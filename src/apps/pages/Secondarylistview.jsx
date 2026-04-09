@@ -83,6 +83,13 @@ import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOu
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -133,6 +140,7 @@ const ListviewSecondary = () => {
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
   var parentID = params.filtertype;
+  var DocumentID = params.DocumentID;
   var InvType = params.InvType;
   var OrderType = params.OrderType;
   var Code = params.Code;
@@ -169,6 +177,7 @@ const ListviewSecondary = () => {
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
   let parentID4 = params.parentID4;
+  let SOPId = params.SOPId;
 
   var Description = params.Desc;
   var Number = params.Number;
@@ -304,6 +313,12 @@ const ListviewSecondary = () => {
   else if (accessID == "TR318") {
     filter = `CompanyID = '${compID}' AND ItemGroupID='${parentID1}'`;
   }
+  // else if (accessID == "TR362") {
+  //   filter = `CompanyID = '${compID}' AND DocumentCategoryID='${params.filtertype || 0}'`;
+  // }
+  else if (accessID == "TR362") {
+    filter = `CompanyID = '${compID}' AND DocumentCategoryID='${parentID1}'`;
+  }
   else if (accessID == "TR027") {
     filter = `CompanyID = '${compID}' AND ClassificationID='${parentID || 0}'`;
   }
@@ -312,6 +327,20 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR324") {
     filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
+  }
+  else if (accessID == "TR335") {
+    filter = `CompanyID = '${compID}' AND DocumentIssuedID='${parentID3}'`;
+    // filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
+  }
+  else if (accessID == "TR338") {
+    filter = `CompanyID = '${compID}' AND SopID='${parentID1}'`;
+  }
+  else if (accessID == "TR339") {
+    filter = `CompanyID = '${compID}' AND SopDocumentListID='${parentID2}'`;
+    // filter = `SopDocumentListID='${parentID2}'`;
+  }
+  else if (accessID == "TR351") {
+    filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -1657,6 +1686,37 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
+        ) 
+        : accessID == "TR362" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR361/Document%20Category", {
+                    state: {
+                      ...state,
+                    }
+                  });
+                }}
+              >
+                Document Category ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Document
+              </Typography>
+            </Breadcrumbs>
+          </Box>
         ) : accessID == "TR027" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
@@ -1746,6 +1806,151 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 List of Route Area
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR335" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}`, { state: { ...state }});
+                }}
+              >
+                List of Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}/Booklet/${params.accessID1}/${params.parentID2}`, { state: { ...state }});
+                }}
+              >
+                List of Log Notes (Serial#{BreadCrumb3})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Batch Reconciliation Records
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        )  : accessID == "TR338" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Documents
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR339" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  // navigate(-1);
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, { state: { ...state }});
+                }}
+              >
+                List of Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Log Notes
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR351" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                List of Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Checklist
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3550,6 +3755,8 @@ const ListviewSecondary = () => {
             false
           ) : accessID == "TR115" ? (
             false
+          ) : accessID == "TR335" ? (
+            false
           ) : accessID == "TR288" ? (
             false
             //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -3764,6 +3971,48 @@ const ListviewSecondary = () => {
                   </IconButton>
 
                 </Tooltip>
+              ): accessID === "TR338" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditSopDocument/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
+              ): accessID === "TR339" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditBooklet/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
+              ): accessID === "TR351" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditSopCheckList/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
               ) : (
                 <Tooltip arrow title="Add">
                   <IconButton>
@@ -3920,9 +4169,10 @@ const ListviewSecondary = () => {
           />
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
-          <Typography fontWeight={400} fontSize={15} lineHeight={1}
+          
+          <Typography fontWeight={600} fontSize={15} lineHeight={1}
             mb={-2} >
-            Legend
+            Actions Guide
           </Typography>
         </Box>
         {accessID == "TR001" ? (
@@ -4013,11 +4263,11 @@ const ListviewSecondary = () => {
                     label="View"
                     variant="outlined"
                   />
-                  {/* <Chip
+                  <Chip
                   icon={<CurrencyRupeeOutlinedIcon color="primary" />}
                   label="Payment"
                   variant="outlined"
-                /> */}
+                />
                   {params.OrderType === "Q" &&
                     <Chip
                       icon={<CurrencyExchangeOutlinedIcon color="primary" />}
@@ -4031,6 +4281,14 @@ const ListviewSecondary = () => {
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
+                  {params.OrderType === "O" &&
+                  <Chip
+                    icon={<PendingActionsOutlinedIcon color="primary" />}
+                    label="View Amount Adjustment"
+                    variant="outlined"
+                  // sx={{ marginLeft: "50px" }}
+                  />}
+                  
                   <Chip
                     icon={< PictureAsPdfIcon color="error" />}
                     label="Order Pdf"
@@ -4420,7 +4678,59 @@ const ListviewSecondary = () => {
                       sx={{ marginLeft: "50px" }}
                     />
                   </Box>
-                ) : accessID == "TR033" ? (
+                ): accessID == "TR338" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<OpenInNewIcon color="primary" />}
+                      label="View File"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ChecklistOutlinedIcon color="primary" />}
+                      label="Checklist"
+                      variant="outlined"
+                    />
+                   
+                    <Chip
+                      icon={<AutoStoriesOutlinedIcon color="primary" />}
+                      label="Log Notes"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR339" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<LoopOutlinedIcon color="primary" />}
+                      label="Process"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                    <Chip
+                    icon={<PictureAsPdfIcon color="error" />}
+                    label="Process Pdf"
+                    variant="outlined"
+                  />
+                    <Chip
+                    icon={<DoubleArrowOutlinedIcon color="primary" />}
+                    label="Batch Reconciliation Records"
+                    variant="outlined"
+                  />
+                  </Box>
+                ): accessID == "TR033" ? (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}
@@ -4800,7 +5110,23 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                   </Box>
-                ) : (
+                ) : accessID == "TR335" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                    <Chip
+                      icon={<TimelineOutlinedIcon color="primary" />}
+                      label="Timeline"
+                      variant="outlined"
+                    />
+                  </Box>
+                ): accessID == "TR314" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                   <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                  </Box>
+                ): (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}

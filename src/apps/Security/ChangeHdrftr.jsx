@@ -77,10 +77,10 @@ const Changehdrftr = () => {
   const data = useSelector((state) => state.formApi.Data) || {};
   console.log(data, "--data");
   const isLoading = useSelector((state) => state.formApi.postLoading);
-  const [logoimage, setlogoimage] = useState("");
+  const [logoimage, setlogoimage] = useState(data?.CM_HEADER || "");
   console.log("Nowlogo", logoimage);
   const company = sessionStorage.getItem("company");
-  const [gstImage, setGstImage] = useState("");
+  const [gstImage, setGstImage] = useState(data?.CM_FOOTER || "");
   const [offaddress, setOffaddress] = useState("");
   const [headerPreview, setHeaderPreview] = useState(""); // blob preview url
   const [footerPreview, setFooterPreview] = useState("");
@@ -91,6 +91,8 @@ const Changehdrftr = () => {
   // const { toggleSidebar, broken, rtl } = useProSidebar();
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const grace = sessionStorage.getItem("CompanyGraceTime");
+  const timeout = sessionStorage.getItem("CompanySessionTimeOut");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -158,8 +160,8 @@ const Changehdrftr = () => {
   const panImageSrc = headerPreview
     ? headerPreview
     : data?.CM_HEADER
-    ? store.getState().globalurl.imageUrl + data?.CM_HEADER
-    : null;
+      ? store.getState().globalurl.imageUrl + data?.CM_HEADER
+      : null;
   const getFilepanChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -215,8 +217,8 @@ const Changehdrftr = () => {
   const gstImageSrc = footerPreview
     ? footerPreview
     : data?.CM_FOOTER
-    ? store.getState().globalurl.imageUrl + data?.CM_FOOTER
-    : null;
+      ? store.getState().globalurl.imageUrl + data?.CM_FOOTER
+      : null;
   const getFilegstChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -325,7 +327,8 @@ const Changehdrftr = () => {
       AutoCode: autocode ? "Y" : "N",
       HeaderImg: overrides.headerImage ?? headerImage,
       FooterImg: overrides.footerImage ?? footerImage,
-
+      GraceTime: grace || 15,
+      SessionTimeOut: timeout || 600,
       CompanyName: data.CM_NAME,
     };
 
@@ -498,10 +501,10 @@ const Changehdrftr = () => {
                       onClick={() => {
                         data.logoimage || headerImage
                           ? window.open(
-                              store.getState().globalurl.attachmentUrl +
-                                (headerImage || data.logoimage),
-                              "_blank"
-                            )
+                            store.getState().globalurl.attachmentUrl +
+                            (headerImage || data.logoimage),
+                            "_blank"
+                          )
                           : toast.error("Please Upload File");
                       }}
                     >
@@ -562,10 +565,10 @@ const Changehdrftr = () => {
                       onClick={() => {
                         data.GstImg || footerImage
                           ? window.open(
-                              store.getState().globalurl.attachmentUrl +
-                                (footerImage || data.GstImg),
-                              "_blank"
-                            )
+                            store.getState().globalurl.attachmentUrl +
+                            (footerImage || data.GstImg),
+                            "_blank"
+                          )
                           : toast.error("Please Upload File");
                       }}
                     >

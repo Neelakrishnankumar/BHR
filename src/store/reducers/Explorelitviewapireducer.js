@@ -2,13 +2,19 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Button, IconButton, Tooltip, Stack, Box } from "@mui/material";
+import { Button, IconButton, Tooltip, Stack, Box,
+  CircularProgress,
+ } from "@mui/material";
+
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
+import { pdf } from "@react-pdf/renderer";
 
 import { useNavigate } from "react-router-dom";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
@@ -20,6 +26,12 @@ import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined
 import TimelineIcon from "@mui/icons-material/Timeline";
 import workinProgress from "../../assets/img/wip.png";
 import DescriptionIcon from "@mui/icons-material/Description";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import toast from "react-hot-toast";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { paySlipGet } from "./Formapireducer";
+import { getConfig } from "../../config";
+
 const initialState = {
   explorerowData: [],
   explorecolumnData: [],
@@ -47,10 +59,10 @@ export const userGroupExplore = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const getFetchUserData = createAsyncThunk(
@@ -65,7 +77,7 @@ export const getFetchUserData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -76,10 +88,10 @@ export const getFetchUserData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const packingListView = createAsyncThunk(
@@ -98,7 +110,7 @@ export const packingListView = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(idata)
+      JSON.stringify(idata),
     );
     idata = JSON.stringify(idata);
     const response = await axios.get(url, {
@@ -112,10 +124,10 @@ export const packingListView = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const getApiSlice = createSlice({
   name: "exploreApi",
@@ -130,7 +142,7 @@ export const getApiSlice = createSlice({
     packingRowUpdate(state, action) {
       console.log(
         "🚀 ~ file: Explorelitviewapireducer.js:96 ~ packingRowUpdate ~ action:",
-        action
+        action,
       );
       switch (action.payload.type) {
         case "INSERTED":
@@ -147,7 +159,7 @@ export const getApiSlice = createSlice({
     addtionalQtyCal(state, action) {
       console.log(
         "🚀 ~ file: Explorelitviewapireducer.js:138 ~ addtionalQtyCal ~ action:",
-        action
+        action,
       );
 
       // for(let row of action.payload.listviewData){
@@ -257,9 +269,9 @@ export const getApiSlice = createSlice({
 
         state.Data = action.payload.Data;
 
-        // if(action.payload.Data.Groupaccess){
-        // state.explorerowData = action.payload.Data.Groupaccess
-        // }
+        if (action.payload.Data.Groupaccess) {
+          state.explorerowData = action.payload.Data.Groupaccess;
+        }
 
         // state.explorecolumnData= action.payload.columndata
       })
@@ -284,11 +296,92 @@ export const {
 
 export default getApiSlice.reducer;
 
+
+
+
+
+
+
 export const fetchExplorelitview =
   (AccessID, screenName, filter, any) => async (dispatch, getState) => {
     console.log("🚀 ~ file: Explorelitviewapireducer.js:209 ~ filter:", filter);
     // const navigate = useNavigate();
     var url = store.getState().globalurl.listViewurl;
+
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log(" ~ Payroll ConfigurationPayroll attendance ~ CompanySignature:", CompanySignature);
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+
+ const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
+    const dispatch = store.dispatch;
+    const [payloading, setPayLoading] = React.useState(false);
+
+    const handlePayPDFGET = async () => {
+      try {
+        setPayLoading(true);
+        const payslip = {
+          Month: Month,
+          Finyear: Finyear,
+          EmployeeID: EmployeeID,
+          CompanyID: CompanyID,
+        };
+
+        const resultAction = await dispatch(paySlipGet(payslip));
+
+        const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
+        if (!data) {
+          alert("No data available for PDF");
+          return;
+        }
+        if (!resultAction.payload) {
+          console.error("No payload returned");
+          return;
+        }
+        // Generate and download PDF
+        const blob = await pdf(
+          <PayslipPdf
+            data={data}
+            filters={{
+              Imageurl: baseurlUAAM,
+              HeaderImg: HeaderImg,
+              FooterImg: FooterImg,
+              CompanySignature: CompanySignature,
+            }}
+          />,
+        ).toBlob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Payslip.pdf";
+        document.body.appendChild(link); // ✅ Important
+        link.click();
+        document.body.removeChild(link); // ✅ Cleanup
+        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
+      } catch (err) {
+        console.error("PDF generation failed", err);
+      } finally {
+        setPayLoading(false);
+      }
+    };
+
+    return (
+      <Tooltip title="Download Payslip PDF">
+        <IconButton color="info" size="small" onClick={handlePayPDFGET}>
+          {payloading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <PictureAsPdfIcon color="error" />
+          )}
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
     if (
       filter != "" &&
@@ -297,7 +390,14 @@ export const fetchExplorelitview =
       AccessID !== "TR325" &&
       AccessID !== "TR302" &&
       AccessID !== "TR249" &&
+      AccessID !== "2151" &&
+      AccessID !== "2152" &&
+      AccessID !== "2153" &&
+      AccessID !== "TR350" &&
       AccessID !== "TR210" &&
+      AccessID !== "TR363" &&
+      AccessID !== "TR362" &&
+      AccessID !== "TR364" &&
       AccessID !== "TR219" &&
       AccessID !== "TR086" &&
       AccessID !== "TR242" &&
@@ -317,12 +417,14 @@ export const fetchExplorelitview =
       AccessID !== "TR130" &&
       AccessID !== "TR131" &&
       AccessID !== "TR139" &&
+      AccessID !== "TR367" &&
+      
       // AccessID !== "TR321" &&
       AccessID !== "TR326"
     ) {
       filter = "parentID=" + filter;
     }
-    if (AccessID == "TR017" || AccessID == "TR088") {
+    if (AccessID == "TR017" || AccessID == "TR088" || AccessID == "TR367") {
       filter = filter;
     }
     // if (AccessID == "TR019") { TR208
@@ -481,6 +583,71 @@ export const fetchExplorelitview =
               };
 
               exploreData.Data.columns.push(obj);
+            }
+
+            
+ 
+            if (AccessID == "TR362" || AccessID === "TR364") {
+              var obj = {};
+              var currentRow = "";
+
+              obj = {
+                field: "action",
+                headerName: "Action",
+                width: 70,
+                align: "center",
+                headerAlign:"center",
+                sortable: false,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Tooltip title="Open Document">
+                        <IconButton
+                          component="a"
+                          onClick={() => {
+
+                            if(!params.row.Attachments){
+                              toast.error("No Document Avaliable!");
+                              return;
+                            }
+                            const fileUrl =
+                              `${store.getState().globalurl.attachmentUrl}/${params.row.Attachments}`;
+
+                            // 👇 Detect file type
+                            const lower = fileUrl.toLowerCase();
+
+                            let viewUrl = fileUrl;
+
+                            // 👉 For DOC/DOCX use Office Online Viewer
+                            if (
+                              lower.endsWith(".doc") ||
+                              lower.endsWith(".docx")
+                            ) {
+                              viewUrl =
+                                "https://view.officeapps.live.com/op/view.aspx?src=" +
+                                encodeURIComponent(fileUrl);
+                            }
+
+                            // 👉 Open in new tab
+                            window.open(
+                              viewUrl,
+                              "_blank",
+                              "noopener,noreferrer",
+                            );
+                          }}
+                          color="primary"
+                          size="small"
+                        >
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  );
+                },
+              };
+
+              exploreData.Data.columns.push(obj);
             } else {
               var obj = {};
               var currentRow = "";
@@ -576,6 +743,45 @@ export const fetchExplorelitview =
                 exploreData.Data.columns.push(obj1);
               }
             }
+
+      if (AccessID == "TR367") {
+        exploreData.Data.columns = exploreData.Data.columns.filter(
+    col => col.field !== "action"
+  );
+       var obj = {};
+obj = {
+    field: "action",
+    headerName: "",
+    width: 50,
+    align: "center",
+    sortable: false,
+    disableColumnMenu: true,
+
+    renderCell: (params) => {
+      return (
+        <Stack direction="row">
+          {params.row.Process === "P" ? (
+            <PayslipBtn
+              CompanyID={params.row.CompanyID}
+              EmployeeID={params.row.EmployeeID}
+              Finyear={params.row.Year}
+              Month={params.row.Month}
+            />
+          ) : (
+            <Tooltip title="Payslip Process pending">
+              <IconButton color="error" size="small" sx={{ opacity: 0.5 }}>
+                <PictureAsPdfIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Stack>
+      );
+    },
+  };
+// exploreData.Data.columns.splice(2, 0, obj);
+  // exploreData.Data.columns.push(obj);
+  exploreData.Data.columns.splice(15, 0, obj);
+}
           } else {
             if (AccessID == "TR077") {
               var object2 = {};
@@ -617,6 +823,7 @@ export const fetchExplorelitview =
               };
               exploreData.Data.columns.splice(4, 0, object2);
             }
+ 
           }
           dispatch(
             Success({
@@ -627,7 +834,7 @@ export const fetchExplorelitview =
               accessID: AccessID, // ← from Query.AccessID
               screenName: screenName, // optional but useful
               action: "get", // optional (for audit clarity)
-            })
+            }),
           );
         } else {
           dispatch(
@@ -637,7 +844,7 @@ export const fetchExplorelitview =
               accessID: AccessID,
               screenName: screenName,
               action: "get",
-            })
+            }),
           );
         }
       })

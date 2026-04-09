@@ -54,7 +54,15 @@ const initialState = {
   matrialDcTrackData: [],
   purchaseorderratingData: [],
   searchLoading: false,
+
+  PayrollconfigpayrollAttendanceLoading : false,
+  PayrollconfigpayrollAttendanceData : {},
+PayrollconfigpayrollAttendanceStatus: "idle",
+
   empAttendanceData: {},
+  InventrygetData: [],
+  InventrygetDataStatus: "idle",
+  Inventoryloading: false, //ADDED BY - MANOJ
   payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
@@ -69,7 +77,8 @@ const initialState = {
     },
   },
   timeSheetData: {},
-  MonthlyAttendanceData: {},
+  MonthlyAttendanceData: [],
+  MonthlyAttendanceDataGetloading: false,
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
@@ -84,6 +93,19 @@ const initialState = {
   PartyDateAndAmtFilterstatus: "",
   PartyDateAndAmtFilterloading: false,
   LeaveEntryRegdata: [],
+  //Inventorygrid1
+  Inventorygrid1status: "",
+  Inventorygrid1loading: false,
+  Inventorygrid1data: [],
+  //Inventorygrid2
+  Inventorygrid2status: "",
+  Inventorygrid2loading: false,
+  Inventorygrid2data: [],
+  //Inventorygrid3
+  Inventorygrid3status: "",
+  Inventorygrid3loading: false,
+  Inventorygrid3data: [],
+
   Partygetdata: [],
   Partycontactgetdata: [],
   LeaveEntryRegstatus: "",
@@ -160,6 +182,65 @@ const initialState = {
   replacementQtyGetdata: {},
   replacementQtyGetstatus: "",
   replacementQtyGetloading: false,
+
+  //SOP PROCESS
+  SOPProcessdata: {},
+  SOPProcessLoading: false,
+  SOPProcessStatus: "",
+
+
+  //SOP CONFIG POST
+  SOPConfigdata: {},
+  SOPConfigLoading: false,
+  SOPConfigStatus: "",
+
+  //SOP CONFIG GET
+  SOPConfigGetdata: {},
+  SOPConfigGetloading: false,
+  SOPConfigGetStatus: "",
+
+  //SPECIMEN GET
+  SpecimenGetdata: {},
+  SpecimenGetloading: false,
+  SpecimenGetStatus: "",
+
+  //SPECIMEN POST
+  SpecimenPostdata: {},
+  SpecimenPostloading: false,
+  SpecimenPostStatus: "",
+
+  //SopEmpMappingController - POST
+  SopEmpMappingControllerdata: {},
+  SopEmpMappingControllerloading: false,
+  SopEmpMappingControllerStatus: "",
+
+  //SCOREBOARD
+  // ScoredashBoardGetData: {},
+  // ScoredashBoardGetStaus: "idle",
+  // ScoredashBoardGetLoading: false,
+  // ScoredashBoardGetError: null,
+
+  //PARTY ORDER PENDING GET
+  PartyOrderPendingGetdata: {},
+  PartyOrderPendingGetloading: false,
+  PartyOrderPendingGetStatus: "",
+
+
+  //SOP TIMELINE GET
+  SOPTimelinedata: {},
+  SOPTimelineloading: false,
+  SOPTimelinestatus: "",
+
+  //GetOverflowAffectedOrders GET
+  GetOverflowAffectedOrdersdata: {},
+  GetOverflowAffectedOrdersloading: false,
+  GetOverflowAffectedOrdersstatus: "",
+
+  
+  //PartyReset POST
+  PartyResetdata: {},
+  PartyResetloading: false,
+  PartyResetstatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -660,7 +741,22 @@ export const Processpost = createAsyncThunk(
     return response.data;
   }
 );
+export const InventoryPostController = createAsyncThunk(
+  "employee/deployment/postdata",
+  async (payload) => {
+    const url = store.getState().globalurl.EmpInventoryPostController;
 
+    console.log("Final API Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
 
 export const costLeatherData = createAsyncThunk(
   "bom/costing/leather",
@@ -2215,6 +2311,87 @@ export const hashtoken = createAsyncThunk(
   },
 );
 
+export const Inventorygrid1 = createAsyncThunk(
+  "Inv1/Itemgroup",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
+
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
+export const Inventorygrid2 = createAsyncThunk(
+  "Inv2/Itemcategory",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
+
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
+export const Inventorygrid3 = createAsyncThunk(
+  "Inv3/Item",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
+
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
 export const getBomList = createAsyncThunk(
   "listOfBom/getbom",
   async ({ recid, action, ProductID }) => {
@@ -2427,6 +2604,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
+      state.InventrygetData = [];
       state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
@@ -2554,6 +2732,23 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.loading = false;
       })
+      .addCase(batchreconciliationGetData.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+      })
+      .addCase(batchreconciliationGetData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        if (action.payload.Data.Disable == "Y") {
+          action.payload.Data.Disable = true;
+        } else action.payload.Data.Disable = false;
+
+        state.Data = action.payload.Data;
+      })
+      .addCase(batchreconciliationGetData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+      })
       .addCase(invoiceExploreGetData.pending, (state, action) => {
         state.Status = "idle";
         state.expgetLoading = true;
@@ -2621,22 +2816,40 @@ export const getApiSlice = createSlice({
         state.loading = false;
       })
 
-      .addCase(getFetchData.pending, (state, action) => {
+      // .addCase(getFetchData.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.getLoading = true;
+      //   state.Data = {};
+      //   state.msg = "Loading...";
+      // })
+      // .addCase(getFetchData.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.getLoading = false;
+      //   state.Data = action.payload.Data ? action.payload.Data : {};
+      //   // state.msg =  action.payload.Msg
+      // })
+      // .addCase(getFetchData.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.getLoading = false;
+      //   state.Data = {};
+      //   toast.error("Something Went Wrong");
+      // })
+      .addCase(getFetchData.pending, (state) => {
         state.Status = "idle";
         state.getLoading = true;
-        state.Data = {};
         state.msg = "Loading...";
       })
+
       .addCase(getFetchData.fulfilled, (state, action) => {
+        console.log("API SUCCESS", action.payload);
         state.Status = "success";
         state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
+        state.Data = action.payload?.Data || {};
       })
-      .addCase(getFetchData.rejected, (state, action) => {
+
+      .addCase(getFetchData.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
-        state.Data = {};
         toast.error("Something Went Wrong");
       })
       //PartyBank Details GET
@@ -2879,6 +3092,69 @@ export const getApiSlice = createSlice({
       .addCase(leaveenquiryget.rejected, (state, action) => {
         state.LeaveEntryRegstatus = "Error";
         state.LeaveEntryRegloading = false;
+      })
+      // Inventorygrid1
+      .addCase(Inventorygrid1.pending, (state) => {
+        state.Inventorygrid1loading = true;
+        state.Inventorygrid1status = "loading";
+      })
+
+      .addCase(Inventorygrid1.fulfilled, (state, action) => {
+        state.Inventorygrid1loading = false;
+        state.Inventorygrid1status = "success";
+
+        state.Inventorygrid1columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid1rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid1.rejected, (state) => {
+        state.Inventorygrid1loading = false;
+        state.Inventorygrid1status = "error";
+      })
+      // Inventorygrid2
+      .addCase(Inventorygrid2.pending, (state) => {
+        state.Inventorygrid2loading = true;
+        state.Inventorygrid2status = "loading";
+      })
+
+      .addCase(Inventorygrid2.fulfilled, (state, action) => {
+        state.Inventorygrid2loading = false;
+        state.Inventorygrid2status = "success";
+
+        state.Inventorygrid2columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid2rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid2.rejected, (state) => {
+        state.Inventorygrid2loading = false;
+        state.Inventorygrid2status = "error";
+      })
+      // Inventorygrid3
+      .addCase(Inventorygrid3.pending, (state) => {
+        state.Inventorygrid3loading = true;
+        state.Inventorygrid3status = "loading";
+      })
+
+      .addCase(Inventorygrid3.fulfilled, (state, action) => {
+        state.Inventorygrid3loading = false;
+        state.Inventorygrid3status = "success";
+
+        state.Inventorygrid3columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid3rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid3.rejected, (state) => {
+        state.Inventorygrid3loading = false;
+        state.Inventorygrid3status = "error";
       })
 
       .addCase(EmployeeVendorGetController.pending, (state, action) => {
@@ -3364,6 +3640,55 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
+
+      
+
+      .addCase(PayrollconfigpayrollAttendance.fulfilled, (state, action) => {
+        state.PayrollconfigpayrollAttendanceData = action.payload.Data;
+        state.PayrollconfigpayrollAttendanceLoading = false;
+      })
+      .addCase(PayrollconfigpayrollAttendance.pending, (state, action) => {
+        state.Status = "idle";
+        state.PayrollconfigpayrollAttendanceLoading = true;
+        state.PayrollconfigpayrollAttendanceData = [];
+      })
+      .addCase(PayrollconfigpayrollAttendance.rejected, (state, action) => {
+        state.Status = "Error";
+        state.PayrollconfigpayrollAttendanceLoading = false;
+        state.PayrollconfigpayrollAttendanceData = [];
+      })
+      // .addCase(Inventryget.fulfilled, (state, action) => {
+      //   state.InventrygetData = action.payload.Data;
+      //   state.InventrygetDataLoading = false;
+      // })
+      // .addCase(Inventryget.pending, (state, action) => {
+      //   state.InventrygetDataStatus = "idle";
+      //   state.InventrygetDataLoading = true;
+      //   state.InventrygetData = [];
+      // })
+      // .addCase(Inventryget.rejected, (state, action) => {
+      //   state.InventrygetDataStatus = "Error";
+      //   state.InventrygetDataLoading = false;
+      //   state.InventrygetData = [];
+      // })
+      .addCase(Inventryget.pending, (state) => {
+        state.Inventoryloading = true;
+      })
+
+      .addCase(Inventryget.fulfilled, (state, action) => {
+        state.Inventoryloading = false;
+
+        if (action.payload?.Status === "Y") {
+          state.InventrygetData = action.payload.Data || [];
+        } else {
+          state.InventrygetData = [];
+        }
+      })
+
+      .addCase(Inventryget.rejected, (state) => {
+        state.Inventoryloading = false;
+        state.InventrygetData = [];
+      })
       .addCase(payslipAttendance.fulfilled, (state, action) => {
         state.payslipAttendanceData = action.payload.Data;
         state.empAttendanceDataLoading = false;
@@ -3741,6 +4066,188 @@ export const getApiSlice = createSlice({
           },
         };
       })
+      //SOP Process POST
+      .addCase(SOPProcessPost.pending, (state, action) => {
+        state.SOPProcessStatus = "idle";
+        state.SOPProcessLoading = true;
+      })
+      .addCase(SOPProcessPost.fulfilled, (state, action) => {
+        state.SOPProcessStatus = "success";
+        state.SOPProcessLoading = false
+        state.SOPProcessdata = action.meta.arg.idata;
+      })
+
+      .addCase(SOPProcessPost.rejected, (state, action) => {
+        state.SOPProcessStatus = "Error";
+        state.SOPProcessLoading = false;
+      })
+      //SOP CONFIG POST
+      .addCase(SOPConfigPost.pending, (state, action) => {
+        state.SOPConfigStatus = "idle";
+        state.SOPConfigLoading = true;
+      })
+      .addCase(SOPConfigPost.fulfilled, (state, action) => {
+        state.SOPConfigStatus = "success";
+        state.SOPConfigLoading = false
+        state.SOPConfigdata = action.meta.arg.idata;
+      })
+
+      .addCase(SOPConfigPost.rejected, (state, action) => {
+        state.SOPConfigStatus = "Error";
+        state.SOPConfigLoading = false;
+      })
+
+      //SOP CONFIGURATION  - GET
+      .addCase(SOPConfigGet.pending, (state, action) => {
+        state.SOPConfigGetstatus = "idle";
+        state.SOPConfigGetloading = true;
+      })
+      .addCase(SOPConfigGet.fulfilled, (state, action) => {
+        state.SOPConfigGetstatus = "success";
+        state.SOPConfigGetloading = false;
+        state.SOPConfigGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SOPConfigGet.rejected, (state, action) => {
+        state.SOPConfigGetstatus = "Error";
+        state.SOPConfigGetloading = false;
+      })
+      //SPECIMEN - GET
+      .addCase(SpecimenGet.pending, (state, action) => {
+        state.SpecimenGetstatus = "idle";
+        state.SpecimenGetloading = true;
+      })
+      .addCase(SpecimenGet.fulfilled, (state, action) => {
+        state.SpecimenGetstatus = "success";
+        state.SpecimenGetloading = false;
+        state.SpecimenGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SpecimenGet.rejected, (state, action) => {
+        state.SpecimenGetstatus = "Error";
+        state.SpecimenGetloading = false;
+      })
+      //SPECIMEN - POST
+      .addCase(SpecimenPost.pending, (state, action) => {
+        state.SpecimenPoststatus = "idle";
+        state.SpecimenPostloading = true;
+      })
+      .addCase(SpecimenPost.fulfilled, (state, action) => {
+        state.SpecimenPoststatus = "success";
+        state.SpecimenPostloading = false;
+        state.SpecimenPostdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SpecimenPost.rejected, (state, action) => {
+        state.SpecimenPoststatus = "Error";
+        state.SpecimenPostloading = false;
+      })
+      //SopEmpMappingController - POST
+      .addCase(SopEmpMappingController.pending, (state, action) => {
+        state.SopEmpMappingControllerstatus = "idle";
+        state.SopEmpMappingControllerloading = true;
+      })
+      .addCase(SopEmpMappingController.fulfilled, (state, action) => {
+        state.SopEmpMappingControllerstatus = "success";
+        state.SopEmpMappingControllerloading = false;
+        state.SopEmpMappingControllerdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SopEmpMappingController.rejected, (state, action) => {
+        state.SopEmpMappingControllerstatus = "Error";
+        state.SopEmpMappingControllerloading = false;
+      })
+      //PARTY ORDER PENDING - GET
+      .addCase(PartyOrderPendingGet.pending, (state, action) => {
+        state.PartyOrderPendingGetstatus = "idle";
+        state.PartyOrderPendingGetloading = true;
+      })
+      .addCase(PartyOrderPendingGet.fulfilled, (state, action) => {
+        state.PartyOrderPendingGetstatus = "success";
+        state.PartyOrderPendingGetloading = false;
+        state.PartyOrderPendingGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(PartyOrderPendingGet.rejected, (state, action) => {
+        state.PartyOrderPendingGetstatus = "Error";
+        state.PartyOrderPendingGetloading = false;
+      })
+
+      //SOP TIMELINE - GET
+      .addCase(SopTimeLineController.pending, (state, action) => {
+        state.SOPTimelinestatus = "idle";
+        state.SOPTimelineloading = true;
+      })
+      .addCase(SopTimeLineController.fulfilled, (state, action) => {
+        state.SOPTimelinestatus = "success";
+        state.SOPTimelineloading = false;
+        state.SOPTimelinedata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SopTimeLineController.rejected, (state, action) => {
+        state.SOPTimelinestatus = "Error";
+        state.SOPTimelineloading = false;
+      })
+      //GetOverflowAffectedOrders - GET
+      .addCase(GetOverflowAffectedOrders.pending, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "idle";
+        state.GetOverflowAffectedOrdersloading = true;
+      })
+      .addCase(GetOverflowAffectedOrders.fulfilled, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "success";
+        state.GetOverflowAffectedOrdersloading = false;
+        state.GetOverflowAffectedOrdersdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(GetOverflowAffectedOrders.rejected, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "Error";
+        state.GetOverflowAffectedOrdersloading = false;
+      })
+      //PartyReset - GET
+      .addCase(PartyReset.pending, (state, action) => {
+        state.PartyResetstatus = "idle";
+        state.PartyResetloading = true;
+      })
+      .addCase(PartyReset.fulfilled, (state, action) => {
+        state.PartyResetstatus = "success";
+        state.PartyResetloading = false;
+        state.PartyResetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(PartyReset.rejected, (state, action) => {
+        state.PartyResetstatus = "Error";
+        state.PartyResetloading = false;
+      })
+      //SCOREBOARD
+      // .addCase(ScoredashBoard.pending, (state, action) => {
+      //   // state.ScoredashBoardGetData = []
+      //   state.ScoredashBoardGetStaus = "pending";
+      //   state.ScoredashBoardGetLoading = true;
+      //   state.ScoredashBoardGetError = null;
+      // })
+
+      // .addCase(ScoredashBoard.fulfilled, (state, action) => {
+      //   state.ScoredashBoardGetData = action.payload;
+      //   state.ScoredashBoardGetStaus = "fulfilled";
+      //   state.ScoredashBoardGetLoading = false;
+      //   state.ScoredashBoardGetError = null;
+      //   console.log("ScoredashBoardGetData",state.ScoredashBoardGetData)
+      // })
+      // .addCase(ScoredashBoard.rejected, (state, action) => {
+      //   // state.ScoredashBoardGetData = [];
+      //   state.ScoredashBoardGetStaus = "rejected";
+      //   state.ScoredashBoardGetLoading = false;
+      //   state.ScoredashBoardGetError = null;
+      // })
+
 
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
@@ -3749,7 +4256,11 @@ export const getApiSlice = createSlice({
         state.managerName =
           action.payload?.Data?.ManagersName?.ManagersName || "";
       })
+       .addCase(MonthlyAttendance.pending, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = true;
+      })
       .addCase(MonthlyAttendance.fulfilled, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = false;
         state.MonthlyAttendanceData = action.payload.Data;
       });
   },
@@ -4772,6 +5283,48 @@ export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
     var url = store.getState().globalurl.payrollattendanceUrl;
+
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const PayrollconfigpayrollAttendance = createAsyncThunk(
+  "Payroll Configuation/Payrollattendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.GetPayrollattendaceUrl;
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const Inventryget = createAsyncThunk(
+  "Inventryget/Inventorygetitem",
+  async ({ data }) => {
+    var url = store.getState().globalurl.EmpInventoryGetController;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
     console.log("get" + JSON.stringify(data));
@@ -4795,6 +5348,25 @@ export const payslipAttendance = createAsyncThunk(
     var url = store.getState().globalurl.payslipattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const ItempriceGet = createAsyncThunk(
+  "employee/ItempriceGet",
+  async (data) => {
+    var url = store.getState().globalurl.ItempriceGeturl;
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -5187,7 +5759,7 @@ export const Setup_MenuExcel = createAsyncThunk(
 
 export const paySlipGet = createAsyncThunk(
   "paySlipGet/Get",
-  async (payslip ) => {
+  async (payslip) => {
     const url = store.getState().globalurl.PayslipGetController;
 
     const data = {
@@ -5209,12 +5781,250 @@ export const paySlipGet = createAsyncThunk(
 
 export const replacementQtyGet = createAsyncThunk(
   "replacementQtyGet/Get",
-  async ({PartyID,CompanyID}) => {
+  async ({ PartyID, CompanyID }) => {
     const url = store.getState().globalurl.PartyReplacementQtyGet;
 
     const data = {
       PartyID: PartyID,
       CompanyID: CompanyID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+
+//batchreconciliationGetData
+export const batchreconciliationGetData = createAsyncThunk(
+  "batchreconciliationGetData/Get",
+  async (props) => {
+    var url = store.getState().globalurl.apiUrl;
+    const data = {
+      accessid: props.accessID,
+      action: props.get,
+      recid: props.recID,
+    };
+    console.log("🚀 ~ data:", JSON.stringify(data));
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SOPProcessPost = createAsyncThunk(
+  "SOPProcessPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SOPProcess;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const SOPConfigPost = createAsyncThunk(
+  "SOPConfigPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SOPConfigPost;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SOPConfigGet = createAsyncThunk(
+  "SOPConfigGet/Get",
+  async ({ EmployeeID, CompanyID }) => {
+    const url = store.getState().globalurl.SOPConfigGet;
+
+    const data = {
+      EmployeeID: EmployeeID,
+      CompanyID: CompanyID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+
+export const SpecimenPost = createAsyncThunk(
+  "SpecimenPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SpecimenPost;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SpecimenGet = createAsyncThunk(
+  "SpecimenGet/Get",
+  async ({ EmployeeID, CompanyID }) => {
+    const url = store.getState().globalurl.SpecimenGet;
+
+    const data = {
+      EmployeeID: EmployeeID,
+      CompanyID: CompanyID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+export const SopEmpMappingController = createAsyncThunk(
+  "SopEmpMappingController/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SopEmpMappingController;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+// export const ScoredashBoard = createAsyncThunk(
+//   "ScoredashBoard/getdata",
+//   async ({ data }, thunkAPI) => {
+//     try {
+//       var url = store.getState().globalurl.Scoreboard;
+//       console.log("get" + JSON.stringify(data));
+//       const response = await axios.post(url, data, {
+//         headers: {
+//           Authorization:
+//             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//         },
+//       });
+//       console.log("🚀 ~ response.data:", response.data);
+//       return response.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );
+
+export const PartyOrderPendingGet = createAsyncThunk(
+  "PartyOrderPendingGet/Get",
+  async ({ PartyID, CompanyID, OrderID }) => {
+    const url = store.getState().globalurl.PartypendingorderlistgetController;
+
+    const data = {
+      PartyID: PartyID,
+      CompanyID: CompanyID,
+      OrderID: OrderID
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+export const SopTimeLineController = createAsyncThunk(
+  "SopTimeLineController/Get",
+  async ({ SopID }) => {
+    const url = store.getState().globalurl.SopTimeLineController;
+
+    const data = {
+      SopID: SopID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+export const GetOverflowAffectedOrders = createAsyncThunk(
+  "GetOverflowAffectedOrders/Get",
+  async ({ HeaderID }) => {
+    const url = store.getState().globalurl.GetOverflowAffectedOrders;
+
+    const data = {
+      HeaderID: HeaderID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+export const PartyReset = createAsyncThunk(
+  "PartyReset/Post",
+  async ({ Data }) => {
+    const url = store.getState().globalurl.PartyReset;
+
+    const data = {
+    UserID: Data.UserID,
+    Password: Data.Password,
+    PartyID: Data.PartyID,
+    CompanyID: Data.CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

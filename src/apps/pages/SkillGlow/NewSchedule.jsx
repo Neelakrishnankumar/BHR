@@ -644,7 +644,7 @@ const NewSchedule = () => {
           </Box>
         </Paper>
 
-        {!getLoading ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={initialValues}
@@ -750,7 +750,8 @@ const NewSchedule = () => {
                       }}
                       error={!!touched.EmpName && !!errors.EmpName}
                       helperText={touched.EmpName && errors.EmpName}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2127","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}'","Any":""}}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2127","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}'","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2154","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}' AND AssessmentID='${parentID2}' AND Status NOT IN ('Pass','Appeared','Scheduled') AND PassStatus ='' GROUP BY RecordID","Any":""}}`}
                     />
                     <TextField
                       name="Date"

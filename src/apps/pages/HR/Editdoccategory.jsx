@@ -56,7 +56,7 @@ import * as Yup from "yup";
 // Purpose:To Create Department
 
 // ***********************************************
-const Editdept = () => {
+const Editdoccategory = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
@@ -98,12 +98,11 @@ const Editdept = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          Name: Yup.string().trim().required(data.Department.Name),
-          Loc: Yup.string().trim().required(data.Department.Loc),
+          Name: Yup.string().trim().required(data.Doccategory.Name),
         };
 
         if (CompanyAutoCode === "N") {
-          schemaFields.Code = Yup.string().trim().required(data.Department.Code);
+          schemaFields.Code = Yup.string().trim().required(data.Doccategory.Code);
         }
 
         const schema = Yup.object().shape(schemaFields);
@@ -126,13 +125,11 @@ const Editdept = () => {
   };
   //*******Assign Department values from Database in  Yup initial value******* */
   const initialValues = {
-    Code: apiData.Code,
-    Name: apiData.Name,
-    Loc: apiData.Loc,
-    SortOrder: apiData.SortOrder || 0,
+    Code: Data.Code,
+    Name: Data.Description,
+    SortOrder: Data.Sortorder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
     delete: Data.DeleteFlag === "Y" ? true : false,
-    subjectskill: Data.SubjectSkill === "Y" ? true : false
   };
   // **********Save Function*****************
   const fnSave = async (values, del) => {
@@ -164,14 +161,11 @@ const Editdept = () => {
 
     var idata = {
       RecordID: recID,
-      Name: values.Name,
+      Description: values.Name,
       Code: values.Code,
-      Loc: values.Loc,
-      SortOrder: values.SortOrder,
+      Sortorder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
-      SubjectSkill: values.subjectskill === true ? "Y" : "N",
-      Finyear,
       CompanyID,
     };
     // var type = "";
@@ -188,7 +182,7 @@ const Editdept = () => {
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
-      navigate(`/Apps/TR026/Department`);
+      navigate(`/Apps/TR361/Document Category`);
     } else {
       toast.error(data.payload.Msg);
       setLoading(false);
@@ -220,7 +214,7 @@ const Editdept = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate("/Apps/TR361/Document Category");
         }
       } else {
         return;
@@ -255,7 +249,7 @@ const Editdept = () => {
                   sx={{ cursor: "default" }}
 
                 >
-                  Department
+                  Document Category
                 </Typography>
 
               </Breadcrumbs>
@@ -276,7 +270,7 @@ const Editdept = () => {
           </Box>
         </Box>
       </Paper>
-      {!getLoading ? (
+      {/* {!getLoading ? ( */}
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValues}
@@ -421,32 +415,7 @@ const Editdept = () => {
                       e.target.setCustomValidity("");
                     }}
                   />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    label={
-                      <>
-                        Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    value={values.Loc}
-                    id="Loc"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="Loc"
-                    // required
-                    error={!!touched.Loc && !!errors.Loc}
-                    helperText={touched.Loc && errors.Loc}
-                    sx={{
-
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }} focused
-                    inputProps={{ maxLength: 90 }}
-                  />
+                
                   <TextField
                     fullWidth
                     variant="standard"
@@ -499,18 +468,7 @@ const Editdept = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
-                        <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="subjectskill"
-                        id="subjectskill"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="subjectskill"
-                      />
-
-                      <FormLabel focused={false}>Subject / Skill</FormLabel>
+                        
                     </Box>
                   </FormControl>
 
@@ -597,7 +555,7 @@ const Editdept = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate(`/Apps/TR026/Department`);
+                      navigate(-1);
                     }}
                   >
                     Cancel
@@ -608,11 +566,11 @@ const Editdept = () => {
           </Formik>
 
         </Paper>
-      ) : (
+      {/* ) : (
         false
-      )}
+      )} */}
     </React.Fragment>
   );
 };
 
-export default Editdept;
+export default Editdoccategory;

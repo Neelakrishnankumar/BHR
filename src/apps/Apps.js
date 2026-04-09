@@ -194,7 +194,16 @@ import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
 import GSPdf from './pages/Empolyee/GSPdf'
 import BRRForm from "./pages/SOP/BRRForm";
-import EditListOfSOPs from "./pages/Empolyee/EditListOfSOPs";
+import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
+import EditSOPDocument from "./pages/SOP/EditSOPDocument";
+import EditBooklet from "./pages/SOP/EditBooklet";
+import EditSopCheckList from "./pages/SOP/EditCheckList";
+import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
+import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
+import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
+import BatchTimeLine from "./pages/SOP/BatchTimeline";
+import Editdoccategory from "./pages/HR/Editdoccategory";
+import Editdocument from "./pages/HR/Editdocument";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -545,6 +554,11 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleListEMP/:parentID1"
                     element={<AppraisalScheduleList />}
                   />
+                  {/* ASSESSMENT SCORE BOARD*/}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/ScheduleListAssessment/:parentID2/AssessmentScoreBoard/:parentID1"
+                    element={<ScoreBoard />}
+                  />
 
                   {/* ITEM GROUP EDIT */}
                   <Route
@@ -619,6 +633,8 @@ function App() {
                     path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
                   />
+
+                 
                   <Route
                     path="SkillGlow/CandidateMain"
                     element={<CandidateMain />}
@@ -690,7 +706,7 @@ function App() {
                     element={<EditSalaryComponent />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditSatuary Component/:id/:Mode"
+                    path="/:accessID/:screenName/EditPayroll Policy/:id/:Mode"
                     element={<EditSatuaryComponent />}
                   />
                   <Route path="/:accessID/:screenName" element={<Listview />} />
@@ -938,6 +954,10 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:parentID1/:Type"
                     element={<ListviewSecondary />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:DocumentID"
+                    element={<ListviewSecondary />}
+                  />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"
@@ -959,6 +979,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:CusID/:secondaryAccessID/:InvoiceName/:InvType"
                     element={<ListviewSecondary />}
                   />
+                
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Desc/EditProforma%20Invoice/:id/:Mode/Editworkinprocess/:productID/:proformaID/:bomID/:proformaRecid"
                     element={<ListviewSecondary />}
@@ -1042,7 +1063,7 @@ function App() {
                     element={<Edituser />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:companyRecID/EditUsergroups/:id/:Mode"
+                    path="/:accessID/:screenName/EditUser Group/:id/:Mode"
                     element={<Editusergroup />}
                   />
                   <Route
@@ -1257,7 +1278,31 @@ function App() {
                     path="/:accessID/:screenName/EditContracts In/:id/:Mode"
                     element={<EditContractsin />}
                   />
+                  
                   <Route
+                    path="/:accessID/:screenName/EditDocument Category/:id/:Mode"
+                    element={<Editdoccategory />}
+                  />
+                   <Route
+
+                    // path="/Secondarylistview/:accessID/:screenName/:id1/:filtertype/EditDocument/:id/:Mode"
+                    // path="/Secondarylistview/:accessID/:screenName/:filtertype/EditDocument/:id/:Mode"
+                    path="/Secondarylistview/Document Category/:accessID/:screenname/:parentID1/EditDocument/:id/:Mode"
+                    element={<Editdocument />}
+                    // /Apps/Secondarylistview/Document%20Category/TR362/Document/1/EditDocument/-1/A
+                  />
+                  {/* /Apps/Secondarylistview/Document Category/TR362/Document/${params.row.RecordID} */}
+
+                  {/* DOCUMENT LIST */}
+                    <Route
+                    path="/Secondarylistview/Document Category/:accessID/:screenName/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
+                    element={<EditContractsout />}
+                  />
+                   <Route
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
                     element={<EditContractsout />}
                   />
@@ -1332,8 +1377,60 @@ function App() {
                     element={<GSPdf />}
                   />
                   <Route
-                    path="/BatchReconciliation/BRRForm"
+                    // path="/BatchReconciliation/BRRForm"
+                    path="/Secondarylistview/:accessID1/SOPDocuments/:SOPID/EditSOPDocuments/:SOPDOCID/E"
                     element={<BRRForm />}
+                  />
+
+                   {/* SOP DOCUMENT LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID/SopDocument/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                   {/* EDIT SOP DOCUMENT */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID1/EditSopDocument/:id/:Mode"
+                    element={<EditSOPDocument />}
+                  />
+                    {/* SOP BOOKLET LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2"
+                    element={<ListviewSecondary />}
+                  />
+                    {/* SOP DOCUMENT LIST - TR335 */}
+                  <Route
+                    path="/Secondarylistview/:accessID2/SopDocument/:parentID1/Booklet/:accessID1/:parentID2/SOPBatch/:accessID/:parentID3"
+                    element={<ListviewSecondary />}
+                  />
+                    {/* SOP DOCUMENT LIST - TR335 TIMELINE */}
+                  <Route
+                    path="/Secondarylistview/:accessID2/SopDocument/:parentID1/Booklet/:accessID1/:parentID2/SOPBatch/:accessID/:parentID3/TimeLine/:id"
+                    element={<BatchTimeLine />}
+                  />
+                    {/* SOP CHECKLIST LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* EDIT BOOKLET */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2/EditBooklet/:id/:Mode"
+                    element={<EditBooklet />}
+                  />
+                  {/* EDIT CHECKLIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2/EditSopCheckList/:id/:Mode"
+                    element={<EditSopCheckList />}
+                  />
+                  {/* EDIT ANNEXURE FORM 1 */}
+                  <Route
+                    path="/Secondarylistview/AnnexureForm1"
+                    element={<AnnexureForm1 />}
+                  />
+                  {/* EDIT ANNEXURE FORM 2 */}
+                  <Route
+                    path="/Secondarylistview/AnnexureForm2"
+                    element={<AnnexureForm2 />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

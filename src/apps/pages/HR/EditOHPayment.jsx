@@ -28,6 +28,7 @@ import {
   fetchApidata,
   getFetchData,
   OHPaymentUpdateController,
+  PartyOrderPendingGet,
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
@@ -36,9 +37,16 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { formGap } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridRowHeight, formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Rating from "@mui/material/Rating";
+import * as Yup from "yup";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { InputAdornment } from "@mui/material";
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { dataGridHeight } from "../../../ui-components/global/utils";
+import { useTheme } from "@emotion/react";
+import { tokens } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditOHPayment = () => {
@@ -70,6 +78,16 @@ const EditOHPayment = () => {
   );
   const PartyRecordID = state.PartyID;
   console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [pageSize, setPageSize] = React.useState(10);
+
+  const [showDueGrid, setShowDueGrid] = useState(false);
+  const [dueRows, setDueRows] = useState([]);
+  const [dueLoading, setDueLoading] = useState(false);
+
 
   useEffect(() => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
@@ -78,7 +96,158 @@ const EditOHPayment = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        let schemaFields = {
+          paidamount: Yup.number()
+            .typeError(data.OHPayment.paidamount)
+            .required(data.OHPayment.paidamount),
 
+          paymentmode: Yup.string()
+            .typeError(data.OHPayment.paymentmode)
+            .required(data.OHPayment.paymentmode),
+        };
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
+
+
+  useEffect(() => {
+    const fetchDueList = async () => {
+      try {
+        setDueLoading(true);
+
+        const response = await dispatch(
+          PartyOrderPendingGet({
+            CompanyID: CompanyID,
+            PartyID: PartyRecordID,
+            OrderID: recID,
+          })
+        );
+
+        if (response.payload?.Data) {
+          setDueRows(response.payload.Data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setDueLoading(false);
+      }
+    };
+
+    fetchDueList();
+  }, [location.key]);
+
+
+  // const fetchDueDetails = async () => {
+  //   try {
+  //     setDueLoading(true);
+
+  //     const response = await dispatch(
+  //       PartyOrderPendingGet({
+  //         CompanyID: CompanyID,
+  //         PartyID: PartyRecordID,
+  //         OrderID: recID
+  //       })
+  //     );
+
+  //     if (response.payload?.Data) {
+  //       setDueRows(response.payload.Data);
+  //       setShowDueGrid(true);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setDueLoading(false);
+  //   }
+  // };
+
+
+  const Sprintcolumns = [
+    { field: "SLNO", headerName: "SL#", width: 40 },
+    {
+      headerName: "Order Date",
+      field: "OrderDate",
+      // type: "date",
+      width: "100",
+      align: "center",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Order Number",
+      field: "Code",
+      width: "200",
+      align: "left",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Total Amount",
+      field: "TotalPrice",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Pending Amount",
+      field: "PendingAmount",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Already Paid",
+      field: "AlreadyPaid",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Status",
+      field: "Status",
+      width: "100",
+      align: "left",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+
+  ];
+
+  function Custombar() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>List of Pending Orders</Typography>
+        </Box>
+        <GridToolbarQuickFilter />
+      </GridToolbarContainer>
+    );
+  }
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   // Extract default API data safely
@@ -207,6 +376,7 @@ const EditOHPayment = () => {
     paiddate: data.PaidDate
       ? data.PaidDate.split(" ")[0] // keeps YYYY-MM-DD
       : "",
+    // paidamount: data.PaidAmount || 0,
     paidamount: "",
     status: " ",
     paymentmode: "",
@@ -217,106 +387,96 @@ const EditOHPayment = () => {
     PartyBalance: data.PartyBalance,
     Rating: "",
     RatingComments: "",
+    AlreadyPaidAmount: data.AlreadyPaidAmount || 0,
   };
 
-  // const Fnsave = async (values, del, override = {}) => {
-  //   // let action = mode === "A" ? "insert" : "update";
-  //   const partyBalance = Number(values.PartyBalance || 0);
-  //   const paidAmount = Number(values.paidamount || 0);
-  //   const status = override.ORStatus ?? values.status;
-  //   const finalPaidAmount =
-  //     status === "Adjust From Advance" ? 0 : values.paidamount || 0;
+  // const calculatePayable = (values) => {
+  //   const netPayable =
+  //     Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-  //   if (status === "Adjust From Advance") {
-  //     const advanceAmount = Math.abs(partyBalance);
+  //   const Balance = Number(values.PartyBalance || 0);
 
-  //     if (paidAmount > advanceAmount) {
-  //       toast.error("Paid amount cannot be greater than available advance.");
-  //       return;
+  //   // let totalPayable = Number(values.AlreadyPaidAmount || 0);
+  //   let AlreadyPaid = Number(values.AlreadyPaidAmount || 0);
+  //   let totalPayable = 0;
+  //   if (Balance > 0) {
+  //     // advance available
+  //     totalPayable = Math.max(netPayable - Balance, 0);
+  //     if (AlreadyPaid !== 0) {
+  //       totalPayable = totalPayable - AlreadyPaid;
   //     }
-  //   }
-
-  //   let action =
-  //     mode === "A" && !del
-  //       ? "insert"
-  //       : mode === "E" && del
-  //       ? "harddelete"
-  //       : "update";
-  //   var isCheck = "N";
-  //   if (values.disable == true) {
-  //     isCheck = "Y";
-  //   }
-
-  //   const idata = {
-  //     RecordID: recID,
-  //     ...(mode === "E" && { Code: values.orderno || "" }),
-  //     //   PartyRecordID: state.PartyID,
-  //     //   EmployeeRecordID: state.PartyID,
-  //     //LeaderID: params.filtertype || 0,
-  //     LeaderID:
-  //       params.Type === "Party"
-  //         ? data.LeaderRecordID || 0
-  //         : params.filtertype || 0,
-
-  //     PartyName: values.partyname || "",
-  //     OrderDate: values.orderdate || "",
-  //     DeliveryCharges: values.delivercharges || 0,
-  //     TotalPrice: values.totalprice || 0,
-  //     TentativeDeliveryDate: values.tentativedeliverdate || "",
-  //     DeliveryBy: values.deliveredby || "",
-  //     DeliveryYesorNo: mode === "A" ? "N" : values.deliver || "N",
-  //     PaidYesorNo: mode === "A" ? "No" : values.paid || "No",
-  //     ProcessDate: values.processdate || "",
-  //     PaidDate: values.paiddate || "",
-  //     DeliveryDate: values.deliverydate || "",
-  //     // PaidAmount: values.paidamount || 0,
-  //     PaidAmount: finalPaidAmount || 0,
-  //     // PaidAmount: values.Tobepaid || 0,
-  //     // ORStatus: values.status || "",
-  //     PaymentMode: values.paymentmode || "",
-  //     ReceiverName: values.receivername || "",
-  //     ReceiverMobileNumber: values.mobilenumber || "",
-  //     DeliveryComments: values.DeliveryComments || "",
-  //     PaidComments: values.PaidComments || "",
-  //     PartyRecordID: state.PartyID || 0,
-  //     EmployeeRecordID: LoginID,
-  //     // SortOrder: values.sortorder,
-  //     // Disable: isCheck,
-  //     //   Finyear,
-  //     CompanyID,
-  //     // OrderType: values.OrderType || "",
-  //     ORStatus: override.ORStatus ?? values.status ?? "",
-  //     OrderType: override.OrderType ?? values.OrderType ?? "",
-  //     PurchaseCheckbox: values.PurchaseCheckbox === true ? "Y" : "N",
-  //   };
-
-  //   const response = await dispatch(postData({ accessID, action, idata }));
-  //   if (response.payload.Status == "Y") {
-  //     toast.success(response.payload.Msg);
-  //     if (mode === "A") {
-  //       const OrderHeaderId = response.payload.OrderHeaderID;
-  //       const OrderHeaderCode = response.payload.OrderHeaderCode;
-  //       navigate(
-  //         `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
-  //         { state: { ...state, Code: OrderHeaderCode } }
-  //       );
-  //     } else if (mode === "E" && params.OrderType === "O") {
-  //       //toast.success(response.payload.Msg);
-  //       navigate(-1);
-  //     } else if (mode === "E" && params.OrderType === "Q") {
-  //       //toast.success(response.payload.Msg);
-  //       navigate(
-  //         `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/O`,
-  //         { state: { ...state } }
-  //       );
-  //     }
-  //     return;
   //   } else {
-  //     toast.error(response.payload.Msg);
-
-  //     dispatch(getFetchData({ accessID, get: "get", recID }));
+  //     // previous due
+  //     totalPayable = netPayable + Math.abs(Balance);
   //   }
+
+  //   const paidAmount = Number(values.paidamount || 0);
+
+  //   const toBePaid = netPayable - totalPayable;
+
+  //   return {
+  //     netPayable,
+  //     totalPayable,
+  //     toBePaid,
+  //   };
   // };
+  const calculatePayable = (values) => {
+    const netPayable =
+      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
+
+    const balance = Number(values.PartyBalance || 0);
+    const alreadyPaid = Number(values.AlreadyPaidAmount || 0);
+    const paidAmount = Number(values.paidamount || 0); //USER INPUT
+
+    let totalPayable = Math.abs(Number(values.PartyBalance || 0));
+    // let totalPayable = netPayable - balance;
+    // Scenario 1: Advance available
+    // if (balance > 0) {
+    //   totalPayable = netPayable - balance;
+    // }
+
+    // Scenario 2: Previous due
+    // else if (balance < 0) {
+    //   totalPayable = netPayable + Math.abs(balance);
+    // }
+
+    // Scenario 3: No balance
+    // else {
+    //   totalPayable = Number(values.PartyBalance || 0);
+    // }
+
+    // Subtract already paid
+    // totalPayable = totalPayable - alreadyPaid;
+
+    // Prevent negative payable
+    // if (totalPayable < 0) {
+    //   totalPayable = 0;
+    // }
+
+    // Remaining to be paid after current payment
+    let toBePaid = totalPayable - paidAmount;
+    // if (balance > 0) {
+    //   // toBePaid = Math.abs(totalPayable - paidAmount);
+    //   toBePaid = totalPayable - paidAmount;
+    // }
+    // else {
+    //   // toBePaid = Math.abs(totalPayable + paidAmount);
+    //   // toBePaid = totalPayable + paidAmount;
+    //   toBePaid = totalPayable - paidAmount;
+    // }
+
+    // const remainingBalance = Math.abs(balance - paidAmount);
+
+    // const toBePaid =
+    //   remainingBalance < 0 ? Math.abs(remainingBalance) : 0;
+
+    return {
+      netPayable,
+      totalPayable,
+      toBePaid,
+      balance
+    };
+  };
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
     const partyBalance = Number(values.PartyBalance || 0);
@@ -340,13 +500,23 @@ const EditOHPayment = () => {
       toast.error("Please provide comments for low rating.");
       return;
     }
-    const netPayable =
-      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
+    // const netPayable =
+    //   Number(values.delivercharges || 0) + Number(values.totalprice || 0);
+    const { netPayable, totalPayable, toBePaid } = calculatePayable(values);
+    // if (totalPayable > values.paidamount) {
+    //   toast.error("Please provide the remaining amount only.");
+    //   return;
+    // }
     const Balance = Number(values.PartyBalance || 0);
 
-    const totalBalance = netPayable + Balance;
-    const toBePaid = totalBalance - Number(values.paidamount || 0);
+
+    if (Balance < 0 && values.paidamount === "0.00") {
+      toast.error("Paid Amount cannot be 0.00");
+      return;
+    }
+    // const totalBalance = netPayable + Balance;
+    // const toBePaid = totalBalance - Number(values.paidamount || 0);
     const idata = {
       PaymentMethod: values.paymentmode || "",
       Amount: netPayable || 0,
@@ -358,7 +528,7 @@ const EditOHPayment = () => {
       PaidComments: values.PaidComments || "",
       NextOrdDate: values.NextOrdDate || "",
       Balance: Balance || 0,
-      ToBePaid: toBePaid || 0,
+      // ToBePaid: toBePaid || 0,
       PaidAmount: values.paidamount || 0,
       Rating: values.Rating || 0,
       Comments: values.RatingComments || "",
@@ -462,9 +632,9 @@ const EditOHPayment = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(-1);
-                // }}
+              // onClick={() => {
+              //   navigate(-1);
+              // }}
               >
                 Payment
                 {/* {params.OrderType === "O"
@@ -502,7 +672,7 @@ const EditOHPayment = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -515,14 +685,19 @@ const EditOHPayment = () => {
               handleSubmit,
               setFieldValue,
             }) => {
-              const netPayable =
-                Number(values.delivercharges || 0) +
-                Number(values.totalprice || 0);
 
-              const Balance = Number(values.PartyBalance || 0);
 
-              const totalBalance = netPayable + Balance;
-              const toBePaid = totalBalance - Number(values.paidamount || 0);
+              // const netPayable =
+              //   Number(values.delivercharges || 0) +
+              //   Number(values.totalprice || 0);
+
+              // const Balance = Number(values.PartyBalance || 0);
+
+              // const totalBalance = netPayable + Balance;
+              // const toBePaid = totalBalance - Number(values.paidamount || 0);
+              const { netPayable, totalPayable, toBePaid } = calculatePayable(values);
+
+
               return (
                 <form onSubmit={handleSubmit}>
                   <Box
@@ -558,8 +733,8 @@ const EditOHPayment = () => {
                       InputProps={{
                         readOnly: true,
                       }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
                     {CompanyAutoCode == "Y" ? (
                       <TextField
@@ -583,7 +758,7 @@ const EditOHPayment = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -675,8 +850,8 @@ const EditOHPayment = () => {
                           label="Due"
                           variant="standard"
                           focused
-                          // value={Math.abs(Number(values.PartyBalance || 0))}
-                          value={Math.abs(Balance || 0)}
+                          value={Math.abs(Number(values.PartyBalance || 0))}
+                          // value={Math.abs(Balance || 0)}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={
@@ -694,10 +869,24 @@ const EditOHPayment = () => {
                                   Number(values.PartyBalance) < 0
                                     ? "#d32f2f"
                                     : // ? "#db4f4a"
-                                      "#2e7d32", // red : green
+                                    "#2e7d32", // red : green
                                 fontWeight: 600,
                               },
                             },
+
+                            // endAdornment:
+                            //   // Number(values.PartyBalance) < 0 && (
+                            //     <InputAdornment position="end">
+                            //       <Tooltip title="View Due Details">
+                            //         <IconButton
+                            //           size="small"
+                            //           onClick={fetchDueDetails}
+                            //         >
+                            //           <InfoOutlinedIcon color="error" />
+                            //         </IconButton>
+                            //       </Tooltip>
+                            //     </InputAdornment>
+                            // ),
                           }}
                           autoFocus
                         />
@@ -705,12 +894,26 @@ const EditOHPayment = () => {
                           label="Total Payable"
                           variant="standard"
                           focused
-                          value={totalBalance.toFixed(2)}
+                          value={Math.abs(totalPayable.toFixed(2))}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
                             },
                           }}
+                        //  InputProps={{
+                        //   readOnly: true,
+                        //   inputProps: {
+                        //     style: {
+                        //       textAlign: "right",
+                        //       color:
+                        //         Number(values.PartyBalance) < 0
+                        //           ? "#d32f2f"
+                        //           : // ? "#db4f4a"
+                        //           "#2e7d32", // red : green
+                        //       fontWeight: 600,
+                        //     },
+                        //   },
+                        // }}
                         />
 
                         <TextField
@@ -732,12 +935,40 @@ const EditOHPayment = () => {
                           name="paidamount"
                           type="number"
                           id="paidamount"
-                          label="Paid Amount"
+                          // label="Paid Amount"
+                          label={
+                            <>
+                              Paid Amount
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.paidamount}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("paidamount", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("paidamount", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("paidamount", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
@@ -774,18 +1005,27 @@ const EditOHPayment = () => {
                         </TextField> */}
                         <TextField
                           select
-                          label="Payment Mode"
+                          // label="Payment Mode"
+                          label={
+                            <>
+                              Payment Mode
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
                           id="paymentmode"
                           name="paymentmode"
                           value={values.paymentmode}
                           onBlur={handleBlur}
-                          onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem(
-                              "paymentmode",
-                              e.target.value,
-                            ); // save to sessionStorage
-                          }}
+                          onChange={handleChange}
+                          // onChange={(e) => {
+                          //   handleChange(e); // update form state (Formik)
+                          //   sessionStorage.setItem(
+                          //     "paymentmode",
+                          //     e.target.value,
+                          //   ); // save to sessionStorage
+                          // }}
                           error={!!touched.paymentmode && !!errors.paymentmode}
                           helperText={touched.paymentmode && errors.paymentmode}
                           focused
@@ -890,15 +1130,13 @@ const EditOHPayment = () => {
                           id="RatingComments"
                           label={
                             Number(values.Rating) > 0 &&
-                            Number(values.Rating) <= 2 ? (
+                              Number(values.Rating) <= 2 ? (
                               <>
                                 Rating Comments
                                 <span
                                   style={{ color: "red", fontSize: "18px" }}
                                 >
-                                  {" "}
-                                  *
-                                </span>
+                                  {" "}*</span>
                               </>
                             ) : (
                               "Rating Comments (Optional)"
@@ -917,8 +1155,8 @@ const EditOHPayment = () => {
                           }
                           helperText={
                             Number(values.Rating) > 0 &&
-                            Number(values.Rating) <= 2 &&
-                            !values.RatingComments ? (
+                              Number(values.Rating) <= 2 &&
+                              !values.RatingComments ? (
                               <>
                                 <span style={{ color: "red" }}>
                                   Comments are required for low ratings
@@ -939,7 +1177,7 @@ const EditOHPayment = () => {
                     gap="20px"
                   >
                     {YearFlag == "true" &&
-                    (mode === "A" || params.OrderType === "O") ? (
+                      (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
@@ -1030,6 +1268,82 @@ const EditOHPayment = () => {
               );
             }}
           </Formik>
+
+          {!dueLoading && dueRows.length > 0 && (
+            <Paper elevation={3} sx={{ margin: "10px" }}>
+              <Box m="5px">
+                <Box
+                  m="5px 0 0 0"
+                  height={dataGridHeight}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rows={dueRows}
+                    columns={Sprintcolumns}
+                    loading={dueLoading}
+                    //rowModesModel={rowModesModel}
+                    getRowId={(row) => row.RecordID}
+                    editMode="cell"
+                    disableRowSelectionOnClick
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    components={{
+                      Toolbar: Custombar,
+                    }}
+                    // componentsProps={{
+                    //   toolbar: { setRows, setRowModesModel },
+                    // }}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                    pagination
+                  />
+                </Box>
+              </Box>
+            </Paper>
+          )}
         </Paper>
       ) : (
         false

@@ -113,7 +113,11 @@ const EditItem = () => {
   );
   const ItemMainData = useSelector((state) => state.formApi.itemMainGetData);
   const ItemFlagData = useSelector((state) => state.formApi.itemFlagGetData);
+  console.log(ItemFlagData, "--ItemFlagData initialvalues");
+  
   const ItemStockData = useSelector((state) => state.formApi.itemStockGetData);
+
+console.log(ItemStockData, "--ItemStockData");
 
   const ItemMainDataLoading = useSelector(
     (state) => state.formApi.itemMainGetDataloading
@@ -370,6 +374,12 @@ const EditItem = () => {
       Price: values.GuidelinePrice || "0.00",
       MinStock: values.MinStock || "0",
       ReorderLevel: values.ReorderLevel || "0",
+      LotNumber: values.locknumber || "",
+      ExpiryDate: values.expirydate,
+      MajorCusStockQty: values.majCusstkQty,
+      MinorCusStockQty: values.minCusstkQty,
+      MajorVenStockQty: values.majvendorstkQty,
+      MinorVenStockQty: values.minvendorstkQty
     };
 
     const response = await dispatch(ItemStockMenuPut({ action, idata }));
@@ -418,6 +428,9 @@ const EditItem = () => {
       WarretyEndPeriod: values.WarrantyEndPeriod || 0,
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
+      LocationID: values.location?.RecordID,
+      BinID: values.bin?.RecordID,
+      ShelvesID: values.shelves?.RecordID
     };
 
     const response = await dispatch(ItemFlagMenuPut({ action, idata }));
@@ -542,6 +555,26 @@ const EditItem = () => {
     UnderEmployeeCustody:
       ItemFlagData?.UnderEmployeeCustody == "Y" ? true : false,
     Tradable: ItemFlagData?.Tradable == "Y" ? true : false,
+       location: ItemFlagData?.LocationID
+    ? {
+        RecordID: ItemFlagData.LocationID || 0,
+        Name: ItemFlagData.LocationName || "", // fallback
+      }
+    : null,
+       bin: ItemFlagData?.BinID
+    ? {
+        RecordID: ItemFlagData.BinID || 0,
+        Name: ItemFlagData.BinName || "", // fallback
+      }
+    : null,
+   shelves: ItemFlagData?.ShelvesID
+    ? {
+        RecordID: ItemFlagData.ShelvesID || 0,
+        Name: ItemFlagData.ShelvesName || "", // fallback
+      }
+    : null,
+  
+  
   };
   const StockinitialValues = {
     Code: ItemStockData?.Code || "",
@@ -558,6 +591,8 @@ const EditItem = () => {
     minvendorstkQty: ItemStockData?.MinorVenStockQty || "",
     MinStock: ItemStockData?.MinStock || "",
     ReorderLevel: ItemStockData?.ReorderLevel || "",
+    locknumber: ItemStockData?.LotNumber,
+    expirydate: ItemStockData?.ExpiryDate
   };
   // const selectCellRowData = ({ rowData, mode, field, setFieldValue, type }) => {
   //   setFunMode(mode);
@@ -1249,6 +1284,118 @@ const EditItem = () => {
                         inputProps: { readOnly: true },
                       }}
                     />
+
+  <CheckinAutocomplete
+                        name="location"
+                        label="Location"
+                        // label={
+                        //   <>
+                        //     Supplier
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </>
+                        // }
+                        id="location"
+                        value={values.location}
+                        onChange={(newValue) => {
+                          setFieldValue("location", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          // setFieldTouched("location", true);
+
+                          // setFieldValue(
+                          //   "productCategoryID",
+                          //   newValue.CrmItemCategoryID || ""
+                          // );
+                          // setTimeout(() => {
+                          //   commentsRef.current?.focus();
+                          // }, 100);
+                        }}
+                        error={!!touched.location && !!errors.location}
+                        helperText={touched.location && errors.location}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2159","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      />
+
+                         <CheckinAutocomplete
+                        name="bin"
+                        label="Bin"
+                        // label={
+                        //   <>
+                        //     Supplier
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </>
+                        // }
+                        id="bin"
+                        value={values.bin}
+                        onChange={(newValue) => {
+                          setFieldValue("bin", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          // setFieldTouched("bin", true);
+
+                          // setFieldValue(
+                          //   "productCategoryID",
+                          //   newValue.CrmItemCategoryID || ""
+                          // );
+                          // setTimeout(() => {
+                          //   commentsRef.current?.focus();
+                          // }, 100);
+                        }}
+                        error={!!touched.bin && !!errors.bin}
+                        helperText={touched.bin && errors.bin}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
+                      />
+                      <Box
+   sx={{
+    gridColumn: "span 2",
+    width: "50%"
+  }}
+>
+                         <CheckinAutocomplete
+                        name="shelves"
+                        label="Shelves"
+                        // label={
+                        //   <>
+                        //     Supplier
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </>
+                        // }
+                        id="shelves"
+                        value={values.shelves}
+                        onChange={(newValue) => {
+                          setFieldValue("shelves", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          // setFieldTouched("shelves", true);
+
+                          // setFieldValue(
+                          //   "productCategoryID",
+                          //   newValue.CrmItemCategoryID || ""
+                          // );
+                          // setTimeout(() => {
+                          //   commentsRef.current?.focus();
+                          // }, 100);
+                        }}
+                        error={!!touched.shelves && !!errors.shelves}
+                        helperText={touched.shelves && errors.shelves}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
+                      />
+          </Box> 
+
+
                     <Box>
                       <FormControlLabel
                         control={
@@ -1302,7 +1449,7 @@ const EditItem = () => {
                     </Box>
 
                     {/* CHECKBOX */}
-                    <Box>
+                  <Box>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -1391,7 +1538,9 @@ const EditItem = () => {
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
                       /> */}
-                    </Box>
+               </Box> 
+
+
                     {/* {values.ServiceAndMaintenance && (
                       <>
                         <TextField
@@ -1973,32 +2122,55 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
+                      <TextField
+                      name="locknumber"
+                      type="number"
+                      id="locknumber"
+                      label="Lot Number"
+                      // label={
+                      //   <span>
+                      //     Lock Number{" "}
+                      //     <span
+                      //       style={{
+                      //         fontSize: "20px",
+                      //         color: "red",
+                      //       }}
+                      //     >
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
+                      variant="standard"
+                      focused
+                      value={values.locknumber}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.locknumber && !!errors.locknumber}
+                      helperText={touched.locknumber && errors.locknumber}
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    />
+                     <TextField
+                                            name="expirydate"
+                                            type="date"
+                                            id="expirydate"
+                                            label="Expiry Date"
+                                            variant="standard"
+                                            focused
+                                            inputFormat="YYYY-MM-DD"
+                                            value={values.expirydate}
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            error={!!touched.expirydate && !!errors.expirydate}
+                                            helperText={touched.expirydate && errors.expirydate}
+                                            sx={{ background: "" }}
+                                          // required
+                                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                                          />
                   </Box>
-                  {/* BUTTONS */}
-                  <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    padding={1}
-                    gap={2}
-                  >
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
-                    >
-                      Save
-                    </LoadingButton>
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      //onClick={() => navigate(-1)}
-                      onClick={() => setScreen("0")}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
+                 
                   {/* ===== STOCK ===== */}
                   <Divider sx={{ mt: 2 }} />
                   <Typography variant="h6" padding={1}>
@@ -2028,7 +2200,7 @@ const EditItem = () => {
                       error={!!touched.BoxQuantity && !!errors.BoxQuantity}
                       helperText={touched.BoxQuantity && errors.BoxQuantity}
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
@@ -2045,7 +2217,7 @@ const EditItem = () => {
                       error={!!touched.PieceQuantity && !!errors.PieceQuantity}
                       helperText={touched.PieceQuantity && errors.PieceQuantity}
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
@@ -2080,7 +2252,7 @@ const EditItem = () => {
                       error={!!touched.majCusstkQty && !!errors.majCusstkQty}
                       helperText={touched.majCusstkQty && errors.majCusstkQty}
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
@@ -2097,7 +2269,7 @@ const EditItem = () => {
                       error={!!touched.minCusstkQty && !!errors.minCusstkQty}
                       helperText={touched.minCusstkQty && errors.minCusstkQty}
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
@@ -2136,7 +2308,7 @@ const EditItem = () => {
                         touched.majvendorstkQty && errors.majvendorstkQty
                       }
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
@@ -2157,10 +2329,36 @@ const EditItem = () => {
                         touched.minvendorstkQty && errors.minvendorstkQty
                       }
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
+                  </Box>
+
+                   {/* BUTTONS */}
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap={2}
+                  >
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      color="secondary"
+                      loading={isLoading}
+                    //disabled={mode == "V" ? true : false}
+                    >
+                      Save
+                    </LoadingButton>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      //onClick={() => navigate(-1)}
+                      onClick={() => setScreen("0")}
+                    >
+                      Cancel
+                    </Button>
                   </Box>
                 </Form>
               )}

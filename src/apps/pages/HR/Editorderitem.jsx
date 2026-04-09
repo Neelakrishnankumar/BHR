@@ -27,6 +27,7 @@ import {
   DefaultProductDeliveryChargeGet,
   fetchApidata,
   getFetchData,
+  ItempriceGet,
   postApidata,
   postData,
   replacementQtyGet,
@@ -169,6 +170,22 @@ const EditOrderitem = () => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
   }, [location.key]);
 
+
+  const computedPrice =
+    mode === "A"
+      ? DefaultProductDeliveryChargeGetData?.Price || 0
+      : data.Price || 0;
+
+  const computedQty = data.Quantity || 1;
+  const computedDiscount = data.Discount || 0;
+
+  const computedNet =
+    computedDiscount === 0
+      ? computedPrice
+      : computedPrice - (computedPrice * computedDiscount) / 100;
+
+  const computedAmount = (computedNet * computedQty).toFixed(2);
+
   const InitialValue = {
     quantity: data.Quantity || 1,
     damageqty: data.DamageQty,
@@ -185,7 +202,8 @@ const EditOrderitem = () => {
           ? DefaultProductDeliveryChargeGetData?.Price
           : data.Price) || 0
         : 0),
-    amount: data.Amount,
+    // netprice: data.NetPrice ?? computedNet,
+    amount: data.Amount !== "" ? data.Amount : computedAmount,
     discount: data.Discount || 0,
     // PurchaseType: data.PurchaseType || "Purchase",
     PurchaseType: data.DamageQty > 0 ? "Damage" : data.ReturnQty > 0 ? "Return" : "Purchase",
@@ -659,12 +677,41 @@ const EditOrderitem = () => {
                         variant="outlined"
                         value={values.product}
                         onBlur={() => setFieldTouched("product", true)}
-                        onChange={(newValue) => {
+                        // onChange={(newValue) => {
+                        //   const prevProduct = values.product;
+                        //   // Set the selected product
+                        //   setFieldValue("product", newValue);
+
+                        //   // If nothing selected (cleared)
+                        //   if (!newValue) {
+                        //     setFieldValue("price", "");
+                        //     setFieldValue("discount", "");
+                        //     setFieldValue("netprice", "");
+                        //     setFieldValue("quantity", "");
+                        //     setFieldValue("amount", "");
+                        //     return;
+                        //   }
+
+                        //   //  If SAME product is selected again — DO NOTHING
+                        //   if (
+                        //     prevProduct &&
+                        //     prevProduct.RecordID === newValue.RecordID
+                        //   ) {
+                        //     console.log("Same product selected — no reset");
+                        //     return;
+                        //   }
+
+                        //   // ★ If NEW product selected → reset all dependent fields
+                        //   setFieldValue("price", newValue.Price);
+                        //   setFieldValue("discount", "");
+                        //   setFieldValue("netprice", "");
+                        //   setFieldValue("quantity", "");
+                        //   setFieldValue("amount", "");
+                        // }}
+                        onChange={async (newValue) => {
                           const prevProduct = values.product;
-                          // Set the selected product
                           setFieldValue("product", newValue);
 
-                          // If nothing selected (cleared)
                           if (!newValue) {
                             setFieldValue("price", "");
                             setFieldValue("discount", "");
@@ -674,21 +721,53 @@ const EditOrderitem = () => {
                             return;
                           }
 
-                          //  If SAME product is selected again — DO NOTHING
-                          if (
-                            prevProduct &&
-                            prevProduct.RecordID === newValue.RecordID
-                          ) {
-                            console.log("Same product selected — no reset");
+                          if (prevProduct && prevProduct.RecordID === newValue.RecordID) {
                             return;
                           }
 
-                          // ★ If NEW product selected → reset all dependent fields
-                          setFieldValue("price", newValue.Price);
-                          setFieldValue("discount", "");
-                          setFieldValue("netprice", "");
-                          setFieldValue("quantity", "");
-                          setFieldValue("amount", "");
+                          try {
+                            const res = await dispatch(
+                              ItempriceGet({
+                                ItemID: newValue.RecordID,
+                                PartyID: PartyRecordID,
+                                CompanyID
+                              })
+                            ).unwrap();
+
+                            console.log("API Response:", res);
+
+                            if (res.Status === "Y") {
+                              // setFieldValue("price", res.Price);   // THIS LINE SETS 60.00
+
+                              const price = parseFloat(res.Price || 0);
+                              // ✅ SET PRICE
+                              setFieldValue("price", price.toFixed(2));
+
+                              // ✅ SET DISCOUNT = 0
+                              const discount = 0;
+                              setFieldValue("discount", discount);
+
+                              // ✅ CALCULATE NET PRICE
+                              const netPrice = price - (price * discount) / 100;
+                              setFieldValue("netprice", netPrice.toFixed(2));
+
+                              // OPTIONAL: reset qty & amount
+                              setFieldValue("quantity", "");
+                              setFieldValue("amount", "");
+
+                            } else {
+                              setFieldValue("price", "");
+                            }
+
+                          } catch (err) {
+                            console.error("Price fetch failed", err);
+                            setFieldValue("price", "");
+                          }
+
+                          // setFieldValue("discount", "");
+                          // setFieldValue("netprice", "");
+                          // setFieldValue("quantity", "");
+                          // setFieldValue("amount", "");
                         }}
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
@@ -722,7 +801,8 @@ const EditOrderitem = () => {
                       //label="Discount (In Percentage)"
                       label={
                         <>
-                          Discount / Add On(%)
+                          {/* Discount / Add On(%) */}
+                          Discount / Add-on (%)
                           <span style={{ color: "red", fontSize: "20px" }}>
                             {" "}
                             *{" "}

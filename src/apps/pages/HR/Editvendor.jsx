@@ -18,11 +18,13 @@ import {
   Paper,
   Breadcrumbs,
   Grid,
+  Chip,
 } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import store from "../../../index";
 import {
   fileUpload,
+  fnFileUpload,
   fnImageUpload,
   imageUpload,
 } from "../../../store/reducers/Imguploadreducer";
@@ -46,8 +48,9 @@ import {
   VendorRegisterFetchData,
   VendorDefaultPUTdata,
   VendorDefaultFetchData,
+  explorePostData,
 } from "../../../store/reducers/Formapireducer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
@@ -58,6 +61,14 @@ import {
   CheckinAutocomplete,
   OrderItemAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ArrowBack, CloudUpload } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -72,6 +83,7 @@ const Editvendor = () => {
   const [loading, setLoading] = useState(false);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   // Redux state
+  const [page, setPage] = React.useState(secondaryCurrentPage);
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const state = location.state || {};
@@ -102,11 +114,13 @@ const Editvendor = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
-   const LoginID = sessionStorage.getItem("loginrecordID");
+  const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
-
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
   const [panUrl, setPanUrl] = useState(null);
   const [gstImage, setGstImage] = useState("");
   const [gstUrl, setGstUrl] = useState(null);
@@ -124,6 +138,10 @@ const Editvendor = () => {
   const [validationSchema3, setValidationSchema3] = useState(null);
   const [validationSchema4, setValidationSchema4] = useState(null);
 
+  const [funMode, setFunMode] = useState("A");
+  const [laomode, setLaoMode] = useState("A");
+  const colors = tokens(theme.palette.mode);
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -138,7 +156,8 @@ const Editvendor = () => {
 
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
-            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+            // .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+            .matches(/^(\d{10,11})$/, "Enter a valid Mobile or Landline Number"),
 
           emailid: Yup.string()
             .nullable()
@@ -232,14 +251,91 @@ const Editvendor = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
+  // useEffect(() => {
+  //   if (recID && mode === "E") {
+  //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+  //   } else {
+  //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+  //   }
+  // }, [location.key, recID, mode]);
   useEffect(() => {
-    if (recID && mode === "E") {
-      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
-    } else {
-      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
+    if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+      }
     }
-  }, [location.key, recID, mode]);
+  }, [location.key, recID, mode, show]);
 
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+
+  // let VISIBLE_FIELDS;
+
+  // if (show == "5") {
+  //   VISIBLE_FIELDS = [
+  //     "slno",
+  //     "NextRenewalRequiredDate",
+  //     "Description",
+  //     "Category",
+  //     "action",
+  //   ];
+  // }
+  const VISIBLE_FIELDS =
+    show == "5"
+      ? [
+        "slno",
+        "Code",
+        "Documents",
+        // "Party",
+        // "Unit",
+        "action",
+      ]
+      : [];
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        // valueGetter: (params) =>
+        //   page * pageSize +
+        //   params.api.getRowIndexRelativeToVisibleRows(params.id) +
+        //   1,
+        renderCell: (params) => params.row.SLNO,
+
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const [rowCount, setRowCount] = useState(0);
+  const [uploadFile, setUploadFile] = useState();
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
+
+  const [empLoaData, SetEmpLoaData] = useState({
+    recordID: "",
+    description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal: false,
+    Attachment: "",
+  });
   if (!data && getLoading) {
     return <LinearProgress />;
   }
@@ -426,9 +522,9 @@ const Editvendor = () => {
       console.log(event.target.value, "--find event.target.value");
 
       if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID:"TR243", get: "", recID }));
+        dispatch(getFetchData({ accessID: "TR243", get: "", recID }));
       }
     }
     if (event.target.value == "3") {
@@ -445,6 +541,18 @@ const Editvendor = () => {
         dispatch(VendorDefaultFetchData({ get: "", recID }));
       }
     }
+    if (event.target.value == "5") {
+      dispatch(
+        fetchExplorelitview(
+          "TR364",
+          "Party Documents",
+          // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_HVRECID))`,
+          ""
+        )
+      );
+
+    }
     if (event.target.value == "1") {
       dispatch(PartyContactget({ VendorID: recID }));
     }
@@ -453,6 +561,83 @@ const Editvendor = () => {
       dispatch(PartyBankget({ VendorID: recID }));
     }
   };
+
+
+  const changeHandler = async (event) => {
+    setUploading(true);   // Start loader
+
+    setSelectedFile(event.target.files[0]);
+
+    console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("type", "images");
+
+    const fileData = await dispatch(fnFileUpload(formData));
+    var filePath = store.getState().globalurl.attachmentUrl + uploadFile
+
+    console.log("fileData" + JSON.stringify(fileData));
+    setUploadFile(fileData.payload.apiResponse);
+
+    setUploading(false);  // Stop loader
+  };
+
+  const fnViewFile = (values) => {
+    const baseUrl = store.getState().globalurl.attachmentUrl;
+
+    const fileName = uploadFile || values.Attachment; // ✅ KEY FIX
+
+    console.log("Final fileName:", fileName);
+
+    if (!fileName) {
+      toast.error("No file to view");
+      return;
+    }
+
+    const encodedFileName = encodeURIComponent(fileName);
+    const filePath = `${baseUrl}${encodedFileName}`;
+
+    console.log("Opening:", filePath);
+
+    window.open(filePath, "_blank");
+  };
+  function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>
+            {show == "5"
+              ? "List of Documents"
+              : ""
+            }
+          </Typography>
+          {show != "20" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          {show != "5" && (
+            <Tooltip title="ADD">
+              <IconButton type="reset">
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
   // Page params
 
   const InitialValue = {
@@ -462,18 +647,18 @@ const Editvendor = () => {
     locality:
       data.LocalityID && data.LocalityID !== "0"
         ? {
-            RecordID: data.LocalityID,
-            Code: data.LocalityCode,
-            Name: data.LocalityName,
-          }
+          RecordID: data.LocalityID,
+          Code: data.LocalityCode,
+          Name: data.LocalityName,
+        }
         : null,
     ReferenceBy:
       data.ReferenceID && data.ReferenceID !== "0"
         ? {
-            RecordID: data.ReferenceID,
-            Code: data.ReferenceByName,
-            Name: data.ReferenceByName,
-          }
+          RecordID: data.ReferenceID,
+          Code: data.ReferenceByName,
+          Name: data.ReferenceByName,
+        }
         : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
@@ -500,8 +685,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -537,11 +722,11 @@ const Editvendor = () => {
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
       Source: "Cloud",
-      CreateBy:LoginID,
+      CreateBy: LoginID,
     };
 
     try {
-      const response = await dispatch(postData({ accessID:"TR243V1", action, idata }));
+      const response = await dispatch(postData({ accessID: "TR243V1", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -589,8 +774,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       PanCardNo: values.Pancardnumber,
@@ -604,7 +789,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorRegisterpostData({ accessID:"TR243", action, idata })
+        VendorRegisterpostData({ accessID: "TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -625,14 +810,14 @@ const Editvendor = () => {
     name: partyDefaultgetdata.Name || "",
     Product:
       partyDefaultgetdata.DefaultProductID &&
-      partyDefaultgetdata.DefaultProductID !== "0"
+        partyDefaultgetdata.DefaultProductID !== "0"
         ? {
-            RecordID: partyDefaultgetdata.DefaultProductID,
-            Name: partyDefaultgetdata.DefaultProductName,
-          }
+          RecordID: partyDefaultgetdata.DefaultProductID,
+          Name: partyDefaultgetdata.DefaultProductName,
+        }
         : partyDefaultgetdata.DefaultProductID == null
-        ? []
-        : null,
+          ? []
+          : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
     DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
     // DefaultPaymentMode:
@@ -652,8 +837,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       DefaultProduct: values.Product.RecordID || 0,
@@ -663,7 +848,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorDefaultPUTdata({ accessID:"TR243", action, idata })
+        VendorDefaultPUTdata({ accessID: "TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -698,8 +883,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -753,8 +938,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -768,8 +953,8 @@ const Editvendor = () => {
       AadhatNo2: values.aadharcardnumber2,
       // ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
       // ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
-      ContactPersonIDProofImg1:  ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
-      ContactPersonIDProofImg2:  ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
+      ContactPersonIDProofImg1: ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
+      ContactPersonIDProofImg2: ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
     };
 
     try {
@@ -787,6 +972,109 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
+
+
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
+    setFunMode(mode);
+    setLaoMode(mode);
+
+    if (mode == "A") {
+      SetEmpLoaData({
+        description: "",
+        Attachment: "",
+        recordID: "",
+        category: "",
+        RenewalDate: "",
+        personal: false,
+        renewal: false,
+      });
+    } else {
+
+      if (field == "action") {
+        SetEmpLoaData({
+          description: rowData.Description,
+          recordID: rowData.RecordID,
+          category: rowData.Category,
+          RenewalDate: rowData.NextRenewalRequiredDate,
+          personal: rowData.Personal,
+          renewal: rowData.RenewalRequired,
+          Attachment: rowData.Attachment,
+        });
+      }
+    }
+    console.log(selectCellRowData, "Itemservices");
+  };
+
+
+  const AttachmentInitialValues = {
+    code: data.Code,
+    description: data.Name,
+    LoaDescription: empLoaData.description,
+    personal: empLoaData.personal === "Y" ? true : false,
+    renewal: empLoaData.renewal === "Y" ? true : false,
+    // category: Data.Category,
+    Attachment: empLoaData.Attachment || "",
+    category:
+      empLoaData.category == "Education"
+        ? "EC"
+        : empLoaData.category == "Insurance "
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
+    RenewalDate: empLoaData.RenewalDate || "",
+    Sortorder: "",
+  };
+  const FnAttachment = async (values, resetForm, del) => {
+    let action =
+      laomode === "A" && !del
+        ? "insert"
+        : laomode === "E" && del
+          ? "harddelete"
+          : "update";
+
+    console.log(values);
+
+    const idata = {
+      RecordID: empLoaData.recordID,
+      EmployeeID: recID,
+      Description: values.LoaDescription,
+      //  ImageName: ImageName ? ImageName:Data.ImageName,
+      Attachment: uploadFile || values.Attachment || "",
+      Personal: values.personal === true ? "Y" : "N",
+      RenewalRequired: values.renewal === true ? "Y" : "N",
+      Category: values.category,
+      NextRenewalRequiredDate: values.RenewalDate,
+      Sortorder: 0,
+      CompanyID,
+    };
+    const response = await dispatch(
+      explorePostData({ accessID: "TR210", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      dispatch(
+        fetchExplorelitview(
+          "TR210",
+          "List of Documents",
+          `EmployeeID=${recID}`,
+          ""
+        )
+      );
+      resetForm();
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
+
 
   const fnLogOut = (props) => {
     Swal.fire({
@@ -808,6 +1096,8 @@ const Editvendor = () => {
       }
     });
   };
+
+
 
   return (
     <React.Fragment>
@@ -890,6 +1180,17 @@ const Editvendor = () => {
                 ) : (
                   false
                 )}
+                {show == "5" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    List Of Documents
+                  </Typography>
+                ) : (
+                  false
+                )}
               </Breadcrumbs>
             </Box>
           </Box>
@@ -910,6 +1211,8 @@ const Editvendor = () => {
                   <MenuItem value={4}>Default Settings</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
+                  <MenuItem value={5}>List Of Documents</MenuItem>
+                  {/* <MenuItem value={6}>Unit</MenuItem>  */}
                   {/* {initialValues.employeetype === "CI" ? (
                                               <MenuItem value={8}>Contracts In</MenuItem>
                                             ) : null}
@@ -1000,7 +1303,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1066,7 +1369,7 @@ const Editvendor = () => {
                     id="mobilenumber"
                     label={
                       <>
-                        Contact Mobile Number
+                        Contact Mobile or Landline Number
                         <span style={{ color: "red", fontSize: "20px" }}>
                           *
                         </span>
@@ -1079,7 +1382,7 @@ const Editvendor = () => {
                     onChange={(e) => {
                       const value = e.target.value;
                       // Only allow numbers and max 10 digits
-                      if (/^\d{0,10}$/.test(value)) {
+                      if (/^\d{0,11}$/.test(value)) {
                         handleChange(e);
                       }
                     }}
@@ -1087,10 +1390,10 @@ const Editvendor = () => {
                     helperText={touched.mobilenumber && errors.mobilenumber}
                     inputProps={{ maxLength: 10 }}
                     sx={{ backgroundColor: "#ffffff" }}
-                    InputProps={{ 
+                    InputProps={{
                       inputProps: {
-                        style:{textAlign: 'left'}
-                      } 
+                        style: { textAlign: 'left' }
+                      }
                     }}
                   />
                   <TextField
@@ -1111,7 +1414,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
 
                   <TextField
@@ -1556,7 +1859,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1894,13 +2197,13 @@ const Editvendor = () => {
                         onClick={() => {
                           partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
                             ? window.open(
+                              ID1Image
+                                ? store.getState().globalurl.attachmentUrl +
                                 ID1Image
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      ID1Image
-                                  : store.getState().globalurl.attachmentUrl +
-                                      partyContactgetdata.ContactPersonIDProofImg1,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                partyContactgetdata.ContactPersonIDProofImg1,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -1936,13 +2239,13 @@ const Editvendor = () => {
                         onClick={() => {
                           partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
                             ? window.open(
+                              ID2Image
+                                ? store.getState().globalurl.attachmentUrl +
                                 ID2Image
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      ID2Image
-                                  : store.getState().globalurl.attachmentUrl +
-                                      partyContactgetdata.ContactPersonIDProofImg2,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                partyContactgetdata.ContactPersonIDProofImg2,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2068,7 +2371,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -2520,7 +2823,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2640,7 +2943,7 @@ const Editvendor = () => {
                         sx={{
                           backgroundColor: "#ffffff",
                         }}
-                        // autoFocus
+                      // autoFocus
                       />
 
                       <TextField
@@ -2663,7 +2966,7 @@ const Editvendor = () => {
                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                           },
                         }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="verifieddate"
@@ -2716,13 +3019,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.PanImg || panImage
                             ? window.open(
+                              panImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 panImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      panImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.PanImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.PanImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2752,13 +3055,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.GstImg || gstImage
                             ? window.open(
+                              gstImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 gstImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      gstImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.GstImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.GstImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2855,7 +3158,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2960,7 +3263,7 @@ const Editvendor = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        // autoFocus
+                      // autoFocus
                       />
                       {/* <TextField
                         name="DefaultPaymentMode"
@@ -3040,6 +3343,210 @@ const Editvendor = () => {
               </form>
             )}
           </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+
+      {show == "5" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={InitialValue}
+            // validationSchema={validationSchema2}
+            enableReinitialize={true}
+          // onSubmit={(values, { resetForm, setFieldValue }) => {
+          //   setTimeout(() => {
+          //     FnAttachment(values, resetForm, false, setFieldValue);
+          //   }, 100);
+          // }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                }}
+              >
+
+
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="code"
+                    name="code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Code"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Name"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                  {/* </FormControl> */}
+                </Box>
+
+                <Box
+                padding={1}
+                  m="5px 0 0 0"
+                  // height="50vh"
+                  height={dataGridHeightExplore}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rows={explorelistViewData}
+                    columns={columns}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.RecordID}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) =>
+                      setPageSize(newPageSize)
+                    }
+                    onCellClick={(params) => {
+                      selectCellRowData({
+                        rowData: params.row,
+                        mode: "E",
+                        field: params.field,
+                      });
+                    }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: Employee,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    loading={exploreLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                  />
+                </Box>
+
+
+
+              </form>
+            )}
+          </Formik>
+          <Box display="flex" justifyContent="space-between" padding={1}>
+
+ <Box>
+                    <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                      Actions Guide
+                    </Typography>
+                    <Box display="flex"
+                      flexDirection="row"
+                      gap="15px"
+                      sx={{ overflowY: "auto" }}>
+                      <Chip
+                        icon={<VisibilityIcon color="primary" />}
+                        label="Open Document"
+                        variant="outlined"
+                      />
+                    </Box>
+                  </Box>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+              <Button
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  setScreen("0");
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
         </Paper>
       ) : (
         false

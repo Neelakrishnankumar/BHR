@@ -80,7 +80,7 @@ import {
 } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { Delete, Psychology, Category, PeopleAlt } from "@mui/icons-material";
+import { Delete, Psychology, Category, PeopleAlt, TextSnippet } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -114,6 +114,10 @@ import { FaFileExcel } from "react-icons/fa";
 import { getConfig } from "../../config";
 import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -158,8 +162,34 @@ const Listview = () => {
   const listViewData = useSelector((state) => state.listviewApi.rowData);
 
   const loading = useSelector((state) => state.listviewApi.loading);
-  const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
-    useSelector((state) => state.screenRights.data);
+  // const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
+  //   useSelector((state) => state.screenRights.data);
+  const rights = useSelector((state) => state.screenRights.data) || {};
+  const {
+    UGA_ADD,
+    UGA_VIEW,
+    UGA_MOD,
+    UGA_DEL,
+    UGA_PROCESS,
+    UGA_PRINT,
+  } = rights;
+
+  useEffect(() => {
+    const Groupaccess =
+      JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
+
+    const found = Groupaccess.find(
+      (item) =>
+        String(item.UGA_ACCESSID).trim() ===
+        String(accessID).trim()
+    );
+
+    console.log("AccessID:", accessID);
+    console.log("Matched Rights:", found);
+
+    dispatch(screenRightsData(found));
+  }, [accessID, dispatch]);
+  console.log("🚀 ~ file: Listview.jsx:59 ~ Listview ~ UGA_ADD:", UGA_ADD);
   // console.log("🚀 ~ file: Listview.jsx:61 ~ Listview ~ UGA_MOD:", UGA_MOD)
 
   // console.log("🚀 ~ file: Listview.jsx:60 ~ Listview ~ rightsData:", JSON.stringify(rightsData))
@@ -374,7 +404,7 @@ const Listview = () => {
                   fontWeight: 600,
                 }}
               >
-                {absValue}
+                {absValue.toFixed(2)}
               </span>
             );
           },
@@ -561,15 +591,16 @@ const Listview = () => {
               false
             )}
 
-            {/* <Tooltip title="Bulk Upload">
+           {accessID == "TR122" || accessID == "TR026" ? (
+            <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip> */}
-
+            </Tooltip>
+):null}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -652,41 +683,42 @@ const Listview = () => {
             ) : accessID == "TR330" ? (
               false
             )
-            // : accessID == "TR336" ? (
+              // : accessID == "TR336" ? (
               //false
-            //)
-            : accessID == "TR337" ? (
-              false
-            ): YearFlag == "true" ? (
-              // UGA_ADD ? (
+              //)
+              : accessID == "TR337" ? (
+                false
+              )
+                // : YearFlag == "true" ? (
+                : UGA_ADD ? (
 
-              <Tooltip arrow title="Add">
-                <IconButton>
-                  <AddOutlinedIcon
-                    onClick={() => {
-                      navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
-                        }`,
-                        {
-                          state: {
-                            CustomerID: "-1",
-                            ProductID: "-1",
-                            BomID: "-1",
-                          },
-                        }
-                      );
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              // ) : (
-              //   false
-              // )
-              false
-            )}
+                  <Tooltip arrow title="Add">
+                    <IconButton>
+                      <AddOutlinedIcon
+                        onClick={() => {
+                          navigate(
+                            `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                            }`,
+                            {
+                              state: {
+                                CustomerID: "-1",
+                                ProductID: "-1",
+                                BomID: "-1",
+                              },
+                            }
+                          );
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  // ) : (
+                  //   false
+                  // )
+                  false
+                )}
 
-              {/* <Tooltip arrow title="Import Excel">
+            {/* <Tooltip arrow title="Import Excel">
                 <IconButton
                   size="large"
                   color="primary"
@@ -749,7 +781,7 @@ const Listview = () => {
               }}
             />
             {/* {accessID == "TR122" && (
-              <Box display="flex" alignItems="center" gap={2} mt={3}>
+              <Box display="flex" alignItems="center" gap={2} >
                 <TextField
                   value={ImageName?.name || ""}
                   size="small"
@@ -843,7 +875,7 @@ const Listview = () => {
             ).unwrap();
             if (response.Status == "Y") {
               toast.success(response.Msg);
-             // window.location.reload();
+              // window.location.reload();
             } else {
               toast.error(response.Msg ? response.Msg : "Error");
             }
@@ -950,8 +982,8 @@ const Listview = () => {
               }}
               key={accessID}
               rows={rows}
-              // columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
-              columns={columns}
+              columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
+              // columns={columns}
               loading={loading}
               disableSelectionOnClick
               rowHeight={dataGridRowHeight}
@@ -1210,7 +1242,7 @@ const Listview = () => {
                       const forcedFileName = `${formattedScreenName}.xlsx`;
                       console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
 
-                      
+
                       formData.append("CompanyID", compID);
                       formData.append("screename", screenName);
                       formData.append("Sync", values.Sync);
@@ -1228,7 +1260,7 @@ const Listview = () => {
 
                       if (response.Status == "Y") {
                         toast.success(response.Msg);
-                       // window.location.reload();
+                        // window.location.reload();
                       } else {
                         toast.error(response.Msg ? response.Msg : "Error");
                       }
@@ -2029,37 +2061,37 @@ const Listview = () => {
                             //     )
                             //   }
                             // </PDFDownloadLink>
-                            
-<BlobProvider
-  document={
-    <OrdEnqProductPDF
-      data={listViewData}
-      Product={values?.product?.Name}
-      Party={values?.party?.Name}
-      filters={{
-        fromdate: values?.fromdate,
-        todate: values?.date,
-        ordertype: values?.ordertype,
-        // Imageurl: baseurlUAAM,
-        // HeaderImg: HeaderImg,
-        // FooterImg: FooterImg,
-      }}
-    />
-  }
->
-  {({ url, loading }) =>
-    loading ? (
-      <PictureAsPdfIcon
-        sx={{ fontSize: 24, opacity: 0.5 }}
-      />
-    ) : (
-      <PictureAsPdfIcon
-        sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
-        onClick={() => window.open(url, "_blank")}
-      />
-    )
-  }
-</BlobProvider>
+
+                            <BlobProvider
+                              document={
+                                <OrdEnqProductPDF
+                                  data={listViewData}
+                                  Product={values?.product?.Name}
+                                  Party={values?.party?.Name}
+                                  filters={{
+                                    fromdate: values?.fromdate,
+                                    todate: values?.date,
+                                    ordertype: values?.ordertype,
+                                    // Imageurl: baseurlUAAM,
+                                    // HeaderImg: HeaderImg,
+                                    // FooterImg: FooterImg,
+                                  }}
+                                />
+                              }
+                            >
+                              {({ url, loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 24, opacity: 0.5 }}
+                                  />
+                                ) : (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+                                    onClick={() => window.open(url, "_blank")}
+                                  />
+                                )
+                              }
+                            </BlobProvider>
                           ) : (
                             <PDFDownloadLink
                               document={
@@ -2092,7 +2124,7 @@ const Listview = () => {
                             </PDFDownloadLink>
                           )}
 
-{/* <FaFileExcel
+                          {/* <FaFileExcel
   size={20}
   color="#1D6F42"
   style={{ cursor: "pointer" }}
@@ -3712,8 +3744,8 @@ const Listview = () => {
           </Box>
           {accessID !== "TR313" && (
             <Box display="flex" alignItems="center" marginLeft={3}>
-              <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
-                Legend
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={-2}>
+                Actions Guide
               </Typography>
             </Box>)}
         </Box>
@@ -4105,6 +4137,11 @@ const Listview = () => {
               variant="outlined"
             // sx={{ marginLeft: "50px" }}
             />
+            <Chip
+              icon={<RestartAltOutlinedIcon color="error" />}
+              label="Reset"
+              variant="outlined"
+            />
           </Box>
         ) : accessID == "TR313" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -4132,6 +4169,19 @@ const Listview = () => {
             <Chip
               icon={<Visibility color="primary" />}
               label="View"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR336" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<SaveOutlinedIcon color="primary" />}
+              label="List Of Documents"
               variant="outlined"
             />
           </Box>
@@ -4163,6 +4213,21 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
+        )
+        : accessID == "TR361" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<TextSnippetIcon color="primary" />}
+              label="Document"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
         ) : accessID == "TR330" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
@@ -4172,90 +4237,91 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) 
-        : accessID == "TR337" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            <Chip
-              icon={<ArrowForwardIosOutlinedIcon color="primary" />}
-              label="SOP Documents"
-              variant="outlined"
-            // sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        ): accessID == "TR316" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<QrCodeScannerOutlinedIcon color="primary" />}
-              label="HSN Master"
-              variant="outlined"
-            // sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        ) : accessID == "TR099" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Usergroups"
-              variant="outlined"
-            />
-          </Box>
-        ) : accessID == "TR275" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            {/* <Chip
+        )
+          : accessID == "TR337" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+                icon={<DoubleArrowOutlinedIcon color="primary" />}
+                label="SOP Documents"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          ) : accessID == "TR316" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<QrCodeScannerOutlinedIcon color="primary" />}
+                label="HSN Master"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          ) : accessID == "TR099" ? (
+            <Box display="flex" flexDirection="row" padding="25px">
+              <Chip
+                icon={<ListAltOutlinedIcon color="primary" />}
+                label="List of Usergroups"
+                variant="outlined"
+              />
+            </Box>
+          ) : accessID == "TR275" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<Visibility color="primary" />}
-              label="View"
-              variant="outlined"
-            />
-            <Chip
-              icon={<PictureAsPdfIcon color="error" />}
-              label="Download PDF"
-              variant="outlined"
-            />
-            {/* <Chip
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<Visibility color="primary" />}
+                label="View"
+                variant="outlined"
+              />
+              <Chip
+                icon={<PictureAsPdfIcon color="error" />}
+                label="Download PDF"
+                variant="outlined"
+              />
+              {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
             /> */}
-          </Box>
-        ) : accessID == "TR128" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            </Box>
+          ) : accessID == "TR128" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap="5px">
 
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="Gate"
-              variant="outlined"
-            />
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<ListAltOutlinedIcon color="primary" />}
+                label="Gate"
+                variant="outlined"
+              />
 
-          </Box>
-        ) : (
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-          </Box>
-        )}
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="row" padding="25px">
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+            </Box>
+          )}
       </Box>
       <MatxCustomizer
         open={open}

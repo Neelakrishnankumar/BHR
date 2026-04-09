@@ -198,11 +198,20 @@ const Editrequests = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  useEffect(() => {
-    dispatch(fetchApidata(accessID, "get", recID));
+  // useEffect(() => {
+  //   dispatch(fetchApidata(accessID, "get", recID));
 
-  }, []);
-
+  // }, []);
+    const [show, setScreen] = React.useState("0");
+ useEffect(() => {
+      if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(fetchApidata(accessID,"get", recID ));
+      } else {
+        dispatch(fetchApidata(accessID, "get", recID ));
+      }
+    }
+    }, [location.key, recID, mode, show]);
 
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
@@ -643,7 +652,6 @@ const Editrequests = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
-  const [show, setScreen] = React.useState("0");
   // material
   const [supprodata, setSupprodata] = useState({
     RecordID: "",

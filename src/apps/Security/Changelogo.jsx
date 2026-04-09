@@ -83,6 +83,11 @@ const Logochange = () => {
     // const { toggleSidebar, broken, rtl } = useProSidebar();
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     const [errorMsgData, setErrorMsgData] = useState(null);
+    const grace = sessionStorage.getItem("CompanyGraceTime");
+    console.log("CompanyGraceTime:", grace);
+    const timeout = sessionStorage.getItem("CompanySessionTimeOut");
+    console.log("Grace:", grace);
+    console.log("Timeout:", timeout);
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -346,8 +351,9 @@ const Logochange = () => {
             AutoCode: autocode ? "Y" : "N",
             HeaderImg: headerImage,
             FooterImg: footerImage,
-            CompanyName: values.Name ? values.Name : company
-
+            CompanyName: values.Name ? values.Name : company,
+            GraceTime: grace || 15,
+            SessionTimeOut: timeout || 600
         };
         console.log(offaddress, "Address");
         console.log(gst, "gst");
@@ -536,7 +542,7 @@ const Logochange = () => {
                                 mt="20px"
                                 gap="20px"
                             >
-                               
+
                                 <LoadingButton
                                     type="submit"
                                     loading={isLoading}
@@ -556,7 +562,7 @@ const Logochange = () => {
                                 >
                                     Cancel
                                 </Button>
-                                 <Button
+                                <Button
                                     color="success"
                                     variant="contained"
                                     // onClick={() => resetForm()}

@@ -12,6 +12,10 @@ import {
   LinearProgress,
   Paper,
   Breadcrumbs,
+  MenuItem,
+  InputLabel,
+  Select,
+  Chip,
 } from "@mui/material";
 import { Field, Formik } from "formik";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -38,12 +42,21 @@ import { HsnSchema } from "../../Security/validation";
 import { DesignationSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
 import * as Yup from "yup";
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { tokens } from "../../../Theme";
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { useTheme } from "@emotion/react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 // import CryptoJS from "crypto-js";
 const Editdesignation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
+  const theme = useTheme();
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
@@ -61,6 +74,16 @@ const Editdesignation = () => {
   const location = useLocation();
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
+  const [show, setScreen] = React.useState("0");
+
+  const [funMode, setFunMode] = useState("A");
+  const [laomode, setLaoMode] = useState("A");
+  const colors = tokens(theme.palette.mode);
+  const [pageSize, setPageSize] = useState(10);
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -86,11 +109,92 @@ const Editdesignation = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
+  // useEffect(() => {
+  //   dispatch(getFetchData({ accessID, get: "get", recID }));
+  // }, [location.key]);
+
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
-  }, [location.key]);
+    if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID, get: "", recID }));
+      }
+    }
+  }, [show]);
   // *************** INITIALVALUE  *************** //
 
+  const screenChange = (event) => {
+    setScreen(event.target.value);
+    if (event.target.value == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID, get: "", recID }));
+      }
+    }
+    if (event.target.value == "1") {
+      dispatch(
+        fetchExplorelitview(
+          "TR364",
+          "Designation Documents",
+          // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_DRECID))`,
+          ""
+        )
+      );
+
+    }
+
+  };
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+
+
+  const VISIBLE_FIELDS =
+    show == "1"
+      ? [
+        "slno",
+        "Code",
+        "Documents",
+        // "Party",
+        // "Unit",
+        "action",
+      ]
+      : [];
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        // valueGetter: (params) =>
+        //   page * pageSize +
+        //   params.api.getRowIndexRelativeToVisibleRows(params.id) +
+        //   1,
+        renderCell: (params) => params.row.SLNO,
+
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const [rowCount, setRowCount] = useState(0);
+  const [uploadFile, setUploadFile] = useState();
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
   const InitialValue = {
     code: data.Code,
     name: data.Description,
@@ -100,15 +204,50 @@ const Editdesignation = () => {
     disable: data.Disable === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
   };
-
+  function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>
+            {show == "1"
+              ? "List of Documents"
+              : ""
+            }
+          </Typography>
+          {show == "1" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          {show != "1" && (
+            <Tooltip title="ADD">
+              <IconButton type="reset">
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
   const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -191,14 +330,46 @@ const Editdesignation = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
+                  onClick={() => {
+                    setScreen(0);
+                  }}
                 >
                   Designation
                 </Typography>
+                {show == "1" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    List Of Documents
+                  </Typography>
+                ) : (
+                  false
+                )}
               </Breadcrumbs>
             </Box>
           </Box>
 
           <Box display="flex">
+
+            {mode !== "A" ? (
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Explore</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={show}
+                  label="Explore"
+                  onChange={screenChange}
+                >
+                  <MenuItem value={0}>Designation</MenuItem>
+                  <MenuItem value={1}>List Of Documents</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              false
+            )}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -213,7 +384,7 @@ const Editdesignation = () => {
         </Box>
       </Paper>
 
-      {!getLoading ? (
+      {show == "0" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
@@ -269,7 +440,7 @@ const Editdesignation = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -519,6 +690,205 @@ const Editdesignation = () => {
               </form>
             )}
           </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+      {show == "1" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={InitialValue}
+            enableReinitialize={true}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+              // onReset={() => {
+              //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+              //   resetForm();
+              // }}
+              >
+
+
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="code"
+                    name="code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Code"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Name"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                  {/* </FormControl> */}
+                </Box>
+
+                <Box
+                padding={1}
+                  m="5px 0 0 0"
+                  // height="50vh"
+                  // height={dataGridHeight}
+                  height={dataGridHeightExplore}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rows={explorelistViewData}
+                    columns={columns}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.RecordID}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) =>
+                      setPageSize(newPageSize)
+                    }
+                    // onCellClick={(params) => {
+                    //   selectCellRowData({
+                    //     rowData: params.row,
+                    //     mode: "E",
+                    //     field: params.field,
+                    //   });
+                    // }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: Employee,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    loading={exploreLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                  />
+                </Box>
+
+
+
+              </form>
+            )}
+
+          </Formik>
+          <Box display="flex" justifyContent="space-between" padding={1}>
+
+            <Box>
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                Actions Guide
+              </Typography>
+              <Box display="flex"
+                flexDirection="row"
+                gap="15px"
+                sx={{ overflowY: "auto" }}>
+                <Chip
+                  icon={<VisibilityIcon color="primary" />}
+                  label="Open Document"
+                  variant="outlined"
+                />
+              </Box>
+            </Box>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+              <Button
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  setScreen("0");
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
         </Paper>
       ) : (
         false

@@ -232,6 +232,7 @@ const initialState = {
   weightagepostUrl: "",
   employeeattendanceUrl: "",
   payrollattendanceUrl: "",
+  GetPayrollattendaceUrl: "",
   attendanceUrl: "",
   attendanceprocessUrl: "",
   regularizationUrl: "",
@@ -306,6 +307,22 @@ const initialState = {
   Processposturl:"",
   PayslipGetController:"",
   PartyReplacementQtyGet:"",
+  ItempriceGeturl:"",
+  SOPAttachmentsController:"",
+  SOPProcess:"",
+  SOPConfigPost:"",
+  SOPConfigGet:"",
+  SpecimenPost:"",
+  SpecimenGet:"",
+  SopEmpMappingController:"",
+  EmpInventoryGetController:"",
+  EmpInventoryPostController:"",
+  Scoreboard:"",
+  RepaymentScheduleGet:"",
+  PartypendingorderlistgetController:"",
+  SopTimeLineController:"",
+  GetOverflowAffectedOrders:"",
+  PartyReset:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -338,6 +355,7 @@ export const getUrlSlice = createSlice({
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
+      state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
       // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
 
@@ -393,10 +411,10 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.GetPayrollattendaceUrl = APIurl + "PayrollAttendanceGet.php";
       state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
-      state.attendanceprocessUrl =
-        APIurl + "EmpAttendanceHistoryController.php";
+      state.attendanceprocessUrl = APIurl + "EmpAttendanceHistoryController.php";
       state.regularizationUrl = APIurl + "APIController.php?";
       state.settingsgetUrl = APIurl + "HRSubscriptionCodeGetController.php";
       state.settingsPostUrl = APIurl + "HRChangePasswordController.php";
@@ -464,6 +482,8 @@ export const getUrlSlice = createSlice({
       state.LeaveenquiryGetController = APIurl + "HrEmployeeLeaveGetController.php";
       state.OHPaymentUpdateController =
         APIurl + "OHPaymentUpdateController.php";
+      // state.OHPaymentUpdateController =
+      //   APIurl + "OHPaymentUpdateControllerV1.php";
       state.PartyBydateByamtFilter =
         APIurl + "PartyBydateByamtFilter.php";
       state.UserActivityGet = APIurl + "UserActivityGetController.php";
@@ -477,6 +497,22 @@ export const getUrlSlice = createSlice({
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
       state.PayslipGetController = APIurl + "PayslipGetController.php";
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
+      state.ItempriceGeturl = APIurl + "ItempriceGetController.php";
+      state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
+      state.SOPProcess = APIurl + "SopProcessPost.php";
+      state.SOPConfigPost = APIurl + "emppoststatus.php";
+      state.SOPConfigGet = APIurl + "empgetstatus.php";
+      state.SpecimenPost = APIurl + "emppostspeciman.php";
+      state.SpecimenGet = APIurl + "empgetspeciman.php";
+      state.SopEmpMappingController = APIurl + "SopEmpMappingController.php";
+      state.EmpInventoryGetController = APIurl + "EmpInventoryGetController.php";
+      state.EmpInventoryPostController = APIurl + "EmpInventoryPostController.php";
+      state.Scoreboard = APIurl + "ScoreBoardChartController.php";
+      state.RepaymentScheduleGet = APIurl + "RepaymentScheduleGet.php";
+      state.PartypendingorderlistgetController = APIurl + "PartypendingorderlistgetController.php";
+      state.SopTimeLineController = APIurl + "SopTimeLineController.php";
+      state.GetOverflowAffectedOrders = APIurl + "getOverflowAffectedOrders.php";
+      state.PartyReset = APIurl + "PartyResetController.php";
     },
   },
 });

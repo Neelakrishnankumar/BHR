@@ -1,4 +1,5 @@
 export const dataGridHeight = "80vh";
+export const dataGridHeightExplore = "60vh";
 export const dataGridRowHeight = 25;
 export const dataGridHeaderFooterHeight = 30;
 export const dataGridPageSizeOption  = [20,50,100]

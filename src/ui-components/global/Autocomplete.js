@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, useMemo, createContext } from "react";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -999,6 +999,212 @@ export function MultiFormikOptimizedAutocomplete({
             endAdornment: (
               <>
                 {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+export function MultiFormikUniqueAutocomplete({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 Fetch API Data
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+
+        const data = response?.data?.Data?.rows || [];
+
+        // ✅ Remove duplicate RecordID
+        const uniqueData = Array.from(
+          new Map(data.map((item) => [item.RecordID, item])).values(),
+        );
+
+        setOptions(uniqueData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  // 🔹 Memoized options (performance)
+  const memoizedOptions = useMemo(() => options, [options]);
+
+  return (
+    <Autocomplete
+      size="small"
+      multiple={multiple}
+      options={memoizedOptions}
+      value={value}
+      onChange={onChange}
+      disableCloseOnSelect
+      loading={loading}
+      isOptionEqualToValue={(option, val) => option?.RecordID === val?.RecordID}
+      getOptionLabel={(option) => option?.Name || ""}
+      // ✅ Force unique key
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+
+        return (
+          <li {...rest} key={option.RecordID}>
+            <Checkbox
+              size="small"
+              checked={selected}
+              style={{ marginRight: 8 }}
+            />
+            {option.Name}
+          </li>
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant="standard"
+          error={errors}
+          helperText={helper}
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+export function MultiSopFormikOptimizedAutocomplete({
+  value = [],
+  Values = null,
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        console.log("API Response:", response.data);
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
+        setOptions(Array.isArray(data) ? data : []);
+        //setOptions(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); // Fallback to an empty array
+      } finally {
+        setLoading(false);
+      }
+    };
+    console.log(Values, "check values");
+    fetchData();
+  }, [url]);
+  /* ---------------- AUTO SELECT FROM "1,2,3" ---------------- */
+  useEffect(() => {
+    if (!Values || options.length === 0) return;
+
+    // Split string → array
+    const selectedIds = Values.split(",")
+      .map((id) => id.trim())
+      .filter(Boolean);
+
+    // Match options
+    const selectedOptions = options.filter((opt) =>
+      selectedIds.includes(String(opt.RecordID)),
+    );
+
+    if (multiple) {
+      onChange?.(null, selectedOptions);
+    } else {
+      onChange?.(null, selectedOptions[0] || null);
+    }
+  }, [Values, options]); // run only when these change
+
+  return (
+    <Autocomplete
+      size="small"
+      multiple={multiple}
+      limitTags={1}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      onChange={onChange}
+      options={options}
+      loading={loading}
+      disableCloseOnSelect={multiple}
+      isOptionEqualToValue={(option, value) =>
+        String(option?.RecordID) === String(value?.RecordID)
+      }
+      getOptionLabel={(option) => option?.Name || ""}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", alignItems: "center" }}>
+          {multiple && (
+            <Checkbox size="small" sx={{ marginRight: 1 }} checked={selected} />
+          )}
+          {option.Name}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant="standard"
+          error={errors}
+          helperText={helper}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={18} />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -2116,7 +2322,6 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
       getOptionLabel={(option) => option?.Name || ""}
       isOptionEqualToValue={(o, v) => o.RecordID === v.RecordID}
       onChange={(e, newValue) => onChange(newValue)}
-
       renderInput={(params) => (
         <TextField
           {...params}
@@ -2124,7 +2329,7 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
           placeholder=""
           InputProps={{
             ...params.InputProps,
-            disableUnderline: true,   // paper style
+            disableUnderline: true, // paper style
             style: {
               fontFamily: "Times New Roman",
               fontSize: "14px",
@@ -2132,9 +2337,7 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
             },
             endAdornment: (
               <>
-                {loading && (
-                  <CircularProgress size={16} color="inherit" />
-                )}
+                {loading && <CircularProgress size={16} color="inherit" />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -2147,6 +2350,239 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
           }}
         />
       )}
+    />
+  );
+};
+//SOP Document Lookup
+export const SOPDocLookup = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.DocumentName}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+//SOPEMP
+export const SOPEMPLookup = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+export const ProjectVendor = ({
+  value = null,
+  onChange,
+  url,
+  height = 15,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
+      onChange={(event, newValue) => onChange(newValue)}
+      // getOptionLabel={(option) => option.Name}
+      getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      // renderOption={(props, option) => (
+      //   <li {...props} key={option.RecordID}>
+      //     {option.Code} || {option.Name}
+      //   </li>
+      // )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={15} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
     />
   );
 };

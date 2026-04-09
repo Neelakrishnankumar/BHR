@@ -20,6 +20,8 @@ import {
   Tooltip,
   Paper,
   Grid,
+  LinearProgress,
+  Chip,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -45,7 +47,16 @@ import {
   PartyContactget,
   EmployeeVendorGetController,
   EmployeeVendorContactGet,
-  partypost
+  partypost,
+  SOPConfigGet,
+  SOPConfigPost,
+  SpecimenGet,
+  SpecimenPost,
+  Inventorygrid1,
+  Inventorygrid2,
+  Inventorygrid3,
+  Inventryget,
+  InventoryPostController
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -90,6 +101,7 @@ import {
   MultiSelectDropdown,
   ModuleAutocomplete,
   MultiFormikOptimizedAutocomplete,
+  MultiFormikUniqueAutocomplete,
   Productautocomplete,
   ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
@@ -99,6 +111,9 @@ import {
 import Resizer from "react-image-file-resizer";
 import ContactsIcon from '@mui/icons-material/Contacts';
 import CircularProgress from "@mui/material/CircularProgress";
+import { SOPfileUpload } from "../../../store/reducers/Imguploadreducer";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { dataGridHeightExplore } from "../../../ui-components/utils";
 
 
 // ***********************************************
@@ -181,11 +196,53 @@ const Editemployee = () => {
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
-
+  const Inventorygrid1columns = useSelector(
+    (state) => state.formApi.Inventorygrid1columns
+  );
+  const Inventorygrid1rows = useSelector(
+    (state) => state.formApi.Inventorygrid1rows
+  );
+  const Inventorygrid2columns = useSelector(
+    (state) => state.formApi.Inventorygrid2columns
+  );
+  const Inventorygrid2rows = useSelector(
+    (state) => state.formApi.Inventorygrid2rows
+  );
+  const Inventorygrid3columns = useSelector(
+    (state) => state.formApi.Inventorygrid3columns
+  );
+  const Inventorygrid3rows = useSelector(
+    (state) => state.formApi.Inventorygrid3rows
+  );
+  // console.log("Inventorygrid1rows", Inventorygrid1rows);
+  // console.log("Inventorygrid2rows", Inventorygrid2rows);
+  // console.log("Inventorygrid3rows", Inventorygrid3rows);
+  const InventrygetData = useSelector(
+    (state) => state.formApi.InventrygetData
+  );
+  const Inventoryloading = useSelector(
+    (state) => state.formApi.Inventoryloading
+  );
+  console.log("InventrygetData", InventrygetData);
+  const Inventorygrid1loading = useSelector(
+    (state) => state.formApi.Inventorygrid1loading
+  );
   console.log(
-    "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
+    " ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
+
+  const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
+  const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
+
+  const [show, setScreen] = React.useState("0");
+  useEffect(() => {
+    if (show == "20") {
+      setSelectionModel([]);
+      setSelectionModel2([]);
+      setSelectionModel3([]);
+    }
+  }, [show]);
   const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [gstImage, setGstImage] = useState("");
@@ -215,8 +272,180 @@ const Editemployee = () => {
   const [validationSchema13, setValidationSchema13] = useState(null);
   const [validationSchema14, setValidationSchema14] = useState(null);
   const [validationSchema17, setValidationSchema17] = useState(null);
+  const [validationSchema18, setValidationSchema18] = useState(null);
 
 
+  //SPECIMEN 
+  const SpecimenGetdata = useSelector(
+    (state) => state.formApi.SpecimenGetdata
+  );
+  const SpecimenGetloading = useSelector(
+    (state) => state.formApi.SpecimenGetloading
+  );
+  const SpecimenPostloading = useSelector(
+    (state) => state.formApi.SpecimenPostloading
+  );
+
+  const [sign1, setsign1Image] = useState("");
+  const [sign2, setsign2Image] = useState("");
+  const [sign3, setsign3Image] = useState("");
+
+
+  //IMAGE PREVIEW
+  const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
+  const [sign2Preview, setsign2Preview] = useState(""); // blob preview url
+  const [sign3Preview, setsign3Preview] = useState(""); // blob preview url
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectionModel2, setSelectionModel2] = useState([]);
+  const [selectedItemIDs, setSelectedItemIDs] = useState([]);
+  const [selectionModel3, setSelectionModel3] = useState([]);
+  // const [selectionModel3, setSelectionModel3] = useState([]);
+  const filteredRows =
+    (InventrygetData || []).filter((row) =>
+      selectionModel3.includes(String(row.ItemID))
+    );
+  const [bottomRows, setBottomRows] = useState([]);
+  const CompReportInitialValue = {
+    code: Data.Code || "",
+    name: Data.Name || "",
+    Sign1: SpecimenGetdata.EMP_SIGN1 || "",
+    Sign2: SpecimenGetdata.EMP_SIGN2 || "",
+    Sign3: SpecimenGetdata.EMP_SIGN3 || "",
+  };
+
+  const CompReportsave = async (values, del) => {
+    setLoading(true);
+
+    const idata = {
+      CompanyID: CompanyID,
+      EmployeeID: recID,
+      Sign1:
+        sign1 && sign1 !== ""
+          ? sign1
+          : SpecimenGetdata.EMP_SIGN1,
+
+      Sign2:
+        sign2 && sign2 !== ""
+          ? sign2
+          : SpecimenGetdata.EMP_SIGN2,
+
+      Sign3:
+        sign3 && sign3 !== ""
+          ? sign3
+          : SpecimenGetdata.EMP_SIGN3,
+    };
+
+    try {
+      const response = await dispatch(SpecimenPost({ idata }));
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        // navigate("/Apps/TR243/Party");
+        setScreen("18");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getFileHeaderChange1 = async (event) => {
+    setsign1Image(event.target.files[0]);
+    setsign1Preview(URL.createObjectURL(event.target.files[0]));
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign1Image(fileData.payload.file_name);
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const getFileFooterChange = async (event) => {
+    setsign2Image(event.target.files[0]);
+    setsign2Preview(URL.createObjectURL(event.target.files[0]));
+    console.log(event.target.files[0]);
+    //setFooterPreview(URL.createObjectURL(event.target.files[0]));
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign2Image(fileData.payload.file_name);
+
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const getFileESignChange = async (event) => {
+    setsign3Image(event.target.files[0]);
+
+    setsign3Preview(URL.createObjectURL(event.target.files[0]));
+    console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign3Image(fileData.payload.file_name);
+
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const SOPConfigGetInitialValue = {
+    code: Data.Code || "",
+    description: Data.Name || "",
+    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true : false,
+    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true : false,
+    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true : false,
+    TrainedBy: SOPConfigGetdata?.EMP_TRAINBY === "Y" ? true : false,
+  };
+  const DocumentMasterInitialValue = {
+    code: Data.Code || "",
+    name: Data.Name || "",
+    imageurl: Data.ImageName
+      ? store.getState().globalurl.imageUrl + Data.ImageName
+      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+  };
+
+  const SOPConfigsave = async (values, del) => {
+    setLoading(true);
+
+    const idata = {
+      CompanyID: CompanyID,
+      EmployeeID: recID,
+      PreparedBy: values.PreparedBy === true ? "Y" : "N",
+      ReviewdBy: values.ReviewedBy === true ? "Y" : "N",
+      ApprovedBY: values.ApprovedBy === true ? "Y" : "N",
+      TrainedBy: values.TrainedBy === true ? "Y" : "N"
+    };
+
+    try {
+      const response = await dispatch(SOPConfigPost({ idata }));
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        setLoading(false);
+        setScreen("19");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const dropdownData = [
     { ID: "All", Name: "All" },
     { ID: "Selected", Name: "Selected" },
@@ -247,6 +476,17 @@ const Editemployee = () => {
     }));
   }, [ParentgetData, is003Subscription]);
 
+  useEffect(() => {
+    if (InventrygetData) {
+      setBottomRows(InventrygetData);
+
+      const preSelected = InventrygetData
+        .filter((row) => row.IsSelect === "Y")
+        .map((row) => row.ItemID);
+
+      setSelectionModel3(preSelected);
+    }
+  }, [InventrygetData]);
   useEffect(() => {
     if (Data?.ImageName) {
       setViewImage(baseUrl + Data.ImageName);
@@ -509,6 +749,13 @@ const Editemployee = () => {
           ItemValue: Yup.string().required(data.Itemcustody1.ItemValue),
         });
         setValidationSchema17(schema17);
+        const schema18 = Yup.object().shape({
+          itemgroups: Yup.object().required(data.Inventory.itemgroups).nullable(),
+          itemcategory: Yup.object().required(data.Inventory.itemcategory).nullable(),
+          Grpitems: Yup.object().required(data.Inventory.Grpitems).nullable(),
+
+        });
+        setValidationSchema18(schema18);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -560,9 +807,18 @@ const Editemployee = () => {
   //     .required("Leave Type is required"),
   // });
   // const { setFieldValue } = useFormikContext();
+  // useEffect(() => {
+  //   dispatch(fetchApidata(accessID, "get", recID));
+  // }, [location.key]);
   useEffect(() => {
-    dispatch(fetchApidata(accessID, "get", recID));
-  }, [location.key]);
+    if (show == "0") {
+    if (recID && mode === "E") {
+      dispatch(fetchApidata("TR027","get", recID ));
+    } else {
+      dispatch(fetchApidata("TR027", "get", recID ));
+    }
+  }
+  }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -661,7 +917,7 @@ const Editemployee = () => {
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
-      Data.EmpType === "Prohibition"
+      Data.EmpType === "Probation"
         ? "PP"
         : Data.EmpType === "Permanent"
           ? "PM"
@@ -685,7 +941,7 @@ const Editemployee = () => {
     SortOrder: Data.SortOrder || 0,
     delete: Data.DeleteFlag === "Y" ? true : false,
     Mgr: Data.Mgr,
-    Sal: Data.Sal,
+    amount: Data.Sal,
     Fax: Data.Fax,
     //module:Data.Module,
     // module: Data.Module
@@ -928,7 +1184,7 @@ const Editemployee = () => {
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
-      Sal: "",
+      Sal: values.amount || 0,
       EmpType: values.employeetype,
       DateOfJoin: values.joindate,
       DateOfBirth: values.dateofbirth,
@@ -961,7 +1217,7 @@ const Editemployee = () => {
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
-      } 
+      }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
@@ -969,14 +1225,14 @@ const Editemployee = () => {
       // }
       else {
 
-    navigate(
-      is00123Subscription
-        ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
-        : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
-      { state: { ...state } }
-    );
+        navigate(
+          is00123Subscription
+            ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
+            : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
+          { state: { ...state } }
+        );
 
-  }
+      }
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
@@ -995,7 +1251,6 @@ const Editemployee = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
-  const [show, setScreen] = React.useState("0");
   // material
   const [supprodata, setSupprodata] = useState({
     RecordID: "",
@@ -1064,6 +1319,12 @@ const Editemployee = () => {
     }
     if (event.target.value == "5") {
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
+    }
+    if (event.target.value == "19") {
+      dispatch(SOPConfigGet({ EmployeeID: recID, CompanyID: CompanyID }));
+    }
+    if (event.target.value == "18") {
+      dispatch(SpecimenGet({ EmployeeID: recID, CompanyID: CompanyID }));
     }
     if (event.target.value == "6") {
       dispatch(
@@ -1162,6 +1423,18 @@ const Editemployee = () => {
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
+    if (event.target.value == "21") {
+      dispatch(
+        fetchExplorelitview(
+          "TR364",
+          "Employee Documents",
+          // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_EMPRECID))`,
+          ""
+        )
+      );
+
+    }
     if (event.target.value == "9") {
       dispatch(geolocationData({ empID: recID }));
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -1197,7 +1470,74 @@ const Editemployee = () => {
       // dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
+    // if (event.target.value == "20") {
+    //   dispatch(
+    //     fetchExplorelitview("2151", "Item Group", `CompanyID=${CompanyID}`, ""));
+    //     dispatch(
+    //     fetchExplorelitview("2152", "Item Category", `CompanyID=${CompanyID}`, ""));
+    //     dispatch(
+    //     fetchExplorelitview("2153", "Item", `CompanyID=${CompanyID}`, ""));
+    //   dispatch(
+    //     fetchExplorelitview(
+    //       "TR350",
+    //       "Inventory",
+    //       `EmployeeID='${recID}'AND CompanyID=${CompanyID}`,
+    //       ""
+    //     )
+    //   );
+    //   // dispatch(fetchApidata(accessID, "get", recID));
+    //   selectcelldata("", "A", "");
+    // }
+    if (event.target.value == "20") {
+      dispatch(
+        Inventryget({ data: { EmployeeID: recID } }));
+      // Item Group
+      dispatch(
+        Inventorygrid1({
+          AccessID: "2151",
+          screenName: "Item Group",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // Item Category
+      dispatch(
+        Inventorygrid2({
+          AccessID: "2152",
+          screenName: "Item Category",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // // Item
+      dispatch(
+        Inventorygrid3({
+          AccessID: "2153",
+          screenName: "Item",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // Inventory
+      // dispatch(fetchExplorelitview("TR350",
+      //   "Inventory",
+      //   `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
+      //   ""
+      // ))
+      //   .unwrap()
+      //   .then((res) => {
+      //     if (res.Status === "Y") {
+      //       setInventoryColumns(res.Data.columns);
+      //       setInventoryRows(res.Data.rows);
+      //     }
+      //   });
+
+    }
   };
+
 
   /******************Employee values assign a state variale******************** */
   const selectcelldata = (data, bMode, field) => {
@@ -1464,6 +1804,16 @@ const Editemployee = () => {
       "action",
     ];
   }
+  else if (show == "21") {
+    VISIBLE_FIELDS = [
+      "slno",
+      "Code",
+      "Documents",
+      // "Party",
+      // "Unit",
+      "action",
+    ];
+  }
   else if (show == "15") {
     VISIBLE_FIELDS = [
       "slno",
@@ -1491,7 +1841,17 @@ const Editemployee = () => {
       "EligibleDays",
       "action",
     ];
-  } else {
+  }
+  else if (show == "20") {
+    VISIBLE_FIELDS = [
+      "slno",
+      "Item",
+      "ItemCategory",
+      "ItemGroup",
+      "action",
+    ];
+  }
+  else {
     VISIBLE_FIELDS = [
       "slno",
       "EmployeeCode",
@@ -1682,30 +2042,34 @@ const Editemployee = () => {
             {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
-          <Typography>
+          <Typography variant="h6" fontWeight="bold">
             {show == "2"
               ? "List of Functions"
               : show == "6"
                 ? "List of Documents"
                 : show == "3"
                   ? "List of Managers"
-                  : show == "7"
-                    ? "Item Custody"
-                    : show == "10"
-                      ? "List of Configurations"
-                      : show == "13"
-                        ? "List of Localities"
-                        : show == "14"
-                          ? "List of Services"
-                          : show == "15"
-                            ? "List of Parent"
-                            : show == "17"
-                              ? "List of Item Custody"
-                              : show == "8" || show == "11"
-                                ? "List of Contracts"
-                                : "List of Managers"}
+                  : show == "20"
+                    ? "List of Items"
+                    : show == "7"
+                      ? "Item Custody"
+                      : show == "10"
+                        ? "List of Configurations"
+                        : show == "13"
+                          ? "List of Localities"
+                          : show == "14"
+                            ? "List of Services"
+                            : show == "15"
+                              ? "List of Parent"
+                              : show == "17"
+                                ? "List of Item Custody"
+                                : show == "21"
+                                  ? "Documents"
+                                  : show == "8" || show == "11"
+                                    ? "List of Contracts"
+                                    : "List of Managers"}
           </Typography>
-          <Typography variant="h5">{`(${rowCount})`}</Typography>
+          {show != "20" && (<Typography variant="h6" fontWeight="bold">{`(${rowCount})`}</Typography>)}
         </Box>
         <Box
           sx={{
@@ -1715,11 +2079,13 @@ const Editemployee = () => {
           }}
         >
           <GridToolbarQuickFilter />
-          <Tooltip title="ADD">
-            <IconButton type="reset">
-              <AddOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+          {show != "21" && (
+            <Tooltip title="ADD">
+              <IconButton type="reset">
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
       </GridToolbarContainer>
     );
@@ -1797,6 +2163,13 @@ const Editemployee = () => {
     shift: "",
     shift2: "",
     project: "",
+  });
+  const [Invendata, setInvendata] = useState({
+    recordID: "",
+    itemgroups: null,
+    itemcategory: null,
+    Grpitems: [],
+    SortOrder: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1933,6 +2306,13 @@ const Editemployee = () => {
         availableleave: "",
         elligibledays: "",
         Year: "",
+      });
+      setInvendata({
+        recordID: "",
+        itemgroups: null,
+        itemcategory: null,
+        Grpitems: [],
+        SortOrder: ""
       });
     } else {
       console.log(rowData, "--rowData");
@@ -2130,6 +2510,31 @@ const Editemployee = () => {
             }
             : null,
           Year: rowData.Year,
+        });
+        setInvendata({
+          recordID: rowData.RecordID,
+          itemgroups: rowData.ItemGroupID
+            ? {
+              RecordID: rowData.ItemGroupID,
+              Code: rowData.ItemgroupCode,
+              Name: rowData.ItemGroupDesc,
+            }
+            : null,
+          itemcategory: rowData.ItemCategoryID
+            ? {
+              RecordID: rowData.ItemCategoryID,
+              Code: rowData.ItemCategoryCode,
+              Name: rowData.ItemCategoryDesc,
+            }
+            : null,
+          Grpitems: rowData.ItemID
+            ? {
+              RecordID: rowData.ItemID,
+              Code: rowData.Code,
+              Name: rowData.Name,
+            }
+            : [],
+          SortOrder: rowData.SortOrder,
         });
         setFieldValue("functionLookup", {
           RecordID: rowData.FunctionsID,
@@ -2914,7 +3319,178 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const AttColumn = [
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 60,
+      sortable: false,
+      filterable: false,
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
 
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Item",
+      headerName: "Item",
+      width: 400,
+      headerAlign: "center",
+      align: "left"
+    },
+    {
+      field: "IsSelect",
+      headerName: "Select",
+      width: 30,
+      hide: true,
+    }
+
+  ];
+  const Att1Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 50,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Itemgroup",
+      headerName: "Item Group",
+      width: 250,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const Att2Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 50,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "ItemCategory",
+      headerName: "Item Category",
+      width: 250,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const Att3Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 50,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Item",
+      headerName: "Item",
+      width: 250,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const InventoryinitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    itemgroups: Invendata.itemgroups,
+    itemcategory: Invendata.itemcategory,
+    Grpitems: Invendata.Grpitems,
+    SortOrder: Invendata.SortOrder,
+
+  };
+  const Inventoryfnsave = async (values, resetForm, del) => {
+    setLoading(true);
+
+    const response = await dispatch(
+      Inventryget({ data: { EmployeeID: recID } })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      toast.success("Data fetched successfully");
+      resetForm();
+    } 
+    else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
+  const Invsave2 = async () => {
+    setLoading(true);
+    const idata = {
+      CompanyID,
+      RecordID: Invendata.recordID || -1,
+      EmployeeID: recID,
+      ItemGroupID: selectionModel?.join(",") || 0,
+      ItemCategoryID: selectionModel2?.join(",") || 0,
+      ItemID: selectionModel3?.join(",") || 0,
+      SortOrder: 0,
+    };
+    const response = await dispatch(InventoryPostController(idata));
+    if (response.payload.Status == "Y") {
+      dispatch(
+        Inventryget({ data: { EmployeeID: recID } }))
+      toast.success(response.payload.Msg);
+    } 
+    // else {
+    //   setLoading(false);
+    //   toast.error(response.payload.Msg);
+    // }
+     else {
+      const errors = response.payload.Message;
+
+      if (Array.isArray(errors)) {
+        toast.error(
+          <div>
+            {errors.map((err, i) => (
+              <div key={i}>{err}</div>
+            ))}
+          </div>
+        );
+      } else {
+        toast.error(errors || "Something went wrong");
+      }
+    }
+
+  }
   //Leave Configuration
   const LCInitialValue = {
     Code: Data.Code,
@@ -3350,6 +3926,10 @@ const Editemployee = () => {
       AutoPresent: values.defaultpresent === true ? "Y" : "N",
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
+      Office: values.office === true ? "Y" : "N",
+      WorkFromHome: values.workfromhome === true ? "Y" : "N",
+      Hybrid: values.hybrid === true ? "Y" : "N",
+      OnSite: values.onsite === true ? "Y" : "N",
     };
 
     const response = await dispatch(postDeployment({ data: idata }));
@@ -3614,7 +4194,8 @@ const Editemployee = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      setScreen(1);
+                      // setScreen(1);
+                      setScreen(0);
                     }}
                   >
                     {/* {mode === "E"
@@ -3738,6 +4319,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "20" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Inventory
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                   {show == "8" ? (
                     <Typography
                       variant="h5"
@@ -3805,6 +4397,39 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "19" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      SOP Configuration
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "18" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Specimen Sign
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "21" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Documents
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -3843,10 +4468,15 @@ const Editemployee = () => {
                     <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Documents</MenuItem>
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
+                    <MenuItem value={20}>Inventory</MenuItem>
                     <MenuItem value={17}>Item Custody</MenuItem>
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
-                    
+                    <MenuItem value={19}>SOP Configuration</MenuItem>
+                    <MenuItem value={18}>Specimen Sign</MenuItem>
+                    <MenuItem value={21}>Documents</MenuItem>
+
+
                   </Select>
                 </FormControl>
               ) : (
@@ -4132,7 +4762,7 @@ const Editemployee = () => {
                           // },
                         }}
                       >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PP">Probation Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
                         {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contract In</MenuItem>
@@ -4140,6 +4770,27 @@ const Editemployee = () => {
                         <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
+                      <TextField
+                        name="amount"
+                        type="text"
+                        id="amount"
+                        label="Actual Salary"
+                        variant="standard"
+                        focused
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        // autoFocus
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 0,
+                            max: 24,
+                          },
+                        }}
+                      />
                       <Box>
                         {/* <CusListRunGrpOptimizedAutocomplete
                           name="module"
@@ -7016,11 +7667,11 @@ const Editemployee = () => {
                       />
                     </FormControl>
                   </Box>
-                    <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
                     Work Location
                   </Typography>
-                    <Box
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -7032,7 +7683,7 @@ const Editemployee = () => {
                       },
                     }}
                   >
-  <Box>
+                    <Box>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -7063,7 +7714,7 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Work From Home
                       </FormLabel>
-                       <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="hybrid"
@@ -7078,7 +7729,7 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Hybrid
                       </FormLabel>
-                       <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="onsite"
@@ -12245,7 +12896,673 @@ const Editemployee = () => {
         ) : (
           false
         )}
+        {show == "20" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={InventoryinitialValue}
+              // validationSchema={validationSchema18}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  Inventoryfnsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
 
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+
+                    <Stack
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+
+                  </Box>
+                  <Box marginLeft={2} height="50vh"
+                    sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[800],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[800],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .odd-row": {
+                        backgroundColor: "",
+                        color: "", // Color for odd rows
+                      },
+                      "& .even-row": {
+                        backgroundColor: "#D3D3D3",
+                        color: "", // Color for even rows
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                          height: dataGridHeaderFooterHeight,
+                          minHeight: dataGridHeaderFooterHeight,
+                        },
+                      }}
+                      // rows={(bottomRows || [])}
+                      // // rows={(InventrygetData || []).filter((row) => row.IsSelect === "Y")}
+                      // // rows={InventrygetData || []}
+                      // columns={AttColumn}
+                      // loading={Inventoryloading}
+                      // checkboxSelection
+                      // selectionModel={selectionModel3}
+                      // onSelectionModelChange={(newSelection) => {
+                      //   setSelectionModel3(newSelection);
+                      // }}
+                      rows={filteredRows}
+                      columns={AttColumn}
+                      loading={Inventoryloading}
+                      checkboxSelection
+                      selectionModel={selectionModel3}
+                      // onSelectionModelChange={(newSelection) => {
+                      //   setSelectionModel3(newSelection.map((id) => String(id)));
+                      // }}
+                      onSelectionModelChange={(newSelection) => {
+                        const newIds = newSelection.map((id) => String(id));
+
+                        const removedIds = selectionModel3.filter(
+                          (id) => !newIds.includes(String(id))
+                        );
+
+                        if (removedIds.length > 0) {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Remove,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              setSelectionModel3(newIds);
+                            }
+                          });
+                        } else {
+                          setSelectionModel3(newIds);
+                        }
+                      }}
+                      disableSelectionOnClick
+                      getRowId={(row) => row.ItemID}
+                      rowHeight={dataGridRowHeight}
+                      headerHeight={dataGridHeaderFooterHeight}
+                      pageSize={pageSize}
+                      page={page}
+                      onPageSizeChange={(newPageSize) =>
+                        setPageSize(newPageSize)
+                      }
+                      rowsPerPageOptions={[5, 10, 15, 20]}
+                      onPageChange={(pageno) => handlePagechange(pageno)}
+                      pagination
+                      onCellClick={(params) => {
+                        selectCellRowData({
+                          rowData: params.row,
+                          mode: "E",
+                          field: params.field,
+                          setFieldValue,
+                        });
+                      }}
+                      components={{
+                        Toolbar: Employee,
+                      }}
+                      onStateChange={(stateParams) =>
+                        setRowCount(stateParams.pagination.rowCount)
+                      }
+                      getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0
+                          ? "odd-row"
+                          : "even-row"
+                      }
+                      componentsProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns={{
+                      xs: "1fr",
+                      md: "repeat(3, 1fr)",
+                    }}
+                    gap={2}
+                    mt={2}
+                  >
+
+                    <Box
+
+                      height="45vh"
+                      marginLeft={2}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                          // overflowX: "auto",
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold">List of Item Group :</Typography>
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            // height: dataGridHeaderFooterHeight,
+                            // minHeight: dataGridHeaderFooterHeight,
+                            height: "auto",
+                            minHeight: 52,
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
+                        }}
+                        rows={Inventorygrid1rows || []}
+                        columns={Att1Column || []}
+                        loading={Inventorygrid1loading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        checkboxSelection
+                        selectionModel={selectionModel}
+                        // onSelectionModelChange={(newSelection) => {
+                        //   setSelectionModel(newSelection.slice(-1));
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const selectedID = ids.slice(-1)[0]; // allow only one checkbox
+                          setSelectionModel([selectedID]);     // ✅ update selection state
+
+                          const selectedRow = Inventorygrid1rows.find(
+                            (row) => row.RecordID === selectedID
+                          );
+
+                          if (selectedRow) {
+                            dispatch(
+                              Inventorygrid2({
+                                AccessID: "2152",
+                                screenName: "Item Category",
+                                filter: `CompanyID=${CompanyID} AND ItemGroupID=${selectedRow.RecordID}`,
+                                any: "",
+                              })
+                            );
+                          }
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+
+                    </Box>
+                    <Box height="45vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold">List of Item Category :</Typography>
+                      <DataGrid
+                        // sx={{
+                        //   "& .MuiDataGrid-footerContainer": {
+                        //     height: dataGridHeaderFooterHeight,
+                        //     minHeight: dataGridHeaderFooterHeight,
+                        //   },
+                        // }}
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: "auto",
+                            minHeight: 52,
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
+                        }}
+                        rows={Inventorygrid2rows || []}
+                        columns={Att2Column || []}
+                        loading={exploreLoading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        checkboxSelection
+                        selectionModel={selectionModel2}
+                        // onSelectionModelChange={(ids) => {
+                        //   const selectedID = ids.slice(-1)[0];
+                        //   setSelectionModel2([selectedID]);
+
+                        //   const selectedRow = Inventorygrid2rows.find(
+                        //     (row) => row.RecordID === selectedID
+                        //   );
+
+                        //   if (selectedRow) {
+                        //     dispatch(
+                        //       Inventorygrid3({
+                        //         AccessID: "2153",
+                        //         screenName: "Item",
+                        //         filter: `CompanyID=${CompanyID} AND ItemCategoryID=${selectedRow.RecordID}`,
+                        //         any: "",
+                        //       })
+                        //     );
+                        //   }
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const selectedIds = ids.map((id) => String(id));
+
+                          // store selected ids
+                          setSelectionModel2(selectedIds);
+
+                          // create comma separated ids
+                          const commaSeparatedIds = selectedIds.join(",");
+
+                          dispatch(
+                            Inventorygrid3({
+                              AccessID: "2153",
+                              screenName: "Item",
+                              filter: `CompanyID=${CompanyID} AND ItemCategoryID IN (${commaSeparatedIds})`,
+                              any: "",
+                            })
+                          );
+                        }}
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box height="45vh"
+                      // marginLeft={2}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold">List of Items :</Typography>
+                      <DataGrid
+                        // sx={{
+                        //   "& .MuiDataGrid-footerContainer": {
+                        //     height: dataGridHeaderFooterHeight,
+                        //     minHeight: dataGridHeaderFooterHeight,
+                        //   },
+                        // }}
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: "auto",
+                            minHeight: 52,
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
+                        }}
+                        rows={Inventorygrid3rows || []}
+                        columns={Att3Column || []}
+                        loading={exploreLoading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        checkboxSelection
+                        // onSelectionModelChange={(ids) => {
+                        //   setSelectedItemIDs(ids); // store all selected RecordIDs
+                        // }}
+                        // onSelectionModelChange={(ids) => {
+
+                        //   const selectedItemIDs = ids.map((id) => String(id));
+
+                        //   setSelectionModel3((prev) => {
+                        //     const merged = [...new Set([...prev, ...selectedItemIDs])];
+                        //     return merged;
+                        //   });
+
+                        // }}
+                        // onSelectionModelChange={(ids) => {
+                        //   const selectedItemIDs = ids.map((id) => String(id));
+                        //   setSelectionModel3(selectedItemIDs);
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const newSelected = ids.map((id) => String(id));
+
+                          setSelectionModel3((prev) => {
+                            const merged = [...new Set([...prev, ...newSelected])];
+                            return merged;
+                          });
+                        }}
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap={2}
+                    mt={6}
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      loading={isLoading}
+                      onClick={() => Invsave2()}
+                    >
+                      SAVE
+
+                    </Button>
+
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  {/* </FormControl>                   */}
+
+
+
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
         {show == "10" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -13392,26 +14709,26 @@ const Editemployee = () => {
                         // required
                         // onBlur={handleBlur}
                         // onChange={handleChange}
-                       onChange={(e) => {
-                            // allow only numbers + decimal
-                            const val = e.target.value;
-                            if (/^\d*\.?\d*$/.test(val)) {
-                              setFieldValue("ItemValue", val);
-                            }
-                          }}
-                          onBlur={(e) => {
-                            let val = e.target.value;
+                        onChange={(e) => {
+                          // allow only numbers + decimal
+                          const val = e.target.value;
+                          if (/^\d*\.?\d*$/.test(val)) {
+                            setFieldValue("ItemValue", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value;
 
-                            if (val === "" || val === ".") {
-                              setFieldValue("ItemValue", "0.00");
-                              return;
-                            }
+                          if (val === "" || val === ".") {
+                            setFieldValue("ItemValue", "0.00");
+                            return;
+                          }
 
-                            const num = parseFloat(val);
-                            if (!isNaN(num)) {
-                              setFieldValue("ItemValue", num.toFixed(2)); // ✅ forces .00
-                            }
-                          }}
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setFieldValue("ItemValue", num.toFixed(2)); // ✅ forces .00
+                          }
+                        }}
                         error={!!touched.ItemValue && !!errors.ItemValue}
                         helperText={touched.ItemValue && errors.ItemValue}
                         sx={{
@@ -13578,6 +14895,840 @@ const Editemployee = () => {
                 </form>
               )}
             </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+        {show == "18" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            {SpecimenGetloading ? <LinearProgress /> : false}
+            {SpecimenPostloading ? <LinearProgress /> : false}
+            <Formik
+              initialValues={CompReportInitialValue}
+              onSubmit={(values, setSubmitting) => {
+                setTimeout(() => {
+                  CompReportsave(values);
+                }, 100);
+              }}
+              enableReinitialize={true}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                setFieldValue,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="name"
+                      type="text"
+                      id="name"
+                      label={
+                        <>
+                          Name
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.name}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(3 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      <Box>
+                        {/* HEADER IMAGE */}
+                        <Tooltip title="Prepared By Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileHeaderChange1}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN1 || sign1
+                              ? window.open(
+                                sign1
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign1
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN1,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Prepared By Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {sign1Preview ||
+                          sign1 ||
+                          SpecimenGetdata.EMP_SIGN1 ? (
+                          <img
+                            src={
+                              sign1Preview
+                                ? sign1Preview
+                                : sign1
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign1
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN1
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      {/* FOOTER IMAGE */}
+                      <Box>
+                        <Tooltip title="Reviewed By Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileFooterChange}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN2 || sign2
+                              ? window.open(
+                                sign2
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign2
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN2,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Reviewed By Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {sign2Preview ||
+                          sign2 ||
+                          SpecimenGetdata.EMP_SIGN2 ? (
+                          <img
+                            src={
+                              sign2Preview
+                                ? sign2Preview
+                                : sign2
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign2
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN2
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      {/* E-SIGN IMAGE */}
+                      <Box>
+                        <Tooltip title="Approved by Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileESignChange}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN3 || sign3
+                              ? window.open(
+                                sign3
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign3
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN3,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Approved by Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {sign3Preview ||
+                          sign3 ||
+                          SpecimenGetdata.EMP_SIGN3 ? (
+                          <img
+                            src={
+                              sign3Preview
+                                ? sign3Preview
+                                : sign3
+                                  ? store.getState().globalurl.SOPUploadUrl + sign3
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN3
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+
+
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap="20px"
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+
+
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+
+
+        {show == "19" ? (
+
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            {loading ? (<LinearProgress />) : false}
+            {SOPConfigGetLoading ? (<LinearProgress />) : false}
+
+            <Formik
+              initialValues={SOPConfigGetInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  SOPConfigsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+                  </Box>
+
+                  <Typography variant="h5" padding={1}>
+                    Roles And Responsibilities:
+                  </Typography>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="PreparedBy"
+                        name="PreparedBy"
+                        as={Checkbox}
+                        label="PreparedBy"
+                      />
+                      <FormLabel focused={false}>Prepared By</FormLabel>
+
+                    </Box>
+
+                    {/* Row 2: Vertical */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="ReviewedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="ReviewedBy"
+                        as={Checkbox}
+                        label="ReviewedBy"
+                      />
+                      <FormLabel focused={false}>Reviewed By</FormLabel>
+
+                    </Box>
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    marginTop={1}
+                    gap={1}
+                  >
+                    {/* First AutoApprovalYesOrNo Checkbox */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="ApprovedBy"
+                        name="ApprovedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Approved By</FormLabel>
+
+                    </Box>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="TrainedBy"
+                        name="TrainedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Trained By</FormLabel>
+
+                    </Box>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="30px"
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+        {show == "21" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={DocumentMasterInitialValue}
+              enableReinitialize={true}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleSubmit,
+                handleChange,
+                setFieldValue,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                // onReset={() => {
+                //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                //   resetForm();
+                // }}
+                >
+
+
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+                    </FormControl>
+
+                    <Stack
+                      sx={{
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+                  </Box>
+
+                  <Box
+                  padding={1}
+                    m="5px 0 0 0"
+                    // height="50vh"
+                    // height={dataGridHeight}
+                    height={dataGridHeightExplore}
+                    sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[800],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[800],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .odd-row": {
+                        backgroundColor: "",
+                        color: "", // Color for odd rows
+                      },
+                      "& .even-row": {
+                        backgroundColor: "#D3D3D3",
+                        color: "", // Color for even rows
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                          height: dataGridHeaderFooterHeight,
+                          minHeight: dataGridHeaderFooterHeight,
+                        },
+                      }}
+                      rows={explorelistViewData}
+                      columns={columns}
+                      disableSelectionOnClick
+                      getRowId={(row) => row.RecordID}
+                      rowHeight={dataGridRowHeight}
+                      headerHeight={dataGridHeaderFooterHeight}
+                      pageSize={pageSize}
+                      onPageSizeChange={(newPageSize) =>
+                        setPageSize(newPageSize)
+                      }
+                      // onCellClick={(params) => {
+                      //   selectCellRowData({
+                      //     rowData: params.row,
+                      //     mode: "E",
+                      //     field: params.field,
+                      //   });
+                      // }}
+                      rowsPerPageOptions={[5, 10, 20]}
+                      pagination
+                      components={{
+                        Toolbar: Employee,
+                      }}
+                      onStateChange={(stateParams) =>
+                        setRowCount(stateParams.pagination.rowCount)
+                      }
+                      loading={exploreLoading}
+                      componentsProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                      getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0
+                          ? "odd-row"
+                          : "even-row"
+                      }
+                    />
+                  </Box>
+
+
+
+                </form>
+              )}
+
+            </Formik>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+
+              <Box>
+                <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                  Actions Guide
+                </Typography>
+                <Box display="flex"
+                  flexDirection="row"
+                  gap="15px"
+                  sx={{ overflowY: "auto" }}>
+                  <Chip
+                    icon={<VisibilityIcon color="primary" />}
+                    label="Open Document"
+                    variant="outlined"
+                  />
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent="space-between" padding={1}>
+                <Button
+                  color="warning"
+                  variant="contained"
+                  onClick={() => {
+                    setScreen("0");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
           </Paper>
         ) : (
           false

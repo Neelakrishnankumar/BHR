@@ -51,6 +51,7 @@ import {
   getProjectCosting,
   paySlipGet,
   postData,
+  SOPProcessPost,
   StockProcessApi,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
@@ -99,7 +100,18 @@ import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
-
+import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import LoopOutlinedIcon from "@mui/icons-material/LoopOutlined";
+import ChecklistOutlinedIcon from "@mui/icons-material/ChecklistOutlined";
+import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import OrderHeaderModal from "../../apps/pages/Modals/OrderHeaderModal";
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import ResetPartyOrder from "../../apps/pages/Modals/ResetPartyOrder";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -524,7 +536,8 @@ export const fetchListview =
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
     const LoginID = sessionStorage.getItem("loginrecordID");
-
+    const empID = sessionStorage.getItem("empID");
+  
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -659,12 +672,18 @@ export const fetchListview =
         AccessID != "TR243" &&
         AccessID != "TR321" &&
         AccessID != "TR315" &&
+        AccessID != "TR362" &&
         AccessID != "TR316" &&
         AccessID != "TR317" &&
         AccessID != "TR318" &&
         AccessID != "TR027" &&
         AccessID != "TR319" &&
         AccessID != "TR324" &&
+        AccessID != "TR335" &&
+        AccessID != "TR338" &&
+        AccessID != "TR339" &&
+        // AccessID != "TR341" &&
+        AccessID != "TR351" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -731,8 +750,14 @@ export const fetchListview =
       AccessID == "TR294" ||
       AccessID == "TR317" ||
       AccessID == "TR318" ||
+      AccessID == "TR362" ||
       AccessID == "TR027" ||
       AccessID == "TR319" ||
+      AccessID == "TR335" ||
+      AccessID == "TR338" ||
+      AccessID == "TR339" ||
+      // AccessID == "TR341" ||
+      AccessID == "TR351" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1804,6 +1829,7 @@ export const fetchListview =
             AccessID == "TR323" ||
             AccessID == "TR324" ||
             AccessID == "TR328" ||
+            AccessID == "TR361" ||
             AccessID == "TR319"
           ) {
             obj = {
@@ -1813,8 +1839,9 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               headerAlign: "center",
+              align: (AccessID === "TR319" || AccessID === "TR324") ? "center" : "left",
               // align: "center",
-              align: "left",
+              // align: "left",
               disableColumnMenu: true,
               disableExport: true,
               renderCell: (params) => (
@@ -1826,14 +1853,43 @@ export const fetchListview =
                 />
               ),
             };
-          }
-          else if (
-            AccessID == "TR336"
+          } else if (
+            AccessID == "TR321"
           ) {
             obj = {
               field: "action",
               headerName: "Action",
-              minWidth: 150,
+              minWidth: 200,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              // align: "center",
+              align: "left",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => (
+                <PartyAction
+                  // rights={rights}
+                  params={params}
+                  accessID={AccessID}
+                  screenName={screenName}
+                />
+              ),
+            };
+          }
+          else if (
+            AccessID == "TR336" ||
+            AccessID == "TR338" ||
+            AccessID == "TR339" ||
+            // AccessID == "TR341" ||
+            AccessID == "TR351" ||
+            AccessID == "TR335" ||
+            AccessID == "TR337"
+          ) {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 180,
               sortable: false,
               filterable: false,
               headerAlign: "center",
@@ -1941,6 +1997,36 @@ export const fetchListview =
                 );
               },
             };
+
+            //  } else if (AccessID == "TR128") {
+            // obj = {
+            //   field: "action",
+            //   headerName: "Action",
+            //   minWidth: 150,
+            //   sortable: false,
+            //   filterable: false,
+            //   headerAlign: "center",
+            //   align: "center",
+            //   disableColumnMenu: true,
+            //   disableExport: true,
+            //   renderCell: (params) => {
+            //     return (
+            //       <Box>
+            //         <Link 
+            //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+            //               state={{ Locationname: params.row.Name }}
+            //         >
+            //           <Tooltip title="Gate">
+            //             <IconButton color="info" size="small">
+            //               <ListAltOutlinedIcon />
+            //             </IconButton>
+            //           </Tooltip>
+            //         </Link>
+                 
+            //       </Box>
+            //     );
+            //   },
+            // };
           } else if (AccessID == "TR049") {
             obj = {
               field: "action",
@@ -2365,132 +2451,160 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID === "TR321") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 170,
-              sortable: false,
-              headerAlign: "center",
-              align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                const count = Number(params.row.MarketingCount || 0);
-                const id = params.row.RecordID;
-                const PartyName = params.row.Name;
+          } 
+          
+          // else if (AccessID === "TR321") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 200,
+          //     sortable: false,
+          //     headerAlign: "center",
+          //     align: "left",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     filterable: false,
+          //     renderCell: (params) => {
+          //       const count = Number(params.row.MarketingCount || 0);
+          //       const id = params.row.RecordID;
+          //       const PartyName = params.row.Name;
 
-                // Encode PartyName to make it URL-safe
-                // const encodedName = encodeURIComponent(PartyName);
+          //       // Encode PartyName to make it URL-safe
+          //       // const encodedName = encodeURIComponent(PartyName);
 
-                return (
-                  <Box>
-                    {/* Edit Button */}
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.Party,
-                        PName: params.row.Name,
-                        Count: params.row.MarketingCount,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          //       const [modalOpen, setModalOpen] = useState(false);
+          //       const [selectedRow, setSelectedRow] = useState(null);
 
-                    {/* Leader Button */}
-                    <Link
-                      to={
-                        count >= 1
-                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Leads">
-                        <IconButton color="info" size="small">
-                          <Diversity2Icon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          //       return (
+          //         <Box>
+          //           {/* Edit Button */}
+          //           <Link
+          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+          //             state={{
+          //               PartyName: params.row.Party,
+          //               PName: params.row.Name,
+          //               Count: params.row.MarketingCount,
+          //             }}
+          //           >
+          //             <Tooltip title="Edit">
+          //               <IconButton color="info" size="small">
+          //                 <ModeEditOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
 
-                    {/* ORDER HEADER */}
-                    {/* {params.row.LeaderCount >= 1 ? ( */}
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-                      // }
-                      to={
-                        params.row.OrderCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Order">
-                        <IconButton color="info" size="small">
-                          <CategoryIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          //           {/* Leader Button */}
+          //           <Link
+          //             to={
+          //               count >= 1
+          //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+          //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+          //             }
+          //             onClick={(e) => e.stopPropagation()}
+          //           >
+          //             <Tooltip title="Leads">
+          //               <IconButton color="info" size="small">
+          //                 <Diversity2Icon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
 
-                    {/* FOR QUOTATION */}
-                    <Link
-                      to={
-                        params.row.QuotationCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Quotation">
-                        <IconButton color="info" size="small">
-                          <RequestQuoteOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    {/* ) : null} */}
+          //           {/* ORDER HEADER */}
+          //           {/* {params.row.LeaderCount >= 1 ? ( */}
+          //           <Link
+          //             // to={
+          //             //   params.row.OrdHdrCount > 0
+          //             //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+          //             //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+          //             // }
+          //             to={
+          //               params.row.OrderCount > 0
+          //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+          //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+          //             }
+          //             state={{
+          //               PartyID: params.row.RecordID,
+          //               PartyName: params.row.Name,
+          //             }}
+          //             onClick={(e) => e.stopPropagation()}
+          //           >
+          //             <Tooltip title="Order">
+          //               <IconButton color="info" size="small">
+          //                 <CategoryIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
 
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+          //           {/* FOR QUOTATION */}
+          //           <Link
+          //             to={
+          //               params.row.QuotationCount > 0
+          //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+          //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+          //             }
+          //             state={{
+          //               PartyID: params.row.RecordID,
+          //               PartyName: params.row.Name,
+          //             }}
+          //             onClick={(e) => e.stopPropagation()}
+          //           >
+          //             <Tooltip title="Quotation">
+          //               <IconButton color="info" size="small">
+          //                 <RequestQuoteOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+          //           {/* ) : null} */}
 
-                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+          //           <Link
+          //             // to={
+          //             //   params.row.OrdHdrCount > 0
+          //             //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
 
-                      //   }
-                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Advance Payment">
-                        <IconButton color="info" size="small">
-                          <CurrencyRupeeOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
+          //             //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+          //             //   }
+          //             to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+          //             state={{
+          //               PartyID: params.row.RecordID,
+          //               PartyName: params.row.Name,
+          //             }}
+          //             onClick={(e) => e.stopPropagation()}
+          //           >
+          //             <Tooltip title="Advance Payment">
+          //               <IconButton color="info" size="small">
+          //                 <CurrencyRupeeOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+
+          //           {/* RESET FOR PARTY */}
+
+          //           <Tooltip title="Reset">
+          //             <IconButton
+          //               color="error"
+          //               size="small"
+          //               onClick={() => {
+          //                 setSelectedRow(params.row);
+          //                 setModalOpen(true);
+          //               }}
+          //             >
+          //               <RestartAltOutlinedIcon />
+          //             </IconButton>
+          //           </Tooltip>
+          //           <ResetPartyOrder
+          //             open={modalOpen}
+          //             onClose={() => {
+          //               setModalOpen(false);
+          //               setSelectedRow(null);
+          //             }}
+          //             rowData={selectedRow}
+          //           />
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
 
           // else if (AccessID == "TR303") {
           //   obj = {
@@ -2810,7 +2924,8 @@ export const fetchListview =
                   <Box>
                     {/* Edit Button */}
                     <Link
-                      to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                      // to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                      to={`./EditAdvancePayment/${params.row.RecordID}/V`}
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
@@ -2819,9 +2934,9 @@ export const fetchListview =
                         PartyID: params.row.PartyRecordID,
                       }}
                     >
-                      <Tooltip title="Edit">
+                      <Tooltip title="View">
                         <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
+                          <VisibilityIcon />
                         </IconButton>
                       </Tooltip>
                     </Link>
@@ -5287,6 +5402,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state || {};
+  console.log(state, "--state in listviewapireducers");
+  
   const dispatch = useDispatch();
   const ScheduleCheck = () => {
     Swal.fire({
@@ -6081,6 +6198,9 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const id = params.row.RecordID;
 
   const PartyName = params.row.Name;
+  // — state (inside your component) — TR310
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
@@ -6249,10 +6369,10 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         const resultAction = await dispatch(paySlipGet(payslip));
 
         const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
-    if (!data) {
-      alert("No data available for PDF");
-      return;
-    }
+        if (!data) {
+          alert("No data available for PDF");
+          return;
+        }
         if (!resultAction.payload) {
           console.error("No payload returned");
           return;
@@ -6269,15 +6389,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             }}
           />,
         ).toBlob();
-       const blobUrl = URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
 
-const link = document.createElement("a");
-link.href = blobUrl;
-link.download = "Payslip.pdf";
-document.body.appendChild(link);   // ✅ Important
-link.click();
-document.body.removeChild(link);   // ✅ Cleanup
-URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Payslip.pdf";
+        document.body.appendChild(link); // ✅ Important
+        link.click();
+        document.body.removeChild(link); // ✅ Cleanup
+        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {
@@ -6345,6 +6465,57 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
                 }
               >
                 <CategoryOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR361" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.DocumentCategories,
+                      // DocumentCategories,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Document">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/Document Category/TR362/Document/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.DocumentCategories,
+                      },
+                    },
+                  )
+                }
+                // onClick={() =>
+                //   navigate(
+                //     `/Apps/SecondarylistView/TR362/Document/${params.row.RecordID}`,
+                //     // {
+                //     //   state: {
+                //     //     ...state,
+                //     //     BreadCrumb1: params.row.ItemGroup,
+                //     //   },
+                //     // },
+                //   )
+                // }
+              >
+                <TextSnippetIcon />
               </IconButton>
             </Tooltip>
           </>
@@ -6503,6 +6674,7 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
             </Tooltip>
           </>
         )}
+
         {accessID === "TR319" && (
           <>
             <Tooltip title="Edit">
@@ -6637,7 +6809,8 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
                 </Tooltip>
               </Link>
             )}
-            {/* {params.row.Status === "Delivered" && (
+            {(params.row.Status === "Delivered" ||
+              params.row.Status === "Partially Paid") && (
               <Link
                 to={`./EditPayment/${params.row.RecordID}/E`}
                 state={{
@@ -6651,11 +6824,11 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
               >
                 <Tooltip title="Payment">
                   <IconButton color="info" size="small">
-                    <CurrencyRupeeOutlinedIcon /> 
+                    <CurrencyRupeeOutlinedIcon />
                   </IconButton>
                 </Tooltip>
               </Link>
-            ) } */}
+            )}
 
             {/* CONVERT TO ORDER */}
             {params.row.OrderType === "Q" && (
@@ -6702,6 +6875,33 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
                 </IconButton>
               </Tooltip>
             </Link>
+
+            {params.row.OverflowUsedFlag === "Y" && (
+              <>
+                <Tooltip title="View Amount Adjustment">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() => {
+                      setSelectedRow(params.row);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <PendingActionsOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <OrderHeaderModal
+                  open={modalOpen}
+                  onClose={() => {
+                    setModalOpen(false);
+                    setSelectedRow(null);
+                  }}
+                  rowData={selectedRow}
+                />
+              </>
+            )}
+
             <Link
               state={{
                 PartyName: params.row.PartyName,
@@ -6759,6 +6959,165 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
               </IconButton> */}
             </Tooltip>
           </Box>
+        )}
+
+      </div>
+    </Fragment>
+  );
+};
+const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
+  const dispatch = useDispatch();
+  const UserName = sessionStorage.getItem("UserName");
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  const CompanyID = sessionStorage.getItem("compID");
+  const EmployeeID = sessionStorage.getItem("empID");
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  const count = Number(params.row.MarketingCount || 0);
+  // const orderType = params.row.OrderType;
+  const id = params.row.RecordID;
+
+  const PartyName = params.row.Name;
+  // — state (inside your component) — TR310
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  return (
+    <Fragment>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        {accessID === "TR321" && (
+           <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.Party,
+                        PName: params.row.Name,
+                        Count: params.row.MarketingCount,
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* Leader Button */}
+                    <Link
+                      to={
+                        count >= 1
+                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+                      }
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Leads">
+                        <IconButton color="info" size="small">
+                          <Diversity2Icon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* ORDER HEADER */}
+                    {/* {params.row.LeaderCount >= 1 ? ( */}
+                    <Link
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                      // }
+                      to={
+                        params.row.OrderCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Order">
+                        <IconButton color="info" size="small">
+                          <CategoryIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* FOR QUOTATION */}
+                    <Link
+                      to={
+                        params.row.QuotationCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Quotation">
+                        <IconButton color="info" size="small">
+                          <RequestQuoteOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    {/* ) : null} */}
+
+                    <Link
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+
+                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+                      //   }
+                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Advance Payment">
+                        <IconButton color="info" size="small">
+                          <CurrencyRupeeOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* RESET FOR PARTY */}
+
+                    <Tooltip title="Reset">
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => {
+                          setSelectedRow(params.row);
+                          setModalOpen(true);
+                        }}
+                      >
+                        <RestartAltOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <ResetPartyOrder
+                      open={modalOpen}
+                      onClose={() => {
+                        setModalOpen(false);
+                        setSelectedRow(null);
+                      }}
+                      rowData={selectedRow}
+                      EmployeeID={EmployeeID}
+                      CompanyID={CompanyID}
+                    />
+                  </Box>
         )}
       </div>
     </Fragment>
@@ -6849,13 +7208,12 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     );
   };
 
-
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
         {accessID === "TR336" && (
           <>
-            <Tooltip title="SOP Forms">
+            <Tooltip title="Edit">
               <IconButton
                 color="info"
                 size="small"
@@ -6863,8 +7221,320 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
-                      BreadCrumb3: params.row.Description,
-                      ItemCode: params.row.Code,
+                      BreadCrumb1: params.row.Code,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="List Of Documents">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/TR338/SopDocument/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Code,
+                      },
+                    },
+                  )
+                }
+              >
+                <SaveOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR337" && (
+          <>
+            {params.row.IsEnable === "Y" ? (
+              <Tooltip title="SOP Documents">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `/Apps/Secondarylistview/TR335/SOPDocuments/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Code,
+                        },
+                      },
+                    )
+                  }
+                >
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="SOP Documents">
+                <IconButton color="info" size="small" disabled>
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        )}
+        {accessID === "TR338" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentCode,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            {params.row.PdfAttach && (
+              <Tooltip title="View File">
+                <IconButton
+                  color="info"
+                  size="small"
+                  // onClick={() =>
+                  //   navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                  //     state: {
+                  //       ...state,
+                  //       BreadCrumb2: params.row.TypeOfDocumentCode,
+                  //     },
+                  //   })
+                  // }
+
+                  onClick={() => {
+                    if (!params.row.PdfAttach) {
+                      toast.error("No file available");
+                      return;
+                    }
+
+                    const fileUrl =
+                      store.getState().globalurl.SOPUploadUrl +
+                      params.row.PdfAttach;
+
+                    // 👇 Detect file type
+                    const lower = fileUrl.toLowerCase();
+
+                    let viewUrl = fileUrl;
+
+                    // 👉 For DOC/DOCX use Office Online Viewer
+                    if (lower.endsWith(".doc") || lower.endsWith(".docx")) {
+                      viewUrl =
+                        "https://view.officeapps.live.com/op/view.aspx?src=" +
+                        encodeURIComponent(fileUrl);
+                    }
+
+                    // 👉 Open in new tab
+                    window.open(viewUrl, "_blank", "noopener,noreferrer");
+                  }}
+                >
+                  <OpenInNewIcon
+                    sx={{ opacity: params.row.PdfAttach ? 1 : 0.5 }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {/* <Tooltip title="Checklist">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR341/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentName,
+                    },
+                  })
+                }
+              >
+                <ChecklistOutlinedIcon />
+              </IconButton>
+            </Tooltip> */}
+
+            {params.row.TypeOfDocumentName === "Annexure" && (
+              <>
+                <Tooltip title="Checklist">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(
+                        `/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR351/${params.row.RecordID}`,
+                        {
+                          state: {
+                            ...state,
+                            BreadCrumb2: params.row.TypeOfDocumentName,
+                          },
+                        },
+                      )
+                    }
+                  >
+                    <ChecklistOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Log Notes">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(
+                        `/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/Booklet/TR339/${params.row.RecordID}`,
+                        {
+                          state: {
+                            ...state,
+                            // BreadCrumb2: params.row.TypeOfDocumentCode,
+                            BreadCrumb2: params.row.TypeOfDocumentName,
+                          },
+                        },
+                      )
+                    }
+                  >
+                    <AutoStoriesOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+          </>
+        )}
+        {accessID === "TR339" && (
+          <>
+            {params.row.Process === "Y" ? (
+              <>
+                <Tooltip title="View">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`./EditBooklet/${params.row.RecordID}/V`, {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      })
+                    }
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Process Pdf">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    // onClick={() =>
+                    //   navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                    //     state: {
+                    //       ...state,
+                    //       BreadCrumb3: params.row.AnnexureNo,
+                    //     },
+                    //   })
+                    // }
+                  >
+                    <PictureAsPdfIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Batch Reconciliation Records">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`./SOPBatch/TR335/${params.row.RecordID}`, {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      })
+                    }
+                  >
+                    <DoubleArrowOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <Tooltip title="Edit">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`./EditBooklet/${params.row.RecordID}/E`, {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      })
+                    }
+                  >
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Process">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      })
+                    }
+                  >
+                    <LoopOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+          </>
+        )}
+        {/* {accessID === "TR341" && (
+          <>
+          <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopCheckList/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+         
+          </>
+        )} */}
+        {accessID === "TR351" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopCheckList/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
                     },
                   })
                 }
@@ -6874,7 +7544,29 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
-        
+
+        {accessID === "TR335" && (
+          <>
+            {params.row.BatchStatus !== "" && (
+              <Tooltip title="Timeline">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(`./TimeLine/${params.row.RecordID}`, {
+                      state: {
+                        ...state,
+                        BreadCrumb4: params.row.NameoftheProduct,
+                      },
+                    })
+                  }
+                >
+                  <TimelineOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        )}
       </div>
     </Fragment>
   );

@@ -9,7 +9,14 @@
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
-
+  "Doccategory": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name"
+  },
+  "Document": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name"
+  },
   "GeoLoc": {
     "code": "Please enter the Code",
     "name": "Please enter the Name"
@@ -24,7 +31,14 @@
     "incharge": "Please select the Accountable Incharge",
     "projectOwner": "Please enter the Project Owner",
     "CurrentStatus": "Please select the Status",
-    "budget": "Please enter the Budget"
+    "budget": "Please enter the Budget",
+    "TentativeEndDate": "Please select the Tentative End Date",
+    "TentativeStartDate": "Please select the Tentative Start Date"
+  },
+  "ProjectUnit": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
+    "OwnedBy": "Please select the Owned By"
   },
   "LeadMarketingActivity": {
     "project": "Please select the Product",
@@ -53,7 +67,6 @@
     "frequency": "Please enter the Frequency",
     "OverheadType": "Please select the OverheadType",
     "Overhead": "Please select the Overhead"
-
   },
   "Overheadtype": {
     "code": "Please enter the Code",
@@ -67,7 +80,7 @@
   "Party": {
     "code": "Please enter the Code",
     "name": "Please enter the Name",
-    "mobilenumber": "Please enter the Contact Mobile Number",
+    "mobilenumber": "Please enter the Contact Mobile or Landline Number",
     "Pancardnumber": "Invalid Pan Card Number",
     "gstnumber": "Invalid GST Number",
     "locality": "Please enter the Locality"
@@ -112,7 +125,7 @@
     "MinOrderQty": "Please enter the Minimum Order Qty",
     "LeadTime": "Please enter the Lead Time (In days)",
     "AgreedPrice": "Please enter the Agreed Price",
-    "ReorderLevel":"Please enter the ReorderLevel"
+    "ReorderLevel": "Please enter the ReorderLevel"
   },
   "Route": {
     "Description": "Please enter the Route Description"
@@ -182,12 +195,17 @@
   },
   "OrderItem": {
     "product": "Please select the Product",
-    "discount": "Please enter the Discount / Add On(%)",
+    "discount": "Please enter the Discount / Add-on (%)",
     "quantity": "Please enter the Quantity"
   },
   "AdvancePayment": {
     "Amount": "Please enter the Amount",
-    "paymentdate": "Please select the Payment Date"
+    "paymentdate": "Please select the Payment Date",
+    "ModeofPayment": "Please select the Payment Mode"
+  },
+  "OHPayment": {
+    "paidamount": "Please enter the Paid Amount",
+    "paymentmode": "Please select the Payment Mode"
   },
   "Locality": {
     "code": "Please enter the Code",
@@ -302,6 +320,27 @@
   "RouteArea": {
     "Name": "Please enter the Route Area"
   },
+  "QCSOPs": {
+    "Description": "Please enter the Description",
+    "Code": "Please enter the Code",
+    "ModuleNo": "Please enter the Modification No",
+    "VersionNo": "Please enter the Version No",
+    "TypeOfCopy": "Please select the Type of Copy",
+    "FacilityType": "Please select the Facility Type"
+  },
+  "QCSOPDoc": {
+    "DocType": "Please select the Document Type",
+    "DocumentName": "Please enter the Document Name",
+    "PdfAttach": "Please select a file"
+  },
+  "QCSOPBooklet": {
+    "AnnexureNo": "Please select the Document Type",
+    "RequestDate": "Please select the Request Date",
+    "NoOfCopyIssue": "Please select the No of Copies Issued",
+    "IssueLogBookNo": "Please enter the Issue Log Book No",
+    "IssuedBy": "Please select the Issued By",
+    "ReceivedBy": "Please select the Received By"
+  },
   "ListofAssessment": {
     "Code": "Please enter the Code",
     "DesignationID": "Please select the Designation",
@@ -342,7 +381,8 @@
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",
     "Close": "Do you want to Close?",
-    "Delete": "Do you want to Delete?"
+    "Delete": "Do you want to Delete?",
+    "Remove": "Do you want to remove this item?"
   },
   "Questions": {
     "Option1": "Please enter Option 1",
@@ -360,9 +400,18 @@
     "numbertype": "Option must be a number",
     "option": "Please enter the Option"
   },
-   "Salarycomp": {
+  "Salarycomp": {
     "Type": "Please select the Type",
     "Name": "Please enter the Name",
-    "Category": "Please select the Category"
+    "Category": "Please select the Category",
+    "Policy": "Please enter the Policy"
+  },
+  "Inventory": {
+    "itemgroups": "Please select the Item Group",
+    "itemcategory": "Please select the Item Category",
+    "Grpitems": "Please select the Item"
+  },
+  "ResetParty": {
+    "Password": "Please Enter Your Passord"
   }
 }

@@ -75,29 +75,39 @@ const EditAdvancePayment = () => {
   }, [location.key]);
 
 
-    useEffect(() => {
-      fetch(process.env.PUBLIC_URL + "/validationcms.json")
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-          return res.json();
-        })
-        .then((data) => {
-          setErrorMsgData(data);
-  
-          let schemaFields = {
-            Amount: Yup.number()
-              .typeError(data.AdvancePayment.Amount)
-              .required(data.AdvancePayment.Amount),
-            paymentdate: Yup.date()
-              .typeError(data.AdvancePayment.paymentdate)
-              .required(data.AdvancePayment.paymentdate)
-          };
-  
-          const schema = Yup.object().shape(schemaFields);
-          setValidationSchema(schema);
-        })
-        .catch((err) => console.error("Error loading validationcms.json:", err));
-    }, []);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          // Amount: Yup.number()
+          //   .typeError(data.AdvancePayment.Amount)
+          //   .required(data.AdvancePayment.Amount),
+          Amount: Yup.number()
+            .transform((value, originalValue) =>
+              originalValue === "" ? undefined : Number(originalValue)
+            )
+            .typeError(data.AdvancePayment.Amount)
+            .required(data.AdvancePayment.Amount)
+            .moreThan(0, "Amount must be greater than 0.00"),
+          paymentdate: Yup.date()
+            .typeError(data.AdvancePayment.paymentdate)
+            .required(data.AdvancePayment.paymentdate),
+          ModeofPayment: Yup.string()
+            .typeError(data.AdvancePayment.ModeofPayment)
+            .required(data.AdvancePayment.ModeofPayment)
+        };
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
 
 
   // *************** INITIALVALUE  *************** //
@@ -109,6 +119,7 @@ const EditAdvancePayment = () => {
     paymentdate: data.Date ? data.Date.split(" ")[0] : "" || "",
     Amount: data.Amount || "",
     paymentComments: data.Comments || "",
+    ModeofPayment: data.ModeofPayment || "",
   };
 
   const Fnsave = async (values, del) => {
@@ -116,8 +127,8 @@ const EditAdvancePayment = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -130,6 +141,7 @@ const EditAdvancePayment = () => {
       Amount: values.Amount || 0,
       SortOrder: values.sortorder || 0,
       Comments: values.paymentComments || "",
+      ModeofPayment: values.ModeofPayment || "",
       Disable: isCheck,
     };
 
@@ -158,7 +170,7 @@ const EditAdvancePayment = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.partyID}`,{
+          navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.partyID}`, {
             state: state,
           });
         }
@@ -211,7 +223,7 @@ const EditAdvancePayment = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {mode === "A" ? "Add Advance" : "Edit Advance"}
+                {mode === "A" ? "Add Advance" : "View Advance"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -251,6 +263,7 @@ const EditAdvancePayment = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => {
               return (
                 <form onSubmit={handleSubmit}>
@@ -271,14 +284,14 @@ const EditAdvancePayment = () => {
                       type="date"
                       id="paymentdate"
                       label={
-                          <>
-                            Payment Date
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
-                          </>
-                        }
+                        <>
+                          Payment Date
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
@@ -287,38 +300,86 @@ const EditAdvancePayment = () => {
                       onChange={handleChange}
                       error={!!touched.paymentdate && !!errors.paymentdate}
                       helperText={touched.paymentdate && errors.paymentdate}
-                      //required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      InputProps={{
+                        readOnly: mode === "V" ? true : false,
+                      }}
+                    //required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
 
                     <TextField
                       name="Amount"
                       type="number"
                       id="Amount"
-                       label={
-                          <>
-                            Amount
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
-                          </>
-                        }
+                      label={
+                        <>
+                          Amount
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.Amount}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                      onChange={(e) => {
+                        // allow only numbers + decimal
+                        const val = e.target.value;
+                        if (/^\d*\.?\d*$/.test(val)) {
+                          setFieldValue("Amount", val);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        let val = e.target.value;
+
+                        if (val === "" || val === ".") {
+                          setFieldValue("Amount", "0.00");
+                          return;
+                        }
+
+                        const num = parseFloat(val);
+                        if (!isNaN(num)) {
+                          setFieldValue("Amount", num.toFixed(2)); // ✅ forces .00
+                        }
+                      }}
                       error={!!touched.Amount && !!errors.Amount}
                       helperText={touched.Amount && errors.Amount}
                       autoFocus
                       InputProps={{
+                        readOnly: mode === "V" ? true : false,
                         inputProps: {
-                          style:{textAlign: "right"},
+                          style: { textAlign: "right" },
                         },
                       }}
                     />
 
+                    <TextField
+                      select
+                      label={
+                        <>
+                          Payment Mode
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      id="ModeofPayment"
+                      name="ModeofPayment"
+                      value={values.ModeofPayment}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ModeofPayment && !!errors.ModeofPayment}
+                      helperText={touched.ModeofPayment && errors.ModeofPayment}
+                      focused
+                      variant="standard"
+                    >
+                      <MenuItem value="COD">Cash On Delivery</MenuItem>
+                      <MenuItem value="UPI">UPI</MenuItem>
+                      <MenuItem value="Others">Others</MenuItem>
+                    </TextField>
                     <TextField
                       name="paymentComments"
                       type="text"
@@ -336,7 +397,10 @@ const EditAdvancePayment = () => {
                         touched.paymentComments && errors.paymentComments
                       }
                       autoFocus
-                      // disabled
+                      InputProps={{
+                        readOnly: mode === "V" ? true : false,
+                      }}
+                    // disabled
                     />
 
                     <TextField
@@ -353,6 +417,7 @@ const EditAdvancePayment = () => {
                       helperText={touched.sortorder && errors.sortorder}
                       // sx={{ background: "#fff6c3" }}
                       InputProps={{
+                        readOnly: mode === "V" ? true : false,
                         inputProps: {
                           style: { textAlign: "right" },
                         },
@@ -373,6 +438,7 @@ const EditAdvancePayment = () => {
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Disable"
+                        disabled={mode === "V"}
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
@@ -384,7 +450,7 @@ const EditAdvancePayment = () => {
                     padding={1}
                     gap="20px"
                   >
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode === "A" ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"

@@ -789,17 +789,18 @@ const EditAttendance = () => {
                   )}
 
                   {/* //For SOP PDF */}
-                  <Tooltip title="View PDF">
+                  {/* <Tooltip title="View PDF">
                     <IconButton onClick={handlePdfClick}>
                       <PictureAsPdfIcon sx={{ fontSize: 24, color: "#d32f2f" }} />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
 
                 </Stack>
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
+                padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}

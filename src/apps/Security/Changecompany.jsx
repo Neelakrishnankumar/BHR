@@ -75,6 +75,8 @@ const Companychange = () => {
     const [logoimage, setlogoimage] = useState("");
     console.log("Nowlogo", logoimage);
     const company = sessionStorage.getItem("company");
+    const grace = sessionStorage.getItem("CompanyGraceTime");
+    const timeout = sessionStorage.getItem("CompanySessionTimeOut");
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
     const [headerPreview, setHeaderPreview] = useState(""); // blob preview url
@@ -227,8 +229,8 @@ const Companychange = () => {
 
             setGstImage(uploadedGst);
             toast.success(fileData.payload.Msg);
-          
-             await saveCompanyDetails(formikRef.current.values, {
+
+            await saveCompanyDetails(formikRef.current.values, {
                 gstImage: uploadedGst
             });
         }
@@ -328,7 +330,9 @@ const Companychange = () => {
             HeaderImg: overrides.headerImage ?? headerImage,
             FooterImg: overrides.footerImage ?? footerImage,
 
-            CompanyName: data.CM_NAME
+            CompanyName: data.CM_NAME,
+            GraceTime: grace || 15,
+            SessionTimeOut: timeout || 600,
         };
 
         return dispatch(CompanydetailpostData({ idata }));

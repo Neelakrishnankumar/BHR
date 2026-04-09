@@ -93,16 +93,16 @@ const EditOrder = () => {
     mode === "A"
       ? defaultDC || 0 // For ADD
       : dataDC === 0
-      ? defaultDC || 0 // For EDIT when data is 0
-      : dataDC; // Otherwise use DATA
+        ? defaultDC || 0 // For EDIT when data is 0
+        : dataDC; // Otherwise use DATA
 
   // Decide correct payment mode
   const paymentMode =
     mode === "A"
       ? defaultPM || ""
       : dataPM === "" || dataPM === null
-      ? defaultPM || ""
-      : dataPM;
+        ? defaultPM || ""
+        : dataPM;
   const InitialValue = {
     orderno: data.Code,
     orderdate: mode == "A" ? currentDate : data.OrderDate,
@@ -145,21 +145,21 @@ const EditOrder = () => {
       data.ORStatus === "Created"
         ? "Created"
         : data.ORStatus === "Process"
-        ? "Process"
-        : data.ORStatus === "Ready To Deliver"
-        ? "Ready To Deliver"
-        : data.ORStatus === "Picked"
-        ? "Picked"
-        : data.ORStatus === "Delivered"
-        ? "Delivered"
-        : data.ORStatus === "Yet To Deliver"
-        ? "Yet To Deliver"
-        : data.ORStatus === "Adjust From Advance"
-        ? "Adjust From Advance"
-        : data.ORStatus === "Paid"
-        ? "Paid"
-        : // : ""
-          "",
+          ? "Process"
+          : data.ORStatus === "Ready To Deliver"
+            ? "Ready To Deliver"
+            : data.ORStatus === "Picked"
+              ? "Picked"
+              : data.ORStatus === "Delivered"
+                ? "Delivered"
+                : data.ORStatus === "Yet To Deliver"
+                  ? "Yet To Deliver"
+                  : data.ORStatus === "Adjust From Advance"
+                    ? "Adjust From Advance"
+                    : data.ORStatus === "Paid"
+                      ? "Paid"
+                      : // : ""
+                      "",
     // status: mode == "A" ? "Ordercreated": data.Status,
     paymentmode: paymentMode,
     receivername: data.ReceiverName,
@@ -193,8 +193,8 @@ const EditOrder = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -238,7 +238,8 @@ const EditOrder = () => {
       //   Finyear,
       CompanyID,
       // OrderType: values.OrderType || "",
-      ORStatus: override.ORStatus ?? values.status ?? "",
+      // ORStatus: override.ORStatus ?? values.status ?? "",
+      ORStatus: override.ORStatus ? override.ORStatus : values.status ? values.status : "Created", //CHANGED -- AS ON 26 MARCH IT WAS "" FOR EVERY INSERT
       OrderType: override.OrderType ?? values.OrderType ?? "",
       PurchaseCheckbox: values.PurchaseCheckbox === true ? "Y" : "N",
     };
@@ -373,16 +374,16 @@ const EditOrder = () => {
                     ? `Order (${state.Code || ""} )`
                     : `Order(New)` || ""
                   : mode === "E"
-                  ? `Quotation (${state.Code || ""} )`
-                  : `Quotation(New)` || ""}
+                    ? `Quotation (${state.Code || ""} )`
+                    : `Quotation(New)` || ""}
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(-1);
-                // }}
+              // onClick={() => {
+              //   navigate(-1);
+              // }}
               >
                 {/* {mode === "A" ? "Add Order" : "Edit Order"} */}
                 {params.OrderType === "O"
@@ -390,8 +391,8 @@ const EditOrder = () => {
                     ? "Add Order"
                     : "Edit Order"
                   : mode === "A"
-                  ? "Add Quotation"
-                  : "Edit Quotation"}
+                    ? "Add Quotation"
+                    : "Edit Quotation"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -469,8 +470,8 @@ const EditOrder = () => {
                       onChange={handleChange}
                       error={!!touched.orderdate && !!errors.orderdate}
                       helperText={touched.orderdate && errors.orderdate}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
                     {CompanyAutoCode == "Y" ? (
                       <TextField
@@ -494,7 +495,7 @@ const EditOrder = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -766,7 +767,7 @@ const EditOrder = () => {
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
                           <MenuItem value="No">No</MenuItem>
-                          
+
                         </TextField>
                         <TextField
                           select
@@ -785,7 +786,8 @@ const EditOrder = () => {
                           focused
                           variant="standard"
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false,
+                            // readOnly: ViewStatus === "Paid" ? true : false,
+                            readOnly: true,
                           }}
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
@@ -824,7 +826,7 @@ const EditOrder = () => {
                           error={!!touched.paiddate && !!errors.paiddate}
                           helperText={touched.paiddate && errors.paiddate}
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false,
+                            readOnly: true,
                           }}
                         />
                         <TextField
@@ -899,7 +901,7 @@ const EditOrder = () => {
                                   Number(values.PartyBalance) < 0
                                     ? "#d32f2f"
                                     : // ? "#db4f4a"
-                                      "#2e7d32", // red : green
+                                    "#2e7d32", // red : green
                                 fontWeight: 600,
                               },
                             },
@@ -939,7 +941,8 @@ const EditOrder = () => {
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false, 
+                            // readOnly: ViewStatus === "Paid" ? true : false, 
+                            readOnly: true,
                             inputProps: {
                               style: { textAlign: "right" },
                             },
@@ -1003,10 +1006,13 @@ const EditOrder = () => {
                           {/* <MenuItem value="Scheduled">Scheduled</MenuItem> */}
                           <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
-                          <MenuItem value="Paid">Paid</MenuItem>
-                          <MenuItem value="Adjust From Advance">
+                          {/* COMMENTED AS PER NK ANNA - 06/03/2026 */}
+                          {/* UNCOMMENTED AS ON - 20/03/2026 */}
+                          {ViewStatus === "Paid" && (
+                            <MenuItem value="Paid">Paid</MenuItem>)}
+                          {/* <MenuItem value="Adjust From Advance">
                             Adjust From Advance
-                          </MenuItem>
+                          </MenuItem> */}
                         </TextField>
                         {/* <TextField
                           name="paymentmode"
@@ -1043,7 +1049,8 @@ const EditOrder = () => {
                           focused
                           variant="standard"
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false,
+                            // readOnly: ViewStatus === "Paid" ? true : false,
+                            readOnly: true,
                           }}
                         >
                           <MenuItem value="COD">Cash On Delivery</MenuItem>
@@ -1071,7 +1078,7 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                          // disabled
+                        // disabled
                         />
 
                         <TextField
@@ -1122,7 +1129,7 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                          // disabled
+                        // disabled
                         />
                         <TextField
                           name="PaidComments"
@@ -1144,7 +1151,7 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                          // disabled
+                        // disabled
                         />
                         <Box>
                           <Field
@@ -1201,9 +1208,15 @@ const EditOrder = () => {
                           onChange={handleChange}
                           error={!!touched.totalprice && !!errors.totalprice}
                           helperText={touched.totalprice && errors.totalprice}
+                          // InputProps={{
+                          //   inputProps: {
+                          //     style: { textAlign: "right" },
+                          //   },
+                          // }}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
+                              readOnly: true,
                             },
                           }}
                           autoFocus
@@ -1334,7 +1347,7 @@ const EditOrder = () => {
                     gap="20px"
                   >
                     {YearFlag == "true" &&
-                    (mode === "A" || params.OrderType === "O") ? (
+                      (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"

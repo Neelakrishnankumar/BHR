@@ -48,6 +48,7 @@ import {
   getFetchData,
   postData,
   scheduleGetData,
+  SopEmpMappingController,
 } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import {
@@ -73,6 +74,8 @@ import {
 } from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 
 const NewScheduleLatest = () => {
   const navigate = useNavigate();
@@ -83,12 +86,16 @@ const NewScheduleLatest = () => {
 
   const recID = params.id;
   const accessID = params.accessID;
+  const accessID1 = params.accessID1;
+  const accessID2 = params.accessID2;
   //const accessID = "TR283";
   const screenName = params.screenName;
   const mode = params.Mode;
   const EmpId = params.parentID3;
   const parentID1 = params.parentID1;
   const parentID2 = params.parentID2;
+  const parentID3 = params.parentID3;
+  const parentID4 = params.parentID4;
   console.log("🚀 ~ NewSchedule ~ parentID2:", parentID2);
 
   const CompanyID = sessionStorage.getItem("compID");
@@ -111,6 +118,8 @@ const NewScheduleLatest = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const scheduleLoading = useSelector((state) => state.formApi.scheduleloading);
+  const schedulegetdata = useSelector((state) => state.formApi.schedulegetdata);
+
   console.log("🚀 ~ NewSchedule ~ scheduleLoading:", scheduleLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const AssessmentAutoUrl = useSelector(
@@ -213,6 +222,7 @@ const NewScheduleLatest = () => {
   //     }
   //   };
   // define it at the top of your component
+
   const fetchScheduleData = async () => {
     try {
       const data = await dispatch(
@@ -222,7 +232,7 @@ const NewScheduleLatest = () => {
       console.log("🚀 ~ fetchScheduleData ~ data:", data);
 
       if (data?.payload?.Status === "Y") {
-        setRows(data.payload.Data || []);
+        // setRows(data.payload.Data || []);
       } else {
         setRows([]); // Prevents DataGrid errors
       }
@@ -242,10 +252,10 @@ const NewScheduleLatest = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
+          ? delAction === "harddelete"
+            ? "harddelete"
+            : "update"
+          : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -385,13 +395,50 @@ const NewScheduleLatest = () => {
     }
   };
 
+  const handleStatusUpdate = (row) => async () => {
+    try {
+
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You want to update status of this schedule",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+      });
+
+      if (!result.isConfirmed) return;
+
+      const idata = {
+        AssessmentID: row.AssessmentID || parentID2 || 0,
+        EmpRecid: row.EmployeeID,
+        AssessmentName: row.Assessment
+      };
+
+      const response = await dispatch(
+        SopEmpMappingController({ idata })
+      );
+
+      if (response.payload?.Status === "Y") {
+        toast.success(response.payload.Msg || "Status updated successfully!");
+        fetchScheduleData(); // 🔹 refresh the grid after delete
+      } else {
+        toast.error(response.payload?.Msg || "Failed to update status!");
+      }
+    } catch (error) {
+      console.error("❌ Error updating status:", error);
+      toast.error("Error occurred during status update.");
+    }
+  };
   const [rowCount, setRowCount] = useState(0);
   const Sprintcolumns = [
-    { field: "SLNO", headerName: "#SL", width: 40 },
+    { field: "SLNO", headerName: "SL#", width: 40 },
     {
       headerName: "Date",
       field: "DATE",
-      type: "date",
+      // type: "date",
       width: "100",
       align: "center",
       headerAlign: "center",
@@ -401,7 +448,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Employee Name",
       field: "EmployeeName",
-      width: "150",
+      width: "200",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -428,7 +475,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Targeted Date",
       field: "Targeteddate",
-      type: "date",
+      // type: "date",
 
       width: "100",
       align: "center",
@@ -440,7 +487,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Last Att Date",
       field: "Lastattdate",
-      type: "date",
+      // type: "date",
       width: "100",
       align: "center",
       headerAlign: "center",
@@ -482,34 +529,121 @@ const NewScheduleLatest = () => {
     //         />,
     //     ],
     // },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   headerName: "Actions",
+    //   width: 150,
+    //   cellClassName: "actions",
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       key="delete"
+    //       icon={
+    //         <DeleteIcon
+    //           style={{
+    //             color: "#e74c3c",
+    //             opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+    //           }}
+    //         />
+    //       }
+    //       label="Delete"
+    //       disabled={params.row.STATUS !== "Not Attended"}
+    //       onClick={
+    //         params.row.STATUS === "Not Attended"
+    //           ? handleDeleteClick(params.row) // ✅ Correct
+    //           : undefined
+    //       }
+    //       color="inherit"
+    //     />,
+
+    //   ],
+    // },
+
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
       width: 150,
+      align: "left",
       cellClassName: "actions",
-      getActions: (params) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={
-            <DeleteIcon
-              style={{
-                color: "#e74c3c",
-                opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
-              }}
+      getActions: (params) => {
+        const actions = [];
+
+        // ✅ DELETE ICON (existing logic)
+        actions.push(
+          <GridActionsCellItem
+            key="delete"
+            icon={
+              <DeleteIcon
+                style={{
+                  color: "#e74c3c",
+                  // opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+                  opacity: params.row.STATUS === "Scheduled" ? 1 : 0.3,
+                }}
+              />
+            }
+            label="Delete"
+            // disabled={params.row.STATUS !== "Not Attended"}
+            disabled={params.row.STATUS !== "Scheduled"}
+            onClick={
+              // params.row.STATUS === "Not Attended"
+              params.row.STATUS === "Scheduled"
+                ? handleDeleteClick(params.row)
+                : undefined
+            }
+            color="inherit"
+          />
+        );
+
+        // if (params.row.STATUS === "Pass") {
+        //   actions.push(
+        //     <GridActionsCellItem
+        //       key="statusUpdate"
+        //       icon={<AutorenewOutlinedIcon style={{ color: "#075b2a" }} />}
+        //       label="Status Update"
+        //       onClick={
+        //         handleStatusUpdate(params.row)
+        //       }
+        //       color="inherit"
+        //     />
+        //   );
+        // }
+
+        if (params.row.STATUS === "Pass") {
+          actions.push(
+            <Tooltip title="Score Board">
+            <GridActionsCellItem
+              key="ScoreBoard"
+              icon={<AnalyticsIcon style={{ color: "#4cceac" }} />}
+              label="Score Board"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/skillglow/${accessID2}/${screenName}/${parentID4}/${accessID1}/${parentID3}/ScheduleListAssessment/${parentID2}/AssessmentScoreBoard/${params.row.RecordID}`,
+                  {
+                    state: {
+                      ...state,
+                      AssessmentName: params.row.AssessmentName,
+                      AssessmentID: params.row.AssessmentID,
+                      ScheduleID: params.row.RecordID,
+                      Lastattdate: params.row.Lastattdate,
+                      Firstattdate: params.row.Firstattdate,
+                      Lastattscore: params.row.Lastattscore,
+                      NoofAttemp: params.row.NoofAttemp,
+                      EmployeeName: params.row.EmployeeName,
+                      EmployeeID: params.row.EmployeeID,
+                    },
+                  },
+                )
+              }
+              color="inherit"
             />
-          }
-          label="Delete"
-          disabled={params.row.STATUS !== "Not Attended"}
-          onClick={
-            params.row.STATUS === "Not Attended"
-              ? handleDeleteClick(params.row) // ✅ Correct
-              : undefined
-          }
-          color="inherit"
-        />,
-      ],
-    },
+            </Tooltip>
+          );
+        }
+
+        return actions;
+      },
+    }
   ];
 
   function Custombar() {
@@ -626,7 +760,7 @@ const NewScheduleLatest = () => {
           </Box>
         </Paper>
 
-        {!getLoading ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px">
               <Box
@@ -673,7 +807,7 @@ const NewScheduleLatest = () => {
                       minHeight: dataGridHeaderFooterHeight,
                     },
                   }}
-                  rows={rows}
+                  rows={schedulegetdata}
                   columns={Sprintcolumns}
                   loading={scheduleLoading}
                   //rowModesModel={rowModesModel}
