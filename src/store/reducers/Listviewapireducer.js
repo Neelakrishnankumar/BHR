@@ -532,9 +532,11 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
     });
 };
 export const fetchListview =
-  (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
+  (AccessID, VerticalLicense, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
+    console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
+    
     const LoginID = sessionStorage.getItem("loginrecordID");
     const empID = sessionStorage.getItem("empID");
   
@@ -1238,6 +1240,7 @@ export const fetchListview =
       Query: {
         // "ScreenName": screenName,
         AccessID: AccessID,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter:
           AccessID == "TR128"

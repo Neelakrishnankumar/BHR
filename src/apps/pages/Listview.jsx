@@ -127,7 +127,10 @@ const Listview = () => {
   const colors = tokens(theme.palette.mode);
   const YearFlag = sessionStorage.getItem("YearFlag");
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
+  const VerticalLicense = sessionStorage.getItem("VerticalLicense");
   const location = useLocation();
+   const rowData = location.state || {};
+ console.log(rowData, "--rowData state");
   console.log(location, "location -----------------");
 
 
@@ -156,7 +159,8 @@ const Listview = () => {
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const open = useSelector((state) => state.listviewApi.mailOpen);
-  var screenName = params.screenName;
+  // var screenName = params.screenName;
+  var screenName = rowData.name;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -307,6 +311,7 @@ const Listview = () => {
     dispatch(
       fetchListview(
         accessID,
+VerticalLicense,
         screenName,
         accessID == "TR010" ||
           accessID == "TR140" ||
@@ -1712,6 +1717,7 @@ const Listview = () => {
                     dispatch(
                       fetchListview(
                         accessID,
+                        VerticalLicense,
                         screenName,
                         whereClause,
                         "",
