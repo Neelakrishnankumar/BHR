@@ -191,7 +191,7 @@ const EditSalaryComponent = () => {
               sx={{ cursor: "default" }}
 
             >
-              Salary Component
+              Salary Components
             </Typography>
           </Box>
 

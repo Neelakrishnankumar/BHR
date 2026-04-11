@@ -4934,7 +4934,7 @@ const Editemployee = () => {
                           />
                         </Stack>
                       )}
-                      <TextField
+                      {/* <TextField
                         name="dateofbirth"
                         type="date"
                         id="dateofbirth"
@@ -4948,9 +4948,11 @@ const Editemployee = () => {
                         error={!!touched.dateofbirth && !!errors.dateofbirth}
                         helperText={touched.dateofbirth && errors.dateofbirth}
                         sx={{ background: "" }}
+                        InputLabelProps={{shrink:true}}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
+                      /> */}
+                      
                       <TextField
                         name="joindate"
                         type="date"

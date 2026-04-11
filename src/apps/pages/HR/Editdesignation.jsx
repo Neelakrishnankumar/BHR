@@ -85,6 +85,7 @@ const Editdesignation = () => {
   const [pageSize, setPageSize] = useState(10);
 
 
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -109,9 +110,9 @@ const Editdesignation = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
-  // useEffect(() => {
-  //   dispatch(getFetchData({ accessID, get: "get", recID }));
-  // }, [location.key]);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, [location.key]);
 
   useEffect(() => {
     if (show == "0") {
