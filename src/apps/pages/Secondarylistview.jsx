@@ -100,6 +100,7 @@ const ListviewSecondary = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const params = useParams();
+  const VerticalLicense = sessionStorage.getItem("VerticalLicense");
 
   var CompId = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -391,11 +392,11 @@ const ListviewSecondary = () => {
     if (response.data.status == 200) {
       toast.success(response.data.message);
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
-      dispatch(fetchListview(accessID, screenName, filter, "", compID));
+      dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
     } else {
       toast.error(response.data.message);
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
-      dispatch(fetchListview(accessID, screenName, filter, "", compID));
+      dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
     }
   };
 
@@ -4066,7 +4067,7 @@ const ListviewSecondary = () => {
   }
 
   React.useEffect(() => {
-    dispatch(fetchListview(accessID, screenName, filter, "", compID));
+    dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
   }, [location.key]);
 
   const handlePagechange = (pageno) => {

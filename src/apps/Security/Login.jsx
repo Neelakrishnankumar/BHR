@@ -697,6 +697,7 @@ const Login = () => {
       }
       var company = data.payload.apiResponse.Company
       var SubscriptionCode = data.payload.SubscriptionCode
+      var VerticalLicense = data.payload.VerticalLicense
       var year = data.payload.apiResponse.Year
       var YearFlag = data.payload.apiResponse.YearFlag
       var compID = data.payload.apiResponse.CompanyRecordid
@@ -713,7 +714,7 @@ const Login = () => {
       var loginrecordID = data.payload.apiResponse.Recordid
       var Modules = data.payload.apiResponse.Modules
       var UserName = data.payload.apiResponse.Name
-      var SubscriptionCode = data.payload.SubscriptionCode
+      // var SubscriptionCode = data.payload.SubscriptionCode
       var SubscriptionID = data.payload.SubscriptionID
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
@@ -733,7 +734,8 @@ const Login = () => {
       sessionStorage.setItem("SubscriptionID", SubscriptionID);
       sessionStorage.setItem("UserName", UserName);
       sessionStorage.setItem("loginrecordID", loginrecordID);
-      sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+      // sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+      sessionStorage.setItem("VerticalLicense", VerticalLicense);
       sessionStorage.setItem("company", company);
       sessionStorage.setItem("year", year);
       sessionStorage.setItem("YearFlag", YearFlag);

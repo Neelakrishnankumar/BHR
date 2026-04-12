@@ -830,6 +830,32 @@ const Editproject = () => {
   };
 
 
+
+
+const getBusinessCaption = (VerticalID, CaptionID, defaultCaption) =>{
+if(VerticalID == 101){
+ var captions = [{ "CAPTIONID":"ProjectOwner","CAPTION":"PROJECT OWNER"},
+{ "CAPTIONID":"PROJECTTITLE","CAPTION":"PROJECT TITLE"},
+{ "CAPTIONID":"PROJECTCODE","CAPTION":"PROJECT CODE"},
+{ "CAPTIONID":"PROJECTDESC","CAPTION":"PROJECT DESC"},
+];
+
+var displaycaption = defaultCaption;
+captions.forEach((caption) => {
+  if(caption.CAPTIONID == CaptionID){
+    console.log(caption.CAPTION, "--caption.CAPTION");
+   displaycaption = caption.CAPTION;
+  }
+});
+    return displaycaption;
+
+} 
+
+else{
+  return defaultCaption;
+}
+ 
+}
   // GRID VIEW SAVE 
   const handleSaveButtonClick = async () => {
     for (let index = 0; index < rows.length; index++) {
@@ -951,6 +977,14 @@ const Editproject = () => {
       </GridToolbarContainer>
     );
   }
+
+
+
+
+
+
+
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -1129,14 +1163,15 @@ const Editproject = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label={
-                      <>
-                        Description
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
+ label={getBusinessCaption(101,"PROJECTTITLE","Title")}
+                    // label={
+                    //   <>
+                    //     Description
+                    //     <span style={{ color: "red", fontSize: "20px" }}>
+                    //       *
+                    //     </span>
+                    //   </>
+                    // }
                     variant="standard"
                     focused
                     value={values.name}
@@ -1174,16 +1209,9 @@ const Editproject = () => {
                   <CheckinAutocomplete
                     disabled={mode == "V"}
                     name="projectOwner"
-                    label="Project Owner"
-                    // label={
-                    //   <>
-                    //     Project Owner
-                    //     <span style={{ color: "red", fontSize: "20px" }}>
-                    //       *
-                    //     </span>
-                    //   </>
-                    // }
-                    variant="outlined"
+                    // label="Project Owner"
+                    label={getBusinessCaption(103,"ProjectOwner","Class Teacher")}
+                     variant="outlined"
                     id="projectOwner"
                     value={values.projectOwner}
                     onChange={(newValue) => {

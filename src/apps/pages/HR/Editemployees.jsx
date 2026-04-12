@@ -4953,7 +4953,7 @@ const Editemployee = () => {
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       /> */}
                       
-                      <TextField
+                      {/* <TextField
                         name="joindate"
                         type="date"
                         id="joindate"
@@ -4969,6 +4969,21 @@ const Editemployee = () => {
                         sx={{ background: "" }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      /> */}
+                       <TextField
+                        name="joindate"
+                        type="date"
+                        id="joindate"
+                        label="Date of Joining"
+                        variant="standard"
+                        value={values.joindate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        InputLabelProps={{ shrink: true }}
+                        inputProps={{
+                          max: "9999-12-31",
+                          min: "1900-01-01"
+                        }}
                       />
                       <TextField
                         name="confirmdate"
@@ -4984,6 +4999,10 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
+                        inputProps={{
+                          max: "9999-12-31",
+                          min: "1900-01-01"
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
