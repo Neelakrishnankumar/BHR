@@ -25,7 +25,7 @@ import { Field, Formik } from "formik";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { postData, getFetchData } from "../../../store/reducers/Formapireducer";
+import { postData, getFetchData, CustomisedCaptionGet } from "../../../store/reducers/Formapireducer";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -54,7 +54,12 @@ const Editshift = () => {
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+    const Subscriptionlastthree = SubscriptionCode.slice(-3);
     // Page params
+    const Customisedcaptiondata = useSelector(
+        (state) => state.formApi.CustomisedCaptionGetData
+    );
     const recID = params.id;
     const mode = params.Mode;
     const accessID = params.accessID;
@@ -95,12 +100,39 @@ const Editshift = () => {
 
         }
     }, [location.key, recID, mode]);
-
+    useEffect(() => {
+        if (Subscriptionlastthree && accessID) {
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                })
+            );
+        }
+    }, [Subscriptionlastthree, accessID, dispatch]);
     // Ensure data is available before rendering form
     if (!data && getLoading) {
         return <LinearProgress />;
     }
 
+
+
+    // Ensure it's always an array
+    const captionArray = Array.isArray(Customisedcaptiondata)
+        ? Customisedcaptiondata
+        : Customisedcaptiondata?.data || [];
+    // GRID VIEW SAVE 
+
+    const getBusinessCaption = (CaptionID, defaultCaption) => {
+        if (Subscriptionlastthree === "003") {
+            const match = captionArray.find(
+                (item) => item.CAPTIONID === CaptionID
+            );
+            return match?.CAPTION || defaultCaption;
+        }
+
+        return defaultCaption;
+    };
     const InitialValue = {
         code: data.Code,
         name: data.Description,
@@ -332,9 +364,10 @@ const Editshift = () => {
                                         id="name"
                                         label={
                                             <>
-                                                Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                {getBusinessCaption("Description", "Description")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                             </>
                                         }
+                                        // label={getBusinessCaption("Description", "Description")}
                                         variant="standard"
                                         focused
                                         value={values.name}
@@ -622,7 +655,7 @@ const Editshift = () => {
                                         >
                                             Save
                                         </Button>
-                                    )}   
+                                    )}
                                     {/* {YearFlag == "true" && mode == "E" ? (
                                         <Button
                                             color="error"

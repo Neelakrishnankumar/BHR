@@ -232,6 +232,7 @@ const initialState = {
   weightagepostUrl: "",
   employeeattendanceUrl: "",
   payrollattendanceUrl: "",
+  GetPayrollattendaceUrl: "",
   attendanceUrl: "",
   attendanceprocessUrl: "",
   regularizationUrl: "",
@@ -338,11 +339,10 @@ export const getUrlSlice = createSlice({
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
-      state.listViewurl = APIurl + "wslistview_mysql.php";
-      state.loginUrl = APIurl + "LController.php";
+      state.listViewurl = APIurl + "wslistview_mysqlV1.php";
+      state.loginUrl = APIurl + "LControllerV1.php";
       state.authUrl = APIurl + "auth.php";
       state.forgotPasswordUrl = APIurl + "BOSForgetPasswordController.php";
-
       state.comboUrl = APIurl + "APIController.php";
       state.apiUrl = APIurl + "APIController.php";
       state.imgUploadUrl = baseurl + "imgup.php";
@@ -410,10 +410,10 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.GetPayrollattendaceUrl = APIurl + "PayrollAttendanceGet.php";
       state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
-      state.attendanceprocessUrl =
-        APIurl + "EmpAttendanceHistoryController.php";
+      state.attendanceprocessUrl = APIurl + "EmpAttendanceHistoryController.php";
       state.regularizationUrl = APIurl + "APIController.php?";
       state.settingsgetUrl = APIurl + "HRSubscriptionCodeGetController.php";
       state.settingsPostUrl = APIurl + "HRChangePasswordController.php";
@@ -512,6 +512,7 @@ export const getUrlSlice = createSlice({
       state.SopTimeLineController = APIurl + "SopTimeLineController.php";
       state.GetOverflowAffectedOrders = APIurl + "getOverflowAffectedOrders.php";
       state.PartyReset = APIurl + "PartyResetController.php";
+      state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
     },
   },
 });

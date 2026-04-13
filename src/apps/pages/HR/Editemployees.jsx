@@ -56,7 +56,8 @@ import {
   Inventorygrid2,
   Inventorygrid3,
   Inventryget,
-  InventoryPostController
+  InventoryPostController,
+  CustomisedCaptionGet
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -475,7 +476,37 @@ const Editemployee = () => {
       vendor,
     }));
   }, [ParentgetData, is003Subscription]);
+  // const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
 
+    return match?.CAPTION || defaultCaption;
+  };
   useEffect(() => {
     if (InventrygetData) {
       setBottomRows(InventrygetData);
@@ -812,12 +843,12 @@ const Editemployee = () => {
   // }, [location.key]);
   useEffect(() => {
     if (show == "0") {
-    if (recID && mode === "E") {
-      dispatch(fetchApidata("TR027","get", recID ));
-    } else {
-      dispatch(fetchApidata("TR027", "get", recID ));
+      if (recID && mode === "E") {
+        dispatch(fetchApidata("TR027", "get", recID));
+      } else {
+        dispatch(fetchApidata("TR027", "get", recID));
+      }
     }
-  }
   }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
@@ -1212,7 +1243,12 @@ const Editemployee = () => {
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       dispatch(fetchApidata(accessID, "get", recID));
-
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
       setLoading(false);
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
@@ -1266,11 +1302,24 @@ const Editemployee = () => {
     setScreen(event.target.value);
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR027",
+        })
+      );
     }
     if (event.target.value == "1") {
       dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR038",
+        })
+      );
+      dispatch(
         fetchExplorelitview(
           "TR038",
+          Subscriptionlastthree,
           "Skills",
           `${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1283,6 +1332,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR302",
+          Subscriptionlastthree,
           "Locality",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1294,6 +1344,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR125",
+          Subscriptionlastthree,
           "Function",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1304,8 +1355,15 @@ const Editemployee = () => {
     if (event.target.value == "3") {
       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR126",
+        })
+      );
+      dispatch(
         fetchExplorelitview(
           "TR126",
+          Subscriptionlastthree,
           "Manager",
           `parentID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1315,6 +1373,11 @@ const Editemployee = () => {
     }
     if (event.target.value == "4" || event.target.value == "12") {
       dispatch(getDeployment({ HeaderID: recID }));
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR027",
+      })
+      );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "5") {
@@ -1330,6 +1393,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR210",
+          Subscriptionlastthree,
           "Attachment",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1338,9 +1402,15 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "7") {
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR212",
+      })
+      );
       dispatch(
         fetchExplorelitview(
           "TR212",
+          Subscriptionlastthree,
           "itemcustody",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1349,9 +1419,15 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "17") {
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR212",
+      })
+      );
       dispatch(
         fetchExplorelitview(
           "TR212",
+          Subscriptionlastthree,
           "itemcustody",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1361,9 +1437,15 @@ const Editemployee = () => {
     }
     //ITEMSERVICES
     if (event.target.value == "14") {
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR309",
+      })
+      );
       dispatch(
         fetchExplorelitview(
           "TR309",
+          Subscriptionlastthree,
           "itemservices",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -1388,6 +1470,12 @@ const Editemployee = () => {
 
       dispatch(getDeployment({ HeaderID: recID }));
       dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR244",
+        })
+      );
       const designationName =
         Data?.DesignDesc ||
         deploymentInitialValue?.Designation?.Name ||
@@ -1405,9 +1493,8 @@ const Editemployee = () => {
       console.log("filterCondition", filterCondition);
 
       dispatch(
-        fetchExplorelitview("TR244", "Contracts In", filterCondition, "")
+        fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
       );
-
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
 
@@ -1415,6 +1502,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR244",
+          Subscriptionlastthree,
           "Contracts Out",
           `EmployeeID='${recID}' AND Customer='Y' AND CompanyID=${CompanyID}`,
           ""
@@ -1427,6 +1515,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR364",
+          Subscriptionlastthree,
           "Employee Documents",
           // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_EMPRECID))`,
@@ -1437,6 +1526,12 @@ const Editemployee = () => {
     }
     if (event.target.value == "9") {
       dispatch(geolocationData({ empID: recID }));
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR027",
+        })
+      );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "15") {
@@ -1460,8 +1555,15 @@ const Editemployee = () => {
     }
     if (event.target.value == "10") {
       dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR249",
+        })
+      );
+      dispatch(
         fetchExplorelitview(
           "TR249",
+          Subscriptionlastthree,
           "Leave Configuration",
           `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
           ""
@@ -1495,6 +1597,7 @@ const Editemployee = () => {
       dispatch(
         Inventorygrid1({
           AccessID: "2151",
+          VerticalLicense: Subscriptionlastthree,
           screenName: "Item Group",
           filter: `CompanyID=${CompanyID}`,
           any: "",
@@ -1505,6 +1608,7 @@ const Editemployee = () => {
       dispatch(
         Inventorygrid2({
           AccessID: "2152",
+          VerticalLicense: Subscriptionlastthree,
           screenName: "Item Category",
           filter: `CompanyID=${CompanyID}`,
           any: "",
@@ -1515,6 +1619,7 @@ const Editemployee = () => {
       dispatch(
         Inventorygrid3({
           AccessID: "2153",
+          VerticalLicense: Subscriptionlastthree,
           screenName: "Item",
           filter: `CompanyID=${CompanyID}`,
           any: "",
@@ -1973,7 +2078,7 @@ const Editemployee = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Skills</Typography>
+          <Typography>{`List of ${getBusinessCaption("Skills", "Skills")}`}</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -2048,13 +2153,13 @@ const Editemployee = () => {
               : show == "6"
                 ? "List of Documents"
                 : show == "3"
-                  ? "List of Managers"
+                  ? `List of ${getBusinessCaption("Managers", "Manager")}`
                   : show == "20"
                     ? "List of Items"
                     : show == "7"
-                      ? "Item Custody"
+                      ? `List of ${getBusinessCaption("ItemCustody", "Item Custody")}`
                       : show == "10"
-                        ? "List of Configurations"
+                        ? `List of ${getBusinessCaption("LeaveConfigurations", "Leave Configuration")}`
                         : show == "13"
                           ? "List of Localities"
                           : show == "14"
@@ -2062,12 +2167,14 @@ const Editemployee = () => {
                             : show == "15"
                               ? "List of Parent"
                               : show == "17"
-                                ? "List of Item Custody"
+                                ? `List of ${getBusinessCaption("ItemCustody", "Item Custody")}`
                                 : show == "21"
-                                  ? "Documents"
-                                  : show == "8" || show == "11"
-                                    ? "List of Contracts"
-                                    : "List of Managers"}
+                                  ? "List of Documents"
+                                  : show == "8"
+                                    ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
+                                    : show == "11"
+                                      ? "List of Contracts"
+                                      : "List of Managers"}
           </Typography>
           {show != "20" && (<Typography variant="h6" fontWeight="bold">{`(${rowCount})`}</Typography>)}
         </Box>
@@ -2656,7 +2763,7 @@ const Editemployee = () => {
     );
     if (response.payload.Status == "Y") {
       dispatch(
-        fetchExplorelitview("TR125", "Function", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR125", Subscriptionlastthree, "Function", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2952,6 +3059,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR302",
+          Subscriptionlastthree,
           "Locality",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -3011,7 +3119,7 @@ const Editemployee = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR212", "ItemCustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR212", Subscriptionlastthree, "ItemCustody", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -3110,7 +3218,7 @@ const Editemployee = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR309", "ItemServices", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR309", Subscriptionlastthree, "ItemServices", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -3256,11 +3364,12 @@ const Editemployee = () => {
       setLoading(false);
       show == "8"
         ? dispatch(
-          fetchExplorelitview("TR244", "Contracts In", filterCondition, "")
+          fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
         )
         : dispatch(
           fetchExplorelitview(
             "TR244",
+            Subscriptionlastthree,
             "Contracts Out",
             `EmployeeID='${recID}' AND Customer='Y'`,
             ""
@@ -3447,7 +3556,7 @@ const Editemployee = () => {
       setLoading(false);
       toast.success("Data fetched successfully");
       resetForm();
-    } 
+    }
     else {
       setLoading(false);
       toast.error(response.payload.Msg);
@@ -3469,12 +3578,12 @@ const Editemployee = () => {
       dispatch(
         Inventryget({ data: { EmployeeID: recID } }))
       toast.success(response.payload.Msg);
-    } 
+    }
     // else {
     //   setLoading(false);
     //   toast.error(response.payload.Msg);
     // }
-     else {
+    else {
       const errors = response.payload.Message;
 
       if (Array.isArray(errors)) {
@@ -3549,6 +3658,7 @@ const Editemployee = () => {
       await dispatch(
         fetchExplorelitview(
           "TR249",
+          Subscriptionlastthree,
           "Leave Configuration",
           `EmployeeID='${recID}'AND CompanyID=${CompanyID}`,
           ""
@@ -3626,7 +3736,7 @@ const Editemployee = () => {
     );
     if (response.payload.Status == "Y") {
       dispatch(
-        fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
+        fetchExplorelitview("TR126", Subscriptionlastthree, "Manager", `parentID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -4008,6 +4118,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR210",
+          Subscriptionlastthree,
           "List of Documents",
           `EmployeeID=${recID}`,
           ""
@@ -4150,7 +4261,7 @@ const Editemployee = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR212", "ItemCustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview("TR212", Subscriptionlastthree, "ItemCustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -4225,7 +4336,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Skills
+                      {getBusinessCaption("Skills", "Skills")}
                     </Typography>
                   ) : (
                     false
@@ -4247,7 +4358,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Managers
+                      {getBusinessCaption("Managers", "Manager")}
                     </Typography>
                   ) : (
                     false
@@ -4258,7 +4369,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Deployment
+                      {getBusinessCaption("Deployment", "Deployment")}
                     </Typography>
                   ) : (
                     false
@@ -4280,7 +4391,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Item Custody
+                      {getBusinessCaption("ItemCustody", "ItemCustody")}
                     </Typography>
                   ) : (
                     false
@@ -4291,7 +4402,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Item Custody
+                      {getBusinessCaption("ItemCustody", "ItemCustody")}
                     </Typography>
                   ) : (
                     false
@@ -4336,7 +4447,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Contract In
+                      {getBusinessCaption("ContractIn", "ContractIn")}
                     </Typography>
                   ) : (
                     false
@@ -4359,7 +4470,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Geo Location
+                      {getBusinessCaption("Geolocation", "Geo Location")}
                     </Typography>
                   ) : (
                     false
@@ -4370,7 +4481,8 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Leave Configuration
+                      {/* Leave Configuration */}
+                      {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
                     </Typography>
                   ) : (
                     false
@@ -4381,7 +4493,18 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Approvals
+                      {getBusinessCaption("Approvals", "Approvals")}
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "14" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      {getBusinessCaption("ItemServices", "ItemServices")}
                     </Typography>
                   ) : (
                     false
@@ -4425,7 +4548,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Documents
+                      {getBusinessCaption("Documents", "Documents")}
                     </Typography>
                   ) : (
                     false
@@ -4448,7 +4571,7 @@ const Editemployee = () => {
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
-                      <MenuItem value={8}>Contract In</MenuItem>
+                      <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
                     {initialValues.employeetype === "CO" ? (
                       <MenuItem value={11}>Contract Out</MenuItem>
@@ -4459,22 +4582,22 @@ const Editemployee = () => {
                     {is003Subscription === true ? (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
-                    <MenuItem value={1}>Skills</MenuItem>
-                    <MenuItem value={12}>Approvals</MenuItem>
-                    <MenuItem value={2}>Functions</MenuItem>
-                    <MenuItem value={3}>Managers</MenuItem>
-                    <MenuItem value={4}>Deployment</MenuItem>
-                    <MenuItem value={9}>Geo Location</MenuItem>
-                    <MenuItem value={10}>Leave Configuration</MenuItem>
-                    <MenuItem value={6}>List of Documents</MenuItem>
+                    <MenuItem value={1}>{getBusinessCaption("Skills", "Skills")}</MenuItem>
+                    <MenuItem value={12}>{getBusinessCaption("Approvals", "Approval Workflow")}</MenuItem>
+                    {is003Subscription === false ? (<MenuItem value={2}>Functions</MenuItem>) : null}
+                    <MenuItem value={3}>{getBusinessCaption("Managers", "Managers")}</MenuItem>
+                    <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
+                    <MenuItem value={9}>{getBusinessCaption("Geolocation", "Geo Location")}</MenuItem>
+                    <MenuItem value={10}>{getBusinessCaption("LeaveConfigurations", "Leave Configuration")}</MenuItem>
+                    {is003Subscription === false ? (<MenuItem value={6}>List of Documents</MenuItem>) : null}
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
-                    <MenuItem value={20}>Inventory</MenuItem>
-                    <MenuItem value={17}>Item Custody</MenuItem>
-                    <MenuItem value={14}>Item Services</MenuItem>
-                    <MenuItem value={13}>Locality</MenuItem>
-                    <MenuItem value={19}>SOP Configuration</MenuItem>
-                    <MenuItem value={18}>Specimen Sign</MenuItem>
-                    <MenuItem value={21}>Documents</MenuItem>
+                    {is003Subscription === false ? (<MenuItem value={20}>Inventory</MenuItem>) : null}
+                    <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
+                    <MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>
+                    {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
+                    {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
+                    {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
+                    <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
 
 
                   </Select>
@@ -4578,7 +4701,16 @@ const Editemployee = () => {
                           helperText={touched.Department && errors.Department}
                           //  onChange={handleSelectionFunctionname}
                           // defaultValue={selectedFunctionName}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2010",
+                              ScreenName: "Department",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `parentID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                         />
                         {/* {touched.Department && errors.Department && (
                           <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -6402,7 +6534,7 @@ const Editemployee = () => {
                                 name="Skills"
                                 label={
                                   <>
-                                    Skills
+                                    {getBusinessCaption("Skills", "Skills")}
                                     <span
                                       style={{ color: "red", fontSize: "20px" }}
                                     >
@@ -6843,7 +6975,16 @@ const Editemployee = () => {
                           helperText={
                             touched.functionLookup && errors.functionLookup
                           }
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2048",
+                              ScreenName: "Functions",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                         />
                       </Box>
                     </FormControl>
@@ -7175,7 +7316,7 @@ const Editemployee = () => {
                           name="manager"
                           label={
                             <span>
-                              Manager
+                              {getBusinessCaption("Managers", "Manager")}
                               <span style={{ color: "red", fontSize: "20px" }}>
                                 *
                               </span>
@@ -7537,7 +7678,16 @@ const Editemployee = () => {
                           }}
                           error={!!touched.Designation && !!errors.Designation}
                           helperText={touched.Designation && errors.Designation}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2047",
+                              ScreenName: "Designation",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `parentID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                         />
                       </FormControl>
 
@@ -7588,7 +7738,16 @@ const Editemployee = () => {
                           }}
                           error={!!touched.location && !!errors.location}
                           helperText={touched.location && errors.location}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2051",
+                              ScreenName: "Location",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `parentID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                         />
                       </FormControl>
                     </Box>
@@ -7628,8 +7787,17 @@ const Editemployee = () => {
                         }}
                         error={!!touched.gate && !!errors.gate}
                         helperText={touched.gate && errors.gate}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
-                          }'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2050",
+                            ScreenName: "Gate",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID='${values.location ? values.location.RecordID : 0}'`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                      //   }'","Any":""}}`}
                       />
                     </FormControl>
 
@@ -7662,8 +7830,17 @@ const Editemployee = () => {
                         }}
                         // error={!!touched.function && !!errors.function}
                         // helperText={touched.function && errors.function}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
- ='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2048",
+                            ScreenName: "Function",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      //                         url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+                      //  ='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
                   </Box>
@@ -7774,7 +7951,7 @@ const Editemployee = () => {
                       <CheckinAutocomplete
                         id="project"
                         name="project"
-                        label="Project"
+                        label={getBusinessCaption("Project", "Project")}
                         variant="outlined"
                         value={values.project}
                         onChange={(newValue) => {
@@ -7784,7 +7961,16 @@ const Editemployee = () => {
                         }}
                         error={!!touched.project && !!errors.project}
                         helperText={touched.project && errors.project}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2054",
+                            ScreenName: "Project",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID='${CompanyID}'`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
                     <TextField
@@ -7915,7 +8101,16 @@ const Editemployee = () => {
                               console.log(newValue, "--newvalue shift");
                               console.log(newValue.RecordID, "shift RecordID");
                             }}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2108",
+                                ScreenName: "Shift",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -7978,7 +8173,16 @@ const Editemployee = () => {
                             onChange={(newValue) => {
                               setFieldValue("shift2", newValue);
                             }}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2108",
+                                ScreenName: "Shift",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -9594,7 +9798,7 @@ const Editemployee = () => {
                         name="items"
                         label={
                           <>
-                            Item
+                            {getBusinessCaption("Item", "Items")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -9615,13 +9819,22 @@ const Editemployee = () => {
                         }}
                         error={!!touched.items && !!errors.items}
                         helperText={touched.items && errors.items}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2129","ScreenName":"Items","Filter":"CompanyID=${CompanyID} AND EmployeeID =${recID}","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2129",
+                            ScreenName: "Items",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID} AND EmployeeID =${recID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2129","ScreenName":"Items","Filter":"CompanyID=${CompanyID} AND EmployeeID =${recID}","Any":""}}`}
                       />
                       <CheckinAutocomplete
                         name="vendors"
                         label={
                           <>
-                            Vendor
+                            {getBusinessCaption("Vendor", "Vendor")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -9649,7 +9862,16 @@ const Editemployee = () => {
                         }}
                         error={!!touched.vendors && !!errors.vendors}
                         helperText={touched.vendors && errors.vendors}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2100",
+                            ScreenName: "Vendor",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -11158,10 +11380,28 @@ const Editemployee = () => {
                           Data.DesignationName === "Student" ||
                             deploymentInitialValue?.Designation?.Name ===
                             "Student"
-                            ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
-                            : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
-                        }
-
+                            ?`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2133",
+                            ScreenName: "Parent",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`
+                        :`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2100",
+                            ScreenName: "Vendor",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`
+                         }
+                            // ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
+                            // : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
+                       
                       //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <CheckinAutocomplete
@@ -11169,7 +11409,7 @@ const Editemployee = () => {
                         name="project"
                         label={
                           <>
-                            Project
+                            {getBusinessCaption("Project", "Project")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -11186,7 +11426,16 @@ const Editemployee = () => {
                         }}
                         error={!!touched.project && !!errors.project}
                         helperText={touched.project && errors.project}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2054",
+                            ScreenName: "Project",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
 
                       <TextField
@@ -11507,7 +11756,16 @@ const Editemployee = () => {
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2108",
+                            ScreenName: "Shift",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <CheckinAutocomplete
                         id="shift2"
@@ -11526,7 +11784,16 @@ const Editemployee = () => {
                           console.log(newValue, "--newvalue shift2");
                           console.log(newValue.RecordID, "shift2 RecordID");
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2108",
+                            ScreenName: "Shift2",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         name="FromPeriod"
@@ -13232,6 +13499,7 @@ const Editemployee = () => {
                             dispatch(
                               Inventorygrid2({
                                 AccessID: "2152",
+                                VerticalLicense: Subscriptionlastthree,
                                 screenName: "Item Category",
                                 filter: `CompanyID=${CompanyID} AND ItemGroupID=${selectedRow.RecordID}`,
                                 any: "",
@@ -13363,6 +13631,7 @@ const Editemployee = () => {
                           dispatch(
                             Inventorygrid3({
                               AccessID: "2153",
+                              VerticalLicense: Subscriptionlastthree,
                               screenName: "Item",
                               filter: `CompanyID=${CompanyID} AND ItemCategoryID IN (${commaSeparatedIds})`,
                               any: "",
@@ -13830,7 +14099,16 @@ const Editemployee = () => {
                             }}
                             error={!!touched.leavetype && !!errors.leavetype}
                             helperText={touched.leavetype && errors.leavetype}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2092",
+                                VerticalLicense: Subscriptionlastthree,
+                                ScreenName: "Leave Type",
+                                Filter: `parentID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
                         {/* {touched.leavetype && errors.leavetype && (
@@ -14641,7 +14919,7 @@ const Editemployee = () => {
                         name="itemGroup"
                         label={
                           <>
-                            Item Group
+                            {getBusinessCaption("ItemGroup", "Item Group")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               {" "}
                               *{" "}
@@ -14663,7 +14941,16 @@ const Editemployee = () => {
                         helperText={touched.itemGroup && errors.itemGroup}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2144","ScreenName":"Department","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2144",
+                            ScreenName: "ItemGroup",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID='${CompanyID}'`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2144","ScreenName":"Department","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                       />
 
 
@@ -14672,7 +14959,7 @@ const Editemployee = () => {
                         name="items"
                         label={
                           <>
-                            Item
+                            {getBusinessCaption("Item", "Items")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               {" "}
                               *{" "}
@@ -14689,7 +14976,16 @@ const Editemployee = () => {
                         helperText={touched.items && errors.items}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2145","ScreenName":"Items","Filter":"ItemGroupID='${values.itemGroup ? values.itemGroup.RecordID : ""}' AND CompanyID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2145",
+                            ScreenName: "Items",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `ItemGroupID='${values.itemGroup ? values.itemGroup.RecordID : ""}' AND CompanyID='${CompanyID}'`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2145","ScreenName":"Items","Filter":"ItemGroupID='${values.itemGroup ? values.itemGroup.RecordID : ""}' AND CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -14700,7 +14996,7 @@ const Editemployee = () => {
                         name="ItemValue"
                         label={
                           <>
-                            Item Value{" "}
+                            {getBusinessCaption("ItemValue", "Item Value")}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -15298,12 +15594,10 @@ const Editemployee = () => {
           false
         )}
 
-
-
         {show == "19" ? (
 
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            {loading ? (<LinearProgress />) : false}
+            {/* {loading ? (<LinearProgress />) : false} */}
             {SOPConfigGetLoading ? (<LinearProgress />) : false}
 
             <Formik
@@ -15608,7 +15902,7 @@ const Editemployee = () => {
                   </Box>
 
                   <Box
-                  padding={1}
+                    padding={1}
                     m="5px 0 0 0"
                     // height="50vh"
                     // height={dataGridHeight}

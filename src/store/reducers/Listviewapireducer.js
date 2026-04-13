@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Button,
   IconButton,
@@ -535,9 +535,10 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
     });
 };
 export const fetchListview =
-  (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
+  (AccessID, VerticalLicense, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
+    console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
     const LoginID = sessionStorage.getItem("loginrecordID");
     const empID = sessionStorage.getItem("empID");
 
@@ -1241,6 +1242,7 @@ export const fetchListview =
       Query: {
         // "ScreenName": screenName,
         AccessID: AccessID,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter:
           AccessID == "TR128"
@@ -1554,7 +1556,8 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID == "TR275") {
+          } 
+          else if (AccessID == "TR275") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1709,44 +1712,147 @@ export const fetchListview =
               },
             };
           }
-          // else if (AccessID == "TR286") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 250,
-          //     sortable: false,
-          //     filterable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     renderCell: (params) => {
-          //       return (
-          //         <Box>
-          //           <IconButton
-          //             color="primary"
-          //             size="small"
-          //             onClick={() =>
-          //               navigate(
-          //                 `/Apps/Secondarylistview/skillglow/:accessID/:screenName`,
-          //                 {
-          //                   state: {
-          //                     BreadCrumb1: params.row.Code,
-          //                     EmpID: params.row.RecordID,
-          //                   },
-          //                 }
-          //               )
-          //             }
-          //           >
-          //             <Tooltip title="Assessment Category">
-          //               <CategoryOutlinedIcon />
-          //             </Tooltip>
-          //           </IconButton>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
+          else if (AccessID == "TR205") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditSalary%20Component/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+          else if (AccessID == "TR207") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+           else if (AccessID == "TR123") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditCheck%20In/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+           else if (AccessID == "TR124") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditCheck%20Out/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+             else if (AccessID == "TR257") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditEmployee%20Request/${params.row.RecordID}/E`}
+                      state={{ EmpName: params.row.Name }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
           else if (
             AccessID == "TR278" ||
             AccessID == "TR280" ||
@@ -1843,8 +1949,9 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               headerAlign: "center",
+              align: (AccessID === "TR319" || AccessID === "TR324") ? "center" : "left",
               // align: "center",
-              align: "left",
+              // align: "left",
               disableColumnMenu: true,
               disableExport: true,
               renderCell: (params) => (
@@ -1997,6 +2104,36 @@ export const fetchListview =
                 );
               },
             };
+
+            //  } else if (AccessID == "TR128") {
+            // obj = {
+            //   field: "action",
+            //   headerName: "Action",
+            //   minWidth: 150,
+            //   sortable: false,
+            //   filterable: false,
+            //   headerAlign: "center",
+            //   align: "center",
+            //   disableColumnMenu: true,
+            //   disableExport: true,
+            //   renderCell: (params) => {
+            //     return (
+            //       <Box>
+            //         <Link 
+            //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+            //               state={{ Locationname: params.row.Name }}
+            //         >
+            //           <Tooltip title="Gate">
+            //             <IconButton color="info" size="small">
+            //               <ListAltOutlinedIcon />
+            //             </IconButton>
+            //           </Tooltip>
+            //         </Link>
+                 
+            //       </Box>
+            //     );
+            //   },
+            // };
           } else if (AccessID == "TR049") {
             obj = {
               field: "action",
@@ -5374,6 +5511,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state || {};
+  console.log(state, "--state in listviewapireducers");
+  
   const dispatch = useDispatch();
   const ScheduleCheck = () => {
     Swal.fire({
@@ -6417,10 +6556,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditItem%20Group/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.ItemGroup,
+
                     },
                   })
                 }
@@ -6439,6 +6579,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.ItemGroup,
+                        BreadCrumb2: screenName,
                       },
                     },
                   )

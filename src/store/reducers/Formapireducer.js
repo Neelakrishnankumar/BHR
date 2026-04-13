@@ -29,6 +29,7 @@ const initialState = {
   pakingListCarton: [],
   summeryData: [],
   hashtokenData: {},
+  CustomisedCaptionGetData:{},
   costingLeatherCost: {
     materialCost: 0,
     leatherOneCost: 0,
@@ -54,6 +55,11 @@ const initialState = {
   matrialDcTrackData: [],
   purchaseorderratingData: [],
   searchLoading: false,
+
+  PayrollconfigpayrollAttendanceLoading: false,
+  PayrollconfigpayrollAttendanceData: {},
+  PayrollconfigpayrollAttendanceStatus: "idle",
+
   empAttendanceData: {},
   InventrygetData: [],
   InventrygetDataStatus: "idle",
@@ -231,7 +237,7 @@ const initialState = {
   GetOverflowAffectedOrdersloading: false,
   GetOverflowAffectedOrdersstatus: "",
 
-  
+
   //PartyReset POST
   PartyResetdata: {},
   PartyResetloading: false,
@@ -1851,6 +1857,35 @@ export const getJioData = createAsyncThunk(
     return response.data;
   },
 );
+export const CustomisedCaptionGet = createAsyncThunk(
+  "CustomisedCaptionGet/CaptionGet",
+  async ({ Vertical, AccessID }, { getState }) => {
+    try {
+      const url = getState().globalurl.CustomisedCaptionGet;
+
+      const data = {
+        Vertical,
+        AccessID,
+      };
+
+      console.log("🚀 API Payload:", data);
+
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "your_token_here",
+        },
+      });
+
+      console.log("✅ API Response:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("❌ API Error:", error);
+      throw error;
+    }
+  }
+);
 export const Regularizationdata = createAsyncThunk(
   "regularization",
   async ({ accessID, get, recID }) => {
@@ -2308,7 +2343,7 @@ export const hashtoken = createAsyncThunk(
 
 export const Inventorygrid1 = createAsyncThunk(
   "Inv1/Itemgroup",
-  async ({ AccessID, screenName, filter, any }, { getState }) => {
+  async ({ AccessID,VerticalLicense, screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2316,6 +2351,7 @@ export const Inventorygrid1 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
+        VerticalLicense:VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -2335,7 +2371,7 @@ export const Inventorygrid1 = createAsyncThunk(
 );
 export const Inventorygrid2 = createAsyncThunk(
   "Inv2/Itemcategory",
-  async ({ AccessID, screenName, filter, any }, { getState }) => {
+  async ({ AccessID, VerticalLicense,screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2343,6 +2379,7 @@ export const Inventorygrid2 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
+        VerticalLicense:VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -2362,7 +2399,7 @@ export const Inventorygrid2 = createAsyncThunk(
 );
 export const Inventorygrid3 = createAsyncThunk(
   "Inv3/Item",
-  async ({ AccessID, screenName, filter, any }, { getState }) => {
+  async ({ AccessID,VerticalLicense, screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2370,6 +2407,7 @@ export const Inventorygrid3 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
+        VerticalLicense:VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -3290,24 +3328,24 @@ export const getApiSlice = createSlice({
         toast.error("Something Went Wrong");
       })
 
-      // .addCase(getJioData.pending, (state, action) => {
-      //     state.Status = "idle";
-      //     state.getLoading = true;
-      //     state.Data = {};
-      //     state.msg = "Loading..."
-      //   })
-      //   .addCase(getJioData.fulfilled, (state, action) => {
-      //     state.Status = "success";
-      //     state.getLoading = false;
-      //     state.Data = action.payload.Data ? action.payload.Data : {};
-      //     // state.msg =  action.payload.Msg
-      //   })
-      //   .addCase(getJioData.rejected, (state, action) => {
-      //     state.Status = "Error";
-      //     state.getLoading = false;
-      //     state.Data = {};
-      //     toast.error('Something Went Wrong')
-      //   })
+      .addCase(CustomisedCaptionGet.pending, (state, action) => {
+          state.Status = "idle";
+          state.getLoading = true;
+          state.CustomisedCaptionGetData = {};
+          state.msg = "Loading..."
+        })
+        .addCase(CustomisedCaptionGet.fulfilled, (state, action) => {
+          state.Status = "success";
+          state.getLoading = false;
+          state.CustomisedCaptionGetData = action.payload.Data ? action.payload.Data : {};
+          // state.msg =  action.payload.Msg
+        })
+        .addCase(CustomisedCaptionGet.rejected, (state, action) => {
+          state.Status = "Error";
+          state.getLoading = false;
+          state.CustomisedCaptionGetData = {};
+          toast.error('Something Went Wrong')
+        })
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;
@@ -3637,6 +3675,21 @@ export const getApiSlice = createSlice({
       })
 
 
+
+      .addCase(PayrollconfigpayrollAttendance.fulfilled, (state, action) => {
+        state.PayrollconfigpayrollAttendanceData = action.payload.Data;
+        state.PayrollconfigpayrollAttendanceLoading = false;
+      })
+      .addCase(PayrollconfigpayrollAttendance.pending, (state, action) => {
+        state.Status = "idle";
+        state.PayrollconfigpayrollAttendanceLoading = true;
+        state.PayrollconfigpayrollAttendanceData = [];
+      })
+      .addCase(PayrollconfigpayrollAttendance.rejected, (state, action) => {
+        state.Status = "Error";
+        state.PayrollconfigpayrollAttendanceLoading = false;
+        state.PayrollconfigpayrollAttendanceData = [];
+      })
       // .addCase(Inventryget.fulfilled, (state, action) => {
       //   state.InventrygetData = action.payload.Data;
       //   state.InventrygetDataLoading = false;
@@ -4236,7 +4289,7 @@ export const getApiSlice = createSlice({
         state.managerName =
           action.payload?.Data?.ManagersName?.ManagersName || "";
       })
-       .addCase(MonthlyAttendance.pending, (state, action) => {
+      .addCase(MonthlyAttendance.pending, (state, action) => {
         state.MonthlyAttendanceDataGetloading = true;
       })
       .addCase(MonthlyAttendance.fulfilled, (state, action) => {
@@ -5262,10 +5315,30 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-    // var url = store.getState().globalurl.payrollattendanceUrl
-var url = store.getState().globalurl.payslipattendanceUrl;
+    var url = store.getState().globalurl.payrollattendanceUrl;
+
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const PayrollconfigpayrollAttendance = createAsyncThunk(
+  "Payroll Configuation/Payrollattendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.GetPayrollattendaceUrl;
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -5981,10 +6054,10 @@ export const PartyReset = createAsyncThunk(
     const url = store.getState().globalurl.PartyReset;
 
     const data = {
-    UserID: Data.UserID,
-    Password: Data.Password,
-    PartyID: Data.PartyID,
-    CompanyID: Data.CompanyID
+      UserID: Data.UserID,
+      Password: Data.Password,
+      PartyID: Data.PartyID,
+      CompanyID: Data.CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

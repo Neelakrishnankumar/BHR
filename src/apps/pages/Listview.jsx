@@ -128,9 +128,12 @@ const Listview = () => {
   const colors = tokens(theme.palette.mode);
   const YearFlag = sessionStorage.getItem("YearFlag");
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
-  const location = useLocation();
-  console.log(location, "location -----------------");
-
+  const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
 
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
@@ -138,9 +141,6 @@ const Listview = () => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   console.log("baseurlUAAM", baseurlUAAM)
-
-
-
   const dispatch = useDispatch();
   const params = useParams();
   console.log(params, "-------------");
@@ -157,7 +157,12 @@ const Listview = () => {
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const open = useSelector((state) => state.listviewApi.mailOpen);
-  var screenName = params.screenName;
+  const location = useLocation();
+  const rowData = location.state || {};
+  console.log(rowData, "--rowData state");
+  console.log(location, "location -----------------");
+  var screenName1 = params.screenName;
+  var screenName = rowData.name;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -315,6 +320,7 @@ const Listview = () => {
     dispatch(
       fetchListview(
         accessID,
+        Subscriptionlastthree,
         screenName,
         accessID == "TR010" ||
           accessID == "TR140" ||
@@ -556,8 +562,8 @@ const Listview = () => {
         )}
 
         <Typography variant="h3" noWrap>
-          {screenName}
-        </Typography>
+          {accessID == "TR330"
+            ? `${screenName1}`: screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -705,7 +711,7 @@ const Listview = () => {
                       <AddOutlinedIcon
                         onClick={() => {
                           navigate(
-                            `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                            `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
                             }`,
                             {
                               state: {
@@ -1720,6 +1726,7 @@ const Listview = () => {
                     dispatch(
                       fetchListview(
                         accessID,
+                        Subscriptionlastthree,
                         screenName,
                         whereClause,
                         "",

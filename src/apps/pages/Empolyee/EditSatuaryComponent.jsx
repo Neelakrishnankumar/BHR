@@ -26,6 +26,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -68,7 +69,9 @@ const EditSatuaryComponent = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [logoimage, setlogoimage] = useState("");
   console.log("Nowlogo", logoimage);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -88,6 +91,31 @@ const EditSatuaryComponent = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -132,7 +160,7 @@ const EditSatuaryComponent = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/TR207/Payroll Policy`);
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -199,7 +227,7 @@ const EditSatuaryComponent = () => {
               sx={{ cursor: "default" }}
 
             >
-              Payroll Policy
+              {getBusinessCaption("PayrollPolicy", "Payroll Policy")}
             </Typography>
           </Box>
 
@@ -260,7 +288,8 @@ const EditSatuaryComponent = () => {
                     // label="Name"
                     label={
                       <span>
-                        Policy <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        {getBusinessCaption("Policy", "Policy")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                       </span>
                     }
                     variant="standard"
@@ -417,7 +446,7 @@ const EditSatuaryComponent = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR207/Payroll Policy");
+                      navigate(-1);
                     }}
                   >
                     Cancel

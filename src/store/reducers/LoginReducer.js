@@ -220,6 +220,7 @@ export function fetchApidata(emailID, password, license, company, year) {
           CompanyLogo: success.data.CompanyLogo,
           CompanyHeader: success.data.CompanyHeader,
           CompanyFooter: success.data.CompanyFooter,
+          VerticalLicense: success.data.VerticalLicense,
           firstLogin: success.data.FirstTime,
           subscription: success.data.subscription,
           CompanySignature: success.data.CompanySignature

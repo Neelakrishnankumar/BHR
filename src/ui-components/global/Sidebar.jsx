@@ -211,7 +211,7 @@ const getPersonnelMenu = (is00123Subscription) =>
 
 
 
-const Item = ({ title, to, icon, selected, setSelected, isChild }) => {
+const Item = ({ title, to, icon, selected, setSelected, isChild ,state,Tooltipname }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -219,7 +219,8 @@ const Item = ({ title, to, icon, selected, setSelected, isChild }) => {
 
   function cal() {
     setSelected(title);
-    navigate(to);
+    // navigate(to);
+    navigate(to, { state }); 
   }
 
   return (
@@ -227,12 +228,16 @@ const Item = ({ title, to, icon, selected, setSelected, isChild }) => {
       style={{ marginLeft: isChild ? "-11px" : "" }}
       active={selected === title}
       icon={icon}
+      //  icon={ <Tooltip title={Tooltipname || title}>
+      //   <span> {icon} </span>
+      // </Tooltip>}
       onClick={cal}
-    >
+     >
       <Typography style={{ marginLeft: isChild ? "16px" : "" }}>
         {title}
       </Typography>
     </MenuItem>
+   
   );
 };
 
@@ -244,6 +249,7 @@ const Sidebars = () => {
   const [selected, setSelected] = useState("Product Category");
   // const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
+
   // const companyLogo = sessionStorage.getItem("CompanyLogo");
   // console.log(companyLogo, "companyLogo");
   const firstLogin = sessionStorage.getItem("firstLogin");
@@ -253,8 +259,8 @@ const Sidebars = () => {
     SubscriptionCode?.endsWith(code)
   );
 
-  console.log(is003Subscription, "is003Subscription");
-  const restrictedMenus003 = ["Party"];
+  console.log(is003Subscription,is00123Subscription, "is003Subscription");
+  const restrictedMenus003 = ["Party","Functions","Aging Report","Lead Enquiry","Order Enquiry"];
 
   // const firstLogin = "Y";
   console.log(firstLogin, "firstLogin");
@@ -275,16 +281,20 @@ const Sidebars = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  // const handleClick = () => {
+  //   setOpen(!open);
+  // };
 
   const company = sessionStorage.getItem("company");
   const year = sessionStorage.getItem("year");
   const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
+  console.log(Groupaccess, "--GroupAccess in sidebar console");
+
+
 
   const Modules = JSON.parse(sessionStorage.getItem("Modules")) || [];
-  console.log(Modules, "Straaaaa");
+  console.log(Modules, "Modules sidebar console");
+
   const handleLogout = () => {
     sessionStorage.clear(); // clear session only
     navigate("/");
@@ -295,6 +305,7 @@ const Sidebars = () => {
   };
   const [menu, setMenu] = useState({});
 
+console.log(menu, "--+heloooooooooooooo menu");
 
 
   const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
@@ -308,14 +319,20 @@ const Sidebars = () => {
         id,
         UGA_ACCESSIDS,
         MenuID,
+        
       }) => {
+   const accessItem = accessRow.find(
+  (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
+);
+console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
+ 
         if (name === "Party") {
           console.log("Party parent:", parentMenuID);
         }
 
         //  HIDE CRM → Party for 003 subscription
         if (
-          parentMenuID === "CRM1800" &&
+          // parentMenuID === "CRM1800" &&
           restrictedMenus003.includes(name) &&
           is003Subscription
         ) {
@@ -323,6 +340,7 @@ const Sidebars = () => {
           return null;
         }
         if (!children) {
+          
           return accessRow.map(
             ({
               UGA_ADD,
@@ -342,6 +360,8 @@ const Sidebars = () => {
                   UGA_PROCESS ||
                   UGA_VIEW)
               ) {
+
+                
                 return (
                   <List component="div" disablePadding key={id}>
                     <ListItem
@@ -351,11 +371,20 @@ const Sidebars = () => {
                     >
                       <Item
                         isChild={isChild}
-                        title={name}
+                        title={accessItem?.SM_CAPTION1 || name}
+                        // title={name}
                         to={url}
                         icon={icon}
                         selected={selected}
                         setSelected={setSelected}
+                        Tooltipname={accessItem?.SM_CAPTION1 || Tooltipname}
+                       state={{
+                         name: accessItem?.SM_CAPTION1 || name,
+                          // name: name,
+                          accessId: UGA_ACCESSIDS,
+                          id: id,
+                        }}
+                        
                       />
                     </ListItem>
                   </List>
@@ -377,10 +406,11 @@ const Sidebars = () => {
                 >
                   {!collapsed && (
                     <Tooltip title={Tooltipname}>
+                    {/* // <Tooltip title={Tooltipname+"Hello"}> */}
                       <ListItemButton style={{ height: menuHeight }}>
                         <ListItemIcon>{icon}</ListItemIcon>
-                        <ListItemText primary={name} />
-
+                        {/* <ListItemText primary={name+"hiii"} /> */}
+                           <ListItemText primary={name} />
                         {menu[name] ? (
                           <ExpandMore />
                         ) : (
@@ -442,7 +472,9 @@ const Sidebars = () => {
             id: 4578,
             url: "./TR122/Designation",
             icon: (
-              <Tooltip title="Designation">
+              <Tooltip
+               title="Designation"
+               >
                 <PersonIcon color="info" />
               </Tooltip>
             ),
@@ -508,12 +540,33 @@ const Sidebars = () => {
           //   UGA_ACCESSIDS: "TR027",
           // },
           getPersonnelMenu(is00123Subscription),
-          {
+
+          // {
+          //   name: is003Subscription ? "Standard" : "Project",
+          //   id: 4346894,
+          //   url: "./TR275/Project",
+          //   icon: (
+          //     <Tooltip title={is003Subscription ? "Standard" : "Project"}>
+          //       <SourceOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR275",
+          // },
+            {
+              
             name: "Project",
             id: 4346894,
             url: "./TR275/Project",
             icon: (
-              <Tooltip title="Project">
+              <Tooltip
+              title="Project"
+               >
                 <SourceOutlinedIcon color="info" />
               </Tooltip>
             ),
