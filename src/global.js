@@ -323,6 +323,7 @@ const initialState = {
   SopTimeLineController:"",
   GetOverflowAffectedOrders:"",
   PartyReset:"",
+  WeeklyTeachercalendarGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -513,6 +514,7 @@ export const getUrlSlice = createSlice({
       state.GetOverflowAffectedOrders = APIurl + "getOverflowAffectedOrders.php";
       state.PartyReset = APIurl + "PartyResetController.php";
       state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
+      state.WeeklyTeachercalendarGet = APIurl + "TeacherScheduleGetController.php";
     },
   },
 });
