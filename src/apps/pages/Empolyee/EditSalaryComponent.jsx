@@ -26,6 +26,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -62,14 +63,19 @@ const EditSalaryComponent = () => {
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  const location = useLocation();
   const [validationSchema, setValidationSchema] = useState(null);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-
-
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  const location = useLocation();
+  const rowData = location.state || {};
+  console.log(rowData, "--rowData state");
+  console.log(location, "location -----------------");
+  var screenName1 = params.screenName;
+  var screenName = rowData.name;
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -91,6 +97,32 @@ const EditSalaryComponent = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
+  
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -135,7 +167,7 @@ const EditSalaryComponent = () => {
       SortOrder: values.sortOrder,
       Disable: values.disable === true ? "Y" : "N",
       CompanyID,
-      StatuaryRecordID : values.Policy?.RecordID || 0,
+      StatuaryRecordID: values.Policy?.RecordID || 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -191,7 +223,7 @@ const EditSalaryComponent = () => {
               sx={{ cursor: "default" }}
 
             >
-              Salary Component
+              {getBusinessCaption("SalaryComponent", "Salary Component")}
             </Typography>
           </Box>
 
@@ -252,7 +284,8 @@ const EditSalaryComponent = () => {
                     id="description"
                     label={
                       <span>
-                        Name <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                       {getBusinessCaption("Name", "Name")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                       </span>
                     }
                     // label="Name"
@@ -271,86 +304,7 @@ const EditSalaryComponent = () => {
                       }
                     }} />
 
-                  {/* <FormControl
-                    focused
-                    variant="standard"
-                  >
-                    <InputLabel id="type">Type<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="type"
-                      name="type"
-                      value={values.type}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.type && !!errors.type}
-                      helperText={touched.type && errors.type}
-                    >
-                      <MenuItem value="FS">PERCENTAGE OF BASIC SALARY</MenuItem>
-                      <MenuItem value="FX">FIXED AMOUNT</MenuItem>
-                      <MenuItem value="PC">POLICY</MenuItem>
-                    </Select>
-                  </FormControl> */}
-                  {/* <FormControl
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "flex-start",
-                      gap: 2,
-                    }}
-                  >
-                    <Box sx={{ flex: 1 }}>
-                      <TextField
-                        label={
-                          <>
-                            Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        id="type"
-                        name="type"
-                        focused
-                        variant="standard"
-                        value={values.type}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        select
-                        error={!!touched.type && !!errors.type}
-                        helperText={touched.type && errors.type}
-                      >                      
-                        <MenuItem value="FX">Fixed Amount</MenuItem>
-                        <MenuItem value="A1">Percentage Of Basic Salary</MenuItem>
-                        <MenuItem value="A2">Percentage Of Basic Salary</MenuItem>
-                        <MenuItem value="A3">Percentage Of Basic Salary</MenuItem>
-                        <MenuItem value="PC">Policy</MenuItem>
-                      </TextField>
-                    </Box>
-                    {values.type === "PC" && (
-                      <Box sx={{ flex: 1 }}>
-                        <CheckinAutocomplete
-                          variant="outlined"
-                          name="Policy"
-                          label={
-                            <>
-                              Policy
-                              <span style={{ color: "red", fontSize: "20px" }}> * </span>
-                            </>
-                          }
-                          id="Policy"
-                          value={values.Policy}
-                          onChange={(newValue) => {
-                            setFieldValue("Policy", newValue);
-                          }}
-                          error={!!touched.Policy && !!errors.Policy}
-                          helperText={touched.Policy && errors.Policy}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
-                        />
-                      </Box>
-                    )}
-                  </FormControl> */}
+                  
                   <Box
                     sx={{
                       display: "grid",
@@ -363,11 +317,12 @@ const EditSalaryComponent = () => {
                   >
                     <TextField
                       fullWidth
-                      label={
-                        <>
-                          Type <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
+                       label={
+                      <span>
+                        {getBusinessCaption("Type", "Type")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
+                    }
                       id="type"
                       name="type"
                       variant="standard"
@@ -391,7 +346,7 @@ const EditSalaryComponent = () => {
                         fullWidth
                         variant="outlined"
                         name="Policy"
-                        label = "Policy"
+                        label="Policy"
                         // label={
                         //   <>
                         //     Policy <span style={{ color: "red", fontSize: "20px" }}> *</span>
@@ -404,9 +359,18 @@ const EditSalaryComponent = () => {
                         }}
                         error={!!touched.Policy && !!errors.Policy}
                         helperText={touched.Policy && errors.Policy}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2150",
+                              ScreenName: "Payroll Policy",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `companyID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
                       />
-                    ):(null)}
+                    ) : (null)}
                   </Box>
                   {/* <FormControl
                     focused
@@ -430,12 +394,10 @@ const EditSalaryComponent = () => {
                   </FormControl> */}
                   <TextField
                     label={
-                      <>
-                        Category
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
+                      <span>
+                        {getBusinessCaption("Category", "Category")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
                     }
                     id="category"
                     name="category"

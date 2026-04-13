@@ -39,7 +39,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { CustomisedCaptionGet, getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 // import {
 //   ManagerAppraisalPayload,
@@ -84,6 +84,9 @@ const EditItemGroup = () => {
   const AssessmentAutoUrl = useSelector(
     (state) => state.globalurl.AssessmentAutoUrl
   );
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
@@ -104,6 +107,31 @@ const EditItemGroup = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
 
   const curDate = new Date().toISOString().split("T")[0];
   const ScheduleSaveFn = async (values, delAction) => {
@@ -221,9 +249,11 @@ const EditItemGroup = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate("/Apps/TR315/Item%20Group")}
                   >
-                    {mode === "E" ? `List Of Item Group
-                    (${state.BreadCrumb1})` : `List Of Item Group`}
-                  </Typography>
+                    {/* {mode === "E" ? `List Of Item Group
+                    (${state.BreadCrumb1})` : `List Of Item Group`} */}
+                    {mode === "E"
+                      ? `${getBusinessCaption("ListofItemGroup", "List Of Item Group")} (${state.BreadCrumb1})`
+                      : getBusinessCaption("ListofItemGroup", "List Of Item Group")}</Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
@@ -344,7 +374,8 @@ const EditItemGroup = () => {
                       id="Description"
                       label={
                         <span>
-                          Description{" "}
+                          {/* Description{" "} */}
+                          {getBusinessCaption("ItemGroup", "Description")}
                           <span
                             style={{
                               fontSize: "20px",

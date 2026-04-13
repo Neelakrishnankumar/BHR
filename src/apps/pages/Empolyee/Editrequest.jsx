@@ -59,6 +59,7 @@ import {
   RegGetData,
   resetregularizedata,
   getLeaveweeklyData,
+  CustomisedCaptionGet,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -127,7 +128,6 @@ const Editrequests = () => {
   const colors = tokens(theme.palette.mode);
   const EMPID = sessionStorage.getItem("EmpId");
   const CompanyID = sessionStorage.getItem("compID");
-  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const UserName = sessionStorage.getItem("UserName");
   const UserRecordid = sessionStorage.getItem("loginrecordID");
   const location = useLocation();
@@ -202,17 +202,47 @@ const Editrequests = () => {
   //   dispatch(fetchApidata(accessID, "get", recID));
 
   // }, []);
-    const [show, setScreen] = React.useState("0");
- useEffect(() => {
-      if (show == "0") {
+  const [show, setScreen] = React.useState("0");
+  useEffect(() => {
+    if (show == "0") {
       if (recID && mode === "E") {
-        dispatch(fetchApidata(accessID,"get", recID ));
+        dispatch(fetchApidata(accessID, "get", recID));
       } else {
-        dispatch(fetchApidata(accessID, "get", recID ));
+        dispatch(fetchApidata(accessID, "get", recID));
       }
     }
-    }, [location.key, recID, mode, show]);
+  }, [location.key, recID, mode, show]);
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
 
+    return match?.CAPTION || defaultCaption;
+  };
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -685,6 +715,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR206",
+
           "Employee Deductions",
           `${recID} AND Category='D'`,
           ""
@@ -699,7 +730,7 @@ const Editrequests = () => {
     }
 
     if (event.target.value == "6") {
-      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
+      dispatch(fetchExplorelitview("TR216", Subscriptionlastthree, "OT", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -709,7 +740,7 @@ const Editrequests = () => {
     }
     if (event.target.value == "10") {
       setResponseMsg("");
-      dispatch(fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
+      dispatch(fetchExplorelitview("TR219", Subscriptionlastthree, "Regularization", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -726,7 +757,7 @@ const Editrequests = () => {
     // }
     if (event.target.value == "2") {
       dispatch(
-        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
+        fetchExplorelitview("TR208", Subscriptionlastthree, "Leave", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
 
       );
       // dispatch(getLeaveweeklyData(`EmployeeID=${recID}`));
@@ -738,7 +769,7 @@ const Editrequests = () => {
 
       dispatch(
         // fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
-        fetchExplorelitview("TR086", "Expense", `Approvedby=${recID} AND CompanyID=${companyID}`, "")
+        fetchExplorelitview("TR086", Subscriptionlastthree, "Expense", `Approvedby=${recID} AND CompanyID=${companyID}`, "")
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -746,7 +777,7 @@ const Editrequests = () => {
     if (event.target.value == "8") {
 
       dispatch(
-        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
+        fetchExplorelitview("TR242", Subscriptionlastthree, "On Duty", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -755,6 +786,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR160",
+          Subscriptionlastthree,
           "Salary Advance",
           `EmployeeID=${recID} AND CompanyID=${companyID}`,
           ""
@@ -766,6 +798,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR266",
+          Subscriptionlastthree,
           "Permission",
           `EmployeeID=${recID} AND CompanyID=${companyID}`,
           ""
@@ -1507,7 +1540,7 @@ const Editrequests = () => {
     approvedby: "",
     approvedDate: "",
     leavetype: "",
-    Year:""
+    Year: ""
   });
 
   const [perData, setPerData] = useState({
@@ -1629,7 +1662,7 @@ const Editrequests = () => {
         approvedby: "",
         approvedDate: "",
         leavetype: "",
-        Year:""
+        Year: ""
       });
       setOtdata({
         RecordID: "",
@@ -1731,7 +1764,7 @@ const Editrequests = () => {
           approvedDate: rowData.ApprovedDate,
           leavetype: rowData.LeaveTypeID,
           EmployeeID: rowData.EmployeeID,
-          Year:rowData.HiddenFromDate?.split("-")[0]
+          Year: rowData.HiddenFromDate?.split("-")[0]
         });
         setPerData({
           recordID: rowData.RecordID,
@@ -2431,7 +2464,7 @@ const Editrequests = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-      Year: leaveData.Year || "",
+    Year: leaveData.Year || "",
   };
 
   const leaveFNsave = async (values, resetForm, del) => {
@@ -3037,8 +3070,8 @@ const Editrequests = () => {
                   >
                     {" "}
                     {mode === "E"
-                      ? `Employee(${state.EmpName})`
-                      : "Employee(New)"}
+                      ? `Personnel(${state.EmpName})`
+                      : "Personnel(New)"}
                   </Typography>
                   {show == "2" ? (
                     <Typography
@@ -3153,7 +3186,7 @@ const Editrequests = () => {
                     label="Explore"
                     onChange={screenChange}
                   >
-                    <MenuItem value={0}>Employee</MenuItem>
+                    <MenuItem value={0}>Personnel</MenuItem>
                     <MenuItem value={11}>Permission</MenuItem>
                     <MenuItem value={2}>Leave</MenuItem>
                     <MenuItem value={8}>On Duty</MenuItem>
@@ -3403,7 +3436,7 @@ const Editrequests = () => {
                         variant="standard"
                         label={
                           <>
-                            Employee Type
+                            Personnel Type
                             <span style={{ color: "red", fontSize: "20px" }}>*</span>
                           </>
                         }
@@ -4143,7 +4176,7 @@ const Editrequests = () => {
                 const minDate = selectedYear ? `${selectedYear}-01-01` : undefined;
                 const maxDate = selectedYear ? `${selectedYear}-12-31` : undefined;
 
-                return(
+                return (
                   <form
                     onSubmit={handleSubmit}
                     onReset={() => {
@@ -4473,9 +4506,9 @@ const Editrequests = () => {
                           error={!!touched.Year && !!errors.Year}
                           helperText={touched.Year && errors.Year}
                           focused
-                          // InputProps={{
-                          //   inputProps:{readOnly:mode === "E" }
-                          // }}
+                        // InputProps={{
+                        //   inputProps:{readOnly:mode === "E" }
+                        // }}
                         >
                           <MenuItem value="2025">2025</MenuItem>
                           <MenuItem value="2026">2026</MenuItem>
@@ -4515,7 +4548,16 @@ const Editrequests = () => {
                             helperText={touched.leavetype && errors.leavetype}
 
                             // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}' AND Year='${values.Year}'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2107",
+                                ScreenName: "Leave Type",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompanyID}' AND EmployeeID='${params.id}' AND Year='${values.Year}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}' AND Year='${values.Year}'","Any":""}}`}
                           />
                           {/* {touched.leavetype && errors.leavetype && (
                           <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -5780,7 +5822,16 @@ const Editrequests = () => {
                             }}
                             error={!!touched.overhead && !!errors.overhead}
                             helperText={touched.overhead && errors.overhead}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2032",
+                                ScreenName: "Overhead",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `companyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
                           />
                           {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -6453,7 +6504,16 @@ const Editrequests = () => {
                             error={!!touched.ProName && !!errors.ProName}
                             helperText={touched.ProName && errors.ProName}
                             // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           />
                           {/* {touched.ProName && errors.ProName && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -7648,7 +7708,16 @@ const Editrequests = () => {
                             error={!!touched.ProName && !!errors.ProName}
                             helperText={touched.ProName && errors.ProName}
                             // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           />
                           {/* {touched.ProName && errors.ProName && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -7710,7 +7779,16 @@ const Editrequests = () => {
                             }}
                             error={!!touched.overhead && !!errors.overhead}
                             helperText={touched.overhead && errors.overhead}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2032",
+                                ScreenName: "OverHead",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `companyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
                           />
                           {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
