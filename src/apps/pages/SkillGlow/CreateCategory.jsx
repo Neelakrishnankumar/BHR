@@ -69,7 +69,8 @@ const CreateCategory = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
   const state = location.state || {};
-
+  const FullyAutomatic = state.FullyAutomatic || "N";
+  console.log("🚀 ~ CreateCategory ~ FullyAutomatic:", FullyAutomatic)
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -178,7 +179,7 @@ const CreateCategory = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID2}/${params.screenName}/${params.parentID3}/${params.accessID1}/${params.parentID2}/${params.accessID}/${params.parentID1}`,{
+          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID2}/${params.screenName}/${params.parentID3}/${params.accessID1}/${params.parentID2}/${params.accessID}/${params.parentID1}`, {
             state: { ...state },
           });
         }
@@ -534,21 +535,27 @@ const CreateCategory = () => {
                       select
                       error={!!touched.AnswerType && !!errors.AnswerType}
                       helperText={touched.AnswerType && errors.AnswerType}
-                      // required
-                      //error={!!touched.AnswerType && !!errors.AnswerType}
-                      //helperText={touched.AnswerType && errors.AnswerType}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
+                    // required
+                    //error={!!touched.AnswerType && !!errors.AnswerType}
+                    //helperText={touched.AnswerType && errors.AnswerType}
+                    // MenuProps={{
+                    //   PaperProps: {
+                    //     sx: {
+                    //       mt: 1, // Add space so the top border doesn’t get cut
+                    //     },
+                    //   },
+                    // }}
                     >
                       <MenuItem value={"1/4"}>One Of Four</MenuItem>
                       <MenuItem value={"Any/4"}>Any Of Four</MenuItem>
-                      <MenuItem value={"Text"}>Text</MenuItem>
-                      <MenuItem value={"Number"}>Number</MenuItem>
+
+                      {FullyAutomatic !== "Y" && (
+                        <>
+                          <MenuItem value={"Text"}>Text</MenuItem>
+                          <MenuItem value={"Number"}>Number</MenuItem>
+                        </>
+                      )}
+
                       {/* <MenuItem value={"10Rates"}>10 Rates</MenuItem>
                       <MenuItem value={"5Rates"}>5 Rates</MenuItem> */}
                       <MenuItem value={"T/F"}>True or False</MenuItem>

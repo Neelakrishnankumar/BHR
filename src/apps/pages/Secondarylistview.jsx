@@ -90,6 +90,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
+import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -4247,6 +4248,11 @@ const ListviewSecondary = () => {
                   label="Leave Enquiry"
                   variant="outlined"
                 // sx={{ marginLeft: "50px" }}
+                />
+                <Chip
+                  icon={<PermContactCalendarOutlinedIcon color="primary" />}
+                  label="Staff Timetable"
+                  variant="outlined"
                 />
               </Box>
 

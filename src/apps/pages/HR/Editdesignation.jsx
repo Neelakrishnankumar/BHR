@@ -118,7 +118,7 @@ const Editdesignation = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
   }, [show]);
@@ -130,7 +130,7 @@ const Editdesignation = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
     if (event.target.value == "1") {

@@ -235,6 +235,7 @@ const SkillCreate = () => {
       //Noofquestion: "0",
       Duration: values.Duration,
       Permittedtimes: values.Permittedtimes,
+      FullyAutomatic: values.FullyAutomatic === true ? "Y" : "N",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -312,6 +313,7 @@ const SkillCreate = () => {
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+    FullyAutomatic: Data.FullyAutomatic == "Y" ? true : false,
   };
   const memoizedUrl = useCallback(() => {
     return `${listViewurl}?data=${encodeURIComponent(
@@ -937,6 +939,16 @@ const SkillCreate = () => {
                   />
 
                   <Box>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="FullyAutomatic"
+                          checked={values.FullyAutomatic}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Fully Automatic"
+                    />
                     <FormControlLabel
                       control={
                         <Checkbox
