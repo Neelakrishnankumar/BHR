@@ -127,12 +127,12 @@ const Listview = () => {
   const colors = tokens(theme.palette.mode);
   const YearFlag = sessionStorage.getItem("YearFlag");
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
-  const VerticalLicense = sessionStorage.getItem("VerticalLicense");
-  const location = useLocation();
-   const rowData = location.state || {};
- console.log(rowData, "--rowData state");
-  console.log(location, "location -----------------");
-
+  const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
 
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
@@ -140,9 +140,6 @@ const Listview = () => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   console.log("baseurlUAAM", baseurlUAAM)
-
-
-
   const dispatch = useDispatch();
   const params = useParams();
   console.log(params, "-------------");
@@ -159,7 +156,11 @@ const Listview = () => {
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const open = useSelector((state) => state.listviewApi.mailOpen);
-  // var screenName = params.screenName;
+  const location = useLocation();
+  const rowData = location.state || {};
+  console.log(rowData, "--rowData state");
+  console.log(location, "location -----------------");
+  var screenName1 = params.screenName;
   var screenName = rowData.name;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
@@ -311,7 +312,7 @@ const Listview = () => {
     dispatch(
       fetchListview(
         accessID,
-VerticalLicense,
+        Subscriptionlastthree,
         screenName,
         accessID == "TR010" ||
           accessID == "TR140" ||
@@ -553,8 +554,8 @@ VerticalLicense,
         )}
 
         <Typography variant="h3" noWrap>
-          {screenName}
-        </Typography>
+          {accessID == "TR330"
+            ? `${screenName1}`: screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -596,16 +597,16 @@ VerticalLicense,
               false
             )}
 
-           {accessID == "TR122" || accessID == "TR026" ? (
-            <Tooltip title="Bulk Upload">
-              <IconButton sx={{ cursor: "pointer" }}>
-                <FaFileExcel size={20}
-                  color="#1D6F42"
-                  onClick={() => setShowBulkUpload((prev) => !prev)}
-                />
-              </IconButton>
-            </Tooltip>
-):null}
+            {accessID == "TR122" || accessID == "TR026" ? (
+              <Tooltip title="Bulk Upload">
+                <IconButton sx={{ cursor: "pointer" }}>
+                  <FaFileExcel size={20}
+                    color="#1D6F42"
+                    onClick={() => setShowBulkUpload((prev) => !prev)}
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : null}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -702,7 +703,7 @@ VerticalLicense,
                       <AddOutlinedIcon
                         onClick={() => {
                           navigate(
-                            `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                            `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
                             }`,
                             {
                               state: {
@@ -1717,7 +1718,7 @@ VerticalLicense,
                     dispatch(
                       fetchListview(
                         accessID,
-                        VerticalLicense,
+                        Subscriptionlastthree,
                         screenName,
                         whereClause,
                         "",
@@ -4220,41 +4221,7 @@ VerticalLicense,
             />
           </Box>
         )
-        : accessID == "TR361" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<TextSnippetIcon color="primary" />}
-              label="Document"
-              variant="outlined"
-            // sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        ) : accessID == "TR330" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            <Chip
-              icon={<PeopleAltIcon color="primary" />}
-              label="Personnel"
-              variant="outlined"
-            // sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        )
-          : accessID == "TR337" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-              <Chip
-                // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
-                icon={<DoubleArrowOutlinedIcon color="primary" />}
-                label="SOP Documents"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />
-            </Box>
-          ) : accessID == "TR316" ? (
+          : accessID == "TR361" ? (
             <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
                 icon={<ModeEditOutlinedIcon color="primary" />}
@@ -4262,72 +4229,106 @@ VerticalLicense,
                 variant="outlined"
               />
               <Chip
-                icon={<QrCodeScannerOutlinedIcon color="primary" />}
-                label="HSN Master"
+                icon={<TextSnippetIcon color="primary" />}
+                label="Document"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
             </Box>
-          ) : accessID == "TR099" ? (
-            <Box display="flex" flexDirection="row" padding="25px">
+          ) : accessID == "TR330" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
-                icon={<ListAltOutlinedIcon color="primary" />}
-                label="List of Usergroups"
+                icon={<PeopleAltIcon color="primary" />}
+                label="Personnel"
                 variant="outlined"
+              // sx={{ marginLeft: "50px" }}
               />
             </Box>
-          ) : accessID == "TR275" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-              {/* <Chip
+          )
+            : accessID == "TR337" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                <Chip
+                  // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+                  icon={<DoubleArrowOutlinedIcon color="primary" />}
+                  label="SOP Documents"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />
+              </Box>
+            ) : accessID == "TR316" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<QrCodeScannerOutlinedIcon color="primary" />}
+                  label="HSN Master"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />
+              </Box>
+            ) : accessID == "TR099" ? (
+              <Box display="flex" flexDirection="row" padding="25px">
+                <Chip
+                  icon={<ListAltOutlinedIcon color="primary" />}
+                  label="List of Usergroups"
+                  variant="outlined"
+                />
+              </Box>
+            ) : accessID == "TR275" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-              <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
-                variant="outlined"
-              />
-              <Chip
-                icon={<Visibility color="primary" />}
-                label="View"
-                variant="outlined"
-              />
-              <Chip
-                icon={<PictureAsPdfIcon color="error" />}
-                label="Download PDF"
-                variant="outlined"
-              />
-              {/* <Chip
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<Visibility color="primary" />}
+                  label="View"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<PictureAsPdfIcon color="error" />}
+                  label="Download PDF"
+                  variant="outlined"
+                />
+                {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
             /> */}
-            </Box>
-          ) : accessID == "TR128" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+              </Box>
+            ) : accessID == "TR128" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap="5px">
 
-              <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
-                variant="outlined"
-              />
-              <Chip
-                icon={<ListAltOutlinedIcon color="primary" />}
-                label="Gate"
-                variant="outlined"
-              />
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<ListAltOutlinedIcon color="primary" />}
+                  label="Gate"
+                  variant="outlined"
+                />
 
-            </Box>
-          ) : (
-            <Box display="flex" flexDirection="row" padding="25px">
-              <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
-                variant="outlined"
-              />
-            </Box>
-          )}
+              </Box>
+            ) : (
+              <Box display="flex" flexDirection="row" padding="25px">
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+              </Box>
+            )}
       </Box>
       <MatxCustomizer
         open={open}

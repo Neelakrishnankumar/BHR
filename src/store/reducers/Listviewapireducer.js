@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Button,
   IconButton,
@@ -536,7 +536,6 @@ export const fetchListview =
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
     console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
-    
     const LoginID = sessionStorage.getItem("loginrecordID");
     const empID = sessionStorage.getItem("empID");
   
@@ -1554,7 +1553,8 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID == "TR275") {
+          } 
+          else if (AccessID == "TR275") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1709,44 +1709,147 @@ export const fetchListview =
               },
             };
           }
-          // else if (AccessID == "TR286") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 250,
-          //     sortable: false,
-          //     filterable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     renderCell: (params) => {
-          //       return (
-          //         <Box>
-          //           <IconButton
-          //             color="primary"
-          //             size="small"
-          //             onClick={() =>
-          //               navigate(
-          //                 `/Apps/Secondarylistview/skillglow/:accessID/:screenName`,
-          //                 {
-          //                   state: {
-          //                     BreadCrumb1: params.row.Code,
-          //                     EmpID: params.row.RecordID,
-          //                   },
-          //                 }
-          //               )
-          //             }
-          //           >
-          //             <Tooltip title="Assessment Category">
-          //               <CategoryOutlinedIcon />
-          //             </Tooltip>
-          //           </IconButton>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
+          else if (AccessID == "TR205") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditSalary%20Component/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+          else if (AccessID == "TR207") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+           else if (AccessID == "TR123") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditCheck%20In/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+           else if (AccessID == "TR124") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditCheck%20Out/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
+             else if (AccessID == "TR257") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                     <Link
+                      to={`./EditEmployee%20Request/${params.row.RecordID}/E`}
+                      state={{ EmpName: params.row.Name }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>                   
+                  </Box>
+                );
+              },
+            };
+          }
           else if (
             AccessID == "TR278" ||
             AccessID == "TR280" ||
@@ -6440,10 +6543,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditItem%20Group/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.ItemGroup,
+
                     },
                   })
                 }
@@ -6462,6 +6566,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.ItemGroup,
+                        BreadCrumb2: screenName,
                       },
                     },
                   )

@@ -303,7 +303,7 @@ export default getApiSlice.reducer;
 
 
 export const fetchExplorelitview =
-  (AccessID, screenName, filter, any) => async (dispatch, getState) => {
+  (AccessID,VerticalLicense, screenName, filter, any) => async (dispatch, getState) => {
     console.log("🚀 ~ file: Explorelitviewapireducer.js:209 ~ filter:", filter);
     // const navigate = useNavigate();
     var url = store.getState().globalurl.listViewurl;
@@ -445,6 +445,7 @@ export const fetchExplorelitview =
     var idata = {
       Query: {
         AccessID: AccessID,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,

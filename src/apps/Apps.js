@@ -350,6 +350,11 @@ function App() {
                     element={<EditemployeePayroll />}
                   />
                   <Route
+                    path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"
+                    element={<EditemployeePayroll />}
+                  />
+                  
+                  <Route
                     path="/:accessID/:screenName/EditPayroll/:id/:Mode"
                     element={<EditemployeePayroll />}
                   />

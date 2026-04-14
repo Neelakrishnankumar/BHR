@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import * as Yup from "yup";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -69,7 +70,9 @@ const Editcheckin = () => {
   console.log(state, "checkin");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -92,6 +95,31 @@ const Editcheckin = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -324,15 +352,16 @@ const Editcheckin = () => {
                   navigate(-1);
                 }}
               >
-                {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
+                {/* {mode === "E" ? `Personnel(${state.EmpName})` : "Employee(New)"} */}
+              {getBusinessCaption("CheckIn", "Check In")}
               </Typography>
-              <Typography
+              {/* <Typography
                 color="#0000D1"
                 sx={{ cursor: "default" }}
 
               >
                 Check In
-              </Typography>
+              </Typography> */}
 
             </Breadcrumbs>
           </Box>
@@ -400,7 +429,7 @@ const Editcheckin = () => {
                       name="employee"
                       label={
                         <span>
-                          Employee <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                          Personnel <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                         </span>
                       }
                       id="employee"
@@ -490,7 +519,7 @@ const Editcheckin = () => {
                     name="date"
                     type="date"
                     id="date"
-                    label="Check In Date"
+                    label={getBusinessCaption("CheckInDate", "Check In Date")}
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
@@ -529,10 +558,11 @@ const Editcheckin = () => {
                     type="time"
                     id="checkintime"
                     label={
-                        <span>
-                          Check In Time <span style={{ color: 'red', fontSize: '20px' }}>*</span>
-                        </span>
-                      }
+                      <span>
+                        {getBusinessCaption("CheckInTime", "Check In Time")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
+                    }
                     inputFormat="HH:mm:aa"
                     variant="standard"
                     value={values.checkintime}

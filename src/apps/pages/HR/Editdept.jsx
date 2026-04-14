@@ -31,6 +31,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -87,7 +88,9 @@ const Editdept = () => {
   const location = useLocation();
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -114,6 +117,32 @@ const Editdept = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
+
   const [ini, setIni] = useState(true);
   const [loading, setLoading] = useState(false);
   var apiData = "";
@@ -390,7 +419,8 @@ const Editdept = () => {
                     type="text"
                     label={
                       <>
-                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        {getBusinessCaption("Name", "Name")}
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
                     value={values.Name}
@@ -499,7 +529,7 @@ const Editdept = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
-                        <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="subjectskill"

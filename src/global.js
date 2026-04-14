@@ -512,6 +512,7 @@ export const getUrlSlice = createSlice({
       state.SopTimeLineController = APIurl + "SopTimeLineController.php";
       state.GetOverflowAffectedOrders = APIurl + "getOverflowAffectedOrders.php";
       state.PartyReset = APIurl + "PartyResetController.php";
+      state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
     },
   },
 });

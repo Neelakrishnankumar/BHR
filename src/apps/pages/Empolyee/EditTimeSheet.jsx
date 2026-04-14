@@ -38,6 +38,7 @@ import {
   AttendanceProcess,
   timeSheet,
   timeSheetPostData,
+  CustomisedCaptionGet,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -108,7 +109,7 @@ const EditTimeSheet = () => {
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
   const projectName = useSelector((state) => state.formApi.projectName);
   console.log(projectName, "--projectName");
-  
+
   const managerName = useSelector((state) => state.formApi.managerName);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
@@ -126,7 +127,38 @@ const EditTimeSheet = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorMsgData, setErrorMsgData] = useState(null);
-
+  var accessID = params.accessID;
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+   useEffect(() => {
+      if (Subscriptionlastthree && accessID) {
+        dispatch(
+          CustomisedCaptionGet({
+            Vertical: Subscriptionlastthree,
+            AccessID: accessID,
+          })
+        );
+      }
+    }, [Subscriptionlastthree, accessID, dispatch]);
+    const Customisedcaptiondata = useSelector(
+      (state) => state.formApi.CustomisedCaptionGetData
+    );
+    // Ensure it's always an array
+    const captionArray = Array.isArray(Customisedcaptiondata)
+      ? Customisedcaptiondata
+      : Customisedcaptiondata?.data || [];
+    console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+    const getBusinessCaption = (CaptionID, defaultCaption) => {
+      const match = captionArray?.find(
+        (item) => item.CAPTIONID === CaptionID
+      );
+  
+      return match?.CAPTION || defaultCaption;
+    };
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
   //     .then((res) => {
@@ -217,26 +249,7 @@ const EditTimeSheet = () => {
   }
 
   const AttColumn = [
-    //    {
-    //   field: "serialNo",
-    //   headerName: "SL#",
-    //   width: 40,
-    //   sortable: false,
-    //   filterable: false,
-    //   disableColumnMenu: true,
-    //   renderCell: (params) => {
-    //     return params.api.getRowIndex(params.id) + 1;
-    //   },
-    // },
-    // {
-    //   field: "slno",
-    //   headerName: "SL#",
-    //   width: 50,
-    //   sortable: false,
-    //   filterable: false,
-    //   valueGetter: (params) =>
-    //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
-    // },
+    
     {
       field: "slno",
       headerName: "SL#",
@@ -278,7 +291,7 @@ const EditTimeSheet = () => {
     },
     {
       field: "ProjectName",
-      headerName: "Project",
+      headerName: getBusinessCaption("Project", "Project"),
       width: 130,
       headerAlign: "center",
     },
@@ -442,11 +455,11 @@ const EditTimeSheet = () => {
   );
 
 
-      const HeaderImg = sessionStorage.getItem("CompanyHeader");
-      const FooterImg = sessionStorage.getItem("CompanyFooter");
-      console.log("HeaderImg", HeaderImg, FooterImg);
-      const config = getConfig();
-      const baseurlUAAM = config.UAAM_URL;
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
 
 
   const currentMonthNumber = new Date().getMonth() + 1;
@@ -696,7 +709,7 @@ const EditTimeSheet = () => {
                   <Employeeautocomplete
                     sx={{ width: 400 }}
                     name="Employee"
-                    label="Employee"
+                    label="Personnel"
                     id="Employee"
                     value={timeempData}
                     // onChange={handleSelectionEmployeeChange}
@@ -707,7 +720,16 @@ const EditTimeSheet = () => {
                       else
                         sessionStorage.removeItem("timeempData");
                     }}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2116",
+                        ScreenName: "Personnel",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `CompanyID='${CompanyID}'`,
+                        Any: "",
+                      },
+                    })}`}
+                  // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                   />
                   {/* <FormControlLabel
                     control={
@@ -754,7 +776,7 @@ const EditTimeSheet = () => {
                   >
                     More
                   </Button>
-                  
+
 
                   {/* <PictureAsPdfIcon
   onClick={() => handleClick(values)}
@@ -773,7 +795,7 @@ const EditTimeSheet = () => {
                             Month: values.timemonth,
                             Year: values.timeyear,
                             EmployeeID: timeempData?.Name || EMPNAME,
-                             Imageurl: baseurlUAAM,
+                            Imageurl: baseurlUAAM,
                             HeaderImg: HeaderImg,
                             FooterImg: FooterImg,
                           }}
@@ -794,7 +816,7 @@ const EditTimeSheet = () => {
                       }
                     </PDFDownloadLink>
                   )}
- {ApprovedData?.length > 0 && (
+                  {ApprovedData?.length > 0 && (
                     <FaFileExcel
                       size={20}
                       color="#1D6F42"
@@ -809,7 +831,7 @@ const EditTimeSheet = () => {
                           },
                           projectName,
                           managerName,
-                        
+
                         )
                       }
                     />
@@ -838,7 +860,7 @@ const EditTimeSheet = () => {
 
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                padding={1}
+                  padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}
