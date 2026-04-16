@@ -262,7 +262,8 @@ const EditAttendance = () => {
     },
     {
       field: "PermissionInMinutes",
-      headerName: "Permission (In Hours)",
+      headerName: "Permission",
+      // headerName: "Permission (In Hours)",
       // flex: 1,
       width: 150,
       headerAlign: "center",
@@ -315,12 +316,21 @@ const EditAttendance = () => {
   // };
   const attendaceFnSave = async (values) => {
     const data = {
-      Month: values.attmonth.toString(),
-      Year: values.attyear,
-      EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
-      // ProjectID: proData.RecordID
-      ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
-      CompanyID
+      // Month: values.attmonth.toString(),
+      // Year: values.attyear,
+      // EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+      // // ProjectID: proData.RecordID
+      // ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
+      // CompanyID
+
+Month: values.attmonth?.toString() ?? "",
+Year: values.attyear ?? "",
+EmployeeID: useCurrentEmp
+  ? EMPID
+  : empData?.RecordID ?? "",
+ProjectID: proData?.RecordID ?? "",
+CompanyID
+
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
