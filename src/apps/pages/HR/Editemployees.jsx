@@ -3561,7 +3561,7 @@ const Editemployee = () => {
       if (res?.payload?.Status === "Y") {
         toast.success(res?.payload?.Message || "Invoice Generated Successfully!");
         setLoading(false);
-        setFlag(res?.payload?.Flag);
+        setFlag("P");
       } else {
         toast.error(res?.payload?.Message || "Failed to Generate Invoice");
       }
@@ -5165,7 +5165,7 @@ const Editemployee = () => {
                         /> */}
 
                      
-                          <MultiSelectDropdown
+                          {/* <MultiSelectDropdown
                             id="module"
                             name="Module"
                             data={fetchedData?.Data || []} // from API
@@ -5174,7 +5174,7 @@ const Editemployee = () => {
                               console.log("Send this to API:", val);
                               setApiReturnValue(val);
                             }}
-                          />
+                          /> */}
                       
                       </Box>
                      

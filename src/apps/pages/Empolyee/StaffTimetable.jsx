@@ -49,8 +49,8 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 const StaffTimetable = () => {
-      const isNonMobile = useMediaQuery("(min-width:600px)");
-    
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+
     const calendarRef = useRef(null);
     const calendarInstanceRef = useRef(null);
     const [eventsData, setEventsData] = useState([]);
@@ -90,10 +90,10 @@ const StaffTimetable = () => {
     const TermsID = params.TermsID;
     const EmployeeID = params.EmployeeID;
     const CompanyID = params.CompanyID;
-  var mode = params.Mode;
+    var mode = params.Mode;
     useEffect(() => {
 
-        if (!EmployeeID || !CompanyID || !TermsID) return;
+        // if (!EmployeeID || !CompanyID || !TermsID) return;
         dispatch(weeklyTeachercalendarGet({ TermsID: TermsID, EmployeeID: EmployeeID, CompanyID: CompanyID }))
     }, [EmployeeID, TermsID, CompanyID]);
     const empID = sessionStorage.getItem("EmpId");
@@ -119,38 +119,38 @@ const StaffTimetable = () => {
     console.log(WEEKcolumns, "--WEEKcolumns");
     console.log(WEEKloading, "--WEEKloading");
 
-      const fnLogOut = (props) => {
+    const fnLogOut = (props) => {
         //   if(Object.keys(ref.current.touched).length === 0){
         //     if(props === 'Logout'){
         //       navigate("/")}
         //       if(props === 'Close'){
         //         navigate("/Apps/TR022/Bank Master")
         //       }
-    
+
         //       return
         //  }
         Swal.fire({
-          title: `Do you want ${props}?`,
-          // text:data.payload.Msg,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: props,
+            title: `Do you want ${props}?`,
+            // text:data.payload.Msg,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: props,
         }).then((result) => {
-          if (result.isConfirmed) {
-            if (props === "Logout") {
-              navigate("/");
+            if (result.isConfirmed) {
+                if (props === "Logout") {
+                    navigate("/");
+                }
+                if (props === "Close") {
+                    navigate("/Apps/TR232/Role");
+                }
+            } else {
+                return;
             }
-            if (props === "Close") {
-              navigate("/Apps/TR232/Role");
-            }
-          } else {
-            return;
-          }
         });
-      };
-    
+    };
+
 
     return (
         <>
@@ -202,14 +202,14 @@ const StaffTimetable = () => {
                                     sx={{ cursor: "default" }}
                                     onClick={() => navigate(-1)}
                                 >
-                                   Staff Timetable
+                                    Staff Timetable
                                 </Typography>
-                            
+
                             </Breadcrumbs>
                         </Box>
                     </Box>
                     <Box display="flex">
-                     
+
                         <Tooltip title="Close">
                             <IconButton onClick={() => fnLogOut("Close")} color="error">
                                 <ResetTvIcon />
@@ -223,153 +223,159 @@ const StaffTimetable = () => {
                     </Box>
                 </Box>
             </Paper>
-            <Paper
-                elevation={3}
-                // sx={{ margin: "10px" }}
-                sx={{
-                    width: "100%",
-                    p: 3,
-                    borderRadius: 3,
-                    marginTop: 2
-                }}
-            >
-                {/* ================= TITLE ROW ================= */}
-                <Box
+            {WEEKloading ? (
+                <Box display="flex" justifyContent="center" mt={5}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Paper
+                    elevation={3}
+                    // sx={{ margin: "10px" }}
                     sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 3,
-                        flexWrap: "wrap",
-                        gap: 2,
+                        width: "100%",
+                        p: 3,
+                        borderRadius: 3,
+                        marginTop: 2
                     }}
                 >
-                    <Typography variant="h5" fontWeight="bold">
-                        Staff Calendar
-                    </Typography>
+                    {/* ================= TITLE ROW ================= */}
                     <Box
                         sx={{
-                            height: "auto",
-                            width: "100%",
-
-                            // Outer grid border
-                            "& .MuiDataGrid-root": {
-                                border: "1px solid #e8e8f0",
-                                borderRadius: "8px",
-                                overflow: "hidden",
-                            },
-
-                            // Header
-                            "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#1e1e3a",
-                                color: "#c8d0ea",
-                                borderBottom: "none",
-                            },
-                            "& .MuiDataGrid-columnHeaderTitle": {
-                                fontWeight: 500,
-                                fontSize: "11px",
-                                color: "#c8d0ea",
-                            },
-                            "& .MuiDataGrid-columnHeader": {
-                                borderRight: "1px solid #2e2e50",
-                            },
-                            "& .MuiDataGrid-columnHeader:last-of-type": {
-                                borderRight: "none",
-                            },
-                            // Sort/menu icons in header
-                            "& .MuiDataGrid-iconButtonContainer .MuiIconButton-root": {
-                                color: "#8890b8",
-                            },
-                            "& .MuiDataGrid-columnSeparator": {
-                                display: "none",
-                            },
-
-                            // Cells
-                            "& .MuiDataGrid-cell": {
-                                borderRight: "0.5px solid #ebebf2",
-                                borderBottom: "0.5px solid #ebebf2",
-                                display: "flex",
-                                // alignItems: "center",
-                                alignItems: "flex-start",
-                                justifyContent: "center",
-                                padding: "2px 8px"
-                            },
-                            "& .MuiDataGrid-cell:last-of-type": {
-                                borderRight: "none",
-                            },
-                            // "& .MuiDataGrid-cellContent": {
-                            //     whiteSpace: "pre-line",
-                            //     wordBreak: "break-word",
-                            //     overflow: "visible",
-                            //     textOverflow: "unset",
-                            // },
-                            "& .MuiDataGrid-cellContent": {
-                                whiteSpace: "normal",        // ✅ better wrapping
-                                wordBreak: "break-word",
-                                lineHeight: "1.4",           // ✅ spacing between lines
-                                textAlign: "center",
-                            },
-
-                            // Row stripes
-                            "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: "#ffffff",
-                            },
-                            "& .odd-row": {
-                                backgroundColor: "#f8f8fc",
-                                color: "#2d2d4a",
-                            },
-                            "& .even-row": {
-                                backgroundColor: "#ffffff",
-                                color: "#2d2d4a",
-                            },
-                            "& .odd-row:hover": {
-                                backgroundColor: "#eff0fa !important",
-                            },
-                            "& .even-row:hover": {
-                                backgroundColor: "#eff0fa !important",
-                            },
-
-                            // Day column (first col) highlight
-                            "& .MuiDataGrid-row .MuiDataGrid-cell:first-of-type": {
-                                backgroundColor: "#f0f0f8",
-                                fontWeight: 500,
-                                color: "#1e1e3a",
-                                borderRight: "2px solid #d0d0e8",
-                            },
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            mb: 3,
+                            flexWrap: "wrap",
+                            gap: 2,
                         }}
                     >
-                        <DataGrid
-                            rows={WCrows}
-                            columns={WEEKcolumns}
-                            loading={WEEKloading}
-                            pageSizeOptions={[5]}
-                            hideFooter
-                            disableRowSelectionOnClick
-                            rowHeight={60}
-                            // getRowHeight={() => "auto"}
-                            autoHeight
-                            getRowClassName={(params) =>
-                                params.indexRelativeToCurrentPage % 2 === 0
-                                    ? "even-row"
-                                    : "odd-row"
-                            }
-                        />
+                        <Typography variant="h5" fontWeight="bold">
+                            Staff Calendar
+                        </Typography>
+                        <Box
+                            sx={{
+                                height: "auto",
+                                width: "100%",
+
+                                // Outer grid border
+                                "& .MuiDataGrid-root": {
+                                    border: "1px solid #e8e8f0",
+                                    borderRadius: "8px",
+                                    overflow: "hidden",
+                                },
+
+                                // Header
+                                "& .MuiDataGrid-columnHeaders": {
+                                    backgroundColor: "#1e1e3a",
+                                    color: "#c8d0ea",
+                                    borderBottom: "none",
+                                },
+                                "& .MuiDataGrid-columnHeaderTitle": {
+                                    fontWeight: 500,
+                                    fontSize: "11px",
+                                    color: "#c8d0ea",
+                                },
+                                "& .MuiDataGrid-columnHeader": {
+                                    borderRight: "1px solid #2e2e50",
+                                },
+                                "& .MuiDataGrid-columnHeader:last-of-type": {
+                                    borderRight: "none",
+                                },
+                                // Sort/menu icons in header
+                                "& .MuiDataGrid-iconButtonContainer .MuiIconButton-root": {
+                                    color: "#8890b8",
+                                },
+                                "& .MuiDataGrid-columnSeparator": {
+                                    display: "none",
+                                },
+
+                                // Cells
+                                "& .MuiDataGrid-cell": {
+                                    borderRight: "0.5px solid #ebebf2",
+                                    borderBottom: "0.5px solid #ebebf2",
+                                    display: "flex",
+                                    // alignItems: "center",
+                                    alignItems: "flex-start",
+                                    justifyContent: "center",
+                                    padding: "2px 8px"
+                                },
+                                "& .MuiDataGrid-cell:last-of-type": {
+                                    borderRight: "none",
+                                },
+                                // "& .MuiDataGrid-cellContent": {
+                                //     whiteSpace: "pre-line",
+                                //     wordBreak: "break-word",
+                                //     overflow: "visible",
+                                //     textOverflow: "unset",
+                                // },
+                                "& .MuiDataGrid-cellContent": {
+                                    whiteSpace: "normal",        // ✅ better wrapping
+                                    wordBreak: "break-word",
+                                    lineHeight: "1.4",           // ✅ spacing between lines
+                                    textAlign: "center",
+                                },
+
+                                // Row stripes
+                                "& .MuiDataGrid-virtualScroller": {
+                                    backgroundColor: "#ffffff",
+                                },
+                                "& .odd-row": {
+                                    backgroundColor: "#f8f8fc",
+                                    color: "#2d2d4a",
+                                },
+                                "& .even-row": {
+                                    backgroundColor: "#ffffff",
+                                    color: "#2d2d4a",
+                                },
+                                "& .odd-row:hover": {
+                                    backgroundColor: "#eff0fa !important",
+                                },
+                                "& .even-row:hover": {
+                                    backgroundColor: "#eff0fa !important",
+                                },
+
+                                // Day column (first col) highlight
+                                "& .MuiDataGrid-row .MuiDataGrid-cell:first-of-type": {
+                                    backgroundColor: "#f0f0f8",
+                                    fontWeight: 500,
+                                    color: "#1e1e3a",
+                                    borderRight: "2px solid #d0d0e8",
+                                },
+                            }}
+                        >
+                            <DataGrid
+                                rows={WCrows || []}
+                                columns={WEEKcolumns || []}
+                                loading={WEEKloading}
+                                pageSizeOptions={[5]}
+                                hideFooter
+                                disableRowSelectionOnClick
+                                rowHeight={60}
+                                // getRowHeight={() => "auto"}
+                                autoHeight
+                                getRowClassName={(params) =>
+                                    params.indexRelativeToCurrentPage % 2 === 0
+                                        ? "even-row"
+                                        : "odd-row"
+                                }
+                            />
+                        </Box>
+
+
+
+
                     </Box>
-
-
-
-
-                </Box>
-                <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
-                    <Button
-                        variant="contained"
-                        color="warning"
-                        onClick={() => navigate(-1)}
-                    >
-                        Cancel
-                    </Button>
-                </Box>
-            </Paper>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+                        <Button
+                            variant="contained"
+                            color="warning"
+                            onClick={() => navigate(-1)}
+                        >
+                            Cancel
+                        </Button>
+                    </Box>
+                </Paper>
+            )}
         </>
     );
 };
