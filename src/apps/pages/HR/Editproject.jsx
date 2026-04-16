@@ -29,6 +29,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  CustomisedCaptionGet,
   explorePostData,
   fetchApidata,
   getFetchData,
@@ -83,6 +84,7 @@ const Editproject = () => {
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
@@ -98,6 +100,9 @@ const Editproject = () => {
   let secondaryCurrentPage = parseInt(
     sessionStorage.getItem("secondaryCurrentPage")
   );
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const [show, setScreen] = React.useState("0");
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
@@ -116,6 +121,10 @@ const Editproject = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const [rows, setRows] = useState([]);
+  const rowData = location.state || {};
+  console.log(rowData, "--rowData state");
+  // var screenName1 = params.screenName;
+  var screenName = rowData.name
   useEffect(() => {
     if (!explorelistViewData) return;
 
@@ -190,6 +199,16 @@ const Editproject = () => {
       }
     }
   }, [show]);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
 
   // *************** INITIALVALUE  *************** //
   // const validationSchema = Yup.object().shape({
@@ -256,25 +275,25 @@ const Editproject = () => {
     }
   };
 
- const UnitRowSlot = (row) => {
-  if (!row.Name) {
-    return "Name is required";
-  }
- if (!row.OwnedBy || !row.OwnedBy.Name) {
-    return "Owned By is required";
-  }
-  
-  return null;
-};
+  const UnitRowSlot = (row) => {
+    if (!row.Name) {
+      return "Name is required";
+    }
+    if (!row.OwnedBy || !row.OwnedBy.Name) {
+      return "Owned By is required";
+    }
+
+    return null;
+  };
   // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
   const processRowUpdate = (newRow, oldRow) => {
 
     //validation
-  const error = UnitRowSlot(newRow);
-  if (error) {
-    throw new Error(error);
-  }
- 
+    const error = UnitRowSlot(newRow);
+    if (error) {
+      throw new Error(error);
+    }
+
     const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
     const updatedRow = { ...newRow, isNew: isNew };
 
@@ -324,6 +343,7 @@ const Editproject = () => {
       dispatch(
         fetchExplorelitview(
           "TR363",
+          Subscriptionlastthree,
           "Project Unit",
           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
           ""
@@ -336,6 +356,7 @@ const Editproject = () => {
       dispatch(
         fetchExplorelitview(
           "TR363",
+          Subscriptionlastthree,
           "Project Unit",
           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
           ""
@@ -346,6 +367,7 @@ const Editproject = () => {
       dispatch(
         fetchExplorelitview(
           "TR364",
+          Subscriptionlastthree,
           "Project Documents",
           // `AND DOC_CMRECID = '${CompanyID}' AND (FIND_IN_SET ('${recID}', DOC_PRECID))`,
           // `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
@@ -551,7 +573,7 @@ const Editproject = () => {
           Name <span style={{ color: "red" }}>*</span>
         </span>
       ),
-    
+
       field: "Name",
       width: 150,
       hide: false,
@@ -565,7 +587,7 @@ const Editproject = () => {
           Owned By <span style={{ color: "red" }}>*</span>
         </span>
       ),
-    
+
       width: 200,
       hide: false,
       editable: true,
@@ -785,6 +807,7 @@ const Editproject = () => {
       dispatch(
         fetchExplorelitview(
           "TR363",
+            Subscriptionlastthree,
           "Project Unit",
           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
           ""
@@ -829,44 +852,66 @@ const Editproject = () => {
     });
   };
 
+  // const getBusinessCaption = (VerticalID, CaptionID, defaultCaption) => {
+  //   if (VerticalID == 101) {
+  //     var captions = [{ "CAPTIONID": "ProjectOwner", "CAPTION": "PROJECT OWNER" },
+  //     { "CAPTIONID": "PROJECTTITLE", "CAPTION": "PROJECT TITLE" },
+  //     { "CAPTIONID": "PROJECTCODE", "CAPTION": "PROJECT CODE" },
+  //     { "CAPTIONID": "PROJECTDESC", "CAPTION": "PROJECT DESC" },
+  //     ];
 
+  //     var displaycaption = defaultCaption;
+  //     captions.forEach((caption) => {
+  //       if (caption.CAPTIONID == CaptionID) {
+  //         console.log(caption.CAPTION, "--caption.CAPTION");
+  //         displaycaption = caption.CAPTION;
+  //       }
+  //     });
+  //     return displaycaption;
 
+  //   }
 
-const getBusinessCaption = (VerticalID, CaptionID, defaultCaption) =>{
-if(VerticalID == 101){
- var captions = [{ "CAPTIONID":"ProjectOwner","CAPTION":"PROJECT OWNER"},
-{ "CAPTIONID":"PROJECTTITLE","CAPTION":"PROJECT TITLE"},
-{ "CAPTIONID":"PROJECTCODE","CAPTION":"PROJECT CODE"},
-{ "CAPTIONID":"PROJECTDESC","CAPTION":"PROJECT DESC"},
-];
+  //   else {
+  //     return defaultCaption;
+  //   }
 
-var displaycaption = defaultCaption;
-captions.forEach((caption) => {
-  if(caption.CAPTIONID == CaptionID){
-    console.log(caption.CAPTION, "--caption.CAPTION");
-   displaycaption = caption.CAPTION;
-  }
-});
-    return displaycaption;
-
-} 
-
-else{
-  return defaultCaption;
-}
- 
-}
+  // }
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
   // GRID VIEW SAVE 
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
+  // const getBusinessCaption = (CaptionID, defaultCaption) => {
+  //   if (Subscriptionlastthree === "003") {
+  //     const match = captionArray.find(
+  //       (item) => item.CAPTIONID === CaptionID
+  //     );
+  //     return match?.CAPTION || defaultCaption;
+  //   }
+
+  //   return defaultCaption;
+  // };
   const handleSaveButtonClick = async () => {
     for (let index = 0; index < rows.length; index++) {
-  const row = rows[index];
-  const error = UnitRowSlot(row);
+      const row = rows[index];
+      const error = UnitRowSlot(row);
 
-  if (error) {
-    toast.error(`${error}`);
-    return; // ✅ stops entire save function
-  }
-}
+      if (error) {
+        toast.error(`${error}`);
+        return; // ✅ stops entire save function
+      }
+    }
     const insertRows = rows
       .filter((row) => row.isNew || isNaN(Number(row.RecordID)))
       .map((row) => ({
@@ -924,6 +969,7 @@ else{
         dispatch(
           fetchExplorelitview(
             "TR363",
+            Subscriptionlastthree,
             "Project Unit",
             `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
             ""
@@ -1010,7 +1056,8 @@ else{
                 }}
 
               >
-                Project
+                {/* Project */}
+                {getBusinessCaption("ProjectTitle", "Project")}
               </Typography>
               {show == "1" ? (
                 <Typography
@@ -1055,7 +1102,7 @@ else{
                   <MenuItem value={3}>Units</MenuItem>
                   <MenuItem value={2}>List Of Documents</MenuItem> */}
 
-                  <MenuItem value="0">Project</MenuItem>
+                  <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
                   <MenuItem value="3">Units</MenuItem>
                   <MenuItem value="2">List Of Documents</MenuItem>
                 </Select>
@@ -1118,7 +1165,8 @@ else{
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"
+                      // label="Code"
+                      label={getBusinessCaption("ProjectCode", "Code")}
                       placeholder="Auto"
                       variant="standard"
                       focused
@@ -1163,15 +1211,16 @@ else{
                     name="name"
                     type="text"
                     id="name"
- label={getBusinessCaption(101,"PROJECTTITLE","Title")}
-                    // label={
-                    //   <>
-                    //     Description
-                    //     <span style={{ color: "red", fontSize: "20px" }}>
-                    //       *
-                    //     </span>
-                    //   </>
-                    // }
+                    // label={getBusinessCaption(101, "PROJECTTITLE", "Title")}
+                    // label={getBusinessCaption("ProjectTitle", "ProjectTitle")}
+                    label={
+                      <>
+                        {getBusinessCaption("ProjectTitle", "Project")}
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -1188,7 +1237,7 @@ else{
                     name="incharge"
                     label={
                       <>
-                        Accountable Incharge
+                        {getBusinessCaption("AccountableIncharge", "Accountable Incharge")}
                         <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
@@ -1203,15 +1252,24 @@ else{
                     error={!!touched.incharge && !!errors.incharge}
                     helperText={touched.incharge && errors.incharge}
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2111",
+                        ScreenName: "Project Incharge",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `parentID=${CompanyID}`,
+                        Any: "",
+                      },
+                    })}`}
+                  // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
 
                   <CheckinAutocomplete
                     disabled={mode == "V"}
                     name="projectOwner"
                     // label="Project Owner"
-                    label={getBusinessCaption(103,"ProjectOwner","Class Teacher")}
-                     variant="outlined"
+                    label={getBusinessCaption("ProjectOwner", "Project Owner")}
+                    variant="outlined"
                     id="projectOwner"
                     value={values.projectOwner}
                     onChange={(newValue) => {
@@ -1226,7 +1284,16 @@ else{
                     }}
                     // error={!!touched.projectOwner && !!errors.projectOwner}
                     // helperText={touched.projectOwner && errors.projectOwner}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2102",
+                        ScreenName: "Customer",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `parentID=${CompanyID}`,
+                        Any: "",
+                      },
+                    })}`}
+                  // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                   />
                   {/* {touched.incharge && errors.incharge && (
                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -1268,7 +1335,7 @@ else{
                     // label="Tentative Start Date"
                     label={
                       <>
-                        Tentative Start Date
+                        {getBusinessCaption("TentativeStartDate", "Tentative Start Date")}
                         <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
@@ -1292,7 +1359,7 @@ else{
                     // label="Tentative End Date"
                     label={
                       <>
-                        Tentative End Date
+                        {getBusinessCaption("TentativeEndDate", "Tentative End Date")}
                         <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
@@ -2316,7 +2383,7 @@ else{
                   />
                 </Box>
                 <Box
-                padding={1}
+                  padding={1}
                   // height="500px"
                   height={dataGridHeightExplore}
                   marginTop={2}
@@ -2548,7 +2615,7 @@ else{
                 </Box>
 
                 <Box
-                padding={1}
+                  padding={1}
                   m="5px 0 0 0"
                   // height="50vh"
                   // height={dataGridHeight}

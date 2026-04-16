@@ -524,7 +524,7 @@ const Editvendor = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID: "TR243", get: "", recID }));
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       }
     }
     if (event.target.value == "3") {
@@ -671,7 +671,11 @@ const Editvendor = () => {
     emailid: data.EmailID || "",
     vendor: data.VendorCheckbox === "Y" ? true : false,
     customer: data.CustomerCheckbox === "Y" ? true : false,
-    prospect: data.Prospects === "Y" ? true : false,
+    // prospect: data.Prospects === "Y" ? true : false,
+    prospect:
+      data?.RecordID
+        ? data?.Prospects === "Y"   // EDIT mode
+        : true,                     // ADD mode
     delete: data.DeleteFlag === "Y" ? true : false,
     BusinessPartner: data.BusinessPartner === "Y" ? true : false,
     Parent: data.ParentCheckBox === "Y" ? true : false,
@@ -3428,7 +3432,7 @@ const Editvendor = () => {
                 </Box>
 
                 <Box
-                padding={1}
+                  padding={1}
                   m="5px 0 0 0"
                   // height="50vh"
                   height={dataGridHeightExplore}
@@ -3520,21 +3524,21 @@ const Editvendor = () => {
           </Formik>
           <Box display="flex" justifyContent="space-between" padding={1}>
 
- <Box>
-                    <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
-                      Actions Guide
-                    </Typography>
-                    <Box display="flex"
-                      flexDirection="row"
-                      gap="15px"
-                      sx={{ overflowY: "auto" }}>
-                      <Chip
-                        icon={<VisibilityIcon color="primary" />}
-                        label="Open Document"
-                        variant="outlined"
-                      />
-                    </Box>
-                  </Box>
+            <Box>
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                Actions Guide
+              </Typography>
+              <Box display="flex"
+                flexDirection="row"
+                gap="15px"
+                sx={{ overflowY: "auto" }}>
+                <Chip
+                  icon={<VisibilityIcon color="primary" />}
+                  label="Open Document"
+                  variant="outlined"
+                />
+              </Box>
+            </Box>
             <Box display="flex" justifyContent="space-between" padding={1}>
               <Button
                 color="warning"

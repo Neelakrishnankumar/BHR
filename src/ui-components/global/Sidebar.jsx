@@ -259,8 +259,8 @@ const Sidebars = () => {
     SubscriptionCode?.endsWith(code)
   );
 
-  console.log(is003Subscription, "is003Subscription");
-  const restrictedMenus003 = ["Party"];
+  console.log(is003Subscription,is00123Subscription, "is003Subscription");
+  const restrictedMenus003 = ["Party","Functions","Aging Report","Lead Enquiry","Order Enquiry"];
 
   // const firstLogin = "Y";
   console.log(firstLogin, "firstLogin");
@@ -324,7 +324,7 @@ console.log(menu, "--+heloooooooooooooo menu");
    const accessItem = accessRow.find(
   (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
 );
-// console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
+console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
  
         if (name === "Party") {
           console.log("Party parent:", parentMenuID);
@@ -332,7 +332,7 @@ console.log(menu, "--+heloooooooooooooo menu");
 
         //  HIDE CRM → Party for 003 subscription
         if (
-          parentMenuID === "CRM1800" &&
+          // parentMenuID === "CRM1800" &&
           restrictedMenus003.includes(name) &&
           is003Subscription
         ) {

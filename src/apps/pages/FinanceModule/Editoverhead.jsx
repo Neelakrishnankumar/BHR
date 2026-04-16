@@ -26,6 +26,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  CustomisedCaptionGet,
   explorePostData,
   fetchApidata,
   getFetchData,
@@ -94,7 +95,11 @@ const Editoverhead = () => {
   const [rowCount, setRowCount] = useState(0);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [funMode, setFunMode] = useState("A");
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   var userimg = store.getState().globalurl.imageUrl;
   if (mode == "A") {
     userimg = userimg + "Defaultimg.jpg";
@@ -117,7 +122,31 @@ const Editoverhead = () => {
   );
   console.log("🚀 ~ Editoverhead ~ explorelistViewcolumn:", explorelistViewcolumn)
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
 
+    return match?.CAPTION || defaultCaption;
+  };
   function Employee() {
     return (
       <GridToolbarContainer
@@ -609,7 +638,8 @@ const Editoverhead = () => {
                     id="name"
                     label={
                       <>
-                        Overhead<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        {getBusinessCaption("Overhead", "Overhead")}
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
                     variant="standard"
@@ -660,7 +690,7 @@ const Editoverhead = () => {
                     name="OverheadType"
                     label={
                       <>
-                        Overhead Type
+                        {getBusinessCaption("OverheadType", "Overhead Type")}
                         <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
@@ -676,7 +706,16 @@ const Editoverhead = () => {
                     helperText={touched.OverheadType && errors.OverheadType}
                     //  onChange={handleSelectionFunctionname}
                     // defaultValue={selectedFunctionName}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2126",
+                        ScreenName: "OverheadType",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `CompanyID=${CompanyID}`,
+                        Any: "",
+                      },
+                    })}`}
+                  // url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType",Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
                   <TextField
                     label="Account Type"
@@ -845,8 +884,8 @@ const Editoverhead = () => {
                   <Button
                     variant="contained"
                     color="warning"
-                    onClick={() => 
-                      navigate("/Apps/TR085/Overhead")
+                    onClick={() =>
+                      navigate(-1)
                     }
                   >
                     CANCEL

@@ -90,6 +90,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
+import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -100,8 +101,13 @@ const ListviewSecondary = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const params = useParams();
-  const VerticalLicense = sessionStorage.getItem("VerticalLicense");
-
+  const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  // const Subscriptionlastthree = SubscriptionCode.slice(-3) || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   var CompId = sessionStorage.getItem("compID");
   const state = location.state || {};
   const storedStatus = sessionStorage.getItem("Status") || state.LEStatus
@@ -392,11 +398,11 @@ const ListviewSecondary = () => {
     if (response.data.status == 200) {
       toast.success(response.data.message);
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
-      dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
+      dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, filter, "", compID));
     } else {
       toast.error(response.data.message);
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
-      dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
+      dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, filter, "", compID));
     }
   };
 
@@ -1676,7 +1682,7 @@ const ListviewSecondary = () => {
                   navigate("/Apps/TR315/Item%20Group");
                 }}
               >
-                List of Item Group ({BreadCrumb1})
+                {BreadCrumb2} ({BreadCrumb1})
               </Typography>
               <Typography
                 variant="h5"
@@ -4067,7 +4073,7 @@ const ListviewSecondary = () => {
   }
 
   React.useEffect(() => {
-    dispatch(fetchListview(accessID, VerticalLicense, screenName, filter, "", compID));
+    dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, filter, "", compID));
   }, [location.key]);
 
   const handlePagechange = (pageno) => {
@@ -4248,6 +4254,11 @@ const ListviewSecondary = () => {
                   label="Leave Enquiry"
                   variant="outlined"
                 // sx={{ marginLeft: "50px" }}
+                />
+                <Chip
+                  icon={<PermContactCalendarOutlinedIcon color="primary" />}
+                  label="Staff Timetable"
+                  variant="outlined"
                 />
               </Box>
 

@@ -204,6 +204,7 @@ import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
 import BatchTimeLine from "./pages/SOP/BatchTimeline";
 import Editdoccategory from "./pages/HR/Editdoccategory";
 import Editdocument from "./pages/HR/Editdocument";
+import StaffTimetable from "./pages/Empolyee/StaffTimetable";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -349,6 +350,11 @@ function App() {
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
                   />
+                  <Route
+                    path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"
+                    element={<EditemployeePayroll />}
+                  />
+                  
                   <Route
                     path="/:accessID/:screenName/EditPayroll/:id/:Mode"
                     element={<EditemployeePayroll />}
@@ -632,6 +638,11 @@ function App() {
                     // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
                     path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
+                  />
+                  {/* STAFF TIMETABLE */}
+                  <Route
+                    path="/Staff/StaffTimetable/:CompanyID/:EmployeeID/:TermsID"
+                    element={<StaffTimetable />}
                   />
 
                  

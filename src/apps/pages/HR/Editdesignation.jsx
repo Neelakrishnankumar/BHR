@@ -28,6 +28,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -83,8 +84,9 @@ const Editdesignation = () => {
   const [laomode, setLaoMode] = useState("A");
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(10);
-
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -118,19 +120,43 @@ const Editdesignation = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
   }, [show]);
   // *************** INITIALVALUE  *************** //
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
 
+    return match?.CAPTION || defaultCaption;
+  };
   const screenChange = (event) => {
     setScreen(event.target.value);
     if (event.target.value == "0") {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
     if (event.target.value == "1") {
@@ -269,7 +295,8 @@ const Editdesignation = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR122/Designation");
+      // navigate("/Apps/TR122/Designation");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -478,7 +505,7 @@ const Editdesignation = () => {
                     id="name"
                     label={
                       <>
-                        Name
+                        {getBusinessCaption("Name", "Name")}
                         <span style={{ color: "red", fontSize: "20px" }}>
                           *
                         </span>
@@ -681,7 +708,8 @@ const Editdesignation = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR122/Designation");
+                      // navigate("/Apps/TR122/Designation");
+                      navigate(-1);
                     }}
                   >
                     Cancel
@@ -768,7 +796,7 @@ const Editdesignation = () => {
                 </Box>
 
                 <Box
-                padding={1}
+                  padding={1}
                   m="5px 0 0 0"
                   // height="50vh"
                   // height={dataGridHeight}

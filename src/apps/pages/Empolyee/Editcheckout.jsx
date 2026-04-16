@@ -27,6 +27,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  CustomisedCaptionGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -74,7 +75,34 @@ const Editcheckout = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
 
+    return match?.CAPTION || defaultCaption;
+  };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -294,7 +322,7 @@ const Editcheckout = () => {
               aria-label="breadcrumb"
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-              <Typography
+              {/* <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
@@ -303,13 +331,13 @@ const Editcheckout = () => {
                 }}
               >
                 {`Employee(${state.EmpName})`}
-              </Typography>
+              </Typography> */}
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                Check Out
+            {getBusinessCaption("CheckOut", "Check Out")}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -376,7 +404,7 @@ const Editcheckout = () => {
 
                         {
                           <span>
-                            Employee
+                            Personnel
                             <span style={{ color: "red", fontSize: "20px" }}>*</span>
                           </span>
                         }
@@ -571,7 +599,8 @@ const Editcheckout = () => {
                     name="date"
                     type="date"
                     id="date"
-                    label="Check Out Date"
+                    // label="Check Out Date"
+                   label={getBusinessCaption("CheckOutDate", "Check Out Date")}
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
@@ -608,12 +637,12 @@ const Editcheckout = () => {
                     name="checkouttime"
                     type="time"
                     id="checkouttime"
-                    label={
-                        <span>
-                          Check Out Time
-                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </span>
-                      }
+                     label={
+                      <span>
+                        {getBusinessCaption("CheckOutTime", "Check Out Time")}
+                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
+                    }
                     inputFormat="HH:mm:aa"
                     value={values.checkouttime}
                     onBlur={handleBlur}
@@ -621,8 +650,8 @@ const Editcheckout = () => {
                     focused
                     sx={{ gridColumn: "span 2", background: "" }}
                     variant="standard"
-                     error={!!touched.checkouttime && !!errors.checkouttime}
-                      helperText={touched.checkouttime && errors.checkouttime}
+                    error={!!touched.checkouttime && !!errors.checkouttime}
+                    helperText={touched.checkouttime && errors.checkouttime}
                   />
                   <TextField
                     name="comment"

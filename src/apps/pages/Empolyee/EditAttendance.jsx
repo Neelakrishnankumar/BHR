@@ -27,6 +27,7 @@ import {
   Attendance,
   AttendanceProcess,
   paySlipGet,
+  CustomisedCaptionGet,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -92,7 +93,37 @@ const EditAttendance = () => {
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
-
+  var accessID = params.accessID;
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+   useEffect(() => {
+      if (Subscriptionlastthree && accessID) {
+        dispatch(
+          CustomisedCaptionGet({
+            Vertical: Subscriptionlastthree,
+            AccessID: accessID,
+          })
+        );
+      }
+    }, [Subscriptionlastthree, accessID, dispatch]);
+    const Customisedcaptiondata = useSelector(
+      (state) => state.formApi.CustomisedCaptionGetData
+    );
+    // Ensure it's always an array
+    const captionArray = Array.isArray(Customisedcaptiondata)
+      ? Customisedcaptiondata
+      : Customisedcaptiondata?.data || [];
+    console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+    const getBusinessCaption = (CaptionID, defaultCaption) => {
+      const match = captionArray?.find(
+        (item) => item.CAPTIONID === CaptionID
+      );
+  
+      return match?.CAPTION || defaultCaption;
+    };
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
   //     .then((res) => {
@@ -396,6 +427,7 @@ CompanyID
     JSON.stringify({
       Query: {
         AccessID: proData ? "2024" : "2117", // or "2101" if you're using EMPLOYEETEAMS
+        VerticalLicense: Subscriptionlastthree,
         ScreenName: "Employee",
         Filter: employeeFilter,
         Any: "",
@@ -577,7 +609,7 @@ CompanyID
                   <Employeeautocomplete
                     sx={{ width: 400 }}
                     name="ProName"
-                    label="Project"
+                    label={getBusinessCaption("Project", "Project")}
                     id="ProName"
                     value={proData}
                     // onChange={handleSelectionProjectChange}
@@ -590,22 +622,31 @@ CompanyID
                     }}
                     error={!!touched.ProName && !!errors.ProName}
                     helperText={touched.ProName && errors.ProName}
-                    url={`${listViewurl}?data=${encodeURIComponent(
-                      JSON.stringify({
-                        Query: {
-                          AccessID: "2054",
-                          ScreenName: "Project",
-                          Filter: `parentID=${CompanyID}`,
-                          Any: "",
-                        },
-                      })
-                    )}`}
+                    // url={`${listViewurl}?data=${encodeURIComponent(
+                    //   JSON.stringify({
+                    //     Query: {
+                    //       AccessID: "2054",
+                    //       ScreenName: "Project",
+                    //       Filter: `parentID=${CompanyID}`,
+                    //       Any: "",
+                    //     },
+                    //   })
+                    // )}`}
+                     url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2054",
+                            ScreenName: "Project",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID='${CompanyID}'`,
+                            Any: "",
+                          },
+                        })}`}
                   />
 
                   <Employeeautocomplete
                     sx={{ width: 400 }}
                     name="Employee"
-                    label="Employee"
+                    label="Personnel"
                     id="Employee"
                     value={empData}
                     // onChange={handleSelectionEmployeeChange}
