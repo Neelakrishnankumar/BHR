@@ -114,10 +114,10 @@ const EditItem = () => {
   const ItemMainData = useSelector((state) => state.formApi.itemMainGetData);
   const ItemFlagData = useSelector((state) => state.formApi.itemFlagGetData);
   console.log(ItemFlagData, "--ItemFlagData initialvalues");
-  
+
   const ItemStockData = useSelector((state) => state.formApi.itemStockGetData);
 
-console.log(ItemStockData, "--ItemStockData");
+  console.log(ItemStockData, "--ItemStockData");
 
   const ItemMainDataLoading = useSelector(
     (state) => state.formApi.itemMainGetDataloading
@@ -138,7 +138,11 @@ console.log(ItemStockData, "--ItemStockData");
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const ItemCategorID = params.parentID1;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -283,6 +287,7 @@ console.log(ItemStockData, "--ItemStockData");
         dispatch(
           fetchExplorelitview(
             "TR326",
+            Subscriptionlastthree,
             "Lead Time",
             `CompanyID='${CompanyID}' AND ItemID='${recID}'`,
             ""
@@ -555,26 +560,26 @@ console.log(ItemStockData, "--ItemStockData");
     UnderEmployeeCustody:
       ItemFlagData?.UnderEmployeeCustody == "Y" ? true : false,
     Tradable: ItemFlagData?.Tradable == "Y" ? true : false,
-       location: ItemFlagData?.LocationID
-    ? {
+    location: ItemFlagData?.LocationID
+      ? {
         RecordID: ItemFlagData.LocationID || 0,
         Name: ItemFlagData.LocationName || "", // fallback
       }
-    : null,
-       bin: ItemFlagData?.BinID
-    ? {
+      : null,
+    bin: ItemFlagData?.BinID
+      ? {
         RecordID: ItemFlagData.BinID || 0,
         Name: ItemFlagData.BinName || "", // fallback
       }
-    : null,
-   shelves: ItemFlagData?.ShelvesID
-    ? {
+      : null,
+    shelves: ItemFlagData?.ShelvesID
+      ? {
         RecordID: ItemFlagData.ShelvesID || 0,
         Name: ItemFlagData.ShelvesName || "", // fallback
       }
-    : null,
-  
-  
+      : null,
+
+
   };
   const StockinitialValues = {
     Code: ItemStockData?.Code || "",
@@ -1285,81 +1290,99 @@ console.log(ItemStockData, "--ItemStockData");
                       }}
                     />
 
-  <CheckinAutocomplete
-                        name="location"
-                        label="Location"
-                        // label={
-                        //   <>
-                        //     Supplier
-                        //     <span style={{ color: "red", fontSize: "20px" }}>
-                        //       *
-                        //     </span>
-                        //   </>
-                        // }
-                        id="location"
-                        value={values.location}
-                        onChange={(newValue) => {
-                          setFieldValue("location", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          // setFieldTouched("location", true);
+                    <CheckinAutocomplete
+                      name="location"
+                      label="Location"
+                      // label={
+                      //   <>
+                      //     Supplier
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
+                      id="location"
+                      value={values.location}
+                      onChange={(newValue) => {
+                        setFieldValue("location", {
+                          RecordID: newValue.RecordID,
+                          Code: newValue.Code,
+                          Name: newValue.Name,
+                        });
+                        // setFieldTouched("location", true);
 
-                          // setFieldValue(
-                          //   "productCategoryID",
-                          //   newValue.CrmItemCategoryID || ""
-                          // );
-                          // setTimeout(() => {
-                          //   commentsRef.current?.focus();
-                          // }, 100);
-                        }}
-                        error={!!touched.location && !!errors.location}
-                        helperText={touched.location && errors.location}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2159","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
-                      />
+                        // setFieldValue(
+                        //   "productCategoryID",
+                        //   newValue.CrmItemCategoryID || ""
+                        // );
+                        // setTimeout(() => {
+                        //   commentsRef.current?.focus();
+                        // }, 100);
+                      }}
+                      error={!!touched.location && !!errors.location}
+                      helperText={touched.location && errors.location}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                       url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2159",
+                              ScreenName: "Location",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2159","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                    />
 
-                         <CheckinAutocomplete
-                        name="bin"
-                        label="Bin"
-                        // label={
-                        //   <>
-                        //     Supplier
-                        //     <span style={{ color: "red", fontSize: "20px" }}>
-                        //       *
-                        //     </span>
-                        //   </>
-                        // }
-                        id="bin"
-                        value={values.bin}
-                        onChange={(newValue) => {
-                          setFieldValue("bin", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          // setFieldTouched("bin", true);
+                    <CheckinAutocomplete
+                      name="bin"
+                      label="Bin"
+                      // label={
+                      //   <>
+                      //     Supplier
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
+                      id="bin"
+                      value={values.bin}
+                      onChange={(newValue) => {
+                        setFieldValue("bin", {
+                          RecordID: newValue.RecordID,
+                          Code: newValue.Code,
+                          Name: newValue.Name,
+                        });
+                        // setFieldTouched("bin", true);
 
-                          // setFieldValue(
-                          //   "productCategoryID",
-                          //   newValue.CrmItemCategoryID || ""
-                          // );
-                          // setTimeout(() => {
-                          //   commentsRef.current?.focus();
-                          // }, 100);
-                        }}
-                        error={!!touched.bin && !!errors.bin}
-                        helperText={touched.bin && errors.bin}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
-                      />
-                      <Box
-   sx={{
-    gridColumn: "span 2",
-    width: "50%"
-  }}
->
-                         <CheckinAutocomplete
+                        // setFieldValue(
+                        //   "productCategoryID",
+                        //   newValue.CrmItemCategoryID || ""
+                        // );
+                        // setTimeout(() => {
+                        //   commentsRef.current?.focus();
+                        // }, 100);
+                      }}
+                      error={!!touched.bin && !!errors.bin}
+                      helperText={touched.bin && errors.bin}
+                       url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2160",
+                              ScreenName: "Bin",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `LocationID=${values.location?.RecordID}`,
+                              Any: "",
+                            },
+                          })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
+                    />
+                    <Box
+                      sx={{
+                        gridColumn: "span 2",
+                        width: "50%"
+                      }}
+                    >
+                      <CheckinAutocomplete
                         name="shelves"
                         label="Shelves"
                         // label={
@@ -1391,9 +1414,18 @@ console.log(ItemStockData, "--ItemStockData");
                         error={!!touched.shelves && !!errors.shelves}
                         helperText={touched.shelves && errors.shelves}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2161",
+                              ScreenName: "Shelves",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `BinID=${values.bin?.RecordID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
                       />
-          </Box> 
+                    </Box>
 
 
                     <Box>
@@ -1449,7 +1481,7 @@ console.log(ItemStockData, "--ItemStockData");
                     </Box>
 
                     {/* CHECKBOX */}
-                  <Box>
+                    <Box>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -1538,7 +1570,7 @@ console.log(ItemStockData, "--ItemStockData");
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
                       /> */}
-               </Box> 
+                    </Box>
 
 
                     {/* {values.ServiceAndMaintenance && (
@@ -2122,7 +2154,7 @@ console.log(ItemStockData, "--ItemStockData");
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
-                      <TextField
+                    <TextField
                       name="locknumber"
                       type="number"
                       id="locknumber"
@@ -2152,25 +2184,25 @@ console.log(ItemStockData, "--ItemStockData");
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
-                     <TextField
-                                            name="expirydate"
-                                            type="date"
-                                            id="expirydate"
-                                            label="Expiry Date"
-                                            variant="standard"
-                                            focused
-                                            inputFormat="YYYY-MM-DD"
-                                            value={values.expirydate}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            error={!!touched.expirydate && !!errors.expirydate}
-                                            helperText={touched.expirydate && errors.expirydate}
-                                            sx={{ background: "" }}
-                                          // required
-                                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                                          />
+                    <TextField
+                      name="expirydate"
+                      type="date"
+                      id="expirydate"
+                      label="Expiry Date"
+                      variant="standard"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.expirydate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.expirydate && !!errors.expirydate}
+                      helperText={touched.expirydate && errors.expirydate}
+                      sx={{ background: "" }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    />
                   </Box>
-                 
+
                   {/* ===== STOCK ===== */}
                   <Divider sx={{ mt: 2 }} />
                   <Typography variant="h6" padding={1}>
@@ -2335,7 +2367,7 @@ console.log(ItemStockData, "--ItemStockData");
                     />
                   </Box>
 
-                   {/* BUTTONS */}
+                  {/* BUTTONS */}
                   <Box
                     display="flex"
                     justifyContent="flex-end"
@@ -2581,7 +2613,16 @@ console.log(ItemStockData, "--ItemStockData");
                         error={!!touched.supplier && !!errors.supplier}
                         helperText={touched.supplier && errors.supplier}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2141",
+                              ScreenName: "Item Lead Time",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID} AND ItemID=${recID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth

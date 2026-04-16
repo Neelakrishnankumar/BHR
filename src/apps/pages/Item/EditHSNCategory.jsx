@@ -210,7 +210,7 @@ const EditHSNCategory = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category")}
+                    onClick={() => navigate("/Apps/TR316/HSN%20Category", { state: { ...state, Screenname: screenName } }) }
                   >
                     {mode === "E" ? `List Of HSN Category
                     (${state.BreadCrumb1})` : `List Of HSN Category`}

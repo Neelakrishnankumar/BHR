@@ -532,7 +532,7 @@ const Configuration = () => {
                                         name="noofemployee"
                                         type="number"
                                         id="noofemployee"
-                                        label="No of Employee"
+                                        label="No of Personnel"
                                         variant="standard"
                                         focused
                                         // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}

@@ -1652,7 +1652,9 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR316/HSN%20Category");
+                  navigate("/Apps/TR316/HSN%20Category",{state:{
+                    ...state,
+                   }});
                 }}
               >
                 List of HSN Category ({BreadCrumb1})
@@ -1678,7 +1680,11 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR315/Item%20Group");
+                  navigate("/Apps/TR315/Item%20Group",{state:
+                    {
+                      ...state,
+                      Screenname: BreadCrumb2,
+                  }})
                 }}
               >
                 {BreadCrumb2} ({BreadCrumb1})
@@ -1801,10 +1807,15 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR323/Route");
+                  navigate("/Apps/TR323/Route",{
+                    state: {
+                      ...state,
+                      Screennameroute: state.Screenname,
+                    }});
                 }}
               >
-                List of Route ({BreadCrumb1})
+                {/* List of Route ({BreadCrumb1}) */}
+                List of {state.Screenname} ({BreadCrumb1})
               </Typography>
               <Typography
                 variant="h5"
@@ -3341,7 +3352,11 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(`/Apps/TR128/Location`);
+                  navigate(`/Apps/TR128/Location`,{state:
+                    {
+                      ...state,
+                     Screenname: BreadCrumb2,
+                  }})
                 }}
               >
                 {/* Location */}

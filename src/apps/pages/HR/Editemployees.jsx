@@ -4583,10 +4583,10 @@ const Editemployee = () => {
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
                     <MenuItem value={1}>{getBusinessCaption("Skills", "Skills")}</MenuItem>
-                    <MenuItem value={12}>{getBusinessCaption("Approvals", "Approval Workflow")}</MenuItem>
+                    <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
+                    <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={2}>Functions</MenuItem>) : null}
                     <MenuItem value={3}>{getBusinessCaption("Managers", "Managers")}</MenuItem>
-                    <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
                     <MenuItem value={9}>{getBusinessCaption("Geolocation", "Geo Location")}</MenuItem>
                     <MenuItem value={10}>{getBusinessCaption("LeaveConfigurations", "Leave Configuration")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={6}>List of Documents</MenuItem>) : null}
@@ -5080,6 +5080,9 @@ const Editemployee = () => {
                         error={!!touched.dateofbirth && !!errors.dateofbirth}
                         helperText={touched.dateofbirth && errors.dateofbirth}
                         sx={{ background: "" }}
+                        InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -5097,6 +5100,9 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
+                         InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -5114,6 +5120,9 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
+                        InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -7521,7 +7530,7 @@ const Editemployee = () => {
             <Formik
               initialValues={deploymentInitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fndeployment(values, resetForm, false);
@@ -11380,28 +11389,28 @@ const Editemployee = () => {
                           Data.DesignationName === "Student" ||
                             deploymentInitialValue?.Designation?.Name ===
                             "Student"
-                            ?`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2133",
-                            ScreenName: "Parent",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `parentID=${CompanyID}`,
-                            Any: "",
-                          },
-                        })}`
-                        :`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2100",
-                            ScreenName: "Vendor",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `parentID=${CompanyID}`,
-                            Any: "",
-                          },
-                        })}`
-                         }
-                            // ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
-                            // : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
-                       
+                            ? `${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2133",
+                                ScreenName: "Parent",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`
+                            : `${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2100",
+                                ScreenName: "Vendor",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`
+                        }
+                      // ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
+                      // : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
+
                       //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <CheckinAutocomplete
@@ -11426,7 +11435,7 @@ const Editemployee = () => {
                         }}
                         error={!!touched.project && !!errors.project}
                         helperText={touched.project && errors.project}
-                         url={`${listViewurl}?data=${JSON.stringify({
+                        url={`${listViewurl}?data=${JSON.stringify({
                           Query: {
                             AccessID: "2054",
                             ScreenName: "Project",
@@ -11435,7 +11444,7 @@ const Editemployee = () => {
                             Any: "",
                           },
                         })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
 
                       <TextField
@@ -11756,7 +11765,7 @@ const Editemployee = () => {
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
-                         url={`${listViewurl}?data=${JSON.stringify({
+                        url={`${listViewurl}?data=${JSON.stringify({
                           Query: {
                             AccessID: "2108",
                             ScreenName: "Shift",
@@ -11765,7 +11774,7 @@ const Editemployee = () => {
                             Any: "",
                           },
                         })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <CheckinAutocomplete
                         id="shift2"
@@ -11784,7 +11793,7 @@ const Editemployee = () => {
                           console.log(newValue, "--newvalue shift2");
                           console.log(newValue.RecordID, "shift2 RecordID");
                         }}
-                         url={`${listViewurl}?data=${JSON.stringify({
+                        url={`${listViewurl}?data=${JSON.stringify({
                           Query: {
                             AccessID: "2108",
                             ScreenName: "Shift2",
@@ -11793,7 +11802,7 @@ const Editemployee = () => {
                             Any: "",
                           },
                         })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         name="FromPeriod"
@@ -14108,7 +14117,7 @@ const Editemployee = () => {
                                 Any: "",
                               },
                             })}`}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
                         {/* {touched.leavetype && errors.leavetype && (

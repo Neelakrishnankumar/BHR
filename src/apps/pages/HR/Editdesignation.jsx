@@ -85,8 +85,10 @@ const Editdesignation = () => {
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(10);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
-  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+ const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -163,6 +165,7 @@ const Editdesignation = () => {
       dispatch(
         fetchExplorelitview(
           "TR364",
+          Subscriptionlastthree,
           "Designation Documents",
           // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_DRECID))`,

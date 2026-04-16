@@ -1709,6 +1709,7 @@ export const fetchListview =
               },
             };
           }
+          
           else if (AccessID == "TR205") {
             obj = {
               field: "action",
@@ -4032,7 +4033,7 @@ export const fetchListview =
                     AccessID !== "TR136" &&
                     AccessID !== "TR091" &&
                     AccessID !== "TR151" &&
-                    //AccessID !== "TR027" &&
+                    AccessID !== "TR128" &&
                     AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -4428,9 +4429,23 @@ export const fetchListview =
                     )}
                     {AccessID == "TR128" ? (
                       <Box>
+                        <>
+                         <Link to={`./EditLocation/${params.row.RecordID}/E`}
+                         state={{
+                                  LocationName: params.row.Name,
+                                  CompanyName: params.row.CompanyName,
+                                  screenName:screenName
+                         }}
+                         >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>                  
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                          state={{ Locationname: params.row.Name }}
+                          state={{ Locationname: params.row.Name,BreadCrumb2:screenName }}
                         >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
@@ -4438,6 +4453,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                        </>
                         {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
@@ -6659,10 +6675,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditHSN Category/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.HSNCategory,
+                      BreadCrumb2: screenName,
                     },
                   })
                 }
@@ -6681,6 +6698,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.HSNCategory,
+                        BreadCrumb2: screenName,
                       },
                     },
                   )
@@ -6811,10 +6829,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditRoute/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.Route,
+                      Screenname: screenName,
                     },
                   })
                 }
@@ -6847,6 +6866,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.Route,
+                        Screenname: screenName,
                       },
                     },
                   )
