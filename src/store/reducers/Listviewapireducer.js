@@ -7089,6 +7089,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
                       BreadCrumb1: params.row.Description,
+                      Classification:params.row.Classification,
                     },
                   })
                 }
@@ -7122,9 +7123,9 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {is003Subscription && (
+            {(is003Subscription && params.row.HasProjectTask === "Y") && (
             <>
-              <Tooltip title="Staff Calendar">
+              <Tooltip title="Staff Timetable">
                 <IconButton
                   color="info"
                   size="small"

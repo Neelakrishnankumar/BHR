@@ -242,6 +242,10 @@ const initialState = {
   PartyResetdata: {},
   PartyResetloading: false,
   PartyResetstatus: "",
+
+  //CONTRACT INVOICE GET
+  InvoiceHeaderData: [],
+  InvoiceDetailData: [],
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -4259,6 +4263,21 @@ export const getApiSlice = createSlice({
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
       })
+
+      .addCase(ContractInvoice.pending, (state, action) => {
+        state.InvoiceHeaderDatastatus = "idle";
+        state.InvoiceHeaderDataloading = true;
+      })
+      .addCase(ContractInvoice.fulfilled, (state, action) => {
+        state.InvoiceHeaderData =
+          action.payload.HeaderData ? action.payload.HeaderData : [];
+        state.InvoiceDetailData =
+          action.payload.DetailData ? action.payload.DetailData : [];
+      })
+       .addCase(ContractInvoice.rejected, (state, action) => {
+        state.InvoiceHeaderDatastatus = "Error";
+        state.InvoiceHeaderDataloading = false;
+      })
       //SCOREBOARD
       // .addCase(ScoredashBoard.pending, (state, action) => {
       //   // state.ScoredashBoardGetData = []
@@ -6068,4 +6087,22 @@ export const PartyReset = createAsyncThunk(
     });
     return response.data;
   },
+);
+
+export const ContractInvoice = createAsyncThunk(
+  "ContractInvoice/GET",
+  async (data) => {
+    const url = store.getState().globalurl.ContractInvoicePDF;
+
+    console.log("POST DATA:", data);
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      }
+    });
+
+    return response.data;
+  }
 );

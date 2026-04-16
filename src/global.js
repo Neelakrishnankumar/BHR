@@ -324,6 +324,7 @@ const initialState = {
   GetOverflowAffectedOrders:"",
   PartyReset:"",
   WeeklyTeachercalendarGet:"",
+  ContractInvoicePDF:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -340,7 +341,8 @@ export const getUrlSlice = createSlice({
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
-      state.listViewurl = APIurl + "wslistview_mysqlV1.php";
+      // state.listViewurl = APIurl + "wslistview_mysqlV1.php";
+      state.listViewurl = APIurl + "wslistview_mysql.php";
       state.loginUrl = APIurl + "LControllerV1.php";
       state.authUrl = APIurl + "auth.php";
       state.forgotPasswordUrl = APIurl + "BOSForgetPasswordController.php";
@@ -515,6 +517,7 @@ export const getUrlSlice = createSlice({
       state.PartyReset = APIurl + "PartyResetController.php";
       state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
       state.WeeklyTeachercalendarGet = APIurl + "TeacherScheduleGetController.php";
+      state.ContractInvoicePDF = APIurl + "EmpContractData.php";
     },
   },
 });

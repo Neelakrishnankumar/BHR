@@ -186,7 +186,7 @@ export default function StaffTimetableModal({ open, onClose, rowData }) {
                                                 type="submit"
                                             // loading={isLoading}
                                             >
-                                                Save
+                                                Apply
                                             </LoadingButton>
                                             {" "}
 

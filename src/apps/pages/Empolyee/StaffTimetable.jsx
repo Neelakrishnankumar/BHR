@@ -93,7 +93,7 @@ const StaffTimetable = () => {
   var mode = params.Mode;
     useEffect(() => {
 
-        if (!EmployeeID && !CompanyID) return;
+        if (!EmployeeID || !CompanyID || !TermsID) return;
         dispatch(weeklyTeachercalendarGet({ TermsID: TermsID, EmployeeID: EmployeeID, CompanyID: CompanyID }))
     }, [EmployeeID, TermsID, CompanyID]);
     const empID = sessionStorage.getItem("EmpId");
@@ -176,7 +176,7 @@ const StaffTimetable = () => {
                                 aria-label="breadcrumb"
                                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                             >
-                                <Typography
+                                {/* <Typography
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "default" }}
@@ -195,11 +195,12 @@ const StaffTimetable = () => {
                                     }}
                                 >
                                    Personnel
-                                </Typography>
+                                </Typography> */}
                                 <Typography
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "default" }}
+                                    onClick={() => navigate(-1)}
                                 >
                                    Staff Timetable
                                 </Typography>
