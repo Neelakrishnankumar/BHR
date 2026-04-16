@@ -539,6 +539,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "left",
   },
+
+
+listTitle: {
+  fontSize: 11,
+  fontWeight: "bold",
+  marginTop: 10,
+  marginBottom: 4,
+},
+
+listText: {
+  fontSize: 9,
+  marginBottom: 2,
+},
+
+
 });
 
 // ===================== PAGINATION =====================
@@ -563,7 +578,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
   const totalAbsent = data.filter(r => r.Status === "Absent").length;
   const totalHolidays = data.filter(r => r.Status === "Holiday").length;
   const totalWeekOffs = data.filter(r => r.Status === "Week Off").length;
-const totalPermission = data.filter(r => r.PermissionHours).length;
+  const totalPermission = data.filter(r => r.PermissionHours).length;
 
   // Leave segregation (example)
   const leaveSummary = {
@@ -571,6 +586,11 @@ const totalPermission = data.filter(r => r.PermissionHours).length;
     SL: data.filter(r => r.Status === "Sick leave").length,
     EL: data.filter(r => r.Status === "Medical Leave").length,
   };
+
+
+
+
+
   return (
     <Document>
       {pages.map((pageData, pageIndex) => {
@@ -742,12 +762,17 @@ const totalPermission = data.filter(r => r.PermissionHours).length;
                         >
                           {val}
                         </Text>
-                      ))}
-                  </View>
 
-                </View>
+                      ))}
+
+                  </View>
+      </View>
+    
+          
               </View>
             )}
+
+ 
           </Page>
 
         );

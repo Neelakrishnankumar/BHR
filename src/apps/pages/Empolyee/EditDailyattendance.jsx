@@ -228,6 +228,12 @@ const EditdailyAttendance = () => {
       flex: 1,
       headerAlign: "center",
     },
+     {
+      field: "Permission",
+      headerName: "Permission",
+      flex: 1,
+      headerAlign: "center",
+    },
     {
       field: "Status",
       headerName: "Status",

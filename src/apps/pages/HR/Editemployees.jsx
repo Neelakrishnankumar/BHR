@@ -57,6 +57,8 @@ import {
   Inventorygrid3,
   Inventryget,
   InventoryPostController,
+  ResignationPOST,
+  getResignation,
   CustomisedCaptionGet,
   ContractInvoice
 } from "../../../store/reducers/Formapireducer";
@@ -212,6 +214,8 @@ const Editemployee = () => {
   console.log("ParentcontactgetData", ParentcontactgetData);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
+    const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
+  console.log("ResignationGetData", ResignationGetData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   const Inventorygrid1columns = useSelector(
     (state) => state.formApi.Inventorygrid1columns
@@ -639,6 +643,10 @@ const Editemployee = () => {
           shift: Yup.object().required(data.Deployment.shift).nullable(),
           // costofemployee: Yup.string().required(data.Deployment.costofemployee),
           // costofcompany: Yup.string().required(data.Deployment.costofcompany),
+           
+          exitinterviewby: Yup.object()
+            .nullable()
+            .required(data.exitinterviewby.Designation),
         });
         setValidationSchema2(schema2);
 
@@ -1403,6 +1411,9 @@ const Editemployee = () => {
       })
       );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+     if (event.target.value == "22") {
+      dispatch(getResignation({ EmployeeID: recID }));
     }
     if (event.target.value == "5") {
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
@@ -3561,7 +3572,7 @@ const Editemployee = () => {
       if (res?.payload?.Status === "Y") {
         toast.success(res?.payload?.Message || "Invoice Generated Successfully!");
         setLoading(false);
-        setFlag(res?.payload?.Flag);
+        setFlag("P");
       } else {
         toast.error(res?.payload?.Message || "Failed to Generate Invoice");
       }
@@ -4155,6 +4166,58 @@ const Editemployee = () => {
     }
   };
 
+  //RESIGNATION_SECTION
+  
+    const resignationinitialvalues = {
+    code: Data.Code,
+    description: Data.Name,
+    resignationdate: ResignationGetData.ResignationDate,
+    resignationnote: ResignationGetData.ResignationNote,
+    exitinterviewby: ResignationGetData.ExitInterviewBy
+      ? {
+        RecordID: ResignationGetData.ExitInterviewBy,
+        Code: ResignationGetData.ExitInterviewByCode,
+        Name: ResignationGetData.ExitInterviewByName,
+      }
+      : null,
+    exitinterviewdate: ResignationGetData.ExitInterviewDate,
+    exitinterviewcomments: ResignationGetData.ExitInterviewComments,
+    acceptedrelievingdate: ResignationGetData.AcceptedRelievingDate,
+    actualrelievingdate: ResignationGetData.ActualRelievingDate,
+   dateofsettlement: ResignationGetData.DateOfSettlement,
+    exitformalitiesacceptrd: ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
+   
+  };
+
+  //RESIGNATION_POST
+   const Fnsaveresignation = async (values, resetForm, del) => {
+    console.log(values, "--values");
+
+    const idata = {
+      EmployeeID: recID,
+      ResignationDate: values.resignationdate,
+      ResignationNote: values.resignationnote,
+      ExitInterviewBy: values.exitinterviewby?.RecordID || 0,
+      ExitInterviewDate: values.exitinterviewdate,
+      ExitInterviewComments: values.exitinterviewcomments,
+      AcceptedRelievingDate: values.acceptedrelievingdate,
+      ActualRelievingDate: values.actualrelievingdate,
+      DateOfSettlement: values.dateofsettlement,
+      ExitFormalitiesAccepted: values.exitformalitiesacceptrd === true ? "Y" : "N",
+          
+    };
+
+   console.log(idata, "--resignation idata");
+// return;
+    const response = await dispatch(ResignationPOST({ data: idata }));
+    // return;
+    if (response.payload.Status == "Y") {
+      dispatch(getResignation({ EmployeeID: recID }));
+      toast.success(response.payload.Msg);
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
   //Approvals
   const FndeploymentApprovals = async (values, resetForm, del) => {
     console.log(values, "--values");
@@ -4743,6 +4806,20 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+
+               
+
+                   {show == "22" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Resignation
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -4788,7 +4865,7 @@ const Editemployee = () => {
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                     <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
-
+                    <MenuItem value={22}>Resignation</MenuItem>
 
                   </Select>
                 </FormControl>
@@ -5165,7 +5242,7 @@ const Editemployee = () => {
                         /> */}
 
                      
-                          <MultiSelectDropdown
+                          {/* <MultiSelectDropdown
                             id="module"
                             name="Module"
                             data={fetchedData?.Data || []} // from API
@@ -5174,7 +5251,7 @@ const Editemployee = () => {
                               console.log("Send this to API:", val);
                               setApiReturnValue(val);
                             }}
-                          />
+                          /> */}
                       
                       </Box>
                      
@@ -9245,6 +9322,554 @@ const Editemployee = () => {
         ) : (
           false
         )}
+
+
+
+  {show == "22" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={resignationinitialvalues}
+              enableReinitialize={true}
+              validationSchema={validationSchema2}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  Fnsaveresignation(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+                     
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+                         <Box sx={{ width: "100%" }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                          <TextField
+                          name="resignationdate"
+                          type="date"
+                          id="resignationdate"
+                          label="Resignation Date"
+                        fullWidth
+                        variant="standard"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.resignationdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.resignationdate && !!errors.resignationdate}
+                        helperText={touched.resignationdate && errors.resignationdate}
+                        // sx={{
+
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+
+                      />
+                        {/* <CheckinAutocomplete
+                          name="location"
+                          label={
+                            <span>
+                              Location
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="location"
+                          // value={locationLookup}
+                          value={values.location}
+                          onChange={(newValue) => {
+                            setFieldValue("location", newValue);
+                            // SetLocationLookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
+                          }}
+                          error={!!touched.location && !!errors.location}
+                          helperText={touched.location && errors.location}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        /> */}
+                      </FormControl>
+                    </Box>
+                    <Box sx={{ width: "100%" }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                          <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Resignation Note"
+                        value={values.resignationnote}
+                        id="resignationnote"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="resignationnote"
+                        error={!!touched.resignationnote && !!errors.resignationnote}
+                        helperText={touched.resignationnote && errors.resignationnote}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      // rows={2}
+                      />
+                        {/* <CheckinAutocomplete
+                          name="location"
+                          label={
+                            <span>
+                              Location
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="location"
+                          // value={locationLookup}
+                          value={values.location}
+                          onChange={(newValue) => {
+                            setFieldValue("location", newValue);
+                            // SetLocationLookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
+                          }}
+                          error={!!touched.location && !!errors.location}
+                          helperText={touched.location && errors.location}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        /> */}
+                      </FormControl>
+                    </Box>
+
+                    <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <CheckinAutocomplete
+                        name="exitinterviewby"
+                        label={
+                          <span>
+                           Exit Interview By
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        id="exitinterviewby"
+                        // value={exitinterviewbyLookup}
+                        value={values.exitinterviewby}
+                        onChange={(newValue) => {
+                          setFieldValue("exitinterviewby", newValue);
+                          console.log(newValue, "--newvalue exitinterviewby");
+                          console.log(newValue.RecordID, "exitinterviewby RecordID");
+
+                          // SetGateLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
+                        }}
+                        error={!!touched.exitinterviewby && !!errors.exitinterviewby}
+                        helperText={touched.exitinterviewby && errors.exitinterviewby}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      />
+                    </FormControl>
+
+                    <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                        <TextField
+                          name="exitinterviewdate"
+                          type="date"
+                          id="exitinterviewdate"
+                          label="Exit Interview Date"
+                        fullWidth
+                        variant="standard"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.exitinterviewdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.exitinterviewdate && !!errors.exitinterviewdate}
+                        helperText={touched.exitinterviewdate && errors.exitinterviewdate}
+                        // sx={{
+
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+
+                      />
+
+                      {/* <CheckinAutocomplete
+                        id="function"
+                        name="function"
+                        label="Function"
+                        // label={
+                        //   <span>
+                        //     Function
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
+                        variant="outlined"
+                        value={values.function}
+                        onChange={(newValue) => {
+                          setFieldValue("function", newValue);
+                          console.log(newValue, "--newvalue function");
+                          console.log(newValue.RecordID, "function RecordID");
+                        }}
+                        // error={!!touched.function && !!errors.function}
+                        // helperText={touched.function && errors.function}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+ ='${CompanyID}'","Any":""}}`}
+                      /> */}
+                    </FormControl>
+
+                     
+
+                    <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                          <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Exit Interview Comments"
+                        value={values.exitinterviewcomments}
+                        id="exitinterviewcomments"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="exitinterviewcomments"
+                        error={!!touched.exitinterviewcomments && !!errors.exitinterviewcomments}
+                        helperText={touched.exitinterviewcomments && errors.exitinterviewcomments}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      // rows={2}
+                      />
+                      </FormControl>
+
+
+
+                        <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                        <TextField
+                          name="acceptedrelievingdate"
+                          type="date"
+                          id="acceptedrelievingdate"
+                          label="Accepted Relieving Date"
+                        fullWidth
+                        variant="standard"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.acceptedrelievingdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.acceptedrelievingdate && !!errors.acceptedrelievingdate}
+                        helperText={touched.acceptedrelievingdate && errors.acceptedrelievingdate}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+
+                      />
+
+                    </FormControl>
+                     <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                        <TextField
+                          name="actualrelievingdate"
+                          type="date"
+                          id="actualrelievingdate"
+                          label="Actual Relieving Date"
+                        fullWidth
+                        variant="standard"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.actualrelievingdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.actualrelievingdate && !!errors.actualrelievingdate}
+                        helperText={touched.actualrelievingdate && errors.actualrelievingdate}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+
+                      />
+
+                    </FormControl>
+                     <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                        <TextField
+                          name="dateofsettlement"
+                          type="date"
+                          id="dateofsettlement"
+                          label="Date Of Settlement"
+                        fullWidth
+                        variant="standard"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.dateofsettlement}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.dateofsettlement && !!errors.dateofsettlement}
+                        helperText={touched.dateofsettlement && errors.dateofsettlement}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+
+                      />
+
+                    </FormControl>
+                     <Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="exitformalitiesacceptrd"
+                        id="exitformalitiesacceptrd"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="exitformalitiesacceptrd"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Exit Formalities Accepted
+                      </FormLabel>
+                           </Box>
+                  </Box>
+                
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="30px"
+                    padding={1}
+                    gap={2}
+                  >
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </Button>
+                    {/* {YearFlag == "true" ? (
+                      
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )} */}
+
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+
+                  <Popup
+                    title="Location"
+                    openPopup={openLOCATIONPopup}
+                    setOpenPopup={setOpenLOCATIONPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2051"
+                      screenName="Location"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Gate"
+                    openPopup={openGATEPopup}
+                    setOpenPopup={setOpenGATEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2050"
+                      screenName="Gate"
+                      filterName={"parentID"}
+                      // filterValue={locationLookup.locationRecordID}
+                      childToParent={childToParent}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designation"
+                    openPopup={opendesignPopup}
+                    setOpenPopup={setOpendesignPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2047"
+                      screenName="Designation"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  {/* <Popup
+                    title="CheckIn"
+                    openPopup={openCHECKINPopup}
+                    setOpenPopup={setOpenCHECKINPopup}
+                  >
+                    <Listviewpopup
+                      accessID=""
+                      screenName="CheckIn"
+                      childToParent={childToParent}
+                    />
+                  </Popup> */}
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+
         {show == "6" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
