@@ -484,7 +484,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR205/Salary Component");
+                      navigate(-1);
                     }}
                   >
                     Cancel

@@ -122,7 +122,7 @@ const Editdesignation = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
   }, [show]);
@@ -158,7 +158,7 @@ const Editdesignation = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
     if (event.target.value == "1") {
@@ -298,7 +298,8 @@ const Editdesignation = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR122/Designation");
+      // navigate("/Apps/TR122/Designation");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -710,7 +711,8 @@ const Editdesignation = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR122/Designation");
+                      // navigate("/Apps/TR122/Designation");
+                      navigate(-1);
                     }}
                   >
                     Cancel
