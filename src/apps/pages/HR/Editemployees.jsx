@@ -1228,8 +1228,8 @@ const Editemployee = () => {
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
-      DeptRecordID: isStudentClassification ? 0 : values.Department.RecordID || 0,
-      DeptName: isStudentClassification ? "" : values.Department.Name || "",
+      DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
+      DeptName: isStudentClassification ? "" : values.Department?.Name || "",
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,

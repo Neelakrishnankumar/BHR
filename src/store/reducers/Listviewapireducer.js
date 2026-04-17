@@ -6648,6 +6648,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.Description,
+                        Classification: params.row.Description,
                       },
                     },
                   )
