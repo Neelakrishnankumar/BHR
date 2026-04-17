@@ -208,10 +208,18 @@ const EditRoute = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR323/Route")}
+                    // onClick={() => navigate("/Apps/TR323/Route")}
+                    onClick={() => {
+                      navigate("/Apps/TR323/Route", {
+                        state: {
+                          ...state,
+                          Screennameroute: state.Screenname,
+                        }
+                      });
+                    }}
                   >
-                    {mode === "E" ? `List Of Route
-                    (${state.BreadCrumb1})` : `List Of Route`}
+                    {mode === "E" ? `List Of ${state.Screenname}
+                    (${state.BreadCrumb1})` : `List Of  ${state.Routescreen}`}
                   </Typography>
                   <Typography
                     variant="h5"

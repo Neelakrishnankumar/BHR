@@ -413,5 +413,8 @@
   },
   "ResetParty": {
     "Password": "Please Enter Your Passord"
-  }
+  },
+  "Allowance": {
+    "Allowance": "Please select the Allowance"
+}
 }

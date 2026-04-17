@@ -1236,8 +1236,8 @@ const Editemployee = () => {
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
-      DeptRecordID: isStudentClassification ? 0 : values.Department.RecordID || 0,
-      DeptName: isStudentClassification ? "" : values.Department.Name || "",
+      DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
+      DeptName: isStudentClassification ? "" : values.Department?.Name || "",
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
@@ -4853,10 +4853,10 @@ const Editemployee = () => {
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
                     <MenuItem value={1}>{getBusinessCaption("Skills", "Skills")}</MenuItem>
-                    <MenuItem value={12}>{getBusinessCaption("Approvals", "Approval Workflow")}</MenuItem>
+                    <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
+                    <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={2}>Functions</MenuItem>) : null}
                     <MenuItem value={3}>{getBusinessCaption("Managers", "Managers")}</MenuItem>
-                    <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
                     <MenuItem value={9}>{getBusinessCaption("Geolocation", "Geo Location")}</MenuItem>
                     <MenuItem value={10}>{getBusinessCaption("LeaveConfigurations", "Leave Configuration")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={6}>List of Documents</MenuItem>) : null}
@@ -5359,6 +5359,9 @@ const Editemployee = () => {
                         error={!!touched.dateofbirth && !!errors.dateofbirth}
                         helperText={touched.dateofbirth && errors.dateofbirth}
                         sx={{ background: "" }}
+                        InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -5376,6 +5379,9 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
+                         InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -5393,6 +5399,9 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
+                        InputProps={{
+                          onKeyDown: (e) => e.preventDefault(), 
+                        }}
                       // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
@@ -8153,7 +8162,7 @@ const Editemployee = () => {
             <Formik
               initialValues={deploymentInitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fndeployment(values, resetForm, false);

@@ -68,7 +68,11 @@ export default function StaffTimetableModal({ open, onClose, rowData }) {
 
         const TermsID = values.terms ? values?.terms?.RecordID : 0;
 
-        navigate(`/Apps/Staff/StaffTimetable/${CompanyID}/${HeaderID}/${TermsID}`);
+        navigate(`/Apps/Staff/StaffTimetable/${CompanyID}/${HeaderID}/${TermsID}`, {
+            state: {
+                EmployeeName: rowData.Personnel,
+            }
+        });
     }
     return (
         <Dialog
