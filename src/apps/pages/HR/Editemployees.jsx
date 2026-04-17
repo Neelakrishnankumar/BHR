@@ -4178,9 +4178,9 @@ const Editemployee = () => {
     resignationnote: ResignationGetData.ResignationNote,
     exitinterviewby: ResignationGetData.ExitInterviewBy
       ? {
-        RecordID: ResignationGetData.ExitInterviewBy,
-        Code: ResignationGetData.ExitInterviewByCode,
-        Name: ResignationGetData.ExitInterviewByName,
+        RecordID: ResignationGetData?.ExitInterviewBy || 0,
+        Code: ResignationGetData?.ExitInterviewByCode || "",
+        Name: ResignationGetData?.ExitInterviewByName || "",
       }
       : null,
     exitinterviewdate: ResignationGetData.ExitInterviewDate,
