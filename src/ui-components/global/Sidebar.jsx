@@ -329,6 +329,9 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
         if (name === "Party") {
           console.log("Party parent:", parentMenuID);
         }
+        if (is003Subscription && name === "CRM") {
+        return null;
+      }
 
         //  HIDE CRM → Party for 003 subscription
         if (

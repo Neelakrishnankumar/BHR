@@ -104,7 +104,10 @@ const Editproject = () => {
  const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
-    : "";  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+    : "";  
+    console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  
   const [show, setScreen] = React.useState("0");
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
@@ -1105,7 +1108,7 @@ const Editproject = () => {
                   <MenuItem value={2}>List Of Documents</MenuItem> */}
 
                   <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
-                  <MenuItem value="3">Units</MenuItem>
+                  {is003Subscription === false ? (<MenuItem value="3">Units</MenuItem>) : null}
                   <MenuItem value="2">List Of Documents</MenuItem>
                 </Select>
               </FormControl>
