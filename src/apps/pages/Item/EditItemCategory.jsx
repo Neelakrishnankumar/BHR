@@ -98,7 +98,11 @@ const EditItemCategory = () => {
       setSelectedHSNCategoryID(null);
     }
   }, [Data]);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -177,7 +181,7 @@ const EditItemCategory = () => {
         }
         if (props === "Close") {
           navigate(`/Apps/Secondarylistview/Item Group/${params.accessID}/${params.screenName}/${params.parentID2}/${params.parentID1}`,
-            {state:state}
+            { state: state }
           );
         }
       } else {
@@ -433,7 +437,16 @@ const EditItemCategory = () => {
                       }}
                       error={!!touched.HSNCategory && !!errors.HSNCategory}
                       helperText={touched.HSNCategory && errors.HSNCategory}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2136","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2136",
+                          ScreenName: "Item Category",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `CompanyID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2136","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID}","Any":""}}`}
 
                     />
 
@@ -457,7 +470,16 @@ const EditItemCategory = () => {
                       }}
                       error={!!touched.HSNMaster && !!errors.HSNMaster}
                       helperText={touched.HSNMaster && errors.HSNMaster}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2135","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID} AND HSNCategoryID=${selectedHSNCategoryID}","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2135",
+                          ScreenName: "Item Category",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `CompanyID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2135","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID} AND HSNCategoryID=${selectedHSNCategoryID}","Any":""}}`}
                     />
 
                     {/* SORT ORDER */}

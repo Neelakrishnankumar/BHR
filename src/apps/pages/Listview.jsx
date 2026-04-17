@@ -563,7 +563,14 @@ const Listview = () => {
 
         <Typography variant="h3" noWrap>
           {accessID == "TR330"
-            ? `${screenName1}`: screenName}</Typography>
+            ? `${screenName1}`:
+            accessID == "TR323"
+             ?  screenName || rowData.Screennameroute :
+             accessID == "TR315"
+             ? screenName || rowData.Screenname 
+              : accessID == "TR128"
+             ? screenName || rowData.LocationName
+             : screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -714,7 +721,10 @@ const Listview = () => {
                             `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
                             }`,
                             {
+                             
                               state: {
+                                ...rowData,
+                                Routescreen: screenName,
                                 CustomerID: "-1",
                                 ProductID: "-1",
                                 BomID: "-1",

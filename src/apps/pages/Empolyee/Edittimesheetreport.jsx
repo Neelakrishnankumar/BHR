@@ -41,6 +41,7 @@ import {
   timeSheet,
   timeSheetPostData,
   timeSheetreport,
+  CustomisedCaptionGet,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -143,6 +144,36 @@ const Edittimesheetreport = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [empData, setempData] = useState(null);
   const [selectedPro, setSelectedPro] = useState([]);
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
+      );
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
   useEffect(() => {
     dispatch(resetTrackingData());
   }, []);
@@ -306,7 +337,7 @@ const Edittimesheetreport = () => {
     },
     {
       field: "ProjectName",
-      headerName: "ProjectName",
+      headerName: getBusinessCaption("Project", "Project"),
       headerAlign: "center",
       width: 130,
     },
@@ -376,12 +407,12 @@ const Edittimesheetreport = () => {
       width: 120,
     },
   ];
-    
-    const HeaderImg = sessionStorage.getItem("CompanyHeader");
-    const FooterImg = sessionStorage.getItem("CompanyFooter");
-    console.log("HeaderImg", HeaderImg, FooterImg);
-    const config = getConfig();
-    const baseurlUAAM = config.UAAM_URL;
+
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
 
 
   const safeAttendanceData = Array.isArray(AttendanceData)
@@ -523,8 +554,8 @@ const Edittimesheetreport = () => {
     () =>
       explorelistViewColumn
         ? explorelistViewColumn.filter((column) =>
-            VISIBLE_FIELDS.includes(column.field),
-          )
+          VISIBLE_FIELDS.includes(column.field),
+        )
         : [],
     [explorelistViewColumn],
   );
@@ -648,7 +679,7 @@ const Edittimesheetreport = () => {
                     <MultiFormikOptimizedAutocomplete
                       sx={{ width: "100%" }}
                       name="ProName"
-                      label="Project"
+                      label={getBusinessCaption("Project", "Project")}
                       id="ProName"
                       value={selectedPro}
                       // onChange={(e, newValue) => {
@@ -667,7 +698,16 @@ const Edittimesheetreport = () => {
                           sessionStorage.removeItem("proData");
                         }
                       }}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                   </Box>
 
@@ -676,7 +716,7 @@ const Edittimesheetreport = () => {
                       name="Employee"
                       label={
                         <span>
-                          Employee
+                          Personnel
                           {/* <span style={{ color: "red", fontWeight: "bold" }}>*</span> */}
                         </span>
                       }
@@ -695,7 +735,16 @@ const Edittimesheetreport = () => {
                         else sessionStorage.removeItem("empData");
                         setUseCurrentEmp(false);
                       }}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                       url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2116",
+                                ScreenName: "EMPLOYEETEAMS",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                     />
                   </Box>
                   {/* )} */}
@@ -1005,24 +1054,24 @@ const Edittimesheetreport = () => {
                   }
                 </PDFDownloadLink>
 
-                 <FaFileExcel
-                                      size={20}
-                                      color="#1D6F42"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() =>
-                                        TimesheetReportExcel(
-                                          safeAttendanceData,
-                                          {
-                                            Month: Month,
-                                            Year: Year,
-                                            EmployeeID: empData?.Name || EMPNAME,
-                                          },
-                                          projectName,
-                                          managerName,
-                                        
-                                        )
-                                      }
-                                    />
+                <FaFileExcel
+                  size={20}
+                  color="#1D6F42"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    TimesheetReportExcel(
+                      safeAttendanceData,
+                      {
+                        Month: Month,
+                        Year: Year,
+                        EmployeeID: empData?.Name || EMPNAME,
+                      },
+                      projectName,
+                      managerName,
+
+                    )
+                  }
+                />
               </Box>
 
               <Box sx={{ gridColumn: "span 4" }}>
@@ -1079,7 +1128,7 @@ const Edittimesheetreport = () => {
                     getRowId={(row) => row.RecordID}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{

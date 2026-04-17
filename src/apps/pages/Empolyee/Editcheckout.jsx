@@ -76,8 +76,10 @@ const Editcheckout = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
-  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     if (Subscriptionlastthree && accessID) {
       dispatch(
@@ -337,7 +339,7 @@ const Editcheckout = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-            {getBusinessCaption("CheckOut", "Check Out")}
+                {getBusinessCaption("CheckOut", "Check Out")}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -600,7 +602,7 @@ const Editcheckout = () => {
                     type="date"
                     id="date"
                     // label="Check Out Date"
-                   label={getBusinessCaption("CheckOutDate", "Check Out Date")}
+                    label={getBusinessCaption("CheckOutDate", "Check Out Date")}
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
@@ -637,7 +639,7 @@ const Editcheckout = () => {
                     name="checkouttime"
                     type="time"
                     id="checkouttime"
-                     label={
+                    label={
                       <span>
                         {getBusinessCaption("CheckOutTime", "Check Out Time")}
                         <span style={{ color: 'red', fontSize: '20px' }}>*</span>

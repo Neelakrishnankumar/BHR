@@ -71,8 +71,10 @@ const Editcheckin = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
-  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -353,7 +355,7 @@ const Editcheckin = () => {
                 }}
               >
                 {/* {mode === "E" ? `Personnel(${state.EmpName})` : "Employee(New)"} */}
-              {getBusinessCaption("CheckIn", "Check In")}
+                {getBusinessCaption("CheckIn", "Check In")}
               </Typography>
               {/* <Typography
                 color="#0000D1"

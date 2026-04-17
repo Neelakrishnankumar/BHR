@@ -544,21 +544,89 @@ const styles = StyleSheet.create({
         right: 0,
         textAlign: "center",
         fontSize: 7,
-    }
+    },
+  sectionContainer: {
+    marginTop: 10,
+  padding: 10,
+  breakInside: "avoid", 
+  },
+
+  SummheaderText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    textAlign: "center",
+    color: "#0B3D91",
+    // textDecoration: "underline",
+  },
+
+  card: {
+    marginBottom: 10,
+    padding: 8,
+    borderRadius: 5,
+    border: "1px solid #ccc",
+    backgroundColor: "#F9FBFF",
+  },
+
+  listTitle: {
+    fontSize: 12,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#1A237E",
+    borderBottom: "1px solid #ddd",
+    paddingBottom: 2,
+  },
+
+  listText: {
+    fontSize: 10,
+    marginLeft: 10,
+    marginBottom: 2,
+    color: "#333",
+  },
+
+  emptyText: {
+    fontSize: 10,
+    fontStyle: "italic",
+    color: "#999",
+    marginLeft: 10,
+  },
 });
 
 // ✅ FIXED: Proper pagination - fit more rows per page
+// const paginateData = (data) => {
+//     if (!data || data.length === 0) return [];
+
+//     const pageSize = 30;  // ✅ INCREASED from 20 to 30 rows per page
+//     const pages = [];
+
+//     for (let i = 0; i < data.length; i += pageSize) {
+//         pages.push(data.slice(i, i + pageSize));
+//     }
+
+//     return pages;
+// };
 const paginateData = (data) => {
-    if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) return [];
 
-    const pageSize = 30;  // ✅ INCREASED from 20 to 30 rows per page
-    const pages = [];
+  const pageSize = 30;
+  const lastPageSize = 18; // 👈 leave space for summary
 
-    for (let i = 0; i < data.length; i += pageSize) {
-        pages.push(data.slice(i, i + pageSize));
-    }
+  const pages = [];
 
-    return pages;
+  for (let i = 0; i < data.length; i += pageSize) {
+    pages.push(data.slice(i, i + pageSize));
+  }
+
+  // 👇 Adjust last page
+  const lastPage = pages[pages.length - 1];
+
+  if (lastPage.length > lastPageSize) {
+    const extra = lastPage.slice(lastPageSize);
+    pages[pages.length - 1] = lastPage.slice(0, lastPageSize);
+    pages.push(extra); // push overflow to new page
+  }
+
+  return pages;
 };
 
 const DailyattendancePDF = ({ data = [], filters = {} }) => {
@@ -577,6 +645,42 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
     const formattedDate = filters.Date
         ? filters.Date.split("-").reverse().join("-")
         : "";
+
+
+
+// Helper function for dd-mm-yyyy
+const formatDateDisplay = (dateStr) => {
+  if (!dateStr || dateStr === "-") return "-";
+  const datePart = dateStr.split(" ")[0]; 
+  const [year, month, day] = datePart.split("-");
+  return `${day}-${month}-${year}`;
+};
+
+// Update mappings to use 'name' and 'date'
+const permissionList = data
+  .filter(r => r.Permission && r.Permission !== "00:00")
+  .map(r => {
+    console.log(r, "--hii permissionList");  // ✅ valid here
+
+    return {
+      name: r.EmpName,
+      date: formatDateDisplay(r.CheckInDate)
+    };
+  });
+
+const scheduledLeaveList = data
+  .filter(r => r.Status === "Leave")
+  .map(r => ({ 
+    name: r.EmpName, 
+    date: formatDateDisplay(r.CheckInDate) 
+  }));
+
+const unscheduledLeaveList = data
+  .filter(r => r.Status === "Absent")
+  .map(r => ({ 
+    name: r.EmpName, 
+    date: formatDateDisplay(r.CheckInDate) 
+  }));
 
     return (
         <Document>
@@ -647,6 +751,8 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
                         })}
                     </View>
 
+
+
                     {/* Footer Image - Optional */}
                     {filters.FooterImg && 
                      filters.FooterImg.length > 0 &&
@@ -663,8 +769,64 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
                     <Text fixed style={styles.pageNumber}>
                         Page {pageIndex + 1} of {pages.length}
                     </Text>
+
+         {/* ✅ Summary Page (NEW) */}
+{/* ✅ Summary Page Section */}
+{pageIndex === pages.length - 1 && (
+  <View style={styles.sectionContainer}>
+    <Text style={styles.SummheaderText}>Summary</Text>
+
+    {/* ✅ Permission */}
+    {permissionList?.length > 0 && (
+      <View style={styles.card} wrap={false}>
+        <Text style={styles.listTitle}>
+          Permission List ({permissionList.length})
+        </Text>
+        {permissionList.map((item, i) => (
+          <Text key={i} style={styles.listText}>
+            • {item.name}
+          </Text>
+        ))}
+      </View>
+    )}
+
+    {/* ✅ Scheduled Leave */}
+    {scheduledLeaveList?.length > 0 && (
+      <View style={styles.card} wrap={false}>
+        <Text style={styles.listTitle}>
+          Scheduled Leave ({scheduledLeaveList.length})
+        </Text>
+        {scheduledLeaveList.map((item, i) => (
+          <Text key={i} style={styles.listText}>
+            • {item.name}
+          </Text>
+        ))}
+      </View>
+    )}
+
+    {/* ✅ Unscheduled Leave */}
+    {unscheduledLeaveList?.length > 0 && (
+      <View style={styles.card} wrap={false}>
+        <Text style={styles.listTitle}>
+          Unscheduled Leave ({unscheduledLeaveList.length})
+        </Text>
+        {unscheduledLeaveList.map((item, i) => (
+          <Text key={i} style={styles.listText}>
+            • {item.name}
+          </Text>
+        ))}
+      </View>
+    )}
+  </View>
+)}
+
                 </Page>
+
+         
             ))}
+
+
+    
         </Document>
     );
 };

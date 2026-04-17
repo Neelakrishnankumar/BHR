@@ -434,7 +434,7 @@ const Holidaylist = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR218/Holiday List");
+                      navigate(-1);
                     }}
                   >
                     Cancel

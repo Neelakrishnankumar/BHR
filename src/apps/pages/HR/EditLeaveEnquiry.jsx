@@ -77,6 +77,11 @@ const EditLeaveEnquiry = () => {
   const state = location.state || {};
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const handleApplyClick = async (values) => {
     const permissionFlag = values.Permission === true;
     setIsPermission(permissionFlag);
@@ -437,7 +442,16 @@ const EditLeaveEnquiry = () => {
                             JSON.stringify(newValue || []),
                           );
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}' AND Year = '${getCurrentYear()}'","Any":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2107",
+                              ScreenName: "Leave Type",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `parentID='${compID}' AND EmployeeID='${recID}' AND Year = '${getCurrentYear()}'`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}' AND Year = '${getCurrentYear()}'","Any":""}}`}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}' AND Year IN (${values.LeaveYears.map(y => `'${y}'`).join(",")})","Any":""}}`}
                       />
 

@@ -627,7 +627,7 @@ const Editdept = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate(`/Apps/TR026/Department`);
+                      navigate(-1);
                     }}
                   >
                     Cancel

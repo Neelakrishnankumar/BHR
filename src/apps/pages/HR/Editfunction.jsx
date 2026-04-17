@@ -807,7 +807,7 @@ const Editfunction = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR121/Functions");
+                      navigate(-1);
                     }}
                   >
                     Cancel

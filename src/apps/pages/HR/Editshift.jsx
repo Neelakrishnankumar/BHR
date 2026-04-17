@@ -694,7 +694,7 @@ const Editshift = () => {
                                         color="warning"
                                         variant="contained"
                                         onClick={() => {
-                                            navigate("/Apps/TR265/Shift");
+                                            navigate(-1);
                                         }}
                                     >
                                         Cancel
