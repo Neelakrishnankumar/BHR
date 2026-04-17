@@ -352,7 +352,7 @@ const StaffTimetable = () => {
                                 columns={safeColumns}
                                 loading={WEEKloading}
                                 pageSizeOptions={[5]}
-                                getRowId={(row) => row.id || row.RecordID || Math.random()}
+                                getRowId={(row) => row.id || row.RecordID}
                                 hideFooter
                                 disableRowSelectionOnClick
                                 rowHeight={60}
