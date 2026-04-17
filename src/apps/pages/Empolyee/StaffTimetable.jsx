@@ -40,7 +40,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { weeklyTeachercalendarGet } from "../../../store/reducers/Explorelitviewapireducer";
 import { tokens } from "../../../Theme";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -53,6 +53,8 @@ const StaffTimetable = () => {
 
     const calendarRef = useRef(null);
     const calendarInstanceRef = useRef(null);
+    const location = useLocation();
+    const state = location.state || {};
     const [eventsData, setEventsData] = useState([]);
     const [DialogData, setDialogData] = useState([]);
     const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -93,7 +95,8 @@ const StaffTimetable = () => {
     var mode = params.Mode;
     useEffect(() => {
 
-        // if (!EmployeeID || !CompanyID || !TermsID) return;
+        if (!TermsID || !EmployeeID || !CompanyID) return;
+
         dispatch(weeklyTeachercalendarGet({ TermsID: TermsID, EmployeeID: EmployeeID, CompanyID: CompanyID }))
     }, [EmployeeID, TermsID, CompanyID]);
     const empID = sessionStorage.getItem("EmpId");
@@ -114,11 +117,12 @@ const StaffTimetable = () => {
     const WEEKcolumns = useSelector(
         (state) => state.exploreApi.explorecolumnData,
     );
-    const WEEKloading = useSelector((state) => state.exploreApi.loading);
+    const WEEKloading = useSelector((state) => state?.exploreApi?.loading ?? false);
     console.log(WCrows, "--WCrows");
     console.log(WEEKcolumns, "--WEEKcolumns");
     console.log(WEEKloading, "--WEEKloading");
-
+    const safeRows = Array.isArray(WCrows) ? WCrows : [];
+    const safeColumns = Array.isArray(WEEKcolumns) ? WEEKcolumns : [];
     const fnLogOut = (props) => {
         //   if(Object.keys(ref.current.touched).length === 0){
         //     if(props === 'Logout'){
@@ -202,7 +206,7 @@ const StaffTimetable = () => {
                                     sx={{ cursor: "default" }}
                                     onClick={() => navigate(-1)}
                                 >
-                                    Staff Timetable
+                                    Staff Timetable ({state?.EmployeeName})
                                 </Typography>
 
                             </Breadcrumbs>
@@ -249,9 +253,9 @@ const StaffTimetable = () => {
                             gap: 2,
                         }}
                     >
-                        <Typography variant="h5" fontWeight="bold">
-                            Staff Calendar
-                        </Typography>
+                        {/* <Typography variant="h5" fontWeight="bold">
+                            Staff Calendar - {state?.EmployeeName}
+                        </Typography> */}
                         <Box
                             sx={{
                                 height: "auto",
@@ -344,10 +348,11 @@ const StaffTimetable = () => {
                             }}
                         >
                             <DataGrid
-                                rows={WCrows || []}
-                                columns={WEEKcolumns || []}
+                                rows={safeRows}
+                                columns={safeColumns}
                                 loading={WEEKloading}
                                 pageSizeOptions={[5]}
+                                getRowId={(row) => row.id || row.RecordID || Math.random()}
                                 hideFooter
                                 disableRowSelectionOnClick
                                 rowHeight={60}

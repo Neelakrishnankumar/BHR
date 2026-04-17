@@ -1236,8 +1236,8 @@ const Editemployee = () => {
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
-      DeptRecordID: isStudentClassification ? 0 : values.Department.RecordID || 0,
-      DeptName: isStudentClassification ? "" : values.Department.Name || "",
+      DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
+      DeptName: isStudentClassification ? "" : values.Department?.Name || "",
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
@@ -1286,6 +1286,9 @@ const Editemployee = () => {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
       }
+      else if (values.delete === true) {
+    navigate(-1); // 👈 go back
+  }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
