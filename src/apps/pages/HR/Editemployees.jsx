@@ -1286,6 +1286,9 @@ const Editemployee = () => {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
       }
+      else if (values.delete === true) {
+    navigate(-1); // 👈 go back
+  }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
