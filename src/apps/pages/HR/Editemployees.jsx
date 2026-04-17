@@ -214,7 +214,7 @@ const Editemployee = () => {
   console.log("ParentcontactgetData", ParentcontactgetData);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
-    const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
+  const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
   console.log("ResignationGetData", ResignationGetData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   const Inventorygrid1columns = useSelector(
@@ -643,7 +643,7 @@ const Editemployee = () => {
           shift: Yup.object().required(data.Deployment.shift).nullable(),
           // costofemployee: Yup.string().required(data.Deployment.costofemployee),
           // costofcompany: Yup.string().required(data.Deployment.costofcompany),
-           
+
           exitinterviewby: Yup.object()
             .nullable()
             .required(data.exitinterviewby.Designation),
@@ -1415,7 +1415,7 @@ const Editemployee = () => {
       );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
-     if (event.target.value == "22") {
+    if (event.target.value == "22") {
       dispatch(getResignation({ EmployeeID: recID }));
     }
     if (event.target.value == "5") {
@@ -4170,8 +4170,8 @@ const Editemployee = () => {
   };
 
   //RESIGNATION_SECTION
-  
-    const resignationinitialvalues = {
+
+  const resignationinitialvalues = {
     code: Data.Code,
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
@@ -4187,13 +4187,13 @@ const Editemployee = () => {
     exitinterviewcomments: ResignationGetData.ExitInterviewComments,
     acceptedrelievingdate: ResignationGetData.AcceptedRelievingDate,
     actualrelievingdate: ResignationGetData.ActualRelievingDate,
-   dateofsettlement: ResignationGetData.DateOfSettlement,
+    dateofsettlement: ResignationGetData.DateOfSettlement,
     exitformalitiesacceptrd: ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
-   
+
   };
 
   //RESIGNATION_POST
-   const Fnsaveresignation = async (values, resetForm, del) => {
+  const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
 
     const idata = {
@@ -4207,11 +4207,11 @@ const Editemployee = () => {
       ActualRelievingDate: values.actualrelievingdate,
       DateOfSettlement: values.dateofsettlement,
       ExitFormalitiesAccepted: values.exitformalitiesacceptrd === true ? "Y" : "N",
-          
+
     };
 
-   console.log(idata, "--resignation idata");
-// return;
+    console.log(idata, "--resignation idata");
+    // return;
     const response = await dispatch(ResignationPOST({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
@@ -4810,9 +4810,9 @@ const Editemployee = () => {
                     false
                   )}
 
-               
 
-                   {show == "22" ? (
+
+                  {show == "22" ? (
                     <Typography
                       variant="h5"
                       color="#0000D1"
@@ -4863,7 +4863,7 @@ const Editemployee = () => {
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
                     {is003Subscription === false ? (<MenuItem value={20}>Inventory</MenuItem>) : null}
                     <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
-                    <MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>
+                     {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
                     {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
@@ -4914,41 +4914,41 @@ const Editemployee = () => {
               }) => (
                 <form onSubmit={handleSubmit}>
                   {!isStudentClassification ? (
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    {!isNonMobile && (
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                    <Box
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      // gap="30px"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
+                      }}
+                    >
+                      {!isNonMobile && (
+                        <Stack
+                          sx={{
+                            //    width: {sm:'100%',md:'100%',lg:'100%'},
 
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "150px" }}
-                        />
-                      </Stack>
-                    )}
+                            alignContent: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative",
+                            right: "0px",
+                          }}
+                        >
+                          <Avatar
+                            variant="rounded"
+                            src={userimg}
+                            sx={{ width: "200px", height: "150px" }}
+                          />
+                        </Stack>
+                      )}
 
-                    <FormControl sx={{ gap: formGap }}>
+                      <FormControl sx={{ gap: formGap }}>
 
-                    <FormControl>
+                        <FormControl>
                           <CheckinAutocomplete
                             sx={{ marginTop: "7px" }}
                             name="Department"
@@ -4991,52 +4991,91 @@ const Editemployee = () => {
                           </div>
                         )} */}
                         </FormControl>
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          label="Code"
-                          value={values.Code}
-                          id="Code"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Code"
-                          placeholder="Auto"
-                          // error={!!touched.Code && !!errors.Code}
-                          // helperText={touched.Code && errors.Code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          focused
-                          // required
-                          // autoFocus
-                          inputProps={{ maxLength: 8 }}
-                          InputProps={{ readOnly: true }}
-                        />
-                      ) : (
+                        {CompanyAutoCode == "Y" ? (
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            label="Code"
+                            value={values.Code}
+                            id="Code"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Code"
+                            placeholder="Auto"
+                            // error={!!touched.Code && !!errors.Code}
+                            // helperText={touched.Code && errors.Code}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                            // required
+                            // autoFocus
+                            inputProps={{ maxLength: 8 }}
+                            InputProps={{ readOnly: true }}
+                          />
+                        ) : (
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            label={
+                              <>
+                                Code
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            value={values.Code}
+                            id="Code"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Code"
+                            error={!!touched.Code && !!errors.Code}
+                            helperText={touched.Code && errors.Code}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                            // required
+                            autoFocus
+                            inputProps={{ maxLength: 8 }}
+                          />
+                        )}
+
                         <TextField
                           fullWidth
                           variant="standard"
                           type="text"
                           label={
                             <>
-                              Code
+                              Name
                               <span style={{ color: "red", fontSize: "20px" }}>
                                 *
                               </span>
                             </>
                           }
-                          value={values.Code}
-                          id="Code"
+                          value={values.Name}
+                          id="Name"
                           onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Code"
-                          error={!!touched.Code && !!errors.Code}
-                          helperText={touched.Code && errors.Code}
+                          //onChange={handleChange}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // allow letters, spaces, and dot
+                            if (/^[a-zA-Z\s.]*$/.test(value)) {
+                              handleChange(e);
+                            }
+                          }}
+                          name="Name"
+                          error={!!touched.Name && !!errors.Name}
+                          helperText={touched.Name && errors.Name}
                           sx={{
                             backgroundColor: "#ffffff", // Set the background to white
                             "& .MuiFilledInput-root": {
@@ -5045,77 +5084,38 @@ const Editemployee = () => {
                           }}
                           focused
                           // required
-                          autoFocus
-                          inputProps={{ maxLength: 8 }}
+                          inputProps={{ maxLength: 90 }}
+                          multiline
                         />
-                      )}
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label={
-                          <>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.Name}
-                        id="Name"
-                        onBlur={handleBlur}
-                        //onChange={handleChange}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          // allow letters, spaces, and dot
-                          if (/^[a-zA-Z\s.]*$/.test(value)) {
-                            handleChange(e);
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="Password"
+                          label={
+                            <>
+                              Password
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
                           }
-                        }}
-                        name="Name"
-                        error={!!touched.Name && !!errors.Name}
-                        helperText={touched.Name && errors.Name}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        // required
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="Password"
-                        label={
-                          <>
-                            Password
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.Password}
-                        id="Password"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Password"
-                        // required
-                        error={!!touched.Password && !!errors.Password}
-                        helperText={touched.Password && errors.Password}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                      />
-                     
+                          value={values.Password}
+                          id="Password"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Password"
+                          // required
+                          error={!!touched.Password && !!errors.Password}
+                          helperText={touched.Password && errors.Password}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                        />
+
                         <TextField
                           fullWidth
                           variant="standard"
@@ -5139,44 +5139,44 @@ const Editemployee = () => {
                           inputProps={{ maxLength: 90 }}
                         />
 
-                      <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={
-                          <>
-                            Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.employeetype}
-                        id="employeetype"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="employeetype"
-                        error={!!touched.employeetype && !!errors.employeetype}
-                        helperText={touched.employeetype && errors.employeetype}
-                        // required
-                        focused
-                        sx={{
-                          gridColumn: "span 2",
-                          // backgroundColor: "#ffffff",
-                          // "& .MuiInputBase-root": {
-                          //   backgroundColor: "",
-                          // },
-                        }}
-                      >
-                        <MenuItem value="PP">Probation Period</MenuItem>
-                        <MenuItem value="PM">Permanent</MenuItem>
-                        {/* <MenuItem value="ST">Student</MenuItem> */}
-                        <MenuItem value="CI">Contract In</MenuItem>
-                        <MenuItem value="CO">Contract Out</MenuItem>
-                        <MenuItem value="IN">Intern</MenuItem>
-                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
-                      </TextField>
-                     
+                        <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={
+                            <>
+                              Type
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          value={values.employeetype}
+                          id="employeetype"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="employeetype"
+                          error={!!touched.employeetype && !!errors.employeetype}
+                          helperText={touched.employeetype && errors.employeetype}
+                          // required
+                          focused
+                          sx={{
+                            gridColumn: "span 2",
+                            // backgroundColor: "#ffffff",
+                            // "& .MuiInputBase-root": {
+                            //   backgroundColor: "",
+                            // },
+                          }}
+                        >
+                          <MenuItem value="PP">Probation Period</MenuItem>
+                          <MenuItem value="PM">Permanent</MenuItem>
+                          {/* <MenuItem value="ST">Student</MenuItem> */}
+                          <MenuItem value="CI">Contract In</MenuItem>
+                          <MenuItem value="CO">Contract Out</MenuItem>
+                          <MenuItem value="IN">Intern</MenuItem>
+                          {/* <MenuItem value="CT">Contractor</MenuItem> */}
+                        </TextField>
+
                         <TextField
                           name="amount"
                           type="text"
@@ -5198,8 +5198,8 @@ const Editemployee = () => {
                             },
                           }}
                         />
-                      <Box>
-                        {/* <CusListRunGrpOptimizedAutocomplete
+                        <Box>
+                          {/* <CusListRunGrpOptimizedAutocomplete
                           name="module"
                           id="module"
                           label="Module"
@@ -5209,7 +5209,7 @@ const Editemployee = () => {
                           companyID="204"
                         /> */}
 
-                        {/* <MultiSelectDropdown
+                          {/* <MultiSelectDropdown
                           id="moduleSelect"
                           name="Select Module"
                           data={fetchedData?.Data || []}
@@ -5220,7 +5220,7 @@ const Editemployee = () => {
                           }}
                         /> */}
 
-                        {/* <MultiSelectDropdown
+                          {/* <MultiSelectDropdown
                           id="moduleSelect"
                           name="Module Select"
                           data={fetchedData?.Data || []}
@@ -5231,7 +5231,7 @@ const Editemployee = () => {
                           }}
                         /> */}
 
-                        {/* <CusListRunGrpOptimizedAutocomplete
+                          {/* <CusListRunGrpOptimizedAutocomplete
                           name="module"
                           label="Module"
                           variant="outlined"
@@ -5244,7 +5244,7 @@ const Editemployee = () => {
                           companyID="204"
                         /> */}
 
-                     
+
                           {/* <MultiSelectDropdown
                             id="module"
                             name="Module"
@@ -5255,9 +5255,9 @@ const Editemployee = () => {
                               setApiReturnValue(val);
                             }}
                           /> */}
-                      
-                      </Box>
-                     
+
+                        </Box>
+
                         <Box>
                           <Field
                             //  size="small"
@@ -5296,520 +5296,520 @@ const Editemployee = () => {
 
                           <FormLabel focused={false}>Project Manager</FormLabel>
                         </Box>
-                     
-                      <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="delete"
-                          id="delete"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Delete"
-                        />
 
-                        <FormLabel focused={false}>Delete</FormLabel>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
-
-                        <FormLabel focused={false}>Disable</FormLabel>
-                      </Box>
-                    </FormControl>
-
-                    <FormControl sx={{ gap: formGap }}>
-                      {isNonMobile && (
-                        <Stack
-                          sx={{
-                            //    width: {sm:'100%',md:'100%',lg:'100%'},
-
-                            alignContent: "center",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: "relative",
-                            right: "0px",
-                          }}
-                        >
-                          <Avatar
-                            variant="rounded"
-                            src={userimg}
-                            sx={{ width: "200px", height: "155px" }}
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="delete"
+                            id="delete"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Delete"
                           />
-                        </Stack>
-                      )}
-                      <TextField
-                        name="dateofbirth"
-                        type="date"
-                        id="dateofbirth"
-                        label="Date of Birth"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.dateofbirth}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.dateofbirth && !!errors.dateofbirth}
-                        helperText={touched.dateofbirth && errors.dateofbirth}
-                        sx={{ background: "" }}
-                        InputProps={{
-                          onKeyDown: (e) => e.preventDefault(), 
-                        }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        name="joindate"
-                        type="date"
-                        id="joindate"
-                        label="Date of Joining"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.joindate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.joindate && !!errors.joindate}
-                        helperText={touched.joindate && errors.joindate}
-                        sx={{ background: "" }}
-                         InputProps={{
-                          onKeyDown: (e) => e.preventDefault(), 
-                        }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        name="confirmdate"
-                        type="date"
-                        id="confirmdate"
-                        label="Date of Confirmation"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.confirmdate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.confirmdate && !!errors.confirmdate}
-                        helperText={touched.confirmdate && errors.confirmdate}
-                        sx={{ background: "" }}
-                        InputProps={{
-                          onKeyDown: (e) => e.preventDefault(), 
-                        }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Comments"
-                        value={values.Comm}
-                        id="Comm"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
-                        // sx={{
 
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "", // Ensure the filled variant also has a white background
-                        //   }
-                        // }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      // rows={2}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        label="Sort Order"
-                        value={values.SortOrder}
-                        id="SortOrder"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="SortOrder"
-                        error={!!touched.SortOrder && !!errors.SortOrder}
-                        helperText={touched.SortOrder && errors.SortOrder}
-                        sx={{ background: "" }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                        onInput={(e) => {
-                          e.target.value = Math.max(0, parseInt(e.target.value))
-                            .toString()
-                            .slice(0, 8);
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                ):
-                (
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    {!isNonMobile && (
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          <FormLabel focused={false}>Delete</FormLabel>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="checkbox"
+                            id="checkbox"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Disable"
+                          />
 
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "150px" }}
+                          <FormLabel focused={false}>Disable</FormLabel>
+                        </Box>
+                      </FormControl>
+
+                      <FormControl sx={{ gap: formGap }}>
+                        {isNonMobile && (
+                          <Stack
+                            sx={{
+                              //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                              alignContent: "center",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              position: "relative",
+                              right: "0px",
+                            }}
+                          >
+                            <Avatar
+                              variant="rounded"
+                              src={userimg}
+                              sx={{ width: "200px", height: "155px" }}
+                            />
+                          </Stack>
+                        )}
+                        <TextField
+                          name="dateofbirth"
+                          type="date"
+                          id="dateofbirth"
+                          label="Date of Birth"
+                          variant="standard"
+                          focused
+                          inputFormat="YYYY-MM-DD"
+                          value={values.dateofbirth}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.dateofbirth && !!errors.dateofbirth}
+                          helperText={touched.dateofbirth && errors.dateofbirth}
+                          sx={{ background: "" }}
+                          InputProps={{
+                            onKeyDown: (e) => e.preventDefault(),
+                          }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
-                      </Stack>
-                    )}
-
-                    <FormControl sx={{ gap: formGap }}>
-
-                   
-                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="joindate"
+                          type="date"
+                          id="joindate"
+                          label="Date of Joining"
+                          variant="standard"
+                          focused
+                          inputFormat="YYYY-MM-DD"
+                          value={values.joindate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.joindate && !!errors.joindate}
+                          helperText={touched.joindate && errors.joindate}
+                          sx={{ background: "" }}
+                          InputProps={{
+                            onKeyDown: (e) => e.preventDefault(),
+                          }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        />
+                        <TextField
+                          name="confirmdate"
+                          type="date"
+                          id="confirmdate"
+                          label="Date of Confirmation"
+                          variant="standard"
+                          focused
+                          inputFormat="YYYY-MM-DD"
+                          value={values.confirmdate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.confirmdate && !!errors.confirmdate}
+                          helperText={touched.confirmdate && errors.confirmdate}
+                          sx={{ background: "" }}
+                          InputProps={{
+                            onKeyDown: (e) => e.preventDefault(),
+                          }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        />
                         <TextField
                           fullWidth
                           variant="standard"
                           type="text"
-                          label="Code"
-                          value={values.Code}
-                          id="Code"
+                          label="Comments"
+                          value={values.Comm}
+                          id="Comm"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          name="Code"
-                          placeholder="Auto"
-                          // error={!!touched.Code && !!errors.Code}
-                          // helperText={touched.Code && errors.Code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          name="Comm"
+                          error={!!touched.Comm && !!errors.Comm}
+                          helperText={touched.Comm && errors.Comm}
+                          // sx={{
+
+                          //   backgroundColor: "#ffffff", // Set the background to white
+                          //   "& .MuiFilledInput-root": {
+                          //     backgroundColor: "", // Ensure the filled variant also has a white background
+                          //   }
+                          // }}
                           focused
-                          // required
-                          // autoFocus
-                          inputProps={{ maxLength: 8 }}
-                          InputProps={{ readOnly: true }}
+                          inputProps={{ maxLength: 90 }}
+                          multiline
+                        // rows={2}
                         />
-                      ) : (
                         <TextField
                           fullWidth
                           variant="standard"
-                          type="text"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          value={values.Code}
-                          id="Code"
+                          type="number"
+                          label="Sort Order"
+                          value={values.SortOrder}
+                          id="SortOrder"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          name="Code"
-                          error={!!touched.Code && !!errors.Code}
-                          helperText={touched.Code && errors.Code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "", // Ensure the filled variant also has a white background
+                          name="SortOrder"
+                          error={!!touched.SortOrder && !!errors.SortOrder}
+                          helperText={touched.SortOrder && errors.SortOrder}
+                          sx={{ background: "" }}
+                          focused
+                          onWheel={(e) => e.target.blur()}
+                          onInput={(e) => {
+                            e.target.value = Math.max(0, parseInt(e.target.value))
+                              .toString()
+                              .slice(0, 8);
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
                             },
                           }}
-                          focused
-                          // required
-                          autoFocus
-                          inputProps={{ maxLength: 8 }}
                         />
-                      )}
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label={
-                          <>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.Name}
-                        id="Name"
-                        onBlur={handleBlur}
-                        //onChange={handleChange}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          // allow letters, spaces, and dot
-                          if (/^[a-zA-Z\s.]*$/.test(value)) {
-                            handleChange(e);
-                          }
-                        }}
-                        name="Name"
-                        error={!!touched.Name && !!errors.Name}
-                        helperText={touched.Name && errors.Name}
+                      </FormControl>
+                    </Box>
+                  ) :
+                    (
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
                         sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
                           },
-                        }}
-                        focused
-                        // required
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="Password"
-                        label={
-                          <>
-                            Password
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.Password}
-                        id="Password"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Password"
-                        // required
-                        error={!!touched.Password && !!errors.Password}
-                        helperText={touched.Password && errors.Password}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                      />
-                     
-                       
-
-                      <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={
-                          <>
-                            Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.employeetype}
-                        id="employeetype"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="employeetype"
-                        error={!!touched.employeetype && !!errors.employeetype}
-                        helperText={touched.employeetype && errors.employeetype}
-                        // required
-                        focused
-                        sx={{
-                          gridColumn: "span 2",
-                          // backgroundColor: "#ffffff",
-                          // "& .MuiInputBase-root": {
-                          //   backgroundColor: "",
-                          // },
                         }}
                       >
-                        <MenuItem value="PP">Probation Period</MenuItem>
-                        <MenuItem value="PM">Permanent</MenuItem>
-                        {/* <MenuItem value="ST">Student</MenuItem> */}
-                        <MenuItem value="CI">Contract In</MenuItem>
-                        <MenuItem value="CO">Contract Out</MenuItem>
-                        <MenuItem value="IN">Intern</MenuItem>
-                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
-                      </TextField>
-                        <TextField
-                        name="dateofbirth"
-                        type="date"
-                        id="dateofbirth"
-                        label="Date of Birth"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.dateofbirth}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.dateofbirth && !!errors.dateofbirth}
-                        helperText={touched.dateofbirth && errors.dateofbirth}
-                        sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        name="joindate"
-                        type="date"
-                        id="joindate"
-                        label="Date of Joining"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.joindate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.joindate && !!errors.joindate}
-                        helperText={touched.joindate && errors.joindate}
-                        sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                    
-                      <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="delete"
-                          id="delete"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Delete"
-                        />
+                        {!isNonMobile && (
+                          <Stack
+                            sx={{
+                              //    width: {sm:'100%',md:'100%',lg:'100%'},
 
-                        <FormLabel focused={false}>Delete</FormLabel>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
+                              alignContent: "center",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              position: "relative",
+                              right: "0px",
+                            }}
+                          >
+                            <Avatar
+                              variant="rounded"
+                              src={userimg}
+                              sx={{ width: "200px", height: "150px" }}
+                            />
+                          </Stack>
+                        )}
 
-                        <FormLabel focused={false}>Disable</FormLabel>
-                      </Box>
-                    </FormControl>
+                        <FormControl sx={{ gap: formGap }}>
 
-                    <FormControl sx={{ gap: formGap }}>
-                      {isNonMobile && (
-                        <Stack
-                          sx={{
-                            //    width: {sm:'100%',md:'100%',lg:'100%'},
 
-                            alignContent: "center",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: "relative",
-                            right: "0px",
-                          }}
-                        >
-                          <Avatar
-                            variant="rounded"
-                            src={userimg}
-                            sx={{ width: "200px", height: "155px" }}
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              fullWidth
+                              variant="standard"
+                              type="text"
+                              label="Code"
+                              value={values.Code}
+                              id="Code"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              name="Code"
+                              placeholder="Auto"
+                              // error={!!touched.Code && !!errors.Code}
+                              // helperText={touched.Code && errors.Code}
+                              sx={{
+                                backgroundColor: "#ffffff", // Set the background to white
+                                "& .MuiFilledInput-root": {
+                                  backgroundColor: "", // Ensure the filled variant also has a white background
+                                },
+                              }}
+                              focused
+                              // required
+                              // autoFocus
+                              inputProps={{ maxLength: 8 }}
+                              InputProps={{ readOnly: true }}
+                            />
+                          ) : (
+                            <TextField
+                              fullWidth
+                              variant="standard"
+                              type="text"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              value={values.Code}
+                              id="Code"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              name="Code"
+                              error={!!touched.Code && !!errors.Code}
+                              helperText={touched.Code && errors.Code}
+                              sx={{
+                                backgroundColor: "#ffffff", // Set the background to white
+                                "& .MuiFilledInput-root": {
+                                  backgroundColor: "", // Ensure the filled variant also has a white background
+                                },
+                              }}
+                              focused
+                              // required
+                              autoFocus
+                              inputProps={{ maxLength: 8 }}
+                            />
+                          )}
+
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            label={
+                              <>
+                                Name
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            value={values.Name}
+                            id="Name"
+                            onBlur={handleBlur}
+                            //onChange={handleChange}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              // allow letters, spaces, and dot
+                              if (/^[a-zA-Z\s.]*$/.test(value)) {
+                                handleChange(e);
+                              }
+                            }}
+                            name="Name"
+                            error={!!touched.Name && !!errors.Name}
+                            helperText={touched.Name && errors.Name}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                            // required
+                            inputProps={{ maxLength: 90 }}
+                            multiline
                           />
-                        </Stack>
-                      )}
-                       <TextField
-                        name="confirmdate"
-                        type="date"
-                        id="confirmdate"
-                        label="Date of Confirmation"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.confirmdate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.confirmdate && !!errors.confirmdate}
-                        helperText={touched.confirmdate && errors.confirmdate}
-                        sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Comments"
-                        value={values.Comm}
-                        id="Comm"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
-                        // sx={{
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="Password"
+                            label={
+                              <>
+                                Password
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            value={values.Password}
+                            id="Password"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Password"
+                            // required
+                            error={!!touched.Password && !!errors.Password}
+                            helperText={touched.Password && errors.Password}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                          />
 
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "", // Ensure the filled variant also has a white background
-                        //   }
-                        // }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      // rows={2}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        label="Sort Order"
-                        value={values.SortOrder}
-                        id="SortOrder"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="SortOrder"
-                        error={!!touched.SortOrder && !!errors.SortOrder}
-                        helperText={touched.SortOrder && errors.SortOrder}
-                        sx={{ background: "" }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                        onInput={(e) => {
-                          e.target.value = Math.max(0, parseInt(e.target.value))
-                            .toString()
-                            .slice(0, 8);
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Box>)}
+
+
+                          <TextField
+                            select
+                            fullWidth
+                            variant="standard"
+                            label={
+                              <>
+                                Type
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            value={values.employeetype}
+                            id="employeetype"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="employeetype"
+                            error={!!touched.employeetype && !!errors.employeetype}
+                            helperText={touched.employeetype && errors.employeetype}
+                            // required
+                            focused
+                            sx={{
+                              gridColumn: "span 2",
+                              // backgroundColor: "#ffffff",
+                              // "& .MuiInputBase-root": {
+                              //   backgroundColor: "",
+                              // },
+                            }}
+                          >
+                            <MenuItem value="PP">Probation Period</MenuItem>
+                            <MenuItem value="PM">Permanent</MenuItem>
+                            {/* <MenuItem value="ST">Student</MenuItem> */}
+                            <MenuItem value="CI">Contract In</MenuItem>
+                            <MenuItem value="CO">Contract Out</MenuItem>
+                            <MenuItem value="IN">Intern</MenuItem>
+                            {/* <MenuItem value="CT">Contractor</MenuItem> */}
+                          </TextField>
+                          <TextField
+                            name="dateofbirth"
+                            type="date"
+                            id="dateofbirth"
+                            label="Date of Birth"
+                            variant="standard"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.dateofbirth}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.dateofbirth && !!errors.dateofbirth}
+                            helperText={touched.dateofbirth && errors.dateofbirth}
+                            sx={{ background: "" }}
+                          // required
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+                          <TextField
+                            name="joindate"
+                            type="date"
+                            id="joindate"
+                            label="Date of Joining"
+                            variant="standard"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.joindate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.joindate && !!errors.joindate}
+                            helperText={touched.joindate && errors.joindate}
+                            sx={{ background: "" }}
+                          // required
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+
+                          <Box>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="delete"
+                              id="delete"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Delete"
+                            />
+
+                            <FormLabel focused={false}>Delete</FormLabel>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="checkbox"
+                              id="checkbox"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Disable"
+                            />
+
+                            <FormLabel focused={false}>Disable</FormLabel>
+                          </Box>
+                        </FormControl>
+
+                        <FormControl sx={{ gap: formGap }}>
+                          {isNonMobile && (
+                            <Stack
+                              sx={{
+                                //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                                alignContent: "center",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                position: "relative",
+                                right: "0px",
+                              }}
+                            >
+                              <Avatar
+                                variant="rounded"
+                                src={userimg}
+                                sx={{ width: "200px", height: "155px" }}
+                              />
+                            </Stack>
+                          )}
+                          <TextField
+                            name="confirmdate"
+                            type="date"
+                            id="confirmdate"
+                            label="Date of Confirmation"
+                            variant="standard"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.confirmdate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.confirmdate && !!errors.confirmdate}
+                            helperText={touched.confirmdate && errors.confirmdate}
+                            sx={{ background: "" }}
+                          // required
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            label="Comments"
+                            value={values.Comm}
+                            id="Comm"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Comm"
+                            error={!!touched.Comm && !!errors.Comm}
+                            helperText={touched.Comm && errors.Comm}
+                            // sx={{
+
+                            //   backgroundColor: "#ffffff", // Set the background to white
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "", // Ensure the filled variant also has a white background
+                            //   }
+                            // }}
+                            focused
+                            inputProps={{ maxLength: 90 }}
+                            multiline
+                          // rows={2}
+                          />
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="number"
+                            label="Sort Order"
+                            value={values.SortOrder}
+                            id="SortOrder"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="SortOrder"
+                            error={!!touched.SortOrder && !!errors.SortOrder}
+                            helperText={touched.SortOrder && errors.SortOrder}
+                            sx={{ background: "" }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                            onInput={(e) => {
+                              e.target.value = Math.max(0, parseInt(e.target.value))
+                                .toString()
+                                .slice(0, 8);
+                            }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
+                        </FormControl>
+                      </Box>)}
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {/* <Button
                       color="secondary"
@@ -8567,7 +8567,7 @@ const Editemployee = () => {
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
-                    Project Details
+                    {is003Subscription === false ? "Project Details" : "Default Project Details"}
                   </Typography>
                   <Box
                     display="grid"
@@ -8678,199 +8678,199 @@ const Editemployee = () => {
                     </Box>
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                  <Typography variant="h5" padding={1}>
-                    Shift Details
-                  </Typography>
-                  {/* <Stack
-                    direction="column"
-                    spacing={2}
-                    sx={{ width: 500, padding: formGap }}
-                  > */}
-                  <Grid container spacing={2}>
-                    {/* Shift 1 */}
-                    <Grid item xs={6}>
-                      <Stack direction="column" spacing={2} padding={2}>
-                        {/* Shift 1*/}
-                        <FormControl variant="standard" fullWidth>
-                          <CheckinAutocomplete
-                            id="shift"
-                            name="shift"
-                            label={
-                              <span>
-                                Shift 1
-                                <span
-                                  style={{ color: "red", fontSize: "20px" }}
-                                >
-                                  *
-                                </span>
-                              </span>
-                            }
-                            variant="outlined"
-                            value={values.shift}
-                            error={!!touched.shift && !!errors.shift}
-                            helperText={touched.shift && errors.shift}
-                            onChange={(newValue) => {
-                              setFieldValue("shift", newValue);
-                              setFieldValue(
-                                "Monday",
-                                newValue.Monday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Tuesday",
-                                newValue.Tuesday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Wednesday",
-                                newValue.Wednesday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Thursday",
-                                newValue.Thursday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Friday",
-                                newValue.Friday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Saturday",
-                                newValue.Saturday === "Y" ? true : false
-                              );
-                              setFieldValue(
-                                "Sunday",
-                                newValue.Sunday === "Y" ? true : false
-                              );
-                              console.log(newValue, "--newvalue shift");
-                              console.log(newValue.RecordID, "shift RecordID");
-                            }}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2108",
-                                ScreenName: "Shift",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                          />
-                        </FormControl>
+                  {is003Subscription === false ? (
+                    <>
+                      <Typography variant="h5" padding={1}>
+                        Shift Details
+                      </Typography>
 
-                        {/* Check In Time */}
-                        <FormControl variant="standard">
-                          <TextField
-                            fullWidth
-                            type="time"
-                            id="checkin"
-                            name="checkin"
-                            value={
-                              values.shift?.ShiftStartTime || values.checkin
-                            }
-                            // value={values.checkin}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Shift Start Time 1"
-                            inputProps={{
-                              readOnly: true,
-                            }}
-                            focused
-                          />
-                        </FormControl>
+                      <Grid container spacing={2}>
+                        {/* Shift 1 */}
+                        <Grid item xs={6}>
+                          <Stack direction="column" spacing={2} padding={2}>
+                            {/* Shift 1*/}
+                            <FormControl variant="standard" fullWidth>
+                              <CheckinAutocomplete
+                                id="shift"
+                                name="shift"
+                                label={
+                                  <span>
+                                    Shift 1
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                value={values.shift}
+                                error={!!touched.shift && !!errors.shift}
+                                helperText={touched.shift && errors.shift}
+                                onChange={(newValue) => {
+                                  setFieldValue("shift", newValue);
+                                  setFieldValue(
+                                    "Monday",
+                                    newValue.Monday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Tuesday",
+                                    newValue.Tuesday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Wednesday",
+                                    newValue.Wednesday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Thursday",
+                                    newValue.Thursday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Friday",
+                                    newValue.Friday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Saturday",
+                                    newValue.Saturday === "Y" ? true : false
+                                  );
+                                  setFieldValue(
+                                    "Sunday",
+                                    newValue.Sunday === "Y" ? true : false
+                                  );
+                                  console.log(newValue, "--newvalue shift");
+                                  console.log(newValue.RecordID, "shift RecordID");
+                                }}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2108",
+                                    ScreenName: "Shift",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                              />
+                            </FormControl>
 
-                        {/* Check Out Time */}
-                        <FormControl variant="standard">
-                          <TextField
-                            fullWidth
-                            type="time"
-                            id="checkout"
-                            name="checkout"
-                            value={
-                              values.shift?.ShiftendTime || values.checkout
-                            }
-                            // value={values.checkout}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Shift End Time 1"
-                            focused
-                            inputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      </Stack>
-                    </Grid>
+                            {/* Check In Time */}
+                            <FormControl variant="standard">
+                              <TextField
+                                fullWidth
+                                type="time"
+                                id="checkin"
+                                name="checkin"
+                                value={
+                                  values.shift?.ShiftStartTime || values.checkin
+                                }
+                                // value={values.checkin}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Shift Start Time 1"
+                                inputProps={{
+                                  readOnly: true,
+                                }}
+                                focused
+                              />
+                            </FormControl>
 
-                    {/* Shift 2*/}
-                    <Grid item xs={6}>
-                      <Stack direction="column" spacing={2} padding={2}>
-                        <FormControl variant="standard" fullWidth>
-                          <CheckinAutocomplete
-                            id="shift2"
-                            name="shift2"
-                            label="Shift 2"
-                            variant="outlined"
-                            value={values.shift2}
-                            // error={!!touched.shift2 && !!errors.shift2}
-                            // helperText={touched.shift2 && errors.shift2}
-                            onChange={(newValue) => {
-                              setFieldValue("shift2", newValue);
-                            }}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2108",
-                                ScreenName: "Shift",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                          />
-                        </FormControl>
+                            {/* Check Out Time */}
+                            <FormControl variant="standard">
+                              <TextField
+                                fullWidth
+                                type="time"
+                                id="checkout"
+                                name="checkout"
+                                value={
+                                  values.shift?.ShiftendTime || values.checkout
+                                }
+                                // value={values.checkout}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Shift End Time 1"
+                                focused
+                                inputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </FormControl>
+                          </Stack>
+                        </Grid>
 
-                        {/* Check In Time */}
-                        <FormControl variant="standard">
-                          <TextField
-                            fullWidth
-                            type="time"
-                            id="checkin2"
-                            name="checkin2"
-                            value={
-                              values.shift2?.ShiftStartTime || values.checkin2
-                            }
-                            // value={values.checkin}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Shift Start Time 2"
-                            inputProps={{
-                              readOnly: true,
-                            }}
-                            focused
-                          />
-                        </FormControl>
+                        {/* Shift 2*/}
+                        <Grid item xs={6}>
+                          <Stack direction="column" spacing={2} padding={2}>
+                            <FormControl variant="standard" fullWidth>
+                              <CheckinAutocomplete
+                                id="shift2"
+                                name="shift2"
+                                label="Shift 2"
+                                variant="outlined"
+                                value={values.shift2}
+                                // error={!!touched.shift2 && !!errors.shift2}
+                                // helperText={touched.shift2 && errors.shift2}
+                                onChange={(newValue) => {
+                                  setFieldValue("shift2", newValue);
+                                }}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2108",
+                                    ScreenName: "Shift",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                              />
+                            </FormControl>
 
-                        {/* Check Out Time */}
-                        <FormControl variant="standard">
-                          <TextField
-                            fullWidth
-                            type="time"
-                            id="checkout2"
-                            name="checkout2"
-                            value={
-                              values.shift2?.ShiftendTime || values.checkout2
-                            }
-                            // value={values.checkout}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Shift End Time 2"
-                            focused
-                            inputProps={{
-                              readOnly: true,
-                            }}
-                          />
-                        </FormControl>
-                      </Stack>
-                    </Grid>
-                  </Grid>
+                            {/* Check In Time */}
+                            <FormControl variant="standard">
+                              <TextField
+                                fullWidth
+                                type="time"
+                                id="checkin2"
+                                name="checkin2"
+                                value={
+                                  values.shift2?.ShiftStartTime || values.checkin2
+                                }
+                                // value={values.checkin}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Shift Start Time 2"
+                                inputProps={{
+                                  readOnly: true,
+                                }}
+                                focused
+                              />
+                            </FormControl>
+
+                            {/* Check Out Time */}
+                            <FormControl variant="standard">
+                              <TextField
+                                fullWidth
+                                type="time"
+                                id="checkout2"
+                                name="checkout2"
+                                value={
+                                  values.shift2?.ShiftendTime || values.checkout2
+                                }
+                                // value={values.checkout}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Shift End Time 2"
+                                focused
+                                inputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </FormControl>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                    </>
+                  ) : null}
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
@@ -9083,6 +9083,8 @@ const Editemployee = () => {
                     </FormLabel>
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  {is003Subscription === false ? (
+                    <>
                   <Typography variant="h5" padding={1}>
                     Costing
                   </Typography>
@@ -9229,6 +9231,8 @@ const Editemployee = () => {
                       }}
                     />
                   </Box>
+                  </>
+                  ): null}
                   <Box
                     display="flex"
                     justifyContent="end"
@@ -9328,7 +9332,7 @@ const Editemployee = () => {
 
 
 
-  {show == "22" ? (
+        {show == "22" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={resignationinitialvalues}
@@ -9412,7 +9416,7 @@ const Editemployee = () => {
                         focused
                       // inputProps={{ readOnly: true }}
                       />
-                     
+
                     </FormControl>
                     <Stack
                       sx={{
@@ -9430,7 +9434,7 @@ const Editemployee = () => {
                         sx={{ width: "200px", height: "120px" }}
                       />
                     </Stack>
-                         <Box sx={{ width: "100%" }}>
+                    <Box sx={{ width: "100%" }}>
                       <FormControl
                         sx={{
                           //gridColumn: "span 2",
@@ -9439,30 +9443,30 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-                          <TextField
+                        <TextField
                           name="resignationdate"
                           type="date"
                           id="resignationdate"
                           label="Resignation Date"
-                        fullWidth
-                        variant="standard"
-                        inputFormat="YYYY-MM-DD"
-                        value={values.resignationdate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.resignationdate && !!errors.resignationdate}
-                        helperText={touched.resignationdate && errors.resignationdate}
-                        // sx={{
+                          fullWidth
+                          variant="standard"
+                          inputFormat="YYYY-MM-DD"
+                          value={values.resignationdate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.resignationdate && !!errors.resignationdate}
+                          helperText={touched.resignationdate && errors.resignationdate}
+                          // sx={{
 
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "", // Ensure the filled variant also has a white background
-                        //   }
-                        // }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
+                          //   backgroundColor: "#ffffff", // Set the background to white
+                          //   "& .MuiFilledInput-root": {
+                          //     backgroundColor: "", // Ensure the filled variant also has a white background
+                          //   }
+                          // }}
+                          focused
+                          inputProps={{ maxLength: 90 }}
 
-                      />
+                        />
                         {/* <CheckinAutocomplete
                           name="location"
                           label={
@@ -9500,23 +9504,23 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-                          <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Resignation Note"
-                        value={values.resignationnote}
-                        id="resignationnote"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="resignationnote"
-                        error={!!touched.resignationnote && !!errors.resignationnote}
-                        helperText={touched.resignationnote && errors.resignationnote}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      // rows={2}
-                      />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          label="Resignation Note"
+                          value={values.resignationnote}
+                          id="resignationnote"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="resignationnote"
+                          error={!!touched.resignationnote && !!errors.resignationnote}
+                          helperText={touched.resignationnote && errors.resignationnote}
+                          focused
+                          inputProps={{ maxLength: 90 }}
+                          multiline
+                        // rows={2}
+                        />
                         {/* <CheckinAutocomplete
                           name="location"
                           label={
@@ -9558,7 +9562,7 @@ const Editemployee = () => {
                         name="exitinterviewby"
                         label={
                           <span>
-                           Exit Interview By
+                            Exit Interview By
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -9593,11 +9597,11 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                        <TextField
-                          name="exitinterviewdate"
-                          type="date"
-                          id="exitinterviewdate"
-                          label="Exit Interview Date"
+                      <TextField
+                        name="exitinterviewdate"
+                        type="date"
+                        id="exitinterviewdate"
+                        label="Exit Interview Date"
                         fullWidth
                         variant="standard"
                         inputFormat="YYYY-MM-DD"
@@ -9644,7 +9648,7 @@ const Editemployee = () => {
                       /> */}
                     </FormControl>
 
-                     
+
 
                     <FormControl
                       sx={{
@@ -9654,7 +9658,7 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                          <TextField
+                      <TextField
                         fullWidth
                         variant="standard"
                         type="text"
@@ -9671,11 +9675,11 @@ const Editemployee = () => {
                         multiline
                       // rows={2}
                       />
-                      </FormControl>
+                    </FormControl>
 
 
 
-                        <FormControl
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -9683,11 +9687,11 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                        <TextField
-                          name="acceptedrelievingdate"
-                          type="date"
-                          id="acceptedrelievingdate"
-                          label="Accepted Relieving Date"
+                      <TextField
+                        name="acceptedrelievingdate"
+                        type="date"
+                        id="acceptedrelievingdate"
+                        label="Accepted Relieving Date"
                         fullWidth
                         variant="standard"
                         inputFormat="YYYY-MM-DD"
@@ -9702,7 +9706,7 @@ const Editemployee = () => {
                       />
 
                     </FormControl>
-                     <FormControl
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -9710,11 +9714,11 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                        <TextField
-                          name="actualrelievingdate"
-                          type="date"
-                          id="actualrelievingdate"
-                          label="Actual Relieving Date"
+                      <TextField
+                        name="actualrelievingdate"
+                        type="date"
+                        id="actualrelievingdate"
+                        label="Actual Relieving Date"
                         fullWidth
                         variant="standard"
                         inputFormat="YYYY-MM-DD"
@@ -9729,7 +9733,7 @@ const Editemployee = () => {
                       />
 
                     </FormControl>
-                     <FormControl
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -9737,11 +9741,11 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                        <TextField
-                          name="dateofsettlement"
-                          type="date"
-                          id="dateofsettlement"
-                          label="Date Of Settlement"
+                      <TextField
+                        name="dateofsettlement"
+                        type="date"
+                        id="dateofsettlement"
+                        label="Date Of Settlement"
                         fullWidth
                         variant="standard"
                         inputFormat="YYYY-MM-DD"
@@ -9756,7 +9760,7 @@ const Editemployee = () => {
                       />
 
                     </FormControl>
-                     <Box>
+                    <Box>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -9772,9 +9776,9 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Exit Formalities Accepted
                       </FormLabel>
-                           </Box>
+                    </Box>
                   </Box>
-                
+
                   <Box
                     display="flex"
                     justifyContent="end"
