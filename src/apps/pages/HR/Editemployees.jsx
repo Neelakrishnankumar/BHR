@@ -9593,14 +9593,15 @@ const Editemployee = () => {
                     >
                       <CheckinAutocomplete
                         name="exitinterviewby"
-                        label={
-                          <span>
-                            Exit Interview By
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
+                        label="Exit Interview By"
+                        // label={
+                        //   <span>
+                        //     Exit Interview By
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
                         variant="outlined"
                         id="exitinterviewby"
                         value={values.exitinterviewby}
