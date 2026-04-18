@@ -4928,9 +4928,12 @@ const Editemployee = () => {
                     {initialValues.employeetype === "CO" ? (
                       <MenuItem value={11}>Contract Out</MenuItem>
                     ) : null}
-                    {is003Subscription === true ? (
+                    {/* {is003Subscription === true ? (
                       <MenuItem value={15}>Parent</MenuItem>
-                    ) : null}
+                    ) : null} */}
+                    {is003Subscription && (
+                      <MenuItem value={15}>Parent</MenuItem>
+                    )}
                     {is003Subscription === true ? (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
