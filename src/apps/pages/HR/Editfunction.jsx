@@ -155,7 +155,7 @@ const Editfunction = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR121/Functions");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }

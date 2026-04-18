@@ -152,7 +152,7 @@ const LeaveType = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR213/Leave Type");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }

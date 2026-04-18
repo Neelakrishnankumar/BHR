@@ -282,6 +282,9 @@ const Editemployee = () => {
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
+  const [validationSchema22, setValidationSchema22] = useState(null);
+    const [errorSchema22, seterrorSchema22] = useState(null);
+
   const [validationSchema4, setValidationSchema4] = useState(null);
   const [validationSchema5, setValidationSchema5] = useState(null);
   const [validationSchema6, setValidationSchema6] = useState(null);
@@ -554,12 +557,16 @@ const Editemployee = () => {
 
 
   useEffect(() => {
+    console.log("-- calling valudation useeffect");
+    
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch validationcms.json");
         return res.json();
       })
       .then((data) => {
+        console.log(errorMsgData, "--display or not errorMsgData");
+        
         setErrorMsgData(data);
 
         //Employee
@@ -639,21 +646,27 @@ const Editemployee = () => {
         setValidationSchema1(schema1);
 
         //Deployment
-        const schema2 = Yup.object().shape({
+        let schemaFields5 = {
           location: Yup.object().required(data.Deployment.location).nullable(),
+
           Designation: Yup.object()
             .nullable()
             .required(data.Deployment.Designation),
-          // function: Yup.object().required(data.Deployment.function).nullable(),
-          gate: Yup.object().required(data.Deployment.gate).nullable(),
-          shift: Yup.object().required(data.Deployment.shift).nullable(),
-          // costofemployee: Yup.string().required(data.Deployment.costofemployee),
-          // costofcompany: Yup.string().required(data.Deployment.costofcompany),
 
-          exitinterviewby: Yup.object()
-            .nullable()
-            .required(data.exitinterviewby.Designation),
+          gate: Yup.object().required(data.Deployment.gate).nullable(),
+        };
+
+        // ✅ Add shift only when subscription is true
+        if (is003Subscription != true) {
+          schemaFields5.shift = Yup.object()
+            .required(data.Deployment.shift)
+            .nullable();
+        }
+
+        const schema2 = Yup.object().shape({
+          ...schemaFields5,   // ✅ IMPORTANT FIX
         });
+
         setValidationSchema2(schema2);
 
         //Skills
@@ -663,6 +676,14 @@ const Editemployee = () => {
         });
 
         setValidationSchema3(schema3);
+        //Resignation
+     const schema22 = Yup.object().shape({
+  exitinterviewby: Yup.object()
+    .nullable()
+    .required(data.Resignation.exitinterviewby),
+});
+
+        setValidationSchema22(schema22);
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -4159,8 +4180,8 @@ const Editemployee = () => {
       ShiftID2: values.shift2?.RecordID || 0,
       TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
       RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
-      ShiftCode: values.shift.Code || "",
-      ShiftName: values.shift.Name || "",
+      ShiftCode: values?.shift?.Code || "",
+      ShiftName: values?.shift?.Name || "",
 
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
@@ -4217,7 +4238,10 @@ const Editemployee = () => {
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
-
+// if(values.exitinterviewby == ""){
+//   seterrorSchema22("Please Select the Exit Interview By");
+//   return;
+// }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -4265,10 +4289,10 @@ const Editemployee = () => {
       // OnsiteActivityRole: values.onsiterole,
       OnsiteActivityRole: deploymentData.OnsiteActivityRole || "Project",
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
-      CostOfBudget: values.costofemployee,
+      CostOfBudget: values.costofemployee || 0,
       CostOfCompany: values.costofcompany || 0,
       CostOfCompanyHours: values.costofcompanyhour || 0,
-      CostOfBudgetHours: values.costofbudgethour,
+      CostOfBudgetHours: values.costofbudgethour || 0,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -8194,7 +8218,7 @@ const Editemployee = () => {
             <Formik
               initialValues={deploymentInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema2}
+              validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fndeployment(values, resetForm, false);
@@ -8219,6 +8243,7 @@ const Editemployee = () => {
                     resetForm();
                   }}
                 >
+                  {/* {JSON.stringify(errors)} */}
                   <Box
                     display="grid"
                     gap={formGap}
@@ -8659,7 +8684,7 @@ const Editemployee = () => {
                     // error={!!touched.Onsiterole && !!errors.Onsiterole}
                     // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
-                      <MenuItem value="Project">Project</MenuItem>
+                      <MenuItem value="Project">Standard/Activities</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
                     </TextField>
                     <Box>
@@ -9369,7 +9394,7 @@ const Editemployee = () => {
             <Formik
               initialValues={resignationinitialvalues}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema22}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fnsaveresignation(values, resetForm, false);
@@ -9386,6 +9411,7 @@ const Editemployee = () => {
                 handleSubmit,
                 resetForm,
                 setFieldValue,
+                // setFieldTouched
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -9592,33 +9618,48 @@ const Editemployee = () => {
                     >
                       <CheckinAutocomplete
                         name="exitinterviewby"
-                        label={
-                          <span>
-                            Exit Interview By
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
+                        label="Exit Interview By"
+                        // label={
+                        //   <span>
+                        //     Exit Interview By
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
                         variant="outlined"
                         id="exitinterviewby"
-                        // value={exitinterviewbyLookup}
                         value={values.exitinterviewby}
                         onChange={(newValue) => {
                           setFieldValue("exitinterviewby", newValue);
                           console.log(newValue, "--newvalue exitinterviewby");
                           console.log(newValue.RecordID, "exitinterviewby RecordID");
-
-                          // SetGateLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
+                   
                         }}
+                        // error={!!errorSchema22}
+                        // helperText={errorSchema22}
                         error={!!touched.exitinterviewby && !!errors.exitinterviewby}
                         helperText={touched.exitinterviewby && errors.exitinterviewby}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
+                      {/* <CheckinAutocomplete
+  name="exitinterviewby"
+  label={
+    <span>
+      Exit Interview By
+      <span style={{ color: "red", fontSize: "20px" }}>*</span>
+    </span>
+  }
+  value={values.exitinterviewby}
+  onChange={(newValue) => {
+    setFieldValue("exitinterviewby", newValue);
+    setFieldTouched("exitinterviewby", true); // ✅ MUST
+  }}
+  onBlur={() => setFieldTouched("exitinterviewby", true)} // ✅ MUST
+  error={!!touched.exitinterviewby && !!errors.exitinterviewby}
+  helperText={touched.exitinterviewby && errors.exitinterviewby}
+  url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+/> */}
                     </FormControl>
 
                     <FormControl
