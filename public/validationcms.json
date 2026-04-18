@@ -85,6 +85,13 @@
     "gstnumber": "Invalid GST Number",
     "locality": "Please enter the Locality"
   },
+  "PersonnelParent": {
+    "code1": "Please enter the Code",
+    "name1": "Please enter the Name",
+    "mobilenumber": "Please enter the Contact Mobile or Landline Number",
+    "emailid": "Please enter the Email ID",
+    "address": "Please enter the Address"
+  },
   "BankDetails": {
     "bankname": "Please enter the Bank Name",
     "branchname": "Please enter the Branch Name",

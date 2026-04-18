@@ -217,6 +217,7 @@ const Editemployee = () => {
   const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
   console.log("ResignationGetData", ResignationGetData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
+  const contactLoading = useSelector((state) => state.formApi.expgetLoading);
   const Inventorygrid1columns = useSelector(
     (state) => state.formApi.Inventorygrid1columns
   );
@@ -581,6 +582,7 @@ const Editemployee = () => {
         let schemaFields1 = {
           email: Yup.string()
             .required(data.Employeecontact.email)
+            .nullable()
             .matches(
               /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
               "Invalid Email Id"
@@ -613,19 +615,23 @@ const Editemployee = () => {
 
         schemaFields1.Branch = Yup.string()
           .trim()
+          .nullable()
           .notRequired(data.Employeecontact.Branch);
 
         schemaFields1.AccountHoldersName = Yup.string()
           .trim()
+          .nullable()
           .notRequired(data.Employeecontact.AccountHoldersName);
 
         schemaFields1.AccountNumber = Yup.string()
           .trim()
+          .nullable()
           .notRequired(data.Employeecontact.AccountNumber)
           .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
 
         schemaFields1.IfscCode = Yup.string()
           .trim()
+          .nullable()
           .notRequired(data.Employeecontact.IfscCode)
           .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
 
@@ -769,32 +775,33 @@ const Editemployee = () => {
         });
         setValidationSchema13(schema13);
         let schemaFields14 = {
-          name1: Yup.string()
-            .trim()
-            .required(data.Party.name),
+          name1: Yup.string().trim().required(data.PersonnelParent.name1),
+          address: Yup.string().trim().required(data.PersonnelParent.address),
 
-          mobilenumber: Yup.string()
-            .required(data.Party.mobilenumber)
-            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+          mobilenumber: Yup.string().required(data.PersonnelParent.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
 
+          // emailid: Yup.string()
+          //   .nullable()
+          //   .required(data.PersonnelParent.emailid)
+          //   .trim()
+          //   .test(
+          //     "email-or-empty",
+          //     "Invalid Email ID",
+          //     (value) => !value || Yup.string().email().isValidSync(value)
+          //   ),
           emailid: Yup.string()
-            .nullable()
-            .notRequired()
             .trim()
-            .test(
-              "email-or-empty",
-              "Invalid Email ID",
-              (value) => !value || Yup.string().email().isValidSync(value)
-            ),
+            .email("Invalid Email ID")
+            .required(data.PersonnelParent.emailid),
         };
 
         if (CompanyAutoCode === "N") {
           schemaFields14.code1 = Yup.string().required(data.Party.code);
         }
 
-        if (CompanyAutoCode === "N") {
-          schemaFields14.code = Yup.string().required(data.Party.code);
-        }
+        // if (CompanyAutoCode === "N") {
+        //   schemaFields14.code = Yup.string().required(data.Party.code);
+        // }
         const schema14 = Yup.object().shape(schemaFields14);
         setValidationSchema14(schema14);
 
@@ -1287,8 +1294,8 @@ const Editemployee = () => {
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
       }
       else if (values.delete === true) {
-    navigate(-1); // 👈 go back
-  }
+        navigate(-1); // 👈 go back
+      }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
@@ -1356,7 +1363,7 @@ const Editemployee = () => {
           "TR038",
           Subscriptionlastthree,
           "Skills",
-          `${recID} AND CompanyID=${CompanyID}`,
+          `parentID=${recID} AND CompanyID=${CompanyID}`,
           ""
         )
       );
@@ -1734,7 +1741,7 @@ const Editemployee = () => {
   };
 
   /******************************save  Function********** */
-  const fnProcess = async (values, resetForm, types) => {
+  const fnProcess = async (values, resetForm, types, filter) => {
 
 
     console.log(values);
@@ -1785,7 +1792,7 @@ const Editemployee = () => {
     const data = await dispatch(postApidata("TR038", type, saveData));
     if (data.payload.Status == "Y") {
       setLoading(false);
-      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
+      dispatch(fetchExplorelitview("TR038", Subscriptionlastthree, "Skills", `parentID=${recID} AND CompanyID=${CompanyID}`, ""));
       resetForm();
       toast.success(data.payload.Msg);
       // setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
@@ -1801,21 +1808,36 @@ const Editemployee = () => {
 
 
   const contactInitialvalues = {
-    Code: Data.Code,
-    Name: Data.Name,
-    phonenumber: DataExplore.PhoneNumber,
-    imageurl: viewImage,
-    email: DataExplore.Email,
-    aadharcardnumber: DataExplore.AadharCardNo,
-    pfnumber: DataExplore.PfNo,
-    esinumber: DataExplore.EsiNo,
-    permanentaddress: DataExplore.PermanentAddress,
-    localaddress: DataExplore.LocalAddress,
-    FatherName: DataExplore.FathersName,
-    AccountNumber: DataExplore.AccountNumber,
-    AccountHoldersName: DataExplore.AccountHoldersName,
-    IfscCode: DataExplore.IfscCode,
-    Branch: DataExplore.Branch,
+    // Code: Data.Code,
+    // Name: Data.Name,
+    // phonenumber: DataExplore.PhoneNumber,
+    // imageurl: viewImage,
+    // email: DataExplore.Email,
+    // aadharcardnumber: DataExplore.AadharCardNo,
+    // pfnumber: DataExplore.PfNo,
+    // esinumber: DataExplore.EsiNo,
+    // permanentaddress: DataExplore.PermanentAddress,
+    // localaddress: DataExplore.LocalAddress,
+    // FatherName: DataExplore.FathersName,
+    // AccountNumber: DataExplore.AccountNumber,
+    // AccountHoldersName: DataExplore.AccountHoldersName,
+    // IfscCode: DataExplore.IfscCode,
+    // Branch: DataExplore.Branch,
+    Code: Data?.Code || "",
+    Name: Data?.Name || "",
+    phonenumber: DataExplore?.PhoneNumber || "",
+    imageurl: viewImage || "",
+    email: DataExplore?.Email || "",
+    aadharcardnumber: DataExplore?.AadharCardNo || "",
+    pfnumber: DataExplore?.PfNo || "",
+    esinumber: DataExplore?.EsiNo || "",
+    permanentaddress: DataExplore?.PermanentAddress || "",
+    localaddress: DataExplore?.LocalAddress || "",
+    FatherName: DataExplore?.FathersName || "",
+    AccountNumber: DataExplore?.AccountNumber || "",
+    AccountHoldersName: DataExplore?.AccountHoldersName || "",
+    IfscCode: DataExplore?.IfscCode || "",
+    Branch: DataExplore?.Branch || "",
   };
 
 
@@ -1828,7 +1850,7 @@ const Editemployee = () => {
     setLoading(true);
 
     saveData = {
-      RecordID: DataExplore.RecordID,
+      RecordID: DataExplore?.RecordID || "-1",
       EmpRecordID: recID,
       PhoneNumber: values.phonenumber,
       Email: values.email,
@@ -4050,7 +4072,7 @@ const Editemployee = () => {
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     costofemployee: deploymentData.CostOfBudget || 0,
     costofcompany: deploymentData.CostOfCompany || 0,
-    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00, 
+    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00,
     costofcompanyhour: deploymentData.CostOfCompanyHours || 0.00,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
@@ -4866,7 +4888,7 @@ const Editemployee = () => {
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
                     {is003Subscription === false ? (<MenuItem value={20}>Inventory</MenuItem>) : null}
                     <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
-                     {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
+                    {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
                     {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
@@ -5385,10 +5407,10 @@ const Editemployee = () => {
                           // InputProps={{
                           //   onKeyDown: (e) => e.preventDefault(),
                           // }}
-                           inputProps={{
-                          max: "9999-12-31",
-                          min: "1900-01-01"
-                        }}
+                          inputProps={{
+                            max: "9999-12-31",
+                            min: "1900-01-01"
+                          }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5948,7 +5970,9 @@ const Editemployee = () => {
           false
         )}
         {show == "5" ? (
+
           <Paper elevation={3} sx={{ margin: "10px" }}>
+            {contactLoading ? <LinearProgress /> : null}
             <Formik
               initialValues={contactInitialvalues}
               enableReinitialize={true}
@@ -7072,6 +7096,7 @@ const Editemployee = () => {
                         }}
                         rows={explorelistViewData}
                         columns={columns1}
+                        loading={exploreLoading}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
@@ -9092,154 +9117,154 @@ const Editemployee = () => {
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   {is003Subscription === false ? (
                     <>
-                  <Typography variant="h5" padding={1}>
-                    Costing
-                  </Typography>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofcompany"
-                      name="costofcompany"
-                      value={values.costofcompany}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Company"
-                      // label={
-                      //   <>
-                      //     Cost to Company
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </>
-                      // }
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff",
-                        },
-                      }}
-                      focused
-                      error={!!touched.costofcompany && !!errors.costofcompany}
-                      helperText={touched.costofcompany && errors.costofcompany}
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
+                      <Typography variant="h5" padding={1}>
+                        Costing
+                      </Typography>
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
                           },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofemployee"
-                      name="costofemployee"
-                      value={values.costofemployee}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Budget"
-                      // label={
-                      //   <>
-                      //     Cost to Budget
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </>
-                      // }
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      error={
-                        !!touched.costofemployee && !!errors.costofemployee
-                      }
-                      helperText={
-                        touched.costofemployee && errors.costofemployee
-                      }
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofcompanyhour"
-                      name="costofcompanyhour"
-                      value={values.costofcompanyhour}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Company(Hours)"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff",
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofbudgethour"
-                      name="costofbudgethour"
-                      value={values.costofbudgethour}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Budget(Hours)"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                  </Box>
-                  </>
-                  ): null}
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofcompany"
+                          name="costofcompany"
+                          value={values.costofcompany}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Company"
+                          // label={
+                          //   <>
+                          //     Cost to Company
+                          //     <span style={{ color: "red", fontSize: "20px" }}>
+                          //       *
+                          //     </span>
+                          //   </>
+                          // }
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          error={!!touched.costofcompany && !!errors.costofcompany}
+                          helperText={touched.costofcompany && errors.costofcompany}
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofemployee"
+                          name="costofemployee"
+                          value={values.costofemployee}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Budget"
+                          // label={
+                          //   <>
+                          //     Cost to Budget
+                          //     <span style={{ color: "red", fontSize: "20px" }}>
+                          //       *
+                          //     </span>
+                          //   </>
+                          // }
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          error={
+                            !!touched.costofemployee && !!errors.costofemployee
+                          }
+                          helperText={
+                            touched.costofemployee && errors.costofemployee
+                          }
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofcompanyhour"
+                          name="costofcompanyhour"
+                          value={values.costofcompanyhour}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Company(Hours)"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofbudgethour"
+                          name="costofbudgethour"
+                          value={values.costofbudgethour}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Budget(Hours)"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </>
+                  ) : null}
                   <Box
                     display="flex"
                     justifyContent="end"
@@ -11521,6 +11546,19 @@ const Editemployee = () => {
                   Fnsave(values);
                 }, 100);
               }}
+              // onSubmit={(values, actions) => {
+              //   actions.setTouched({
+              //     code1: true,
+              //     name1: true,
+              //     mobilenumber: true,
+              //     emailid: true,
+              //     address: true,
+              //   });
+
+              //   if (Object.keys(actions.errors || {}).length > 0) return;
+
+              //   Fnsave(values);
+              // }}
             >
               {({
                 errors,
@@ -11532,7 +11570,9 @@ const Editemployee = () => {
                 handleSubmit,
                 setFieldValue,
               }) => (
-                <form onSubmit={handleSubmit}>
+                <form
+                  onSubmit={handleSubmit}>
+                  {/* {JSON.stringify(errors)} */}
                   <Box
                     display="grid"
                     gap={formGap}
@@ -11664,7 +11704,15 @@ const Editemployee = () => {
                       name="emailid"
                       type="text"
                       id="emailid"
-                      label="Email ID"
+                      // label="Email ID"
+                      label={
+                        <>
+                          Email ID
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.emailid}
@@ -11685,7 +11733,15 @@ const Editemployee = () => {
                       name="address"
                       type="text"
                       id="address"
-                      label="Address"
+                      // label="Address"
+                      label={
+                        <>
+                          Address
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       multiline
@@ -11693,8 +11749,8 @@ const Editemployee = () => {
                       value={values.address}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // error={!!touched.address && !!errors.address}
-                      // helperText={touched.address && errors.address}
+                      error={!!touched.address && !!errors.address}
+                      helperText={touched.address && errors.address}
                       sx={{
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
@@ -12726,8 +12782,8 @@ const Editemployee = () => {
                         {/* <MenuItem value="WS">Week</MenuItem> */}
                         <MenuItem value="MS">Month</MenuItem>
                         {is003Subscription && [
-                          <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                           <MenuItem key="TF" value="TF">Term Fees</MenuItem>,
+                          <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                         ]}
                       </TextField>
                       <TextField
@@ -12803,40 +12859,7 @@ const Editemployee = () => {
                         // multiline
                         inputProps={{ maxLength: 90 }}
                       />
-                      {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
-                        <TextField
-                          name="DueDate"
-                          type="date"
-                          id="DueDate"
-                          label="Due Date"
-                          variant="standard"
-                          focused
-                          value={values.DueDate}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const { name, value } = e.target;
-                        //   setFieldValue(name, value);
 
-                        //   // 🔁 Run same logic if ToDate already exists
-                        //   if (values.ToPeriod) {
-                        //     const toDate = new Date(values.ToPeriod);
-                        //     const fromDate = new Date(value);
-
-                        //     // Renewal days
-                        //     const diffDays = differenceInDays(toDate, fromDate);
-                        //     setFieldValue("RenewableNotification", diffDays);
-
-                        //     // Notification Alert Date (still based on ToDate)
-                        //     const alertDate = subDays(toDate, 1);
-                        //     setFieldValue(
-                        //       "NotificationAlertDate",
-                        //       alertDate.toISOString().split("T")[0]
-                        //     );
-                        //   }
-                        // }}
-                        />
-                      )}
 
                       <TextField
                         select
@@ -13124,6 +13147,40 @@ const Editemployee = () => {
                           }
                         }}
                       />
+                      {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
+                        <TextField
+                          name="DueDate"
+                          type="date"
+                          id="DueDate"
+                          label="Due Date"
+                          variant="standard"
+                          focused
+                          value={values.DueDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        // onChange={(e) => {
+                        //   const { name, value } = e.target;
+                        //   setFieldValue(name, value);
+
+                        //   // 🔁 Run same logic if ToDate already exists
+                        //   if (values.ToPeriod) {
+                        //     const toDate = new Date(values.ToPeriod);
+                        //     const fromDate = new Date(value);
+
+                        //     // Renewal days
+                        //     const diffDays = differenceInDays(toDate, fromDate);
+                        //     setFieldValue("RenewableNotification", diffDays);
+
+                        //     // Notification Alert Date (still based on ToDate)
+                        //     const alertDate = subDays(toDate, 1);
+                        //     setFieldValue(
+                        //       "NotificationAlertDate",
+                        //       alertDate.toISOString().split("T")[0]
+                        //     );
+                        //   }
+                        // }}
+                        />
+                      )}
                       <TextField
                         name="NotificationAlertDate"
                         type="date"

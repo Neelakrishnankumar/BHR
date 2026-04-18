@@ -498,12 +498,13 @@ export const fetchExplorelitview =
       AccessID !== "TR131" &&
       AccessID !== "TR139" &&
       AccessID !== "TR367" &&
+      AccessID !== "TR038" &&
       // AccessID !== "TR321" &&
       AccessID !== "TR326"
     ) {
       filter = "parentID=" + filter;
     }
-    if (AccessID == "TR017" || AccessID == "TR088" || AccessID == "TR367") {
+    if (AccessID == "TR017" || AccessID == "TR088" || AccessID == "TR367" || AccessID == "TR038" || AccessID == "TR321" || AccessID == "TR326") {
       filter = filter;
     }
     // if (AccessID == "TR019") { TR208
