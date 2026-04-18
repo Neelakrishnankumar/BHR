@@ -579,11 +579,22 @@ const Editemployee = () => {
 
         //Contact
         let schemaFields1 = {
+          // email: Yup.string()
+          //   .required(data.Employeecontact.email)
+          //   .matches(
+          //     /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
+          //     "Invalid Email Id"
+          //   ),
           email: Yup.string()
-            .required(data.Employeecontact.email)
+            .nullable()
+            .transform((value) => (value === "" ? null : value))
+            .required(data.Employeecontact.email) // ✅ first priority
             .matches(
               /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
-              "Invalid Email Id"
+              {
+                message: "Invalid Email Id",
+                excludeEmptyString: true, // ✅ avoids conflict with required
+              }
             ),
         };
 
@@ -611,23 +622,50 @@ const Editemployee = () => {
           .transform((value) => (value === "" ? null : value))
           .matches(/^\d{10}$/, data.Employeecontact.phonenumber);
 
-        schemaFields1.Branch = Yup.string()
-          .trim()
-          .notRequired(data.Employeecontact.Branch);
+        // schemaFields1.Branch = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.Branch);
 
+        // schemaFields1.AccountHoldersName = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.AccountHoldersName);
+
+        // schemaFields1.AccountNumber = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.AccountNumber)
+        //   .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
+
+        // schemaFields1.IfscCode = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.IfscCode)
+        //   .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
         schemaFields1.AccountHoldersName = Yup.string()
-          .trim()
-          .notRequired(data.Employeecontact.AccountHoldersName);
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value));
 
         schemaFields1.AccountNumber = Yup.string()
-          .trim()
-          .notRequired(data.Employeecontact.AccountNumber)
-          .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^\d{9,18}$/, {
+            message: data.Employeecontact.AccountNumber,
+            excludeEmptyString: true, // ✅ key fix
+          });
 
         schemaFields1.IfscCode = Yup.string()
-          .trim()
-          .notRequired(data.Employeecontact.IfscCode)
-          .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, {
+            message: data.Employeecontact.IfscCode,
+            excludeEmptyString: true, // ✅ key fix
+          });
+
+        schemaFields1.Branch = Yup.string()
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value));
 
         const schema1 = Yup.object().shape(schemaFields1);
         setValidationSchema1(schema1);
@@ -4056,7 +4094,7 @@ const Editemployee = () => {
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     costofemployee: deploymentData.CostOfBudget || 0,
     costofcompany: deploymentData.CostOfCompany || 0,
-    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00, 
+    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00,
     costofcompanyhour: deploymentData.CostOfCompanyHours || 0.00,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
@@ -5391,10 +5429,10 @@ const Editemployee = () => {
                           // InputProps={{
                           //   onKeyDown: (e) => e.preventDefault(),
                           // }}
-                           inputProps={{
-                          max: "9999-12-31",
-                          min: "1900-01-01"
-                        }}
+                          inputProps={{
+                            max: "9999-12-31",
+                            min: "1900-01-01"
+                          }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -6252,8 +6290,8 @@ const Editemployee = () => {
                       //   </>
                       // }
                       focused
-                      error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
-                      helperText={touched.AccountHoldersName && errors.AccountHoldersName}
+                      // error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
+                      // helperText={touched.AccountHoldersName && errors.AccountHoldersName}
                       onWheel={(e) => e.target.blur()}
                       sx={
                         {
