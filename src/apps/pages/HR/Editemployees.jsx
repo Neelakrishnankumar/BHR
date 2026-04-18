@@ -8567,7 +8567,7 @@ const Editemployee = () => {
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
-                    {is003Subscription === false ? "Project Details" : "Default Project Details"}
+                    {is003Subscription === false ? "Project Details" : "Default Standard/Acivities Details"}
                   </Typography>
                   <Box
                     display="grid"
