@@ -189,7 +189,7 @@ const Editshift = () => {
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                navigate("/Apps/TR265/Shift");
+                navigate(-1);
             } else {
                 toast.error(response.payload.Msg);
             }

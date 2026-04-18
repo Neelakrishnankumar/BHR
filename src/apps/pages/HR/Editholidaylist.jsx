@@ -132,7 +132,7 @@ const Holidaylist = () => {
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
-        navigate("/Apps/TR218/Holiday List");
+        navigate(-1);
       } else {
         toast.error(response.payload.Msg);
       }

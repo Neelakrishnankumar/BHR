@@ -2062,7 +2062,7 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     /> */}
-                    <TextField
+                    {/* <TextField
                       name="GuidelinePrice"
                       type="text"
                       id="GuidelinePrice"
@@ -2088,6 +2088,40 @@ const EditItem = () => {
                         }
                       }}
                       onBlur={handleBlur}
+                      error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
+                      helperText={touched.GuidelinePrice && errors.GuidelinePrice}
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    /> */}
+                    <TextField
+                      name="GuidelinePrice"
+                      type="text"
+                      id="GuidelinePrice"
+                      label="Guideline Price (Box)"
+                      variant="standard"
+                      focused
+                      value={values.GuidelinePrice}
+                      onChange={(e) => {
+                        let val = e.target.value;
+
+                        // Allow only numbers and decimal
+                        if (!/^\d*\.?\d*$/.test(val)) return;
+
+                        // Just store raw value (NO formatting here)
+                        setFieldValue("GuidelinePrice", val);
+                      }}
+                      onBlur={(e) => {
+                        let val = e.target.value;
+
+                        if (val === "") return;
+
+                        const num = Number(val);
+                        if (!isNaN(num)) {
+                          setFieldValue("GuidelinePrice", num.toFixed(2));
+                        }
+                      }}
                       error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
                       helperText={touched.GuidelinePrice && errors.GuidelinePrice}
                       autoFocus
