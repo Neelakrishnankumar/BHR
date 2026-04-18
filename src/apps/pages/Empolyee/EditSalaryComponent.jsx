@@ -68,8 +68,10 @@ const EditSalaryComponent = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
-  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const location = useLocation();
   const rowData = location.state || {};
   console.log(rowData, "--rowData state");
@@ -483,7 +485,7 @@ const EditSalaryComponent = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR205/Salary Component");
+                      navigate(-1);
                     }}
                   >
                     Cancel

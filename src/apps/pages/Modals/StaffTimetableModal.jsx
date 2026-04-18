@@ -31,7 +31,7 @@ import { fetchListview } from "../../../store/reducers/Listviewapireducer";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 
-export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID, CompanyID }) {
+export default function StaffTimetableModal({ open, onClose, rowData }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const dispatch = useDispatch();
@@ -46,7 +46,10 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
     const navigate = useNavigate();
     const state = location.state || {};
     //   const HeaderID = state.HeaderID || 0
-    const HeaderID = rowData?.RecordID || 0
+    const HeaderID = rowData?.RecordID || 0;
+    const CompanyID = rowData?.CompanyID || 0;
+    const SubscriptionCode = rowData?.SubscriptionCode || 0;
+    const sliceSubcriptionCode = "003";
     const colors = tokens(theme.palette.mode);
     const [validationSchema, setValidationSchema] = useState(null);
     const [errorMsgData, setErrorMsgData] = useState(null);
@@ -58,19 +61,18 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
         setShowPassword((prev) => !prev);
     };
     const initialValues = {
-        supplier: null,
+        terms: null,
     }
 
     const PartyResetSave = async (values) => {
-        // const Data = {
-        //     PartyID: rowData?.RecordID,
-        //     Password: values.Password || "",
-        //     UserID: EmployeeID,
-        //     CompanyID: CompanyID
 
-        // }
-        navigate("/Apps/Staff/StaffTimetable");
+        const TermsID = values.terms ? values?.terms?.RecordID : 0;
 
+        navigate(`/Apps/Staff/StaffTimetable/${CompanyID}/${HeaderID}/${TermsID}`, {
+            state: {
+                EmployeeName: rowData.Personnel,
+            }
+        });
     }
     return (
         <Dialog
@@ -83,7 +85,7 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
             {/* Header */}
             <DialogTitle sx={{ pb: 1 }}>
                 <Typography variant="h5" fontWeight="600">
-                    Staff ({rowData?.Party}) &nbsp;
+                    Staff ({rowData?.Personnel}) &nbsp;
                 </Typography>
             </DialogTitle>
 
@@ -121,13 +123,13 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
                                 }, 100);
                             }}
                             enableReinitialize={true}
-                        // validate={(values) => {
-                        //     const errors = {};
-                        //     if (!values.Password) {
-                        //         errors.Password = "Please Select a Term";
-                        //     }
-                        //     return errors;
-                        // }}
+                            validate={(values) => {
+                                const errors = {};
+                                if (!values.terms) {
+                                    errors.terms = "Please Select a Term";
+                                }
+                                return errors;
+                            }}
                         >
                             {({
                                 errors, touched, handleBlur,
@@ -141,7 +143,7 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
                                             padding={1}
                                         >
                                             <CheckinAutocomplete
-                                                name="supplier"
+                                                name="terms"
                                                 //label="Item"
                                                 label={
                                                     <>
@@ -151,15 +153,15 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
                                                         </span>
                                                     </>
                                                 }
-                                                id="supplier"
-                                                value={values.supplier}
+                                                id="terms"
+                                                value={values.terms}
                                                 onChange={(newValue) => {
-                                                    setFieldValue("supplier", {
+                                                    setFieldValue("terms", {
                                                         RecordID: newValue.RecordID,
                                                         Code: newValue.Code,
                                                         Name: newValue.Name,
                                                     });
-                                                    setFieldTouched("supplier", true);
+                                                    // setFieldTouched("terms", true);
 
                                                     // setFieldValue(
                                                     //   "productCategoryID",
@@ -169,10 +171,10 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
                                                         commentsRef.current?.focus();
                                                     }, 100);
                                                 }}
-                                                error={!!touched.supplier && !!errors.supplier}
-                                                helperText={touched.supplier && errors.supplier}
+                                                error={!!touched.terms && !!errors.terms}
+                                                helperText={touched.terms && errors.terms}
                                                 // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                                                url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID='1'","Any":""}}`}
+                                                url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms","Filter":"CompanyID=${CompanyID}","Any":"","VerticalLicense": "${sliceSubcriptionCode || ""}"}}`}
                                             />                         </Box>
 
                                         <Box
@@ -188,7 +190,7 @@ export default function StaffTimetableModal({ open, onClose, rowData, EmployeeID
                                                 type="submit"
                                             // loading={isLoading}
                                             >
-                                                Save
+                                                Apply
                                             </LoadingButton>
                                             {" "}
 

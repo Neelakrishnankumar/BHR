@@ -101,8 +101,13 @@ const Editproject = () => {
     sessionStorage.getItem("secondaryCurrentPage")
   );
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
-  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+ const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";  
+    console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  
   const [show, setScreen] = React.useState("0");
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
@@ -1103,7 +1108,7 @@ const Editproject = () => {
                   <MenuItem value={2}>List Of Documents</MenuItem> */}
 
                   <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
-                  <MenuItem value="3">Units</MenuItem>
+                  {is003Subscription === false ? (<MenuItem value="3">Units</MenuItem>) : null}
                   <MenuItem value="2">List Of Documents</MenuItem>
                 </Select>
               </FormControl>
@@ -1531,6 +1536,9 @@ const Editproject = () => {
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
                 </Box>
+                
+                {Subscriptionlastthree != "003" ? (
+                  <>
                 <Typography variant="h5" padding={1}>
                   Costing:
                 </Typography>
@@ -1825,6 +1833,8 @@ const Editproject = () => {
                     }}
                   /> */}
                 </Box>
+                </>
+                ): null}
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton

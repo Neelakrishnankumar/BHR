@@ -70,7 +70,10 @@ const EditSatuaryComponent = () => {
   const [logoimage, setlogoimage] = useState("");
   console.log("Nowlogo", logoimage);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-  const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -227,7 +230,7 @@ const EditSatuaryComponent = () => {
               sx={{ cursor: "default" }}
 
             >
-              {getBusinessCaption("PayrollPolicy", "Payroll Policy")}
+              {getBusinessCaption("Policy", "Payroll Policy")}
             </Typography>
           </Box>
 

@@ -43,6 +43,7 @@ const initialState = {
   customerLeatherData: {},
   summaryData: {},
   deploymentData: {},
+  ResignationGetData: {},
   trackingLoading: false,
   materialTrackingData: {
     Rateseries: {},
@@ -242,6 +243,10 @@ const initialState = {
   PartyResetdata: {},
   PartyResetloading: false,
   PartyResetstatus: "",
+
+  //CONTRACT INVOICE GET
+  InvoiceHeaderData: [],
+  InvoiceDetailData: [],
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -696,6 +701,49 @@ export const postDeployment = createAsyncThunk(
   "employee/deployment/postdata",
   async ({ data }) => {
     var url = store.getState().globalurl.postempdeployment;
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+//Employee_RESIGNATION_GET
+export const getResignation = createAsyncThunk(
+  "Personnel/Resignation",
+  async ({ EmployeeID }) => {
+    var url = store.getState().globalurl.getResignationUrl;
+    var data = {
+      EmployeeID: EmployeeID,
+    };
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const ResignationPOST = createAsyncThunk(
+  "Personnel/Explore/postResignation",
+  async ({ data }) => {
+    var url = store.getState().globalurl.postResignation;
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
       headers: {
@@ -3545,6 +3593,9 @@ export const getApiSlice = createSlice({
       .addCase(getDeployment.fulfilled, (state, action) => {
         state.deploymentData = action.payload.Data;
       })
+      .addCase(getResignation.fulfilled,(state, action) => {
+        state.ResignationGetData = action.payload.Data;
+      })
 
       .addCase(procurementTrackingGet.pending, (state, action) => {
         state.Status = "idle";
@@ -4258,6 +4309,21 @@ export const getApiSlice = createSlice({
       .addCase(PartyReset.rejected, (state, action) => {
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
+      })
+
+      .addCase(ContractInvoice.pending, (state, action) => {
+        state.InvoiceHeaderDatastatus = "idle";
+        state.InvoiceHeaderDataloading = true;
+      })
+      .addCase(ContractInvoice.fulfilled, (state, action) => {
+        state.InvoiceHeaderData =
+          action.payload.HeaderData ? action.payload.HeaderData : [];
+        state.InvoiceDetailData =
+          action.payload.DetailData ? action.payload.DetailData : [];
+      })
+       .addCase(ContractInvoice.rejected, (state, action) => {
+        state.InvoiceHeaderDatastatus = "Error";
+        state.InvoiceHeaderDataloading = false;
       })
       //SCOREBOARD
       // .addCase(ScoredashBoard.pending, (state, action) => {
@@ -6068,4 +6134,22 @@ export const PartyReset = createAsyncThunk(
     });
     return response.data;
   },
+);
+
+export const ContractInvoice = createAsyncThunk(
+  "ContractInvoice/GET",
+  async (data) => {
+    const url = store.getState().globalurl.ContractInvoicePDF;
+
+    console.log("POST DATA:", data);
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      }
+    });
+
+    return response.data;
+  }
 );

@@ -23,7 +23,7 @@ import {
   Chip,
 } from "@mui/material";
 // import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-
+import * as Yup from "yup";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -217,8 +217,39 @@ const EditemployeePayroll = () => {
   //   dispatch(fetchApidata("TR027", "get", recID));
   // }, []);
   // const [show, setScreen] = React.useState(0);
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
+  const [validationSchema, setValidationSchema] =useState(Yup.object());
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+
+        let schemaFields = {
+          Allowances: Yup.object()
+            .nullable()
+            .required(data.Allowance.Allowance),
+
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.Code = Yup.string().required(data.Allowance.Code);
+        }
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+
+        //Skills
+
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     if (show == "0") {
       if (recID && mode === "E") {
@@ -657,7 +688,7 @@ const EditemployeePayroll = () => {
     }
 
     if (event.target.value == "5") {
-       dispatch(
+      dispatch(
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR206",
@@ -1285,9 +1316,11 @@ const EditemployeePayroll = () => {
     LeavePart: "",
     Status: "",
   });
+  
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
+    Allowances:"",
     effectivevalue: "",
     sortOrder: "",
   });
@@ -1319,7 +1352,7 @@ const EditemployeePayroll = () => {
     Amount: "",
     Comments: "",
   });
-  const selectCellRowData = ({ rowData, mode, field }) => {
+  const selectCellRowData = ({ rowData, mode, field,setFieldValue }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
       rowData,
@@ -1334,6 +1367,7 @@ const EditemployeePayroll = () => {
         value: "",
         effectivevalue: "",
         sortOrder: "",
+        Allowances:"",
       });
 
       setADLookupData(null);
@@ -1462,6 +1496,16 @@ const EditemployeePayroll = () => {
           value: rowData.value,
           effectivevalue: rowData.EffectiveValue,
           sortOrder: rowData.Sortorder,
+          Allowances:rowData.SalaryComponentID
+            ? {
+              RecordID: rowData.SalaryComponentID,
+              Name: rowData.Name,
+            }
+            : null,
+        });
+        setFieldValue("Allowances", {
+          RecordID: rowData.SalaryComponentID,
+          Name: rowData.Name,
         });
         console.log(rowData.Sortorder, "--rowData.Sortorder in Allowances");
 
@@ -1924,7 +1968,7 @@ const EditemployeePayroll = () => {
 
     // salaryCategory: (ADLookupData.adCategory === 'A') ? "Allowances" : (ADLookupData.adCategory === 'D') ? "Deductions" : ADLookupData.adCategory,
     type: ADLookupData ? ADLookupData.Type : "",
-
+     Allowances: allDecData?.Allowances || null,
     // type: ADLookupData.adType,
     value: allDecData.value,
     effectiveValue: allDecData.effectivevalue || 0.0,
@@ -1947,18 +1991,18 @@ const EditemployeePayroll = () => {
       RecordID: allDecData.recordID,
       // "SalaryComponentID": ADLookupData.adRecordID,
       // "SCName": ADLookupData.adDesc,
-      SalaryComponentID: ADLookupData ? ADLookupData.RecordID : 0,
-      SCName: ADLookupData ? ADLookupData.Name : "",
+      SalaryComponentID: values?.Allowances?.RecordID || 0,
+      // SCName: ADLookupData ? ADLookupData.Name : "",
+      SCName: values?.Allowances?.Name || "",
       SCType: values.type,
       SCCategory: show == "1" ? "A" : "D",
-      Value: values.value,
-      EffectiveValue: values.effectivevalue,
+      Value: values.value || 0,
+      EffectiveValue: values.value || 0,
       // show == "1"
       //   ? Number(Data.Sal) + Number(values.value)
       //   : Number(Data.Sal) - Number(values.value),
       SortOrder: values.sortorder || 0,
       Disable: "N",
-
       parentID: recID,
     };
 
@@ -1970,7 +2014,7 @@ const EditemployeePayroll = () => {
       const query =
         show == "1" ? `${recID} AND Category='A'` : `${recID} AND Category='D'`;
       dispatch(
-        fetchExplorelitview("TR206", "AllowancesAndDeductions", query, ""),
+        fetchExplorelitview("TR206",Subscriptionlastthree, "AllowancesAndDeductions", query, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -3119,7 +3163,16 @@ const EditemployeePayroll = () => {
                       onChange={(e, newValue) => {
                         setFieldValue("project", newValue);
                       }}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2054",
+                          ScreenName: "Project",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                     {/* <CheckinAutocomplete
                       name="Designation"
@@ -3142,7 +3195,16 @@ const EditemployeePayroll = () => {
                       onChange={(e, newValue) => {
                         setFieldValue("Designation", newValue);
                       }}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2047",
+                          ScreenName: "Designation",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID='${CompanyID}'`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                     <TextField
                       fullWidth
@@ -3342,6 +3404,7 @@ const EditemployeePayroll = () => {
             <Formik
               initialValues={AllDedInitialValues}
               enableReinitialize={true}
+              validationSchema={validationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   AllDedFNsave(values, resetForm, false);
@@ -3556,7 +3619,7 @@ const EditemployeePayroll = () => {
                             alignItems: "center",
                           }}
                         >
-                          <Productautocomplete
+                          <CheckinAutocomplete
                             name="Allowances"
                             label={
                               <span>
@@ -3570,10 +3633,12 @@ const EditemployeePayroll = () => {
                             }
                             variant="outlined"
                             id="Allowances"
-                            value={ADLookupData}
-                            // value={values.Allowances}
+                            // value={ADLookupData}
+                            value={values.Allowances}
                             onChange={(newValue) => {
-                              // setFieldValue("Allowances", newValue);
+                              setFieldValue("Allowances", newValue);
+                              setFieldValue("type", newValue ? newValue.Type : "");
+                              setFieldValue("salaryCategory", newValue ? newValue.Category : "");
                               console.log(
                                 ADLookupData,
                                 "--ADLookupData Allowances",
@@ -3584,13 +3649,15 @@ const EditemployeePayroll = () => {
                                 "Allowances RecordID",
                               );
 
-                              setADLookupData({
-                                RecordID: newValue.RecordID,
-                                Type: newValue.Type,
-                                Name: newValue.Name,
-                                SalaryCategory: newValue.SalaryCategory,
-                              });
+                              // setADLookupData({
+                              //   RecordID: newValue.RecordID,
+                              //   Type: newValue.Type,
+                              //   Name: newValue.Name,
+                              //   SalaryCategory: newValue.SalaryCategory,
+                              // });
                             }}
+                            error={!!touched.Allowances && !!errors.Allowances}
+                            helperText={touched.Allowances && errors.Allowances}
                             url={`${listViewurl}?data=${JSON.stringify({
                               Query: {
                                 AccessID: "2082",
@@ -4078,16 +4145,16 @@ const EditemployeePayroll = () => {
                                 SalaryCategory: newValue.SalaryCategory,
                               });
                             }}
-                             url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2082",
-                              ScreenName: "Deduction",
-                              VerticalLicense: Subscriptionlastthree,
-                              Filter: `SalaryCategory='D' AND CompanyID='${CompanyID}'`,
-                              Any: "",
-                            },
-                          })}`}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D' AND CompanyID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2082",
+                                ScreenName: "Deduction",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `SalaryCategory='D' AND CompanyID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D' AND CompanyID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -6426,16 +6493,16 @@ const EditemployeePayroll = () => {
                       //value={selectedProjectOptions}
                       //onChange={handleSelectionProjectname}
                       // defaultValue={selectedProjectName}
-                       url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2054",
-                            ScreenName: "Project",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `parentID='${CompanyID}'`,
-                            Any: "",
-                          },
-                        })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2054",
+                          ScreenName: "Project",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID='${CompanyID}'`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
 
                     <TextField

@@ -535,7 +535,8 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
     });
 };
 export const fetchListview =
-  (AccessID, VerticalLicense, screenName, filter, any, CompId) => async (dispatch, getState) => {
+  (AccessID, VerticalLicense, screenName, filter, any, CompId) =>
+  async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
     console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
@@ -1556,8 +1557,7 @@ export const fetchListview =
                 );
               },
             };
-          } 
-          else if (AccessID == "TR275") {
+          } else if (AccessID == "TR275") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1711,8 +1711,7 @@ export const fetchListview =
                 );
               },
             };
-          }
-          else if (AccessID == "TR205") {
+          } else if (AccessID == "TR205") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1726,7 +1725,7 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                     <Link
+                    <Link
                       to={`./EditSalary%20Component/${params.row.RecordID}/E`}
                     >
                       <Tooltip title="Edit">
@@ -1734,13 +1733,12 @@ export const fetchListview =
                           <ModeEditOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    </Link>                   
+                    </Link>
                   </Box>
                 );
               },
             };
-          }
-          else if (AccessID == "TR207") {
+          } else if (AccessID == "TR207") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1754,7 +1752,7 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                     <Link
+                    <Link
                       to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
                     >
                       <Tooltip title="Edit">
@@ -1762,13 +1760,12 @@ export const fetchListview =
                           <ModeEditOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    </Link>                   
+                    </Link>
                   </Box>
                 );
               },
             };
-          }
-           else if (AccessID == "TR123") {
+          } else if (AccessID == "TR123") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1782,21 +1779,18 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                     <Link
-                      to={`./EditCheck%20In/${params.row.RecordID}/E`}
-                    >
+                    <Link to={`./EditCheck%20In/${params.row.RecordID}/E`}>
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
                           <ModeEditOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    </Link>                   
+                    </Link>
                   </Box>
                 );
               },
             };
-          }
-           else if (AccessID == "TR124") {
+          } else if (AccessID == "TR124") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1810,21 +1804,18 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                     <Link
-                      to={`./EditCheck%20Out/${params.row.RecordID}/E`}
-                    >
+                    <Link to={`./EditCheck%20Out/${params.row.RecordID}/E`}>
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
                           <ModeEditOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    </Link>                   
+                    </Link>
                   </Box>
                 );
               },
             };
-          }
-             else if (AccessID == "TR257") {
+          } else if (AccessID == "TR257") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1838,7 +1829,7 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                     <Link
+                    <Link
                       to={`./EditEmployee%20Request/${params.row.RecordID}/E`}
                       state={{ EmpName: params.row.Name }}
                     >
@@ -1847,13 +1838,12 @@ export const fetchListview =
                           <ModeEditOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    </Link>                   
+                    </Link>
                   </Box>
                 );
               },
             };
-          }
-          else if (
+          } else if (
             AccessID == "TR278" ||
             AccessID == "TR280" ||
             AccessID == "TR301" ||
@@ -1949,7 +1939,10 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               headerAlign: "center",
-              align: (AccessID === "TR319" || AccessID === "TR324") ? "center" : "left",
+              align:
+                AccessID === "TR319" || AccessID === "TR324"
+                  ? "center"
+                  : "left",
               // align: "center",
               // align: "left",
               disableColumnMenu: true,
@@ -2119,7 +2112,7 @@ export const fetchListview =
             //   renderCell: (params) => {
             //     return (
             //       <Box>
-            //         <Link 
+            //         <Link
             //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
             //               state={{ Locationname: params.row.Name }}
             //         >
@@ -2129,7 +2122,7 @@ export const fetchListview =
             //             </IconButton>
             //           </Tooltip>
             //         </Link>
-                 
+
             //       </Box>
             //     );
             //   },
@@ -4033,7 +4026,7 @@ export const fetchListview =
                     AccessID !== "TR136" &&
                     AccessID !== "TR091" &&
                     AccessID !== "TR151" &&
-                    //AccessID !== "TR027" &&
+                    AccessID !== "TR128" &&
                     AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -4430,9 +4423,23 @@ export const fetchListview =
                     )}
                     {AccessID == "TR128" ? (
                       <Box>
+                        <>
+                         <Link to={`./EditLocation/${params.row.RecordID}/E`}
+                         state={{
+                                  LocationName: params.row.Name,
+                                  CompanyName: params.row.CompanyName,
+                                  screenName:screenName
+                         }}
+                         >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>                  
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                          state={{ Locationname: params.row.Name }}
+                          state={{ Locationname: params.row.Name,BreadCrumb2:screenName }}
                         >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
@@ -4440,6 +4447,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                        </>
                         {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
@@ -5512,7 +5520,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const location = useLocation();
   const state = location.state || {};
   console.log(state, "--state in listviewapireducers");
-  
+
   const dispatch = useDispatch();
   const ScheduleCheck = () => {
     Swal.fire({
@@ -6307,6 +6315,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
   console.log("HeaderImg", HeaderImg, FooterImg);
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const count = Number(params.row.MarketingCount || 0);
@@ -6560,7 +6570,6 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.ItemGroup,
-
                     },
                   })
                 }
@@ -6654,6 +6663,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.Description,
+                        Classification: params.row.Description,
                       },
                     },
                   )
@@ -6672,10 +6682,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditHSN Category/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.HSNCategory,
+                      BreadCrumb2: screenName,
                     },
                   })
                 }
@@ -6694,6 +6705,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.HSNCategory,
+                        BreadCrumb2: screenName,
                       },
                     },
                   )
@@ -6824,10 +6836,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditRoute/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.Route,
+                      Screenname: screenName,
                     },
                   })
                 }
@@ -6860,6 +6873,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       state: {
                         ...state,
                         BreadCrumb1: params.row.Route,
+                        Screenname: screenName,
                       },
                     },
                   )
@@ -7095,6 +7109,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
                       BreadCrumb1: params.row.Description,
+                      Classification:params.row.Classification,
                     },
                   })
                 }
@@ -7128,27 +7143,31 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            <Tooltip title="Staff Calendar">
-              <IconButton
-                color="info"
-                size="small"
-                onClick={() => {
-                  setSTSelectedRow(params.row);
-                  setSTModalOpen(true);
-                }}
-              >
-                <PermContactCalendarOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+            {(is003Subscription && params.row.HasProjectTask === "Y") && (
+            <>
+              <Tooltip title="Staff Timetable">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    setSTSelectedRow(params.row);
+                    setSTModalOpen(true);
+                  }}
+                >
+                  <PermContactCalendarOutlinedIcon />
+                </IconButton>
+              </Tooltip>
 
-            <StaffTimetableModal
-              open={STmodalOpen}
-              onClose={() => {
-                setSTModalOpen(false);
-                setSTSelectedRow(null);
-              }}
-              rowData={selectedRow}
-            />
+              <StaffTimetableModal
+                open={STmodalOpen}
+                onClose={() => {
+                  setSTModalOpen(false);
+                  setSTSelectedRow(null);
+                }}
+                rowData={STselectedRow}
+              />
+            </>
+            )}
           </Box>
         )}
       </div>

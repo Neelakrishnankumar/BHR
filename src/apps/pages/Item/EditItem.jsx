@@ -138,7 +138,11 @@ const EditItem = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const ItemCategorID = params.parentID1;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -283,6 +287,7 @@ const EditItem = () => {
         dispatch(
           fetchExplorelitview(
             "TR326",
+            Subscriptionlastthree,
             "Lead Time",
             `CompanyID='${CompanyID}' AND ItemID='${recID}'`,
             ""
@@ -1317,7 +1322,16 @@ const EditItem = () => {
                       error={!!touched.location && !!errors.location}
                       helperText={touched.location && errors.location}
                       // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2159","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                       url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2159",
+                              ScreenName: "Location",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2159","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
 
                     <CheckinAutocomplete
@@ -1351,7 +1365,16 @@ const EditItem = () => {
                       }}
                       error={!!touched.bin && !!errors.bin}
                       helperText={touched.bin && errors.bin}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
+                       url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2160",
+                              ScreenName: "Bin",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `LocationID=${values.location?.RecordID}`,
+                              Any: "",
+                            },
+                          })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
                     />
                     <Box
                       sx={{
@@ -1391,7 +1414,16 @@ const EditItem = () => {
                         error={!!touched.shelves && !!errors.shelves}
                         helperText={touched.shelves && errors.shelves}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2161",
+                              ScreenName: "Shelves",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `BinID=${values.bin?.RecordID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
                       />
                     </Box>
 
@@ -2615,7 +2647,16 @@ const EditItem = () => {
                         error={!!touched.supplier && !!errors.supplier}
                         helperText={touched.supplier && errors.supplier}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
+                         url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2141",
+                              ScreenName: "Item Lead Time",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID} AND ItemID=${recID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth

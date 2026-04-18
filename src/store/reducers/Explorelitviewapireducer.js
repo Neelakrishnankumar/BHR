@@ -2,9 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Button, IconButton, Tooltip, Stack, Box,
+import {
+  Button,
+  IconButton,
+  Tooltip,
+  Stack,
+  Box,
   CircularProgress,
- } from "@mui/material";
+} from "@mui/material";
 
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
@@ -127,6 +132,36 @@ export const packingListView = createAsyncThunk(
       response,
     );
     return response.data;
+  },
+);
+
+//WEEKLY_TEACHER_CALENDAR
+export const weeklyTeachercalendarGet = createAsyncThunk(
+  "TimeTable/TeacherCal",
+  async ({ EmployeeID, TermsID, CompanyID }, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.WeeklyTeachercalendarGet;
+      const requestBody = {
+        EmployeeID: EmployeeID,
+        TermsID: TermsID,
+        CompanyID: CompanyID,
+      };
+
+      const response = await axios.post(url, requestBody, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("✅ weeklyTeachercaledarGet API Response:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.log("❌ API Error:", error.response?.data || error.message);
+
+      return rejectWithValue(error.response?.data || "Something went wrong");
+    }
   },
 );
 export const getApiSlice = createSlice({
@@ -278,6 +313,54 @@ export const getApiSlice = createSlice({
       .addCase(getFetchUserData.rejected, (state, action) => {
         state.Status = "Error";
         state.loading = false;
+      })
+
+      .addCase(weeklyTeachercalendarGet.pending, (state) => {
+        state.Status = "loading";
+        state.loading = true;
+        state.Data = {};
+        state.explorerowData = [];
+        state.explorecolumnData = [];
+      })
+
+      .addCase(weeklyTeachercalendarGet.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+
+        const data = action.payload;
+
+        // ✅ Save raw response
+        state.Data = data;
+
+        // ✅ Create dynamic columns
+        state.explorecolumnData = [
+          {
+            field: "day",
+            headerName: "Days",
+            flex: 1,
+            headerAlign: "center",
+            align: "center",
+          },
+          ...data.timeSlots.map((slot) => ({
+            field: slot,
+            headerName: slot,
+            flex: 1,
+            headerAlign: "center",
+            align: "center",
+          })),
+        ];
+
+        // ✅ Create dynamic rows
+        state.explorerowData = data.schedule.map((item, index) => ({
+          id: index + 1,
+          day: item.day,
+          ...item.slots,
+        }));
+      })
+
+      .addCase(weeklyTeachercalendarGet.rejected, (state) => {
+        state.Status = "error";
+        state.loading = false;
       });
   },
 });
@@ -296,92 +379,89 @@ export const {
 
 export default getApiSlice.reducer;
 
-
-
-
-
-
-
 export const fetchExplorelitview =
-  (AccessID,VerticalLicense, screenName, filter, any) => async (dispatch, getState) => {
+  (AccessID, VerticalLicense, screenName, filter, any) =>
+  async (dispatch, getState) => {
     console.log("🚀 ~ file: Explorelitviewapireducer.js:209 ~ filter:", filter);
     // const navigate = useNavigate();
     var url = store.getState().globalurl.listViewurl;
 
-
     const HeaderImg = sessionStorage.getItem("CompanyHeader");
-  const FooterImg = sessionStorage.getItem("CompanyFooter");
-  const CompanySignature = sessionStorage.getItem("CompanySignature");
-  console.log(" ~ Payroll ConfigurationPayroll attendance ~ CompanySignature:", CompanySignature);
-  console.log("HeaderImg", HeaderImg, FooterImg);
-  const config = getConfig();
-  const baseurlUAAM = config.UAAM_URL;
-
- const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
-    const dispatch = store.dispatch;
-    const [payloading, setPayLoading] = React.useState(false);
-
-    const handlePayPDFGET = async () => {
-      try {
-        setPayLoading(true);
-        const payslip = {
-          Month: Month,
-          Finyear: Finyear,
-          EmployeeID: EmployeeID,
-          CompanyID: CompanyID,
-        };
-
-        const resultAction = await dispatch(paySlipGet(payslip));
-
-        const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
-        if (!data) {
-          alert("No data available for PDF");
-          return;
-        }
-        if (!resultAction.payload) {
-          console.error("No payload returned");
-          return;
-        }
-        // Generate and download PDF
-        const blob = await pdf(
-          <PayslipPdf
-            data={data}
-            filters={{
-              Imageurl: baseurlUAAM,
-              HeaderImg: HeaderImg,
-              FooterImg: FooterImg,
-              CompanySignature: CompanySignature,
-            }}
-          />,
-        ).toBlob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = blobUrl;
-        link.download = "Payslip.pdf";
-        document.body.appendChild(link); // ✅ Important
-        link.click();
-        document.body.removeChild(link); // ✅ Cleanup
-        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
-      } catch (err) {
-        console.error("PDF generation failed", err);
-      } finally {
-        setPayLoading(false);
-      }
-    };
-
-    return (
-      <Tooltip title="Download Payslip PDF">
-        <IconButton color="info" size="small" onClick={handlePayPDFGET}>
-          {payloading ? (
-            <CircularProgress size={20} />
-          ) : (
-            <PictureAsPdfIcon color="error" />
-          )}
-        </IconButton>
-      </Tooltip>
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    const CompanySignature = sessionStorage.getItem("CompanySignature");
+    console.log(
+      " ~ Payroll ConfigurationPayroll attendance ~ CompanySignature:",
+      CompanySignature,
     );
-  };
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+
+    const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
+      const dispatch = store.dispatch;
+      const [payloading, setPayLoading] = React.useState(false);
+
+      const handlePayPDFGET = async () => {
+        try {
+          setPayLoading(true);
+          const payslip = {
+            Month: Month,
+            Finyear: Finyear,
+            EmployeeID: EmployeeID,
+            CompanyID: CompanyID,
+          };
+
+          const resultAction = await dispatch(paySlipGet(payslip));
+
+          const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
+          if (!data) {
+            alert("No data available for PDF");
+            return;
+          }
+          if (!resultAction.payload) {
+            console.error("No payload returned");
+            return;
+          }
+          // Generate and download PDF
+          const blob = await pdf(
+            <PayslipPdf
+              data={data}
+              filters={{
+                Imageurl: baseurlUAAM,
+                HeaderImg: HeaderImg,
+                FooterImg: FooterImg,
+                CompanySignature: CompanySignature,
+              }}
+            />,
+          ).toBlob();
+          const blobUrl = URL.createObjectURL(blob);
+
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = "Payslip.pdf";
+          document.body.appendChild(link); // ✅ Important
+          link.click();
+          document.body.removeChild(link); // ✅ Cleanup
+          URL.revokeObjectURL(blobUrl); // ✅ Cleanup
+        } catch (err) {
+          console.error("PDF generation failed", err);
+        } finally {
+          setPayLoading(false);
+        }
+      };
+
+      return (
+        <Tooltip title="Download Payslip PDF">
+          <IconButton color="info" size="small" onClick={handlePayPDFGET}>
+            {payloading ? (
+              <CircularProgress size={20} />
+            ) : (
+              <PictureAsPdfIcon color="error" />
+            )}
+          </IconButton>
+        </Tooltip>
+      );
+    };
 
     if (
       filter != "" &&
@@ -418,7 +498,6 @@ export const fetchExplorelitview =
       AccessID !== "TR131" &&
       AccessID !== "TR139" &&
       AccessID !== "TR367" &&
-      
       // AccessID !== "TR321" &&
       AccessID !== "TR326"
     ) {
@@ -586,8 +665,6 @@ export const fetchExplorelitview =
               exploreData.Data.columns.push(obj);
             }
 
-            
- 
             if (AccessID == "TR362" || AccessID === "TR364") {
               var obj = {};
               var currentRow = "";
@@ -597,7 +674,7 @@ export const fetchExplorelitview =
                 headerName: "Action",
                 width: 70,
                 align: "center",
-                headerAlign:"center",
+                headerAlign: "center",
                 sortable: false,
                 disableColumnMenu: true,
                 renderCell: (params) => {
@@ -607,13 +684,11 @@ export const fetchExplorelitview =
                         <IconButton
                           component="a"
                           onClick={() => {
-
-                            if(!params.row.Attachments){
+                            if (!params.row.Attachments) {
                               toast.error("No Document Avaliable!");
                               return;
                             }
-                            const fileUrl =
-                              `${store.getState().globalurl.attachmentUrl}/${params.row.Attachments}`;
+                            const fileUrl = `${store.getState().globalurl.attachmentUrl}/${params.row.Attachments}`;
 
                             // 👇 Detect file type
                             const lower = fileUrl.toLowerCase();
@@ -745,44 +820,48 @@ export const fetchExplorelitview =
               }
             }
 
-      if (AccessID == "TR367") {
-        exploreData.Data.columns = exploreData.Data.columns.filter(
-    col => col.field !== "action"
-  );
-       var obj = {};
-obj = {
-    field: "action",
-    headerName: "",
-    width: 50,
-    align: "center",
-    sortable: false,
-    disableColumnMenu: true,
+            if (AccessID == "TR367") {
+              exploreData.Data.columns = exploreData.Data.columns.filter(
+                (col) => col.field !== "action",
+              );
+              var obj = {};
+              obj = {
+                field: "action",
+                headerName: "",
+                width: 50,
+                align: "center",
+                sortable: false,
+                disableColumnMenu: true,
 
-    renderCell: (params) => {
-      return (
-        <Stack direction="row">
-          {params.row.Process === "P" ? (
-            <PayslipBtn
-              CompanyID={params.row.CompanyID}
-              EmployeeID={params.row.EmployeeID}
-              Finyear={params.row.Year}
-              Month={params.row.Month}
-            />
-          ) : (
-            <Tooltip title="Payslip Process pending">
-              <IconButton color="error" size="small" sx={{ opacity: 0.5 }}>
-                <PictureAsPdfIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Stack>
-      );
-    },
-  };
-// exploreData.Data.columns.splice(2, 0, obj);
-  // exploreData.Data.columns.push(obj);
-  exploreData.Data.columns.splice(15, 0, obj);
-}
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      {params.row.Process === "P" ? (
+                        <PayslipBtn
+                          CompanyID={params.row.CompanyID}
+                          EmployeeID={params.row.EmployeeID}
+                          Finyear={params.row.Year}
+                          Month={params.row.Month}
+                        />
+                      ) : (
+                        <Tooltip title="Payslip Process pending">
+                          <IconButton
+                            color="error"
+                            size="small"
+                            sx={{ opacity: 0.5 }}
+                          >
+                            <PictureAsPdfIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Stack>
+                  );
+                },
+              };
+              // exploreData.Data.columns.splice(2, 0, obj);
+              // exploreData.Data.columns.push(obj);
+              exploreData.Data.columns.splice(15, 0, obj);
+            }
           } else {
             if (AccessID == "TR077") {
               var object2 = {};
@@ -824,7 +903,6 @@ obj = {
               };
               exploreData.Data.columns.splice(4, 0, object2);
             }
- 
           }
           dispatch(
             Success({
