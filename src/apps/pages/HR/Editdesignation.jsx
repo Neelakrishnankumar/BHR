@@ -84,6 +84,7 @@ const Editdesignation = () => {
   const [laomode, setLaoMode] = useState("A");
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(10);
+
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
  const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -113,9 +114,9 @@ const Editdesignation = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
-  // useEffect(() => {
-  //   dispatch(getFetchData({ accessID, get: "get", recID }));
-  // }, [location.key]);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, [location.key]);
 
   useEffect(() => {
     if (show == "0") {

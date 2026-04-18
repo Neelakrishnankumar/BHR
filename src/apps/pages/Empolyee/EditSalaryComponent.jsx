@@ -225,6 +225,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
               sx={{ cursor: "default" }}
 
             >
+
               {getBusinessCaption("SalaryComponent", "Salary Component")}
             </Typography>
           </Box>
