@@ -281,6 +281,9 @@ const Editemployee = () => {
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
+  const [validationSchema22, setValidationSchema22] = useState(null);
+    const [errorSchema22, seterrorSchema22] = useState(null);
+
   const [validationSchema4, setValidationSchema4] = useState(null);
   const [validationSchema5, setValidationSchema5] = useState(null);
   const [validationSchema6, setValidationSchema6] = useState(null);
@@ -553,12 +556,16 @@ const Editemployee = () => {
 
 
   useEffect(() => {
+    console.log("-- calling valudation useeffect");
+    
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch validationcms.json");
         return res.json();
       })
       .then((data) => {
+        console.log(errorMsgData, "--display or not errorMsgData");
+        
         setErrorMsgData(data);
 
         //Employee
@@ -663,6 +670,14 @@ const Editemployee = () => {
         });
 
         setValidationSchema3(schema3);
+        //Resignation
+     const schema22 = Yup.object().shape({
+  exitinterviewby: Yup.object()
+    .nullable()
+    .required(data.Resignation.exitinterviewby),
+});
+
+        setValidationSchema22(schema22);
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -4201,7 +4216,10 @@ const Editemployee = () => {
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
-
+// if(values.exitinterviewby == ""){
+//   seterrorSchema22("Please Select the Exit Interview By");
+//   return;
+// }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -9351,7 +9369,7 @@ const Editemployee = () => {
             <Formik
               initialValues={resignationinitialvalues}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema22}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fnsaveresignation(values, resetForm, false);
@@ -9368,6 +9386,7 @@ const Editemployee = () => {
                 handleSubmit,
                 resetForm,
                 setFieldValue,
+                // setFieldTouched
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -9584,23 +9603,37 @@ const Editemployee = () => {
                         }
                         variant="outlined"
                         id="exitinterviewby"
-                        // value={exitinterviewbyLookup}
                         value={values.exitinterviewby}
                         onChange={(newValue) => {
                           setFieldValue("exitinterviewby", newValue);
                           console.log(newValue, "--newvalue exitinterviewby");
                           console.log(newValue.RecordID, "exitinterviewby RecordID");
-
-                          // SetGateLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
+                   
                         }}
+                        // error={!!errorSchema22}
+                        // helperText={errorSchema22}
                         error={!!touched.exitinterviewby && !!errors.exitinterviewby}
                         helperText={touched.exitinterviewby && errors.exitinterviewby}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
+                      {/* <CheckinAutocomplete
+  name="exitinterviewby"
+  label={
+    <span>
+      Exit Interview By
+      <span style={{ color: "red", fontSize: "20px" }}>*</span>
+    </span>
+  }
+  value={values.exitinterviewby}
+  onChange={(newValue) => {
+    setFieldValue("exitinterviewby", newValue);
+    setFieldTouched("exitinterviewby", true); // ✅ MUST
+  }}
+  onBlur={() => setFieldTouched("exitinterviewby", true)} // ✅ MUST
+  error={!!touched.exitinterviewby && !!errors.exitinterviewby}
+  helperText={touched.exitinterviewby && errors.exitinterviewby}
+  url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+/> */}
                     </FormControl>
 
                     <FormControl

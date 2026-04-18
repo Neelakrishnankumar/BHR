@@ -175,6 +175,9 @@
     "costofemployee": "Please enter the Cost to Budget",
     "costofcompany": "Please enter the Cost to Company"
   },
+  "Resignation": {
+"exitinterviewby": "Please Select the Exit Interview By"
+  },
   "ContractsIN": {
     "vendor": "Please enter the Vendor",
     "project": "Please enter the Project",
