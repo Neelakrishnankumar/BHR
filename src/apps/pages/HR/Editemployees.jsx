@@ -217,6 +217,7 @@ const Editemployee = () => {
   const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
   console.log("ResignationGetData", ResignationGetData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
+  const contactLoading = useSelector((state) => state.formApi.expgetLoading);
   const Inventorygrid1columns = useSelector(
     (state) => state.formApi.Inventorygrid1columns
   );
@@ -281,6 +282,9 @@ const Editemployee = () => {
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
+  const [validationSchema22, setValidationSchema22] = useState(null);
+  const [errorSchema22, seterrorSchema22] = useState(null);
+
   const [validationSchema4, setValidationSchema4] = useState(null);
   const [validationSchema5, setValidationSchema5] = useState(null);
   const [validationSchema6, setValidationSchema6] = useState(null);
@@ -553,12 +557,16 @@ const Editemployee = () => {
 
 
   useEffect(() => {
+    console.log("-- calling valudation useeffect");
+
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch validationcms.json");
         return res.json();
       })
       .then((data) => {
+        console.log(errorMsgData, "--display or not errorMsgData");
+
         setErrorMsgData(data);
 
         //Employee
@@ -701,6 +709,14 @@ const Editemployee = () => {
         });
 
         setValidationSchema3(schema3);
+        //Resignation
+        const schema22 = Yup.object().shape({
+          exitinterviewby: Yup.object()
+            .nullable()
+            .required(data.Resignation.exitinterviewby),
+        });
+
+        setValidationSchema22(schema22);
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -813,32 +829,33 @@ const Editemployee = () => {
         });
         setValidationSchema13(schema13);
         let schemaFields14 = {
-          name1: Yup.string()
-            .trim()
-            .required(data.Party.name),
+          name1: Yup.string().trim().required(data.PersonnelParent.name1),
+          address: Yup.string().trim().required(data.PersonnelParent.address),
 
-          mobilenumber: Yup.string()
-            .required(data.Party.mobilenumber)
-            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+          mobilenumber: Yup.string().required(data.PersonnelParent.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
 
+          // emailid: Yup.string()
+          //   .nullable()
+          //   .required(data.PersonnelParent.emailid)
+          //   .trim()
+          //   .test(
+          //     "email-or-empty",
+          //     "Invalid Email ID",
+          //     (value) => !value || Yup.string().email().isValidSync(value)
+          //   ),
           emailid: Yup.string()
-            .nullable()
-            .notRequired()
             .trim()
-            .test(
-              "email-or-empty",
-              "Invalid Email ID",
-              (value) => !value || Yup.string().email().isValidSync(value)
-            ),
+            .email("Invalid Email ID")
+            .required(data.PersonnelParent.emailid),
         };
 
         if (CompanyAutoCode === "N") {
           schemaFields14.code1 = Yup.string().required(data.Party.code);
         }
 
-        if (CompanyAutoCode === "N") {
-          schemaFields14.code = Yup.string().required(data.Party.code);
-        }
+        // if (CompanyAutoCode === "N") {
+        //   schemaFields14.code = Yup.string().required(data.Party.code);
+        // }
         const schema14 = Yup.object().shape(schemaFields14);
         setValidationSchema14(schema14);
 
@@ -1400,7 +1417,7 @@ const Editemployee = () => {
           "TR038",
           Subscriptionlastthree,
           "Skills",
-          `${recID} AND CompanyID=${CompanyID}`,
+          `parentID=${recID} AND CompanyID=${CompanyID}`,
           ""
         )
       );
@@ -1778,7 +1795,7 @@ const Editemployee = () => {
   };
 
   /******************************save  Function********** */
-  const fnProcess = async (values, resetForm, types) => {
+  const fnProcess = async (values, resetForm, types, filter) => {
 
 
     console.log(values);
@@ -1829,7 +1846,7 @@ const Editemployee = () => {
     const data = await dispatch(postApidata("TR038", type, saveData));
     if (data.payload.Status == "Y") {
       setLoading(false);
-      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
+      dispatch(fetchExplorelitview("TR038", Subscriptionlastthree, "Skills", `parentID=${recID} AND CompanyID=${CompanyID}`, ""));
       resetForm();
       toast.success(data.payload.Msg);
       // setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
@@ -1845,21 +1862,36 @@ const Editemployee = () => {
 
 
   const contactInitialvalues = {
-    Code: Data.Code,
-    Name: Data.Name,
-    phonenumber: DataExplore.PhoneNumber,
-    imageurl: viewImage,
-    email: DataExplore.Email,
-    aadharcardnumber: DataExplore.AadharCardNo,
-    pfnumber: DataExplore.PfNo,
-    esinumber: DataExplore.EsiNo,
-    permanentaddress: DataExplore.PermanentAddress,
-    localaddress: DataExplore.LocalAddress,
-    FatherName: DataExplore.FathersName,
-    AccountNumber: DataExplore.AccountNumber,
-    AccountHoldersName: DataExplore.AccountHoldersName,
-    IfscCode: DataExplore.IfscCode,
-    Branch: DataExplore.Branch,
+    // Code: Data.Code,
+    // Name: Data.Name,
+    // phonenumber: DataExplore.PhoneNumber,
+    // imageurl: viewImage,
+    // email: DataExplore.Email,
+    // aadharcardnumber: DataExplore.AadharCardNo,
+    // pfnumber: DataExplore.PfNo,
+    // esinumber: DataExplore.EsiNo,
+    // permanentaddress: DataExplore.PermanentAddress,
+    // localaddress: DataExplore.LocalAddress,
+    // FatherName: DataExplore.FathersName,
+    // AccountNumber: DataExplore.AccountNumber,
+    // AccountHoldersName: DataExplore.AccountHoldersName,
+    // IfscCode: DataExplore.IfscCode,
+    // Branch: DataExplore.Branch,
+    Code: Data?.Code || "",
+    Name: Data?.Name || "",
+    phonenumber: DataExplore?.PhoneNumber || "",
+    imageurl: viewImage || "",
+    email: DataExplore?.Email || "",
+    aadharcardnumber: DataExplore?.AadharCardNo || "",
+    pfnumber: DataExplore?.PfNo || "",
+    esinumber: DataExplore?.EsiNo || "",
+    permanentaddress: DataExplore?.PermanentAddress || "",
+    localaddress: DataExplore?.LocalAddress || "",
+    FatherName: DataExplore?.FathersName || "",
+    AccountNumber: DataExplore?.AccountNumber || "",
+    AccountHoldersName: DataExplore?.AccountHoldersName || "",
+    IfscCode: DataExplore?.IfscCode || "",
+    Branch: DataExplore?.Branch || "",
   };
 
 
@@ -1872,7 +1904,7 @@ const Editemployee = () => {
     setLoading(true);
 
     saveData = {
-      RecordID: DataExplore.RecordID,
+      RecordID: DataExplore?.RecordID || "-1",
       EmpRecordID: recID,
       PhoneNumber: values.phonenumber,
       Email: values.email,
@@ -4239,7 +4271,10 @@ const Editemployee = () => {
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
-
+    // if(values.exitinterviewby == ""){
+    //   seterrorSchema22("Please Select the Exit Interview By");
+    //   return;
+    // }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -5992,7 +6027,9 @@ const Editemployee = () => {
           false
         )}
         {show == "5" ? (
+
           <Paper elevation={3} sx={{ margin: "10px" }}>
+            {contactLoading ? <LinearProgress /> : null}
             <Formik
               initialValues={contactInitialvalues}
               enableReinitialize={true}
@@ -7116,6 +7153,7 @@ const Editemployee = () => {
                         }}
                         rows={explorelistViewData}
                         columns={columns1}
+                        loading={exploreLoading}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
@@ -9389,7 +9427,7 @@ const Editemployee = () => {
             <Formik
               initialValues={resignationinitialvalues}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema22}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fnsaveresignation(values, resetForm, false);
@@ -9406,6 +9444,7 @@ const Editemployee = () => {
                 handleSubmit,
                 resetForm,
                 setFieldValue,
+                // setFieldTouched
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -9612,33 +9651,48 @@ const Editemployee = () => {
                     >
                       <CheckinAutocomplete
                         name="exitinterviewby"
-                        label={
-                          <span>
-                            Exit Interview By
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
+                        label="Exit Interview By"
+                        // label={
+                        //   <span>
+                        //     Exit Interview By
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
                         variant="outlined"
                         id="exitinterviewby"
-                        // value={exitinterviewbyLookup}
                         value={values.exitinterviewby}
                         onChange={(newValue) => {
                           setFieldValue("exitinterviewby", newValue);
                           console.log(newValue, "--newvalue exitinterviewby");
                           console.log(newValue.RecordID, "exitinterviewby RecordID");
 
-                          // SetGateLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
                         }}
+                        // error={!!errorSchema22}
+                        // helperText={errorSchema22}
                         error={!!touched.exitinterviewby && !!errors.exitinterviewby}
                         helperText={touched.exitinterviewby && errors.exitinterviewby}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
+                      {/* <CheckinAutocomplete
+  name="exitinterviewby"
+  label={
+    <span>
+      Exit Interview By
+      <span style={{ color: "red", fontSize: "20px" }}>*</span>
+    </span>
+  }
+  value={values.exitinterviewby}
+  onChange={(newValue) => {
+    setFieldValue("exitinterviewby", newValue);
+    setFieldTouched("exitinterviewby", true); // ✅ MUST
+  }}
+  onBlur={() => setFieldTouched("exitinterviewby", true)} // ✅ MUST
+  error={!!touched.exitinterviewby && !!errors.exitinterviewby}
+  helperText={touched.exitinterviewby && errors.exitinterviewby}
+  url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+/> */}
                     </FormControl>
 
                     <FormControl
@@ -11566,6 +11620,19 @@ const Editemployee = () => {
                   Fnsave(values);
                 }, 100);
               }}
+            // onSubmit={(values, actions) => {
+            //   actions.setTouched({
+            //     code1: true,
+            //     name1: true,
+            //     mobilenumber: true,
+            //     emailid: true,
+            //     address: true,
+            //   });
+
+            //   if (Object.keys(actions.errors || {}).length > 0) return;
+
+            //   Fnsave(values);
+            // }}
             >
               {({
                 errors,
@@ -11577,7 +11644,9 @@ const Editemployee = () => {
                 handleSubmit,
                 setFieldValue,
               }) => (
-                <form onSubmit={handleSubmit}>
+                <form
+                  onSubmit={handleSubmit}>
+                  {/* {JSON.stringify(errors)} */}
                   <Box
                     display="grid"
                     gap={formGap}
@@ -11709,7 +11778,15 @@ const Editemployee = () => {
                       name="emailid"
                       type="text"
                       id="emailid"
-                      label="Email ID"
+                      // label="Email ID"
+                      label={
+                        <>
+                          Email ID
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.emailid}
@@ -11730,7 +11807,15 @@ const Editemployee = () => {
                       name="address"
                       type="text"
                       id="address"
-                      label="Address"
+                      // label="Address"
+                      label={
+                        <>
+                          Address
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       multiline
@@ -11738,8 +11823,8 @@ const Editemployee = () => {
                       value={values.address}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // error={!!touched.address && !!errors.address}
-                      // helperText={touched.address && errors.address}
+                      error={!!touched.address && !!errors.address}
+                      helperText={touched.address && errors.address}
                       sx={{
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
@@ -12771,8 +12856,8 @@ const Editemployee = () => {
                         {/* <MenuItem value="WS">Week</MenuItem> */}
                         <MenuItem value="MS">Month</MenuItem>
                         {is003Subscription && [
-                          <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                           <MenuItem key="TF" value="TF">Term Fees</MenuItem>,
+                          <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                         ]}
                       </TextField>
                       <TextField
@@ -12848,40 +12933,7 @@ const Editemployee = () => {
                         // multiline
                         inputProps={{ maxLength: 90 }}
                       />
-                      {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
-                        <TextField
-                          name="DueDate"
-                          type="date"
-                          id="DueDate"
-                          label="Due Date"
-                          variant="standard"
-                          focused
-                          value={values.DueDate}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const { name, value } = e.target;
-                        //   setFieldValue(name, value);
 
-                        //   // 🔁 Run same logic if ToDate already exists
-                        //   if (values.ToPeriod) {
-                        //     const toDate = new Date(values.ToPeriod);
-                        //     const fromDate = new Date(value);
-
-                        //     // Renewal days
-                        //     const diffDays = differenceInDays(toDate, fromDate);
-                        //     setFieldValue("RenewableNotification", diffDays);
-
-                        //     // Notification Alert Date (still based on ToDate)
-                        //     const alertDate = subDays(toDate, 1);
-                        //     setFieldValue(
-                        //       "NotificationAlertDate",
-                        //       alertDate.toISOString().split("T")[0]
-                        //     );
-                        //   }
-                        // }}
-                        />
-                      )}
 
                       <TextField
                         select
@@ -13169,6 +13221,40 @@ const Editemployee = () => {
                           }
                         }}
                       />
+                      {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
+                        <TextField
+                          name="DueDate"
+                          type="date"
+                          id="DueDate"
+                          label="Due Date"
+                          variant="standard"
+                          focused
+                          value={values.DueDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        // onChange={(e) => {
+                        //   const { name, value } = e.target;
+                        //   setFieldValue(name, value);
+
+                        //   // 🔁 Run same logic if ToDate already exists
+                        //   if (values.ToPeriod) {
+                        //     const toDate = new Date(values.ToPeriod);
+                        //     const fromDate = new Date(value);
+
+                        //     // Renewal days
+                        //     const diffDays = differenceInDays(toDate, fromDate);
+                        //     setFieldValue("RenewableNotification", diffDays);
+
+                        //     // Notification Alert Date (still based on ToDate)
+                        //     const alertDate = subDays(toDate, 1);
+                        //     setFieldValue(
+                        //       "NotificationAlertDate",
+                        //       alertDate.toISOString().split("T")[0]
+                        //     );
+                        //   }
+                        // }}
+                        />
+                      )}
                       <TextField
                         name="NotificationAlertDate"
                         type="date"
