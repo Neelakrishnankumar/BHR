@@ -633,21 +633,27 @@ const Editemployee = () => {
         setValidationSchema1(schema1);
 
         //Deployment
-        const schema2 = Yup.object().shape({
+        let schemaFields5 = {
           location: Yup.object().required(data.Deployment.location).nullable(),
+
           Designation: Yup.object()
             .nullable()
             .required(data.Deployment.Designation),
-          // function: Yup.object().required(data.Deployment.function).nullable(),
-          gate: Yup.object().required(data.Deployment.gate).nullable(),
-          shift: Yup.object().required(data.Deployment.shift).nullable(),
-          // costofemployee: Yup.string().required(data.Deployment.costofemployee),
-          // costofcompany: Yup.string().required(data.Deployment.costofcompany),
 
-          exitinterviewby: Yup.object()
-            .nullable()
-            .required(data.exitinterviewby.Designation),
+          gate: Yup.object().required(data.Deployment.gate).nullable(),
+        };
+
+        // ✅ Add shift only when subscription is true
+        if (is003Subscription != true) {
+          schemaFields5.shift = Yup.object()
+            .required(data.Deployment.shift)
+            .nullable();
+        }
+
+        const schema2 = Yup.object().shape({
+          ...schemaFields5,   // ✅ IMPORTANT FIX
         });
+
         setValidationSchema2(schema2);
 
         //Skills
@@ -1287,8 +1293,8 @@ const Editemployee = () => {
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
       }
       else if (values.delete === true) {
-    navigate(-1); // 👈 go back
-  }
+        navigate(-1); // 👈 go back
+      }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
@@ -4137,8 +4143,8 @@ const Editemployee = () => {
       ShiftID2: values.shift2?.RecordID || 0,
       TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
       RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
-      ShiftCode: values.shift.Code || "",
-      ShiftName: values.shift.Name || "",
+      ShiftCode: values?.shift?.Code || "",
+      ShiftName: values?.shift?.Name || "",
 
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
@@ -4243,10 +4249,10 @@ const Editemployee = () => {
       // OnsiteActivityRole: values.onsiterole,
       OnsiteActivityRole: deploymentData.OnsiteActivityRole || "Project",
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
-      CostOfBudget: values.costofemployee,
+      CostOfBudget: values.costofemployee || 0,
       CostOfCompany: values.costofcompany || 0,
       CostOfCompanyHours: values.costofcompanyhour || 0,
-      CostOfBudgetHours: values.costofbudgethour,
+      CostOfBudgetHours: values.costofbudgethour || 0,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -4863,7 +4869,7 @@ const Editemployee = () => {
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
                     {is003Subscription === false ? (<MenuItem value={20}>Inventory</MenuItem>) : null}
                     <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
-                     {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
+                    {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
                     {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
@@ -8162,7 +8168,7 @@ const Editemployee = () => {
             <Formik
               initialValues={deploymentInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema2}
+              validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fndeployment(values, resetForm, false);
@@ -8187,6 +8193,7 @@ const Editemployee = () => {
                     resetForm();
                   }}
                 >
+                  {JSON.stringify(errors)}
                   <Box
                     display="grid"
                     gap={formGap}
@@ -9085,154 +9092,154 @@ const Editemployee = () => {
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   {is003Subscription === false ? (
                     <>
-                  <Typography variant="h5" padding={1}>
-                    Costing
-                  </Typography>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofcompany"
-                      name="costofcompany"
-                      value={values.costofcompany}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Company"
-                      // label={
-                      //   <>
-                      //     Cost to Company
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </>
-                      // }
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff",
-                        },
-                      }}
-                      focused
-                      error={!!touched.costofcompany && !!errors.costofcompany}
-                      helperText={touched.costofcompany && errors.costofcompany}
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
+                      <Typography variant="h5" padding={1}>
+                        Costing
+                      </Typography>
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
                           },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofemployee"
-                      name="costofemployee"
-                      value={values.costofemployee}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Budget"
-                      // label={
-                      //   <>
-                      //     Cost to Budget
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </>
-                      // }
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      error={
-                        !!touched.costofemployee && !!errors.costofemployee
-                      }
-                      helperText={
-                        touched.costofemployee && errors.costofemployee
-                      }
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofcompanyhour"
-                      name="costofcompanyhour"
-                      value={values.costofcompanyhour}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Company(Hours)"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff",
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofbudgethour"
-                      name="costofbudgethour"
-                      value={values.costofbudgethour}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost to Budget(Hours)"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                  </Box>
-                  </>
-                  ): null}
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofcompany"
+                          name="costofcompany"
+                          value={values.costofcompany}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Company"
+                          // label={
+                          //   <>
+                          //     Cost to Company
+                          //     <span style={{ color: "red", fontSize: "20px" }}>
+                          //       *
+                          //     </span>
+                          //   </>
+                          // }
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          error={!!touched.costofcompany && !!errors.costofcompany}
+                          helperText={touched.costofcompany && errors.costofcompany}
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofemployee"
+                          name="costofemployee"
+                          value={values.costofemployee}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Budget"
+                          // label={
+                          //   <>
+                          //     Cost to Budget
+                          //     <span style={{ color: "red", fontSize: "20px" }}>
+                          //       *
+                          //     </span>
+                          //   </>
+                          // }
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          error={
+                            !!touched.costofemployee && !!errors.costofemployee
+                          }
+                          helperText={
+                            touched.costofemployee && errors.costofemployee
+                          }
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofcompanyhour"
+                          name="costofcompanyhour"
+                          value={values.costofcompanyhour}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Company(Hours)"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="costofbudgethour"
+                          name="costofbudgethour"
+                          value={values.costofbudgethour}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Cost to Budget(Hours)"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </>
+                  ) : null}
                   <Box
                     display="flex"
                     justifyContent="end"

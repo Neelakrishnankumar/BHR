@@ -217,7 +217,7 @@ const Editdept = () => {
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
-      navigate(`/Apps/TR026/Department`);
+      navigate(-1);
     } else {
       toast.error(data.payload.Msg);
       setLoading(false);
