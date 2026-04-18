@@ -7103,7 +7103,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditPersonnel/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       EmpName: params.row.Name,
