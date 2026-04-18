@@ -3846,13 +3846,13 @@ const Editemployee = () => {
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     costofemployee: deploymentData.CostOfBudget || 0,
     costofcompany: deploymentData.CostOfCompany || 0,
-    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00,
+    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00, 
     costofcompanyhour: deploymentData.CostOfCompanyHours || 0.00,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
-    HorizontalMimNo: deploymentData.HorizontalMimNo || 1,
-    VerticalMimNo: deploymentData.VerticalMimNo || 3,
+    HorizontalMimNo: deploymentData.HorizontalMimNo || "",
+    VerticalMimNo: deploymentData.VerticalMimNo || "",
     AutoApprovalYesOrNo:
       deploymentData.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: deploymentData.ApprovelTolerance,
@@ -4047,6 +4047,9 @@ const Editemployee = () => {
     if (response.payload.Status == "Y") {
       dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
+      setTimeout(() => {
+        navigate("/Apps/TR027/Personnel");
+      }, 4000);
     } else {
       toast.error(response.payload.Msg);
     }

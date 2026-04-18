@@ -112,6 +112,9 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 import OrderHeaderModal from "../../apps/pages/Modals/OrderHeaderModal";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import ResetPartyOrder from "../../apps/pages/Modals/ResetPartyOrder";
+import StaffTimetableModal from "../../apps/pages/Modals/StaffTimetableModal";
+import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -538,7 +541,7 @@ export const fetchListview =
     console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
     const LoginID = sessionStorage.getItem("loginrecordID");
     const empID = sessionStorage.getItem("empID");
-  
+
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -1936,6 +1939,7 @@ export const fetchListview =
             AccessID == "TR324" ||
             AccessID == "TR328" ||
             AccessID == "TR361" ||
+            AccessID == "TR027" ||
             AccessID == "TR319"
           ) {
             obj = {
@@ -1959,9 +1963,7 @@ export const fetchListview =
                 />
               ),
             };
-          } else if (
-            AccessID == "TR321"
-          ) {
+          } else if (AccessID == "TR321") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1982,8 +1984,7 @@ export const fetchListview =
                 />
               ),
             };
-          }
-          else if (
+          } else if (
             AccessID == "TR336" ||
             AccessID == "TR338" ||
             AccessID == "TR339" ||
@@ -2557,8 +2558,8 @@ export const fetchListview =
                 );
               },
             };
-          } 
-          
+          }
+
           // else if (AccessID === "TR321") {
           //   obj = {
           //     field: "action",
@@ -4037,71 +4038,72 @@ export const fetchListview =
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={
-                          AccessID === "TR027"
+                          // AccessID === "TR027"
+                          //   ? {
+                          //       EmpName: params.row.Name,
+                          //       Employee: params.row.Employee,
+                          //       BreadCrumb1: params.row.Description,
+                          //     }
+                          //   :
+                          AccessID === "TR128"
                             ? {
-                                EmpName: params.row.Name,
-                                Employee: params.row.Employee,
-                                BreadCrumb1: params.row.Description,
+                                LocationName: params.row.Name,
+                                CompanyName: params.row.CompanyName,
                               }
-                            : AccessID === "TR128"
+                            : AccessID === "TR127"
                               ? {
-                                  LocationName: params.row.Name,
+                                  GateName: params.row.Name,
+                                  LocationName: params.row.LocationName,
                                   CompanyName: params.row.CompanyName,
                                 }
-                              : AccessID === "TR127"
+                              : AccessID === "TR257"
                                 ? {
-                                    GateName: params.row.Name,
-                                    LocationName: params.row.LocationName,
-                                    CompanyName: params.row.CompanyName,
+                                    EmpName: params.row.Name,
                                   }
-                                : AccessID === "TR257"
+                                : AccessID === "TR132"
                                   ? {
-                                      EmpName: params.row.Name,
+                                      proName: params.row.ProjectName,
+                                      Date: params.row.Date,
+                                      EmpName: params.row.EmployeeName,
+                                      Locname: params.row.LocationName,
                                     }
-                                  : AccessID === "TR132"
+                                  : AccessID === "TR123"
                                     ? {
-                                        proName: params.row.ProjectName,
-                                        Date: params.row.Date,
-                                        EmpName: params.row.EmployeeName,
-                                        Locname: params.row.LocationName,
+                                        EmpName: params.row.Name,
                                       }
-                                    : AccessID === "TR123"
+                                    : AccessID === "TR134"
                                       ? {
-                                          EmpName: params.row.Name,
+                                          proName: params.row.ProjectName,
+                                          EmpName: params.row.EmployeeName,
+                                          Date: params.row.Date,
+                                          Locname: params.row.LocationName,
+                                          EmployeeID: params.row.EmployeesID,
+                                          checkinID: params.row.CheckinID,
                                         }
-                                      : AccessID === "TR134"
+                                      : AccessID === "TR124"
                                         ? {
-                                            proName: params.row.ProjectName,
                                             EmpName: params.row.EmployeeName,
-                                            Date: params.row.Date,
-                                            Locname: params.row.LocationName,
-                                            EmployeeID: params.row.EmployeesID,
                                             checkinID: params.row.CheckinID,
                                           }
-                                        : AccessID === "TR124"
-                                          ? {
-                                              EmpName: params.row.EmployeeName,
-                                              checkinID: params.row.CheckinID,
-                                            }
-                                          : // : AccessID === "TR127"
-                                            // ? {
-                                            //     GateName: params.row.Name,
-                                            //     LocationName: params.row.LocationName,
-                                            //     CompanyName: params.row.CompanyName,
-                                            //   }
-                                            // : AccessID === "TR129"
-                                            // ? {
-                                            //     bin: params.row.Name,
-                                            //     LocationName: params.row.LocationName,
-                                            //     CompanyName: params.row.CompanyName,
-                                            //   }
-                                            {
-                                              CustomerID:
-                                                params.row.CustomerRecordID,
-                                              ProductID:
-                                                params.row.ProductRecordID,
-                                              BomID: params.row.BomRecordID,
-                                            }
+                                        : // : AccessID === "TR127"
+                                          // ? {
+                                          //     GateName: params.row.Name,
+                                          //     LocationName: params.row.LocationName,
+                                          //     CompanyName: params.row.CompanyName,
+                                          //   }
+                                          // : AccessID === "TR129"
+                                          // ? {
+                                          //     bin: params.row.Name,
+                                          //     LocationName: params.row.LocationName,
+                                          //     CompanyName: params.row.CompanyName,
+                                          //   }
+                                          {
+                                            CustomerID:
+                                              params.row.CustomerRecordID,
+                                            ProductID:
+                                              params.row.ProductRecordID,
+                                            BomID: params.row.BomRecordID,
+                                          }
                         }
                       >
                         <Tooltip title="Edit">
@@ -5349,36 +5351,37 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
-                      ) : AccessID == "TR027" ? (
-                        <Box>
-                          <Link
-                            to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                            state={{
-                              EmpName: params.row.Name,
-                              Employee: params.row.Employee,
-                            }}
-                          >
-                            <Tooltip title="Image upload">
-                              <IconButton color="info" size="small">
-                                <AddPhotoAlternateIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                          <Link
-                            to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                            state={{
-                              EmpName: params.row.Name,
-                              Employee: params.row.Personnel,
-                            }}
-                          >
-                            <Tooltip title="Leave Enquiry">
-                              <IconButton color="info" size="small">
-                                <EventNoteIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        </Box>
-                      ) : AccessID == "TR003" ? (
+                      ) : //  : AccessID == "TR027" ? (
+                      //   <Box>
+                      //     <Link
+                      //       to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                      //       state={{
+                      //         EmpName: params.row.Name,
+                      //         Employee: params.row.Employee,
+                      //       }}
+                      //     >
+                      //       <Tooltip title="Image upload">
+                      //         <IconButton color="info" size="small">
+                      //           <AddPhotoAlternateIcon />
+                      //         </IconButton>
+                      //       </Tooltip>
+                      //     </Link>
+                      //     <Link
+                      //       to={`/Apps/leaveenquiry/${params.row.RecordID}`}
+                      //       state={{
+                      //         EmpName: params.row.Name,
+                      //         Employee: params.row.Personnel,
+                      //       }}
+                      //     >
+                      //       <Tooltip title="Leave Enquiry">
+                      //         <IconButton color="info" size="small">
+                      //           <EventNoteIcon />
+                      //         </IconButton>
+                      //       </Tooltip>
+                      //     </Link>
+                      //   </Box>
+                      // )
+                      AccessID == "TR003" ? (
                         <Link
                           to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
                         >
@@ -5659,7 +5662,10 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 navigate(
                   `./EditListOfQuestionGroups/${params.row.RecordID}/E`,
                   {
-                    state: { ...state },
+                    state: {
+                      ...state,
+                      FullyAutomatic: params.row.FullyAutomatic,
+                    },
                   },
                 )
               }
@@ -6134,7 +6140,11 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             // }
             onClick={() =>
               navigate(`./TR281/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb3: params.row.Name },
+                state: {
+                  ...state,
+                  BreadCrumb3: params.row.Name,
+                  FullyAutomatic: params.row.FullyAutomatic,
+                },
               })
             }
           >
@@ -6307,6 +6317,9 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+
+  const [STmodalOpen, setSTModalOpen] = useState(false);
+  const [STselectedRow, setSTSelectedRow] = useState(null);
 
   const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
@@ -7069,6 +7082,75 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Box>
         )}
 
+        {accessID === "TR027" && (
+          <Box>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      EmpName: params.row.Name,
+                      Employee: params.row.Employee,
+                      BreadCrumb1: params.row.Description,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Link
+              to={`/Apps/${screenName}/imageupload/${accessID}/${params.row.RecordID}`}
+              state={{
+                EmpName: params.row.Name,
+                Employee: params.row.Employee,
+              }}
+            >
+              <Tooltip title="Image upload">
+                <IconButton color="info" size="small">
+                  <AddPhotoAlternateIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+              to={`/Apps/leaveenquiry/${params.row.RecordID}`}
+              state={{
+                EmpName: params.row.Name,
+                Employee: params.row.Personnel,
+              }}
+            >
+              <Tooltip title="Leave Enquiry">
+                <IconButton color="info" size="small">
+                  <EventNoteIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Tooltip title="Staff Calendar">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() => {
+                  setSTSelectedRow(params.row);
+                  setSTModalOpen(true);
+                }}
+              >
+                <PermContactCalendarOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+
+            <StaffTimetableModal
+              open={STmodalOpen}
+              onClose={() => {
+                setSTModalOpen(false);
+                setSTSelectedRow(null);
+              }}
+              rowData={selectedRow}
+            />
+          </Box>
+        )}
       </div>
     </Fragment>
   );
@@ -7099,133 +7181,133 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
         {accessID === "TR321" && (
-           <Box>
-                    {/* Edit Button */}
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.Party,
-                        PName: params.row.Name,
-                        Count: params.row.MarketingCount,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          <Box>
+            {/* Edit Button */}
+            <Link
+              to={`./Edit${screenName}/${params.row.RecordID}/E`}
+              state={{
+                PartyName: params.row.Party,
+                PName: params.row.Name,
+                Count: params.row.MarketingCount,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
 
-                    {/* Leader Button */}
-                    <Link
-                      to={
-                        count >= 1
-                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Leads">
-                        <IconButton color="info" size="small">
-                          <Diversity2Icon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+            {/* Leader Button */}
+            <Link
+              to={
+                count >= 1
+                  ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                  : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+              }
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Tooltip title="Leads">
+                <IconButton color="info" size="small">
+                  <Diversity2Icon />
+                </IconButton>
+              </Tooltip>
+            </Link>
 
-                    {/* ORDER HEADER */}
-                    {/* {params.row.LeaderCount >= 1 ? ( */}
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-                      // }
-                      to={
-                        params.row.OrderCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Order">
-                        <IconButton color="info" size="small">
-                          <CategoryIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+            {/* ORDER HEADER */}
+            {/* {params.row.LeaderCount >= 1 ? ( */}
+            <Link
+              // to={
+              //   params.row.OrdHdrCount > 0
+              //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+              //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+              // }
+              to={
+                params.row.OrderCount > 0
+                  ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+                  : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+              }
+              state={{
+                PartyID: params.row.RecordID,
+                PartyName: params.row.Name,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Tooltip title="Order">
+                <IconButton color="info" size="small">
+                  <CategoryIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
 
-                    {/* FOR QUOTATION */}
-                    <Link
-                      to={
-                        params.row.QuotationCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Quotation">
-                        <IconButton color="info" size="small">
-                          <RequestQuoteOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    {/* ) : null} */}
+            {/* FOR QUOTATION */}
+            <Link
+              to={
+                params.row.QuotationCount > 0
+                  ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+                  : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+              }
+              state={{
+                PartyID: params.row.RecordID,
+                PartyName: params.row.Name,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Tooltip title="Quotation">
+                <IconButton color="info" size="small">
+                  <RequestQuoteOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            {/* ) : null} */}
 
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+            <Link
+              // to={
+              //   params.row.OrdHdrCount > 0
+              //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
 
-                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+              //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
 
-                      //   }
-                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Advance Payment">
-                        <IconButton color="info" size="small">
-                          <CurrencyRupeeOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+              //   }
+              to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+              state={{
+                PartyID: params.row.RecordID,
+                PartyName: params.row.Name,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Tooltip title="Advance Payment">
+                <IconButton color="info" size="small">
+                  <CurrencyRupeeOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
 
-                    {/* RESET FOR PARTY */}
+            {/* RESET FOR PARTY */}
 
-                    <Tooltip title="Reset">
-                      <IconButton
-                        color="error"
-                        size="small"
-                        onClick={() => {
-                          setSelectedRow(params.row);
-                          setModalOpen(true);
-                        }}
-                      >
-                        <RestartAltOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <ResetPartyOrder
-                      open={modalOpen}
-                      onClose={() => {
-                        setModalOpen(false);
-                        setSelectedRow(null);
-                      }}
-                      rowData={selectedRow}
-                      EmployeeID={EmployeeID}
-                      CompanyID={CompanyID}
-                    />
-                  </Box>
+            <Tooltip title="Reset">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => {
+                  setSelectedRow(params.row);
+                  setModalOpen(true);
+                }}
+              >
+                <RestartAltOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <ResetPartyOrder
+              open={modalOpen}
+              onClose={() => {
+                setModalOpen(false);
+                setSelectedRow(null);
+              }}
+              rowData={selectedRow}
+              EmployeeID={EmployeeID}
+              CompanyID={CompanyID}
+            />
+          </Box>
         )}
       </div>
     </Fragment>

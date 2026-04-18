@@ -701,7 +701,8 @@ const DATA_ROWS_PER_PAGE = 11; // 11 + Total + Summary = 13 rows
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 70,
+    // paddingTop: 70,
+    paddingTop: 50,
     paddingHorizontal: 20,
     paddingBottom: 60,
     fontSize: 9,
@@ -711,6 +712,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "bold",
+    marginTop: 15,
     marginBottom: 15,
   },
 
@@ -718,6 +720,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "bold",
     marginBottom: 6,
+    marginTop: 15,
   },
 
   table: {
@@ -731,19 +734,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#000",
     minHeight: 20,
-    alignItems: "center",
+    // alignItems: "center",
+    alignItems: "stretch",
   },
 
   headerCell: {
-    padding: 4,
+    // padding: 4,
+    paddingVertical: 3,
+    paddingHorizontal: 3,
     fontWeight: "bold",
     backgroundColor: "#f0f0f0",
-    borderRightWidth: 1,
-    borderColor: "#000",
+    // borderRightWidth: 1,
+    // borderColor: "#000",
     textAlign: "center",
   },
   headerCellStatus: {
-    padding: 4,
+    // padding: 4,
+    paddingVertical: 3,
+    paddingHorizontal: 3,
     fontWeight: "bold",
     backgroundColor: "#f0f0f0",
     // borderRightWidth: 1,
@@ -752,8 +760,19 @@ const styles = StyleSheet.create({
   },
 
   cell: {
-    padding: 4,
-    borderRightWidth: 1,
+    // padding: 4,
+    // padding: 2,
+    // border: 1,
+    // borderRightWidth: 1,
+    // borderColor: "#000",
+    paddingVertical: 3,
+    paddingHorizontal: 3,
+    height: "100%",
+
+  },
+  cell1: {
+    padding: 0.5,
+    border: 1,
     borderColor: "#000",
   },
 
@@ -778,7 +797,15 @@ const styles = StyleSheet.create({
     top: 15,
     left: 20,
     right: 20,
-    height: 50,
+    // height: 50,
+  },
+  headerContainer: {
+    position: "absolute",
+    top: 5,          // 🔥 move closer to top
+    left: 0,
+    right: 0,
+    bottom: 10,
+    alignItems: "center",
   },
 
   footerWrapper: {
@@ -787,6 +814,12 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     height: 60,
+  },
+  logo: {
+    width: 70,
+    height: "auto",
+    // marginLeft: "5px",
+    objectFit: "contain",
   },
 });
 
@@ -868,7 +901,7 @@ const OrdEnqProductPDF = ({ data = [], filters = {} }) => {
               (sum, r) => sum + Number(r.Amount || 0),
               0
             );
-
+            const isLastPage = chunkIndex === chunks.length - 1;
             return (
               <Page
                 key={`${productIndex}-${chunkIndex}`}
@@ -877,14 +910,16 @@ const OrdEnqProductPDF = ({ data = [], filters = {} }) => {
                 style={styles.page}
               >
                 {/* HEADER */}
-                <View fixed style={styles.headerWrapper}>
+                {/* <View fixed style={styles.headerWrapper}> */}
+                <View style={styles.headerContainer} fixed>
                   {filters.HeaderImg && (
                     <Image
                       src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                      style={{ width: "100%", height: 50 }}
+                      style={styles.logo}
                     />
                   )}
                 </View>
+
 
                 {/* TITLE ONLY FIRST PAGE */}
                 {productIndex === 0 && chunkIndex === 0 && (
@@ -895,73 +930,175 @@ const OrdEnqProductPDF = ({ data = [], filters = {} }) => {
 
                 {/* PRODUCT NAME */}
                 <Text style={styles.overheadTitle}>
-                  Product Name : {productName}
+                  Product Name : {productName || ""}
                 </Text>
 
                 {/* TABLE */}
                 <View style={styles.table} wrap={false}>
                   {/* HEADER */}
                   <View style={styles.tableRow}>
-                    <Text style={[styles.headerCell, { flex: 0.5 }]}>SL#</Text>
-                    <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
-                    <Text style={[styles.headerCell, { flex: 3.5 }]}>Party</Text>
-                    <Text style={[styles.headerCell, { flex: 0.6 }]}>Qty</Text>
-                    <Text style={[styles.headerCell, { flex: 0.8 }]}>Rate</Text>
-                    <Text style={[styles.headerCell, { flex: 0.9 }]}>Disc</Text>
-                    <Text style={[styles.headerCell, { flex: 0.9 }]}>Value</Text>
-                    <Text style={[styles.headerCellStatus, { flex: 1.5 }]}>Status</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 0.5, borderRightWidth: 1,
+                      // borderColor: "#000",
+                    }]}>SL#</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 1, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Date</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 3.5, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Party</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 0.6, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Qty</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 0.8, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Rate</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 0.9, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Disc</Text>
+                    <Text style={[styles.headerCell, {
+                      flex: 0.9, borderRightWidth: 1,
+                      // borderColor: "#000"
+                    }]}>Value</Text>
+                    <Text style={[styles.headerCellStatus, {
+                      flex: 1.5, borderRightWidth: 0,
+                      // borderColor: "#000"
+                    }]}>Status</Text>
                   </View>
 
                   {/* DATA ROWS */}
                   {chunk.map((row, i) => (
-                    <View key={i} style={styles.tableRow}>
-                      <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
+                    <View key={i} style={[styles.tableRow]}>
+                      <Text style={[styles.cell, {
+                        flex: 0.5, textAlign: "center",
+                        borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
                         {chunkIndex * DATA_ROWS_PER_PAGE + i + 1}
                       </Text>
-                      <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
-                        {formatDate(row.OROrderDate)}
+                      <Text style={[styles.cell, {
+                        flex: 1, textAlign: "center", borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {formatDate(row.OROrderDate || "")}
                       </Text>
-                      <Text style={[styles.cell, { flex: 3.5 }]}>
-                        {row.Party}
+                      <Text style={[styles.cell, {
+                        flex: 3.5, borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {row.Party || ""}
                       </Text>
-                      <Text style={[styles.cell, { flex: 0.6, textAlign: "right" }]}>
-                        {row.Quantity}
+                      <Text style={[styles.cell, {
+                        flex: 0.6, textAlign: "right", borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {row.Quantity || ""}
                       </Text>
-                      <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>
-                        {row.Price}
+                      <Text style={[styles.cell, {
+                        flex: 0.8, textAlign: "right", borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {row.Price || ""}
                       </Text>
-                      <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>
-                        {row.Discount}
+                      <Text style={[styles.cell, {
+                        flex: 0.9, textAlign: "right", borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {row.Discount || ""}
                       </Text>
-                      <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>
-                        {row.Amount}
+                      <Text style={[styles.cell, {
+                        flex: 0.9, textAlign: "right", borderRightWidth: 1,
+                        // borderColor: "#000"
+                      }]}>
+                        {row.Amount.toFixed(2) || ""}
                       </Text>
-                      <Text style={[styles.cell, { flex: 1.5, borderRightWidth: 0 }]}>
-                        {row.Status}
+                      <Text style={[styles.cell, { flex: 1.5, borderRightWidth: 0, }]}>
+                        {row.Status || ""}
                       </Text>
                     </View>
                   ))}
 
                   {/* TOTAL ROW */}
-                  <View style={styles.tableRow}>
-                    <Text style={[styles.cell, { flex: 6.3 }]} />
+                  {/* <View style={styles.tableRow}>
+                    <Text style={[styles.cell, {
+                      //  flex: 6.3
+                      flex: 8.2
+
+                    }]} />
                     <Text
                       style={[
                         styles.cell,
-                        { flex: 1.5, textAlign: "right", fontWeight: "bold", borderRightWidth: 0 },
+                        {
+                          // flex: 1.5, 
+                          flex: 1.5,
+                          textAlign: "right",
+                          fontWeight: "bold",
+                          borderRightWidth: 0
+                        },
                       ]}
                     >
+                      {pageTotal.toFixed(2)}
+                    </Text>
+                  </View> */}
+                  <View style={[styles.tableRow, { borderBottomWidth: 0 }]}>
+                    {/* 🔥 MERGED LEFT SIDE */}
+                    <Text
+                      style={[
+                        styles.cell,
+                        {
+                          flex: 7.3,                 // ✅ sum of first 6 columns
+                          textAlign: "right",
+                          fontWeight: "bold",
+                          // borderRightWidth: 1,       // ✅ only one divider before value
+                        },
+                      ]}
+                    >
+                      {/* Total */}
+                    </Text>
+
+                    {/* VALUE COLUMN */}
+                    <Text
+                      style={[
+                        styles.cell,
+                        {
+                          flex: 0.9,
+                          textAlign: "right",
+                          fontWeight: "bold",
+                          // borderRightWidth: 1,
+                        },
+                      ]}
+                    >
+
+                    </Text>
+
+                    {/* STATUS COLUMN */}
+                    <Text style={[styles.cell, {
+                      flex: 1.5, textAlign: "right",
+                      fontWeight: "bold",
+                    }]}>
                       {pageTotal.toFixed(2)}
                     </Text>
                   </View>
                 </View>
 
                 {/* SUMMARY LINE */}
+                {/* <View style={styles.summaryRow}>
+                  <Text>Product Name : {productName}</Text>
+                  <Text>Transaction Count : {totalTransactions}</Text>
+                  <Text>Total Amount : {totalAmount.toFixed(2)}</Text>
+                </View> */}
+                {isLastPage && (
                 <View style={styles.summaryRow}>
                   <Text>Product Name : {productName}</Text>
                   <Text>Transaction Count : {totalTransactions}</Text>
                   <Text>Total Amount : {totalAmount.toFixed(2)}</Text>
                 </View>
+                )}
 
                 {/* FOOTER */}
                 <View fixed style={styles.footerWrapper}>

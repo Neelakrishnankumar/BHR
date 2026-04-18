@@ -235,6 +235,7 @@ const CreateCompliance = () => {
       //Noofquestion: "0",
       Duration: values.Duration,
       Permittedtimes: values.Permittedtimes,
+      FullyAutomatic: values.FullyAutomatic === true ? "Y" : "N",
     };
 
     const response = await dispatch(postData({ accessID: "TR300", action, idata }));
@@ -310,6 +311,7 @@ const CreateCompliance = () => {
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+    FullyAutomatic: Data.FullyAutomatic == "Y" ? true : false,
   };
   const memoizedUrl = useCallback(() => {
     return `${listViewurl}?data=${encodeURIComponent(
@@ -935,6 +937,16 @@ const CreateCompliance = () => {
                   />
 
                   <Box>
+                     <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="FullyAutomatic"
+                          checked={values.FullyAutomatic}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Fully Automatic"
+                    />
                     <FormControlLabel
                       control={
                         <Checkbox
