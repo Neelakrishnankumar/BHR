@@ -588,12 +588,22 @@ const Editemployee = () => {
 
         //Contact
         let schemaFields1 = {
+          // email: Yup.string()
+          //   .required(data.Employeecontact.email)
+          //   .matches(
+          //     /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
+          //     "Invalid Email Id"
+          //   ),
           email: Yup.string()
-            .required(data.Employeecontact.email)
             .nullable()
+            .transform((value) => (value === "" ? null : value))
+            .required(data.Employeecontact.email) // ✅ first priority
             .matches(
               /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
-              "Invalid Email Id"
+              {
+                message: "Invalid Email Id",
+                excludeEmptyString: true, // ✅ avoids conflict with required
+              }
             ),
         };
 
@@ -621,27 +631,50 @@ const Editemployee = () => {
           .transform((value) => (value === "" ? null : value))
           .matches(/^\d{10}$/, data.Employeecontact.phonenumber);
 
-        schemaFields1.Branch = Yup.string()
-          .trim()
-          .nullable()
-          .notRequired(data.Employeecontact.Branch);
+        // schemaFields1.Branch = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.Branch);
 
+        // schemaFields1.AccountHoldersName = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.AccountHoldersName);
+
+        // schemaFields1.AccountNumber = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.AccountNumber)
+        //   .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
+
+        // schemaFields1.IfscCode = Yup.string()
+        //   .trim()
+        //   .notRequired(data.Employeecontact.IfscCode)
+        //   .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
         schemaFields1.AccountHoldersName = Yup.string()
-          .trim()
           .nullable()
-          .notRequired(data.Employeecontact.AccountHoldersName);
+          .notRequired()
+          .transform((value) => (value === "" ? null : value));
 
         schemaFields1.AccountNumber = Yup.string()
-          .trim()
           .nullable()
-          .notRequired(data.Employeecontact.AccountNumber)
-          .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^\d{9,18}$/, {
+            message: data.Employeecontact.AccountNumber,
+            excludeEmptyString: true, // ✅ key fix
+          });
 
         schemaFields1.IfscCode = Yup.string()
-          .trim()
           .nullable()
-          .notRequired(data.Employeecontact.IfscCode)
-          .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, {
+            message: data.Employeecontact.IfscCode,
+            excludeEmptyString: true, // ✅ key fix
+          });
+
+        schemaFields1.Branch = Yup.string()
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value));
 
         const schema1 = Yup.object().shape(schemaFields1);
         setValidationSchema1(schema1);
@@ -6318,8 +6351,8 @@ const Editemployee = () => {
                       //   </>
                       // }
                       focused
-                      error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
-                      helperText={touched.AccountHoldersName && errors.AccountHoldersName}
+                      // error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
+                      // helperText={touched.AccountHoldersName && errors.AccountHoldersName}
                       onWheel={(e) => e.target.blur()}
                       sx={
                         {
@@ -8709,7 +8742,7 @@ const Editemployee = () => {
                     // error={!!touched.Onsiterole && !!errors.Onsiterole}
                     // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
-                      <MenuItem value="Project">Standard/Activities</MenuItem>
+                      <MenuItem value="Project">{getBusinessCaption("Project", "Project")}</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
                     </TextField>
                     <Box>
@@ -13196,7 +13229,7 @@ const Editemployee = () => {
                         name="ToPeriod"
                         type="date"
                         id="ToPeriod"
-                        label="To Date"
+                        label="To Period"
                         variant="standard"
                         focused
                         value={values.ToPeriod}

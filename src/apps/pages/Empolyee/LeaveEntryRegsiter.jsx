@@ -78,7 +78,11 @@ const LeaveEntryRegister = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let params = useParams();
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   var recID = params.id;
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
@@ -157,6 +161,7 @@ const LeaveEntryRegister = () => {
         AccessID: "2117",
         ScreenName: "Employee",
         Filter: employeeFilter,
+        VerticalLicense: Subscriptionlastthree,
         Any: "",
         CompId: "",
       },
