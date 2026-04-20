@@ -1263,7 +1263,7 @@ const Configuration = () => {
             if (response?.payload?.Status === "Y") {
                 toast.success(response.payload.Msg);
 
-                const data = await dispatch(companyTermsGet({ CompanyID }));
+                const data = await dispatch(companyTermsGet({ CompanyID: CompanyID }));
 
                 if (data?.payload?.Status === "Y") {
                     // setTermsRows(data.payload.Data.rows);
@@ -1445,8 +1445,8 @@ const Configuration = () => {
         }
         if (event.target.value == "2") {
             if (CompanyID && mode === "E") {
-                dispatch(PolicyFetchData({ get: "get", CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID }));
+                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
                 // const data = await dispatch(
                 //   slotListView({
                 //     accessID: "TR355",
@@ -1461,7 +1461,7 @@ const Configuration = () => {
                 console.log("🚀 ~ screenChange ~ data:", data);
             } else {
                 dispatch(PolicyFetchData({ get: "get", CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID }));
+                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
             }
         }
     };
