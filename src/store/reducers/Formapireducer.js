@@ -247,6 +247,7 @@ const initialState = {
   //CONTRACT INVOICE GET
   InvoiceHeaderData: [],
   InvoiceDetailData: [],
+  InvoiceBaseUrl : "",
   PolicygetLoading: false,
   PolicyStatus: "",
   PolicyData: {},
@@ -4475,6 +4476,8 @@ export const getApiSlice = createSlice({
           action.payload.HeaderData ? action.payload.HeaderData : [];
         state.InvoiceDetailData =
           action.payload.DetailData ? action.payload.DetailData : [];
+        state.InvoiceBaseUrl =
+          action.payload.BaseUrl ? action.payload.BaseUrl : [];
       })
       .addCase(ContractInvoice.rejected, (state, action) => {
         state.InvoiceHeaderDatastatus = "Error";

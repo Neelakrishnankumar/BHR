@@ -102,7 +102,7 @@ const Editdept = () => {
 
         let schemaFields = {
           Name: Yup.string().trim().required(data.Department.Name),
-          Loc: Yup.string().trim().required(data.Department.Loc),
+          // Loc: Yup.string().trim().required(data.Department.Loc),
         };
 
         if (CompanyAutoCode === "N") {
@@ -455,11 +455,12 @@ const Editdept = () => {
                     fullWidth
                     variant="standard"
                     type="text"
-                    label={
-                      <>
-                        Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
+                    label="Location"
+                    // label={
+                    //   <>
+                    //     Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                    //   </>
+                    // }
                     value={values.Loc}
                     id="Loc"
                     onBlur={handleBlur}

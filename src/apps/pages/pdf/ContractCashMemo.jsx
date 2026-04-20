@@ -330,7 +330,7 @@ const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
-export default function ContractCashMemo({ invoice = [], detailData = [], logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
+export default function ContractCashMemo({ invoice = [], detailData = [],PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
     filters = {} }) {
 
     const formattedDate = filters.Date
@@ -341,7 +341,8 @@ export default function ContractCashMemo({ invoice = [], detailData = [], logoUr
     const items = Array.isArray(invoice) ? invoice : [invoice];
     const attendancedata = Array.isArray(detailData) ? detailData : [detailData];
     // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";  // your image folder path
-    const QR_BASE_URL = `${filters.baseUrl}uploads/images/`;  
+    // const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
+    const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
 
     const qrFullPath = invoice?.QRCode
         ? `${QR_BASE_URL}${invoice.QRCode}`

@@ -1125,26 +1125,26 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
           },
-           {
-            name: "Invoice",
-            // url: "/Apps/TR250/Invoice",
-            // url: "/Apps/TR331/Invoice",
-            url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
-            id: 88,
-            icon: (
-              <Tooltip title="Invoice">
-                <ReceiptIcon color="info" />
-              </Tooltip>
-            ),
-            // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR331",
-          },
+          //  {
+          //   name: "Invoice",
+          //   // url: "/Apps/TR250/Invoice",
+          //   // url: "/Apps/TR331/Invoice",
+          //   url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+          //   id: 88,
+          //   icon: (
+          //     <Tooltip title="Invoice">
+          //       <ReceiptIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR331",
+          // },
         ],
       },
 
