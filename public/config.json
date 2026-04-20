@@ -1,7 +1,7 @@
 {
   "API_URL": "https://bosuat.beyondexs.com/api/",
   "BASE_URL": "https://bosuat.beyondexs.com/",
-  "ESS_URL": "https://ess.beyondexs.com/",
-  "UAAM_URL": "https://uaam.beyondexs.com/"
+  "ESS_URL": "https://essuat.beyondexs.com/",
+  "UAAM_URL": "https://uaamuat.beyondexs.com/"
 }
  

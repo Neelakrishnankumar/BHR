@@ -1936,7 +1936,7 @@ const defaultToDate = format(today);
                         to={`/Apps/Secondarylistview/TR332/Payment/${params.row.RecordID}/${params.row.EmployeeID}`}
                         state={{
                           Employee: params.row.Employee,
-                          Project: params.row.Project,
+                          projectName: params.row.Project,
                           ProjectID: params.row.ProjectID,
                         }}
                       >
