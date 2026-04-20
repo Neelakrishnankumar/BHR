@@ -205,6 +205,8 @@ import BatchTimeLine from "./pages/SOP/BatchTimeline";
 import Editdoccategory from "./pages/HR/Editdoccategory";
 import Editdocument from "./pages/HR/Editdocument";
 import StaffTimetable from "./pages/Empolyee/StaffTimetable";
+import EditPayment from "./pages/Empolyee/Editpayment";
+import InvoiceAnalytics from "./pages/Empolyee/InvoiceAnalytics";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -375,12 +377,20 @@ function App() {
                     path="/:accessID/Regularization/:id/"
                     element={<Regularization />}
                   />
-
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID/:filtertype/EditPayment/:id/:Mode"                 
+                    element={<EditPayment />}
+                  />
+                   <Route
+                    path="/:accessID/:screenName/Invoice/Analytics"
+                    element={<InvoiceAnalytics />}
+                  />
                   {/* SKILL GLOW */}
 
                   {/* SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
+
                     element={<ListviewSecondary />}
                   />
 
@@ -432,12 +442,13 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/:accessID/:parentID2/:parentID1"
                     element={<NewSchedule />}
                   />
+                  
                   {/* QUESTION GROUP */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
                     element={<ListviewSecondary />}
                   />
-
+                 
                   {/* NEW QUESTION GROUP */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1"
@@ -762,7 +773,7 @@ function App() {
                   <Route path="/change Password" element={<Changepass />} />
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
-                  <Route path="/configuration" element={<Configuration />} />
+                  <Route path="/configuration/:Mode" element={<Configuration />} />
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"

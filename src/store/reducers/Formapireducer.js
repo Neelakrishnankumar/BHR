@@ -29,7 +29,7 @@ const initialState = {
   pakingListCarton: [],
   summeryData: [],
   hashtokenData: {},
-  CustomisedCaptionGetData:{},
+  CustomisedCaptionGetData: {},
   costingLeatherCost: {
     materialCost: 0,
     leatherOneCost: 0,
@@ -247,6 +247,12 @@ const initialState = {
   //CONTRACT INVOICE GET
   InvoiceHeaderData: [],
   InvoiceDetailData: [],
+  PolicygetLoading: false,
+  PolicyStatus: "",
+  PolicyData: {},
+  companytermsgetLoading: false,
+  companytermsStatus: "",
+  companytermsData: [],
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2391,7 +2397,7 @@ export const hashtoken = createAsyncThunk(
 
 export const Inventorygrid1 = createAsyncThunk(
   "Inv1/Itemgroup",
-  async ({ AccessID,VerticalLicense, screenName, filter, any }, { getState }) => {
+  async ({ AccessID, VerticalLicense, screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2399,7 +2405,7 @@ export const Inventorygrid1 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
-        VerticalLicense:VerticalLicense,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -2419,7 +2425,7 @@ export const Inventorygrid1 = createAsyncThunk(
 );
 export const Inventorygrid2 = createAsyncThunk(
   "Inv2/Itemcategory",
-  async ({ AccessID, VerticalLicense,screenName, filter, any }, { getState }) => {
+  async ({ AccessID, VerticalLicense, screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2427,7 +2433,7 @@ export const Inventorygrid2 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
-        VerticalLicense:VerticalLicense,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -2447,7 +2453,7 @@ export const Inventorygrid2 = createAsyncThunk(
 );
 export const Inventorygrid3 = createAsyncThunk(
   "Inv3/Item",
-  async ({ AccessID,VerticalLicense, screenName, filter, any }, { getState }) => {
+  async ({ AccessID, VerticalLicense, screenName, filter, any }, { getState }) => {
     const url = getState().globalurl.listViewurl;
 
     const CompId = sessionStorage.getItem("compID");
@@ -2455,7 +2461,7 @@ export const Inventorygrid3 = createAsyncThunk(
     const idata = {
       Query: {
         AccessID,
-        VerticalLicense:VerticalLicense,
+        VerticalLicense: VerticalLicense,
         ScreenName: screenName,
         Filter: filter,
         Any: any,
@@ -2673,6 +2679,115 @@ export const productorderanalysis = createAsyncThunk(
     return response.data;
   },
 );
+export const InvoiceAnalyticsget = createAsyncThunk(
+  "Mgr_Desk/invoice_analytics_get",
+  async (data, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.InvoiceAnalytics;
+
+      const payload = {
+        CompanyID: data.CompanyID,
+        CategoryID: data.CategoryID,
+        staffID: data.staffID,
+        fromPeriod: data.fromPeriod,
+        toPeriod: data.toPeriod,
+      };
+
+      console.log("🔥 THUNK CALLED:", payload);
+      console.log("🌐 URL:", url);
+
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization: "YOUR_TOKEN",
+        },
+      });
+
+      console.log("✅ API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("❌ API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);                                                                           
+export const companyTermsGet = createAsyncThunk(
+  "COMPANY_TERMS_GET/GET",
+  async ({ CompanyID }) => {
+    var url = store.getState().globalurl.CompanyTermsGet;
+    const data = {
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+// Company -- Policy Get
+export const PolicyFetchData = createAsyncThunk(
+  "PolicyFetchData/get",
+  async ({ get, CompanyID }) => {
+    var url = store.getState().globalurl.CompanyPloicyGET;
+    const data = {
+      get: get,
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+export const PolicyUpdateData = createAsyncThunk(
+  "PolicyUpdateData/update",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.CompanyPolicyUpdate;
+
+
+    const data = idata;
+
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const getApiSlice = createSlice({
   name: "formApi",
   initialState,
@@ -2865,6 +2980,46 @@ export const getApiSlice = createSlice({
       .addCase(InvoicePostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
+      })
+      //COMPANY_TERMS_GET
+      .addCase(companyTermsGet.pending, (state, action) => {
+        state.companytermsStatus = "idle";
+        state.companytermsgetLoading = true;
+        state.companytermsData = [];
+        state.msg = "Loading...";
+      })
+      .addCase(companyTermsGet.fulfilled, (state, action) => {
+        state.companytermsStatus = "success";
+        state.companytermsgetLoading = false;
+        state.companytermsData = action.payload.Data ? action.payload.Data : [];
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(companyTermsGet.rejected, (state, action) => {
+        state.companytermsStatus = "Error";
+        state.companytermsgetLoading = false;
+        state.companytermsData = [];
+        toast.error("Something Went Wrong");
+      })
+
+      //COMPANY_POLICY_GET
+
+      .addCase(PolicyFetchData.pending, (state, action) => {
+        state.PolicyStatus = "idle";
+        state.PolicygetLoading = true;
+        state.PolicyData = {};
+        state.msg = "Loading...";
+      })
+      .addCase(PolicyFetchData.fulfilled, (state, action) => {
+        state.PolicyStatus = "success";
+        state.PolicygetLoading = false;
+        state.PolicyData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(PolicyFetchData.rejected, (state, action) => {
+        state.PolicyStatus = "Error";
+        state.PolicygetLoading = false;
+        state.PolicyData = {};
+        toast.error("Something Went Wrong");
       })
       .addCase(ModuleUrl.pending, (state) => {
         state.status = "loading";
@@ -3377,23 +3532,23 @@ export const getApiSlice = createSlice({
       })
 
       .addCase(CustomisedCaptionGet.pending, (state, action) => {
-          state.Status = "idle";
-          state.getLoading = true;
-          state.CustomisedCaptionGetData = {};
-          state.msg = "Loading..."
-        })
-        .addCase(CustomisedCaptionGet.fulfilled, (state, action) => {
-          state.Status = "success";
-          state.getLoading = false;
-          state.CustomisedCaptionGetData = action.payload.Data ? action.payload.Data : {};
-          // state.msg =  action.payload.Msg
-        })
-        .addCase(CustomisedCaptionGet.rejected, (state, action) => {
-          state.Status = "Error";
-          state.getLoading = false;
-          state.CustomisedCaptionGetData = {};
-          toast.error('Something Went Wrong')
-        })
+        state.Status = "idle";
+        state.getLoading = true;
+        state.CustomisedCaptionGetData = {};
+        state.msg = "Loading..."
+      })
+      .addCase(CustomisedCaptionGet.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.CustomisedCaptionGetData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(CustomisedCaptionGet.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.CustomisedCaptionGetData = {};
+        toast.error('Something Went Wrong')
+      })
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;
@@ -3593,7 +3748,7 @@ export const getApiSlice = createSlice({
       .addCase(getDeployment.fulfilled, (state, action) => {
         state.deploymentData = action.payload.Data;
       })
-      .addCase(getResignation.fulfilled,(state, action) => {
+      .addCase(getResignation.fulfilled, (state, action) => {
         state.ResignationGetData = action.payload.Data;
       })
 
@@ -4321,7 +4476,7 @@ export const getApiSlice = createSlice({
         state.InvoiceDetailData =
           action.payload.DetailData ? action.payload.DetailData : [];
       })
-       .addCase(ContractInvoice.rejected, (state, action) => {
+      .addCase(ContractInvoice.rejected, (state, action) => {
         state.InvoiceHeaderDatastatus = "Error";
         state.InvoiceHeaderDataloading = false;
       })
