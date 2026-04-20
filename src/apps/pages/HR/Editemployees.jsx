@@ -283,7 +283,7 @@ const Editemployee = () => {
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
   const [validationSchema22, setValidationSchema22] = useState(null);
-    const [errorSchema22, seterrorSchema22] = useState(null);
+  const [errorSchema22, seterrorSchema22] = useState(null);
 
   const [validationSchema4, setValidationSchema4] = useState(null);
   const [validationSchema5, setValidationSchema5] = useState(null);
@@ -316,6 +316,7 @@ const Editemployee = () => {
 
   const Invoiceheader = useSelector(state => state.formApi.InvoiceHeaderData);
   const Invoicedetails = useSelector(state => state.formApi.InvoiceDetailData);
+  const PdfBaseUrl = useSelector(state => state.formApi.InvoiceBaseUrl);
 
   const [sign1, setsign1Image] = useState("");
   const [sign2, setsign2Image] = useState("");
@@ -558,7 +559,7 @@ const Editemployee = () => {
 
   useEffect(() => {
     console.log("-- calling valudation useeffect");
-    
+
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch validationcms.json");
@@ -566,7 +567,7 @@ const Editemployee = () => {
       })
       .then((data) => {
         console.log(errorMsgData, "--display or not errorMsgData");
-        
+
         setErrorMsgData(data);
 
         //Employee
@@ -677,11 +678,11 @@ const Editemployee = () => {
 
         setValidationSchema3(schema3);
         //Resignation
-     const schema22 = Yup.object().shape({
-  exitinterviewby: Yup.object()
-    .nullable()
-    .required(data.Resignation.exitinterviewby),
-});
+        const schema22 = Yup.object().shape({
+          exitinterviewby: Yup.object()
+            .nullable()
+            .required(data.Resignation.exitinterviewby),
+        });
 
         setValidationSchema22(schema22);
         //Function
@@ -911,6 +912,8 @@ const Editemployee = () => {
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [employeeName, setEmployeeName] = useState("");
+  const EmployeeName = employeeName || Data?.Name || state?.EmpName;
   const [flag, setFlag] = useState("");
   const [billingTypeForPrint, setBillingTypeForPrint] = useState("");
   var userimg = store.getState().globalurl.imageUrl;
@@ -1302,6 +1305,10 @@ const Editemployee = () => {
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
+      if (mode === "A") {
+        navigate(-1); // go back
+        return;
+      }
       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         CustomisedCaptionGet({
@@ -1310,6 +1317,7 @@ const Editemployee = () => {
         })
       );
       setLoading(false);
+      setEmployeeName(values?.Name);
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
@@ -3788,6 +3796,7 @@ const Editemployee = () => {
     Code: Data.Code,
     Name: Data.Name,
     itemgroups: Invendata.itemgroups,
+
     itemcategory: Invendata.itemcategory,
     Grpitems: Invendata.Grpitems,
     SortOrder: Invendata.SortOrder,
@@ -4098,8 +4107,10 @@ const Editemployee = () => {
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
-    HorizontalMimNo: deploymentData.HorizontalMimNo || "",
-    VerticalMimNo: deploymentData.VerticalMimNo || "",
+    // HorizontalMimNo: deploymentData.HorizontalMimNo || "",
+    // VerticalMimNo: deploymentData.VerticalMimNo || "",
+    HorizontalMimNo: deploymentData?.HorizontalMimNo ?? 0,
+    VerticalMimNo: deploymentData?.VerticalMimNo ?? 0,
     AutoApprovalYesOrNo:
       deploymentData.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: deploymentData.ApprovelTolerance,
@@ -4193,8 +4204,8 @@ const Editemployee = () => {
       CompanyID,
       Horizontal: deploymentData.Horizontal,
       Vertical: deploymentData.Vertical,
-      HorizontalMimNo: deploymentData.HorizontalMimNo || 0,
-      VerticalMimNo: deploymentData.VerticalMimNo || 0,
+      HorizontalMimNo: deploymentData?.HorizontalMimNo || 0,
+      VerticalMimNo: deploymentData?.VerticalMimNo || 0,
       AutoApprovalYesOrNo: deploymentData.AutoApprovalYesOrNo,
       ApprovelTolerance: deploymentData.ApprovelTolerance || 0,
       AutoRejectionYesOrNo: deploymentData.AutoRejectionYesOrNo,
@@ -4238,10 +4249,10 @@ const Editemployee = () => {
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
-// if(values.exitinterviewby == ""){
-//   seterrorSchema22("Please Select the Exit Interview By");
-//   return;
-// }
+    // if(values.exitinterviewby == ""){
+    //   seterrorSchema22("Please Select the Exit Interview By");
+    //   return;
+    // }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -4348,10 +4359,15 @@ const Editemployee = () => {
     // return;
     if (response.payload.Status == "Y") {
       dispatch(getDeployment({ HeaderID: recID }));
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR027",
+      })
+      );
       toast.success(response.payload.Msg);
-      setTimeout(() => {
-        navigate("/Apps/TR027/Personnel");
-      }, 4000);
+      // setTimeout(() => {
+      //   navigate("/Apps/TR027/Personnel");
+      // }, 4000);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -4617,9 +4633,14 @@ const Editemployee = () => {
                     {/* {mode === "E"
                       ? `Personnel(${state.EmpName})`
                       : "Personnel(New)"} */}
-                    {
+                    {/* {
                       mode === "E"
                         ? `Personnel(${state?.EmpName || Data?.Name})`
+                        : "Personnel(New)"
+                    } */}
+                    {
+                      mode === "E"
+                        ? `Personnel(${EmployeeName})`
                         : "Personnel(New)"
                     }
 
@@ -8502,7 +8523,8 @@ const Editemployee = () => {
                       />
                     </FormControl>
 
-                    <FormControl
+{/* COMMENTED AS ON 20/04/2026 -- AS PER HARI */}
+                    {/* <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -8543,7 +8565,7 @@ const Editemployee = () => {
                       //                         url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
                       //  ='${CompanyID}'","Any":""}}`}
                       />
-                    </FormControl>
+                    </FormControl> */}
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
@@ -9637,7 +9659,7 @@ const Editemployee = () => {
                           setFieldValue("exitinterviewby", newValue);
                           console.log(newValue, "--newvalue exitinterviewby");
                           console.log(newValue.RecordID, "exitinterviewby RecordID");
-                   
+
                         }}
                         // error={!!errorSchema22}
                         // helperText={errorSchema22}
@@ -11590,19 +11612,19 @@ const Editemployee = () => {
                   Fnsave(values);
                 }, 100);
               }}
-              // onSubmit={(values, actions) => {
-              //   actions.setTouched({
-              //     code1: true,
-              //     name1: true,
-              //     mobilenumber: true,
-              //     emailid: true,
-              //     address: true,
-              //   });
+            // onSubmit={(values, actions) => {
+            //   actions.setTouched({
+            //     code1: true,
+            //     name1: true,
+            //     mobilenumber: true,
+            //     emailid: true,
+            //     address: true,
+            //   });
 
-              //   if (Object.keys(actions.errors || {}).length > 0) return;
+            //   if (Object.keys(actions.errors || {}).length > 0) return;
 
-              //   Fnsave(values);
-              // }}
+            //   Fnsave(values);
+            // }}
             >
               {({
                 errors,
@@ -12658,6 +12680,10 @@ const Editemployee = () => {
                         // value={vendorlookup}
                         value={values.vendor}
                         onChange={(newValue) => {
+                          if (!newValue) {
+                            setFieldValue("vendor", null);
+                            return;
+                          }
                           setFieldValue("vendor", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -12719,6 +12745,10 @@ const Editemployee = () => {
                         variant="outlined"
                         value={values.project}
                         onChange={(newValue) => {
+                            if (!newValue) {
+                            setFieldValue("project", null);
+                            return;
+                          }
                           setFieldValue("project", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -13075,6 +13105,10 @@ const Editemployee = () => {
                         error={!!touched.shift && !!errors.shift}
                         helperText={touched.shift && errors.shift}
                         onChange={(newValue) => {
+                            if (!newValue) {
+                            setFieldValue("shift", null);
+                            return;
+                          }
                           setFieldValue("shift", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -13103,6 +13137,10 @@ const Editemployee = () => {
                         error={!!touched.shift2 && !!errors.shift2}
                         helperText={touched.shift2 && errors.shift2}
                         onChange={(newValue) => {
+                           if (!newValue) {
+                            setFieldValue("shift2", null);
+                            return;
+                          }
                           setFieldValue("shift2", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -13386,6 +13424,7 @@ const Editemployee = () => {
                             <ContractCashMemo
                               invoice={Invoiceheader?.[0]}
                               detailData={Invoicedetails}
+                              PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
                               logoUrl={"/Logo.png"}
                               headerUrl={"/Elitelogo.png"}
                               footerUrl={"/pdffooterimg.PNG"}
@@ -13403,6 +13442,7 @@ const Editemployee = () => {
                               // data={InvData}
                               invoice={Invoiceheader?.[0]}
                               detailData={Invoicedetails}
+                              PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
                               logoUrl={"/Logo.png"}
                               headerUrl={"/Elitelogo.png"}
                               footerUrl={"/pdffooterimg.PNG"}
