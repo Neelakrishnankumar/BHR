@@ -404,9 +404,11 @@ const Editproject = () => {
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
-    ByProduct: data.ByProduct === "Y" ? true : false,
+    // ByProduct: data.ByProduct === "Y" ? true : false,
+    ByProduct: false,
     Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
-    Routine: data.RoutineTasks === "Y" ? true : false,
+   // Routine: data.RoutineTasks === "Y" ? true : false,
+    Routine:  false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
     // budget: data.Budget ?? 0.00,
@@ -458,11 +460,13 @@ const Editproject = () => {
       ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
+      // RoutineTasks: "N",
       SortOrder: values.sortorder || 0,
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-      ByProduct: values.ByProduct == true ? "Y" : "N",
+       ByProduct: values.ByProduct == true ? "Y" : "N",
+      //ByProduct: "N",
       EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
@@ -1451,6 +1455,8 @@ const Editproject = () => {
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
+                    {!is003Subscription && (
+                      <>
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1497,6 +1503,8 @@ const Editproject = () => {
                     >
                       Product
                     </FormLabel>
+                    </>
+                  )}
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
