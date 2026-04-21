@@ -1263,7 +1263,7 @@ const Configuration = () => {
             if (response?.payload?.Status === "Y") {
                 toast.success(response.payload.Msg);
 
-                const data = await dispatch(companyTermsGet({ CompanyID }));
+                const data = await dispatch(companyTermsGet({ CompanyID: CompanyID }));
 
                 if (data?.payload?.Status === "Y") {
                     // setTermsRows(data.payload.Data.rows);
@@ -1445,8 +1445,8 @@ const Configuration = () => {
         }
         if (event.target.value == "2") {
             if (CompanyID && mode === "E") {
-                dispatch(PolicyFetchData({ get: "get", CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID }));
+                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
                 // const data = await dispatch(
                 //   slotListView({
                 //     accessID: "TR355",
@@ -1461,7 +1461,7 @@ const Configuration = () => {
                 console.log("🚀 ~ screenChange ~ data:", data);
             } else {
                 dispatch(PolicyFetchData({ get: "get", CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID }));
+                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
             }
         }
     };
@@ -1540,7 +1540,7 @@ const Configuration = () => {
         const response = await dispatch(CompanydetailpostData({ idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            navigate("/Apps/configuration");
+            navigate("/Apps/configuration/E");
         } else {
             toast.error(response.payload.Msg);
         }
@@ -1597,7 +1597,7 @@ const Configuration = () => {
     return (
         <React.Fragment>
 
-            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -1636,8 +1636,8 @@ const Configuration = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper> */}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            </Paper>
+            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box
                         display="flex"
@@ -1701,8 +1701,8 @@ const Configuration = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper>
-            {show == "0" ? (
+            </Paper> */}
+            {/* {show == "0" ? ( */}
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
                         initialValues={initialvalues}
@@ -2199,9 +2199,9 @@ const Configuration = () => {
                         )}
                     </Formik>
                 </Paper>
-            ) : (
+            {/* ) : (
                 false
-            )}
+            )} */}
             {show == "1" ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
