@@ -1452,7 +1452,7 @@ setTermsRows((prev) =>
         //                 };
         //             });
         if (event.target.value == "1") {
-      if (mode === "E") {
+      if (mode == "E") {
         dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
  
         const data = await dispatch(

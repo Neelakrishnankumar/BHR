@@ -126,7 +126,7 @@ invoiceDetailBoxLast: {
 },
 
 invoiceLabel: {
-    fontSize: 8,                    // smaller — subordinate to value
+    fontSize: 12,                    // smaller — subordinate to value
     fontWeight: 'bold',
     marginBottom: 4,
     textAlign: 'center',            // header title center aligned
@@ -137,14 +137,14 @@ invoiceLabel: {
 },
 
 invoiceValue: {
-    fontSize: 11,
+    fontSize: 9,
     fontWeight: 'bold',
     textAlign: 'right',             // number field → right aligned
     marginTop: 4,                   // space after separator line
 },
 
 invoiceTextValue: {
-    fontSize: 11,
+    fontSize: 9,
     fontWeight: 'bold',
     textAlign: 'left',              // text field → left aligned
     marginTop: 4,
