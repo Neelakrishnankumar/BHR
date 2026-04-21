@@ -327,6 +327,9 @@ const initialState = {
   PartyReset:"",
   WeeklyTeachercalendarGet:"",
   ContractInvoicePDF:"",
+  CompanyPolicyUpdate:"",
+  CompanyPloicyGET:"",
+  CompanyTermsGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -522,6 +525,10 @@ export const getUrlSlice = createSlice({
       state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
       state.WeeklyTeachercalendarGet = APIurl + "TeacherScheduleGetController.php";
       state.ContractInvoicePDF = APIurl + "EmpContractData.php";
+      state.CompanyPloicyGET = APIurl + "CompanyPolicyGetController.php";
+      state.CompanyPolicyUpdate = APIurl + "CompanyPolicyUpdateController.php";
+      state.CompanyTermsGet = APIurl + "TermsGetController.php";
+
     },
   },
 });

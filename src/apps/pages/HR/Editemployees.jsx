@@ -8720,7 +8720,7 @@ const Editemployee = () => {
                     // error={!!touched.Onsiterole && !!errors.Onsiterole}
                     // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
-                      <MenuItem value="Project">Standard/Activities</MenuItem>
+                      <MenuItem value="Project">{getBusinessCaption("Project", "Project")}</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
                     </TextField>
                     <Box>
@@ -13191,7 +13191,7 @@ const Editemployee = () => {
                         name="ToPeriod"
                         type="date"
                         id="ToPeriod"
-                        label="To Date"
+                        label="To Period"
                         variant="standard"
                         focused
                         value={values.ToPeriod}

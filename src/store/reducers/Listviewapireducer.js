@@ -114,7 +114,7 @@ import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import ResetPartyOrder from "../../apps/pages/Modals/ResetPartyOrder";
 import StaffTimetableModal from "../../apps/pages/Modals/StaffTimetableModal";
 import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
-
+import PaymentReceipt from "../../apps/pages/pdf/Paymentreceipt2";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -536,1114 +536,1187 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
 };
 export const fetchListview =
   (AccessID, VerticalLicense, screenName, filter, any, CompId) =>
-  async (dispatch, getState) => {
-    var url = store.getState().globalurl.listViewurl;
-    var CompId = sessionStorage.getItem("compID");
-    console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
-    const LoginID = sessionStorage.getItem("loginrecordID");
-    const empID = sessionStorage.getItem("empID");
+    async (dispatch, getState) => {
+      var url = store.getState().globalurl.listViewurl;
+      var CompId = sessionStorage.getItem("compID");
+      console.log(CompId, "--comaonyID filer passing in a listviewapireducers");
+      const LoginID = sessionStorage.getItem("loginrecordID");
+      const empID = sessionStorage.getItem("empID");
+      const config = getConfig();
+      const baseurl1 = config.UAAM_URL;
+      const year = sessionStorage.getItem("year");
+      const company = sessionStorage.getItem("company");
+      var LoggedInUserName = sessionStorage.getItem("UserName");
+      const UserName = sessionStorage.getItem("UserName");
+      //PROJECTPDFGET
 
-    const year = sessionStorage.getItem("year");
-    const company = sessionStorage.getItem("company");
-    var LoggedInUserName = sessionStorage.getItem("UserName");
-    const UserName = sessionStorage.getItem("UserName");
-    //PROJECTPDFGET
+      const format = (d) => {
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+const today = new Date();
+ const formatToDMY = (dateStr) => {
+      if (!dateStr) return "";
 
-    // const handlePDFGET = (ProjectID, EmployeeID) => {
-    //   console.log("Dispatching with:", { ProjectID, EmployeeID });
-    //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
-    // };
+      const parts = dateStr.split("-");
+      if (parts.length !== 3) return dateStr;
 
-    // const handlePDFGET = (ProjectID, EmployeeID) => {
-    //   const dispatch = store.dispatch; // use store directly
-    //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
-    //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
-    // };
+      const [year, month, day] = parts; // if input is yyyy-mm-dd
 
-    if (
-      filter != "" &&
-      AccessID !== "TR115" &&
-      AccessID !== "TR118" &&
-      AccessID !== "TR155" &&
-      AccessID !== "TR152" &&
-      AccessID !== "TR280" &&
-      AccessID !== "TR300" &&
-      AccessID !== "TR305" &&
-      AccessID !== "TR301" &&
-      AccessID !== "TR295" &&
-      AccessID !== "TR296" &&
-      AccessID !== "TR297" &&
-      AccessID !== "TR298" &&
-      AccessID !== "TR279" &&
-      AccessID !== "TR281" &&
-      AccessID !== "TR282" &&
-      AccessID !== "TR291" &&
-      AccessID !== "TR283" &&
-      AccessID !== "TR148"
-    ) {
+      return `${day}-${month}-${year}`;
+    };
+    const currentMonthNumber = new Date().getMonth() + 1;
+const currentYear = new Date().getFullYear();
+const oneMonthBefore = new Date();
+oneMonthBefore.setMonth(today.getMonth() - 1);
+const defaultFromDate = format(oneMonthBefore);
+const defaultToDate = format(today);
+      // const handlePDFGET = (ProjectID, EmployeeID) => {
+      //   console.log("Dispatching with:", { ProjectID, EmployeeID });
+      //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+      // };
+
+      // const handlePDFGET = (ProjectID, EmployeeID) => {
+      //   const dispatch = store.dispatch; // use store directly
+      //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
+      //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+      // };
+
       if (
-        AccessID == "TR011" ||
-        AccessID == "TR008" ||
-        AccessID == "TR054" ||
-        AccessID == "TR052" ||
-        AccessID == "TR060" ||
-        AccessID == "TR003" ||
-        AccessID == "TR021" ||
-        AccessID == "TR073" ||
-        AccessID == "TR050" ||
-        AccessID == "TR074" ||
-        AccessID == "TR077" ||
-        AccessID == "TR079" ||
-        AccessID == "TR080" ||
-        AccessID == "TR032" ||
-        AccessID == "TR128" ||
-        AccessID == "TR087"
+        filter != "" &&
+        AccessID !== "TR115" &&
+        AccessID !== "TR118" &&
+        AccessID !== "TR155" &&
+        AccessID !== "TR152" &&
+        AccessID !== "TR280" &&
+        AccessID !== "TR300" &&
+        AccessID !== "TR305" &&
+        AccessID !== "TR301" &&
+        AccessID !== "TR295" &&
+        AccessID !== "TR296" &&
+        AccessID !== "TR297" &&
+        AccessID !== "TR298" &&
+        AccessID !== "TR279" &&
+        AccessID !== "TR281" &&
+        AccessID !== "TR282" &&
+        AccessID !== "TR291" &&
+        AccessID !== "TR283" &&
+        AccessID !== "TR148"
       ) {
-        if (AccessID == "TR080") {
-          filter =
-            "parentID='" +
-            filter +
-            "'" +
-            " " +
-            "AND" +
-            " " +
-            "Finyear='" +
-            year +
-            "'";
+        if (
+          AccessID == "TR011" ||
+          AccessID == "TR008" ||
+          AccessID == "TR054" ||
+          AccessID == "TR052" ||
+          AccessID == "TR060" ||
+          AccessID == "TR003" ||
+          AccessID == "TR021" ||
+          AccessID == "TR073" ||
+          AccessID == "TR050" ||
+          AccessID == "TR074" ||
+          AccessID == "TR077" ||
+          AccessID == "TR079" ||
+          AccessID == "TR080" ||
+          AccessID == "TR032" ||
+          AccessID == "TR128" ||
+          AccessID == "TR087"
+        ) {
+          if (AccessID == "TR080") {
+            filter =
+              "parentID='" +
+              filter +
+              "'" +
+              " " +
+              "AND" +
+              " " +
+              "Finyear='" +
+              year +
+              "'";
+          }
+          if (AccessID != "TR080") {
+            filter = "parentID= " + filter + "'";
+            // console.log("---3---",filter);
+          }
         }
-        if (AccessID != "TR080") {
-          filter = "parentID= " + filter + "'";
-          // console.log("---3---",filter);
+        if (
+          AccessID != "TR051" &&
+          AccessID != "TR032" &&
+          AccessID != "TR004" &&
+          AccessID != "TR011" &&
+          AccessID != "TR008" &&
+          AccessID != "TR054" &&
+          AccessID != "TR052" &&
+          AccessID != "TR060" &&
+          AccessID != "TR003" &&
+          AccessID != "TR021" &&
+          AccessID != "TR073" &&
+          AccessID != "TR050" &&
+          AccessID != "TR074" &&
+          AccessID != "TR077" &&
+          AccessID != "TR079" &&
+          AccessID != "TR080" &&
+          AccessID != "TR063" &&
+          AccessID != "TR047" &&
+          AccessID != "TR097" &&
+          AccessID != "TR102" &&
+          AccessID != "TR103" &&
+          AccessID != "TR105" &&
+          AccessID != "TR002" &&
+          AccessID != "TR087" &&
+          AccessID != "TR123" &&
+          AccessID != "TR124" &&
+          AccessID != "TR010" &&
+          AccessID != "TR091" &&
+          AccessID != "TR140" &&
+          AccessID != "TR233" &&
+          AccessID != "TR236" &&
+          AccessID != "TR234" &&
+          AccessID != "TR235" &&
+          AccessID != "TR280" &&
+          AccessID != "TR300" &&
+          AccessID != "TR305" &&
+          AccessID != "TR301" &&
+          AccessID != "TR295" &&
+          AccessID != "TR296" &&
+          AccessID != "TR297" &&
+          AccessID != "TR298" &&
+          AccessID != "TR279" &&
+          AccessID != "TR281" &&
+          AccessID != "TR282" &&
+          AccessID != "TR283" &&
+          AccessID != "TR291" &&
+          AccessID != "TR262" &&
+          AccessID != "TR288" &&
+          AccessID != "TR294" &&
+          AccessID != "TR022" &&
+          AccessID != "TR303" &&
+          AccessID != "TR304" &&
+          AccessID != "TR310" &&
+          AccessID != "TR311" &&
+          AccessID != "TR314" &&
+          AccessID != "TR313" &&
+          AccessID != "TR328" &&
+          AccessID != "TR243" &&
+          AccessID != "TR321" &&
+          AccessID != "TR315" &&
+          AccessID != "TR362" &&
+          AccessID != "TR316" &&
+          AccessID != "TR317" &&
+          AccessID != "TR318" &&
+          AccessID != "TR027" &&
+          AccessID != "TR319" &&
+          AccessID != "TR324" &&
+          AccessID != "TR335" &&
+          AccessID != "TR338" &&
+          AccessID != "TR339" &&
+          AccessID != "TR331" &&
+          AccessID != "TR351" &&
+          AccessID != "TR127" &&
+          AccessID != "TR332" 
+        ) {
+          filter = "parentID=" + `'${filter}'`;
+          // console.log("---4---",filter);
         }
-      }
-      if (
-        AccessID != "TR051" &&
-        AccessID != "TR032" &&
-        AccessID != "TR004" &&
-        AccessID != "TR011" &&
-        AccessID != "TR008" &&
-        AccessID != "TR054" &&
-        AccessID != "TR052" &&
-        AccessID != "TR060" &&
-        AccessID != "TR003" &&
-        AccessID != "TR021" &&
-        AccessID != "TR073" &&
-        AccessID != "TR050" &&
-        AccessID != "TR074" &&
-        AccessID != "TR077" &&
-        AccessID != "TR079" &&
-        AccessID != "TR080" &&
-        AccessID != "TR063" &&
-        AccessID != "TR047" &&
-        AccessID != "TR097" &&
-        AccessID != "TR102" &&
-        AccessID != "TR103" &&
-        AccessID != "TR105" &&
-        AccessID != "TR002" &&
-        AccessID != "TR087" &&
-        AccessID != "TR123" &&
-        AccessID != "TR124" &&
-        AccessID != "TR010" &&
-        AccessID != "TR091" &&
-        AccessID != "TR140" &&
-        AccessID != "TR233" &&
-        AccessID != "TR236" &&
-        AccessID != "TR234" &&
-        AccessID != "TR235" &&
-        AccessID != "TR280" &&
-        AccessID != "TR300" &&
-        AccessID != "TR305" &&
-        AccessID != "TR301" &&
-        AccessID != "TR295" &&
-        AccessID != "TR296" &&
-        AccessID != "TR297" &&
-        AccessID != "TR298" &&
-        AccessID != "TR279" &&
-        AccessID != "TR281" &&
-        AccessID != "TR282" &&
-        AccessID != "TR283" &&
-        AccessID != "TR291" &&
-        AccessID != "TR262" &&
-        AccessID != "TR288" &&
-        AccessID != "TR294" &&
-        AccessID != "TR022" &&
-        AccessID != "TR303" &&
-        AccessID != "TR304" &&
-        AccessID != "TR310" &&
-        AccessID != "TR311" &&
-        AccessID != "TR314" &&
-        AccessID != "TR313" &&
-        AccessID != "TR328" &&
-        AccessID != "TR243" &&
-        AccessID != "TR321" &&
-        AccessID != "TR315" &&
-        AccessID != "TR362" &&
-        AccessID != "TR316" &&
-        AccessID != "TR317" &&
-        AccessID != "TR318" &&
-        AccessID != "TR027" &&
-        AccessID != "TR319" &&
-        AccessID != "TR324" &&
-        AccessID != "TR335" &&
-        AccessID != "TR338" &&
-        AccessID != "TR339" &&
-        // AccessID != "TR341" &&
-        AccessID != "TR351" &&
-        AccessID != "TR127"
+
+        if (
+          AccessID == "TR051" ||
+          AccessID == "TR047" ||
+          AccessID == "TR097" ||
+          AccessID == "TR063" ||
+          AccessID == "TR004" ||
+          AccessID == "TR103" ||
+          AccessID == "TR102" ||
+          AccessID == "TR105" ||
+          AccessID == "TR002" ||
+          //  AccessID == "TR303" ||
+          AccessID == "TR091"
+        ) {
+          // filter = filter;
+          filter = `CompanyID=${CompId}`;
+        }
+        if (AccessID === "TR262") {
+          filter = "ProjectID=" + `'${filter}'`;
+        }
+        if (AccessID === "TR303") {
+          filter = "PartyID=" + `'${filter}'`;
+        }
+        //   if (AccessID === "TR304") {
+        //    filter = "LeaderID=" + `'${filter}'`;
+
+        // }
+        // if (AccessID === "TR314") {
+        //    filter = "PartyID=" + `'${filter}'`;
+
+        // }
+
+        //  if (AccessID === "TR283") {
+        //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
+        // }
+        //     if (AccessID === "TR288") {
+        //       // filter = `"EmployeeID=${Em}"` + `'${filter}'`;
+        //         const EmployeeID = sessionStorage.getItem("RecordID");
+        // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
+        //     }
+        // if (AccessID === "TR321" ) {
+        //   filter = "CompanyID=" + `'${CompId}'`;
+
+        // }
+      } else if (
+        AccessID == "TR280" ||
+        AccessID == "TR300" ||
+        AccessID == "TR301" ||
+        AccessID == "TR295" ||
+        AccessID == "TR296" ||
+        AccessID == "TR297" ||
+        AccessID == "TR298" ||
+        AccessID == "TR279" ||
+        AccessID == "TR281" ||
+        AccessID == "TR288" ||
+        AccessID == "TR283" ||
+        AccessID == "TR291" ||
+        AccessID == "TR299" ||
+        AccessID == "TR294" ||
+        AccessID == "TR317" ||
+        AccessID == "TR318" ||
+        AccessID == "TR362" ||
+        AccessID == "TR027" ||
+        AccessID == "TR319" ||
+        AccessID == "TR335" ||
+        AccessID == "TR338" ||
+        AccessID == "TR339" ||
+        // AccessID == "TR341" ||
+        AccessID == "TR351" ||
+        AccessID == "TR282" || 
+          AccessID == "TR331"||
+          AccessID == "TR332"
+        // AccessID == "TR304"
       ) {
-        filter = "parentID=" + `'${filter}'`;
-        // console.log("---4---",filter);
+        filter = filter;
+      }
+      // else if (AccessID == "TR283") {
+      //   filter;
+      // }
+      else if (AccessID == "TR305") {
+        filter = "";
       }
 
-      if (
-        AccessID == "TR051" ||
-        AccessID == "TR047" ||
-        AccessID == "TR097" ||
-        AccessID == "TR063" ||
-        AccessID == "TR004" ||
-        AccessID == "TR103" ||
-        AccessID == "TR102" ||
-        AccessID == "TR105" ||
-        AccessID == "TR002" ||
-        //  AccessID == "TR303" ||
-        AccessID == "TR091"
-      ) {
-        // filter = filter;
+      // else if (AccessID == "TR328") {
+      //   filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;
+      // }
+      else if (AccessID === "TR328") {
+        const savedFilter = sessionStorage.getItem("TR328_WHERE");
+
+        filter = savedFilter
+          ? savedFilter
+          : `HrLoginUserID='${LoginID}' AND CompanyID='${CompId}'`;
+      }
+
+      // else if (AccessID == "TR305") {
+      //   filter = "";
+      // }
+      //     else if (AccessID === "TR321") {
+      //   if (!filter || filter.trim() === "") {
+
+      //     const hasProspect =
+      //       sessionStorage.getItem("TR321_Prospect") === "Y";
+      //     const hasBalance =
+      //       sessionStorage.getItem("TR321_Balance") === "Y";
+
+      //     /* =================================================
+      //        CASE 1️⃣ : PROSPECT / BALANCE (simple Party query)
+      //     =================================================== */
+      //     if (hasProspect || hasBalance) {
+      //       const conditions = [];
+      //       conditions.push(`CompanyID='${CompId}'`);
+
+      //       if (hasProspect) {
+      //         conditions.push(`Prospects='Y'`);
+      //       }
+
+      //       if (hasBalance) {
+      //         conditions.push(`Balance < 0`);
+      //       }
+
+      //       filter = conditions.join(" AND ");
+      //       return; // 🔴 VERY IMPORTANT
+      //     }
+
+      //     /* =================================================
+      //        CASE 2️⃣ : STATUS / DAYS (ORDHDR subquery logic)
+      //     =================================================== */
+      //     const conditions = [];
+      //     conditions.push(`CompanyID='${CompId}'`);
+
+      //     const statusDateMap = {
+      //       Created: "OR_ORDERDATE",
+      //       Process: "OR_PROCESSDATE",
+      //       Paid: "OR_PAIDDATE",
+      //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+      //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
+      //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+      //       Picked: "OR_PICKEDDATETIME",
+      //       Delivered: "OR_DELIVERYDATE",
+      //     };
+
+      //     const days = sessionStorage.getItem("TR321_Days");
+      //     const type = sessionStorage.getItem("TR321_type");
+
+      //     if (days && type) {
+      //       const today = new Date();
+      //       const dToday = today.toISOString().split("T")[0];
+      //       const shifted = new Date(today);
+
+      //       let fromdate = "";
+      //       let todate = "";
+
+      //       if (type === "A") {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split("T")[0];
+      //       }
+
+      //       if (type === "L") {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split("T")[0];
+      //         todate = dToday;
+      //       }
+
+      //       if (type === "N") {
+      //         shifted.setDate(today.getDate() + Number(days));
+      //         fromdate = dToday;
+      //         todate = shifted.toISOString().split("T")[0];
+      //       }
+
+      //       const dateConditions = [];
+
+      //       Object.keys(statusDateMap).forEach((status) => {
+      //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+      //           const col = statusDateMap[status];
+
+      //           if (type === "A") {
+      //             dateConditions.push(`${col} < '${fromdate}'`);
+      //           } else {
+      //             dateConditions.push(
+      //               `${col} BETWEEN '${fromdate}' AND '${todate}'`
+      //             );
+      //           }
+      //         }
+      //       });
+
+      //       if (dateConditions.length > 0) {
+      //         conditions.push(`(${dateConditions.join(" OR ")})`);
+      //       }
+      //     }
+
+      //     // 🔵 Final ORDHDR-based filter
+      //     const dynamicWhere = conditions.join(" AND ");
+      //     const innerWhere = dynamicWhere.replace(
+      //       `CompanyID='${CompId}' AND `,
+      //       ""
+      //     );
+
+      //     filter =
+      //       `CompanyID='${CompId}'` +
+      //       ` AND HV_RECID IN (` +
+      //       ` SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}` +
+      //       ` ) GROUP BY RecordID`;
+      //   }
+      // }
+
+      // else if (AccessID === "TR321") {
+      //   if (!filter || filter.trim() === "") {
+      //     // CASE 1: Prospect/Balance
+      //     const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
+      //     const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
+
+      //     if (hasProspect || hasBalance) {
+      //       const conditions = [];
+      //       conditions.push(`CompanyID='${CompId}'`);
+      //       if (hasProspect) conditions.push(`Prospects='Y'`);
+      //       if (hasBalance) conditions.push(`Balance < 0`);
+      //       filter = conditions.join(" AND ");
+      //       return;
+      //     }
+
+      //     // CASE 2: Status/Days
+      //     const days = sessionStorage.getItem("TR321_Days");
+      //     const type = sessionStorage.getItem("TR321_type");
+
+      //     const statusDateMap = {
+      //       Created: "OR_ORDERDATE",
+      //       Process: "OR_PROCESSDATE",
+      //       Paid: "OR_PAIDDATE",
+      //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+      //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
+      //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+      //       Picked: "OR_PICKEDDATETIME",
+      //       Delivered: "OR_DELIVERYDATE",
+      //     };
+
+      //     if (days && type) {
+      //       // Check if ANY status is selected
+      //       const hasStatusFilter = Object.keys(statusDateMap).some(status =>
+      //         sessionStorage.getItem(`TR321_${status}`) === "Y"
+      //       );
+
+      //       if (!hasStatusFilter) {
+      //         filter = `CompanyID='${CompId}'`;
+      //         return;
+      //       }
+
+      //       // Build ORDHDR query
+      //       const today = new Date();
+      //       const dToday = today.toISOString().split("T")[0];
+      //       const shifted = new Date(today);
+
+      //       let fromdate = "";
+      //       let todate = "";
+
+      //       if (type === "A") {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split("T")[0];
+      //       } else if (type === "L") {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split("T")[0];
+      //         todate = dToday;
+      //       } else if (type === "N") {
+      //         shifted.setDate(today.getDate() + Number(days));
+      //         fromdate = dToday;
+      //         todate = shifted.toISOString().split("T")[0];
+      //       }
+
+      //       const dateConditions = [];
+      //       Object.keys(statusDateMap).forEach((status) => {
+      //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+      //           const col = statusDateMap[status];
+      //           if (type === "A") {
+      //             dateConditions.push(`${col} < '${fromdate}'`);
+      //           } else {
+      //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+      //           }
+      //         }
+      //       });
+
+      //       if (dateConditions.length > 0) {
+      //         const conditions = [];
+      //         conditions.push(`CompanyID='${CompId}'`);
+      //         conditions.push(`(${dateConditions.join(" OR ")})`);
+
+      //         const dynamicWhere = conditions.join(" AND ");
+      //         const innerWhere = dynamicWhere.replace(`CompanyID='${CompId}' AND `, "");
+
+      //         filter = `CompanyID='${CompId}' AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}) GROUP BY RecordID`;
+      //         return;
+      //       }
+      //     }
+
+      //     // 🟢 FINAL FALLBACK: Always show CompanyID data initially
+      //     filter = `CompanyID='${CompId}'`;
+      //     return;
+      //   }
+      // }
+
+      // else if (AccessID === 'TR321') {
+      //   console.log('🔍 TR321 DEBUG - filter:', filter);
+      //   console.log('🔍 TR321 DEBUG - TR321_Balance:', sessionStorage.getItem('TR321_Balance'));
+      //   console.log('🔍 TR321 DEBUG - TR321_RESET:', sessionStorage.getItem('TR321_RESET'));
+
+      //   // 🔥 CHECK RESET STATE FIRST
+      //   const isResetState = sessionStorage.getItem('TR321_RESET') === 'Y';
+
+      //   if (isResetState) {
+      //     console.log('🔍 TR321 - RESET STATE: CompanyID only');
+      //     sessionStorage.removeItem('TR321_RESET'); // Clear flag once
+      //     dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
+      //     return;
+      //   }
+
+      //   // Normal filter checks
+      //   const hasProspect = sessionStorage.getItem('TR321_Prospect') === 'Y';
+      //   const hasBalance = sessionStorage.getItem('TR321_Balance') === 'Y';
+      //   const hasStatusFilter = sessionStorage.getItem('TR321_Days') ||
+      //                          ['Created','Process','Paid','Picked','ReadyToDeliver','Delivered','Scheduled','NextVisitDate']
+      //                          .some(status => sessionStorage.getItem(`TR321_${status}`) === 'Y');
+
+      //   console.log('🔍 TR321 DEBUG - hasProspect:', hasProspect, 'hasBalance:', hasBalance, 'hasStatusFilter:', hasStatusFilter);
+
+      //   // CASE 1: PROSPECT/BALANCE - PRIORITY 1
+      //   if (hasProspect || hasBalance) {
+      //     console.log('🔍 TR321 - Using CASE 1 (Prospect/Balance)');
+      //     const conditions = [`CompanyID=${CompId}`];
+      //     if (hasProspect) conditions.push(`Prospects = 'Y'`);
+      //     if (hasBalance) conditions.push(`Balance < 0`);
+      //     const filterClause = conditions.join(' AND ');
+      //     console.log('🔍 TR321 - CASE 1 filter:', filterClause);
+      //     dispatch(fetchListview(AccessID, 'Party', filterClause, '', CompId));
+      //     return;
+      //   }
+
+      //   // CASE 2: STATUS + DAYS - PRIORITY 2
+      //   if (hasStatusFilter) {
+      //     console.log('🔍 TR321 - Using CASE 2 (Status+Days)');
+      //     const statusDateMap = {
+      //       Created: 'OR_ORDERDATE',
+      //       Process: 'OR_PROCESSDATE',
+      //       Paid: 'OR_PAIDDATE',
+      //       ReadyToDeliver: 'OR_TENTATIVEDELIVERYDATE',
+      //       Scheduled: 'OR_TENTATIVEDELIVERYDATE',
+      //       NextVisitDate: 'OR_TENTATIVEDELIVERYDATE',
+      //       Picked: 'OR_PICKEDDATETIME',
+      //       Delivered: 'OR_DELIVERYDATE'
+      //     };
+
+      //     const conditions = [`CompanyID=${CompId}`];
+      //     const days = sessionStorage.getItem('TR321_Days');
+      //     const type = sessionStorage.getItem('TR321_type');
+
+      //     console.log('🔍 TR321 CASE 2 - days:', days, 'type:', type);
+
+      //     if (days && type) {
+      //       const today = new Date();
+      //       const dToday = today.toISOString().split('T')[0];
+      //       const shifted = new Date(today);
+      //       let fromdate, todate;
+
+      //       if (type === 'A') {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split('T')[0];
+      //       } else if (type === 'L') {
+      //         shifted.setDate(today.getDate() - Number(days));
+      //         fromdate = shifted.toISOString().split('T')[0];
+      //         todate = dToday;
+      //       } else if (type === 'N') {
+      //         shifted.setDate(today.getDate() + Number(days));
+      //         fromdate = dToday;
+      //         todate = shifted.toISOString().split('T')[0];
+      //       }
+
+      //       console.log('🔍 TR321 CASE 2 - fromdate:', fromdate, 'todate:', todate);
+
+      //       const dateConditions = [];
+      //       Object.keys(statusDateMap).forEach(status => {
+      //         if (sessionStorage.getItem(`TR321_${status}`) === 'Y') {
+      //           const col = statusDateMap[status];
+      //           if (type === 'A') {
+      //             dateConditions.push(`${col}='${fromdate}'`);
+      //           } else {
+      //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+      //           }
+      //           console.log('🔍 TR321 CASE 2 - Added condition for', status, col);
+      //         }
+      //       });
+
+      //       if (dateConditions.length > 0) {
+      //         conditions.push(`(${dateConditions.join(' OR ')})`);
+      //         console.log('🔍 TR321 CASE 2 - dateConditions:', dateConditions);
+      //       }
+      //     }
+
+      //     const dynamicWhere = conditions.join(' AND');
+      //     const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, '');
+      //     const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+
+      //     console.log('🔍 TR321 - CASE 2 finalFilter:', finalFilter);
+      //     dispatch(fetchListview(AccessID, 'Party', finalFilter, '', CompId));
+      //     return;
+      //   }
+
+      //   // CASE 3: TRUE NO FILTERS (not reset state)
+      //   console.log('🔍 TR321 - TRUE NO FILTERS: CompanyID only');
+      //   dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
+      // }
+        else if (AccessID == "TR331") {
+      const savedFilters =
+        JSON.parse(sessionStorage.getItem("TR331_Filters")) || null;
+
+      if (savedFilters) {
+        const conditions = [];
+
+        // 🔹 FORMAT DATE HERE
+        if (savedFilters.fromDate && savedFilters.toDate) {
+          const fromDate = formatToDMY(savedFilters.fromDate);
+          const toDate = formatToDMY(savedFilters.toDate);
+
+          conditions.push(`Date BETWEEN '${fromDate}' AND '${toDate}'`);
+        }
+
+        if (savedFilters.attmonth) {
+          conditions.push(`BillableMonth='${savedFilters.attmonth}'`);
+        }
+
+        if (savedFilters.attyear) {
+          conditions.push(`BillableYear='${savedFilters.attyear}'`);
+        }
+
+        if (savedFilters.Employee?.length > 0) {
+          const EmpIds = savedFilters.Employee.map(
+            (e) => `'${e.RecordID}'`,
+          ).join(",");
+          conditions.push(`EmployeeID IN (${EmpIds})`);
+        }
+
+        if (savedFilters.project?.length > 0) {
+          const projIds = savedFilters.project
+            .map((p) => `'${p.RecordID}'`)
+            .join(",");
+          conditions.push(`ProjectID IN (${projIds})`);
+        }
+
+        conditions.push(`CompanyID ='${CompId}'`);
+
+        filter = conditions.join(" AND ");
+      } else {
+        const MangerEmpID =
+          JSON.parse(sessionStorage.getItem("MangerEmpID")) || [];
+
+        if (!MangerEmpID.length) return;
+
+        // const fromDate = formatToDMY(defaultFromDate);
+        // const toDate = formatToDMY(defaultToDate);
+
+        filter = `EmployeeID IN (${MangerEmpID.join(",")}, '${empID}') AND Date BETWEEN '${defaultFromDate}'AND '${defaultToDate}'AND BillableMonth ='${currentMonthNumber}'AND BillableYear='${currentYear}'AND CompanyID ='${CompId}'`;
+      }
+    }
+      else if (AccessID === "TR321") {
+        console.log("🔍 TR321 DEBUG - filter:", filter);
+        console.log(
+          "🔍 TR321 DEBUG - TR321_RESET:",
+          sessionStorage.getItem("TR321_RESET"),
+        );
+        console.log(
+          "🔍 TR321 DEBUG - TR321_HASFILTER:",
+          sessionStorage.getItem("TR321_HASFILTER"),
+        );
+
+        // 🔥 ONE-TIME RESET: Clear immediately + CompanyID
+        if (sessionStorage.getItem("TR321_RESET") === "Y") {
+          console.log("🔍 TR321 - ONE-TIME RESET: CompanyID");
+          sessionStorage.removeItem("TR321_RESET");
+          dispatch(
+            fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
+          );
+          return;
+        }
+
+        // 🔥 NO FILTERS (null/undefined/N) → CompanyID
+        const hasFilter = sessionStorage.getItem("TR321_HASFILTER");
+        if (hasFilter !== "Y") {
+          console.log("🔍 TR321 - NO FILTERS (null/N): CompanyID");
+          dispatch(
+            fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
+          );
+          return;
+        }
+
+        // 🔥 NORMAL FILTERS: Check actual data
+        const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
+        const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
+        const hasStatusFilter =
+          sessionStorage.getItem("TR321_Days") ||
+          [
+            "Created",
+            "Process",
+            "Paid",
+            "Picked",
+            "ReadyToDeliver",
+            "Delivered",
+            "Scheduled",
+            "NextVisitDate",
+          ].some((status) => sessionStorage.getItem(`TR321_${status}`) === "Y");
+
+        console.log(
+          "🔍 TR321 DEBUG - hasProspect:",
+          hasProspect,
+          "hasBalance:",
+          hasBalance,
+          "hasStatusFilter:",
+          hasStatusFilter,
+        );
+
+        // CASE 1: PROSPECT/BALANCE
+        if (hasProspect || hasBalance) {
+          const conditions = [`CompanyID=${CompId}`];
+          if (hasProspect) conditions.push(`Prospects = 'Y'`);
+          if (hasBalance) conditions.push(`Balance < 0`);
+          const filterClause = conditions.join(" AND ");
+          console.log("🔍 TR321 - CASE 1:", filterClause);
+          dispatch(fetchListview(AccessID, "Party", filterClause, "", CompId));
+          return;
+        }
+
+        // CASE 2: STATUS + DAYS
+        if (hasStatusFilter) {
+          console.log("🔍 TR321 - CASE 2 (Status+Days)");
+          const statusDateMap = {
+            Created: "OR_ORDERDATE",
+            Process: "OR_PROCESSDATE",
+            Paid: "OR_PAIDDATE",
+            ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+            Scheduled: "OR_TENTATIVEDELIVERYDATE",
+            NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+            Picked: "OR_PICKEDDATETIME",
+            Delivered: "OR_DELIVERYDATE",
+          };
+
+          const conditions = [`CompanyID=${CompId}`];
+          const days = sessionStorage.getItem("TR321_Days");
+          const type = sessionStorage.getItem("TR321_type");
+
+          if (days && type) {
+            const today = new Date();
+            const dToday = today.toISOString().split("T")[0];
+            const shifted = new Date(today);
+            let fromdate, todate;
+
+            if (type === "A") {
+              shifted.setDate(today.getDate() - Number(days));
+              fromdate = shifted.toISOString().split("T")[0];
+            } else if (type === "L") {
+              shifted.setDate(today.getDate() - Number(days));
+              fromdate = shifted.toISOString().split("T")[0];
+              todate = dToday;
+            } else if (type === "N") {
+              shifted.setDate(today.getDate() + Number(days));
+              fromdate = dToday;
+              todate = shifted.toISOString().split("T")[0];
+            }
+
+            const dateConditions = [];
+            Object.keys(statusDateMap).forEach((status) => {
+              if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+                const col = statusDateMap[status];
+                if (type === "A") {
+                  dateConditions.push(`${col}='${fromdate}'`);
+                } else {
+                  dateConditions.push(
+                    `${col} BETWEEN '${fromdate}' AND '${todate}'`,
+                  );
+                }
+              }
+            });
+
+            if (dateConditions.length > 0) {
+              conditions.push(`(${dateConditions.join(" OR ")})`);
+            }
+          }
+
+          const dynamicWhere = conditions.join(" AND");
+          const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, "");
+          const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+
+          console.log("🔍 TR321 - CASE 2 finalFilter:", finalFilter);
+          dispatch(fetchListview(AccessID, "Party", finalFilter, "", CompId));
+          return;
+        }
+
+        // CASE 3: FALLBACK
+        console.log("🔍 TR321 - FALLBACK: CompanyID");
+        dispatch(
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
+        );
+      } else {
         filter = `CompanyID=${CompId}`;
       }
-      if (AccessID === "TR262") {
-        filter = "ProjectID=" + `'${filter}'`;
-      }
-      if (AccessID === "TR303") {
-        filter = "PartyID=" + `'${filter}'`;
-      }
-      //   if (AccessID === "TR304") {
-      //    filter = "LeaderID=" + `'${filter}'`;
-
-      // }
-      // if (AccessID === "TR314") {
-      //    filter = "PartyID=" + `'${filter}'`;
-
-      // }
-
-      //  if (AccessID === "TR283") {
-      //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
-      // }
-      //     if (AccessID === "TR288") {
-      //       // filter = `"EmployeeID=${Em}"` + `'${filter}'`;
-      //         const EmployeeID = sessionStorage.getItem("RecordID");
-      // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
-      //     }
-      // if (AccessID === "TR321" ) {
-      //   filter = "CompanyID=" + `'${CompId}'`;
-
-      // }
-    } else if (
-      AccessID == "TR280" ||
-      AccessID == "TR300" ||
-      AccessID == "TR301" ||
-      AccessID == "TR295" ||
-      AccessID == "TR296" ||
-      AccessID == "TR297" ||
-      AccessID == "TR298" ||
-      AccessID == "TR279" ||
-      AccessID == "TR281" ||
-      AccessID == "TR288" ||
-      AccessID == "TR283" ||
-      AccessID == "TR291" ||
-      AccessID == "TR299" ||
-      AccessID == "TR294" ||
-      AccessID == "TR317" ||
-      AccessID == "TR318" ||
-      AccessID == "TR362" ||
-      AccessID == "TR027" ||
-      AccessID == "TR319" ||
-      AccessID == "TR335" ||
-      AccessID == "TR338" ||
-      AccessID == "TR339" ||
-      // AccessID == "TR341" ||
-      AccessID == "TR351" ||
-      AccessID == "TR282"
-      // AccessID == "TR304"
-    ) {
-      filter = filter;
-    }
-    // else if (AccessID == "TR283") {
-    //   filter;
-    // }
-    else if (AccessID == "TR305") {
-      filter = "";
-    }
-
-    // else if (AccessID == "TR328") {
-    //   filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;
-    // }
-    else if (AccessID === "TR328") {
-      const savedFilter = sessionStorage.getItem("TR328_WHERE");
-
-      filter = savedFilter
-        ? savedFilter
-        : `HrLoginUserID='${LoginID}' AND CompanyID='${CompId}'`;
-    }
-
-    // else if (AccessID == "TR305") {
-    //   filter = "";
-    // }
-    //     else if (AccessID === "TR321") {
-    //   if (!filter || filter.trim() === "") {
-
-    //     const hasProspect =
-    //       sessionStorage.getItem("TR321_Prospect") === "Y";
-    //     const hasBalance =
-    //       sessionStorage.getItem("TR321_Balance") === "Y";
-
-    //     /* =================================================
-    //        CASE 1️⃣ : PROSPECT / BALANCE (simple Party query)
-    //     =================================================== */
-    //     if (hasProspect || hasBalance) {
-    //       const conditions = [];
-    //       conditions.push(`CompanyID='${CompId}'`);
-
-    //       if (hasProspect) {
-    //         conditions.push(`Prospects='Y'`);
-    //       }
-
-    //       if (hasBalance) {
-    //         conditions.push(`Balance < 0`);
-    //       }
-
-    //       filter = conditions.join(" AND ");
-    //       return; // 🔴 VERY IMPORTANT
-    //     }
-
-    //     /* =================================================
-    //        CASE 2️⃣ : STATUS / DAYS (ORDHDR subquery logic)
-    //     =================================================== */
-    //     const conditions = [];
-    //     conditions.push(`CompanyID='${CompId}'`);
-
-    //     const statusDateMap = {
-    //       Created: "OR_ORDERDATE",
-    //       Process: "OR_PROCESSDATE",
-    //       Paid: "OR_PAIDDATE",
-    //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-    //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
-    //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-    //       Picked: "OR_PICKEDDATETIME",
-    //       Delivered: "OR_DELIVERYDATE",
-    //     };
-
-    //     const days = sessionStorage.getItem("TR321_Days");
-    //     const type = sessionStorage.getItem("TR321_type");
-
-    //     if (days && type) {
-    //       const today = new Date();
-    //       const dToday = today.toISOString().split("T")[0];
-    //       const shifted = new Date(today);
-
-    //       let fromdate = "";
-    //       let todate = "";
-
-    //       if (type === "A") {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split("T")[0];
-    //       }
-
-    //       if (type === "L") {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split("T")[0];
-    //         todate = dToday;
-    //       }
-
-    //       if (type === "N") {
-    //         shifted.setDate(today.getDate() + Number(days));
-    //         fromdate = dToday;
-    //         todate = shifted.toISOString().split("T")[0];
-    //       }
-
-    //       const dateConditions = [];
-
-    //       Object.keys(statusDateMap).forEach((status) => {
-    //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
-    //           const col = statusDateMap[status];
-
-    //           if (type === "A") {
-    //             dateConditions.push(`${col} < '${fromdate}'`);
-    //           } else {
-    //             dateConditions.push(
-    //               `${col} BETWEEN '${fromdate}' AND '${todate}'`
-    //             );
-    //           }
-    //         }
-    //       });
-
-    //       if (dateConditions.length > 0) {
-    //         conditions.push(`(${dateConditions.join(" OR ")})`);
-    //       }
-    //     }
-
-    //     // 🔵 Final ORDHDR-based filter
-    //     const dynamicWhere = conditions.join(" AND ");
-    //     const innerWhere = dynamicWhere.replace(
-    //       `CompanyID='${CompId}' AND `,
-    //       ""
-    //     );
-
-    //     filter =
-    //       `CompanyID='${CompId}'` +
-    //       ` AND HV_RECID IN (` +
-    //       ` SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}` +
-    //       ` ) GROUP BY RecordID`;
-    //   }
-    // }
-
-    // else if (AccessID === "TR321") {
-    //   if (!filter || filter.trim() === "") {
-    //     // CASE 1: Prospect/Balance
-    //     const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
-    //     const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
-
-    //     if (hasProspect || hasBalance) {
-    //       const conditions = [];
-    //       conditions.push(`CompanyID='${CompId}'`);
-    //       if (hasProspect) conditions.push(`Prospects='Y'`);
-    //       if (hasBalance) conditions.push(`Balance < 0`);
-    //       filter = conditions.join(" AND ");
-    //       return;
-    //     }
-
-    //     // CASE 2: Status/Days
-    //     const days = sessionStorage.getItem("TR321_Days");
-    //     const type = sessionStorage.getItem("TR321_type");
-
-    //     const statusDateMap = {
-    //       Created: "OR_ORDERDATE",
-    //       Process: "OR_PROCESSDATE",
-    //       Paid: "OR_PAIDDATE",
-    //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-    //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
-    //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-    //       Picked: "OR_PICKEDDATETIME",
-    //       Delivered: "OR_DELIVERYDATE",
-    //     };
-
-    //     if (days && type) {
-    //       // Check if ANY status is selected
-    //       const hasStatusFilter = Object.keys(statusDateMap).some(status =>
-    //         sessionStorage.getItem(`TR321_${status}`) === "Y"
-    //       );
-
-    //       if (!hasStatusFilter) {
-    //         filter = `CompanyID='${CompId}'`;
-    //         return;
-    //       }
-
-    //       // Build ORDHDR query
-    //       const today = new Date();
-    //       const dToday = today.toISOString().split("T")[0];
-    //       const shifted = new Date(today);
-
-    //       let fromdate = "";
-    //       let todate = "";
-
-    //       if (type === "A") {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split("T")[0];
-    //       } else if (type === "L") {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split("T")[0];
-    //         todate = dToday;
-    //       } else if (type === "N") {
-    //         shifted.setDate(today.getDate() + Number(days));
-    //         fromdate = dToday;
-    //         todate = shifted.toISOString().split("T")[0];
-    //       }
-
-    //       const dateConditions = [];
-    //       Object.keys(statusDateMap).forEach((status) => {
-    //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
-    //           const col = statusDateMap[status];
-    //           if (type === "A") {
-    //             dateConditions.push(`${col} < '${fromdate}'`);
-    //           } else {
-    //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-    //           }
-    //         }
-    //       });
-
-    //       if (dateConditions.length > 0) {
-    //         const conditions = [];
-    //         conditions.push(`CompanyID='${CompId}'`);
-    //         conditions.push(`(${dateConditions.join(" OR ")})`);
-
-    //         const dynamicWhere = conditions.join(" AND ");
-    //         const innerWhere = dynamicWhere.replace(`CompanyID='${CompId}' AND `, "");
-
-    //         filter = `CompanyID='${CompId}' AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}) GROUP BY RecordID`;
-    //         return;
-    //       }
-    //     }
-
-    //     // 🟢 FINAL FALLBACK: Always show CompanyID data initially
-    //     filter = `CompanyID='${CompId}'`;
-    //     return;
-    //   }
-    // }
-
-    // else if (AccessID === 'TR321') {
-    //   console.log('🔍 TR321 DEBUG - filter:', filter);
-    //   console.log('🔍 TR321 DEBUG - TR321_Balance:', sessionStorage.getItem('TR321_Balance'));
-    //   console.log('🔍 TR321 DEBUG - TR321_RESET:', sessionStorage.getItem('TR321_RESET'));
-
-    //   // 🔥 CHECK RESET STATE FIRST
-    //   const isResetState = sessionStorage.getItem('TR321_RESET') === 'Y';
-
-    //   if (isResetState) {
-    //     console.log('🔍 TR321 - RESET STATE: CompanyID only');
-    //     sessionStorage.removeItem('TR321_RESET'); // Clear flag once
-    //     dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
-    //     return;
-    //   }
-
-    //   // Normal filter checks
-    //   const hasProspect = sessionStorage.getItem('TR321_Prospect') === 'Y';
-    //   const hasBalance = sessionStorage.getItem('TR321_Balance') === 'Y';
-    //   const hasStatusFilter = sessionStorage.getItem('TR321_Days') ||
-    //                          ['Created','Process','Paid','Picked','ReadyToDeliver','Delivered','Scheduled','NextVisitDate']
-    //                          .some(status => sessionStorage.getItem(`TR321_${status}`) === 'Y');
-
-    //   console.log('🔍 TR321 DEBUG - hasProspect:', hasProspect, 'hasBalance:', hasBalance, 'hasStatusFilter:', hasStatusFilter);
-
-    //   // CASE 1: PROSPECT/BALANCE - PRIORITY 1
-    //   if (hasProspect || hasBalance) {
-    //     console.log('🔍 TR321 - Using CASE 1 (Prospect/Balance)');
-    //     const conditions = [`CompanyID=${CompId}`];
-    //     if (hasProspect) conditions.push(`Prospects = 'Y'`);
-    //     if (hasBalance) conditions.push(`Balance < 0`);
-    //     const filterClause = conditions.join(' AND ');
-    //     console.log('🔍 TR321 - CASE 1 filter:', filterClause);
-    //     dispatch(fetchListview(AccessID, 'Party', filterClause, '', CompId));
-    //     return;
-    //   }
-
-    //   // CASE 2: STATUS + DAYS - PRIORITY 2
-    //   if (hasStatusFilter) {
-    //     console.log('🔍 TR321 - Using CASE 2 (Status+Days)');
-    //     const statusDateMap = {
-    //       Created: 'OR_ORDERDATE',
-    //       Process: 'OR_PROCESSDATE',
-    //       Paid: 'OR_PAIDDATE',
-    //       ReadyToDeliver: 'OR_TENTATIVEDELIVERYDATE',
-    //       Scheduled: 'OR_TENTATIVEDELIVERYDATE',
-    //       NextVisitDate: 'OR_TENTATIVEDELIVERYDATE',
-    //       Picked: 'OR_PICKEDDATETIME',
-    //       Delivered: 'OR_DELIVERYDATE'
-    //     };
-
-    //     const conditions = [`CompanyID=${CompId}`];
-    //     const days = sessionStorage.getItem('TR321_Days');
-    //     const type = sessionStorage.getItem('TR321_type');
-
-    //     console.log('🔍 TR321 CASE 2 - days:', days, 'type:', type);
-
-    //     if (days && type) {
-    //       const today = new Date();
-    //       const dToday = today.toISOString().split('T')[0];
-    //       const shifted = new Date(today);
-    //       let fromdate, todate;
-
-    //       if (type === 'A') {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split('T')[0];
-    //       } else if (type === 'L') {
-    //         shifted.setDate(today.getDate() - Number(days));
-    //         fromdate = shifted.toISOString().split('T')[0];
-    //         todate = dToday;
-    //       } else if (type === 'N') {
-    //         shifted.setDate(today.getDate() + Number(days));
-    //         fromdate = dToday;
-    //         todate = shifted.toISOString().split('T')[0];
-    //       }
-
-    //       console.log('🔍 TR321 CASE 2 - fromdate:', fromdate, 'todate:', todate);
-
-    //       const dateConditions = [];
-    //       Object.keys(statusDateMap).forEach(status => {
-    //         if (sessionStorage.getItem(`TR321_${status}`) === 'Y') {
-    //           const col = statusDateMap[status];
-    //           if (type === 'A') {
-    //             dateConditions.push(`${col}='${fromdate}'`);
-    //           } else {
-    //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-    //           }
-    //           console.log('🔍 TR321 CASE 2 - Added condition for', status, col);
-    //         }
-    //       });
-
-    //       if (dateConditions.length > 0) {
-    //         conditions.push(`(${dateConditions.join(' OR ')})`);
-    //         console.log('🔍 TR321 CASE 2 - dateConditions:', dateConditions);
-    //       }
-    //     }
-
-    //     const dynamicWhere = conditions.join(' AND');
-    //     const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, '');
-    //     const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-    //     console.log('🔍 TR321 - CASE 2 finalFilter:', finalFilter);
-    //     dispatch(fetchListview(AccessID, 'Party', finalFilter, '', CompId));
-    //     return;
-    //   }
-
-    //   // CASE 3: TRUE NO FILTERS (not reset state)
-    //   console.log('🔍 TR321 - TRUE NO FILTERS: CompanyID only');
-    //   dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
-    // }
-    else if (AccessID === "TR321") {
-      console.log("🔍 TR321 DEBUG - filter:", filter);
-      console.log(
-        "🔍 TR321 DEBUG - TR321_RESET:",
-        sessionStorage.getItem("TR321_RESET"),
-      );
-      console.log(
-        "🔍 TR321 DEBUG - TR321_HASFILTER:",
-        sessionStorage.getItem("TR321_HASFILTER"),
-      );
-
-      // 🔥 ONE-TIME RESET: Clear immediately + CompanyID
-      if (sessionStorage.getItem("TR321_RESET") === "Y") {
-        console.log("🔍 TR321 - ONE-TIME RESET: CompanyID");
-        sessionStorage.removeItem("TR321_RESET");
-        dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
-        );
-        return;
-      }
-
-      // 🔥 NO FILTERS (null/undefined/N) → CompanyID
-      const hasFilter = sessionStorage.getItem("TR321_HASFILTER");
-      if (hasFilter !== "Y") {
-        console.log("🔍 TR321 - NO FILTERS (null/N): CompanyID");
-        dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
-        );
-        return;
-      }
-
-      // 🔥 NORMAL FILTERS: Check actual data
-      const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
-      const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
-      const hasStatusFilter =
-        sessionStorage.getItem("TR321_Days") ||
-        [
-          "Created",
-          "Process",
-          "Paid",
-          "Picked",
-          "ReadyToDeliver",
-          "Delivered",
-          "Scheduled",
-          "NextVisitDate",
-        ].some((status) => sessionStorage.getItem(`TR321_${status}`) === "Y");
-
-      console.log(
-        "🔍 TR321 DEBUG - hasProspect:",
-        hasProspect,
-        "hasBalance:",
-        hasBalance,
-        "hasStatusFilter:",
-        hasStatusFilter,
-      );
-
-      // CASE 1: PROSPECT/BALANCE
-      if (hasProspect || hasBalance) {
-        const conditions = [`CompanyID=${CompId}`];
-        if (hasProspect) conditions.push(`Prospects = 'Y'`);
-        if (hasBalance) conditions.push(`Balance < 0`);
-        const filterClause = conditions.join(" AND ");
-        console.log("🔍 TR321 - CASE 1:", filterClause);
-        dispatch(fetchListview(AccessID, "Party", filterClause, "", CompId));
-        return;
-      }
-
-      // CASE 2: STATUS + DAYS
-      if (hasStatusFilter) {
-        console.log("🔍 TR321 - CASE 2 (Status+Days)");
-        const statusDateMap = {
-          Created: "OR_ORDERDATE",
-          Process: "OR_PROCESSDATE",
-          Paid: "OR_PAIDDATE",
-          ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-          Scheduled: "OR_TENTATIVEDELIVERYDATE",
-          NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-          Picked: "OR_PICKEDDATETIME",
-          Delivered: "OR_DELIVERYDATE",
-        };
-
-        const conditions = [`CompanyID=${CompId}`];
-        const days = sessionStorage.getItem("TR321_Days");
-        const type = sessionStorage.getItem("TR321_type");
-
-        if (days && type) {
-          const today = new Date();
-          const dToday = today.toISOString().split("T")[0];
-          const shifted = new Date(today);
-          let fromdate, todate;
-
-          if (type === "A") {
-            shifted.setDate(today.getDate() - Number(days));
-            fromdate = shifted.toISOString().split("T")[0];
-          } else if (type === "L") {
-            shifted.setDate(today.getDate() - Number(days));
-            fromdate = shifted.toISOString().split("T")[0];
-            todate = dToday;
-          } else if (type === "N") {
-            shifted.setDate(today.getDate() + Number(days));
-            fromdate = dToday;
-            todate = shifted.toISOString().split("T")[0];
-          }
-
-          const dateConditions = [];
-          Object.keys(statusDateMap).forEach((status) => {
-            if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
-              const col = statusDateMap[status];
-              if (type === "A") {
-                dateConditions.push(`${col}='${fromdate}'`);
-              } else {
-                dateConditions.push(
-                  `${col} BETWEEN '${fromdate}' AND '${todate}'`,
-                );
-              }
-            }
-          });
-
-          if (dateConditions.length > 0) {
-            conditions.push(`(${dateConditions.join(" OR ")})`);
-          }
-        }
-
-        const dynamicWhere = conditions.join(" AND");
-        const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, "");
-        const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-        console.log("🔍 TR321 - CASE 2 finalFilter:", finalFilter);
-        dispatch(fetchListview(AccessID, "Party", finalFilter, "", CompId));
-        return;
-      }
-
-      // CASE 3: FALLBACK
-      console.log("🔍 TR321 - FALLBACK: CompanyID");
-      dispatch(
-        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
-      );
-    } else {
-      filter = `CompanyID=${CompId}`;
-    }
-    var idata = {
-      Query: {
-        // "ScreenName": screenName,
-        AccessID: AccessID,
-        VerticalLicense: VerticalLicense,
-        ScreenName: screenName,
-        Filter:
-          AccessID == "TR128"
-            ? `parentID=${CompId}`
-            : AccessID == "TR273"
-              ? "Type = 'CI'"
-              : AccessID == "TR274"
-                ? "Type = 'CO'"
-                : filter,
-        // Filter: `CompanyID=${CompId}`,
-        Any: any,
-        //CompId,
-      },
-    };
-
-    idata = JSON.stringify(idata);
-    console.log("data--" + idata);
-
-    dispatch(pending());
-    axios
-      .get(url, {
-        params: {
-          data: idata,
+      var idata = {
+        Query: {
+          // "ScreenName": screenName,
+          AccessID: AccessID,
+          VerticalLicense: VerticalLicense,
+          ScreenName: screenName,
+          Filter:
+            AccessID == "TR128"
+              ? `parentID=${CompId}`
+              : AccessID == "TR273"
+                ? "Type = 'CI'"
+                : AccessID == "TR274"
+                  ? "Type = 'CO'"
+                  : filter,
+          // Filter: `CompanyID=${CompId}`,
+          Any: any,
+          //CompId,
         },
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-        },
-      })
-      .then((response) => {
-        var listviewData = response.data;
-        if (listviewData.Status == "Y") {
-          var obj = {};
-          if (AccessID == "TR047") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              headerAlign: "center",
-              sortable: false,
-              filterable: false,
-              disableColumnMenu: true,
-              minWidth: 300,
-              maxWidth: 300,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Stack direction="row">
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Number}/${params.row.Quantity}`}
-                    >
-                      <Tooltip title="Production Card Items">
-                        <IconButton color="info">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.Number}`}
-                    >
-                      <Tooltip title="Indent Items">
-                        <IconButton color="error">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    <Link
-                      to={`/Apps/TR146/Production Card/EditInspection Form/${params.row.RecordID}`}
-                    >
-                      <Tooltip title="Inspection Form">
-                        <IconButton color="info">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    {params.row.Startdate != "" ? (
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }productioncard.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {params.row.Process != "Y" && params.row.Completeddate ? (
-                      <Link>
-                        <IconButton
-                          color="primary"
-                          variant="contained"
-                          onClick={fnProcess(params.row.RecordID, "TR047")}
-                        >
-                          <SettingsBackupRestoreIcon />
-                        </IconButton>
-                      </Link>
-                    ) : null}
+      };
 
-                    {params.row.Startdate == "" ? (
-                      <Link>
-                        <Tooltip title={params.row.Startdate}>
-                          <IconButton
-                            color="success"
-                            onClick={productionCardUPdate(
-                              "S",
-                              params.row.RecordID,
-                            )}
-                          >
-                            <PlayCircleOutlineOutlinedIcon />
+      idata = JSON.stringify(idata);
+      console.log("data--" + idata);
+
+      dispatch(pending());
+      axios
+        .get(url, {
+          params: {
+            data: idata,
+          },
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        })
+        .then((response) => {
+          var listviewData = response.data;
+          if (listviewData.Status == "Y") {
+            var obj = {};
+            if (AccessID == "TR047") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 300,
+                maxWidth: 300,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Number}/${params.row.Quantity}`}
+                      >
+                        <Tooltip title="Production Card Items">
+                          <IconButton color="info">
+                            <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : params.row.Startdate != "" &&
-                      params.row.Completeddate == "" ? (
-                      <Box>
-                        {params.row.Pausedate == "" ? (
-                          <Link>
-                            <Tooltip title={params.row.Pausedate || "Pause"}>
-                              <IconButton
-                                color="warning"
-                                onClick={productionCardUPdate(
-                                  "P",
-                                  params.row.RecordID,
-                                )}
-                              >
-                                <PauseCircleOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        ) : params.row.ContinueDate == "" ? (
-                          <Link>
-                            <Tooltip title="Continue">
-                              <IconButton
-                                color="primary"
-                                onClick={productionCardUPdate(
-                                  "R",
-                                  params.row.RecordID,
-                                )}
-                              >
-                                <NotStartedOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        ) : (
-                          false
-                        )}
-                        <Link>
-                          <Tooltip
-                            title={params.row.Completeddate || "Complete"}
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.Number}`}
+                      >
+                        <Tooltip title="Indent Items">
+                          <IconButton color="error">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      <Link
+                        to={`/Apps/TR146/Production Card/EditInspection Form/${params.row.RecordID}`}
+                      >
+                        <Tooltip title="Inspection Form">
+                          <IconButton color="info">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      {params.row.Startdate != "" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }productioncard.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
                           >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {params.row.Process != "Y" && params.row.Completeddate ? (
+                        <Link>
+                          <IconButton
+                            color="primary"
+                            variant="contained"
+                            onClick={fnProcess(params.row.RecordID, "TR047")}
+                          >
+                            <SettingsBackupRestoreIcon />
+                          </IconButton>
+                        </Link>
+                      ) : null}
+
+                      {params.row.Startdate == "" ? (
+                        <Link>
+                          <Tooltip title={params.row.Startdate}>
                             <IconButton
                               color="success"
                               onClick={productionCardUPdate(
-                                "C",
+                                "S",
                                 params.row.RecordID,
                               )}
                             >
-                              <TaskAltOutlinedIcon />
+                              <PlayCircleOutlineOutlinedIcon />
                             </IconButton>
                           </Tooltip>
                         </Link>
-                      </Box>
-                    ) : (
-                      ""
-                    )}
-                    {params.row.Process == "Y" ? (
-                      <Tooltip title="Print">
+                      ) : params.row.Startdate != "" &&
+                        params.row.Completeddate == "" ? (
+                        <Box>
+                          {params.row.Pausedate == "" ? (
+                            <Link>
+                              <Tooltip title={params.row.Pausedate || "Pause"}>
+                                <IconButton
+                                  color="warning"
+                                  onClick={productionCardUPdate(
+                                    "P",
+                                    params.row.RecordID,
+                                  )}
+                                >
+                                  <PauseCircleOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : params.row.ContinueDate == "" ? (
+                            <Link>
+                              <Tooltip title="Continue">
+                                <IconButton
+                                  color="primary"
+                                  onClick={productionCardUPdate(
+                                    "R",
+                                    params.row.RecordID,
+                                  )}
+                                >
+                                  <NotStartedOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : (
+                            false
+                          )}
+                          <Link>
+                            <Tooltip
+                              title={params.row.Completeddate || "Complete"}
+                            >
+                              <IconButton
+                                color="success"
+                                onClick={productionCardUPdate(
+                                  "C",
+                                  params.row.RecordID,
+                                )}
+                              >
+                                <TaskAltOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        </Box>
+                      ) : (
+                        ""
+                      )}
+                      {params.row.Process == "Y" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
+
+                      <Tooltip title="Production Requirement">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }ProductionRequirement.php?Token=${params.row.Hashtoken
+                            }`}
                           target="_blank"
                           rel="noreferrer"
-                          color="info"
+                          sx={{ color: "#4615b2" }}
                           size="small"
                         >
                           <PrintOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    ) : (
-                      false
-                    )}
 
-                    <Tooltip title="Production Requirement">
-                      <IconButton
-                        component="a"
-                        href={`${
-                          store.getState().globalurl.pdfurl
-                        }ProductionRequirement.php?Token=${
-                          params.row.Hashtoken
-                        }`}
-                        target="_blank"
-                        rel="noreferrer"
-                        sx={{ color: "#4615b2" }}
-                        size="small"
-                      >
-                        <PrintOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
+                      {params.row.Process == "Y" ? (
+                        <Tooltip title="Email">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                              dispatch(
+                                mailOpen({
+                                  row: params.row,
+                                  link: `${store.getState().globalurl.pdfurl
+                                    }PRODUCTIONCARD.php?Token=${params.row.Hashtoken
+                                    }`,
+                                }),
+                              );
+                              dispatch(
+                                getMail({
+                                  Templateid: "ET_006",
+                                  RecordID: params.row.RecordID,
+                                  UserName: "Trinity",
+                                }),
+                              );
+                            }}
+                          >
+                            <EmailIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
 
-                    {params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }PRODUCTIONCARD.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
-                              }),
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_006",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              }),
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-
-                    {/* <Link><Tooltip title="Start"><IconButton color="success" onClick={productionCardUPdate("S",params.row.RecordID)} ><PlayCircleOutlineOutlinedIcon/></IconButton></Tooltip></Link>
+                      {/* <Link><Tooltip title="Start"><IconButton color="success" onClick={productionCardUPdate("S",params.row.RecordID)} ><PlayCircleOutlineOutlinedIcon/></IconButton></Tooltip></Link>
              <Link><Tooltip title="Pause"><IconButton color="warning" onClick={productionCardUPdate("P",params.row.RecordID)}><PauseCircleOutlinedIcon/></IconButton></Tooltip></Link>
             <Link><Tooltip title="Complete"><IconButton color="success" onClick={productionCardUPdate("C",params.row.RecordID)}><TaskAltOutlinedIcon/></IconButton></Tooltip></Link> */}
-                    {/* </Stack> */}
-                  </Stack>
-                );
-              },
-            };
-          } else if (AccessID == "TR058" || AccessID == "TR059") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {/* // <Stack direction="row" spacing={1}> */}
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip
-                        title={
-                          AccessID == "TR058"
-                            ? "List of Remarks"
-                            : "List of Delivery challan"
-                        }
-                      >
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR313") {
-            obj = {};
-          } else if (AccessID == "TR146") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./EditJobWork Category/${params.row.RecordID}/E`}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    <Link to={`./EditJobwork/${params.row.RecordID}/E`}>
-                      <Tooltip title={"List of Job Work"}>
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR275") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                const dispatch = store.dispatch;
-                const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
-                const PDFButton = ({ ProjectID, EmployeeID }) => {
-                  const dispatch = store.dispatch;
-                  const [loading, setLoading] = React.useState(false);
-
-                  const handlePDFGET = async () => {
-                    try {
-                      setLoading(true);
-
-                      const resultAction = await dispatch(
-                        getProjectCosting({ ProjectID, EmployeeID }),
-                      );
-
-                      const data = resultAction.payload; // <-- this depends on how your thunk is defined
-                      if (!data?.HeaderData?.DetailData?.length) {
-                        alert(
-                          "No Costing available to generate PDF. Kindly add costing...",
-                        );
-                        return;
-                      }
-
-                      // Generate and download PDF
-                      const blob = await pdf(
-                        <ProjectPDF data={data} UserName={UserName} />,
-                      ).toBlob();
-                      const link = document.createElement("a");
-                      link.href = URL.createObjectURL(blob);
-                      link.download = "Project.pdf";
-                      link.click();
-                    } catch (err) {
-                      console.error("PDF generation failed", err);
-                    } finally {
-                      setLoading(false);
-                    }
-                  };
-
-                  return (
-                    <Tooltip title="Download Payslip Pdf">
-                      <IconButton
-                        color="info"
-                        size="small"
-                        onClick={handlePDFGET}
-                      >
-                        {loading ? (
-                          <CircularProgress size={20} />
-                        ) : (
-                          <PictureAsPdfIcon color="error" />
-                        )}
-                      </IconButton>
-                    </Tooltip>
+                      {/* </Stack> */}
+                    </Stack>
                   );
-                };
-
-                return (
-                  <Box>
-                    {isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                },
+              };
+            } else if (AccessID == "TR058" || AccessID == "TR059") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {/* // <Stack direction="row" spacing={1}> */}
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
+                      >
+                        <Tooltip
+                          title={
+                            AccessID == "TR058"
+                              ? "List of Remarks"
+                              : "List of Delivery challan"
+                          }
+                        >
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR313") {
+              obj = {};
+            } else if (AccessID == "TR146") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditJobWork Category/${params.row.RecordID}/E`}
+                      >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    )}
-                    {!isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/V`}>
-                        <Tooltip title="View">
+                      <Link to={`./EditJobwork/${params.row.RecordID}/E`}>
+                        <Tooltip title={"List of Job Work"}>
                           <IconButton color="info" size="small">
-                            <VisibilityIcon />
+                            <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    )}
-                    {/* <Tooltip title="Download PDF">
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR275") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  const dispatch = store.dispatch;
+                  const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
+                  const PDFButton = ({ ProjectID, EmployeeID }) => {
+                    const dispatch = store.dispatch;
+                    const [loading, setLoading] = React.useState(false);
+
+                    const handlePDFGET = async () => {
+                      try {
+                        setLoading(true);
+
+                        const resultAction = await dispatch(
+                          getProjectCosting({ ProjectID, EmployeeID }),
+                        );
+
+                        const data = resultAction.payload; // <-- this depends on how your thunk is defined
+                        if (!data?.HeaderData?.DetailData?.length) {
+                          alert(
+                            "No Costing available to generate PDF. Kindly add costing...",
+                          );
+                          return;
+                        }
+
+                        // Generate and download PDF
+                        const blob = await pdf(
+                          <ProjectPDF data={data} UserName={UserName} />,
+                        ).toBlob();
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(blob);
+                        link.download = "Project.pdf";
+                        link.click();
+                      } catch (err) {
+                        console.error("PDF generation failed", err);
+                      } finally {
+                        setLoading(false);
+                      }
+                    };
+
+                    return (
+                      <Tooltip title="Download Payslip Pdf">
+                        <IconButton
+                          color="info"
+                          size="small"
+                          onClick={handlePDFGET}
+                        >
+                          {loading ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            <PictureAsPdfIcon color="error" />
+                          )}
+                        </IconButton>
+                      </Tooltip>
+                    );
+                  };
+
+                  return (
+                    <Box>
+                      {isSeedEditable && (
+                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {!isSeedEditable && (
+                        <Link to={`./EditProject/${params.row.RecordID}/V`}>
+                          <Tooltip title="View">
+                            <IconButton color="info" size="small">
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {/* <Tooltip title="Download PDF">
                       <IconButton
                         color="info"
                         size="small"
@@ -1669,7 +1742,7 @@ export const fetchListview =
                       </IconButton>
                     </Tooltip> */}
 
-                    {/* <Tooltip title="Download PDF">
+                      {/* <Tooltip title="Download PDF">
                       <IconButton
                         color="info"
                         size="small"
@@ -1701,1375 +1774,926 @@ export const fetchListview =
                         )}
                       </IconButton>
                     </Tooltip> */}
-                    {isSeedEditable && (
-                      <PDFButton
-                        ProjectID={params.row.RecordID}
-                        EmployeeID={params.row.InchargeID}
-                      />
-                    )}
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR205") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./EditSalary%20Component/${params.row.RecordID}/E`}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR207") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR123") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link to={`./EditCheck%20In/${params.row.RecordID}/E`}>
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR124") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link to={`./EditCheck%20Out/${params.row.RecordID}/E`}>
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR257") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./EditEmployee%20Request/${params.row.RecordID}/E`}
-                      state={{ EmpName: params.row.Name }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR278" ||
-            AccessID == "TR280" ||
-            AccessID == "TR301" ||
-            AccessID == "TR300" ||
-            AccessID == "TR305" ||
-            AccessID == "TR295" ||
-            AccessID == "TR296" ||
-            AccessID == "TR297" ||
-            AccessID == "TR298" ||
-            AccessID == "TR279" ||
-            AccessID == "TR281" ||
-            AccessID == "TR282" ||
-            AccessID == "TR288" ||
-            AccessID == "TR286" ||
-            AccessID == "TR291" ||
-            AccessID == "TR299" ||
-            AccessID == "TR294" ||
-            AccessID == "TR283"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 200,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              //align: "center",
-              align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => (
-                <PrepareAction
-                  // rights={rights}
-                  params={params}
-                  accessID={AccessID}
-                  screenName={screenName}
-                />
-              ),
-              // renderCell: (params) => {
-              //   return (
-              //     <Box>
-              //       <Link
-              //         // to={`/Apps/SkillGlow/SkillGlowList`}
-              //         to={`/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`}
-              //       >
-              //         <IconButton color="primary" size="small">
-              //           <Tooltip title="Assessment">
-              //             <Psychology />
+                      {isSeedEditable && (
+                        <PDFButton
+                          ProjectID={params.row.RecordID}
+                          EmployeeID={params.row.InchargeID}
+                        />
+                      )}
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR205") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditSalary%20Component/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR207") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR123") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link to={`./EditCheck%20In/${params.row.RecordID}/E`}>
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR124") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link to={`./EditCheck%20Out/${params.row.RecordID}/E`}>
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR257") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditEmployee%20Request/${params.row.RecordID}/E`}
+                        state={{ EmpName: params.row.Name }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR331" || AccessID == "TR366") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        // to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        to={`/Apps/Secondarylistview/TR332/Payment/${params.row.RecordID}/${params.row.EmployeeID}`}
+                        state={{
+                          Employee: params.row.Employee,
+                          Project: params.row.Project,
+                          ProjectID: params.row.ProjectID,
+                        }}
+                      >
+                        <Tooltip title="Payment">
+                          <IconButton color="info" size="small">
+                            <CurrencyRupeeOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR332") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <>
+                        {/* EDIT */}
+                        <Link
+                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+                          to={`./EditPayment/${params.row.RecordID}/E`}
+                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.Project,
+                            Employee: params.row.Employee,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+
+                        {/* PDF */}
+                        <Tooltip title="Download Receipt">
+                          <span>
+                            <PDFDownloadLink
+                              document={
+                               
+                                <PaymentReceipt
+                                  data={{
+
+                                    Employee: params.row?.ReceiverName,
+                                    PaymentMode: params.row?.PaymentMode,
+                                    InvoiceNo: params.row?.InvoiceNo,
+                                    InvoiceAmount: params.row?.InvoiceAmount,
+                                    PreviouslyPaid: params.row?.PreviouslyPaid,
+                                    MobileNo: params.row?.ReceiverMobileNo,
+                                    EmailID: params.row?.ReceiverEmailID,
+                                    Address: params.row?.ReceiverAddress,
+                                    CompanyName: params.row?.CompanyName,
+                                    paymentDetails: [
+                                      {
+                                        sno: 1,
+                                        PaymentReference: params.row?.PaymentRefereance,
+                                        PaidAmount: params.row?.PaidAmount,
+                                        DueAmount: params.row?.Due,
+
+                                      }
+                                    ]
+                                  }}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
+                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
+                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+
+                                  }}
+                                />
+                              }
+                              fileName={`Receipt.pdf`}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <IconButton size="small">
+                                    <CircularProgress size={18} />
+                                  </IconButton>
+                                ) : (
+                                  <IconButton size="small">
+                                    <PictureAsPdfIcon color="error" />
+                                  </IconButton>
+                                )
+                              }
+                            </PDFDownloadLink>
+                          </span>
+                        </Tooltip>
+                      </>
+                    </Box>
+                  );
+                },
+              };
+            }
+
+            // else if (AccessID == "TR366") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 250,
+            //     sortable: false,
+            //     filterable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <Link
+            //               // to={`./Edit${screenName}/${params.row.RecordID}/E`}
+            //               to={`/Apps/Secondarylistview/TR332/Payment/${params.row.RecordID}/${params.row.EmployeeID}`}
+            //               state={{
+            //                 Employee: params.row.Employee,
+            //                 Project: params.row.Project,
+            //                 ProjectID: params.row.ProjectID,
+            //               }}
+            //             >
+            //               <Tooltip title="Payment">
+            //                 <IconButton color="info" size="small">
+            //                   <CurrencyRupeeOutlinedIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             </Link>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
+            else if (
+              AccessID == "TR278" ||
+              AccessID == "TR280" ||
+              AccessID == "TR301" ||
+              AccessID == "TR300" ||
+              AccessID == "TR305" ||
+              AccessID == "TR295" ||
+              AccessID == "TR296" ||
+              AccessID == "TR297" ||
+              AccessID == "TR298" ||
+              AccessID == "TR279" ||
+              AccessID == "TR281" ||
+              AccessID == "TR282" ||
+              AccessID == "TR288" ||
+              AccessID == "TR286" ||
+              AccessID == "TR291" ||
+              AccessID == "TR299" ||
+              AccessID == "TR294" ||
+              AccessID == "TR283"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 200,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                //align: "center",
+                align: "left",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => (
+                  <PrepareAction
+                    // rights={rights}
+                    params={params}
+                    accessID={AccessID}
+                    screenName={screenName}
+                  />
+                ),
+                // renderCell: (params) => {
+                //   return (
+                //     <Box>
+                //       <Link
+                //         // to={`/Apps/SkillGlow/SkillGlowList`}
+                //         to={`/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`}
+                //       >
+                //         <IconButton color="primary" size="small">
+                //           <Tooltip title="Assessment">
+                //             <Psychology />
+                //           </Tooltip>
+                //         </IconButton>
+                //       </Link>
+                //       <Link
+                //         to={`./EditList Of Categories/${params.row.RecordID}/E`}
+                //       >
+                //         <Tooltip title="Edit">
+                //           <IconButton color="info" size="small">
+                //             <ModeEditOutlinedIcon />
+                //           </IconButton>
+                //         </Tooltip>
+                //       </Link>
+                //       <Link
+                //         to={`./EditList Of Categories/${params.row.RecordID}/D`}
+                //       >
+                //         <Tooltip title="Delete">
+                //           <IconButton color="error" size="small">
+                //             <Delete />
+                //           </IconButton>
+                //         </Tooltip>
+                //       </Link>
+                //     </Box>
+                //   );
+                // },
+              };
+            } else if (
+              AccessID == "TR315" ||
+              AccessID == "TR330" ||
+              AccessID == "TR316" ||
+              AccessID == "TR333" ||
+              AccessID == "TR317" ||
+              AccessID == "TR318" ||
+              AccessID == "TR310" ||
+              AccessID == "TR323" ||
+              AccessID == "TR324" ||
+              AccessID == "TR328" ||
+              AccessID == "TR361" ||
+              AccessID == "TR027" ||
+              AccessID == "TR319"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 150,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align:
+                  AccessID === "TR319" || AccessID === "TR324"
+                    ? "center"
+                    : "left",
+                // align: "center",
+                // align: "left",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => (
+                  <ItemAction
+                    // rights={rights}
+                    params={params}
+                    accessID={AccessID}
+                    screenName={screenName}
+                  />
+                ),
+              };
+            } else if (AccessID == "TR321") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 200,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                // align: "center",
+                align: "left",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => (
+                  <PartyAction
+                    // rights={rights}
+                    params={params}
+                    accessID={AccessID}
+                    screenName={screenName}
+                  />
+                ),
+              };
+            } else if (
+              AccessID == "TR336" ||
+              AccessID == "TR338" ||
+              AccessID == "TR339" ||
+              // AccessID == "TR341" ||
+              AccessID == "TR351" ||
+              AccessID == "TR335" ||
+              AccessID == "TR337"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 180,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                // align: "center",
+                align: "left",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => (
+                  <SOPAction
+                    // rights={rights}
+                    params={params}
+                    accessID={AccessID}
+                    screenName={screenName}
+                  />
+                ),
+              };
+            } else if (AccessID == "TR076") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {/* // <Stack direction="row" spacing={1}> */}
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
+                      >
+                        <Tooltip title="List of Batch">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR064") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {/* // <Stack direction="row" spacing={1}> */}
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
+                      >
+                        <Tooltip title="List of Stock">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR213") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      <Link
+                        to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
+                        state={{ LeaveType: params.row.LeaveType }}
+                      >
+                        <Tooltip title="Leave Enquiry Report">
+                          <IconButton color="info" size="small">
+                            <EventNoteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+
+              //  } else if (AccessID == "TR128") {
+              // obj = {
+              //   field: "action",
+              //   headerName: "Action",
+              //   minWidth: 150,
+              //   sortable: false,
+              //   filterable: false,
+              //   headerAlign: "center",
+              //   align: "center",
+              //   disableColumnMenu: true,
+              //   disableExport: true,
+              //   renderCell: (params) => {
+              //     return (
+              //       <Box>
+              //         <Link
+              //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+              //               state={{ Locationname: params.row.Name }}
+              //         >
+              //           <Tooltip title="Gate">
+              //             <IconButton color="info" size="small">
+              //               <ListAltOutlinedIcon />
+              //             </IconButton>
               //           </Tooltip>
-              //         </IconButton>
-              //       </Link>
-              //       <Link
-              //         to={`./EditList Of Categories/${params.row.RecordID}/E`}
-              //       >
-              //         <Tooltip title="Edit">
-              //           <IconButton color="info" size="small">
-              //             <ModeEditOutlinedIcon />
-              //           </IconButton>
-              //         </Tooltip>
-              //       </Link>
-              //       <Link
-              //         to={`./EditList Of Categories/${params.row.RecordID}/D`}
-              //       >
-              //         <Tooltip title="Delete">
-              //           <IconButton color="error" size="small">
-              //             <Delete />
-              //           </IconButton>
-              //         </Tooltip>
-              //       </Link>
-              //     </Box>
-              //   );
-              // },
-            };
-          } else if (
-            AccessID == "TR315" ||
-            AccessID == "TR330" ||
-            AccessID == "TR316" ||
-            AccessID == "TR333" ||
-            AccessID == "TR317" ||
-            AccessID == "TR318" ||
-            AccessID == "TR310" ||
-            AccessID == "TR323" ||
-            AccessID == "TR324" ||
-            AccessID == "TR328" ||
-            AccessID == "TR361" ||
-            AccessID == "TR027" ||
-            AccessID == "TR319"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 150,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align:
-                AccessID === "TR319" || AccessID === "TR324"
-                  ? "center"
-                  : "left",
-              // align: "center",
-              // align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => (
-                <ItemAction
-                  // rights={rights}
-                  params={params}
-                  accessID={AccessID}
-                  screenName={screenName}
-                />
-              ),
-            };
-          } else if (AccessID == "TR321") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 200,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              // align: "center",
-              align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => (
-                <PartyAction
-                  // rights={rights}
-                  params={params}
-                  accessID={AccessID}
-                  screenName={screenName}
-                />
-              ),
-            };
-          } else if (
-            AccessID == "TR336" ||
-            AccessID == "TR338" ||
-            AccessID == "TR339" ||
-            // AccessID == "TR341" ||
-            AccessID == "TR351" ||
-            AccessID == "TR335" ||
-            AccessID == "TR337"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 180,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              // align: "center",
-              align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => (
-                <SOPAction
-                  // rights={rights}
-                  params={params}
-                  accessID={AccessID}
-                  screenName={screenName}
-                />
-              ),
-            };
-          } else if (AccessID == "TR076") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {/* // <Stack direction="row" spacing={1}> */}
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="List of Batch">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR064") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {/* // <Stack direction="row" spacing={1}> */}
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="List of Stock">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR213") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    <Link
-                      to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
-                      state={{ LeaveType: params.row.LeaveType }}
-                    >
-                      <Tooltip title="Leave Enquiry Report">
-                        <IconButton color="info" size="small">
-                          <EventNoteIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
+              //         </Link>
 
-            //  } else if (AccessID == "TR128") {
-            // obj = {
-            //   field: "action",
-            //   headerName: "Action",
-            //   minWidth: 150,
-            //   sortable: false,
-            //   filterable: false,
-            //   headerAlign: "center",
-            //   align: "center",
-            //   disableColumnMenu: true,
-            //   disableExport: true,
-            //   renderCell: (params) => {
-            //     return (
-            //       <Box>
-            //         <Link
-            //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-            //               state={{ Locationname: params.row.Name }}
-            //         >
-            //           <Tooltip title="Gate">
-            //             <IconButton color="info" size="small">
-            //               <ListAltOutlinedIcon />
-            //             </IconButton>
-            //           </Tooltip>
-            //         </Link>
-
-            //       </Box>
-            //     );
-            //   },
-            // };
-          } else if (AccessID == "TR049") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {/* // <Stack direction="row" spacing={1}> */}
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="List of UOM">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR063") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/${params.row.YearID}/E`}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR043"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 150,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {params.row.Code == "P" ? (
+              //       </Box>
+              //     );
+              //   },
+              // };
+            } else if (AccessID == "TR049") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {/* // <Stack direction="row" spacing={1}> */}
                       <Link
-                        to={`/Apps/Secondarylistview/TR073/${params.row.ChildName}/${params.row.Type}`}
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
                       >
-                        <Tooltip title="List Of Invoice">
+                        <Tooltip title="List of UOM">
                           <IconButton color="info" size="small">
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : params.row.Code == "L" ? (
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR063") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                filterable: false,
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`/Apps/Secondarylistview/TR011/Proforma Invoice/${params.row.Code}/FI`}
+                        to={`./Edit${screenName}/${params.row.RecordID}/${params.row.YearID}/E`}
                       >
-                        <Tooltip title="List Of Invoice">
+                        <Tooltip title="Edit">
                           <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
+                            <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : null}
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR043"
 
-                    {params.row.Code == "PL" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR211/Local Invoice/${params.row.Code}`}
-                      >
-                        <Tooltip title="List Of Invoice">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : null}
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 150,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {params.row.Code == "P" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR073/${params.row.ChildName}/${params.row.Type}`}
+                        >
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : params.row.Code == "L" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR011/Proforma Invoice/${params.row.Code}/FI`}
+                        >
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : null}
 
-                    {params.row.Code == "LL" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR084/Local Invoice/${params.row.Code}/${params.row.Type}`}
-                      >
-                        <Tooltip title="List Of Invoice">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : null}
+                      {params.row.Code == "PL" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR211/Local Invoice/${params.row.Code}`}
+                        >
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : null}
 
-                    {/* ( <Link to={`/Apps/Secondarylistview/TR083/Local Invoce/${params.row.Type}/IN`}>
+                      {params.row.Code == "LL" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR084/Local Invoice/${params.row.Code}/${params.row.Type}`}
+                        >
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : null}
+
+                      {/* ( <Link to={`/Apps/Secondarylistview/TR083/Local Invoce/${params.row.Type}/IN`}>
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
                           <ReceiptLongIcon />
                         </IconButton>
                       </Tooltip>
                   </Link>) */}
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR044"
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR044"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="List of Category">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
-
-          //          else if (AccessID == "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       const count = Number(params.row.MarketingCount || 0);
-          //       const id = params.row.RecordID;
-
-          //       console.log("Row:", id, "Count:", count, typeof count); // ✅ Debug log
-
-          //       const leaderLink =
-          //         count === 1
-          //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-          //           : `/Apps/Secondarylistview/TR303/Leader/EditLeader/${id}/A`;
-
-          //       const leaderState =
-          //         count === 1
-          //           ? {
-          //               PartyName: params.row.Name,
-          //               Count: count,
-          //             }
-          //           : null;
-
-          //       return (
-          //         <Box>
-          //           {/* Edit Button */}
-          //           <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* Leader Button */}
-          //           <Link to={leaderLink} state={leaderState}>
-          //             <Tooltip title="Leader">
-          //               <IconButton
-          //                 color="info"
-          //                 size="small"
-          //                 onClick={(e) => {
-          //                   e.stopPropagation();
-          //                   console.log("MarketingCount:", count);
-          //                 }}
-          //               >
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
-          // else if (AccessID === "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       const count = Number(params.row.MarketingCount || 0);
-          //       const id = params.row.RecordID;
-          //       const PartyName = params.row.Name;
-          //       // const filtertype = params.row.RecordID
-          //       console.log(count, id, PartyName, "statess");
-          //       const leaderLink =
-          //         count >= 1
-          //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
-          //           // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
-          //           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
-
-          //       // const leaderState =
-          //       // {
-          //       //   PartyName: params.row.Name,
-          //       //   Count: count,
-          //       // }
-
-          //       return (
-          //         <Box>
-          //           {/* Edit Button */}
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //             state={{
-          //                PartyName: params.row.Party,
-          //               Count: params.row.MarketingCount
-          //             }}
-          //           >
-
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* Leader Button */}
-          //           <Link
-          //             to={
-          //               count >= 1
-          //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-          //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
-          //             }
-          //             state={{
-          //               PartyName: PartyName,
-          //               Count: count
-          //             }}
-          //           >
-          //             <Tooltip title="Leads">
-          //               <IconButton
-          //                 color="info"
-          //                 size="small"
-          //                 onClick={(e) => e.stopPropagation()}
-          //               >
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
-          else if (AccessID === "TR243") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 170,
-              sortable: false,
-              headerAlign: "center",
-              align: "left",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                const count = Number(params.row.MarketingCount || 0);
-                const id = params.row.RecordID;
-                const PartyName = params.row.Name;
-
-                // Encode PartyName to make it URL-safe
-                // const encodedName = encodeURIComponent(PartyName);
-
-                return (
-                  <Box>
-                    {/* Edit Button */}
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.Party,
-                        PName: params.row.Name,
-                        Count: params.row.MarketingCount,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-
-                    {/* Leader Button */}
-                    <Link
-                      to={
-                        count >= 1
-                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Leads">
-                        <IconButton color="info" size="small">
-                          <Diversity2Icon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-
-                    {/* ORDER HEADER */}
-                    {/* {params.row.LeaderCount >= 1 ? ( */}
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-                      // }
-                      to={
-                        params.row.OrderCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Order">
-                        <IconButton color="info" size="small">
-                          <CategoryIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-
-                    {/* FOR QUOTATION */}
-                    <Link
-                      to={
-                        params.row.QuotationCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
-                      }
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Quotation">
-                        <IconButton color="info" size="small">
-                          <RequestQuoteOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                    {/* ) : null} */}
-
-                    <Link
-                      // to={
-                      //   params.row.OrdHdrCount > 0
-                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-
-                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-
-                      //   }
-                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
-                      state={{
-                        PartyID: params.row.RecordID,
-                        PartyName: params.row.Name,
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Tooltip title="Advance Payment">
-                        <IconButton color="info" size="small">
-                          <CurrencyRupeeOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
-
-          // else if (AccessID === "TR321") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 200,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "left",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       const count = Number(params.row.MarketingCount || 0);
-          //       const id = params.row.RecordID;
-          //       const PartyName = params.row.Name;
-
-          //       // Encode PartyName to make it URL-safe
-          //       // const encodedName = encodeURIComponent(PartyName);
-
-          //       const [modalOpen, setModalOpen] = useState(false);
-          //       const [selectedRow, setSelectedRow] = useState(null);
-
-          //       return (
-          //         <Box>
-          //           {/* Edit Button */}
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //             state={{
-          //               PartyName: params.row.Party,
-          //               PName: params.row.Name,
-          //               Count: params.row.MarketingCount,
-          //             }}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* Leader Button */}
-          //           <Link
-          //             to={
-          //               count >= 1
-          //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-          //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
-          //             }
-          //             onClick={(e) => e.stopPropagation()}
-          //           >
-          //             <Tooltip title="Leads">
-          //               <IconButton color="info" size="small">
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* ORDER HEADER */}
-          //           {/* {params.row.LeaderCount >= 1 ? ( */}
-          //           <Link
-          //             // to={
-          //             //   params.row.OrdHdrCount > 0
-          //             //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-          //             //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-          //             // }
-          //             to={
-          //               params.row.OrderCount > 0
-          //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
-          //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
-          //             }
-          //             state={{
-          //               PartyID: params.row.RecordID,
-          //               PartyName: params.row.Name,
-          //             }}
-          //             onClick={(e) => e.stopPropagation()}
-          //           >
-          //             <Tooltip title="Order">
-          //               <IconButton color="info" size="small">
-          //                 <CategoryIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* FOR QUOTATION */}
-          //           <Link
-          //             to={
-          //               params.row.QuotationCount > 0
-          //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
-          //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
-          //             }
-          //             state={{
-          //               PartyID: params.row.RecordID,
-          //               PartyName: params.row.Name,
-          //             }}
-          //             onClick={(e) => e.stopPropagation()}
-          //           >
-          //             <Tooltip title="Quotation">
-          //               <IconButton color="info" size="small">
-          //                 <RequestQuoteOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //           {/* ) : null} */}
-
-          //           <Link
-          //             // to={
-          //             //   params.row.OrdHdrCount > 0
-          //             //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-
-          //             //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
-
-          //             //   }
-          //             to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
-          //             state={{
-          //               PartyID: params.row.RecordID,
-          //               PartyName: params.row.Name,
-          //             }}
-          //             onClick={(e) => e.stopPropagation()}
-          //           >
-          //             <Tooltip title="Advance Payment">
-          //               <IconButton color="info" size="small">
-          //                 <CurrencyRupeeOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           {/* RESET FOR PARTY */}
-
-          //           <Tooltip title="Reset">
-          //             <IconButton
-          //               color="error"
-          //               size="small"
-          //               onClick={() => {
-          //                 setSelectedRow(params.row);
-          //                 setModalOpen(true);
-          //               }}
-          //             >
-          //               <RestartAltOutlinedIcon />
-          //             </IconButton>
-          //           </Tooltip>
-          //           <ResetPartyOrder
-          //             open={modalOpen}
-          //             onClose={() => {
-          //               setModalOpen(false);
-          //               setSelectedRow(null);
-          //             }}
-          //             rowData={selectedRow}
-          //           />
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
-
-          // else if (AccessID == "TR303") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       return (
-          //         <Box>
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //             state={{
-          //               PartyName: params.row.Party,
-          //             }}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-
-          //           <Link
-          //             //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-          //             to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
-          //             state={{
-          //               PartyName: params.row.Party,
-          //             }}
-          //           >
-          //             <Tooltip title="Marketing Activity">
-          //               <IconButton color="info" size="small">
-          //                 <AssistantIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
-          //   else if (AccessID === "TR310") {
-          //     obj = {
-          //       field: "action",
-          //       headerName: "Action",
-          //       minWidth: 150,
-          //       sortable: false,
-          //       headerAlign: "center",
-          //       align: "center",
-          //       disableColumnMenu: true,
-          //       disableExport: true,
-          //       filterable: false,
-          //       renderCell: (params) => {
-          //         const count = Number(params.row.MarketingCount || 0);
-          //         const id = params.row.RecordID;
-
-          //         const PartyName = params.row.Name;
-
-          //         const PDFButton = ({ PartyID, OrderHdrID, CompanyID }) => {
-          //           const dispatch = store.dispatch;
-          //           const [loading, setLoading] = React.useState(false);
-
-          //           const handlePDFGET = async () => {
-          //             try {
-          //               setLoading(true);
-
-          //               const resultAction = await dispatch(
-          //                 getOrderdetailReport({ PartyID, OrderHdrID, CompanyID })
-          //               );
-
-          //               const data = resultAction.payload; // <-- this depends on how your thunk is defined
-          //               if (!data?.HeaderData?.DetailData?.length) {
-          //                 alert("No Order Items available for this order..");
-          //                 return;
-          //               }
-
-          //               // Generate and download PDF
-          //               const blob = await pdf(
-          //                 <OrderHeaderPdf data={data} UserName={UserName} />
-          //               ).toBlob();
-          //               // const link = document.createElement("a");
-          //               // link.href = URL.createObjectURL(blob);
-          //               // //link.download = "OrderDeatils.pdf";
-          //               // link.Open();
-          //               // link.click();
-          //               const blobUrl = URL.createObjectURL(blob);
-          //               window.open(blobUrl, "_blank");
-          //             } catch (err) {
-          //               console.error("PDF generation failed", err);
-          //             } finally {
-          //               setLoading(false);
-          //             }
-          //           };
-
-          //           return (
-          //             <Tooltip title="Download PDF">
-          //               <IconButton
-          //                 color="info"
-          //                 size="small"
-          //                 onClick={handlePDFGET}
-          //               >
-          //                 {loading ? (
-          //                   <CircularProgress size={20} />
-          //                 ) : (
-          //                   <PictureAsPdfIcon color="error" />
-          //                 )}
-          //               </IconButton>
-          //             </Tooltip>
-          //           );
-          //         };
-          //         const handleConvert = async (row) => {
-          //           const action = "update";
-
-          //           const idata = {
-          //             RecordID: row.RecordID,
-          //             Code: row.Code || "",
-
-          //             LeaderID: row.LeaderID || 0,
-          //             PartyRecordID: row.PartyRecordID || 0,
-          //             EmployeeRecordID: row.EmployeeRecordID || 0,
-
-          //             PartyName: row.PartyName || "",
-          //             OrderDate: row.OrderDate || "",
-          //             DeliveryCharges: row.DeliveryCharges || 0,
-          //             TotalPrice: row.TotalPrice || 0,
-          //             TentativeDeliveryDate: row.TentativeDeliveryDate || "",
-          //             DeliveryBy: row.DeliveryBy || "",
-          //             DeliveryYesorNo: row.DeliveryYesorNo || "N",
-          //             PaidYesorNo: row.PaidYesorNo || "No",
-          //             PaidDate: row.PaidDate || "",
-          //             DeliveryDate: row.DeliveryDate || "",
-          //             PaidAmount: row.PaidAmount || 0,
-
-          //             PaymentMode: row.PaymentMode || "",
-          //             ReceiverName: row.ReceiverName || "",
-          //             ReceiverMobileNumber: row.ReceiverMobileNumber || "",
-          //             DeliveryComments: row.DeliveryComments || "",
-          //             PaidComments: row.PaidComments || "",
-
-          //             CompanyID: row.CompanyID,
-
-          //             // 🔥 CONVERSION LOGIC
-          //             OrderType: "O",
-          //             ORStatus: "Process",
-          //           };
-
-          //           const response = await dispatch(
-          //             postData({ accessID: "TR310", action, idata })
-          //           );
-
-          //           if (response.payload.Status === "Y") {
-          //             // 🔑 parse message if needed
-          //             let msg = "Converted to Order successfully";
-          //             if (response.payload.Result) {
-          //               try {
-          //                 msg = JSON.parse(response.payload.Result)?.Msg || msg;
-          //               } catch {}
-          //             }
-
-          //             toast.success(msg);
-
-          //             navigate(
-          //   `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/O`,
-          //   { state: { ...state } }
-          // );
-          //           } else {
-          //             toast.error("Conversion failed");
-          //           }
-          //         };
-
-          //         return (
-          //           <Box>
-          //             {/* Edit Button */}
-          //             <Link
-          //               to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //               state={{
-          //                 PartyName: params.row.PartyName,
-          //                 Count: params.row.MarketingCount,
-          //                 LeadTitle: params.row.LeadTitle,
-          //                 PartyID: params.row.PartyRecordID,
-          //                 Code: params.row.Code,
-          //               }}
-          //             >
-          //               <Tooltip title="Edit">
-          //                 <IconButton color="info" size="small">
-          //                   <ModeEditOutlinedIcon />
-          //                 </IconButton>
-          //               </Tooltip>
-          //             </Link>
-
-          //             {/* CONVERT TO ORDER */}
-          //             {params.row.OrderType === "Q" && (
-          //               <Tooltip title="Convert To Order">
-          //                 <IconButton
-          //                   color="success"
-          //                   size="small"
-          //                   onClick={() => handleConvert(params.row)}
-          //                 >
-          //                   <CurrencyExchangeOutlinedIcon />
-          //                 </IconButton>
-          //               </Tooltip>
-          //             )}
-
-          //             {/* Leader Button */}
-          //             <Link
-          //               // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
-          //               to={
-          //                 params.row.OrderItemsCount >= 1
-          //                   ? `./TR311/${id}`
-          //                   : `./TR311/${id}/EditOrderitem/-1/A`
-          //               }
-          //               state={{
-          //                 PartyName: params.row.PartyName,
-          //                 Count: params.row.MarketingCount,
-          //                 Code: params.row.Code,
-          //                 LeadTitle: params.row.LeadTitle,
-          //                 PartyID: params.row.PartyRecordID,
-          //               }}
-          //               // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
-          //             >
-          //               <Tooltip title="Order Item">
-          //                 <IconButton
-          //                   color="info"
-          //                   size="small"
-          //                   // onClick={() =>
-          //                   //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
-          //                   // }
-          //                 >
-          //                   <GridViewIcon />
-          //                 </IconButton>
-          //               </Tooltip>
-          //             </Link>
-          //             <Link
-          //               state={{
-          //                 PartyName: params.row.PartyName,
-          //                 Count: params.row.MarketingCount,
-          //                 LeadTitle: params.row.LeadTitle,
-          //                 PartyID: params.row.PartyRecordID,
-          //                 Code: params.row.Code,
-          //               }}
-          //             >
-          //               <PDFButton
-          //                 PartyID={params.row.PartyRecordID}
-          //                 OrderHdrID={params.row.RecordID}
-          //                 CompanyID={params.row.CompanyID}
-          //               />
-          //             </Link>
-          //           </Box>
-          //         );
-          //       },
-          //     };
-          //   }
-          else if (AccessID === "TR311") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                const count = Number(params.row.MarketingCount || 0);
-                const id = params.row.RecordID;
-                const PartyName = params.row.Name;
-
-                // Encode PartyName to make it URL-safe
-                // const encodedName = encodeURIComponent(PartyName);
-
-                return (
-                  <Box>
-                    {/* Edit Button */}
-                    <Link
-                      to={`./EditOrderitem/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.PartyName,
-                        Count: params.row.MarketingCount,
-                        Code: params.row.Code,
-                        LeadTitle: params.row.LeadTitle,
-                        PartyID: params.row.PartyRecordID,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID === "TR314") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                const count = Number(params.row.MarketingCount || 0);
-                const id = params.row.RecordID;
-                const PartyName = params.row.Name;
-
-                return (
-                  <Box>
-                    {/* Edit Button */}
-                    <Link
-                      // to={`./EditAdvancePayment/${params.row.RecordID}/E`}
-                      to={`./EditAdvancePayment/${params.row.RecordID}/V`}
-                      state={{
-                        PartyName: params.row.PartyName,
-                        Count: params.row.MarketingCount,
-                        Code: params.row.Code,
-                        LeadTitle: params.row.LeadTitle,
-                        PartyID: params.row.PartyRecordID,
-                      }}
-                    >
-                      <Tooltip title="View">
-                        <IconButton color="info" size="small">
-                          <VisibilityIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID === "TR304") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                // Check per-row Editable value
-                sessionStorage.setItem("Status", params.row.OMStatus);
-                if (
-                  String(params.row.Editable) === "1" &&
-                  params.row.OMStatus !== "Close"
-                ) {
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
                   return (
                     <Box>
                       <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
+                      >
+                        <Tooltip title="List of Category">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+
+            //          else if (AccessID == "TR243") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 100,
+            //     sortable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     filterable: false,
+            //     renderCell: (params) => {
+            //       const count = Number(params.row.MarketingCount || 0);
+            //       const id = params.row.RecordID;
+
+            //       console.log("Row:", id, "Count:", count, typeof count); // ✅ Debug log
+
+            //       const leaderLink =
+            //         count === 1
+            //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+            //           : `/Apps/Secondarylistview/TR303/Leader/EditLeader/${id}/A`;
+
+            //       const leaderState =
+            //         count === 1
+            //           ? {
+            //               PartyName: params.row.Name,
+            //               Count: count,
+            //             }
+            //           : null;
+
+            //       return (
+            //         <Box>
+            //           {/* Edit Button */}
+            //           <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
+            //             <Tooltip title="Edit">
+            //               <IconButton color="info" size="small">
+            //                 <ModeEditOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* Leader Button */}
+            //           <Link to={leaderLink} state={leaderState}>
+            //             <Tooltip title="Leader">
+            //               <IconButton
+            //                 color="info"
+            //                 size="small"
+            //                 onClick={(e) => {
+            //                   e.stopPropagation();
+            //                   console.log("MarketingCount:", count);
+            //                 }}
+            //               >
+            //                 <Diversity2Icon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
+            // else if (AccessID === "TR243") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 100,
+            //     sortable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     filterable: false,
+            //     renderCell: (params) => {
+            //       const count = Number(params.row.MarketingCount || 0);
+            //       const id = params.row.RecordID;
+            //       const PartyName = params.row.Name;
+            //       // const filtertype = params.row.RecordID
+            //       console.log(count, id, PartyName, "statess");
+            //       const leaderLink =
+            //         count >= 1
+            //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
+            //           // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
+            //           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
+
+            //       // const leaderState =
+            //       // {
+            //       //   PartyName: params.row.Name,
+            //       //   Count: count,
+            //       // }
+
+            //       return (
+            //         <Box>
+            //           {/* Edit Button */}
+            //           <Link
+            //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+            //             state={{
+            //                PartyName: params.row.Party,
+            //               Count: params.row.MarketingCount
+            //             }}
+            //           >
+
+            //             <Tooltip title="Edit">
+            //               <IconButton color="info" size="small">
+            //                 <ModeEditOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* Leader Button */}
+            //           <Link
+            //             to={
+            //               count >= 1
+            //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+            //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
+            //             }
+            //             state={{
+            //               PartyName: PartyName,
+            //               Count: count
+            //             }}
+            //           >
+            //             <Tooltip title="Leads">
+            //               <IconButton
+            //                 color="info"
+            //                 size="small"
+            //                 onClick={(e) => e.stopPropagation()}
+            //               >
+            //                 <Diversity2Icon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
+            else if (AccessID === "TR243") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 170,
+                sortable: false,
+                headerAlign: "center",
+                align: "left",
+                disableColumnMenu: true,
+                disableExport: true,
+                filterable: false,
+                renderCell: (params) => {
+                  const count = Number(params.row.MarketingCount || 0);
+                  const id = params.row.RecordID;
+                  const PartyName = params.row.Name;
+
+                  // Encode PartyName to make it URL-safe
+                  // const encodedName = encodeURIComponent(PartyName);
+
+                  return (
+                    <Box>
+                      {/* Edit Button */}
+                      <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
-                          PartyName: params.row.PartyName,
-                          PartyID: params.row.PartyID,
-                          LeadTitle: params.row.LeadTitle,
+                          PartyName: params.row.Party,
+                          PName: params.row.Name,
+                          Count: params.row.MarketingCount,
                         }}
                       >
                         <Tooltip title="Edit">
@@ -3078,536 +2702,1251 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
+
+                      {/* Leader Button */}
                       <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/IM`}
-                        state={{
-                          PartyName: params.row.PartyName,
-                          PartyID: params.row.PartyID,
-                          LeadTitle: params.row.LeadTitle,
-                        }}
+                        to={
+                          count >= 1
+                            ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                            : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+                        }
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Tooltip title="Attachment">
+                        <Tooltip title="Leads">
                           <IconButton color="info" size="small">
-                            <AttachFileIcon />
+                            <Diversity2Icon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      {/* if (params.row.Editable === "Close") */}
+
+                      {/* ORDER HEADER */}
+                      {/* {params.row.LeaderCount >= 1 ? ( */}
+                      <Link
+                        // to={
+                        //   params.row.OrdHdrCount > 0
+                        //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+                        //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                        // }
+                        to={
+                          params.row.OrderCount > 0
+                            ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+                            : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+                        }
+                        state={{
+                          PartyID: params.row.RecordID,
+                          PartyName: params.row.Name,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Tooltip title="Order">
+                          <IconButton color="info" size="small">
+                            <CategoryIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+
+                      {/* FOR QUOTATION */}
+                      <Link
+                        to={
+                          params.row.QuotationCount > 0
+                            ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+                            : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+                        }
+                        state={{
+                          PartyID: params.row.RecordID,
+                          PartyName: params.row.Name,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Tooltip title="Quotation">
+                          <IconButton color="info" size="small">
+                            <RequestQuoteOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      {/* ) : null} */}
+
+                      <Link
+                        // to={
+                        //   params.row.OrdHdrCount > 0
+                        //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+
+                        //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+                        //   }
+                        to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+                        state={{
+                          PartyID: params.row.RecordID,
+                          PartyName: params.row.Name,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Tooltip title="Advance Payment">
+                          <IconButton color="info" size="small">
+                            <CurrencyRupeeOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
                     </Box>
                   );
-                }
-                if (
-                  String(params.row.Editable) === "0" ||
-                  params.row.OMStatus === "Close"
-                ) {
+                },
+              };
+            }
+
+            // else if (AccessID === "TR321") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 200,
+            //     sortable: false,
+            //     headerAlign: "center",
+            //     align: "left",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     filterable: false,
+            //     renderCell: (params) => {
+            //       const count = Number(params.row.MarketingCount || 0);
+            //       const id = params.row.RecordID;
+            //       const PartyName = params.row.Name;
+
+            //       // Encode PartyName to make it URL-safe
+            //       // const encodedName = encodeURIComponent(PartyName);
+
+            //       const [modalOpen, setModalOpen] = useState(false);
+            //       const [selectedRow, setSelectedRow] = useState(null);
+
+            //       return (
+            //         <Box>
+            //           {/* Edit Button */}
+            //           <Link
+            //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+            //             state={{
+            //               PartyName: params.row.Party,
+            //               PName: params.row.Name,
+            //               Count: params.row.MarketingCount,
+            //             }}
+            //           >
+            //             <Tooltip title="Edit">
+            //               <IconButton color="info" size="small">
+            //                 <ModeEditOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* Leader Button */}
+            //           <Link
+            //             to={
+            //               count >= 1
+            //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+            //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+            //             }
+            //             onClick={(e) => e.stopPropagation()}
+            //           >
+            //             <Tooltip title="Leads">
+            //               <IconButton color="info" size="small">
+            //                 <Diversity2Icon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* ORDER HEADER */}
+            //           {/* {params.row.LeaderCount >= 1 ? ( */}
+            //           <Link
+            //             // to={
+            //             //   params.row.OrdHdrCount > 0
+            //             //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+            //             //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+            //             // }
+            //             to={
+            //               params.row.OrderCount > 0
+            //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+            //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+            //             }
+            //             state={{
+            //               PartyID: params.row.RecordID,
+            //               PartyName: params.row.Name,
+            //             }}
+            //             onClick={(e) => e.stopPropagation()}
+            //           >
+            //             <Tooltip title="Order">
+            //               <IconButton color="info" size="small">
+            //                 <CategoryIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* FOR QUOTATION */}
+            //           <Link
+            //             to={
+            //               params.row.QuotationCount > 0
+            //                 ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+            //                 : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+            //             }
+            //             state={{
+            //               PartyID: params.row.RecordID,
+            //               PartyName: params.row.Name,
+            //             }}
+            //             onClick={(e) => e.stopPropagation()}
+            //           >
+            //             <Tooltip title="Quotation">
+            //               <IconButton color="info" size="small">
+            //                 <RequestQuoteOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+            //           {/* ) : null} */}
+
+            //           <Link
+            //             // to={
+            //             //   params.row.OrdHdrCount > 0
+            //             //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+
+            //             //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+            //             //   }
+            //             to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+            //             state={{
+            //               PartyID: params.row.RecordID,
+            //               PartyName: params.row.Name,
+            //             }}
+            //             onClick={(e) => e.stopPropagation()}
+            //           >
+            //             <Tooltip title="Advance Payment">
+            //               <IconButton color="info" size="small">
+            //                 <CurrencyRupeeOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           {/* RESET FOR PARTY */}
+
+            //           <Tooltip title="Reset">
+            //             <IconButton
+            //               color="error"
+            //               size="small"
+            //               onClick={() => {
+            //                 setSelectedRow(params.row);
+            //                 setModalOpen(true);
+            //               }}
+            //             >
+            //               <RestartAltOutlinedIcon />
+            //             </IconButton>
+            //           </Tooltip>
+            //           <ResetPartyOrder
+            //             open={modalOpen}
+            //             onClose={() => {
+            //               setModalOpen(false);
+            //               setSelectedRow(null);
+            //             }}
+            //             rowData={selectedRow}
+            //           />
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
+
+            // else if (AccessID == "TR303") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 100,
+            //     sortable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     filterable: false,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <Link
+            //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+            //             state={{
+            //               PartyName: params.row.Party,
+            //             }}
+            //           >
+            //             <Tooltip title="Edit">
+            //               <IconButton color="info" size="small">
+            //                 <ModeEditOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //           <Link
+            //             //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+            //             to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+            //             state={{
+            //               PartyName: params.row.Party,
+            //             }}
+            //           >
+            //             <Tooltip title="Marketing Activity">
+            //               <IconButton color="info" size="small">
+            //                 <AssistantIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
+            //   else if (AccessID === "TR310") {
+            //     obj = {
+            //       field: "action",
+            //       headerName: "Action",
+            //       minWidth: 150,
+            //       sortable: false,
+            //       headerAlign: "center",
+            //       align: "center",
+            //       disableColumnMenu: true,
+            //       disableExport: true,
+            //       filterable: false,
+            //       renderCell: (params) => {
+            //         const count = Number(params.row.MarketingCount || 0);
+            //         const id = params.row.RecordID;
+
+            //         const PartyName = params.row.Name;
+
+            //         const PDFButton = ({ PartyID, OrderHdrID, CompanyID }) => {
+            //           const dispatch = store.dispatch;
+            //           const [loading, setLoading] = React.useState(false);
+
+            //           const handlePDFGET = async () => {
+            //             try {
+            //               setLoading(true);
+
+            //               const resultAction = await dispatch(
+            //                 getOrderdetailReport({ PartyID, OrderHdrID, CompanyID })
+            //               );
+
+            //               const data = resultAction.payload; // <-- this depends on how your thunk is defined
+            //               if (!data?.HeaderData?.DetailData?.length) {
+            //                 alert("No Order Items available for this order..");
+            //                 return;
+            //               }
+
+            //               // Generate and download PDF
+            //               const blob = await pdf(
+            //                 <OrderHeaderPdf data={data} UserName={UserName} />
+            //               ).toBlob();
+            //               // const link = document.createElement("a");
+            //               // link.href = URL.createObjectURL(blob);
+            //               // //link.download = "OrderDeatils.pdf";
+            //               // link.Open();
+            //               // link.click();
+            //               const blobUrl = URL.createObjectURL(blob);
+            //               window.open(blobUrl, "_blank");
+            //             } catch (err) {
+            //               console.error("PDF generation failed", err);
+            //             } finally {
+            //               setLoading(false);
+            //             }
+            //           };
+
+            //           return (
+            //             <Tooltip title="Download PDF">
+            //               <IconButton
+            //                 color="info"
+            //                 size="small"
+            //                 onClick={handlePDFGET}
+            //               >
+            //                 {loading ? (
+            //                   <CircularProgress size={20} />
+            //                 ) : (
+            //                   <PictureAsPdfIcon color="error" />
+            //                 )}
+            //               </IconButton>
+            //             </Tooltip>
+            //           );
+            //         };
+            //         const handleConvert = async (row) => {
+            //           const action = "update";
+
+            //           const idata = {
+            //             RecordID: row.RecordID,
+            //             Code: row.Code || "",
+
+            //             LeaderID: row.LeaderID || 0,
+            //             PartyRecordID: row.PartyRecordID || 0,
+            //             EmployeeRecordID: row.EmployeeRecordID || 0,
+
+            //             PartyName: row.PartyName || "",
+            //             OrderDate: row.OrderDate || "",
+            //             DeliveryCharges: row.DeliveryCharges || 0,
+            //             TotalPrice: row.TotalPrice || 0,
+            //             TentativeDeliveryDate: row.TentativeDeliveryDate || "",
+            //             DeliveryBy: row.DeliveryBy || "",
+            //             DeliveryYesorNo: row.DeliveryYesorNo || "N",
+            //             PaidYesorNo: row.PaidYesorNo || "No",
+            //             PaidDate: row.PaidDate || "",
+            //             DeliveryDate: row.DeliveryDate || "",
+            //             PaidAmount: row.PaidAmount || 0,
+
+            //             PaymentMode: row.PaymentMode || "",
+            //             ReceiverName: row.ReceiverName || "",
+            //             ReceiverMobileNumber: row.ReceiverMobileNumber || "",
+            //             DeliveryComments: row.DeliveryComments || "",
+            //             PaidComments: row.PaidComments || "",
+
+            //             CompanyID: row.CompanyID,
+
+            //             // 🔥 CONVERSION LOGIC
+            //             OrderType: "O",
+            //             ORStatus: "Process",
+            //           };
+
+            //           const response = await dispatch(
+            //             postData({ accessID: "TR310", action, idata })
+            //           );
+
+            //           if (response.payload.Status === "Y") {
+            //             // 🔑 parse message if needed
+            //             let msg = "Converted to Order successfully";
+            //             if (response.payload.Result) {
+            //               try {
+            //                 msg = JSON.parse(response.payload.Result)?.Msg || msg;
+            //               } catch {}
+            //             }
+
+            //             toast.success(msg);
+
+            //             navigate(
+            //   `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/O`,
+            //   { state: { ...state } }
+            // );
+            //           } else {
+            //             toast.error("Conversion failed");
+            //           }
+            //         };
+
+            //         return (
+            //           <Box>
+            //             {/* Edit Button */}
+            //             <Link
+            //               to={`./Edit${screenName}/${params.row.RecordID}/E`}
+            //               state={{
+            //                 PartyName: params.row.PartyName,
+            //                 Count: params.row.MarketingCount,
+            //                 LeadTitle: params.row.LeadTitle,
+            //                 PartyID: params.row.PartyRecordID,
+            //                 Code: params.row.Code,
+            //               }}
+            //             >
+            //               <Tooltip title="Edit">
+            //                 <IconButton color="info" size="small">
+            //                   <ModeEditOutlinedIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             </Link>
+
+            //             {/* CONVERT TO ORDER */}
+            //             {params.row.OrderType === "Q" && (
+            //               <Tooltip title="Convert To Order">
+            //                 <IconButton
+            //                   color="success"
+            //                   size="small"
+            //                   onClick={() => handleConvert(params.row)}
+            //                 >
+            //                   <CurrencyExchangeOutlinedIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             )}
+
+            //             {/* Leader Button */}
+            //             <Link
+            //               // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
+            //               to={
+            //                 params.row.OrderItemsCount >= 1
+            //                   ? `./TR311/${id}`
+            //                   : `./TR311/${id}/EditOrderitem/-1/A`
+            //               }
+            //               state={{
+            //                 PartyName: params.row.PartyName,
+            //                 Count: params.row.MarketingCount,
+            //                 Code: params.row.Code,
+            //                 LeadTitle: params.row.LeadTitle,
+            //                 PartyID: params.row.PartyRecordID,
+            //               }}
+            //               // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
+            //             >
+            //               <Tooltip title="Order Item">
+            //                 <IconButton
+            //                   color="info"
+            //                   size="small"
+            //                   // onClick={() =>
+            //                   //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+            //                   // }
+            //                 >
+            //                   <GridViewIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             </Link>
+            //             <Link
+            //               state={{
+            //                 PartyName: params.row.PartyName,
+            //                 Count: params.row.MarketingCount,
+            //                 LeadTitle: params.row.LeadTitle,
+            //                 PartyID: params.row.PartyRecordID,
+            //                 Code: params.row.Code,
+            //               }}
+            //             >
+            //               <PDFButton
+            //                 PartyID={params.row.PartyRecordID}
+            //                 OrderHdrID={params.row.RecordID}
+            //                 CompanyID={params.row.CompanyID}
+            //               />
+            //             </Link>
+            //           </Box>
+            //         );
+            //       },
+            //     };
+            //   }
+            else if (AccessID === "TR311") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                filterable: false,
+                renderCell: (params) => {
+                  const count = Number(params.row.MarketingCount || 0);
+                  const id = params.row.RecordID;
+                  const PartyName = params.row.Name;
+
+                  // Encode PartyName to make it URL-safe
+                  // const encodedName = encodeURIComponent(PartyName);
+
                   return (
                     <Box>
+                      {/* Edit Button */}
                       <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                        to={`./EditOrderitem/${params.row.RecordID}/E`}
                         state={{
                           PartyName: params.row.PartyName,
-                          PartyID: params.row.PartyID,
+                          Count: params.row.MarketingCount,
+                          Code: params.row.Code,
                           LeadTitle: params.row.LeadTitle,
-                          Editable: params.row.Editable,
+                          PartyID: params.row.PartyRecordID,
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID === "TR314") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                filterable: false,
+                renderCell: (params) => {
+                  const count = Number(params.row.MarketingCount || 0);
+                  const id = params.row.RecordID;
+                  const PartyName = params.row.Name;
+
+                  return (
+                    <Box>
+                      {/* Edit Button */}
+                      <Link
+                        // to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                        to={`./EditAdvancePayment/${params.row.RecordID}/V`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          Count: params.row.MarketingCount,
+                          Code: params.row.Code,
+                          LeadTitle: params.row.LeadTitle,
+                          PartyID: params.row.PartyRecordID,
                         }}
                       >
                         <Tooltip title="View">
-                          <IconButton
-                            style={{ color: "#eb710dff" }}
-                            size="small"
-                          >
+                          <IconButton color="info" size="small">
                             <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID === "TR304") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                filterable: false,
+                renderCell: (params) => {
+                  // Check per-row Editable value
+                  sessionStorage.setItem("Status", params.row.OMStatus);
+                  if (
+                    String(params.row.Editable) === "1" &&
+                    params.row.OMStatus !== "Close"
+                  ) {
+                    return (
+                      <Box>
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={{
+                            PartyName: params.row.PartyName,
+                            PartyID: params.row.PartyID,
+                            LeadTitle: params.row.LeadTitle,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                          state={{
+                            PartyName: params.row.PartyName,
+                            PartyID: params.row.PartyID,
+                            LeadTitle: params.row.LeadTitle,
+                          }}
+                        >
+                          <Tooltip title="Attachment">
+                            <IconButton color="info" size="small">
+                              <AttachFileIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                        {/* if (params.row.Editable === "Close") */}
+                      </Box>
+                    );
+                  }
+                  if (
+                    String(params.row.Editable) === "0" ||
+                    params.row.OMStatus === "Close"
+                  ) {
+                    return (
+                      <Box>
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                          state={{
+                            PartyName: params.row.PartyName,
+                            PartyID: params.row.PartyID,
+                            LeadTitle: params.row.LeadTitle,
+                            Editable: params.row.Editable,
+                          }}
+                        >
+                          <Tooltip title="View">
+                            <IconButton
+                              style={{ color: "#eb710dff" }}
+                              size="small"
+                            >
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                          state={{
+                            PartyName: params.row.PartyName,
+                            PartyID: params.row.PartyID,
+                            LeadTitle: params.row.LeadTitle,
+                          }}
+                        >
+                          <Tooltip title="Attachment">
+                            <IconButton color="info" size="small">
+                              <AttachFileIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      </Box>
+                    );
+                  }
+                  // If Editable is "0", render nothing
+                  return null;
+                },
+              };
+            }
+
+            // STOCKENQUIRY
+            else if (
+              AccessID == "TR078"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 150,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {params.row.Type == "S" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.SuppChildID}/${params.row.SuppChildName}/${params.row.Type}/${params.row.Description}`}
+                        >
+                          <Tooltip title="List Of Stock">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : params.row.Type == "PD" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.PrdcrdChildID}/${params.row.PrdcrdChildName}/${params.row.Type}`}
+                        >
+                          <Tooltip title="List Of Stock">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : params.row.Type == "L" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.PrdcrdChildID}/${params.row.PrdcrdChildName}/${params.row.parentID}/${params.row.Type}`}
+                        >
+                          <Tooltip title="List Of Stock">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : params.row.Type == "CC" || params.row.Type == "PC" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Code}`}
+                        >
+                          <Tooltip title="List Of Stock">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.RemarkChildID}/${params.row.RemarkChildName}/${params.row.Code}`}
+                        >
+                          <Tooltip title="List Of Stock">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR072"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/IM`}
-                        state={{
-                          PartyName: params.row.PartyName,
-                          PartyID: params.row.PartyID,
-                          LeadTitle: params.row.LeadTitle,
-                        }}
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Description}`}
                       >
-                        <Tooltip title="Attachment">
+                        <Tooltip title="List Of Process">
                           <IconButton color="info" size="small">
-                            <AttachFileIcon />
+                            <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
                     </Box>
                   );
-                }
-                // If Editable is "0", render nothing
-                return null;
-              },
-            };
-          }
+                },
+              };
+            } else if (
+              AccessID == "TR116"
 
-          // STOCKENQUIRY
-          else if (
-            AccessID == "TR078"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 150,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {params.row.Type == "S" ? (
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                align: "center",
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`/Apps/Secondarylistview/${params.row.SuppChildID}/${params.row.SuppChildName}/${params.row.Type}/${params.row.Description}`}
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
                       >
-                        <Tooltip title="List Of Stock">
+                        <Tooltip title="List Of Packing List">
                           <IconButton color="info" size="small">
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : params.row.Type == "PD" ? (
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR116"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`/Apps/Secondarylistview/${params.row.PrdcrdChildID}/${params.row.PrdcrdChildName}/${params.row.Type}`}
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
                       >
-                        <Tooltip title="List Of Stock">
+                        <Tooltip title="">
                           <IconButton color="info" size="small">
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : params.row.Type == "L" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.PrdcrdChildID}/${params.row.PrdcrdChildName}/${params.row.parentID}/${params.row.Type}`}
-                      >
-                        <Tooltip title="List Of Stock">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : params.row.Type == "CC" || params.row.Type == "PC" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Code}`}
-                      >
-                        <Tooltip title="List Of Stock">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.RemarkChildID}/${params.row.RemarkChildName}/${params.row.Code}`}
-                      >
-                        <Tooltip title="List Of Stock">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR072"
+                    </Box>
+                  );
+                },
+              };
+            }
+            //
+            else if (
+              AccessID == "TR087"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Description}`}
-                    >
-                      <Tooltip title="List Of Process">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR116"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              align: "center",
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="List Of Packing List">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR116"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                    >
-                      <Tooltip title="">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
-          //
-          else if (
-            AccessID == "TR087"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {params.row.parentID == "N" ? (
-                      <Link to={`./EditPacking List/${params.row.RecordID}/E`}>
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR087/Packing List/${params.row.parentID}/EditAssorted/${params.row.RecordID}/E`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                    {params.row.Process == "Y" ? (
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }productpacking.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {params.row.parentID == "N" ? (
+                        <Link to={`./EditPacking List/${params.row.RecordID}/E`}>
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR087/Packing List/${params.row.parentID}/EditAssorted/${params.row.RecordID}/E`}
                         >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }productpacking.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
-                              }),
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_010",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              }),
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR072"
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {params.row.Process == "Y" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }productpacking.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {params.row.Process == "Y" ? (
+                        <Tooltip title="Email">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                              dispatch(
+                                mailOpen({
+                                  row: params.row,
+                                  link: `${store.getState().globalurl.pdfurl
+                                    }productpacking.php?Token=${params.row.Hashtoken
+                                    }`,
+                                }),
+                              );
+                              dispatch(
+                                getMail({
+                                  Templateid: "ET_010",
+                                  RecordID: params.row.RecordID,
+                                  UserName: "Trinity",
+                                }),
+                              );
+                            }}
+                          >
+                            <EmailIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR072"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 150,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Description}`}
-                    >
-                      <Tooltip title="List Of Process">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR073"
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 150,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.Description}`}
+                      >
+                        <Tooltip title="List Of Process">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR073"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 150,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.parentID}/${params.row.Code}`}
-                    >
-                      <Tooltip title={params.row.Description}>
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR079"
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 150,
+                sortable: false,
+                headerAlign: "center",
+                align: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.parentID}/${params.row.Code}`}
+                      >
+                        <Tooltip title={params.row.Description}>
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR079"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/TR080/Stock/${params.row.RecordID}/${params.row.Name}/${params.row.parentID}`}
-                    >
-                      <Tooltip title="Stock">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR051"
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/Secondarylistview/TR080/Stock/${params.row.RecordID}/${params.row.Name}/${params.row.parentID}`}
+                      >
+                        <Tooltip title="Stock">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR051"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              align: "center",
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {/* <Tooltip title="Indent Order">
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                align: "center",
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {/* <Tooltip title="Indent Order">
                         
                        <IconButton color="info" size="small" onClick={indentOrderSave('insert',params.row.RecordID)}>
                          <ReceiptLongIcon />
                        </IconButton>
                      </Tooltip> */}
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.MtlRecordID}/${params.row.ProductionCardNO}/${params.row.Type}`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton
+                            color="info"
+                            onClick={() =>
+                              sessionStorage.setItem(
+                                "indentRecID",
+                                params.row.RecordID,
+                              )
+                            }
+                            size="small"
+                          >
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR113"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
                     <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.MtlRecordID}/${params.row.ProductionCardNO}/${params.row.Type}`}
+                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
                     >
                       <Tooltip title="Edit">
-                        <IconButton
-                          color="info"
-                          onClick={() =>
-                            sessionStorage.setItem(
-                              "indentRecID",
-                              params.row.RecordID,
-                            )
-                          }
-                          size="small"
+                        <IconButton color="info" size="small">
+                          <ListAltOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR111"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Link
+                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.Name}`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ListAltOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR101"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {params.row.Code === "CR" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}`}
                         >
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR113"
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Code}/${params.row.RecordID}`}
+                        >
+                          <Tooltip title="List Of Invoice">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR140"
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Link
-                    to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
-                  >
-                    <Tooltip title="Edit">
-                      <IconButton color="info" size="small">
-                        <ListAltOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Link>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR111"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Link
-                    to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.Name}`}
-                  >
-                    <Tooltip title="Edit">
-                      <IconButton color="info" size="small">
-                        <ListAltOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Link>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR101"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {params.row.Code === "CR" ? (
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/Costing/${params.row.ProductRecordID}/${params.row.ProductDescription}/${params.row.CustomerRecordID}`}
+                      >
+                        <Tooltip title="List Of BOM">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR141"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./costing-product/${params.row.ReferenceNo}/${params.row.RecordID}/TR091`}
+                      >
+                        <Tooltip title="List Of Costing">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR103"
+
+              // AccessID == "TR060"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Description}/${params.row.RecordID}`}
+                        state={{ rowData: params.row }}
                       >
                         <Tooltip title="List Of Invoice">
                           <IconButton color="info" size="small">
@@ -3615,9 +3954,25 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : (
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR104") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
                       <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Code}/${params.row.RecordID}`}
+                        to={`./${params.row.ChildID}/${params.row.ChildName}/${params.row.Code}`}
                       >
                         <Tooltip title="List Of Invoice">
                           <IconButton color="info" size="small">
@@ -3625,447 +3980,329 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    )}
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR140"
+                    </Box>
+                  );
+                },
+              };
+            } else if (
+              AccessID == "TR236" ||
+              AccessID == "TR234" ||
+              AccessID == "TR235" ||
+              AccessID == "TR233"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 100,
+                sortable: false,
+                headerAlign: "center",
+                filterable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {AccessID == "TR236" && (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={{
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            MilestoneName: params.row.MilestoneName,
+                            Activityname: params.row.ActivitesName,
+                            TaskName: params.row.Name,
+                            projectName: params.row.ProjectName,
+                            stagesName: params.row.OperationStageName,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {AccessID == "TR236" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
+                          state={{
+                            MilestoneID: params.row.MilestoneID,
+                            MilestoneName: params.row.MilestoneName,
+                            stagesName: params.row.Name,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.ProjectName,
+                          }}
+                        >
+                          <Tooltip title="Activities">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR236" ? (
+                        <Link
+                          to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            MilestoneName: params.row.MilestoneName,
+                            stagesName: params.row.Name,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.ProjectName,
+                          }}
+                        >
+                          <Tooltip title="Activity Weightage">
+                            <IconButton color="info" size="small">
+                              <BalanceIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR233" && (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={{
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            //MilestoneName:params.row.MilestoneName,
+                            Activityname: params.row.ActivitesName,
+                            TaskName: params.row.Name,
+                            projectName: params.row.ProjectName,
+                            stagesName: params.row.OperationStageName,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {AccessID == "TR233" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR236/Stages/${params.row.RecordID}`}
+                          state={{
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            MilestoneName: params.row.Name,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.ProjectName,
+                          }}
+                        >
+                          <Tooltip title="Stages">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR233" ? (
+                        <Link
+                          to={`/Apps/TR233/weightage/Editweightage/OPS/${params.row.RecordID}/E`}
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.ProjectName,
+                          }}
+                        >
+                          <Tooltip title="Stage Weightage">
+                            <IconButton color="info" size="small">
+                              <BalanceIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR234" && (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={{
+                            MilestoneID: params.row.RecordID,
+                            Activityname: params.row.Name,
+                            MilestoneName: params.row.MilestoneName,
+                            projectID: params.row.ProjectID,
+                            stagesName: params.row.OperationStageName,
+                            projectName: params.row.ProjectName,
+                            OperationStageID: params.row.OperationStageID,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {AccessID == "TR234" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
+                          state={{
+                            MilestoneID: params.row.MilestoneID,
+                            Activityname: params.row.Name,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            MilestoneName: params.row.MilestoneName,
+                            stagesName: params.row.OperationStageName,
+                            projectName: params.row.ProjectName,
+                          }}
+                        >
+                          <Tooltip title="Task">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/Costing/${params.row.ProductRecordID}/${params.row.ProductDescription}/${params.row.CustomerRecordID}`}
-                    >
-                      <Tooltip title="List Of BOM">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR141"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./costing-product/${params.row.ReferenceNo}/${params.row.RecordID}/TR091`}
-                    >
-                      <Tooltip title="List Of Costing">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR103"
-
-            // AccessID == "TR060"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Description}/${params.row.RecordID}`}
-                      state={{ rowData: params.row }}
-                    >
-                      <Tooltip title="List Of Invoice">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR104") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./${params.row.ChildID}/${params.row.ChildName}/${params.row.Code}`}
-                    >
-                      <Tooltip title="List Of Invoice">
-                        <IconButton color="info" size="small">
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
-            AccessID == "TR236" ||
-            AccessID == "TR234" ||
-            AccessID == "TR235" ||
-            AccessID == "TR233"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              filterable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    {AccessID == "TR236" && (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                        state={{
-                          MilestoneID: params.row.RecordID,
-                          projectID: params.row.ProjectID,
-                          MilestoneName: params.row.MilestoneName,
-                          Activityname: params.row.ActivitesName,
-                          TaskName: params.row.Name,
-                          projectName: params.row.ProjectName,
-                          stagesName: params.row.OperationStageName,
-                        }}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                    {AccessID == "TR236" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
-                        state={{
-                          MilestoneID: params.row.MilestoneID,
-                          MilestoneName: params.row.MilestoneName,
-                          stagesName: params.row.Name,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          projectName: params.row.ProjectName,
-                        }}
-                      >
-                        <Tooltip title="Activities">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR236" ? (
-                      <Link
-                        to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                        state={{
-                          code: params.row.Code,
-                          Desc: params.row.Name,
-                          MilestoneID: params.row.RecordID,
-                          MilestoneName: params.row.MilestoneName,
-                          stagesName: params.row.Name,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          projectName: params.row.ProjectName,
-                        }}
-                      >
-                        <Tooltip title="Activity Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR233" && (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                        state={{
-                          MilestoneID: params.row.RecordID,
-                          projectID: params.row.ProjectID,
-                          //MilestoneName:params.row.MilestoneName,
-                          Activityname: params.row.ActivitesName,
-                          TaskName: params.row.Name,
-                          projectName: params.row.ProjectName,
-                          stagesName: params.row.OperationStageName,
-                        }}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                    {AccessID == "TR233" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR236/Stages/${params.row.RecordID}`}
-                        state={{
-                          MilestoneID: params.row.RecordID,
-                          projectID: params.row.ProjectID,
-                          MilestoneName: params.row.Name,
-                          MilestoneName: params.row.Name,
-                          projectName: params.row.ProjectName,
-                        }}
-                      >
-                        <Tooltip title="Stages">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR233" ? (
-                      <Link
-                        to={`/Apps/TR233/weightage/Editweightage/OPS/${params.row.RecordID}/E`}
-                        state={{
-                          code: params.row.Code,
-                          Desc: params.row.Name,
-                          MilestoneID: params.row.RecordID,
-                          MilestoneName: params.row.Name,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          projectName: params.row.ProjectName,
-                        }}
-                      >
-                        <Tooltip title="Stage Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR234" && (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                        state={{
-                          MilestoneID: params.row.RecordID,
-                          Activityname: params.row.Name,
-                          MilestoneName: params.row.MilestoneName,
-                          projectID: params.row.ProjectID,
-                          stagesName: params.row.OperationStageName,
-                          projectName: params.row.ProjectName,
-                          OperationStageID: params.row.OperationStageID,
-                        }}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                    {AccessID == "TR234" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
-                        state={{
-                          MilestoneID: params.row.MilestoneID,
-                          Activityname: params.row.Name,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          MilestoneName: params.row.MilestoneName,
-                          stagesName: params.row.OperationStageName,
-                          projectName: params.row.ProjectName,
-                        }}
-                      >
-                        <Tooltip title="Task">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-
-                    {AccessID == "TR234" ? (
-                      <Link
-                        to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                        state={{
-                          code: params.row.Code,
-                          Desc: params.row.Name,
-                          MilestoneID: params.row.MilestoneID,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          MilestoneName: params.row.MilestoneName,
-                          stagesName: params.row.OperationStageName,
-                          projectName: params.row.ProjectName,
-                          Activityname: params.row.Name,
-                        }}
-                      >
-                        <Tooltip title="Task Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR235" && (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                        state={{
-                          TaskName: params.row.Name,
-                          MilestoneID: params.row.RecordID,
-                          MilestoneName: params.row.MilestoneName,
-                          Activityname: params.row.ActivitesName,
-                          projectID: params.row.ProjectID,
-                          projectName: params.row.ProjectName,
-                          OperationStageID: params.row.OperationStageID,
-                          stagesName: params.row.OperationStageName,
-                        }}
+                      {AccessID == "TR234" ? (
+                        <Link
+                          to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.MilestoneID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            MilestoneName: params.row.MilestoneName,
+                            stagesName: params.row.OperationStageName,
+                            projectName: params.row.ProjectName,
+                            Activityname: params.row.Name,
+                          }}
+                        >
+                          <Tooltip title="Task Weightage">
+                            <IconButton color="info" size="small">
+                              <BalanceIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR235" && (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={{
+                            TaskName: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            MilestoneName: params.row.MilestoneName,
+                            Activityname: params.row.ActivitesName,
+                            projectID: params.row.ProjectID,
+                            projectName: params.row.ProjectName,
+                            OperationStageID: params.row.OperationStageID,
+                            stagesName: params.row.OperationStageName,
+                          }}
                         //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                  </Box>
-                );
-              },
-            };
-          } else if (AccessID == "TR080") {
-            listviewData.Data.columns.push(obj);
-            dispatch(
-              Success({
-                columndata: listviewData.Data.columns,
-                rowdata: listviewData.Data.rows,
-              }),
-            );
-          } else if (
-            AccessID !== "TR105" &&
-            AccessID !== "TR102" &&
-            AccessID !== "TR111" &&
-            AccessID !== "TR112" &&
-            AccessID !== "TR114" &&
-            AccessID !== "TR115"
-          ) {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              headerAlign: "center",
-              align: "center",
-              filterable: false,
-              sortable: false,
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                const indentRecID = sessionStorage.getItem("indentRecID");
-                return (
-                  <Stack direction="row">
-                    {AccessID !== "TR119" &&
-                    AccessID !== "TR118" &&
-                    AccessID !== "TR032" &&
-                    AccessID !== "TR099" &&
-                    AccessID !== "TR048" &&
-                    AccessID !== "TR010" &&
-                    AccessID !== "TR083" &&
-                    AccessID !== "TR097" &&
-                    AccessID !== "TR135" &&
-                    AccessID !== "TR136" &&
-                    AccessID !== "TR091" &&
-                    AccessID !== "TR151" &&
-                    AccessID !== "TR128" &&
-                    AccessID !== "TR052" ? (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                        state={
-                          // AccessID === "TR027"
-                          //   ? {
-                          //       EmpName: params.row.Name,
-                          //       Employee: params.row.Employee,
-                          //       BreadCrumb1: params.row.Description,
-                          //     }
-                          //   :
-                          AccessID === "TR128"
-                            ? {
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR080") {
+              listviewData.Data.columns.push(obj);
+              dispatch(
+                Success({
+                  columndata: listviewData.Data.columns,
+                  rowdata: listviewData.Data.rows,
+                }),
+              );
+            } else if (
+              AccessID !== "TR105" &&
+              AccessID !== "TR102" &&
+              AccessID !== "TR111" &&
+              AccessID !== "TR112" &&
+              AccessID !== "TR114" &&
+              AccessID !== "TR115"
+            ) {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                headerAlign: "center",
+                align: "center",
+                filterable: false,
+                sortable: false,
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  const indentRecID = sessionStorage.getItem("indentRecID");
+                  return (
+                    <Stack direction="row">
+                      {AccessID !== "TR119" &&
+                        AccessID !== "TR118" &&
+                        AccessID !== "TR032" &&
+                        AccessID !== "TR099" &&
+                        AccessID !== "TR048" &&
+                        AccessID !== "TR010" &&
+                        AccessID !== "TR083" &&
+                        AccessID !== "TR097" &&
+                        AccessID !== "TR135" &&
+                        AccessID !== "TR136" &&
+                        AccessID !== "TR091" &&
+                        AccessID !== "TR151" &&
+                        AccessID !== "TR128" &&
+                        AccessID !== "TR052" ? (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                          state={
+                            // AccessID === "TR027"
+                            //   ? {
+                            //       EmpName: params.row.Name,
+                            //       Employee: params.row.Employee,
+                            //       BreadCrumb1: params.row.Description,
+                            //     }
+                            //   :
+                            AccessID === "TR128"
+                              ? {
                                 LocationName: params.row.Name,
                                 CompanyName: params.row.CompanyName,
                               }
-                            : AccessID === "TR127"
-                              ? {
+                              : AccessID === "TR127"
+                                ? {
                                   GateName: params.row.Name,
                                   LocationName: params.row.LocationName,
                                   CompanyName: params.row.CompanyName,
                                 }
-                              : AccessID === "TR257"
-                                ? {
+                                : AccessID === "TR257"
+                                  ? {
                                     EmpName: params.row.Name,
                                   }
-                                : AccessID === "TR132"
-                                  ? {
+                                  : AccessID === "TR132"
+                                    ? {
                                       proName: params.row.ProjectName,
                                       Date: params.row.Date,
                                       EmpName: params.row.EmployeeName,
                                       Locname: params.row.LocationName,
                                     }
-                                  : AccessID === "TR123"
-                                    ? {
+                                    : AccessID === "TR123"
+                                      ? {
                                         EmpName: params.row.Name,
                                       }
-                                    : AccessID === "TR134"
-                                      ? {
+                                      : AccessID === "TR134"
+                                        ? {
                                           proName: params.row.ProjectName,
                                           EmpName: params.row.EmployeeName,
                                           Date: params.row.Date,
@@ -4073,12 +4310,12 @@ export const fetchListview =
                                           EmployeeID: params.row.EmployeesID,
                                           checkinID: params.row.CheckinID,
                                         }
-                                      : AccessID === "TR124"
-                                        ? {
+                                        : AccessID === "TR124"
+                                          ? {
                                             EmpName: params.row.EmployeeName,
                                             checkinID: params.row.CheckinID,
                                           }
-                                        : // : AccessID === "TR127"
+                                          : // : AccessID === "TR127"
                                           // ? {
                                           //     GateName: params.row.Name,
                                           //     LocationName: params.row.LocationName,
@@ -4097,31 +4334,31 @@ export const fetchListview =
                                               params.row.ProductRecordID,
                                             BomID: params.row.BomRecordID,
                                           }
-                        }
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR052" || AccessID == "TR151" ? (
-                      <Link
-                        to={`./EditDelivery Chalan/${params.row.RecordID}/E`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {/* {AccessID == "TR027" ? (
+                          }
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR052" || AccessID == "TR151" ? (
+                        <Link
+                          to={`./EditDelivery Chalan/${params.row.RecordID}/E`}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {/* {AccessID == "TR027" ? (
                       <Link
                       to={`/Apps/TR027/${screenName}/Edit${screenName}/${params.row.RecordID}/E`}
                       state={{EmpName:params.row.Name}}
@@ -4135,7 +4372,7 @@ export const fetchListview =
                     ) : (
                       false
                     )} */}
-                    {/* {AccessID == "TR027" ? (
+                      {/* {AccessID == "TR027" ? (
                       <Link
                       to={`/Apps/TR027/Employee Payroll/EditEmployee Payroll/${params.row.RecordID}/E`}
                       >
@@ -4148,117 +4385,116 @@ export const fetchListview =
                     ) : (
                       false
                     )} */}
-                    {AccessID == "TR091" ? (
-                      <Link
-                        to={`./${params.row.FirstLeatherID}/Edit${screenName}/${params.row.RecordID}/E`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
+                      {AccessID == "TR091" ? (
+                        <Link
+                          to={`./${params.row.FirstLeatherID}/Edit${screenName}/${params.row.RecordID}/E`}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {params.row.Process == "Y" && AccessID == "TR052" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }deliverychallan.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {params.row.Process == "Y" && AccessID == "TR052" ? (
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }deliverychallan.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {params.row.Process != "Y" &&
-                    params.row.parentID == "MO" &&
-                    AccessID == "TR052" ? (
-                      <Link>
-                        <IconButton
-                          color="primary"
-                          variant="contained"
-                          onClick={fnProcess(params.row.RecordID, "TR052")}
-                        >
-                          <SettingsBackupRestoreIcon />
-                        </IconButton>
-                      </Link>
-                    ) : null}
-                    {params.row.Process != "Y" &&
-                    params.row.parentID == "LO" &&
-                    AccessID == "TR052" ? (
-                      <Link>
-                        <IconButton
-                          color="primary"
-                          variant="contained"
-                          onClick={fnProcess(params.row.RecordID, "TR052")}
-                        >
-                          <SettingsBackupRestoreIcon />
-                        </IconButton>
-                      </Link>
-                    ) : null}
-                    {params.row.Process != "Y" &&
-                    params.row.parentID == "PO" &&
-                    AccessID == "TR052" ? (
-                      <Link>
-                        <IconButton
-                          color="primary"
-                          variant="contained"
-                          onClick={fnProcess(params.row.RecordID, "TR052")}
-                        >
-                          <SettingsBackupRestoreIcon />
-                        </IconButton>
-                      </Link>
-                    ) : null}
-                    {AccessID == "TR091" ? (
-                      <Link
-                        // to={"./price-of-other-customer"}
-                        to={`./price-of-other-customer/${params.row.RecordID}`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <AssessmentIcon />
+                      ) : (
+                        false
+                      )}
+                      {params.row.Process != "Y" &&
+                        params.row.parentID == "MO" &&
+                        AccessID == "TR052" ? (
+                        <Link>
+                          <IconButton
+                            color="primary"
+                            variant="contained"
+                            onClick={fnProcess(params.row.RecordID, "TR052")}
+                          >
+                            <SettingsBackupRestoreIcon />
                           </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR099" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
-                      >
-                        <Tooltip title="List of  usergroups">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
+                        </Link>
+                      ) : null}
+                      {params.row.Process != "Y" &&
+                        params.row.parentID == "LO" &&
+                        AccessID == "TR052" ? (
+                        <Link>
+                          <IconButton
+                            color="primary"
+                            variant="contained"
+                            onClick={fnProcess(params.row.RecordID, "TR052")}
+                          >
+                            <SettingsBackupRestoreIcon />
                           </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR014" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
-                      >
-                        <Tooltip title="Locations">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
+                        </Link>
+                      ) : null}
+                      {params.row.Process != "Y" &&
+                        params.row.parentID == "PO" &&
+                        AccessID == "TR052" ? (
+                        <Link>
+                          <IconButton
+                            color="primary"
+                            variant="contained"
+                            onClick={fnProcess(params.row.RecordID, "TR052")}
+                          >
+                            <SettingsBackupRestoreIcon />
                           </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {/* {AccessID == "TR123" ? (
+                        </Link>
+                      ) : null}
+                      {AccessID == "TR091" ? (
+                        <Link
+                          // to={"./price-of-other-customer"}
+                          to={`./price-of-other-customer/${params.row.RecordID}`}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <AssessmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR099" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
+                        >
+                          <Tooltip title="List of  usergroups">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR014" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}`}
+                        >
+                          <Tooltip title="Locations">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {/* {AccessID == "TR123" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR132/DailyTask/${params.row.RecordID}`}
                         state={{EmpName:params.row.EmployeeName,Locname:params.row.LocationName,Date:params.row.CheckInDate}}
@@ -4272,7 +4508,7 @@ export const fetchListview =
                     ) : (
                       false
                     )} */}
-                    {/* {AccessID == "TR132" ? (
+                      {/* {AccessID == "TR132" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR134/Daily Hour Task/${params.row.RecordID}/${params.row.parentID}`}
                         state={{EmpName:params.row.EmployeeName,Locname:params.row.LocationName,proName:params.row.ProjectName,EmployeeID:params.row.EmployeesID,Date:params.row.Date}}
@@ -4287,52 +4523,52 @@ export const fetchListview =
                       false
                     )}
                     */}
-                    {AccessID == "TR234" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
-                        state={{
-                          MilestoneID: params.row.MilestoneID,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          stagesName: params.row.OperationStageName,
-                          MilestoneName: params.row.MilestoneName,
-                          Activityname: params.row.Name,
-                        }}
-                      >
-                        <Tooltip title="Task">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR234" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
+                          state={{
+                            MilestoneID: params.row.MilestoneID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            stagesName: params.row.OperationStageName,
+                            MilestoneName: params.row.MilestoneName,
+                            Activityname: params.row.Name,
+                          }}
+                        >
+                          <Tooltip title="Task">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR234" ? (
-                      <Link
-                        to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                        state={{
-                          code: params.row.Code,
-                          Desc: params.row.Name,
-                          MilestoneID: params.row.RecordID,
-                          projectID: params.row.ProjectID,
-                          OperationStageID: params.row.OperationStageID,
-                          stagesName: params.row.OperationStageName,
-                          MilestoneName: params.row.MilestoneName,
-                          Activityname: params.row.Name,
-                        }}
-                      >
-                        <Tooltip title="Task Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {/*                    
+                      {AccessID == "TR234" ? (
+                        <Link
+                          to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            stagesName: params.row.OperationStageName,
+                            MilestoneName: params.row.MilestoneName,
+                            Activityname: params.row.Name,
+                          }}
+                        >
+                          <Tooltip title="Task Weightage">
+                            <IconButton color="info" size="small">
+                              <BalanceIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {/*                    
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
@@ -4382,73 +4618,73 @@ export const fetchListview =
                       false
                     )} */}
 
-                    {AccessID == "TR136" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
-                      >
-                        <Tooltip title="Finance Entry">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR135" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
-                      >
-                        <Tooltip title="Fixed Asset Category">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR137" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                      >
-                        <Tooltip title="Fixed Assets">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR128" ? (
-                      <Box>
-                        <>
-                         <Link to={`./EditLocation/${params.row.RecordID}/E`}
-                         state={{
-                                  LocationName: params.row.Name,
-                                  CompanyName: params.row.CompanyName,
-                                  screenName:screenName
-                         }}
-                         >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>                  
+                      {AccessID == "TR136" ? (
                         <Link
-                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                          state={{ Locationname: params.row.Name,BreadCrumb2:screenName }}
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
                         >
-                          <Tooltip title="Gate">
+                          <Tooltip title="Finance Entry">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        </>
-                        {/* <Link
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR135" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
+                        >
+                          <Tooltip title="Fixed Asset Category">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR137" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+                        >
+                          <Tooltip title="Fixed Assets">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR128" ? (
+                        <Box>
+                          <>
+                            <Link to={`./EditLocation/${params.row.RecordID}/E`}
+                              state={{
+                                LocationName: params.row.Name,
+                                CompanyName: params.row.CompanyName,
+                                screenName: screenName
+                              }}
+                            >
+                              <Tooltip title="Edit">
+                                <IconButton color="info" size="small">
+                                  <ModeEditOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                            <Link
+                              to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+                              state={{ Locationname: params.row.Name, BreadCrumb2: screenName }}
+                            >
+                              <Tooltip title="Gate">
+                                <IconButton color="info" size="small">
+                                  <ListAltOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          </>
+                          {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
                           <Tooltip title="Bin">
@@ -4457,563 +4693,544 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link> */}
-                      </Box>
-                    ) : (
-                      false
-                    )}
+                        </Box>
+                      ) : (
+                        false
+                      )}
 
-                    {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
-                    {AccessID == "TR083" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors/${params.row.Type}`}
-                      >
-                        <Tooltip title="List of Colors">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
+                      {AccessID == "TR083" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors/${params.row.Type}`}
+                        >
+                          <Tooltip title="List of Colors">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR032" ? (
-                      <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
-                    {AccessID == "TR032" && params.row.MType === "L" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors/${params.row.RecordID}/${params.row.Description}`}
-                      >
-                        <Tooltip title="List of Color shades">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR033" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors-customer/${params.row.RecordID}/${params.row.parentName}/${params.row.Description}`}
-                      >
-                        <Tooltip title="List of Customer">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR032" ? (
+                        <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
+                      {AccessID == "TR032" && params.row.MType === "L" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors/${params.row.RecordID}/${params.row.Description}`}
+                        >
+                          <Tooltip title="List of Color shades">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR033" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/Colors-customer/${params.row.RecordID}/${params.row.parentName}/${params.row.Description}`}
+                        >
+                          <Tooltip title="List of Customer">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR097" ? (
-                      <Link
-                        to={`./${params.row.ChildID}/${params.row.RecordID}/DC/${params.row.Type}/${params.row.Description}/`}
-                      >
-                        <Tooltip title="List of Delivery Chalan">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR109" && params.row.Process == "Y" ? (
-                      <Box>
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }Leatherpackingreport.php?Token=${
-                              params.row.Hashtoken
-                            }`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR109" && params.row.Process == "Y" ? (
-                      <IconButton
-                        color="info"
-                        size="small"
-                        onClick={() => {
-                          dispatch(
-                            mailOpen({
-                              row: params.row,
-                              link: `${
-                                store.getState().globalurl.pdfurl
-                              }Leatherpackingreport.php?Token=${
-                                params.row.Hashtoken
-                              }`,
-                            }),
-                          );
-                          dispatch(
-                            getMail({
-                              Templateid: "ET_011",
-                              RecordID: params.row.RecordID,
-                              UserName: "Trinity",
-                            }),
-                          );
-                        }}
-                      >
-                        <EmailIcon />
-                      </IconButton>
-                    ) : null}
-                    {AccessID == "TR050" && params.row.Process != "Y" ? (
-                      <Link>
-                        {" "}
+                      {AccessID == "TR097" ? (
+                        <Link
+                          to={`./${params.row.ChildID}/${params.row.RecordID}/DC/${params.row.Type}/${params.row.Description}/`}
+                        >
+                          <Tooltip title="List of Delivery Chalan">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR109" && params.row.Process == "Y" ? (
+                        <Box>
+                          <Tooltip title="Print">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }Leatherpackingreport.php?Token=${params.row.Hashtoken
+                                }`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Print">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR109" && params.row.Process == "Y" ? (
                         <IconButton
-                          color="primary"
-                          variant="contained"
-                          onClick={fnProcess(params.row.RecordID, "TR050")}
+                          color="info"
+                          size="small"
+                          onClick={() => {
+                            dispatch(
+                              mailOpen({
+                                row: params.row,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }Leatherpackingreport.php?Token=${params.row.Hashtoken
+                                  }`,
+                              }),
+                            );
+                            dispatch(
+                              getMail({
+                                Templateid: "ET_011",
+                                RecordID: params.row.RecordID,
+                                UserName: "Trinity",
+                              }),
+                            );
+                          }}
+                        >
+                          <EmailIcon />
+                        </IconButton>
+                      ) : null}
+                      {AccessID == "TR050" && params.row.Process != "Y" ? (
+                        <Link>
+                          {" "}
+                          <IconButton
+                            color="primary"
+                            variant="contained"
+                            onClick={fnProcess(params.row.RecordID, "TR050")}
                           // onClick={()=>alert("hai")}
-                        >
-                          <SettingsBackupRestoreIcon />
-                        </IconButton>
-                      </Link>
-                    ) : null}
+                          >
+                            <SettingsBackupRestoreIcon />
+                          </IconButton>
+                        </Link>
+                      ) : null}
 
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <Tooltip title="Cutting Component">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMCC.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="primary"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
+                        <Tooltip title="Cutting Component">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }BOMCC.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="primary"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <Tooltip title="Production">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMPROD.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="success"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
+                        <Tooltip title="Production">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }BOMPROD.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="success"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <Tooltip title="Packing">
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
+                        <Tooltip title="Packing">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }BOMPACK.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="error"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
+                        <Tooltip title="All BOM">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }BOMALL.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color=""
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
+                        <Tooltip title="Internal Order">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }Internalorder.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color=""
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR050" && params.row.Process == "Y" ? (
                         <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMPACK.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="error"
+                          color="info"
                           size="small"
+                          onClick={() => {
+                            dispatch(
+                              mailOpen({
+                                row: params.row,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }BOMALL.php?Token=${params.row.Hashtoken}`,
+                              }),
+                            );
+                            dispatch(
+                              getMail({
+                                Templateid: "ET_005",
+                                RecordID: params.row.RecordID,
+                                UserName: "Trinity",
+                              }),
+                            );
+                          }}
                         >
-                          <PrintOutlinedIcon />
+                          <EmailIcon />
                         </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <Tooltip title="All BOM">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMALL.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color=""
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <Tooltip title="Internal Order">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }Internalorder.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color=""
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR050" && params.row.Process == "Y" ? (
-                      <IconButton
-                        color="info"
-                        size="small"
-                        onClick={() => {
-                          dispatch(
-                            mailOpen({
-                              row: params.row,
-                              link: `${
-                                store.getState().globalurl.pdfurl
-                              }BOMALL.php?Token=${params.row.Hashtoken}`,
-                            }),
-                          );
-                          dispatch(
-                            getMail({
-                              Templateid: "ET_005",
-                              RecordID: params.row.RecordID,
-                              UserName: "Trinity",
-                            }),
-                          );
-                        }}
-                      >
-                        <EmailIcon />
-                      </IconButton>
-                    ) : (
-                      false
-                    )}
-                    {/* {AccessID == "TR087" ?
+                      ) : (
+                        false
+                      )}
+                      {/* {AccessID == "TR087" ?
                  <IconButton component="a"  href={`${store.getState().globalurl.pdfurl}productpackinglist.php?`} target="_blank" 
                  rel="noreferrer"  color="info" size="small" ><PrintOutlinedIcon/>
                  </IconButton>
                 :false} */}
 
-                    {AccessID == "TR074" ? (
-                      params.row.Complete == "N" ? (
+                      {AccessID == "TR074" ? (
+                        params.row.Complete == "N" ? (
+                          <Box>
+                            <Link
+                              to={`./Editbatchissue/${params.row.RecordID}/E`}
+                            >
+                              <Tooltip title="Issue">
+                                <IconButton color="info" size="small">
+                                  <ListAltOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+
+                            <Link
+                              to={`./Editbatchcompletion/${params.row.RecordID}/E`}
+                            >
+                              <Tooltip title="Completion">
+                                <IconButton color="error" size="small">
+                                  <ListAltOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          </Box>
+                        ) : (
+                          <Box>
+                            <Tooltip title="Batch Completed">
+                              <IconButton color="success" size="small">
+                                <CheckCircleOutlineIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                        )
+                      ) : (
+                        false
+                      )}
+
+                      {AccessID == "TR074" ? (
+                        params.row.parentID == "CC" &&
+                          params.row.Process == "Y" ? (
+                          <Tooltip title="Print ">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }BATCHCC.php?Token=${params.row.Hashtoken}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          false
+                        )
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR074" ? (
+                        params.row.parentID == "PC" &&
+                          params.row.Process == "Y" ? (
+                          <Tooltip title="Print">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }BATCHPROD.php?Token=${params.row.Hashtoken}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          false
+                        )
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR074" ? (
+                        params.row.parentID == "PK" &&
+                          params.row.Process == "Y" ? (
+                          <Tooltip title="Print">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }BATCHPACK.php?Token=${params.row.Hashtoken}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          false
+                        )
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR155" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {AccessID == "TR152" ? (
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }purchaseorder.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {AccessID == "TR074" &&
+                        params.row.parentID == "CC" &&
+                        params.row.Process == "Y" ? (
+                        <Tooltip title="Email">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                              dispatch(
+                                mailOpen({
+                                  row: params.row,
+                                  link: `${store.getState().globalurl.pdfurl
+                                    }BATCHCC.php?Token=${params.row.Hashtoken}`,
+                                }),
+                              );
+                              dispatch(
+                                getMail({
+                                  Templateid: "ET_013",
+                                  RecordID: params.row.RecordID,
+                                  UserName: "Trinity",
+                                }),
+                              );
+                            }}
+                          >
+                            <EmailIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {AccessID == "TR074" &&
+                        params.row.parentID == "PC" &&
+                        params.row.Process == "Y" ? (
+                        <Tooltip title="Email">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                              dispatch(
+                                mailOpen({
+                                  row: params.row,
+                                  link: `${store.getState().globalurl.pdfurl
+                                    }BATCHPROD.php?Token=${params.row.Hashtoken}`,
+                                }),
+                              );
+                              dispatch(
+                                getMail({
+                                  Templateid: "ET_014",
+                                  RecordID: params.row.RecordID,
+                                  UserName: "Trinity",
+                                }),
+                              );
+                            }}
+                          >
+                            <EmailIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+                      {AccessID == "TR074" &&
+                        params.row.parentID == "PK" &&
+                        params.row.Process == "Y" ? (
+                        <Tooltip title="Email">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                              dispatch(
+                                mailOpen({
+                                  row: params.row,
+                                  link: `${store.getState().globalurl.pdfurl
+                                    }BATCHPACK.php?Token=${params.row.Hashtoken}`,
+                                }),
+                              );
+                              dispatch(
+                                getMail({
+                                  Templateid: "ET_015",
+                                  RecordID: params.row.RecordID,
+                                  UserName: "Trinity",
+                                }),
+                              );
+                            }}
+                          >
+                            <EmailIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
+
+                      {AccessID == "TR048" ? (
                         <Box>
                           <Link
-                            to={`./Editbatchissue/${params.row.RecordID}/E`}
+                            to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
                           >
                             <Tooltip title="Issue">
                               <IconButton color="info" size="small">
-                                <ListAltOutlinedIcon />
+                                <SummarizeOutlinedIcon />
                               </IconButton>
                             </Tooltip>
                           </Link>
-
-                          <Link
-                            to={`./Editbatchcompletion/${params.row.RecordID}/E`}
-                          >
-                            <Tooltip title="Completion">
-                              <IconButton color="error" size="small">
-                                <ListAltOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        </Box>
-                      ) : (
-                        <Box>
-                          <Tooltip title="Batch Completed">
-                            <IconButton color="success" size="small">
-                              <CheckCircleOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      )
-                    ) : (
-                      false
-                    )}
-
-                    {AccessID == "TR074" ? (
-                      params.row.parentID == "CC" &&
-                      params.row.Process == "Y" ? (
-                        <Tooltip title="Print ">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHCC.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        false
-                      )
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR074" ? (
-                      params.row.parentID == "PC" &&
-                      params.row.Process == "Y" ? (
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHPROD.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        false
-                      )
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR074" ? (
-                      params.row.parentID == "PK" &&
-                      params.row.Process == "Y" ? (
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHPACK.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        false
-                      )
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR155" ? (
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {AccessID == "TR152" ? (
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }purchaseorder.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {AccessID == "TR074" &&
-                    params.row.parentID == "CC" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHCC.php?Token=${params.row.Hashtoken}`,
-                              }),
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_013",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              }),
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {AccessID == "TR074" &&
-                    params.row.parentID == "PC" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHPROD.php?Token=${params.row.Hashtoken}`,
-                              }),
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_014",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              }),
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {AccessID == "TR074" &&
-                    params.row.parentID == "PK" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHPACK.php?Token=${params.row.Hashtoken}`,
-                              }),
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_015",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              }),
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-
-                    {AccessID == "TR048" ? (
-                      <Box>
-                        <Link
-                          to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
-                        >
-                          <Tooltip title="Issue">
-                            <IconButton color="info" size="small">
-                              <SummarizeOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                        {/* <Link
+                          {/* <Link
                        to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
                      > */}
-                        <Tooltip title="Alter Material">
-                          {/* //here change */}
-                          <IconButton
-                            onClick={() =>
-                              dispatch(
-                                productionlookupOpen({
-                                  materialRecID: params.row.MtlRecordID,
-                                  productionCardID: params.row.PcdhRecordID,
-                                }),
-                              )
-                            }
-                            color="info"
-                            size="small"
-                          >
-                            <OpenInBrowserOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                        {params.row.Colourflag == "Y" ? (
-                          <Tooltip title="Alter Color">
+                          <Tooltip title="Alter Material">
                             {/* //here change */}
                             <IconButton
                               onClick={() =>
                                 dispatch(
-                                  productionColorlookupOpen({
+                                  productionlookupOpen({
                                     materialRecID: params.row.MtlRecordID,
+                                    productionCardID: params.row.PcdhRecordID,
                                   }),
                                 )
                               }
                               color="info"
                               size="small"
                             >
-                              <OpenInBrowserOutlinedIcon color="warning" />
+                              <OpenInBrowserOutlinedIcon />
                             </IconButton>
                           </Tooltip>
-                        ) : (
-                          false
-                        )}
-                        {/* </Link> */}
-                      </Box>
-                    ) : (
-                      false
-                    )}
+                          {params.row.Colourflag == "Y" ? (
+                            <Tooltip title="Alter Color">
+                              {/* //here change */}
+                              <IconButton
+                                onClick={() =>
+                                  dispatch(
+                                    productionColorlookupOpen({
+                                      materialRecID: params.row.MtlRecordID,
+                                    }),
+                                  )
+                                }
+                                color="info"
+                                size="small"
+                              >
+                                <OpenInBrowserOutlinedIcon color="warning" />
+                              </IconButton>
+                            </Tooltip>
+                          ) : (
+                            false
+                          )}
+                          {/* </Link> */}
+                        </Box>
+                      ) : (
+                        false
+                      )}
 
-                    {/* {AccessID == "TR048" ?
+                      {/* {AccessID == "TR048" ?
         
                     
                    params.row.Type =="M"?
@@ -5026,66 +5243,66 @@ export const fetchListview =
 
                  
                 :false} */}
-                    {/* INDENT ITEM --- PRODUCTION CARD */}
-                    {AccessID == "TR118" ? (
-                      <Link
-                        to={`./${params.row.ChildID}/${params.row.ChildName}/PC/${params.row.RecordID}/${params.row.Type}`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR119" ? (
-                      <Tooltip title="Indent Order">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={indentOrderSave(
-                            "insert",
-                            indentRecID,
-                            params.row.SupplierID,
-                            params.row.parentID,
-                          )}
+                      {/* INDENT ITEM --- PRODUCTION CARD */}
+                      {AccessID == "TR118" ? (
+                        <Link
+                          to={`./${params.row.ChildID}/${params.row.ChildName}/PC/${params.row.RecordID}/${params.row.Type}`}
                         >
-                          <ListAltOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR003" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR004/List%20of%20Materials/${params.row.RecordID}/${params.row.parentID}/${params.row.Name}/${params.row.SearchPhrase}/pm`}
-                      >
-                        <Tooltip title="Material">
-                          <IconButton color="info" size="small">
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR119" ? (
+                        <Tooltip title="Indent Order">
+                          <IconButton
+                            color="info"
+                            size="small"
+                            onClick={indentOrderSave(
+                              "insert",
+                              indentRecID,
+                              params.row.SupplierID,
+                              params.row.parentID,
+                            )}
+                          >
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR001" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR050/List of BOM/${params.row.RecordID}/${params.row.ProductDescription}/${params.row.Description}/all-bom/${params.row.parentID}`}
-                      >
-                        <Tooltip title="List of BOM">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR003" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR004/List%20of%20Materials/${params.row.RecordID}/${params.row.parentID}/${params.row.Name}/${params.row.SearchPhrase}/pm`}
+                        >
+                          <Tooltip title="Material">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR001" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR050/List of BOM/${params.row.RecordID}/${params.row.ProductDescription}/${params.row.Description}/all-bom/${params.row.parentID}`}
+                        >
+                          <Tooltip title="List of BOM">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {/* {AccessID == "TR079" ?
+                      {/* {AccessID == "TR079" ?
                      <Link to={`/Apps/Secondarylistview/TR080/Material Master/${params.row.RecordID}`}>
                      <Tooltip title="Material Master">
                        <IconButton color="info" size="small">
@@ -5094,23 +5311,40 @@ export const fetchListview =
                      </Tooltip>
                  </Link>
                 :false} */}
-                    {AccessID == "TR001" ? (
-                      <Link
-                        to={`/Apps/TR069/Editproductstock/${params.row.RecordID}/${params.row.ModelCode}/${params.row.Description}/E`}
-                      >
-                        <Tooltip title="Stock">
-                          <IconButton color="error" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR004" ? (
-                      params.row.STKType != "S" ? (
-                        <Link to={`./Editstock/${params.row.RecordID}/E`}>
+                      {AccessID == "TR001" ? (
+                        <Link
+                          to={`/Apps/TR069/Editproductstock/${params.row.RecordID}/${params.row.ModelCode}/${params.row.Description}/E`}
+                        >
                           <Tooltip title="Stock">
+                            <IconButton color="error" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR004" ? (
+                        params.row.STKType != "S" ? (
+                          <Link to={`./Editstock/${params.row.RecordID}/E`}>
+                            <Tooltip title="Stock">
+                              <IconButton color="info" size="small">
+                                <ListAltOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        ) : (
+                          false
+                        )
+                      ) : (
+                        false
+                      )}
+
+                      {AccessID == "TR002" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.Name}`}
+                        >
+                          <Tooltip title="Products">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
                             </IconButton>
@@ -5118,80 +5352,63 @@ export const fetchListview =
                         </Link>
                       ) : (
                         false
-                      )
-                    ) : (
-                      false
-                    )}
+                      )}
+                      {AccessID == "TR147" ? (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR148/Job Work/${params.row.RecordID}/${params.row.Name}`}
+                        >
+                          <Tooltip title="Jobwork">
+                            <IconButton color="info" size="small">
+                              <ListAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR002" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.Name}`}
-                      >
-                        <Tooltip title="Products">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR147" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR148/Job Work/${params.row.RecordID}/${params.row.Name}`}
-                      >
-                        <Tooltip title="Jobwork">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR010" ? (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E/${0}`}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR010" ? (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E/${0}`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
+                      {AccessID == "TR010" ? (
+                        <Link
+                          to={`./Edit${screenName}/${params.row.RecordID}/E/${2}`}
+                        >
+                          <Tooltip title="Customer Products">
+                            <IconButton color="info" size="small">
+                              <WysiwygIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR010" ? (
+                        <Link
+                          to={`/Apps/TR400/Editcustomerlinechart/EditCustomer Line Chart/${params.row.RecordID}/E`}
+                        >
+                          <Tooltip title="Customer Analysis">
+                            <IconButton color="info" size="small">
+                              <AssessmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        false
+                      )}
 
-                    {AccessID == "TR010" ? (
-                      <Link
-                        to={`./Edit${screenName}/${params.row.RecordID}/E/${2}`}
-                      >
-                        <Tooltip title="Customer Products">
-                          <IconButton color="info" size="small">
-                            <WysiwygIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                    {AccessID == "TR010" ? (
-                      <Link
-                        to={`/Apps/TR400/Editcustomerlinechart/EditCustomer Line Chart/${params.row.RecordID}/E`}
-                      >
-                        <Tooltip title="Customer Analysis">
-                          <IconButton color="info" size="small">
-                            <AssessmentIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-
-                    {/* {AccessID == "TR011" ?
+                      {/* {AccessID == "TR011" ?
                    <Link to={`/Apps/product-analysis/${params.row.CustRecordID}/E`}>
                    <Tooltip title="Customer Analysis">
                      <IconButton color="info" size="small"  >
@@ -5200,93 +5417,9 @@ export const fetchListview =
                    </Tooltip>
                  </Link>
                 :false} */}
-                    {params.row.InvType == "SI" &&
-                    AccessID == "TR011" &&
-                    params.row.Print == "Y" ? (
-                      <Tooltip
-                        title={
-                          params.row.Process == "Y"
-                            ? "INVOICE"
-                            : "DARFT INVOICE"
-                        }
-                      >
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }sampleinvoice.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-
-                    {params.row.InvType == "FI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "P" &&
-                    params.row.Print == "Y" ? (
-                      <Tooltip
-                        title={
-                          params.row.Process == "Y"
-                            ? "INVOICE"
-                            : "DARFT INVOICE"
-                        }
-                      >
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }finalreport.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-
-                    {params.row.InvType == "FI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "L" &&
-                    params.row.Print == "Y" ? (
-                      <Tooltip
-                        title={
-                          params.row.Process == "Y"
-                            ? "INVOICE"
-                            : "DARFT INVOICE"
-                        }
-                      >
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }leatherinvoice.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      false
-                    )}
-                    {params.row.InvType == "PI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "P" &&
-                    params.row.Print == "Y" ? (
-                      <>
+                      {params.row.InvType == "SI" &&
+                        AccessID == "TR011" &&
+                        params.row.Print == "Y" ? (
                         <Tooltip
                           title={
                             params.row.Process == "Y"
@@ -5296,9 +5429,8 @@ export const fetchListview =
                         >
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }report.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }sampleinvoice.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -5307,213 +5439,292 @@ export const fetchListview =
                             <PrintOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Leather Consumption">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }leatherconsumption.php?Token=${
-                              params.row.Hashtoken
-                            }`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      false
-                    )}
-
-                    {params.row.ImgApp == "Y" ? (
-                      AccessID == "TR002" ? (
-                        <Link
-                          to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      ) : AccessID == "TR009" ? (
-                        <Link
-                          to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      ) : AccessID == "TR010" ? (
-                        <Link
-                          to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      ) : //  : AccessID == "TR027" ? (
-                      //   <Box>
-                      //     <Link
-                      //       to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                      //       state={{
-                      //         EmpName: params.row.Name,
-                      //         Employee: params.row.Employee,
-                      //       }}
-                      //     >
-                      //       <Tooltip title="Image upload">
-                      //         <IconButton color="info" size="small">
-                      //           <AddPhotoAlternateIcon />
-                      //         </IconButton>
-                      //       </Tooltip>
-                      //     </Link>
-                      //     <Link
-                      //       to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                      //       state={{
-                      //         EmpName: params.row.Name,
-                      //         Employee: params.row.Personnel,
-                      //       }}
-                      //     >
-                      //       <Tooltip title="Leave Enquiry">
-                      //         <IconButton color="info" size="small">
-                      //           <EventNoteIcon />
-                      //         </IconButton>
-                      //       </Tooltip>
-                      //     </Link>
-                      //   </Box>
-                      // )
-                      AccessID == "TR003" ? (
-                        <Link
-                          to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      ) : AccessID == "TR004" ? (
-                        <Link
-                          to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/${params.row.Type}/${params.row.parentName}/${params.row.SearchPhrase}/imageupload/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      ) : AccessID == "TR001" ? (
-                        <Link
-                          to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/${params.row.ProductDescription}/imageupload/${params.row.RecordID}`}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
                       ) : (
                         false
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </Stack>
-                );
-              },
-            };
-          }
+                      )}
 
-          if (AccessID == "TR027") {
-            const obj = {
-              field: "Type",
-              headerName: "Type",
-              headerAlign: "center",
-              sortable: false,
-              filterable: false,
-              disableColumnMenu: true,
-              minWidth: 60,
-              maxWidth: 60,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Stack direction="row">
-                    <Link>
-                      {params.row.EmpType === "Contracts In" && (
-                        <Tooltip title="Contract In">
-                          <IconButton color="info">
-                            <RedoIcon />
+                      {params.row.InvType == "FI" &&
+                        AccessID == "TR011" &&
+                        params.row.parentID == "P" &&
+                        params.row.Print == "Y" ? (
+                        <Tooltip
+                          title={
+                            params.row.Process == "Y"
+                              ? "INVOICE"
+                              : "DARFT INVOICE"
+                          }
+                        >
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }finalreport.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
                           </IconButton>
                         </Tooltip>
+                      ) : (
+                        false
                       )}
-                    </Link>
 
-                    <Link>
-                      {params.row.EmpType === "Contracts Out" && (
-                        <Tooltip title="Contract Out">
-                          <IconButton color="info">
-                            <UndoIcon />
+                      {params.row.InvType == "FI" &&
+                        AccessID == "TR011" &&
+                        params.row.parentID == "L" &&
+                        params.row.Print == "Y" ? (
+                        <Tooltip
+                          title={
+                            params.row.Process == "Y"
+                              ? "INVOICE"
+                              : "DARFT INVOICE"
+                          }
+                        >
+                          <IconButton
+                            component="a"
+                            href={`${store.getState().globalurl.pdfurl
+                              }leatherinvoice.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
                           </IconButton>
                         </Tooltip>
+                      ) : (
+                        false
                       )}
-                    </Link>
-                  </Stack>
-                );
-              },
-            };
-            listviewData.Data.columns.splice(2, 0, obj);
-          }
-          if (AccessID == "TR027") {
-            const obj = {
-              field: "emp",
-              headerName: " ",
-              headerAlign: "center",
-              sortable: false,
-              filterable: false,
-              disableColumnMenu: true,
-              minWidth: 40,
-              maxWidth: 40,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Stack direction="row">
-                    <Link>
-                      <Tooltip title="Employee">
-                        <IconButton color="info">
-                          <Person2Icon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Stack>
-                );
-              },
-            };
-            listviewData.Data.columns.splice(2, 0, obj);
-          }
-          listviewData.Data.columns.push(obj);
+                      {params.row.InvType == "PI" &&
+                        AccessID == "TR011" &&
+                        params.row.parentID == "P" &&
+                        params.row.Print == "Y" ? (
+                        <>
+                          <Tooltip
+                            title={
+                              params.row.Process == "Y"
+                                ? "INVOICE"
+                                : "DARFT INVOICE"
+                            }
+                          >
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }report.php?Token=${params.row.Hashtoken}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Leather Consumption">
+                            <IconButton
+                              component="a"
+                              href={`${store.getState().globalurl.pdfurl
+                                }leatherconsumption.php?Token=${params.row.Hashtoken
+                                }`}
+                              target="_blank"
+                              rel="noreferrer"
+                              color="info"
+                              size="small"
+                            >
+                              <PrintOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </>
+                      ) : (
+                        false
+                      )}
 
-          dispatch(
-            Success({
-              columndata: listviewData.Data.columns,
-              rowdata: listviewData.Data.rows,
-            }),
-          );
-        } else {
-          dispatch(Success({ columndata: [], rowdata: [] }));
-        }
-      })
+                      {params.row.ImgApp == "Y" ? (
+                        AccessID == "TR002" ? (
+                          <Link
+                            to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                          >
+                            <Tooltip title="Image upload">
+                              <IconButton color="info" size="small">
+                                <AddPhotoAlternateIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        ) : AccessID == "TR009" ? (
+                          <Link
+                            to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                          >
+                            <Tooltip title="Image upload">
+                              <IconButton color="info" size="small">
+                                <AddPhotoAlternateIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        ) : AccessID == "TR010" ? (
+                          <Link
+                            to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                          >
+                            <Tooltip title="Image upload">
+                              <IconButton color="info" size="small">
+                                <AddPhotoAlternateIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        ) : //  : AccessID == "TR027" ? (
+                          //   <Box>
+                          //     <Link
+                          //       to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                          //       state={{
+                          //         EmpName: params.row.Name,
+                          //         Employee: params.row.Employee,
+                          //       }}
+                          //     >
+                          //       <Tooltip title="Image upload">
+                          //         <IconButton color="info" size="small">
+                          //           <AddPhotoAlternateIcon />
+                          //         </IconButton>
+                          //       </Tooltip>
+                          //     </Link>
+                          //     <Link
+                          //       to={`/Apps/leaveenquiry/${params.row.RecordID}`}
+                          //       state={{
+                          //         EmpName: params.row.Name,
+                          //         Employee: params.row.Personnel,
+                          //       }}
+                          //     >
+                          //       <Tooltip title="Leave Enquiry">
+                          //         <IconButton color="info" size="small">
+                          //           <EventNoteIcon />
+                          //         </IconButton>
+                          //       </Tooltip>
+                          //     </Link>
+                          //   </Box>
+                          // )
+                          AccessID == "TR003" ? (
+                            <Link
+                              to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
+                            >
+                              <Tooltip title="Image upload">
+                                <IconButton color="info" size="small">
+                                  <AddPhotoAlternateIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : AccessID == "TR004" ? (
+                            <Link
+                              to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/${params.row.Type}/${params.row.parentName}/${params.row.SearchPhrase}/imageupload/${params.row.RecordID}`}
+                            >
+                              <Tooltip title="Image upload">
+                                <IconButton color="info" size="small">
+                                  <AddPhotoAlternateIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : AccessID == "TR001" ? (
+                            <Link
+                              to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/${params.row.ProductDescription}/imageupload/${params.row.RecordID}`}
+                            >
+                              <Tooltip title="Image upload">
+                                <IconButton color="info" size="small">
+                                  <AddPhotoAlternateIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : (
+                            false
+                          )
+                      ) : (
+                        ""
+                      )}
+                    </Stack>
+                  );
+                },
+              };
+            }
 
-      .catch((error) => {
-        dispatch(errored(error.message));
-      });
-  };
+            if (AccessID == "TR027") {
+              const obj = {
+                field: "Type",
+                headerName: "Type",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 60,
+                maxWidth: 60,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link>
+                        {params.row.EmpType === "Contracts In" && (
+                          <Tooltip title="Contract In">
+                            <IconButton color="info">
+                              <RedoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link>
+
+                      <Link>
+                        {params.row.EmpType === "Contracts Out" && (
+                          <Tooltip title="Contract Out">
+                            <IconButton color="info">
+                              <UndoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link>
+                    </Stack>
+                  );
+                },
+              };
+              listviewData.Data.columns.splice(2, 0, obj);
+            }
+            if (AccessID == "TR027") {
+              const obj = {
+                field: "emp",
+                headerName: " ",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 40,
+                maxWidth: 40,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link>
+                        <Tooltip title="Employee">
+                          <IconButton color="info">
+                            <Person2Icon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Stack>
+                  );
+                },
+              };
+              listviewData.Data.columns.splice(2, 0, obj);
+            }
+            listviewData.Data.columns.push(obj);
+
+            dispatch(
+              Success({
+                columndata: listviewData.Data.columns,
+                rowdata: listviewData.Data.rows,
+              }),
+            );
+          } else {
+            dispatch(Success({ columndata: [], rowdata: [] }));
+          }
+        })
+
+        .catch((error) => {
+          dispatch(errored(error.message));
+        });
+    };
 
 const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const navigate = useNavigate();
@@ -5856,9 +6067,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               size="small"
               onClick={async () => {
                 if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
-                  const url = `${
-                    store.getState().globalurl.baseUrl
-                  }uploads/attachments/${params.row.AttachmentName}`;
+                  const url = `${store.getState().globalurl.baseUrl
+                    }uploads/attachments/${params.row.AttachmentName}`;
 
                   try {
                     const response = await fetch(url);
@@ -6135,32 +6345,32 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID == "TR296" ||
           accessID == "TR297" ||
           accessID == "TR298") && (
-          <IconButton
-            color="primary"
-            size="small"
-            // onClick={() =>
-            //   navigate(
-            //     `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
-            //     {
-            //       state: { ...state, BreadCrumb3: params.row.Name },
-            //     }
-            //   )
-            // }
-            onClick={() =>
-              navigate(`./TR281/${params.row.RecordID}`, {
-                state: {
-                  ...state,
-                  BreadCrumb3: params.row.Name,
-                  FullyAutomatic: params.row.FullyAutomatic,
-                },
-              })
-            }
-          >
-            <Tooltip title="Question Groups">
-              <Category />
-            </Tooltip>
-          </IconButton>
-        )}
+            <IconButton
+              color="primary"
+              size="small"
+              // onClick={() =>
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
+              //     {
+              //       state: { ...state, BreadCrumb3: params.row.Name },
+              //     }
+              //   )
+              // }
+              onClick={() =>
+                navigate(`./TR281/${params.row.RecordID}`, {
+                  state: {
+                    ...state,
+                    BreadCrumb3: params.row.Name,
+                    FullyAutomatic: params.row.FullyAutomatic,
+                  },
+                })
+              }
+            >
+              <Tooltip title="Question Groups">
+                <Category />
+              </Tooltip>
+            </IconButton>
+          )}
 
         {(accessID == "TR280" ||
           accessID == "TR300" ||
@@ -6168,28 +6378,28 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID == "TR296" ||
           accessID == "TR297" ||
           accessID == "TR298") && (
-          <IconButton
-            color="primary"
-            size="small"
-            // onClick={() =>
-            //   navigate(
-            //     `./TR279/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
-            //     {
-            //       state: { ...state, BreadCrumb2: params.row.Name },
-            //     }
-            //   )
-            // }
-            onClick={() =>
-              navigate(`./TR279/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb3: params.row.Name },
-              })
-            }
-          >
-            <Tooltip title="Session">
-              <AccessTimeOutlined />
-            </Tooltip>
-          </IconButton>
-        )}
+            <IconButton
+              color="primary"
+              size="small"
+              // onClick={() =>
+              //   navigate(
+              //     `./TR279/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
+              //     {
+              //       state: { ...state, BreadCrumb2: params.row.Name },
+              //     }
+              //   )
+              // }
+              onClick={() =>
+                navigate(`./TR279/${params.row.RecordID}`, {
+                  state: { ...state, BreadCrumb3: params.row.Name },
+                })
+              }
+            >
+              <Tooltip title="Session">
+                <AccessTimeOutlined />
+              </Tooltip>
+            </IconButton>
+          )}
         {/* {(accessID == "TR300" || accessID == "TR295" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
           <IconButton
             color="primary"
@@ -6463,7 +6673,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       if (response.payload.Result) {
         try {
           msg = JSON.parse(response.payload.Result)?.Msg || msg;
-        } catch {}
+        } catch { }
       }
 
       toast.success(msg);
@@ -6633,17 +6843,17 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     },
                   )
                 }
-                // onClick={() =>
-                //   navigate(
-                //     `/Apps/SecondarylistView/TR362/Document/${params.row.RecordID}`,
-                //     // {
-                //     //   state: {
-                //     //     ...state,
-                //     //     BreadCrumb1: params.row.ItemGroup,
-                //     //   },
-                //     // },
-                //   )
-                // }
+              // onClick={() =>
+              //   navigate(
+              //     `/Apps/SecondarylistView/TR362/Document/${params.row.RecordID}`,
+              //     // {
+              //     //   state: {
+              //     //     ...state,
+              //     //     BreadCrumb1: params.row.ItemGroup,
+              //     //   },
+              //     // },
+              //   )
+              // }
               >
                 <TextSnippetIcon />
               </IconButton>
@@ -6946,24 +7156,24 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             )}
             {(params.row.Status === "Delivered" ||
               params.row.Status === "Partially Paid") && (
-              <Link
-                to={`./EditPayment/${params.row.RecordID}/E`}
-                state={{
-                  PartyName: params.row.PartyName,
-                  Count: params.row.MarketingCount,
-                  LeadTitle: params.row.LeadTitle,
-                  PartyID: params.row.PartyRecordID,
-                  Code: params.row.Code,
-                  ViewStatus: params.row.Status,
-                }}
-              >
-                <Tooltip title="Payment">
-                  <IconButton color="info" size="small">
-                    <CurrencyRupeeOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            )}
+                <Link
+                  to={`./EditPayment/${params.row.RecordID}/E`}
+                  state={{
+                    PartyName: params.row.PartyName,
+                    Count: params.row.MarketingCount,
+                    LeadTitle: params.row.LeadTitle,
+                    PartyID: params.row.PartyRecordID,
+                    Code: params.row.Code,
+                    ViewStatus: params.row.Status,
+                  }}
+                >
+                  <Tooltip title="Payment">
+                    <IconButton color="info" size="small">
+                      <CurrencyRupeeOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+              )}
 
             {/* CONVERT TO ORDER */}
             {params.row.OrderType === "Q" && (
@@ -6996,15 +7206,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 LeadTitle: params.row.LeadTitle,
                 PartyID: params.row.PartyRecordID,
               }}
-              // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
+            // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
             >
               <Tooltip title="Order Item">
                 <IconButton
                   color="info"
                   size="small"
-                  // onClick={() =>
-                  //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
-                  // }
+                // onClick={() =>
+                //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+                // }
                 >
                   <GridViewIcon />
                 </IconButton>
@@ -7109,7 +7319,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
                       BreadCrumb1: params.row.Description,
-                      Classification:params.row.Classification,
+                      Classification: params.row.Classification,
                     },
                   })
                 }
@@ -7144,29 +7354,29 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
-            <>
-              <Tooltip title="Staff Timetable">
-                <IconButton
-                  color="info"
-                  size="small"
-                  onClick={() => {
-                    setSTSelectedRow(params.row);
-                    setSTModalOpen(true);
-                  }}
-                >
-                  <PermContactCalendarOutlinedIcon />
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title="Staff Timetable">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() => {
+                      setSTSelectedRow(params.row);
+                      setSTModalOpen(true);
+                    }}
+                  >
+                    <PermContactCalendarOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
 
-              <StaffTimetableModal
-                open={STmodalOpen}
-                onClose={() => {
-                  setSTModalOpen(false);
-                  setSTSelectedRow(null);
-                }}
-                rowData={STselectedRow}
-              />
-            </>
+                <StaffTimetableModal
+                  open={STmodalOpen}
+                  onClose={() => {
+                    setSTModalOpen(false);
+                    setSTSelectedRow(null);
+                  }}
+                  rowData={STselectedRow}
+                />
+              </>
             )}
           </Box>
         )}
@@ -7644,14 +7854,14 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <IconButton
                     color="error"
                     size="small"
-                    // onClick={() =>
-                    //   navigate(`./EditBooklet/${params.row.RecordID}/P`, {
-                    //     state: {
-                    //       ...state,
-                    //       BreadCrumb3: params.row.AnnexureNo,
-                    //     },
-                    //   })
-                    // }
+                  // onClick={() =>
+                  //   navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                  //     state: {
+                  //       ...state,
+                  //       BreadCrumb3: params.row.AnnexureNo,
+                  //     },
+                  //   })
+                  // }
                   >
                     <PictureAsPdfIcon />
                   </IconButton>

@@ -326,9 +326,9 @@ console.log(menu, "--+heloooooooooooooo menu");
 );
 console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
  
-        if (name === "Party") {
-          console.log("Party parent:", parentMenuID);
-        }
+        // if (name === "Party") {
+        //   console.log("Party parent:", parentMenuID);
+        // }
         if (is003Subscription && name === "CRM") {
         return null;
       }
@@ -1025,6 +1025,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR257",
           },
+          
           // {
           //   name: "Approval",
           //   id: 5859,
@@ -1045,12 +1046,12 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
         ],
       },
       {
-        name: "Agile",
+        name: is003Subscription ? "Academics" : "Agile",
         id: 45678,
         MenuID: "EM900",
-        Tooltipname: "Agile",
+        Tooltipname: is003Subscription ? "Academics" : "Agile",
         icon: (
-          <Tooltip title="Agile">
+          <Tooltip title= {is003Subscription ? "Academics" : "Agile"}>
             <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
           </Tooltip>
         ),
@@ -1124,6 +1125,26 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
           },
+          //  {
+          //   name: "Invoice",
+          //   // url: "/Apps/TR250/Invoice",
+          //   // url: "/Apps/TR331/Invoice",
+          //   url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+          //   id: 88,
+          //   icon: (
+          //     <Tooltip title="Invoice">
+          //       <ReceiptIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR331",
+          // },
         ],
       },
 
@@ -1249,7 +1270,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
           {
             name: "Company",
             id: 5846,
-            url: "./configuration",
+            url: "./configuration/E",
             icon: (
               <Tooltip title="Configuration">
                 <DisplaySettingsIcon color="info" />
