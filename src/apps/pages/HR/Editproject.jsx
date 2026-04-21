@@ -394,7 +394,7 @@ const Editproject = () => {
     Name: "",
   });
 
-
+const is003 = SubscriptionCode?.endsWith("003");
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -404,11 +404,14 @@ const Editproject = () => {
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
-    // ByProduct: data.ByProduct === "Y" ? true : false,
-    ByProduct: false,
-    Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
-   // Routine: data.RoutineTasks === "Y" ? true : false,
-    Routine:  false,
+    //ByProduct: data.ByProduct === "Y" ? true : false,
+    //ByProduct: false,
+
+    ByProduct: is003 ? false : data.ByProduct === "Y",
+    Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
+    //Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
+    Routine: data.RoutineTasks === "Y" ? true : false,
+    //Routine:  false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
     // budget: data.Budget ?? 0.00,
@@ -465,9 +468,11 @@ const Editproject = () => {
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-       ByProduct: values.ByProduct == true ? "Y" : "N",
+      //  ByProduct: values.ByProduct == true ? "Y" : "N",
       //ByProduct: "N",
-      EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
+      ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+      EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+      //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -1456,8 +1461,7 @@ const Editproject = () => {
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
-                    {!is003Subscription && (
-                      <>
+                   
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1488,6 +1492,8 @@ const Editproject = () => {
                     >
                       Service & Maintenance
                     </FormLabel> */}
+                     {!is003Subscription && (
+                      <>
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1504,8 +1510,8 @@ const Editproject = () => {
                     >
                       Product
                     </FormLabel>
-                    </>
-                  )}
+                   
+                
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1517,6 +1523,8 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}>Enable Onsite Activities</FormLabel>
+                         </>
+                      )}
                     <Field
                       //  size="small"
                       disabled={mode == "V"}
