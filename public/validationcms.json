@@ -195,6 +195,10 @@
     "Hsn": "Please enter the HSN Code",
     "shift": "Please enter the Shift 1"
   },
+  "CourseAttendence": {
+    "project": "Please select the Standard/Activities",
+    "shift": "Please select the Shift 1"
+  },
   "ItemServices": {
     "items": "Please select the Item",
     "vendors": "Please select the Vendor",

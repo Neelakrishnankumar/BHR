@@ -546,6 +546,7 @@ export const fetchExplorelitview =
         AccessID !== "TR016" &&
         AccessID !== "TR125" &&
         AccessID !== "TR244" &&
+        AccessID !== "TR369" &&
         AccessID !== "TR126" &&
         AccessID !== "TR130" &&
         AccessID !== "TR131" &&
