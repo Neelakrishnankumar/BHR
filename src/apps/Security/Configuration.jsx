@@ -120,6 +120,11 @@ const Configuration = () => {
     const [pageSize, setPageSize] = useState(15);
     const CompanyID = sessionStorage.getItem("compID");
 
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+    const lastThree = SubscriptionCode?.slice(-3) || "";
+    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+        ? lastThree
+        : "";
     //TERMS_GET
     const companytermsData = useSelector((state) => state.formApi.companytermsData);
     console.log(companytermsData, "--companytermsData");
@@ -303,7 +308,8 @@ const Configuration = () => {
             align: "left",
             headerAlign: "center",
             editable: true,
-            renderCell: (params) => params.value || "",
+            // renderCell: (params) => params.value || "",
+            renderCell: (params) => formatTo12Hour(params.value),
             renderEditCell: (params) => <EditTimeCell {...params} />,
         },
         {
@@ -318,7 +324,8 @@ const Configuration = () => {
             align: "left",
             headerAlign: "center",
             editable: true,
-            renderCell: (params) => params.value || "",
+            // renderCell: (params) => params.value || "",
+            renderCell: (params) => formatTo12Hour(params.value),
             renderEditCell: (params) => <EditTimeCell {...params} />,
         },
         {
@@ -432,25 +439,74 @@ const Configuration = () => {
         setRowModesModel(newRowModesModel);
     };
 
+    // function EditTimeCell(props) {
+    //     const { id, field, value, api } = props;
+
+    //     const handleChange = (event) => {
+    //         const newValue = event.target.value;
+    //         api.setEditCellValue({ id, field, value: newValue });
+    //     };
+
+    //     // Remove seconds if present (09:00:00 → 09:00)
+    //     const formattedValue = value ? value.slice(0, 5) : "";
+
+    //     return (
+    //         <TextField
+    //             type="time"
+    //             fullWidth
+    //             size="small"
+    //             value={formattedValue}
+    //             onChange={handleChange}
+    //             InputLabelProps={{ shrink: true }}
+    //         />
+    //     );
+    // }
+
     function EditTimeCell(props) {
         const { id, field, value, api } = props;
 
-        const handleChange = (event) => {
-            const newValue = event.target.value;
-            api.setEditCellValue({ id, field, value: newValue });
+        const convertTo24Hour = (time12h) => {
+            if (!time12h) return "";
+
+            const [time, modifier] = time12h.split(" ");
+            let [hours, minutes] = time.split(":");
+
+            if (modifier === "PM" && hours !== "12") {
+                hours = String(parseInt(hours, 10) + 12);
+            }
+            if (modifier === "AM" && hours === "12") {
+                hours = "00";
+            }
+
+            return `${hours.padStart(2, "0")}:${minutes}`;
         };
 
-        // Remove seconds if present (09:00:00 → 09:00)
-        const formattedValue = value ? value.slice(0, 5) : "";
+        const convertTo12Hour = (time24) => {
+            if (!time24) return "";
+
+            const [hour, minute] = time24.split(":");
+            let h = parseInt(hour);
+            const ampm = h >= 12 ? "PM" : "AM";
+
+            h = h % 12 || 12;
+
+            return `${h}:${minute} ${ampm}`;
+        };
+
+        const handleChange = (event) => {
+            const val24 = event.target.value; // 16:30
+            const val12 = convertTo12Hour(val24); // 4:30 PM
+
+            api.setEditCellValue({ id, field, value: val12 });
+        };
 
         return (
             <TextField
                 type="time"
                 fullWidth
                 size="small"
-                value={formattedValue}
+                value={convertTo24Hour(value)} // show correct time in picker
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
             />
         );
     }
@@ -499,6 +555,7 @@ const Configuration = () => {
                         screenName: "Slot",
                         filter: `CompanyID = ${CompanyID}`,
                         any: "",
+                        VerticalLicense: Subscriptionlastthree
                     }),
                 );
                 console.log("🚀 ~ screenChange ~ data:", data);
@@ -623,7 +680,7 @@ const Configuration = () => {
                 id="StandardName"
                 value={value || []}
                 onChange={handleChange}
-                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2157","ScreenName":"Standard","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2157","ScreenName":"Standard","Filter":"parentID='${CompanyID}'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
             />
         );
     }
@@ -651,7 +708,7 @@ const Configuration = () => {
                 id="SlotName"
                 value={value || []}
                 onChange={handleChange}
-                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2148","ScreenName":"Slot Name","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2148","ScreenName":"Slot Name","Filter":"CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
             />
         );
     }
@@ -679,7 +736,7 @@ const Configuration = () => {
                 id="SlotBreak"
                 value={value || []}
                 onChange={handleChange}
-                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2156","ScreenName":"Slot Break","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                url={`${lookuplistViewurl}?data={"Query":{"AccessID":"2156","ScreenName":"Slot Break","Filter":"CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
             />
         );
     }
@@ -720,12 +777,12 @@ const Configuration = () => {
         }
 
         const idata = rows.map((row, index) => {
-             const isNewRow = isNaN(Number(row.RecordID));
- 
+            const isNewRow = isNaN(Number(row.RecordID));
+
 
             return {
                 // RecordID: row.isNew ? 0 : row.RecordID,
-                 RecordID: isNewRow ? 0 : row.RecordID, 
+                RecordID: isNewRow ? 0 : row.RecordID,
                 IsEditable: isNewRow ? "N" : "Y",
                 CompanyID: CompanyID,
                 Code: row.SlotCode,
@@ -762,6 +819,7 @@ const Configuration = () => {
                         screenName: "Slot",
                         filter: `CompanyID = ${CompanyID}`,
                         any: "",
+                        VerticalLicense: Subscriptionlastthree
                     }),
                 );
                 console.log("🚀 ~ screenChange ~ data:", data);
@@ -857,6 +915,7 @@ const Configuration = () => {
             headerAlign: "center",
             editable: true,
             renderCell: (params) => params.value || "",
+            // renderCell: (params) => formatTo12Hour(params.value),
             renderEditCell: (params) => {
                 return <EditfromDateCell {...params} />;
             },
@@ -874,6 +933,7 @@ const Configuration = () => {
             headerAlign: "center",
             editable: true,
             renderCell: (params) => params.value || "",
+            // renderCell: (params) => formatTo12Hour(params.value),
             renderEditCell: (params) => {
                 return <EditfromDateCell {...params} />;
             },
@@ -1084,16 +1144,16 @@ const Configuration = () => {
 
     const handleDeleteTermsClick = (RecordID) => async () => {
         // setTermsRows(rows.filter((row) => row.RecordID !== RecordID));
-setTermsRows((prev) =>
-      prev.filter((row) => row.RecordID !== RecordID)
-    );
- 
-    // cleanup edit mode
-    setTermsRowModesModel((prev) => {
-      const updated = { ...prev };
-      delete updated[RecordID];
-      return updated;
-    });
+        setTermsRows((prev) =>
+            prev.filter((row) => row.RecordID !== RecordID)
+        );
+
+        // cleanup edit mode
+        setTermsRowModesModel((prev) => {
+            const updated = { ...prev };
+            delete updated[RecordID];
+            return updated;
+        });
         if (!isNaN(RecordID)) {
             const idata = {
                 //RecordID: recID,
@@ -1247,11 +1307,11 @@ setTermsRows((prev) =>
             const standardID = Array.isArray(row.StandardName)
                 ? row.StandardName.map((v) => v.RecordID).join(",")
                 : row.StandardID || "";
-             const isNewRow = isNaN(Number(row.RecordID));
+            const isNewRow = isNaN(Number(row.RecordID));
 
             return {
                 // RecordID: row.isNew ? 0 : row.RecordID,
-                 RecordID: isNewRow ? 0 : row.RecordID, 
+                RecordID: isNewRow ? 0 : row.RecordID,
                 IsEditable: isNewRow ? "N" : "Y",
                 CompanyID: CompanyID,
                 Code: row.Code,
@@ -1452,26 +1512,27 @@ setTermsRows((prev) =>
         //                 };
         //             });
         if (event.target.value == "1") {
-      if (mode === "E") {
-        dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
- 
-        const data = await dispatch(
-          slotListView({
-            accessID: "TR334",
-            screenName: "Slot",
-            filter: `CompanyID = ${CompanyID}`,
-            any: "",
-          })
-        );
- 
-        if (data.payload.Status === "Y") {
-          const resData = data.payload.Data.rows.map((value) => {
-            return {
-              ...value,
-              Break: value.Break === "Y", // ✅ convert Y/N → true/false
-              isNew:false,
-            };
-          });
+            if (mode === "E") {
+                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+
+                const data = await dispatch(
+                    slotListView({
+                        accessID: "TR334",
+                        screenName: "Slot",
+                        filter: `CompanyID = ${CompanyID}`,
+                        any: "",
+                        VerticalLicense: Subscriptionlastthree
+                    })
+                );
+
+                if (data.payload.Status === "Y") {
+                    const resData = data.payload.Data.rows.map((value) => {
+                        return {
+                            ...value,
+                            Break: value.Break === "Y", // ✅ convert Y/N → true/false
+                            isNew: false,
+                        };
+                    });
 
                     setRows(resData);
                 } else {
@@ -1484,7 +1545,7 @@ setTermsRows((prev) =>
         if (event.target.value == "2") {
             if (CompanyID && mode === "E") {
                 dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
+                dispatch(companyTermsGet({ CompanyID: CompanyID }));
                 // const data = await dispatch(
                 //   slotListView({
                 //     accessID: "TR355",
@@ -1499,7 +1560,7 @@ setTermsRows((prev) =>
                 console.log("🚀 ~ screenChange ~ data:", data);
             } else {
                 dispatch(PolicyFetchData({ get: "get", CompanyID }));
-                 dispatch(companyTermsGet({ CompanyID: CompanyID }));
+                dispatch(companyTermsGet({ CompanyID: CompanyID }));
             }
         }
     };

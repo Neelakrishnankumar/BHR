@@ -166,7 +166,7 @@ export const weeklyTeachercalendarGet = createAsyncThunk(
 );
 export const slotListView = createAsyncThunk(
   "slot/Companydetail",
-  async ({ accessID, screenName, filter, any }) => {
+  async ({ accessID, screenName, filter, any,VerticalLicense }) => {
     var url = store.getState().globalurl.listViewurl;
     var idata = {
       Query: {
@@ -174,6 +174,7 @@ export const slotListView = createAsyncThunk(
         ScreenName: screenName,
         Filter: filter,
         Any: any,
+        VerticalLicense:VerticalLicense
         // CompId:CompID
       },
     };
