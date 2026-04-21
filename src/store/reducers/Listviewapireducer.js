@@ -549,7 +549,18 @@ export const fetchListview =
       var LoggedInUserName = sessionStorage.getItem("UserName");
       const UserName = sessionStorage.getItem("UserName");
       //PROJECTPDFGET
+const getTodayDate = () => {
+  const today = new Date();
 
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+// usage
+console.log(getTodayDate()); // 21/04/2026
       const format = (d) => {
   const day = String(d.getDate()).padStart(2, "0");
   const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -1936,7 +1947,7 @@ const defaultToDate = format(today);
                         to={`/Apps/Secondarylistview/TR332/Payment/${params.row.RecordID}/${params.row.EmployeeID}`}
                         state={{
                           Employee: params.row.Employee,
-                          projectName: params.row.Project,
+                          Project: params.row.Project,
                           ProjectID: params.row.ProjectID,
                         }}
                       >
@@ -2026,8 +2037,7 @@ const defaultToDate = format(today);
                                   }}
                                 />
                               }
-                              fileName={`Receipt.pdf`}
-                            >
+                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
                               {({ loading }) =>
                                 loading ? (
                                   <IconButton size="small">

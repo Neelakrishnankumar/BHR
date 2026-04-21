@@ -93,6 +93,11 @@ const EditLeader = () => {
   const { id, name } = useParams();
   console.log("Received Name:", decodeURIComponent(name));
   console.log(location, "location");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const OrderType = params.OrderType;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -191,9 +196,9 @@ const EditLeader = () => {
               Status: "",
               project: leaderData.ProjectID
                 ? {
-                    RecordID: leaderData.ProjectID,
-                    Name: leaderData.ProjectName,
-                  }
+                  RecordID: leaderData.ProjectID,
+                  Name: leaderData.ProjectName,
+                }
                 : null,
             });
           }
@@ -231,23 +236,23 @@ const EditLeader = () => {
           ? data.OMStatus === "Cool"
             ? "Cool"
             : data.OMStatus === "Warm"
-            ? "Warm"
-            : data.OMStatus === "Hot"
-            ? "Hot"
-            : data.OMStatus === "Opt to Order"
-            ? "Opt to Order"
-            : data.OMStatus === "Opt to Quote"
-            ? "Opt to Quote"
-            : data.OMStatus === "Close"
-            ? "Close"
-            : ""
+              ? "Warm"
+              : data.OMStatus === "Hot"
+                ? "Hot"
+                : data.OMStatus === "Opt to Order"
+                  ? "Opt to Order"
+                  : data.OMStatus === "Opt to Quote"
+                    ? "Opt to Quote"
+                    : data.OMStatus === "Close"
+                      ? "Close"
+                      : ""
           : "",
       project:
         mode === "A"
           ? null
           : data.ProjectID
-          ? { RecordID: data.ProjectID, Name: data.ProjectName }
-          : null,
+            ? { RecordID: data.ProjectID, Name: data.ProjectName }
+            : null,
     });
   }, [data, mode, curdate]);
 
@@ -272,8 +277,8 @@ const EditLeader = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     setLoading(true);
 
     const idata = {
@@ -594,7 +599,17 @@ const EditLeader = () => {
                       shrink: true, // ✅ prevents overlap
                     }}
                     //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2137",
+                        ScreenName: "Project",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `CompanyID='${CompanyID}'AND ItemsDesc ='Product'`,
+                        Any: "",
+                      },
+                    })}`}
+
+                  // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
                   />
 
                   <TextField

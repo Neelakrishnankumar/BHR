@@ -94,6 +94,7 @@ import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import {
   CheckinAutocomplete,
+  Employeeautocomplete,
   MultiFormikOptimizedAutocomplete,
   OrderItemAutocomplete,
   PartymultiSelect,
@@ -171,7 +172,7 @@ const Listview = () => {
   console.log("🚀 ~ Listview ~ listViewData:", listViewData)
   const format = (d) => d.toISOString().split("T")[0];
   const oneMonthBefore = new Date();
-    const today = new Date();
+  const today = new Date();
   oneMonthBefore.setMonth(today.getMonth() - 1);
   const defaultFromDate = format(oneMonthBefore);
 
@@ -183,6 +184,7 @@ const Listview = () => {
   console.log(SubscriptionCode, is003Subscription, "SubscriptionCode");
   const baseurl1 = config.UAAM_URL;
   const loading = useSelector((state) => state.listviewApi.loading);
+  const [timeempData, settimeempData] = useState(null);
 
   var CompId = sessionStorage.getItem("compID");
 
@@ -613,7 +615,7 @@ const Listview = () => {
             {accessID === "TR313" ||
               accessID === "TR243" ||
               accessID === "TR328" ||
-              accessID === "TR331" || 
+              accessID === "TR331" ||
               accessID === "TR366" ||
               accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
@@ -633,7 +635,7 @@ const Listview = () => {
               false
             )}
 
-            {accessID == "TR122" || accessID == "TR026"  ? (
+            {accessID == "TR122" || accessID == "TR026" ? (
               <Tooltip title="Bulk Upload">
                 <IconButton sx={{ cursor: "pointer" }}>
                   <FaFileExcel size={20}
@@ -2474,30 +2476,36 @@ const Listview = () => {
                             onChange={(e, newValue) =>
                               setFieldValue("project", newValue)
                             }
-                            url={`${listViewurl}?data=${encodeURIComponent(
-                              JSON.stringify({
-                                Query: {
-                                  AccessID: "2114",
-                                  VerticalLicense: Subscriptionlastthree,
-                                  ScreenName: "Project",
-                                  Filter: `parentID=${CompId} AND EmployeeID='`,
-                                  Any: "",
-                                },
-                              })
-                            )}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`}
                           />
+                          
 
                           {/* Employee */}
-                          {/* <MultiFormikOptimizedAutocomplete
+                          <MultiFormikOptimizedAutocomplete
                             sx={{ mt: 2 }}
                             name="Employee"
-                            label="Personnel"
+                            label={is003Subscription ? "Student" : "Personnel"}
                             value={values.Employee}
                             onChange={(e, newValue) =>
                               setFieldValue("Employee", newValue)
                             }
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=''","Any":"","CompId":${CompId}}}`}
-                          /> */}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2116",
+                                ScreenName: "Personnel",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`} />
 
                           {/*  Month */}
                           {/* <TextField

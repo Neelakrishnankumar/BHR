@@ -247,7 +247,7 @@ const initialState = {
   //CONTRACT INVOICE GET
   InvoiceHeaderData: [],
   InvoiceDetailData: [],
-  InvoiceBaseUrl : "",
+  InvoiceBaseUrl: "",
   PolicygetLoading: false,
   PolicyStatus: "",
   PolicyData: {},
@@ -2711,7 +2711,7 @@ export const InvoiceAnalyticsget = createAsyncThunk(
       return rejectWithValue(error.response?.data || error.message);
     }
   }
-);                                                                           
+);
 export const companyTermsGet = createAsyncThunk(
   "COMPANY_TERMS_GET/GET",
   async ({ CompanyID }) => {
@@ -2981,6 +2981,21 @@ export const getApiSlice = createSlice({
       .addCase(InvoicePostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
+      })
+      .addCase(InvoiceAnalyticsget.pending, (state) => {
+        state.invoiceAnalyticsLoading = true;
+        state.invoiceAnalyticsError = null;
+        state.invoiceAnalyticsData = null;
+      })
+      .addCase(InvoiceAnalyticsget.fulfilled, (state, action) => {
+        state.invoiceAnalyticsLoading = false;
+        state.invoiceAnalyticsData = action.payload; // full API response
+        state.invoiceAnalyticsError = null;
+      })
+      .addCase(InvoiceAnalyticsget.rejected, (state, action) => {
+        state.invoiceAnalyticsLoading = false;
+        state.invoiceAnalyticsError = action.payload || "Failed to fetch invoice analytics";
+        state.invoiceAnalyticsData = null;
       })
       //COMPANY_TERMS_GET
       .addCase(companyTermsGet.pending, (state, action) => {

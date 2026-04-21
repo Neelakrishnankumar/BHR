@@ -3843,9 +3843,9 @@ const ListviewSecondary = () => {
                             ? "Delivery Chalan"
                             : screenName
                           }/-1/A`,
-                          {
-                            state: { ...state },
-                          }
+                         {
+                          state: { ...state }
+                        },
                         );
                       }}
                     />

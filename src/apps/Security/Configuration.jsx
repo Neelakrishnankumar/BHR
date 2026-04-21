@@ -720,8 +720,13 @@ const Configuration = () => {
         }
 
         const idata = rows.map((row, index) => {
+             const isNewRow = isNaN(Number(row.RecordID));
+ 
+
             return {
-                RecordID: row.isNew ? 0 : row.RecordID,
+                // RecordID: row.isNew ? 0 : row.RecordID,
+                 RecordID: isNewRow ? 0 : row.RecordID, 
+                IsEditable: isNewRow ? "N" : "Y",
                 CompanyID: CompanyID,
                 Code: row.SlotCode,
                 SlotName: row.SlotName,
@@ -730,7 +735,7 @@ const Configuration = () => {
                 ToTime: formatTo12Hour(row.ToTime),
                 Break: row.Break ? "Y" : "N",
                 SortOrder: 0,
-                IsEditable: !isNaN(parseInt(row.RecordID, 10)) ? "Y" : "N"
+                // IsEditable: !isNaN(parseInt(row.RecordID, 10)) ? "Y" : "N"
 
 
 
@@ -1078,8 +1083,17 @@ const Configuration = () => {
 
 
     const handleDeleteTermsClick = (RecordID) => async () => {
-        setTermsRows(rows.filter((row) => row.RecordID !== RecordID));
-
+        // setTermsRows(rows.filter((row) => row.RecordID !== RecordID));
+setTermsRows((prev) =>
+      prev.filter((row) => row.RecordID !== RecordID)
+    );
+ 
+    // cleanup edit mode
+    setTermsRowModesModel((prev) => {
+      const updated = { ...prev };
+      delete updated[RecordID];
+      return updated;
+    });
         if (!isNaN(RecordID)) {
             const idata = {
                 //RecordID: recID,
@@ -1233,9 +1247,12 @@ const Configuration = () => {
             const standardID = Array.isArray(row.StandardName)
                 ? row.StandardName.map((v) => v.RecordID).join(",")
                 : row.StandardID || "";
+             const isNewRow = isNaN(Number(row.RecordID));
 
             return {
-                RecordID: row.isNew ? 0 : row.RecordID,
+                // RecordID: row.isNew ? 0 : row.RecordID,
+                 RecordID: isNewRow ? 0 : row.RecordID, 
+                IsEditable: isNewRow ? "N" : "Y",
                 CompanyID: CompanyID,
                 Code: row.Code,
                 TermsName: row.TermsName,
@@ -1245,7 +1262,7 @@ const Configuration = () => {
                 SlotID: slotIDs,
                 BreakSlotID: breakSlotIDs,
                 StandardID: standardID,
-                IsEditable: !isNaN(parseInt(row.RecordID, 10)) ? "Y" : "N",
+                // IsEditable: !isNaN(parseInt(row.RecordID, 10)) ? "Y" : "N",
             };
         });
 
@@ -1414,26 +1431,47 @@ const Configuration = () => {
                 dispatch(getFetchData({ accessID, get: "", CompanyID: CompanyID }));
             }
         }
+        // if (event.target.value == "1") {
+        //     if (mode === "E") {
+        //         dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+
+        //         const data = await dispatch(
+        //             slotListView({
+        //                 accessID: "TR334",
+        //                 screenName: "Slot",
+        //                 filter: `CompanyID = ${CompanyID}`,
+        //                 any: "",
+        //             })
+        //         );
+
+        //         if (data.payload.Status === "Y") {
+        //             const resData = data.payload.Data.rows.map((value) => {
+        //                 return {
+        //                     ...value,
+        //                     Break: value.Break === "Y", // ✅ convert Y/N → true/false
+        //                 };
+        //             });
         if (event.target.value == "1") {
-            if (mode === "E") {
-                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
-
-                const data = await dispatch(
-                    slotListView({
-                        accessID: "TR334",
-                        screenName: "Slot",
-                        filter: `CompanyID = ${CompanyID}`,
-                        any: "",
-                    })
-                );
-
-                if (data.payload.Status === "Y") {
-                    const resData = data.payload.Data.rows.map((value) => {
-                        return {
-                            ...value,
-                            Break: value.Break === "Y", // ✅ convert Y/N → true/false
-                        };
-                    });
+      if (mode === "E") {
+        dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+ 
+        const data = await dispatch(
+          slotListView({
+            accessID: "TR334",
+            screenName: "Slot",
+            filter: `CompanyID = ${CompanyID}`,
+            any: "",
+          })
+        );
+ 
+        if (data.payload.Status === "Y") {
+          const resData = data.payload.Data.rows.map((value) => {
+            return {
+              ...value,
+              Break: value.Break === "Y", // ✅ convert Y/N → true/false
+              isNew:false,
+            };
+          });
 
                     setRows(resData);
                 } else {

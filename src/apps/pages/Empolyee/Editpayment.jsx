@@ -131,6 +131,7 @@ const EditPayment = ({ appId, empId }) => {
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [validationSchema, setValidationSchema] = useState(null);
     const state = location.state || {};
+    console.log(state, "state");
      const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -225,7 +226,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
         paymentreference: data.PaymentReference,
         amount: data.PaidAmount,
         paymentmode: data.PaymentMode,
-        project: state.projectName,
+        project: mode == "E" ? state.projectName : state.Project,
         employee: state.Employee
 
     };
@@ -464,7 +465,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                                         name="employee"
                                         type="text"
                                         id="employee"
-                                        label="Personnel"
+                                        label={getBusinessCaption("Personnel", "Personnel")}
                                         variant="standard"
                                         focused
                                         // required
