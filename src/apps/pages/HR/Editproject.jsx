@@ -101,13 +101,13 @@ const Editproject = () => {
     sessionStorage.getItem("secondaryCurrentPage")
   );
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
- const lastThree = SubscriptionCode?.slice(-3) || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
-    : "";  
-    console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
-  
+
   const [show, setScreen] = React.useState("0");
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
@@ -816,7 +816,7 @@ const Editproject = () => {
       dispatch(
         fetchExplorelitview(
           "TR363",
-            Subscriptionlastthree,
+          Subscriptionlastthree,
           "Project Unit",
           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
           ""
@@ -1272,38 +1272,39 @@ const Editproject = () => {
                     })}`}
                   // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
+                  {is003Subscription === false ? (
+                    <CheckinAutocomplete
+                      disabled={mode == "V"}
+                      name="projectOwner"
+                      // label="Project Owner"
+                      label={getBusinessCaption("ProjectOwner", "Project Owner")}
+                      variant="outlined"
+                      id="projectOwner"
+                      value={values.projectOwner}
+                      onChange={(newValue) => {
+                        setFieldValue("projectOwner", {
+                          RecordID: newValue.RecordID,
+                          Code: newValue.Code,
+                          Name: newValue.Name,
+                        });
+                        console.log(newValue, "--newvalue projectOwner");
 
-                  <CheckinAutocomplete
-                    disabled={mode == "V"}
-                    name="projectOwner"
-                    // label="Project Owner"
-                    label={getBusinessCaption("ProjectOwner", "Project Owner")}
-                    variant="outlined"
-                    id="projectOwner"
-                    value={values.projectOwner}
-                    onChange={(newValue) => {
-                      setFieldValue("projectOwner", {
-                        RecordID: newValue.RecordID,
-                        Code: newValue.Code,
-                        Name: newValue.Name,
-                      });
-                      console.log(newValue, "--newvalue projectOwner");
-
-                      console.log(newValue.RecordID, "projectOwner RecordID");
-                    }}
-                    // error={!!touched.projectOwner && !!errors.projectOwner}
-                    // helperText={touched.projectOwner && errors.projectOwner}
-                    url={`${listViewurl}?data=${JSON.stringify({
-                      Query: {
-                        AccessID: "2102",
-                        ScreenName: "Customer",
-                        VerticalLicense: Subscriptionlastthree,
-                        Filter: `parentID=${CompanyID}`,
-                        Any: "",
-                      },
-                    })}`}
-                  // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
-                  />
+                        console.log(newValue.RecordID, "projectOwner RecordID");
+                      }}
+                      // error={!!touched.projectOwner && !!errors.projectOwner}
+                      // helperText={touched.projectOwner && errors.projectOwner}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2102",
+                          ScreenName: "Customer",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                    />
+                  ) : null}
                   {/* {touched.incharge && errors.incharge && (
                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                           {errors.incharge}
@@ -1544,276 +1545,276 @@ const Editproject = () => {
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
                 </Box>
-                
+
                 {Subscriptionlastthree != "003" ? (
                   <>
-                <Typography variant="h5" padding={1}>
-                  Costing:
-                </Typography>
+                    <Typography variant="h5" padding={1}>
+                      Costing:
+                    </Typography>
 
-                {values.ByProduct === true ? (
-                  <Box
-                    display="grid"
-                    initialValues={InitialValue}
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      //fullWidth
-                      disabled={mode == "V"}
-                      variant="standard"
-                      type="number"
-                      id="price"
-                      name="price"
-                      value={values.price}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Price (If it is a product)"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
+                    {values.ByProduct === true ? (
+                      <Box
+                        display="grid"
+                        initialValues={InitialValue}
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
                           },
-                        },
-                      }}
-                    />{" "}
-                  </Box>
-                ) : (
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    initialValues={InitialValue}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      disabled={mode == "V"}
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="budget"
-                      name="budget"
-                      value={values.budget}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      // label="Budget"
-                      label={
-                        <>
-                          Budget
-                          {/* <span style={{ color: "red", fontSize: "20px" }}>
+                        }}
+                      >
+                        <TextField
+                          //fullWidth
+                          disabled={mode == "V"}
+                          variant="standard"
+                          type="number"
+                          id="price"
+                          name="price"
+                          value={values.price}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Price (If it is a product)"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />{" "}
+                      </Box>
+                    ) : (
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        initialValues={InitialValue}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        <TextField
+                          disabled={mode == "V"}
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="budget"
+                          name="budget"
+                          value={values.budget}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          // label="Budget"
+                          label={
+                            <>
+                              Budget
+                              {/* <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
                         </span> */}
-                        </>
-                      }
+                            </>
+                          }
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          error={!!touched.budget && !!errors.budget}
+                          helperText={touched.budget && errors.budget}
+                          focused
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          disabled={mode == "V"}
+                          variant="standard"
+                          type="number"
+                          id="scheduled"
+                          name="scheduled"
+                          value={values.scheduled}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Scheduled Cost"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          disabled={mode == "V"}
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="actual"
+                          name="actual"
+                          value={values.actual}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Actual Cost"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+                        <TextField
+                          disabled={mode == "V"}
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="OtherExpenses"
+                          name="OtherExpenses"
+                          value={values.OtherExpenses}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Other Expenses"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
+                            },
+                          }}
+                        />
+
+                        {/* </FormControl> */}
+                      </Box>
+                    )}
+                    <Typography variant="h5" padding={1}>
+                      Location:
+                    </Typography>
+                    <Box
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      // gap="30px"
                       sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
                         },
                       }}
-                      error={!!touched.budget && !!errors.budget}
-                      helperText={touched.budget && errors.budget}
-                      focused
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={mode == "V"}
-                      variant="standard"
-                      type="number"
-                      id="scheduled"
-                      name="scheduled"
-                      value={values.scheduled}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Scheduled Cost"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff",
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      disabled={mode == "V"}
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="actual"
-                      name="actual"
-                      value={values.actual}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Actual Cost"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      disabled={mode == "V"}
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="OtherExpenses"
-                      name="OtherExpenses"
-                      value={values.OtherExpenses}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Other Expenses"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
+                    >
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Latitude"
+                        name="latitude"
+                        focused
+                        type="text"
+                        value={values.latitude}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.target.value;
 
-                    {/* </FormControl> */}
-                  </Box>
-                )}
-                <Typography variant="h5" padding={1}>
-                  Location:
-                </Typography>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    label="Latitude"
-                    name="latitude"
-                    focused
-                    type="text"
-                    value={values.latitude}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                          // Allow - and one decimal only
+                          if (/^-?\d*\.?\d*$/.test(value)) {
+                            handleChange(e);
+                          }
+                        }}
+                        inputProps={{
+                          inputMode: "decimal",
+                          style: { textAlign: "right" },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Longitude"
+                        name="longitude"
+                        focused
+                        type="text"
+                        value={values.longitude}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.target.value;
 
-                      // Allow - and one decimal only
-                      if (/^-?\d*\.?\d*$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
-                    inputProps={{
-                      inputMode: "decimal",
-                      style: { textAlign: "right" },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    label="Longitude"
-                    name="longitude"
-                    focused
-                    type="text"
-                    value={values.longitude}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                          if (/^-?\d*\.?\d*$/.test(value)) {
+                            handleChange(e);
+                          }
+                        }}
+                        inputProps={{
+                          inputMode: "decimal",
+                          style: { textAlign: "right" },
+                        }}
+                      />
 
-                      if (/^-?\d*\.?\d*$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
-                    inputProps={{
-                      inputMode: "decimal",
-                      style: { textAlign: "right" },
-                    }}
-                  />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        focused
+                        label="Radius (m)"
+                        name="radius"
+                        type="text"
+                        value={values.radius}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.target.value;
 
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    focused
-                    label="Radius (m)"
-                    name="radius"
-                    type="text"
-                    value={values.radius}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
-
-                      if (/^\d*\.?\d*$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
-                    inputProps={{
-                      inputMode: "decimal",
-                      style: { textAlign: "right" },
-                    }}
-                  />
-                  {/* <TextField
+                          if (/^\d*\.?\d*$/.test(value)) {
+                            handleChange(e);
+                          }
+                        }}
+                        inputProps={{
+                          inputMode: "decimal",
+                          style: { textAlign: "right" },
+                        }}
+                      />
+                      {/* <TextField
                     fullWidth
                     variant="standard"
                     focused
@@ -1840,9 +1841,9 @@ const Editproject = () => {
                       },
                     }}
                   /> */}
-                </Box>
-                </>
-                ): null}
+                    </Box>
+                  </>
+                ) : null}
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
