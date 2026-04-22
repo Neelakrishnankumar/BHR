@@ -963,13 +963,13 @@ const Editemployee = () => {
   //   dispatch(fetchApidata(accessID, "get", recID));
   // }, [location.key]);
   useEffect(() => {
-    if (show == "0") {
+    // if (show == "0") {
       if (recID && mode === "E") {
         dispatch(fetchApidata("TR027", "get", recID));
       } else {
         dispatch(fetchApidata("TR027", "get", recID));
       }
-    }
+    // }
   }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
@@ -1988,17 +1988,20 @@ const Editemployee = () => {
       toast.success(data.payload.Msg);
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
-      selectCellRowData({
-        rowData: DataExplore,
-        mode: "E",
-        field: "",
-      });
+     dispatch(fetchApidata("TR027", "get", recID));
+    //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
+    //   selectCellRowData({
+    //     rowData: DataExplore,
+    //     mode: "E",
+    //     field: "",
+    //   });
 
-      resetForm({
-        values: {
-          ...contactInitialvalues,
-        },
-      });
+    //   resetForm({
+    //     values: {
+    //       ...contactInitialvalues,
+    //     },
+    //   });
+    //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
 
       // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
@@ -6286,7 +6289,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                      inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -6307,7 +6310,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                      inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     <Stack

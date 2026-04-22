@@ -34,7 +34,11 @@ const LeaderCardView = () => {
   const listViewUrl = useSelector((store) => store.globalurl.listViewurl);
   const state = location.state || {};
   console.log(state, "state");
-
+ const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   useEffect(() => {
     const fetchLeaderData = async () => {
       setLoading(true);
@@ -45,6 +49,7 @@ const LeaderCardView = () => {
             ScreenName: "Leader",
             Filter: `PartyID='${partyID}' AND RecordID='${LeadId}'`,
             Any: "",
+            VerticalLicense: Subscriptionlastthree,
           },
         };
 

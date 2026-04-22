@@ -126,7 +126,7 @@ invoiceDetailBoxLast: {
 },
 
 invoiceLabel: {
-    fontSize: 8,                    // smaller — subordinate to value
+    fontSize: 10,                    // smaller — subordinate to value
     fontWeight: 'bold',
     marginBottom: 4,
     textAlign: 'center',            // header title center aligned
@@ -137,21 +137,23 @@ invoiceLabel: {
 },
 
 invoiceValue: {
-    fontSize: 11,
+    // fontSize: 11,
+    fontSize: 8,
     fontWeight: 'bold',
     textAlign: 'right',             // number field → right aligned
     marginTop: 4,                   // space after separator line
 },
 
 invoiceTextValue: {
-    fontSize: 11,
+    fontSize: 8,
     fontWeight: 'bold',
     textAlign: 'left',              // text field → left aligned
     marginTop: 4,
 },
 
 previousBalanceValue: {
-    fontSize: 11,
+    // fontSize: 11,
+    fontSize: 8,
     fontWeight: 'bold',
     color: '#d97706',
     textAlign: 'right',             // number field → right aligned
@@ -450,13 +452,13 @@ const PaymentReceipt = ({ data, filters }) => {
 
     {/* Invoice No — text, left aligned */}
     <View style={styles.invoiceDetailBox}>
-        <Text style={styles.invoiceLabel}>Invoice no</Text>
+        <Text style={styles.invoiceLabel}>Invoice No.</Text>
         <Text style={styles.invoiceTextValue}>{data.InvoiceNo}</Text>
     </View>
 
     {/* Payment Mode — text, left aligned */}
     <View style={styles.invoiceDetailBox}>
-        <Text style={styles.invoiceLabel}>Payment mode</Text>
+        <Text style={styles.invoiceLabel}>Payment Mode</Text>
         <Text style={styles.invoiceTextValue}>{data.PaymentMode}</Text>
     </View>
 
@@ -468,7 +470,7 @@ const PaymentReceipt = ({ data, filters }) => {
 
     {/* Already Paid — number, right aligned, no right border */}
     <View style={styles.invoiceDetailBoxLast}>
-        <Text style={styles.invoiceLabel}>Already paid</Text>
+        <Text style={styles.invoiceLabel}>Already Paid</Text>
         <Text style={styles.previousBalanceValue}>{data.PreviouslyPaid}</Text>
     </View>
 
