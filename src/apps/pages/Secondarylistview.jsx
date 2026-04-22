@@ -229,7 +229,7 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR332") {
-    filter = `EmployeeID = '${Type}' AND InvoiceHeaderID = '${leaderID}'`;
+    filter = `EmployeeID = '${Type}' AND InvoiceHeaderID = '${leaderID}' AND CompanyID = '${compID}'`;
   } else if (accessID == "TR097") {
     filter = `${parentID.slice(-1) == "I"
       ? "(DcType IN ('I','B'))"
