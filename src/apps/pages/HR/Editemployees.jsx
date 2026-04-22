@@ -5116,6 +5116,9 @@ const Editemployee = () => {
                     <MenuItem value={0}>Personnel</MenuItem>
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
+                     {is003Subscription && (
+                      <MenuItem value={15}>Parent</MenuItem>
+                    )}
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
@@ -5128,9 +5131,9 @@ const Editemployee = () => {
                     {/* {is003Subscription === true ? (
                       <MenuItem value={15}>Parent</MenuItem>
                     ) : null} */}
-                    {is003Subscription && (
+                    {/* {is003Subscription && (
                       <MenuItem value={15}>Parent</MenuItem>
-                    )}
+                    )} */}
                     {is003Subscription === true ? (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
