@@ -72,6 +72,7 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {
   ExcelFileDownload,
   ExcelFileUpload,
@@ -5118,6 +5119,16 @@ const Listview = () => {
             <Chip
               icon={< CurrencyRupeeOutlinedIcon color="primary"/>}
               label="Payment"
+              variant="outlined"
+              
+            />
+          </Box>
+        ): accessID == "TR370" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+           
+            <Chip
+              icon={<ManageAccountsIcon  color="primary"/>}
+              label="Enquiry Detail"
               variant="outlined"
               
             />

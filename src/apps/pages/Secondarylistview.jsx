@@ -6,7 +6,12 @@ import {
   Breadcrumbs,
   Tooltip,
   Chip,
+  TextField,
+  Button,
+  Stack
 } from "@mui/material";
+import { Formik } from "formik";
+import { BlobProvider, pdf, PDFDownloadLink } from "@react-pdf/renderer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -91,6 +96,8 @@ import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -113,6 +120,7 @@ const ListviewSecondary = () => {
   const storedStatus = sessionStorage.getItem("Status") || state.LEStatus
   // const storedStatus = "Close";
   console.log(state.LEStatus, sessionStorage.getItem("Status"), "storedStatus");
+  const [showMore, setShowMore] = React.useState(false);
 
   let BreadCrumb1 = state.BreadCrumb1 || "";
   let BreadCrumb2 = state.BreadCrumb2 || "";
@@ -146,6 +154,8 @@ const ListviewSecondary = () => {
   const [pageSize, setPageSize] = React.useState(20);
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
+    const [loadingPdf, setLoadingPdf] = useState(false);
+  
   var parentID = params.filtertype;
   var DocumentID = params.DocumentID;
   var InvType = params.InvType;
@@ -169,6 +179,10 @@ const ListviewSecondary = () => {
 
   // skillglow
   const [errorMsgData, setErrorMsgData] = useState(null);
+  console.log(state.Description, "DEsc");
+  const Enquirytype = state.Description;
+  // const DMEfilter = `${state.Description} == "Book a Demo" ?"B":${state.Description} == "Free Version" ?"F":${state.Description} == "Whats App" ?"W":""`;
+  const DMEfilter = Enquirytype == "Book a Demo" ? "BD" : Enquirytype == "Free Version" ? "FV" : Enquirytype == "Whats App" ? "W" : "";
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -230,6 +244,8 @@ const ListviewSecondary = () => {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR332") {
     filter = `EmployeeID = '${Type}' AND InvoiceHeaderID = '${leaderID}' AND CompanyID = '${compID}'`;
+  } else if (accessID == "TR371") {
+    filter = `ProspectStatus = '${DMEfilter}'`;
   } else if (accessID == "TR097") {
     filter = `${parentID.slice(-1) == "I"
       ? "(DcType IN ('I','B'))"
@@ -992,6 +1008,70 @@ const ListviewSecondary = () => {
               sx={{ cursor: "default" }}
             >
               {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR371" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              key={846}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate("/Apps/TR133/Project");
+                navigate(-1);
+              }}
+            >
+              {`Enquiry(${state.Description})`}
+            </Typography>
+
+            <Typography
+              key={6359}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+              Enquiry Detail
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR372" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              key={846}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate("/Apps/TR133/Project");
+                navigate(-1);
+              }}
+            >
+              {`Enquiry(${state.Description})`}
+            </Typography>
+
+            <Typography
+              key={6359}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+              Enquiry Detail
+            </Typography>
+             <Typography
+              key={6359}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+             {screenName}
             </Typography>
           </Breadcrumbs>
         ) : accessID == "TR282" ? (
@@ -3778,6 +3858,23 @@ const ListviewSecondary = () => {
               <MenuOutlinedIcon />
             </IconButton>
           )}
+          {accessID === "TR371" ? (
+            <IconButton onClick={() => setShowMore((prev) => !prev)}>
+              {showMore ? (
+                <Tooltip title="Close">
+                  {/* <MoreHorizIcon /> */}
+                  <FilterAltOutlinedIcon />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Open">
+                  {/* <MoreVertIcon /> */}
+                  <FilterAltOutlinedIcon />
+                </Tooltip>
+              )}
+            </IconButton>
+          ) : (
+            false
+          )}
           <GridToolbarQuickFilter />
           {accessID == "TR048" ? (
             false
@@ -3843,9 +3940,9 @@ const ListviewSecondary = () => {
                             ? "Delivery Chalan"
                             : screenName
                           }/-1/A`,
-                         {
-                          state: { ...state }
-                        },
+                          {
+                            state: { ...state }
+                          },
                         );
                       }}
                     />
@@ -4152,6 +4249,8 @@ const ListviewSecondary = () => {
           // height="85vh"
           height={dataGridHeight}
           sx={{
+            display: "flex",
+              direction: "row",
             "& .MuiDataGrid-root": {
               // border: "none",
             },
@@ -4228,6 +4327,236 @@ const ListviewSecondary = () => {
                 : "even-row"
             }
           />
+          {showMore && accessID === "TR371" && (
+            <Box
+              sx={{
+                width: 300,
+                p: 2,
+                borderRadius: 1,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Formik
+                initialValues={{
+                  fromdate: sessionStorage.getItem("FromDate") || "",
+                  date: sessionStorage.getItem("ToDate") || "",
+                  
+                }}
+                enableReinitialize
+                validate={(values) => {
+                  const hasAtLeastOneValue =
+                    values.fromdate ||
+                    values.date
+                   
+                }}
+              
+                onSubmit={(values, { setSubmitting }) => {
+                  const conditions = [];                
+                  const fromDate = values.fromdate || "";
+                  const toDate = values.date || "";
+
+                  sessionStorage.setItem("FromDate", fromDate);
+                  sessionStorage.setItem("ToDate", toDate);
+                  sessionStorage.setItem("ordertype", values.ordertype || "");
+
+                  if (fromDate && toDate) {
+                    conditions.push(
+                      `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                    );
+                  } else if (fromDate) {
+                    conditions.push(`(OROrderDate >= '${fromDate}')`);
+                  } else if (toDate) {
+                    conditions.push(`(OROrderDate <= '${toDate}')`);
+                  }                 
+                
+
+                  
+                  if (compID) {
+                    conditions.push(`CompanyID = '${compID}'`);
+                  }
+
+                  sessionStorage.setItem(
+                    "TR371_Filters",
+                    JSON.stringify(values)
+                  );
+
+                  // --------------------------
+                  // FINAL WHERE CLAUSE
+                  // --------------------------
+                  const whereClause = conditions.join(" AND ");
+                  console.log("FINAL FILTER:", whereClause);
+
+                  dispatch(
+                    fetchListview(
+                      accessID,
+                      Subscriptionlastthree,
+                      screenName,
+                      whereClause,
+                      "",
+                      compID
+                    )
+                  );
+
+                  setTimeout(() => setSubmitting(false), 100);
+                }}
+
+              >
+                {({
+                  values,
+                  handleSubmit,
+                  handleChange,
+                  handleBlur,
+                  isSubmitting,
+                  setFieldValue,
+                  resetForm,
+                }) => {
+
+                  // ✅ NOW you can declare functions here
+                  const generatePdf = async () => {
+
+                    try {
+                      setLoadingPdf(true);
+
+                      const blob = await pdf(
+                          // <OrdEnqProductPDF
+                          //   data={listViewData}
+                          //   Product={values?.product?.Name}
+                          //   Party={values?.party?.Name}
+                          //   filters={{
+                          //     fromdate: values?.fromdate,
+                          //     todate: values?.date,
+                          //     ordertype: values?.ordertype,
+                          //     Imageurl: baseurlUAAM,
+                          //     HeaderImg,
+                          //     FooterImg,
+                          //   }}/>
+                         
+                      ).toBlob();
+
+                      const url = URL.createObjectURL(blob);
+                      window.open(url); // ✅ better UX (no extra button)
+                      setLoadingPdf(false);
+                    }
+                    catch (err) {
+                      console.error("PDF ERROR:", err); // 🔥 important
+                    } finally {
+                      setLoadingPdf(false); // ✅ ALWAYS resets
+                    }
+                  }
+                  return (
+
+                    <form onSubmit={handleSubmit}>
+
+                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowMore(false)}
+                          sx={{ position: "absolute", top: 5, right: 4 }}
+                        >
+                          <Tooltip title="Close">
+                            <CancelIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
+                        <TextField
+                          name="fromdate"
+                          type="date"
+                          id="fromdate"
+                          label="From Date"
+                          variant="standard"
+                          value={values.fromdate || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("fromdate", newDate);
+                            // dispatch(setFromDate(newDate));
+                            sessionStorage.setItem("FromDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <TextField
+                          name="date"
+                          type="date"
+                          id="date"
+                          label="To Date"
+                          variant="standard"
+                          value={values.date || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("date", newDate);
+                            // dispatch(setToDate(newDate));
+                            sessionStorage.setItem("ToDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />                      
+                     
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="end"
+                          spacing={1}
+                          marginTop={3}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                          >
+                            Apply
+                          </Button>
+                         
+                          <PictureAsPdfIcon
+                            sx={{
+                              fontSize: 24,
+                              color: loadingPdf ? "grey" : "#d32f2f",
+                              cursor: loadingPdf ? "not-allowed" : "pointer",
+                              opacity: loadingPdf ? 0.5 : 1,
+                            }}
+                            onClick={() => {
+                              if (!loadingPdf) generatePdf();
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="contained"
+                            color="error"
+                            onClick={() => {
+                                [
+                                  "FromDate",
+                                  "ToDate",                          
+                                  "TR371_Filters",
+                                ].forEach((key) =>
+                                  sessionStorage.removeItem(key)
+                                );
+
+                                resetForm({
+                                  values: {
+                                    fromdate: "",
+                                    date: "",                                  
+                                  },
+                                });
+                              }}
+                          >
+                            RESET
+                          </Button>
+                        </Stack>
+                      </Box>
+                    </form>
+                  )
+                }}
+              </Formik>
+            </Box>
+          )}
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
 
@@ -4530,6 +4859,15 @@ const ListviewSecondary = () => {
                       label="Schedule History"
                       variant="outlined"
                     />
+
+                  </Box>
+                ) : accessID == "TR371" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<GppMaybeOutlinedIcon color="primary" />}
+                      label="Detail"
+                      variant="outlined"
+                    />                  
 
                   </Box>
                 ) : accessID == "TR296" ? (

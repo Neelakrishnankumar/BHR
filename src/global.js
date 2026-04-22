@@ -347,8 +347,8 @@ export const getUrlSlice = createSlice({
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
-      // state.listViewurl = APIurl + "wslistview_mysqlV1.php";
-      state.listViewurl = APIurl + "wslistview_mysql.php";
+      state.listViewurl = APIurl + "wslistview_mysqlV1.php";
+      // state.listViewurl = APIurl + "wslistview_mysql.php";
       state.loginUrl = APIurl + "LController.php";
       state.authUrl = APIurl + "auth.php";
       state.forgotPasswordUrl = APIurl + "BOSForgetPasswordController.php";

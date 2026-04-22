@@ -400,6 +400,12 @@ function App() {
                     element={<ListviewSecondary />}
                   />
                   <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:screenName/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* /Apps/Secondarylistview/TR371/BFWEnquiry/2/Detail/TR372/691 */}
+                  {/* /Apps/Secondarylistview/TR371/DMEnquiry/2/TR372/693 */}
+                  <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/:Type"
                     element={<ListviewSecondary />}
                   />
