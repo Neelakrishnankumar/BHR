@@ -71,6 +71,7 @@ import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
+import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import {
   ExcelFileDownload,
   ExcelFileUpload,
@@ -89,7 +90,6 @@ import CategoryIcon from "@mui/icons-material/Category";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
-import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import {
@@ -472,7 +472,9 @@ const Listview = () => {
     () => columns.filter(filterByIDShow),
     [listViewcolumn]
   );
-  // console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+   console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+      console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
+
   const rows = React.useMemo(() => {
     return listViewData;
   }, [listViewData]);
@@ -5110,26 +5112,15 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ) : accessID == "TR313" ? (
+        ) : accessID == "TR331" || accessID == "TR366" ? (
           <Box display="flex" flexDirection="row" padding="25px">
-            {/* <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-
+           
             <Chip
-              icon={< Diversity2Icon color="primary"/>}
-              label="Leads"
+              icon={< CurrencyRupeeOutlinedIcon color="primary"/>}
+              label="Payment"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              
             />
-            <Chip
-              icon={< CategoryIcon color="primary"/>}
-              label="Order"
-              variant="outlined"
-              sx={{ marginLeft: "50px" }}
-            /> */}
           </Box>
         ) : accessID == "TR328" ? (
           <Box display="flex" flexDirection="row" padding="25px">

@@ -891,6 +891,23 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR313",
           },
+          //  {
+          //   name: "Enquiry (DME)",
+          //   id: 4346899,
+          //   url: "./TR313/DMEnquiry",
+          //   icon: (
+          //     <Tooltip title="Digital Marketing Enquiry">
+          //       <QueryStatsOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR313",
+          // },
           {
             name: "Lead Enquiry",
             id: 4346899,

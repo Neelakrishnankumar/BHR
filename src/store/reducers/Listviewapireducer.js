@@ -770,10 +770,10 @@ const defaultToDate = format(today);
         //         const EmployeeID = sessionStorage.getItem("RecordID");
         // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
         //     }
-        if (AccessID === "TR331" ) {
-          filter = "CompanyID=" + `'${CompId}'`;
+        // if (AccessID === "TR331" ) {
+        //   filter = "CompanyID=" + `'${CompId}'`;
 
-        }
+        // }
       } else if (
         AccessID == "TR280" ||
         AccessID == "TR300" ||
