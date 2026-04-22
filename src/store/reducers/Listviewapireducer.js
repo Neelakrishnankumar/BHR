@@ -741,7 +741,7 @@ const defaultToDate = format(today);
           AccessID == "TR102" ||
           AccessID == "TR105" ||
           AccessID == "TR002" ||
-          //  AccessID == "TR303" ||
+          // AccessID == "TR331" ||
           AccessID == "TR091"
         ) {
           // filter = filter;
@@ -770,10 +770,10 @@ const defaultToDate = format(today);
         //         const EmployeeID = sessionStorage.getItem("RecordID");
         // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
         //     }
-        // if (AccessID === "TR321" ) {
-        //   filter = "CompanyID=" + `'${CompId}'`;
+        if (AccessID === "TR331" ) {
+          filter = "CompanyID=" + `'${CompId}'`;
 
-        // }
+        }
       } else if (
         AccessID == "TR280" ||
         AccessID == "TR300" ||

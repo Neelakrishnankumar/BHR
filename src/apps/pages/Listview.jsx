@@ -351,6 +351,8 @@ const Listview = () => {
           ? `compID=${compID}`
           : accessID == "TR027" ||
             accessID == "TR321" ?
+            `CompanyID=${compID}`:
+            accessID == "TR331" ?
             `CompanyID=${compID}`
             : "",
         "",
