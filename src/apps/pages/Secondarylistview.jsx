@@ -4361,19 +4361,19 @@ const ListviewSecondary = () => {
 
                   if (fromDate && toDate) {
                     conditions.push(
-                      `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                      `(Date BETWEEN '${fromDate}' AND '${toDate}')`
                     );
                   } else if (fromDate) {
-                    conditions.push(`(OROrderDate >= '${fromDate}')`);
+                    conditions.push(`(Date >= '${fromDate}')`);
                   } else if (toDate) {
-                    conditions.push(`(OROrderDate <= '${toDate}')`);
+                    conditions.push(`(Date <= '${toDate}')`);
                   }                 
                 
 
                   
-                  if (compID) {
-                    conditions.push(`CompanyID = '${compID}'`);
-                  }
+                
+                    conditions.push(`ProspectStatus = 'BD'`);
+                 
 
                   sessionStorage.setItem(
                     "TR371_Filters",
@@ -4472,9 +4472,9 @@ const ListviewSecondary = () => {
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
+                          // inputProps={{
+                          //   max: new Date().toISOString().split("T")[0],
+                          // }}
                           sx={{ width: 250, mt: 2 }}
                         />
 
@@ -4493,9 +4493,9 @@ const ListviewSecondary = () => {
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
+                          // inputProps={{
+                          //   max: new Date().toISOString().split("T")[0],
+                          // }}
                           sx={{ width: 250, mt: 2 }}
                         />                      
                      
