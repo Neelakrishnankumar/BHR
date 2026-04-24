@@ -166,6 +166,7 @@ import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettin
 import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -890,6 +891,23 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR313",
+          },
+           {
+            name: "Enquiry (DME)",
+            id: 4346899,
+            url: "./TR370/DMEnquiry",
+            icon: (
+              <Tooltip title="Digital Marketing Enquiry">
+                <AppShortcutIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR370",
           },
           {
             name: "Lead Enquiry",

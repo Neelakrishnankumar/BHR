@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         
     // },
     columnLabel: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     marginBottom: 4,
 },

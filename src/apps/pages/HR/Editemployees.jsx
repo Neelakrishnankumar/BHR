@@ -6162,10 +6162,10 @@ const Editemployee = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        // is00123Subscription
-                        //   ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
-                        //   : navigate(`/Apps/TR027/Personnel`);
-                        navigate(-1)
+                        is00123Subscription
+                          ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
+                          : navigate(`/Apps/TR027/Personnel`);
+                        //  navigate(-1)
                       }}
                     >
                       Cancel

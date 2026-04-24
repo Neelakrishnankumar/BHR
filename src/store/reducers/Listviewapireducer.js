@@ -31,7 +31,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
@@ -725,7 +725,9 @@ const defaultToDate = format(today);
           AccessID != "TR331" &&
           AccessID != "TR351" &&
           AccessID != "TR127" &&
-          AccessID != "TR332" 
+          AccessID != "TR332" &&
+           AccessID != "TR372" &&
+          AccessID != "TR371" 
         ) {
           filter = "parentID=" + `'${filter}'`;
           // console.log("---4---",filter);
@@ -741,7 +743,7 @@ const defaultToDate = format(today);
           AccessID == "TR102" ||
           AccessID == "TR105" ||
           AccessID == "TR002" ||
-          //  AccessID == "TR303" ||
+          // AccessID == "TR372" ||
           AccessID == "TR091"
         ) {
           // filter = filter;
@@ -749,6 +751,9 @@ const defaultToDate = format(today);
         }
         if (AccessID === "TR262") {
           filter = "ProjectID=" + `'${filter}'`;
+        }
+        if (AccessID === "TR372") {
+          filter = "";
         }
         if (AccessID === "TR303") {
           filter = "PartyID=" + `'${filter}'`;
@@ -770,7 +775,7 @@ const defaultToDate = format(today);
         //         const EmployeeID = sessionStorage.getItem("RecordID");
         // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
         //     }
-        // if (AccessID === "TR321" ) {
+        // if (AccessID === "TR331" ) {
         //   filter = "CompanyID=" + `'${CompId}'`;
 
         // }
@@ -1962,6 +1967,60 @@ const defaultToDate = format(today);
                 },
               };
             }
+             else if (AccessID == "TR370") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      {params.row.Type === "WA" ? (
+                      <Link
+                        // to={`./Edit${screenName}/${params.row.RecordID}/E`}                      
+                        // to={`/Apps/SecondarylistView/DMEEnquiry/TR371/BFWEnquiry/${params.row.CompanyID}/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/TR372/WhatsAppEnquiry/${params.row.RecordID}/WA`}
+                        state={{
+                          Description: params.row.Description,
+                          // Project: params.row.Project,
+                          // ProjectID: params.row.ProjectID,
+                        }}
+                      >
+                        <Tooltip title="Enquiry Details">
+                          <IconButton color="info" size="small">
+                            <ManageAccountsIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                  ):(
+                      <Link
+                        // to={`./Edit${screenName}/${params.row.RecordID}/E`}                      
+                        // to={`/Apps/SecondarylistView/DMEEnquiry/TR371/BFWEnquiry/${params.row.CompanyID}/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/TR371/BFWEnquiry/${params.row.RecordID}/${params.row.Type}`}
+                        state={{
+                          Description: params.row.Description,
+                          // Project: params.row.Project,
+                          // ProjectID: params.row.ProjectID,
+                        }}
+                      >
+                        <Tooltip title="Enquiry Details">
+                          <IconButton color="info" size="small">
+                            <ManageAccountsIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                   
+                  )}
+                   </Box>
+        )},
+              };
+            }
             else if (AccessID == "TR332") {
               obj = {
                 field: "action",
@@ -2174,12 +2233,14 @@ const defaultToDate = format(today);
               AccessID == "TR333" ||
               AccessID == "TR317" ||
               AccessID == "TR318" ||
+              // AccessID == "TR371" ||
               AccessID == "TR310" ||
               AccessID == "TR323" ||
               AccessID == "TR324" ||
               AccessID == "TR328" ||
               AccessID == "TR361" ||
               AccessID == "TR027" ||
+              AccessID == "TR372" || //WHATSAPP ENQUIRY
               AccessID == "TR319"
             ) {
               obj = {
@@ -2312,7 +2373,22 @@ const defaultToDate = format(today);
                   );
                 },
               };
-            } else if (AccessID == "TR213") {
+            } 
+            else if (AccessID == "TR371" || AccessID == "TR372") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                hide:true,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+              };
+            }
+            else if (AccessID == "TR213") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -7026,6 +7102,26 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>
           </>
+        )}
+         {accessID === "TR372"  && (           
+            <Tooltip title="Detail">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  // navigate(`/Apps/ItemGroup/ItemCategory/Items`, {
+
+                  navigate(`./Detail/TR373/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.ItemCategory,
+                    },
+                  })
+                }
+              >
+                <GppMaybeOutlinedIcon />
+              </IconButton>
+            </Tooltip>
         )}
 
         {accessID === "TR319" && (
