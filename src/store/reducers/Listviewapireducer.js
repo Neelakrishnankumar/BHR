@@ -7387,6 +7387,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(`./EditPersonnel/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
+                      screenName: screenName,
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
                       BreadCrumb1: params.row.Description,
