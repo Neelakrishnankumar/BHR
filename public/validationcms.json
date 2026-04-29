@@ -425,6 +425,27 @@
     "itemcategory": "Please select the Item Category",
     "Grpitems": "Please select the Item"
   },
+  "ACYear": {
+    "Academicyear": "Please enter the Academic Year",
+    "Fromdate": "Please enter the From Date",
+    "Todate": "Please enter the To Date"
+  },
+   "Terms": {
+    "Description": "Please enter the Description",
+    "Fromdate": "Please enter the From Date",
+    "Todate": "Please enter the To Date",
+     "code": "Please enter the Code"
+  },
+   "Slot": {
+    "Description": "Please enter the Description",
+    "FromTime": "Please enter the From Time",
+    "ToTime": "Please enter the To Time",
+     "code": "Please enter the Code"
+  },
+   "Slotgroup": {
+    "Description": "Please enter the Description", 
+    "code": "Please enter the Code"
+  },
   "ResetParty": {
     "Password": "Please Enter Your Passord"
   },

@@ -2700,22 +2700,69 @@ export const InvoiceAnalyticsget = createAsyncThunk(
         toPeriod: data.toPeriod,
       };
 
-      console.log("🔥 THUNK CALLED:", payload);
-      console.log("🌐 URL:", url);
+      console.log(" THUNK CALLED:", payload);
+      console.log(" URL:", url);
+
+      const response = await axios.post(url, payload, {
+       headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+      });
+
+      console.log(" API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error(" API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const TeacherOccupancyget = createAsyncThunk(
+  "Mgr_Desk/TeacherOccupancy",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.TeacherOccupancy;
 
       const response = await axios.post(url, payload, {
         headers: {
-          Authorization: "YOUR_TOKEN",
-        },
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
       });
 
       console.log("✅ API RESPONSE:", response.data);
 
       return response.data;
     } catch (error) {
-      console.error("❌ API ERROR:", error);
+      console.error("API ERROR:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
+  }
+);
+export const TimetableProcessController = createAsyncThunk(
+  "TimetableProcess/Get",
+  async ({ data }) => {
+    var url = store.getState().globalurl.TimetableProcessController;
+
+    const payload =
+    {
+      HeaderID: data.HeaderID,
+      TeacherID: data.TeacherID,
+      Process: data.Process
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
   }
 );
 export const companyTermsGet = createAsyncThunk(

@@ -166,8 +166,8 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().trim().required(data.Project.name),
-          TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
-          TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
+          // TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
+          // TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
           // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
@@ -483,8 +483,9 @@ const is003 = SubscriptionCode?.endsWith("003");
       Longitude: values.longitude || 0,
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
-      TentativeStartDate: values.TentativeStartDate || "",
-      TentativeEndDate: values.TentativeEndDate || ""
+      AcademicYearID : params.filtertype || 0,
+      // TentativeStartDate: values.TentativeStartDate || "",
+      // TentativeEndDate: values.TentativeEndDate || ""
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -1343,7 +1344,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
 
-                  <TextField
+                  {/* <TextField
                     id="TentativeStartDate"
                     name="TentativeStartDate"
                     type="date"
@@ -1390,7 +1391,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                     // value={values.CurrentStatus}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                  />
+                  /> */}
 
                   <TextField
                     disabled={mode == "V"}

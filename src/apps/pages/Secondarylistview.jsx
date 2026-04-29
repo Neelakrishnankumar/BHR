@@ -98,6 +98,12 @@ import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlin
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { MultiFormikOptimizedAutocomplete } from "../../ui-components/global/Autocomplete";
+import EnquiryPDF from "./pdf/Enquirypdf";
+import { getConfig } from "../../config";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
+import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -108,6 +114,7 @@ const ListviewSecondary = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const params = useParams();
+  console.log("🚀 ~ ListviewSecondary ~ params:", params)
   const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   // const Subscriptionlastthree = SubscriptionCode.slice(-3) || "";
@@ -116,12 +123,27 @@ const ListviewSecondary = () => {
     ? lastThree
     : "";
   var CompId = sessionStorage.getItem("compID");
+  const formatDate = (date) => {
+    if (!date) return "";
+    const [year, month, day] = date.split("-");
+    return `${day}-${month}-${year}`; // DD-MM-YYYY
+  };
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  console.log("baseurlUAAM", baseurlUAAM)
   const state = location.state || {};
   const storedStatus = sessionStorage.getItem("Status") || state.LEStatus
   // const storedStatus = "Close";
   console.log(state.LEStatus, sessionStorage.getItem("Status"), "storedStatus");
   const [showMore, setShowMore] = React.useState(false);
-
+  const fromDateKey = `${accessID}_FromDate`;
+  const toDateKey = `${accessID}_ToDate`;
+  const typeKey = `${accessID}_type`;
+  const filterKey = `${accessID}_Filters`;
   let BreadCrumb1 = state.BreadCrumb1 || "";
   let BreadCrumb2 = state.BreadCrumb2 || "";
   let BreadCrumb3 = state.BreadCrumb3 || "";
@@ -154,8 +176,8 @@ const ListviewSecondary = () => {
   const [pageSize, setPageSize] = React.useState(20);
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
-    const [loadingPdf, setLoadingPdf] = useState(false);
-  
+  const [loadingPdf, setLoadingPdf] = useState(false);
+
   var parentID = params.filtertype;
   var DocumentID = params.DocumentID;
   var InvType = params.InvType;
@@ -182,8 +204,14 @@ const ListviewSecondary = () => {
   console.log(state.Description, "DEsc");
   const Enquirytype = state.Description;
   // const DMEfilter = `${state.Description} == "Book a Demo" ?"B":${state.Description} == "Free Version" ?"F":${state.Description} == "Whats App" ?"W":""`;
-  const DMEfilter = Enquirytype == "Book a Demo" ? "BD" : Enquirytype == "Free Version" ? "FV" : Enquirytype == "Whats App" ? "W" : "";
-
+  const DMEfilter = Enquirytype == "Book a Demo" ? "BD" : Enquirytype == "Free Version" ? "FV" : "";
+  const toSqlDate = (isoDate) => {
+    if (!isoDate) return "";
+    const parts = isoDate.split("-");
+    if (parts.length !== 3) return isoDate; // already converted or garbage — pass through
+    const [yyyy, mm, dd] = parts;
+    return `${dd}-${mm}-${yyyy}`;
+  };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -244,9 +272,62 @@ const ListviewSecondary = () => {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR332") {
     filter = `EmployeeID = '${Type}' AND InvoiceHeaderID = '${leaderID}' AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR371") {
-    filter = `ProspectStatus = '${DMEfilter}'`;
-  } else if (accessID == "TR097") {
+  } else if (accessID == "TR373") {
+    filter = `MobileNo = '${state.MobileNo}'`;
+  }
+  else if (accessID == "TR375") {
+    filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR368") {
+    filter = `StandardID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR377") {
+    filter = `SlotGroupID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR275") {
+    filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID === "TR371") {
+
+    const fromDateKey = `${accessID}_FromDate`;
+    const toDateKey = `${accessID}_ToDate`;
+    const typeKey = `${accessID}_type`;
+
+    const conditions = [];
+
+    // ✅ Raw YYYY-MM-DD from storage — use directly in SQL, no conversion
+    const fromDate = sessionStorage.getItem(fromDateKey) || "";
+    const toDate = sessionStorage.getItem(toDateKey) || "";
+
+    const type = (() => {
+      try {
+        return JSON.parse(sessionStorage.getItem(typeKey)) || [];
+      } catch {
+        return [];
+      }
+    })();
+
+    // ✅ SQL output: FilterDate BETWEEN '2026-04-24' AND '2026-05-05'
+    if (fromDate && toDate) {
+      conditions.push(`(FilterDate BETWEEN '${fromDate}' AND '${toDate}')`);
+    } else if (fromDate) {
+      conditions.push(`(FilterDate >= '${fromDate}')`);
+    } else if (toDate) {
+      conditions.push(`(FilterDate <= '${toDate}')`);
+    }
+
+    if (type.length > 0) {
+      const ids = type.map((t) => `'${t.Name}'`).join(", ");
+      conditions.push(`Type IN (${ids})`);
+    }
+
+    if (DMEfilter === "BD" || DMEfilter === "FV") {
+      conditions.push(`ProspectStatus = '${DMEfilter}'`);
+    }
+
+    filter = conditions.join(" AND ");
+  }
+  else if (accessID == "TR097") {
     filter = `${parentID.slice(-1) == "I"
       ? "(DcType IN ('I','B'))"
       : parentID === "PO"
@@ -368,9 +449,6 @@ const ListviewSecondary = () => {
   else if (accessID == "TR351") {
     filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
   }
-  // else if (accessID == "TR372") {
-  //   filter = `CompanyID = '${compID}'`;
-  // }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
   // }
@@ -1023,6 +1101,87 @@ const ListviewSecondary = () => {
               {screenName}
             </Typography>
           </Breadcrumbs>
+        ) : accessID == "TR375" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              key={8646}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              {`Academic Year(${state.AcademicYear})`}
+            </Typography>
+
+            <Typography
+              key={63259}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR368" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              key={8646}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              {`Standard/Activities(${state.projectName})`}
+            </Typography>
+
+            <Typography
+              key={63259}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR377" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              key={8646}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              {`Slot Group(${state.SlotGroupName})`}
+            </Typography>
+
+            <Typography
+              key={63259}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            >
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
         ) : accessID == "TR371" ? (
           <Breadcrumbs
             maxItems={2}
@@ -1048,10 +1207,10 @@ const ListviewSecondary = () => {
               color="#0000D1"
               sx={{ cursor: "default" }}
             >
-              Enquiry Detail
+              {`${state.Description} Enquiry`}
             </Typography>
           </Breadcrumbs>
-        ): accessID == "TR372" ? (
+        ) : accessID == "TR372" ? (
           <Breadcrumbs
             maxItems={2}
             aria-label="breadcrumb"
@@ -1069,14 +1228,13 @@ const ListviewSecondary = () => {
             >
               {`Enquiry(${state.Description})`}
             </Typography>
-
             <Typography
               key={6359}
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
             >
-              Enquiry Detail
+              {`${state.Description} Enquiry`}
             </Typography>
           </Breadcrumbs>
         ) : accessID == "TR373" ? (
@@ -1091,31 +1249,40 @@ const ListviewSecondary = () => {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/TR370/DMEnquiry");
+                navigate(
+                  "/Apps/TR370/DMEnquiry",
+                  {
+                    state: {
+                      ...state
+                      // screenname: screenName,
+                    }
+                  }
+                );
               }}
             >
-              {`Enquiry(${state.Description})`}
+              {`Enquiry (Whats App)`}
             </Typography>
-
             <Typography
               key={6359}
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                navigate(-1);
+              }}
             >
-              Enquiry Detail
+              Whats App Enquiry
             </Typography>
-             <Typography
+            <Typography
               key={6359}
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
             >
-             WhatsApp Message Detail
+              {screenName}
             </Typography>
           </Breadcrumbs>
-        ): accessID == "TR282" ? (
+        ) : accessID == "TR282" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             {/* <Breadcrumbs
               maxItems={2}
@@ -2004,7 +2171,7 @@ const ListviewSecondary = () => {
                     navigate("/Apps/TR330/Classification");
                   }}
                 >
-                  Classification ({BreadCrumb1})
+                  Classification ({BreadCrumb1 ? BreadCrumb1 : state.Classification})
                 </Typography>
                 <Typography
                   variant="h5"
@@ -2012,6 +2179,32 @@ const ListviewSecondary = () => {
                   sx={{ cursor: "default" }}
                 >
                   Personnel
+                </Typography>
+              </Breadcrumbs>
+            </Box>
+          ) : accessID == "TR275" ? (
+            <Box display="flex" borderRadius="3px" alignItems="center">
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR378/Academic Year");
+                  }}
+                >
+                  Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  Standard/Activities
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -4002,7 +4195,7 @@ const ListviewSecondary = () => {
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          {(accessID === "TR371" ||  accessID === "TR372" )? (
+          {accessID === "TR371" || accessID === "TR372" ? (
             <IconButton onClick={() => setShowMore((prev) => !prev)}>
               {showMore ? (
                 <Tooltip title="Close">
@@ -4058,12 +4251,6 @@ const ListviewSecondary = () => {
             ) : accessID == "TR115" ? (
               false
             ) : accessID == "TR335" ? (
-              false
-            ): accessID == "TR372" ? (
-              false
-            ) : accessID == "TR371" ? (
-              false
-            ): accessID == "TR373" ? (
               false
             ) : accessID == "TR288" ? (
               false
@@ -4381,7 +4568,7 @@ const ListviewSecondary = () => {
     setPage(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
-  // ✅ Safely check if any record has Editable === "1"
+  //  Safely check if any record has Editable === "1"
   const hasEditable =
     Array.isArray(listViewData) &&
     listViewData.some((row) => String(row.Editable) === "1");
@@ -4400,7 +4587,7 @@ const ListviewSecondary = () => {
           height={dataGridHeight}
           sx={{
             display: "flex",
-              direction: "row",
+            direction: "row",
             "& .MuiDataGrid-root": {
               // border: "none",
             },
@@ -4477,7 +4664,7 @@ const ListviewSecondary = () => {
                 : "even-row"
             }
           />
-          {showMore && accessID === "TR371" && (
+          {/* {showMore && (accessID === "TR371" || accessID === "TR372") && (
             <Box
               sx={{
                 width: 300,
@@ -4490,41 +4677,41 @@ const ListviewSecondary = () => {
                 initialValues={{
                   fromdate: sessionStorage.getItem("FromDate") || "",
                   date: sessionStorage.getItem("ToDate") || "",
-                  
+                  type: JSON.parse(sessionStorage.getItem("TR371_type")) || []
                 }}
                 enableReinitialize
                 validate={(values) => {
                   const hasAtLeastOneValue =
                     values.fromdate ||
-                    values.date
-                   
-                }}
-              
-                onSubmit={(values, { setSubmitting }) => {
-                  const conditions = [];                
-                  const fromDate = values.fromdate || "";
-                  const toDate = values.date || "";
+                    values.date ||
+                    (values.type && values.type.length > 0);
 
+                }}
+
+                onSubmit={(values, { setSubmitting }) => {
+                  const conditions = [];
+                  const fromDate = formatDate(values.fromdate);
+                  const toDate = formatDate(values.date);
                   sessionStorage.setItem("FromDate", fromDate);
                   sessionStorage.setItem("ToDate", toDate);
-                  sessionStorage.setItem("ordertype", values.ordertype || "");
-
+                  sessionStorage.setItem("TR371_type", JSON.stringify(values.type || []));
                   if (fromDate && toDate) {
                     conditions.push(
-                      `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                      `(Date BETWEEN '${fromDate}' AND '${toDate}')`
                     );
                   } else if (fromDate) {
-                    conditions.push(`(OROrderDate >= '${fromDate}')`);
+                    conditions.push(`(Date >= '${fromDate}')`);
                   } else if (toDate) {
-                    conditions.push(`(OROrderDate <= '${toDate}')`);
-                  }                 
-                
-
-                  
-                  if (compID) {
-                    conditions.push(`CompanyID = '${compID}'`);
+                    conditions.push(`(Date <= '${toDate}')`);
                   }
+                  if (values.type?.length > 0) {
+                    const productIds = values.type
+                      .map((p) => `'${p.RecordID}'`)
+                      .join(", ");
 
+                    conditions.push(`Type IN (${productIds})`);
+                  }
+                  conditions.push(`ProspectStatus = '${DMEfilter}'`);
                   sessionStorage.setItem(
                     "TR371_Filters",
                     JSON.stringify(values)
@@ -4561,36 +4748,35 @@ const ListviewSecondary = () => {
                   resetForm,
                 }) => {
 
-                  // ✅ NOW you can declare functions here
+                  //  NOW you can declare functions here
                   const generatePdf = async () => {
 
                     try {
                       setLoadingPdf(true);
 
                       const blob = await pdf(
-                          // <OrdEnqProductPDF
-                          //   data={listViewData}
-                          //   Product={values?.product?.Name}
-                          //   Party={values?.party?.Name}
-                          //   filters={{
-                          //     fromdate: values?.fromdate,
-                          //     todate: values?.date,
-                          //     ordertype: values?.ordertype,
-                          //     Imageurl: baseurlUAAM,
-                          //     HeaderImg,
-                          //     FooterImg,
-                          //   }}/>
-                         
+                        <EnquiryPDF
+                          data={listViewData}
+                          filters={{
+                            fromdate: values?.fromdate,
+                            todate: values?.date,
+                            Type: values?.type?.Name,
+                            EnquiryStatus: Enquirytype,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
+                          }} />
+
                       ).toBlob();
 
                       const url = URL.createObjectURL(blob);
-                      window.open(url); // ✅ better UX (no extra button)
+                      window.open(url); //  better UX (no extra button)
                       setLoadingPdf(false);
                     }
                     catch (err) {
-                      console.error("PDF ERROR:", err); // 🔥 important
+                      console.error("PDF ERROR:", err); // important
                     } finally {
-                      setLoadingPdf(false); // ✅ ALWAYS resets
+                      setLoadingPdf(false); //  ALWAYS resets
                     }
                   }
                   return (
@@ -4622,9 +4808,9 @@ const ListviewSecondary = () => {
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
+                          // inputProps={{
+                          //   max: new Date().toISOString().split("T")[0],
+                          // }}
                           sx={{ width: 250, mt: 2 }}
                         />
 
@@ -4643,12 +4829,36 @@ const ListviewSecondary = () => {
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
+                          // inputProps={{
+                          //   max: new Date().toISOString().split("T")[0],
+                          // }}
                           sx={{ width: 250, mt: 2 }}
-                        />                      
-                     
+                        />
+                        <MultiFormikOptimizedAutocomplete
+                          sx={{ width: 250, mt: 1 }}
+                          id="type"
+                          name="type"
+                          label="Type"
+                          variant="outlined"
+                          value={values.type}
+                          onChange={(e, newValue) => {
+                            setFieldValue("type", newValue);
+                            sessionStorage.setItem(
+                              "TR371_type",
+                              JSON.stringify(newValue)
+                            );
+                          }}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2168",
+                              ScreenName: "Type",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: "",
+                              Any: "",
+                            },
+                          })}`}
+                        />
+
                         <Stack
                           direction="row"
                           alignItems="center"
@@ -4664,7 +4874,7 @@ const ListviewSecondary = () => {
                           >
                             Apply
                           </Button>
-                         
+
                           <PictureAsPdfIcon
                             sx={{
                               fontSize: 24,
@@ -4681,21 +4891,24 @@ const ListviewSecondary = () => {
                             variant="contained"
                             color="error"
                             onClick={() => {
-                                [
-                                  "FromDate",
-                                  "ToDate",                          
-                                  "TR371_Filters",
-                                ].forEach((key) =>
-                                  sessionStorage.removeItem(key)
-                                );
+                              [
+                                "FromDate",
+                                "ToDate",
+                                "type",
+                                "TR371_Filters",
+                              ].forEach((key) =>
+                                sessionStorage.removeItem(key)
+                              );
 
-                                resetForm({
-                                  values: {
-                                    fromdate: "",
-                                    date: "",                                  
-                                  },
-                                });
-                              }}
+                              resetForm({
+                                values: {
+                                  fromdate: "",
+                                  date: "",
+                                  type: [],
+
+                                },
+                              });
+                            }}
                           >
                             RESET
                           </Button>
@@ -4706,246 +4919,260 @@ const ListviewSecondary = () => {
                 }}
               </Formik>
             </Box>
-          )}
-          {showMore && accessID === "TR372" && (
-            <Box
-              sx={{
-                width: 300,
-                p: 2,
-                borderRadius: 1,
-                backgroundColor: "#fff",
-              }}
-            >
-              <Formik
-                initialValues={{
-                  fromdate: sessionStorage.getItem("FromDate") || "",
-                  date: sessionStorage.getItem("ToDate") || "",
-                  
+          )} */}
+          {showMore && (accessID === "TR371" || accessID === "TR372") && (() => {
+
+            const fromDateKey = `${accessID}_FromDate`;
+            const toDateKey = `${accessID}_ToDate`;
+            const typeKey = `${accessID}_type`;
+            const filterKey = `${accessID}_Filters`;
+
+            const getStoredType = () => {
+              try {
+                const data = sessionStorage.getItem(typeKey);
+                return data ? JSON.parse(data) : [];
+              } catch {
+                return [];
+              }
+            };
+
+            return (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
+                  position: "relative",
                 }}
-                enableReinitialize
-                validate={(values) => {
-                  const hasAtLeastOneValue =
-                    values.fromdate ||
-                    values.date
-                   
-                }}
-              
-                onSubmit={(values, { setSubmitting }) => {
-                  const conditions = [];                
-                  const fromDate = values.fromdate || "";
-                  const toDate = values.date || "";
-
-                  sessionStorage.setItem("FromDate", fromDate);
-                  sessionStorage.setItem("ToDate", toDate);
-                  sessionStorage.setItem("ordertype", values.ordertype || "");
-
-                  if (fromDate && toDate) {
-                    conditions.push(
-                      `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
-                    );
-                  } else if (fromDate) {
-                    conditions.push(`(OROrderDate >= '${fromDate}')`);
-                  } else if (toDate) {
-                    conditions.push(`(OROrderDate <= '${toDate}')`);
-                  }                 
-                
-
-                  
-                  if (compID) {
-                    conditions.push(`CompanyID = '${compID}'`);
-                  }
-
-                  sessionStorage.setItem(
-                    "TR372_Filters",
-                    JSON.stringify(values)
-                  );
-
-                  // --------------------------
-                  // FINAL WHERE CLAUSE
-                  // --------------------------
-                  const whereClause = conditions.join(" AND ");
-                  console.log("FINAL FILTER:", whereClause);
-
-                  dispatch(
-                    fetchListview(
-                      accessID,
-                      Subscriptionlastthree,
-                      screenName,
-                      whereClause,
-                      "",
-                      compID
-                    )
-                  );
-
-                  setTimeout(() => setSubmitting(false), 100);
-                }}
-
               >
-                {({
-                  values,
-                  handleSubmit,
-                  handleChange,
-                  handleBlur,
-                  isSubmitting,
-                  setFieldValue,
-                  resetForm,
-                }) => {
+                <Formik
+                  key={accessID}
+                  initialValues={{
+                    // sessionStorage holds YYYY-MM-DD — safe for type="date"
+                    fromdate: sessionStorage.getItem(fromDateKey) || "",
+                    date: sessionStorage.getItem(toDateKey) || "",
+                    type: getStoredType(),
+                  }}
+                  enableReinitialize
 
-                  // ✅ NOW you can declare functions here
-                  const generatePdf = async () => {
-
-                    try {
-                      setLoadingPdf(true);
-
-                      const blob = await pdf(
-                          // <OrdEnqProductPDF
-                          //   data={listViewData}
-                          //   Product={values?.product?.Name}
-                          //   Party={values?.party?.Name}
-                          //   filters={{
-                          //     fromdate: values?.fromdate,
-                          //     todate: values?.date,
-                          //     ordertype: values?.ordertype,
-                          //     Imageurl: baseurlUAAM,
-                          //     HeaderImg,
-                          //     FooterImg,
-                          //   }}/>
-                         
-                      ).toBlob();
-
-                      const url = URL.createObjectURL(blob);
-                      window.open(url); // ✅ better UX (no extra button)
-                      setLoadingPdf(false);
+                  validate={(values) => {
+                    const errors = {};
+                    if (!values.fromdate && !values.date && values.type.length === 0) {
+                      errors.general = "At least one filter required";
                     }
-                    catch (err) {
-                      console.error("PDF ERROR:", err); // 🔥 important
-                    } finally {
-                      setLoadingPdf(false); // ✅ ALWAYS resets
+                    return errors;
+                  }}
+
+                  onSubmit={(values, { setSubmitting }) => {
+                    const conditions = [];
+
+                    // Store raw YYYY-MM-DD — no conversion needed
+                    sessionStorage.setItem(fromDateKey, values.fromdate || "");
+                    sessionStorage.setItem(toDateKey, values.date || "");
+                    sessionStorage.setItem(typeKey, JSON.stringify(values.type || []));
+                    sessionStorage.setItem(filterKey, JSON.stringify(values));
+
+                    // ✅ Use YYYY-MM-DD directly in SQL — no toSqlDate() conversion
+                    const fromDate = values.fromdate || "";
+                    const toDate = values.date || "";
+
+                    if (fromDate && toDate) {
+                      conditions.push(`(FilterDate BETWEEN '${fromDate}' AND '${toDate}')`);
+                    } else if (fromDate) {
+                      conditions.push(`(FilterDate >= '${fromDate}')`);
+                    } else if (toDate) {
+                      conditions.push(`(FilterDate <= '${toDate}')`);
                     }
-                  }
-                  return (
 
-                    <form onSubmit={handleSubmit}>
+                    if (values.type?.length > 0) {
+                      const ids = values.type.map((t) => `'${t.Name}'`).join(", ");
+                      conditions.push(`Type IN (${ids})`);
+                    }
 
-                      <Box sx={{ height: 600, overflowY: "auto" }}>
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowMore(false)}
-                          sx={{ position: "absolute", top: 5, right: 4 }}
-                        >
-                          <Tooltip title="Close">
-                            <CancelIcon color="error" />
-                          </Tooltip>
-                        </IconButton>
-                        <TextField
-                          name="fromdate"
-                          type="date"
-                          id="fromdate"
-                          label="From Date"
-                          variant="standard"
-                          value={values.fromdate || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("fromdate", newDate);
-                            // dispatch(setFromDate(newDate));
-                            sessionStorage.setItem("FromDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />
+                    if (DMEfilter === "BD" || DMEfilter === "FV") {
+                      conditions.push(`ProspectStatus = '${DMEfilter}'`);
+                    }
 
-                        <TextField
-                          name="date"
-                          type="date"
-                          id="date"
-                          label="To Date"
-                          variant="standard"
-                          value={values.date || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("date", newDate);
-                            // dispatch(setToDate(newDate));
-                            sessionStorage.setItem("ToDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />                      
-                     
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="end"
-                          spacing={1}
-                          marginTop={3}
-                        >
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            Apply
-                          </Button>
-                         
-                          <PictureAsPdfIcon
-                            sx={{
-                              fontSize: 24,
-                              color: loadingPdf ? "grey" : "#d32f2f",
-                              cursor: loadingPdf ? "not-allowed" : "pointer",
-                              opacity: loadingPdf ? 0.5 : 1,
-                            }}
-                            onClick={() => {
-                              if (!loadingPdf) generatePdf();
+                    const whereClause = conditions.join(" AND ");
+                    console.log("FINAL FILTER:", whereClause);
+
+                    dispatch(
+                      fetchListview(
+                        accessID,
+                        Subscriptionlastthree,
+                        screenName,
+                        whereClause,
+                        "",
+                        compID
+                      )
+                    );
+
+                    setTimeout(() => setSubmitting(false), 100);
+                  }}
+                >
+                  {({ values, handleSubmit, isSubmitting, setFieldValue, resetForm }) => {
+
+                    const generatePdf = async () => {
+                      try {
+                        setLoadingPdf(true);
+                        const blob = await pdf(
+                          <EnquiryPDF
+                            data={listViewData}
+                            filters={{
+                              fromdate: values?.fromdate,
+                              todate: values?.date,
+                              Type: values?.type?.map((t) => t.Name).join(", "),
+                              EnquiryStatus: Enquirytype,
+                              Imageurl: baseurlUAAM,
+                              HeaderImg: HeaderImg,
+                              FooterImg: FooterImg,
                             }}
                           />
-                          <Button
-                            type="button"
-                            variant="contained"
-                            color="error"
-                            onClick={() => {
-                                [
-                                  "FromDate",
-                                  "ToDate",                          
-                                  "TR372_Filters",
-                                ].forEach((key) =>
+                        ).toBlob();
+                        const url = URL.createObjectURL(blob);
+                        window.open(url);
+                      } catch (err) {
+                        console.error("PDF ERROR:", err);
+                      } finally {
+                        setLoadingPdf(false);
+                      }
+                    };
+
+                    return (
+                      <form onSubmit={handleSubmit}>
+                        <Box sx={{ height: 600, overflowY: "auto" }}>
+
+                          {/* CLOSE */}
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
+
+                          {/* FROM DATE */}
+                          <TextField
+                            name="fromdate"
+                            type="date"
+                            label="From Date"
+                            variant="standard"
+                            value={values.fromdate || ""}
+                            onChange={(e) => setFieldValue("fromdate", e.target.value)}
+                            focused
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ width: 250, mt: 2 }}
+                          />
+
+                          {/* TO DATE */}
+                          <TextField
+                            name="date"
+                            type="date"
+                            label="To Date"
+                            variant="standard"
+                            value={values.date || ""}
+                            onChange={(e) => setFieldValue("date", e.target.value)}
+                            focused
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ width: 250, mt: 2 }}
+                          />
+
+                          {/* TYPE */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ width: 250, mt: 1 }}
+                            id="type"
+                            name="type"
+                            label="Type"
+                            value={values.type || []}
+                            onChange={(e, newValue) => setFieldValue("type", newValue)}
+                            isOptionEqualToValue={(option, value) =>
+                              option.RecordID === value.RecordID
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2168",
+                                ScreenName: "Type",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: "",
+                                Any: "",
+                              },
+                            })}`}
+                          />
+
+                          {/* BUTTONS */}
+                          <Stack direction="row" justifyContent="end" spacing={1} mt={3}>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
+                              Apply
+                            </Button>
+
+                            <PictureAsPdfIcon
+                              sx={{
+                                fontSize: 24,
+                                color: loadingPdf ? "grey" : "#d32f2f",
+                                cursor: loadingPdf ? "not-allowed" : "pointer",
+                                opacity: loadingPdf ? 0.5 : 1,
+                              }}
+                              onClick={() => { if (!loadingPdf) generatePdf(); }}
+                            />
+
+                            <Button
+                              type="button"
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                // Clear sessionStorage
+                                [fromDateKey, toDateKey, typeKey, filterKey].forEach((key) =>
                                   sessionStorage.removeItem(key)
                                 );
 
-                                resetForm({
-                                  values: {
-                                    fromdate: "",
-                                    date: "",                                  
-                                  },
-                                });
-                              }}
-                          >
-                            RESET
-                          </Button>
-                        </Stack>
-                      </Box>
-                    </form>
-                  )
-                }}
-              </Formik>
-            </Box>
-          )}
-        </Box>
+                                // Reset form fields
+                                resetForm({ values: { fromdate: "", date: "", type: [] } });
 
+                                // Re-fetch with only the default ProspectStatus filter (if BD or FV)
+                                const defaultFilter =
+                                  DMEfilter === "BD" || DMEfilter === "FV"
+                                    ? `ProspectStatus = '${DMEfilter}'`
+                                    : "";
+
+                                dispatch(
+                                  fetchListview(
+                                    accessID,
+                                    Subscriptionlastthree,
+                                    screenName,
+                                    defaultFilter,
+                                    "",
+                                    compID
+                                  )
+                                );
+                              }}
+                            >
+                              RESET
+                            </Button>
+                          </Stack>
+
+                        </Box>
+                      </form>
+                    );
+                  }}
+                </Formik>
+              </Box>
+            );
+          })()}
+        </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
-{(accessID !== "TR371" && accessID !== "TR373" ) && (
+
           <Typography fontWeight={600} fontSize={15} lineHeight={1}
             mb={-2} >
-            Actions Guide
+            {accessID === "TR371" || accessID === "TR373" ? null : "Actions Guide"}
           </Typography>
-        )}
         </Box>
         {accessID == "TR001" ? (
           <Box
@@ -5249,7 +5476,7 @@ const ListviewSecondary = () => {
                       icon={<GppMaybeOutlinedIcon color="primary" />}
                       label="Detail"
                       variant="outlined"
-                    />                  
+                    />
 
                   </Box>
                 ) : accessID == "TR296" ? (
@@ -5878,65 +6105,104 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                   </Box>
-                ) : accessID == "TR234" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<BalanceIcon color="primary" />}
-                      label="Task Weightage"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Tasks"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR335" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<TimelineOutlinedIcon color="primary" />}
-                      label="Timeline"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR314" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<VisibilityIcon color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    />
-                  </Box>
-                ): accessID == "TR371" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    {/* <Chip
-                      icon={<VisibilityIcon color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    /> */}
-                  </Box>
-                ) : accessID == "TR373" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    {/* <Chip
-                      icon={<VisibilityIcon color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    /> */}
-                  </Box>
-                ): (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                )}
+                ) : //LIST OF APPRAISAL
+                  accessID == "TR368" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<VisibilityIcon color="primary" />}
+                        label="View"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<CalendarMonthOutlinedIcon color="primary" />}
+                        label="TimeTable"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<LockResetOutlinedIcon color="error" />}
+                        label="Process"
+                        variant="outlined"
+                      />
+
+                    </Box>
+                  ) : //LIST OF APPRAISAL
+                    accessID == "TR275" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                        {/* <Chip
+                                  icon={<BalanceIcon color="primary" />}
+                                  label="Milestone Weightage"
+                                  variant="outlined"
+                                /> */}
+                        <Chip
+                          icon={<ModeEditOutlinedIcon color="primary" />}
+                          label="Edit"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<Visibility color="primary" />}
+                          label="View"
+                          variant="outlined"
+                        />
+                        {/* <Chip
+                          icon={<PictureAsPdfIcon color="error" />}
+                          label="Download PDF"
+                          variant="outlined"
+                        /> */}
+                        <Chip
+                          icon={<DatasetLinkedIcon
+                            color="primary" />}
+                          label="Timetable"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID == "TR234" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<BalanceIcon color="primary" />}
+                          label="Task Weightage"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<ModeEditOutlinedIcon color="primary" />}
+                          label="Edit"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<ListAltOutlinedIcon color="primary" />}
+                          label="List of Tasks"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID == "TR335" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<TimelineOutlinedIcon color="primary" />}
+                          label="Timeline"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID == "TR314" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<VisibilityIcon color="primary" />}
+                          label="View"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID != "TR373" && accessID != "TR371" ? (
+                      <Box display="flex" flexDirection="row" padding="25px">
+                        <Chip
+                          icon={<ModeEditOutlinedIcon color="primary" />}
+                          label="Edit"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : (null)}
       </Box>
       <MatxCustomizer
         open={open}
