@@ -279,7 +279,7 @@ const SkillCreate = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID1}/${params.screenName}/${params.parentID2}/${params.accessID}/${params.parentID1}`,{
+          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID1}/${params.screenName}/${params.parentID2}/${params.accessID}/${params.parentID1}`, {
             state: { ...state },
           });
         }
@@ -306,9 +306,9 @@ const SkillCreate = () => {
     //Designation: Data.DesignationID || "",
     DesignationID: Data.DesignationID
       ? {
-          RecordID: Data.DesignationID,
-          Name: Data.DesignationName, // used for dropdown display
-        }
+        RecordID: Data.DesignationID,
+        Name: Data.DesignationName, // used for dropdown display
+      }
       : null,
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
@@ -360,52 +360,73 @@ const SkillCreate = () => {
               borderRadius="3px"
               alignItems="center"
             >
-                <Breadcrumbs
-                            maxItems={2}
-                            aria-label="breadcrumb"
-                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                          >
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                              onClick={() => {
-                                navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
-                              }}
-                            >
-                              List of Assessment Type ({state.BreadCrumb1})
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                              onClick={() => {
-                                navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
-                                  {state: {...state}}
-                                );
-                              }}
-                            
-                            >
-                              List of Category ({state.BreadCrumb2})
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                            onClick={() => {
-                              navigate(-1);
-                            }}
-                            >
-                              List of Assessment
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                            >
-                              {mode == "A" ? "New" : "Edit"}
-                            </Typography>
-                          </Breadcrumbs>
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                  }}
+                >
+                  List of Assessment Type ({state.BreadCrumb1})
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
+                      { state: { ...state } }
+                    );
+                  }}
+
+                >
+                  {/* {params.parentID2 === "AP" ?
+                    "List of Appraisal Category" :
+                    params.parentID2 === "CL" ?
+                      "List of Compliance Category" :
+                      params.parentID2 === "SV" ?
+                        "List of Survey Category" :
+                        params.parentID2 === "FB" ?
+                          "List of Feedback Category" :
+                          "List of Assessment Category"
+                  } */}
+                  List of Category 
+                  ({state.BreadCrumb2})
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  {params.parentID2 === "AP" ?
+                    "List of Appraisal" :
+                    params.parentID2 === "CL" ?
+                      "List of Compliance" :
+                      params.parentID2 === "SV" ?
+                        "List of Survey" :
+                        params.parentID2 === "FB" ?
+                          "List of Feedback" :
+                          "List of Assessment"
+                  }
+                  {/* List of Assessment */}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  {mode == "A" ? "New" : "Edit"}
+                </Typography>
+              </Breadcrumbs>
             </Box>
           </Box>
 
@@ -689,8 +710,8 @@ const SkillCreate = () => {
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  // required
+                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
@@ -823,9 +844,9 @@ const SkillCreate = () => {
                           "DesignationID",
                           newValue
                             ? {
-                                RecordID: newValue.RecordID,
-                                Name: newValue.Name,
-                              }
+                              RecordID: newValue.RecordID,
+                              Name: newValue.Name,
+                            }
                             : null
                         )
                       }
@@ -969,12 +990,12 @@ const SkillCreate = () => {
                         />
                       }
                       label="Disable"
-                      // sx={{
-                      //   marginTop: "20px",
-                      //   "@media (max-width:500px)": {
-                      //     marginTop: 0,
-                      //   },
-                      // }}
+                    // sx={{
+                    //   marginTop: "20px",
+                    //   "@media (max-width:500px)": {
+                    //     marginTop: 0,
+                    //   },
+                    // }}
                     />
                   </Box>
                 </Box>
