@@ -164,6 +164,44 @@ export const weeklyTeachercalendarGet = createAsyncThunk(
     }
   },
 );
+export const weeklyclasscaledarGet = createAsyncThunk(
+  "TimeTable/classCal",
+  async ({ projectID, milestonesID, TermsID, CompanyID }, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.WeeklycaledarUrl;
+  const requestBody = {
+        milestonesID: milestonesID,
+        projectID: projectID,
+        TermsID: TermsID,
+        CompanyID: CompanyID
+      };
+
+      console.log("🚀 Sending Body:", requestBody);
+
+      const response = await axios.post(
+        url,
+        requestBody,
+        {
+          headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+        }
+      );
+
+      console.log("✅ API Response:", response.data);
+
+      return response.data;
+
+    } catch (error) {
+      console.log("❌ API Error:", error.response?.data || error.message);
+
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
 export const slotListView = createAsyncThunk(
   "slot/Companydetail",
   async ({ accessID, screenName, filter, any,VerticalLicense }) => {

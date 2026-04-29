@@ -123,6 +123,9 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import InvpaymentPDF from "./pdf/Invpaymentdetailpdf";
+import EventIcon from '@mui/icons-material/Event';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -352,10 +355,10 @@ const Listview = () => {
           ? `compID=${compID}`
           : accessID == "TR027" ||
             accessID == "TR321" ?
-            `CompanyID=${compID}`:
+            `CompanyID=${compID}` :
             accessID == "TR331" ?
-            `CompanyID=${compID}`
-            : "",
+              `CompanyID=${compID}`
+              : "",
         "",
         compID
       )
@@ -473,8 +476,8 @@ const Listview = () => {
     () => columns.filter(filterByIDShow),
     [listViewcolumn]
   );
-   console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
-      console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
 
   const rows = React.useMemo(() => {
     return listViewData;
@@ -590,13 +593,17 @@ const Listview = () => {
         <Typography variant="h3" noWrap>
           {accessID == "TR330"
             ? `${screenName1}` :
-            accessID == "TR323"
-              ? screenName || rowData.Screennameroute :
-              accessID == "TR315"
-                ? screenName || rowData.Screenname
-                : accessID == "TR128"
-                  ? screenName || rowData.LocationName
-                  : screenName}</Typography>
+            accessID == "TR376"
+              ? `${screenName1}` :
+              accessID == "TR378"
+                ? `${screenName1}` :
+                accessID == "TR323"
+                  ? screenName || rowData.Screennameroute :
+                  accessID == "TR315"
+                    ? screenName || rowData.Screenname
+                    : accessID == "TR128"
+                      ? screenName || rowData.LocationName
+                      : screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -745,6 +752,8 @@ const Listview = () => {
             ) : accessID == "TR328" ? (
               false
             ) : accessID == "TR315" ? (
+              false
+            ) : accessID == "TR370" ? (
               false
             ) : accessID == "TR330" ? (
               false
@@ -2491,7 +2500,7 @@ const Listview = () => {
                               },
                             })}`}
                           />
-                          
+
 
                           {/* Employee */}
                           <MultiFormikOptimizedAutocomplete
@@ -4769,6 +4778,32 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
+        ) : accessID == "TR374" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<EventIcon color="primary" />}
+              label="Terms"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR376" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ScheduleIcon color="primary" />}
+              label="Slot"
+              variant="outlined"
+            />
+          </Box>
         ) : accessID == "TR333" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             {/* <Chip
@@ -5115,22 +5150,22 @@ const Listview = () => {
           </Box>
         ) : accessID == "TR331" || accessID == "TR366" ? (
           <Box display="flex" flexDirection="row" padding="25px">
-           
+
             <Chip
-              icon={< CurrencyRupeeOutlinedIcon color="primary"/>}
+              icon={< CurrencyRupeeOutlinedIcon color="primary" />}
               label="Payment"
               variant="outlined"
-              
+
             />
           </Box>
-        ): accessID == "TR370" ? (
+        ) : accessID == "TR370" ? (
           <Box display="flex" flexDirection="row" padding="25px">
-           
+
             <Chip
-              icon={<ManageAccountsIcon  color="primary"/>}
+              icon={<ManageAccountsIcon color="primary" />}
               label="Enquiry Detail"
               variant="outlined"
-              
+
             />
           </Box>
         ) : accessID == "TR328" ? (
@@ -5202,6 +5237,16 @@ const Listview = () => {
               <Chip
                 icon={<PeopleAltIcon color="primary" />}
                 label="Personnel"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          )
+           : accessID == "TR378" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<SourceOutlinedIcon color="primary" />}
+                label="Standard/Activities"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />

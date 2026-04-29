@@ -203,6 +203,7 @@ const Editemployee = () => {
   console.log("API URL:", baseApiUrl);
   const state = location.state || {};
   console.log(state, "emnployee");
+  const screenname = state.screenName;
   const designationType =
     state.Classification ||
     "";
@@ -964,11 +965,11 @@ const Editemployee = () => {
   // }, [location.key]);
   useEffect(() => {
     // if (show == "0") {
-      if (recID && mode === "E") {
-        dispatch(fetchApidata("TR027", "get", recID));
-      } else {
-        dispatch(fetchApidata("TR027", "get", recID));
-      }
+    if (recID && mode === "E") {
+      dispatch(fetchApidata("TR027", "get", recID));
+    } else {
+      dispatch(fetchApidata("TR027", "get", recID));
+    }
     // }
   }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
@@ -1988,20 +1989,20 @@ const Editemployee = () => {
       toast.success(data.payload.Msg);
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
-     dispatch(fetchApidata("TR027", "get", recID));
-    //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
-    //   selectCellRowData({
-    //     rowData: DataExplore,
-    //     mode: "E",
-    //     field: "",
-    //   });
+      dispatch(fetchApidata("TR027", "get", recID));
+      //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
+      //   selectCellRowData({
+      //     rowData: DataExplore,
+      //     mode: "E",
+      //     field: "",
+      //   });
 
-    //   resetForm({
-    //     values: {
-    //       ...contactInitialvalues,
-    //     },
-    //   });
-    //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
+      //   resetForm({
+      //     values: {
+      //       ...contactInitialvalues,
+      //     },
+      //   });
+      //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
 
       // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
@@ -5116,7 +5117,7 @@ const Editemployee = () => {
                     <MenuItem value={0}>Personnel</MenuItem>
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
-                     {is003Subscription && (
+                    {is003Subscription && (
                       <MenuItem value={15}>Parent</MenuItem>
                     )}
                     {initialValues.employeetype === "CI" ? (
@@ -6158,7 +6159,7 @@ const Editemployee = () => {
                       //   Delete
                       // </Button>
                       null} */}
-                    <Button
+                    {/* <Button
                       color="warning"
                       variant="contained"
                       onClick={() => {
@@ -6166,6 +6167,20 @@ const Editemployee = () => {
                           ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
                           : navigate(`/Apps/TR027/Personnel`);
                         //  navigate(-1)
+                      }}
+                    >
+                      Cancel
+                    </Button> */}
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        is00123Subscription
+                          ? navigate(
+                            `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                            { state }   //  just pass existing state
+                          )
+                          : navigate(`/Apps/TR027/Personnel`, { state }); //  same here
                       }}
                     >
                       Cancel
@@ -6292,7 +6307,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      inputProps={{ readOnly: true }}
+                        inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -6313,7 +6328,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      inputProps={{ readOnly: true }}
+                        inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     <Stack
@@ -13379,133 +13394,133 @@ const Editemployee = () => {
                         </>
                       )}
 
-                          <TextField
-                            name="FromPeriod"
-                            type="date"
-                            id="FromPeriod"
-                            label="From Period"
-                            variant="standard"
-                            focused
-                            value={values.FromPeriod}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const { name, value } = e.target;
-                              setFieldValue(name, value);
+                      <TextField
+                        name="FromPeriod"
+                        type="date"
+                        id="FromPeriod"
+                        label="From Period"
+                        variant="standard"
+                        focused
+                        value={values.FromPeriod}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue(name, value);
 
-                              // 🔁 Run same logic if ToDate already exists
-                              if (values.ToPeriod) {
-                                const toDate = new Date(values.ToPeriod);
-                                const fromDate = new Date(value);
+                          // 🔁 Run same logic if ToDate already exists
+                          if (values.ToPeriod) {
+                            const toDate = new Date(values.ToPeriod);
+                            const fromDate = new Date(value);
 
-                                // Renewal days
-                                const diffDays = differenceInDays(toDate, fromDate);
-                                setFieldValue("RenewableNotification", diffDays);
+                            // Renewal days
+                            const diffDays = differenceInDays(toDate, fromDate);
+                            setFieldValue("RenewableNotification", diffDays);
 
-                                // Notification Alert Date (still based on ToDate)
-                                const alertDate = subDays(toDate, 1);
-                                setFieldValue(
-                                  "NotificationAlertDate",
-                                  alertDate.toISOString().split("T")[0]
-                                );
-                              }
-                            }}
-                          />
+                            // Notification Alert Date (still based on ToDate)
+                            const alertDate = subDays(toDate, 1);
+                            setFieldValue(
+                              "NotificationAlertDate",
+                              alertDate.toISOString().split("T")[0]
+                            );
+                          }
+                        }}
+                      />
 
-                          <TextField
-                            name="ToPeriod"
-                            type="date"
-                            id="ToPeriod"
-                            label="To Period"
-                            variant="standard"
-                            focused
-                            value={values.ToPeriod}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const { name, value } = e.target;
-                              setFieldValue(name, value);
+                      <TextField
+                        name="ToPeriod"
+                        type="date"
+                        id="ToPeriod"
+                        label="To Period"
+                        variant="standard"
+                        focused
+                        value={values.ToPeriod}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue(name, value);
 
-                              // Case 1: Set NotificationAlertDate to 1 day before ToDate
-                              const toDate = new Date(value);
-                              const alertDate = subDays(toDate, 1);
-                              const formattedAlertDate = alertDate
-                                .toISOString()
-                                .split("T")[0];
-                              console.log(
-                                formattedAlertDate,
-                                "--formattedAlertDate"
-                              );
+                          // Case 1: Set NotificationAlertDate to 1 day before ToDate
+                          const toDate = new Date(value);
+                          const alertDate = subDays(toDate, 1);
+                          const formattedAlertDate = alertDate
+                            .toISOString()
+                            .split("T")[0];
+                          console.log(
+                            formattedAlertDate,
+                            "--formattedAlertDate"
+                          );
 
-                              setFieldValue(
-                                "NotificationAlertDate",
-                                formattedAlertDate
-                              );
+                          setFieldValue(
+                            "NotificationAlertDate",
+                            formattedAlertDate
+                          );
 
-                              // Case 2: If FromPeriod is selected, calculate difference in days
-                              if (values.FromPeriod) {
-                                const fromDate = new Date(values.FromPeriod);
-                                const diffDays = differenceInDays(toDate, fromDate);
-                                setFieldValue("RenewableNotification", diffDays); // or your target field
-                              }
-                            }}
-                          />
-                          {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
-                            <TextField
-                              name="DueDate"
-                              type="date"
-                              id="DueDate"
-                              label="Due Date"
-                              variant="standard"
-                              focused
-                              value={values.DueDate}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                            />
-                          )}
+                          // Case 2: If FromPeriod is selected, calculate difference in days
+                          if (values.FromPeriod) {
+                            const fromDate = new Date(values.FromPeriod);
+                            const diffDays = differenceInDays(toDate, fromDate);
+                            setFieldValue("RenewableNotification", diffDays); // or your target field
+                          }
+                        }}
+                      />
+                      {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
+                        <TextField
+                          name="DueDate"
+                          type="date"
+                          id="DueDate"
+                          label="Due Date"
+                          variant="standard"
+                          focused
+                          value={values.DueDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        />
+                      )}
 
-                          <TextField
-                            name="NotificationAlertDate"
-                            type="date"
-                            id="NotificationAlertDate"
-                            label="Notification Alert Date"
-                            variant="standard"
-                            focused
-                            value={values.NotificationAlertDate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.NotificationAlertDate &&
-                              !!errors.NotificationAlertDate
-                            }
-                            helperText={
-                              touched.NotificationAlertDate &&
-                              errors.NotificationAlertDate
-                            }
-                            inputProps={{ readOnly: true }}
-                          />
-                          <TextField
-                            name="RenewableNotification"
-                            label="Renewal Notification Period"
-                            type="number"
-                            variant="standard"
-                            focused
-                            value={values.RenewableNotification}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.RenewableNotification &&
-                              !!errors.RenewableNotification
-                            }
-                            helperText={
-                              touched.RenewableNotification &&
-                              errors.RenewableNotification
-                            }
-                            inputProps={{ readOnly: true }}
-                            InputProps={{
-                              inputProps: {
-                                style: { textAlign: "right" },
-                              },
-                            }}
-                          />
+                      <TextField
+                        name="NotificationAlertDate"
+                        type="date"
+                        id="NotificationAlertDate"
+                        label="Notification Alert Date"
+                        variant="standard"
+                        focused
+                        value={values.NotificationAlertDate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.NotificationAlertDate &&
+                          !!errors.NotificationAlertDate
+                        }
+                        helperText={
+                          touched.NotificationAlertDate &&
+                          errors.NotificationAlertDate
+                        }
+                        inputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        name="RenewableNotification"
+                        label="Renewal Notification Period"
+                        type="number"
+                        variant="standard"
+                        focused
+                        value={values.RenewableNotification}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.RenewableNotification &&
+                          !!errors.RenewableNotification
+                        }
+                        helperText={
+                          touched.RenewableNotification &&
+                          errors.RenewableNotification
+                        }
+                        inputProps={{ readOnly: true }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
                       {/* <TextField
                         name="ToPeriod"
                         type="date"

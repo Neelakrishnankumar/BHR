@@ -875,6 +875,87 @@ export const SprintEmpAutocomplete = ({
     />
   );
 };
+export function SprintEmpAutocomplete1({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+          }
+        });
+        const data = response.data?.Data?.rows || [];
+        setOptions(data);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setOptions([]);
+        setError("Failed to load options");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value || null}
+      isOptionEqualToValue={(option, val) =>
+        option?.Name === val?.Name
+      }
+
+      onChange={(event, newValue) => {
+        onChange(newValue);
+      }}
+      getOptionLabel={(option) => {
+        if (typeof option === "string") return option;
+        if (!option || typeof option !== "object") return "";
+        return option.Name || "";
+      }}
+      renderInput={(params) => (
+        <TextField
+          focused
+          {...params}
+          label={props.label || "Days"}
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {/* {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null} */}
+                {params.InputProps.endAdornment}
+              </>
+            )
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
 //   function CustomAutocomplete({
 //   value = [],
 //   onChange,

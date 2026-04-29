@@ -544,7 +544,7 @@ const Editdesignation = () => {
                     id="rank"
                     label={
                       <>
-                        Rank
+                        {getBusinessCaption("Rank", "Rank")}
                         <span style={{ color: "red", fontSize: "20px" }}>
                           *
                         </span>

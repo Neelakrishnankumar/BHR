@@ -53,6 +53,7 @@ import {
   postData,
   SOPProcessPost,
   StockProcessApi,
+  TimetableProcessController,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import RedoIcon from "@mui/icons-material/Redo";
@@ -115,6 +116,14 @@ import ResetPartyOrder from "../../apps/pages/Modals/ResetPartyOrder";
 import StaffTimetableModal from "../../apps/pages/Modals/StaffTimetableModal";
 import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
 import PaymentReceipt from "../../apps/pages/pdf/Paymentreceipt2";
+import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
+import EventIcon from '@mui/icons-material/Event';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
+import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -548,42 +557,46 @@ export const fetchListview =
       const company = sessionStorage.getItem("company");
       var LoggedInUserName = sessionStorage.getItem("UserName");
       const UserName = sessionStorage.getItem("UserName");
+      console.log("screenname", screenName);
+      const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+      const is003Subscription = SubscriptionCode.endsWith("003");
       //PROJECTPDFGET
-const getTodayDate = () => {
-  const today = new Date();
 
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
+      const getTodayDate = () => {
+        const today = new Date();
 
-  return `${day}/${month}/${year}`;
-};
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
 
-// usage
-console.log(getTodayDate()); // 21/04/2026
+        return `${day}/${month}/${year}`;
+      };
+
+      // usage
+      console.log(getTodayDate()); // 21/04/2026
       const format = (d) => {
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}-${month}-${year}`;
-};
-const today = new Date();
- const formatToDMY = (dateStr) => {
-      if (!dateStr) return "";
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+      };
+      const today = new Date();
+      const formatToDMY = (dateStr) => {
+        if (!dateStr) return "";
 
-      const parts = dateStr.split("-");
-      if (parts.length !== 3) return dateStr;
+        const parts = dateStr.split("-");
+        if (parts.length !== 3) return dateStr;
 
-      const [year, month, day] = parts; // if input is yyyy-mm-dd
+        const [year, month, day] = parts; // if input is yyyy-mm-dd
 
-      return `${day}-${month}-${year}`;
-    };
-    const currentMonthNumber = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
-const oneMonthBefore = new Date();
-oneMonthBefore.setMonth(today.getMonth() - 1);
-const defaultFromDate = format(oneMonthBefore);
-const defaultToDate = format(today);
+        return `${day}-${month}-${year}`;
+      };
+      const currentMonthNumber = new Date().getMonth() + 1;
+      const currentYear = new Date().getFullYear();
+      const oneMonthBefore = new Date();
+      oneMonthBefore.setMonth(today.getMonth() - 1);
+      const defaultFromDate = format(oneMonthBefore);
+      const defaultToDate = format(today);
       // const handlePDFGET = (ProjectID, EmployeeID) => {
       //   console.log("Dispatching with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
@@ -594,7 +607,57 @@ const defaultToDate = format(today);
       //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
       // };
+      const handleTermsProcess = async (values) => {
 
+        const result = await Swal.fire({
+          title: "If you process this Timetable you will not able to edit. Do you want to proceed?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+        });
+
+        if (result.isConfirmed) {
+          const data = await dispatch(TimetableProcessController({
+            data: {
+              HeaderID: values.RecordID,
+              TeacherID: empID,
+              Process: "Y",
+            },
+          }));
+
+          if (data.payload.Status === "Y") {
+            Swal.fire({
+              title: data.payload.Message,
+              icon: "success",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#3085d6",
+            });
+          } else {
+            Swal.fire({
+              title: data.payload.Message,
+              // text: data.payload.Msg,
+              icon: "warning",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#3085d6",
+            });
+          }
+          dispatch(
+            fetchListview(
+              "TR368",
+              VerticalLicense,
+              screenName,
+              `CompanyID='${CompId}' AND StandardID='${values.StandardID || 0}'`,
+              "",
+              CompId,
+              "003"
+
+            )
+          );
+        }
+      }
       if (
         filter != "" &&
         AccessID !== "TR115" &&
@@ -717,6 +780,7 @@ const defaultToDate = format(today);
           AccessID != "TR317" &&
           AccessID != "TR318" &&
           AccessID != "TR027" &&
+          AccessID != "TR275" &&
           AccessID != "TR319" &&
           AccessID != "TR324" &&
           AccessID != "TR335" &&
@@ -726,8 +790,12 @@ const defaultToDate = format(today);
           AccessID != "TR351" &&
           AccessID != "TR127" &&
           AccessID != "TR332" &&
-           AccessID != "TR372" &&
-          AccessID != "TR371" 
+          AccessID != "TR372" &&
+          AccessID != "TR373" &&
+          AccessID != "TR371" &&
+          AccessID != "TR375" &&
+          AccessID != "TR368" &&
+          AccessID != "TR377"
         ) {
           filter = "parentID=" + `'${filter}'`;
           // console.log("---4---",filter);
@@ -753,7 +821,7 @@ const defaultToDate = format(today);
           filter = "ProjectID=" + `'${filter}'`;
         }
         if (AccessID === "TR372") {
-          filter = "";
+          filter = filter ? filter : "";
         }
         if (AccessID === "TR303") {
           filter = "PartyID=" + `'${filter}'`;
@@ -804,10 +872,10 @@ const defaultToDate = format(today);
         AccessID == "TR339" ||
         // AccessID == "TR341" ||
         AccessID == "TR351" ||
-        AccessID == "TR282" || 
-          AccessID == "TR331"||
-          AccessID == "TR332"
-        // AccessID == "TR304"
+        AccessID == "TR282" ||
+        AccessID == "TR331" ||
+        AccessID == "TR332" ||
+        AccessID == "TR373"
       ) {
         filter = filter;
       }
@@ -1142,58 +1210,58 @@ const defaultToDate = format(today);
       //   console.log('🔍 TR321 - TRUE NO FILTERS: CompanyID only');
       //   dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
       // }
-        else if (AccessID == "TR331") {
-      const savedFilters =
-        JSON.parse(sessionStorage.getItem("TR331_Filters")) || null;
+      else if (AccessID == "TR331") {
+        const savedFilters =
+          JSON.parse(sessionStorage.getItem("TR331_Filters")) || null;
 
-      if (savedFilters) {
-        const conditions = [];
+        if (savedFilters) {
+          const conditions = [];
 
-        // 🔹 FORMAT DATE HERE
-        if (savedFilters.fromDate && savedFilters.toDate) {
-          const fromDate = formatToDMY(savedFilters.fromDate);
-          const toDate = formatToDMY(savedFilters.toDate);
+          // 🔹 FORMAT DATE HERE
+          if (savedFilters.fromDate && savedFilters.toDate) {
+            const fromDate = formatToDMY(savedFilters.fromDate);
+            const toDate = formatToDMY(savedFilters.toDate);
 
-          conditions.push(`Date BETWEEN '${fromDate}' AND '${toDate}'`);
+            conditions.push(`Date BETWEEN '${fromDate}' AND '${toDate}'`);
+          }
+
+          if (savedFilters.attmonth) {
+            conditions.push(`BillableMonth='${savedFilters.attmonth}'`);
+          }
+
+          if (savedFilters.attyear) {
+            conditions.push(`BillableYear='${savedFilters.attyear}'`);
+          }
+
+          if (savedFilters.Employee?.length > 0) {
+            const EmpIds = savedFilters.Employee.map(
+              (e) => `'${e.RecordID}'`,
+            ).join(",");
+            conditions.push(`EmployeeID IN (${EmpIds})`);
+          }
+
+          if (savedFilters.project?.length > 0) {
+            const projIds = savedFilters.project
+              .map((p) => `'${p.RecordID}'`)
+              .join(",");
+            conditions.push(`ProjectID IN (${projIds})`);
+          }
+
+          conditions.push(`CompanyID ='${CompId}'`);
+
+          filter = conditions.join(" AND ");
+        } else {
+          const MangerEmpID =
+            JSON.parse(sessionStorage.getItem("MangerEmpID")) || [];
+
+          if (!MangerEmpID.length) return;
+
+          // const fromDate = formatToDMY(defaultFromDate);
+          // const toDate = formatToDMY(defaultToDate);
+
+          filter = `EmployeeID IN (${MangerEmpID.join(",")}, '${empID}') AND Date BETWEEN '${defaultFromDate}'AND '${defaultToDate}'AND BillableMonth ='${currentMonthNumber}'AND BillableYear='${currentYear}'AND CompanyID ='${CompId}'`;
         }
-
-        if (savedFilters.attmonth) {
-          conditions.push(`BillableMonth='${savedFilters.attmonth}'`);
-        }
-
-        if (savedFilters.attyear) {
-          conditions.push(`BillableYear='${savedFilters.attyear}'`);
-        }
-
-        if (savedFilters.Employee?.length > 0) {
-          const EmpIds = savedFilters.Employee.map(
-            (e) => `'${e.RecordID}'`,
-          ).join(",");
-          conditions.push(`EmployeeID IN (${EmpIds})`);
-        }
-
-        if (savedFilters.project?.length > 0) {
-          const projIds = savedFilters.project
-            .map((p) => `'${p.RecordID}'`)
-            .join(",");
-          conditions.push(`ProjectID IN (${projIds})`);
-        }
-
-        conditions.push(`CompanyID ='${CompId}'`);
-
-        filter = conditions.join(" AND ");
-      } else {
-        const MangerEmpID =
-          JSON.parse(sessionStorage.getItem("MangerEmpID")) || [];
-
-        if (!MangerEmpID.length) return;
-
-        // const fromDate = formatToDMY(defaultFromDate);
-        // const toDate = formatToDMY(defaultToDate);
-
-        filter = `EmployeeID IN (${MangerEmpID.join(",")}, '${empID}') AND Date BETWEEN '${defaultFromDate}'AND '${defaultToDate}'AND BillableMonth ='${currentMonthNumber}'AND BillableYear='${currentYear}'AND CompanyID ='${CompId}'`;
       }
-    }
       else if (AccessID === "TR321") {
         console.log("🔍 TR321 DEBUG - filter:", filter);
         console.log(
@@ -1646,7 +1714,9 @@ const defaultToDate = format(today);
                   );
                 },
               };
-            } else if (AccessID == "TR275") {
+            }
+
+            else if (AccessID == "TR275") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -1714,24 +1784,43 @@ const defaultToDate = format(today);
 
                   return (
                     <Box>
-                      {isSeedEditable && (
-                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
-                          <Tooltip title="Edit">
-                            <IconButton color="info" size="small">
-                              <ModeEditOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      )}
-                      {!isSeedEditable && (
-                        <Link to={`./EditProject/${params.row.RecordID}/V`}>
-                          <Tooltip title="View">
-                            <IconButton color="info" size="small">
-                              <VisibilityIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      )}
+                      {/* { && ( */}
+                      <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      {/* )} */}
+                      {/* {is003Subscription &&( */}
+                      <Link
+                        to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.RecordID}`}
+                        state={{
+                          // MilestoneID: params.row.RecordID,
+                          projectID: params.row.RecordID,
+                          MilestoneName: params.row.Name,
+                          projectName: params.row.Project,
+                          BreadCrumb1: params.row.Project,
+                        }}
+                      >
+                        <Tooltip title="Time Table">
+                          <IconButton color="info" size="small">
+                            <DatasetLinkedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      {/* )} */}
+
+                      {/* {!isSeedEditable ( */}
+                      <Link to={`./EditProject/${params.row.RecordID}/V`}>
+                        <Tooltip title="View">
+                          <IconButton color="info" size="small">
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      {/* )} */}
                       {/* <Tooltip title="Download PDF">
                       <IconButton
                         color="info"
@@ -1800,7 +1889,8 @@ const defaultToDate = format(today);
                   );
                 },
               };
-            } else if (AccessID == "TR205") {
+            }
+            else if (AccessID == "TR205") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -1816,6 +1906,63 @@ const defaultToDate = format(today);
                     <Box>
                       <Link
                         to={`./EditSalary%20Component/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } 
+             else if (AccessID == "TR378") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        state={{AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Standard/Activities">
+                          <IconButton color="info" size="small">
+                            <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } 
+            else if (AccessID == "TR265") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditShift/${params.row.RecordID}/E`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -1967,7 +2114,7 @@ const defaultToDate = format(today);
                 },
               };
             }
-             else if (AccessID == "TR370") {
+            else if (AccessID == "TR370") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -1981,24 +2128,44 @@ const defaultToDate = format(today);
                 renderCell: (params) => {
                   return (
                     <Box>
-                      <Link
-                        // to={`./Edit${screenName}/${params.row.RecordID}/E`}                      
-                        // to={`/Apps/SecondarylistView/DMEEnquiry/TR371/BFWEnquiry/${params.row.CompanyID}/${params.row.RecordID}`}
-                        to={`/Apps/Secondarylistview/TR371/BFWEnquiry/${params.row.RecordID}`}
-                        state={{
-                          Description: params.row.Description,
-                          // Project: params.row.Project,
-                          // ProjectID: params.row.ProjectID,
-                        }}
-                      >
-                        <Tooltip title="Enquiry Details">
-                          <IconButton color="info" size="small">
-                            <ManageAccountsIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                      {params.row.Type === "WA" ? (
+                        <Link
+                          // to={`./Edit${screenName}/${params.row.RecordID}/E`}                      
+                          // to={`/Apps/SecondarylistView/DMEEnquiry/TR371/BFWEnquiry/${params.row.CompanyID}/${params.row.RecordID}`}
+                          to={`/Apps/Secondarylistview/TR372/WhatsAppEnquiry/${params.row.RecordID}/WA`}
+                          state={{
+                            Description: params.row.Description,
+                            // Project: params.row.Project,
+                            // ProjectID: params.row.ProjectID,
+                          }}
+                        >
+                          <Tooltip title="Enquiry Details">
+                            <IconButton color="info" size="small">
+                              <ManageAccountsIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        <Link
+                          // to={`./Edit${screenName}/${params.row.RecordID}/E`}                      
+                          // to={`/Apps/SecondarylistView/DMEEnquiry/TR371/BFWEnquiry/${params.row.CompanyID}/${params.row.RecordID}`}
+                          to={`/Apps/Secondarylistview/TR371/BFWEnquiry/${params.row.RecordID}/${params.row.Type}`}
+                          state={{
+                            Description: params.row.Description,
+                            // Project: params.row.Project,
+                            // ProjectID: params.row.ProjectID,
+                          }}
+                        >
+                          <Tooltip title="Enquiry Details">
+                            <IconButton color="info" size="small">
+                              <ManageAccountsIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+
+                      )}
                     </Box>
-                  );
+                  )
                 },
               };
             }
@@ -2045,7 +2212,7 @@ const defaultToDate = format(today);
                           <span>
                             <PDFDownloadLink
                               document={
-                               
+
                                 <PaymentReceipt
                                   data={{
 
@@ -2214,13 +2381,14 @@ const defaultToDate = format(today);
               AccessID == "TR333" ||
               AccessID == "TR317" ||
               AccessID == "TR318" ||
-              AccessID == "TR371" ||
+              // AccessID == "TR371" ||
               AccessID == "TR310" ||
               AccessID == "TR323" ||
               AccessID == "TR324" ||
               AccessID == "TR328" ||
               AccessID == "TR361" ||
               AccessID == "TR027" ||
+              AccessID == "TR372" || //WHATSAPP ENQUIRY
               AccessID == "TR319"
             ) {
               obj = {
@@ -2353,7 +2521,22 @@ const defaultToDate = format(today);
                   );
                 },
               };
-            } else if (AccessID == "TR213") {
+            }
+            else if (AccessID == "TR371" || AccessID == "TR372") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                hide: true,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+              };
+            }
+            else if (AccessID == "TR213") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -4315,6 +4498,9 @@ const defaultToDate = format(today);
                         AccessID !== "TR091" &&
                         AccessID !== "TR151" &&
                         AccessID !== "TR128" &&
+                        AccessID !== "TR374" &&
+                        AccessID !== "TR376" &&
+                        AccessID !== "TR368" &&
                         AccessID !== "TR052" ? (
                         <Link
                           to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -4337,54 +4523,62 @@ const defaultToDate = format(today);
                                   LocationName: params.row.LocationName,
                                   CompanyName: params.row.CompanyName,
                                 }
-                                : AccessID === "TR257"
+                                : AccessID === "TR375"
                                   ? {
-                                    EmpName: params.row.Name,
+                                    AcademicYear: params.row.AcademicYear,
                                   }
-                                  : AccessID === "TR132"
+                                  : AccessID === "TR377"
                                     ? {
-                                      proName: params.row.ProjectName,
-                                      Date: params.row.Date,
-                                      EmpName: params.row.EmployeeName,
-                                      Locname: params.row.LocationName,
+                                      SlotGroupName: params.row.SlotGroup,
                                     }
-                                    : AccessID === "TR123"
+                                    : AccessID === "TR257"
                                       ? {
                                         EmpName: params.row.Name,
                                       }
-                                      : AccessID === "TR134"
+                                      : AccessID === "TR132"
                                         ? {
                                           proName: params.row.ProjectName,
-                                          EmpName: params.row.EmployeeName,
                                           Date: params.row.Date,
+                                          EmpName: params.row.EmployeeName,
                                           Locname: params.row.LocationName,
-                                          EmployeeID: params.row.EmployeesID,
-                                          checkinID: params.row.CheckinID,
                                         }
-                                        : AccessID === "TR124"
+                                        : AccessID === "TR123"
                                           ? {
-                                            EmpName: params.row.EmployeeName,
-                                            checkinID: params.row.CheckinID,
+                                            EmpName: params.row.Name,
                                           }
-                                          : // : AccessID === "TR127"
-                                          // ? {
-                                          //     GateName: params.row.Name,
-                                          //     LocationName: params.row.LocationName,
-                                          //     CompanyName: params.row.CompanyName,
-                                          //   }
-                                          // : AccessID === "TR129"
-                                          // ? {
-                                          //     bin: params.row.Name,
-                                          //     LocationName: params.row.LocationName,
-                                          //     CompanyName: params.row.CompanyName,
-                                          //   }
-                                          {
-                                            CustomerID:
-                                              params.row.CustomerRecordID,
-                                            ProductID:
-                                              params.row.ProductRecordID,
-                                            BomID: params.row.BomRecordID,
-                                          }
+                                          : AccessID === "TR134"
+                                            ? {
+                                              proName: params.row.ProjectName,
+                                              EmpName: params.row.EmployeeName,
+                                              Date: params.row.Date,
+                                              Locname: params.row.LocationName,
+                                              EmployeeID: params.row.EmployeesID,
+                                              checkinID: params.row.CheckinID,
+                                            }
+                                            : AccessID === "TR124"
+                                              ? {
+                                                EmpName: params.row.EmployeeName,
+                                                checkinID: params.row.CheckinID,
+                                              }
+                                              : // : AccessID === "TR127"
+                                              // ? {
+                                              //     GateName: params.row.Name,
+                                              //     LocationName: params.row.LocationName,
+                                              //     CompanyName: params.row.CompanyName,
+                                              //   }
+                                              // : AccessID === "TR129"
+                                              // ? {
+                                              //     bin: params.row.Name,
+                                              //     LocationName: params.row.LocationName,
+                                              //     CompanyName: params.row.CompanyName,
+                                              //   }
+                                              {
+                                                CustomerID:
+                                                  params.row.CustomerRecordID,
+                                                ProductID:
+                                                  params.row.ProductRecordID,
+                                                BomID: params.row.BomRecordID,
+                                              }
                           }
                         >
                           <Tooltip title="Edit">
@@ -4735,18 +4929,154 @@ const defaultToDate = format(today);
                               </Tooltip>
                             </Link>
                           </>
-                          {/* <Link
-                          to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
-                        >
-                          <Tooltip title="Bin">
-                            <IconButton color="info" size="small">
-                              <ListAltOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link> */}
+
                         </Box>
                       ) : (
                         false
+                      )}
+                      {AccessID == "TR374" ? (
+                        <Box>
+                          <>
+                            <Link to={`./EditAcademicyear/${params.row.RecordID}/E`}
+                              state={{
+                                AcademicYear: params.row.AcademicYear,
+                              }}
+                            >
+                              <Tooltip title="Edit">
+                                <IconButton color="info" size="small">
+                                  <ModeEditOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                            <Link
+                              to={`/Apps/Secondarylistview/TR375/Terms/${params.row.RecordID}`}
+                              state={{ AcademicYear: params.row.AcademicYear, BreadCrumb2: screenName }}
+                            >
+                              <Tooltip title="Terms">
+                                <IconButton color="info" size="small">
+                                  <EventIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          </>
+
+                        </Box>
+                      ) : (
+                        false
+                      )}
+                      {AccessID == "TR376" ? (
+                        <Box>
+                          <>
+                            <Link to={`./EditSlot%20Group/${params.row.RecordID}/E`}
+                              state={{
+                                SlotGroupName: params.row.Name,
+                              }}
+                            >
+                              <Tooltip title="Edit">
+                                <IconButton color="info" size="small">
+                                  <ModeEditOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                            <Link
+                              to={`/Apps/Secondarylistview/TR377/Slots/${params.row.RecordID}`}
+                              state={{ SlotGroupName: params.row.Name, BreadCrumb2: screenName }}
+                            >
+                              <Tooltip title="Slot">
+                                <IconButton color="info" size="small">
+                                  <ScheduleIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          </>
+
+                        </Box>
+                      ) : (
+                        false
+                      )}
+                      {AccessID === "TR368" && (
+                        <>
+                          {params.row.IsProcess === "N" ? (
+                            <Link
+                              to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                              state={{
+                                MilestoneID: params.row.Section,
+                                MilestoneName: params.row.MilestoneDesc,
+                                projectID: params.row.StandardID,
+                                projectName: params.row.ProjectDesc,
+                                BreadCrumb2: params.row.Term,
+                                BreadCrumb3: params.row.Description
+                              }}
+                            >
+                              <Tooltip title="Edit">
+                                <IconButton color="info" size="small">
+                                  <ModeEditOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          ) : (
+                            <Link
+                              to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                              state={{
+                                MilestoneID: params.row.Section,
+                                MilestoneName: params.row.MilestoneDesc,
+                                projectID: params.row.StandardID,
+                                projectName: params.row.ProjectDesc,
+                                BreadCrumb2: params.row.Term,
+                                BreadCrumb3: params.row.Description
+                              }}
+                            >
+                              <Tooltip title="View">
+                                <IconButton color="info" size="small">
+                                  <VisibilityIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          )}
+                          <Link
+                            to={`./ProjectTimeTable`}
+                            state={{
+                              MilestoneID: params.row.Section,
+                              MilestoneName: params.row.MilestoneDesc,
+                              TermsID: params.row.TermID,
+                              projectID: params.row.StandardID,
+                              projectName: params.row.ProjectDesc,
+                              Description: params.row.Description,
+                              TermName: params.row.TermName
+                            }}
+                          >
+                            <Tooltip title="Timetable">
+                              <IconButton color="info" size="small">
+                                <CalendarMonthOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+
+                          {params.row.IsProcess === "N" ? (
+                            <Tooltip title="Process">
+                              <IconButton
+                                color="error"
+                                size="small"
+                                onClick={() => handleTermsProcess(params.row)}
+                              >
+                                <LockResetOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+
+                          ) : (
+                            <Tooltip title="Process">
+                              <IconButton
+                                color="error"
+                                size="small"
+                                sx={{
+                                  opacity: 0.5
+                                }}
+                              // onClick={() =>handleTermsProcess(params.row)}
+                              >
+                                <LockResetOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>)}
+                        </>
                       )}
 
                       {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
@@ -6933,9 +7263,57 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PeopleAltIcon />
               </IconButton>
             </Tooltip>
+            {params.row.Description == "Teaching Staff" && (
+              <Tooltip title="Teacher Occupancy">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `/Apps/TeacherOccupancy/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Description,
+                          Classification: params.row.Description,
+                          CompanyID: params.row.CompanyID,
+                        },
+                      },
+                    )
+                  }
+                >
+                  <SensorOccupiedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
 
+        {/* {accessID === "TR378" && (
+          <>
+            <Tooltip title="Standard/Activities">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/SecondarylistView/Academic Year/TR275/Project/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.AcademicYear,
+                        Classification: params.row.Description,
+                      },
+                    },
+                  )
+                }
+              >
+                <SourceOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+
+          </>
+        )} */}
         {accessID === "TR316" && (
           <>
             <Tooltip title="Edit">
@@ -7068,25 +7446,26 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
-         {accessID === "TR371" && (           
-            <Tooltip title="Detail">
-              <IconButton
-                color="info"
-                size="small"
-                onClick={() =>
-                  // navigate(`/Apps/ItemGroup/ItemCategory/Items`, {
+        {accessID === "TR372" && (
+          <Tooltip title="Detail">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                // navigate(`/Apps/ItemGroup/ItemCategory/Items`, {
 
-                  navigate(`./Detail/TR372/${params.row.RecordID}`, {
-                    state: {
-                      ...state,
-                      BreadCrumb2: params.row.ItemCategory,
-                    },
-                  })
-                }
-              >
-                <GppMaybeOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+                navigate(`./Detail/TR373/${params.row.RecordID}`, {
+                  state: {
+                    ...state,
+                    BreadCrumb2: params.row.ItemCategory,
+                    MobileNo: params.row.MobileNo
+                  },
+                })
+              }
+            >
+              <GppMaybeOutlinedIcon />
+            </IconButton>
+          </Tooltip>
         )}
 
         {accessID === "TR319" && (
@@ -7383,8 +7762,25 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               <IconButton
                 color="info"
                 size="small"
-                onClick={() =>
-                  navigate(`./EditPersonnel/${params.row.RecordID}/E`, {
+                // onClick={() =>
+                //   navigate(`./EditPersonnel/${params.row.RecordID}/E`, {
+                //     state: {
+                //       ...state,
+                //       screenName: screenName,
+                //       EmpName: params.row.Name,
+                //       Employee: params.row.Employee,
+                //       BreadCrumb1: params.row.Description,
+                //       Classification: params.row.Classification,
+                //     },
+                //   })
+                // }
+                onClick={() => {
+                  const path =
+                    screenName === "Payroll Configuration"
+                      ? `./EditPayroll Configuration/${params.row.RecordID}/E`
+                      : `./EditPersonnel/${params.row.RecordID}/E`;
+
+                  navigate(path, {
                     state: {
                       ...state,
                       screenName: screenName,
@@ -7393,8 +7789,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       BreadCrumb1: params.row.Description,
                       Classification: params.row.Classification,
                     },
-                  })
-                }
+                  });
+                }}
               >
                 <ModeEditOutlinedIcon />
               </IconButton>

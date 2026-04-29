@@ -426,7 +426,8 @@ const EditSatuaryComponent = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )} 
+                  { mode == "E" &&
                     <Button
                       color="error"
                       variant="contained"
@@ -435,16 +436,7 @@ const EditSatuaryComponent = () => {
                       }}
                     >
                       Delete
-                    </Button>
-                  ) : (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Delete
-                    </Button>
-                  )}
+                    </Button>}
                   <Button
                     color="warning"
                     variant="contained"

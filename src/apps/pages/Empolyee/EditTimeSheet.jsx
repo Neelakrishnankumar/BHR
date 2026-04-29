@@ -461,7 +461,6 @@ const EditTimeSheet = () => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
 
-
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const AttInitialvalues = {
