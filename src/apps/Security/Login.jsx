@@ -720,13 +720,14 @@ const Login = () => {
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyGraceTime = data.payload.CompanyGraceTime
       var CompanySessionTimeOut = data.payload.CompanySessionTimeOut
+      var ClassificationData = data.payload.ClassificationData
       var CompanyLogo = data.payload.CompanyLogo
       var CompanyHeader = data.payload.CompanyHeader
       var CompanyFooter = data.payload.CompanyFooter
       var firstLogin = data.payload.firstLogin
       var CompanySignature = data.payload.CompanySignature
       //  var firstLogin = "Y";
-      console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
+      console.log(ClassificationData, "--login screen ClassificationData");
 
 
       sessionStorage.setItem("Expiryin", Expiryin);
@@ -751,6 +752,7 @@ const Login = () => {
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
       sessionStorage.setItem("CompanyGraceTime", CompanyGraceTime)
       sessionStorage.setItem("CompanySessionTimeOut", CompanySessionTimeOut)
+      sessionStorage.setItem("ClassificationData", JSON.stringify(data.payload.ClassificationData));
       sessionStorage.setItem("CompanyLogo", CompanyLogo)
       sessionStorage.setItem("CompanyHeader", CompanyHeader)
       sessionStorage.setItem("CompanyFooter", CompanyFooter)
@@ -761,7 +763,7 @@ const Login = () => {
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
 
       navigate("/Apps/HR");
-            console.log("Groupaccess:", Groupaccess);
+      console.log("Groupaccess:", Groupaccess);
 
       console.log("firstLogin:", firstLogin);
       if (firstLogin == "Y") {

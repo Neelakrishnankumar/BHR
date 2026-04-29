@@ -1509,11 +1509,11 @@ function App() {
                     
                   />
                    <Route
-                  path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTimeTable/:id/:Mode"
+                  path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                   element={<EditTimetablev1 />}
                   />
                   <Route
-                  path="/Secondarylistview/:accessID/:screenName/:filtertype/ProjectTimeTable"
+                  path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"
                   element={<ProjectTimeTable />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}

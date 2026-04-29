@@ -1696,7 +1696,7 @@ const Configuration = () => {
     return (
         <React.Fragment>
 
-            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -1735,8 +1735,8 @@ const Configuration = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper> */}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            </Paper>
+            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box
                         display="flex"
@@ -1800,7 +1800,7 @@ const Configuration = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper>
+            </Paper> */}
             {show == "0" ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
