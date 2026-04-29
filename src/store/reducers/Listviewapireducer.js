@@ -6241,7 +6241,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               );
             }}
           >
-            <Tooltip title="Assessment Category">
+            <Tooltip title="Category">
+            {/* <Tooltip title={params.row.Code === "SK" ? "Assessment Category" : params.row.Code === "AP" ? "Appraisal Category" : params.row.Code === "CL" ? "Compliance Category" : params.row.Code === "SV" ? "Survey Category" : params.row.Code === "FB" ? "Feedback Category" : "Assessment Category"}> */}
               <CategoryOutlinedIcon />
             </Tooltip>
           </IconButton>

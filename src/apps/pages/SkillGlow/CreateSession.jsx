@@ -319,7 +319,18 @@ const CreateSession = () => {
                       );
                     }}
                   >
-                    List of Assessment ({state.BreadCrumb3})
+                    {params.parentID3 === "AP" ?
+                      "List of Appraisal" :
+                      params.parentID3 === "CL" ?
+                        "List of Compliance" :
+                        params.parentID3 === "SV" ?
+                          "List of Survey" :
+                          params.parentID3 === "FB" ?
+                            "List of Feedback" :
+                            "List of Assessment"
+                    }
+                    {/* List of Assessment */}
+                     ({state.BreadCrumb3})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -333,7 +344,7 @@ const CreateSession = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    //onClick={() => navigate(-1)}
+                  //onClick={() => navigate(-1)}
                   >
                     {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
                   </Typography>
@@ -508,13 +519,13 @@ const CreateSession = () => {
                       select
                       error={!!touched.ContentType && !!errors.ContentType}
                       helperText={touched.ContentType && errors.ContentType}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
+                    // MenuProps={{
+                    //   PaperProps: {
+                    //     sx: {
+                    //       mt: 1, // Add space so the top border doesn’t get cut
+                    //     },
+                    //   },
+                    // }}
                     >
                       <MenuItem value="Pdf">Pdf</MenuItem>
                       <MenuItem value="Ppt">Ppt</MenuItem>
@@ -563,7 +574,7 @@ const CreateSession = () => {
                           onChange={handleChange}
                           disabled={mode === "V"}
 
-                          //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                         />
                       }
                       label="Disable"
@@ -617,10 +628,10 @@ const CreateSession = () => {
                         </Tooltip>
                         {(values.ContentType === "Pdf" ||
                           values.ContentType === "Ppt") && (
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        )}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          )}
                         {/* Show Yup validation error here */}
                         {touched.AttachmentName && errors.AttachmentName && (
                           <div

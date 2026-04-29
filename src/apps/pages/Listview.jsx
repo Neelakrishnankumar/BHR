@@ -601,7 +601,9 @@ const Listview = () => {
                     ? screenName1
                     : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
                       ? screenName1
-                      : screenName}</Typography>
+                      // : screenName}</Typography>
+                      // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
+                      : screenName ?? screenName1}</Typography> 
 
         {/* RIGHT SIDE */}
         <Box
@@ -4762,7 +4764,8 @@ const Listview = () => {
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<CategoryOutlinedIcon color="primary" />}
-              label="Assessment Category"
+              // label="Assessment Category"
+              label="Category"
               variant="outlined"
             />
           </Box>

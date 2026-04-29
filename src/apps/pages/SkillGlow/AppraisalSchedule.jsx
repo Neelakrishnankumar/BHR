@@ -90,6 +90,8 @@ const AppraisalSchedule = () => {
   const parentID2 = params.parentID2;
 
   const CompanyID = sessionStorage.getItem("compID");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
   const state = location.state || {};
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -268,7 +270,8 @@ const AppraisalSchedule = () => {
     },
     {
       field: "EmployeeName",
-      headerName: "Employee Name",
+      // headerName: "Employee Name",
+      headerName: is003Subscription ? "Personnel Name" : "Employee Name",
       width: 200,
       headerAlign: "center",
     },
@@ -666,6 +669,13 @@ const AppraisalSchedule = () => {
                       }}
                       name="EmpName"
                       label="Employee"
+                      label={
+                            is003Subscription ? (
+                              "Personnel"
+                            ) : (
+                              "Employee"
+                            )
+                          }
                       //  label={
                       //   <span>
                       //     Employee{" "}
