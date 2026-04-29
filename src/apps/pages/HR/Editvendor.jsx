@@ -115,6 +115,11 @@ const Editvendor = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const LoginID = sessionStorage.getItem("loginrecordID");
+   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const [panImage, setPanImage] = useState("");
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
@@ -545,6 +550,7 @@ const Editvendor = () => {
       dispatch(
         fetchExplorelitview(
           "TR364",
+          Subscriptionlastthree,
           "Party Documents",
           // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_HVRECID))`,
@@ -1464,7 +1470,7 @@ const Editvendor = () => {
                     }}
                     error={!!touched.locality && !!errors.locality}
                     helperText={touched.locality && errors.locality}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                   />
                   {/* <TextField
                     name="Pancardnumber"
@@ -1596,7 +1602,7 @@ const Editvendor = () => {
                     }}
                     // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
                     // helperText={touched.ReferenceBy && errors.ReferenceBy}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":""}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                   />
 
                   {/* panimage */}
@@ -3241,7 +3247,7 @@ const Editvendor = () => {
                         error={!!touched.Product && !!errors.Product}
                         helperText={touched.Product && errors.Product}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                       />
                       <TextField
                         name="defaultDelivery"

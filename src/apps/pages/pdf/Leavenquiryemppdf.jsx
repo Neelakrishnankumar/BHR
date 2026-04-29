@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#EEE",
         textAlign: "center",
     }
-,
+    ,
     headerCMlDesc: {
         flex: 1,
         borderRightWidth: 1,
@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     cMlstatus: {
-         width: 70,
+        width: 70,
         // borderRightWidth: 1,
         borderRightColor: "#000",
         padding: 5,
         textAlign: "center",
     }
-,
+    ,
     cMlDesc: {
         flex: 1,
         borderRightWidth: 1,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
         textAlign: "right",
     },
     cellmedi: {
-flex: 1,
+        flex: 1,
         borderRightWidth: 1,
         // borderBottomWidth: 1,
         padding: 4,
@@ -302,8 +302,8 @@ flex: 1,
     },
 
     noBottomBorder: {
-  borderBottomWidth: 0,
-},
+        borderBottomWidth: 0,
+    },
 });
 
 
@@ -411,63 +411,97 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
     //     return summary;
     // }, [data, isPermission]);
 
-const permissionSummaryNew = React.useMemo(() => {
-    if (!isPermission || !data.length) return null;
+    const permissionSummaryNew = React.useMemo(() => {
+        if (!isPermission || !data.length) return null;
 
-    const summary = {
-        Applied: { days: new Set(), minutes: 0 },
-        Approved: { days: new Set(), minutes: 0 },
-        Query: { days: new Set(), minutes: 0 },
-        Rejected: { days: new Set(), minutes: 0 },
-    };
+        const summary = {
+            Applied: { days: new Set(), minutes: 0 },
+            Approved: { days: new Set(), minutes: 0 },
+            Query: { days: new Set(), minutes: 0 },
+            Rejected: { days: new Set(), minutes: 0 },
+        };
 
-    data.forEach((item) => {
-        const status = item.Status;
+        data.forEach((item) => {
+            const status = item.Status;
 
-        if (summary[status]) {
-            summary[status].days.add(item.DisplayPermissionDate);
+            if (summary[status]) {
+                summary[status].days.add(item.DisplayPermissionDate);
 
-            // Convert HH.MM to total minutes
-            const parts = item.NumofHrsday?.toString().split(".") || [];
-            const hours = Number(parts[0] || 0);
-            const mins = Number(parts[1] || 0);
+                // Convert HH.MM to total minutes
+                const parts = item.NumofHrsday?.toString().split(".") || [];
+                const hours = Number(parts[0] || 0);
+                const mins = Number(parts[1] || 0);
 
-            summary[status].minutes += (hours * 60) + mins;
-        }
-    });
+                summary[status].minutes += (hours * 60) + mins;
+            }
+        });
 
-    // Convert minutes back to HH.MM format
-    Object.keys(summary).forEach(status => {
-        const totalMinutes = summary[status].minutes;
+        // Convert minutes back to HH.MM format
+        Object.keys(summary).forEach(status => {
+            const totalMinutes = summary[status].minutes;
 
-        const hours = Math.floor(totalMinutes / 60);
-        const mins = totalMinutes % 60;
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
 
-        summary[status].hours =
-            `${hours}:${mins.toString().padStart(2, "0")}`;
+            summary[status].hours =
+                `${hours}:${mins.toString().padStart(2, "0")}`;
 
-        summary[status].days = summary[status].days.size;
-    });
+            summary[status].days = summary[status].days.size;
+        });
 
-    return summary;
-}, [data, isPermission]);
+        return summary;
+    }, [data, isPermission]);
 
-//Leave Summary
+    // const leaveTypeMap = {};
 
-    const totalLeave = { CL: 0, G: 0, M: 0 };
-    const takenLeave = { CL: 0, G: 0, M: 0 };
-    const balancMeave = { CL: 0, G: 0, M: 0 };
+    // data.forEach((row) => {
+    //     if (row.Category && row.LeaveName) {
+    //         leaveTypeMap[row.Category] = row.LeaveName.trim();
+    //     }
+    // });
+
+    //Leave Summary
+
+    // COMMENTED AS ON 24/04/2026 - AS LEAVE SUMMARY IS HARDCODED -- BY MANOJ
+    // const totalLeave = { CL: 0, G: 0, M: 0 };
+    // const takenLeave = { CL: 0, G: 0, M: 0 };
+    // const balancMeave = { CL: 0, G: 0, M: 0 };
+
+    // data.forEach((row) => {
+    //     const type = row.Category; // CL / G / M
+    //     if (!totalLeave.hasOwnProperty(type)) return;
+
+    //     //  take total leave from API (same for all rows of same type)
+    //     totalLeave[type] = Number(row.TotalLeaveDays || 0);
+
+    //     //  count approved rows as taken leave
+    //     if (row.Status === "Approved") {
+    //         takenLeave[type] += 1;
+    //     }
+    // });
+
+    // DYNAMIC MAPPING OF LEAVE TYPES - WORKING AS ON 24/04/2026
+    const totalLeave = {};
+    const takenLeave = {};
+    const balancMeave = {};
+    const leaveTypeMap = {};
 
     data.forEach((row) => {
-        const type = row.Category; // CL / G / M
-        if (!totalLeave.hasOwnProperty(type)) return;
+        const type = row.Category;
 
-        //  take total leave from API (same for all rows of same type)
+        if (!type) return;
+
+        // map leave name
+        leaveTypeMap[type] = row.LeaveName?.trim();
+
+        // total leave
         totalLeave[type] = Number(row.TotalLeaveDays || 0);
 
-        //  count approved rows as taken leave
+        // taken leave (Approved count)
         if (row.Status === "Approved") {
-            takenLeave[type] += 1;
+            takenLeave[type] = (takenLeave[type] || 0) + 1;
+        } else {
+            takenLeave[type] = takenLeave[type] || 0;
         }
     });
 
@@ -477,15 +511,23 @@ const permissionSummaryNew = React.useMemo(() => {
     });
 
     //  totals
-    const totalLeaveDays =
-        totalLeave.CL + totalLeave.G + totalLeave.M;
+    // const totalLeaveDays =
+    //     totalLeave.CL + totalLeave.G + totalLeave.M;
 
-    const takenLeaveDays =
-        takenLeave.CL + takenLeave.G + takenLeave.M;
+    // const takenLeaveDays =
+    //     takenLeave.CL + takenLeave.G + takenLeave.M;
 
-    const balancMeaveDays =
-        balancMeave.CL + balancMeave.G + balancMeave.M;
+    // const balancMeaveDays =
+    //     balancMeave.CL + balancMeave.G + balancMeave.M;
 
+    const totalLeaveDays = Object.values(totalLeave)
+        .reduce((sum, val) => sum + Number(val || 0), 0);
+
+    const takenLeaveDays = Object.values(takenLeave)
+        .reduce((sum, val) => sum + Number(val || 0), 0);
+
+    const balancMeaveDays = Object.values(balancMeave)
+        .reduce((sum, val) => sum + Number(val || 0), 0);
     const monthNames = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -541,13 +583,20 @@ const permissionSummaryNew = React.useMemo(() => {
 
                         {pageData.map((row, rowIndex) => {
                             const isLast = rowIndex === pageData.length - 1;
-
+                            const getSerialNumber = (pageIndex, rowIndex) => {
+                                if (pageIndex === 0) {
+                                    return rowIndex + 1;
+                                }
+                                return 18 + (pageIndex - 1) * 24 + rowIndex + 1;
+                            };
                             return (
                                 <View
                                     key={rowIndex}
                                     style={isLast ? styles.tableRowLast : styles.tableRow}
                                 >
-                                    <Text style={styles.cMl1}>{rowIndex + 1}</Text>
+                                    {/* COMMENTED AS ON 24/04/2026 - AS SL# IS RENDER IS NO PROPER IN PAGE 2 SL.NO STARTS WITH 1 INSTEAD OF CONTINUING -- BY MANOJ */}
+                                    {/* <Text style={styles.cMl1}>{rowIndex + 1}</Text> */}
+                                    <Text style={styles.cMl1}>{getSerialNumber(pageIndex, rowIndex)}</Text>
                                     {isPermission ? (
                                         <>
                                             <Text style={styles.cMl}>{row.DisplayPermissionDate}</Text>
@@ -599,77 +648,77 @@ const permissionSummaryNew = React.useMemo(() => {
                     )} */}
 
                     {/* NEW */}
-                  {isPermission && 
- permissionSummaryNew && 
- pageIndex === pages.length - 1 && (
-    <View style={{ marginTop: 12 }}>
+                    {isPermission &&
+                        permissionSummaryNew &&
+                        pageIndex === pages.length - 1 && (
+                            <View style={{ marginTop: 12 }}>
 
-        <Text
-            style={{
-                fontSize: 10,
-                fontWeight: "bold",
-                marginBottom: 4
-            }}
-        >
-            Permission Summary
-        </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 10,
+                                        fontWeight: "bold",
+                                        marginBottom: 4
+                                    }}
+                                >
+                                    Permission Summary
+                                </Text>
 
-        <View style={styles.table}>
+                                <View style={styles.table}>
 
-            {/* Header Row */}
-            <View style={styles.row}>
-                <Text style={styles.headerCell}>Status</Text>
-                <Text style={styles.headerCell}>No of Days</Text>
-                <Text style={[styles.headerCell, styles.lastCell]}>
-                    No of Hours
-                </Text>
-            </View>
+                                    {/* Header Row */}
+                                    <View style={styles.row}>
+                                        <Text style={styles.headerCell}>Status</Text>
+                                        <Text style={styles.headerCell}>No of Days</Text>
+                                        <Text style={[styles.headerCell, styles.lastCell]}>
+                                            No of Hours
+                                        </Text>
+                                    </View>
 
-            {/* Data Rows */}
-            {Object.entries(permissionSummaryNew).map(
-                ([status, values], index, arr) => {
+                                    {/* Data Rows */}
+                                    {Object.entries(permissionSummaryNew).map(
+                                        ([status, values], index, arr) => {
 
-                    const isLast = index === arr.length - 1;
+                                            const isLast = index === arr.length - 1;
 
-                    return (
-                        <View style={styles.row} key={status}>
-                            
-                            <Text
-                                style={[
-                                    styles.cell,
-                                    { textAlign: "left" },
-                                    isLast && styles.noBottomBorder
-                                ]}
-                            >
-                                {status}
-                            </Text>
+                                            return (
+                                                <View style={styles.row} key={status}>
 
-                            <Text
-                                style={[
-                                    styles.cell,
-                                    isLast && styles.noBottomBorder
-                                ]}
-                            >
-                                {values.days}
-                            </Text>
+                                                    <Text
+                                                        style={[
+                                                            styles.cell,
+                                                            { textAlign: "left" },
+                                                            isLast && styles.noBottomBorder
+                                                        ]}
+                                                    >
+                                                        {status}
+                                                    </Text>
 
-                            <Text
-                                style={[
-                                    styles.cell,
-                                    styles.lastCell,
-                                    isLast && styles.noBottomBorder
-                                ]}
-                            >
-                                {values.hours}
-                            </Text>
+                                                    <Text
+                                                        style={[
+                                                            styles.cell,
+                                                            isLast && styles.noBottomBorder
+                                                        ]}
+                                                    >
+                                                        {values.days}
+                                                    </Text>
 
-                        </View>
-                    );
-                }
-            )}
-        </View>
-    </View>
-)}
+                                                    <Text
+                                                        style={[
+                                                            styles.cell,
+                                                            styles.lastCell,
+                                                            isLast && styles.noBottomBorder
+                                                        ]}
+                                                    >
+                                                        {values.hours}
+                                                    </Text>
+
+                                                </View>
+                                            );
+                                        }
+                                    )}
+                                </View>
+                            </View>
+                        )}
 
                     {/* {isPermission && permissionSummary && (
                         <View style={{ marginTop: 12 }}>
@@ -714,34 +763,79 @@ const permissionSummaryNew = React.useMemo(() => {
                                 </View>
 
                                 {/* CL */}
-                                <View style={styles.row}>
+                                {/* <View style={styles.row}>
                                     <Text style={[styles.cell, { textAlign: "left" }]}>Casual Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.CL}</Text>
                                     <Text style={styles.cell}>{takenLeave.CL}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
                                         {balancMeave.CL}
                                     </Text>
-                                </View>
+                                </View> */}
 
                                 {/* SL */}
-                                <View style={styles.row}>
+                                {/* <View style={styles.row}>
                                     <Text style={[styles.cell, { textAlign: "left" }]}>Sick Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.G}</Text>
                                     <Text style={styles.cell}>{takenLeave.G}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
                                         {balancMeave.G}
                                     </Text>
-                                </View>
+                                </View> */}
 
                                 {/* EL */}
-                                <View style={styles.row}>
+                                {/* <View style={styles.row}>
                                     <Text style={[styles.cellmedi, { textAlign: "left" }]}>Medical Leave</Text>
                                     <Text style={styles.cellmedi}>{totalLeave.M}</Text>
                                     <Text style={styles.cellmedi}>{takenLeave.M}</Text>
                                     <Text style={[styles.cellmedi, styles.lastCell]}>
                                         {balancMeave.M}
                                     </Text>
-                                </View>
+                                </View> */}
+                                {Object.keys(totalLeave).map((type, index, arr) => {
+                                    const isLast = index === arr.length - 1;
+
+                                    return (
+                                        <View style={styles.row} key={type}>
+                                            <Text
+                                                style={[
+                                                    styles.cell,
+                                                    { textAlign: "left" },
+                                                    isLast && styles.noBottomBorder
+                                                ]}
+                                            >
+                                                {leaveTypeMap[type] || type}
+                                            </Text>
+
+                                            <Text
+                                                style={[
+                                                    styles.cell,
+                                                    isLast && styles.noBottomBorder
+                                                ]}
+                                            >
+                                                {totalLeave[type]}
+                                            </Text>
+
+                                            <Text
+                                                style={[
+                                                    styles.cell,
+                                                    isLast && styles.noBottomBorder
+                                                ]}
+                                            >
+                                                {takenLeave[type]}
+                                            </Text>
+
+                                            <Text
+                                                style={[
+                                                    styles.cell,
+                                                    styles.lastCell,
+                                                    isLast && styles.noBottomBorder
+                                                ]}
+                                            >
+                                                {balancMeave[type]}
+                                            </Text>
+                                        </View>
+                                    );
+                                })}
                             </View>
 
                             {/* OPTIONAL TOTAL LINE */}

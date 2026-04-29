@@ -7424,7 +7424,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       ...state,
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
-                      BreadCrumb1: params.row.Description,
+                      // BreadCrumb1: params.row.Description,
+                      BreadCrumb1: params.row.Classification,
                       Classification: params.row.Classification,
                     },
                   })
@@ -7519,7 +7520,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <Box>
             {/* Edit Button */}
             <Link
-              to={`./Edit${screenName}/${params.row.RecordID}/E`}
+              to={`./Edit${screenName ?? "Party"}/${params.row.RecordID}/E`}
               state={{
                 PartyName: params.row.Party,
                 PName: params.row.Name,

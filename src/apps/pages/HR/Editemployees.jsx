@@ -5467,7 +5467,8 @@ const Editemployee = () => {
                           name="amount"
                           type="text"
                           id="amount"
-                          label="Actual Salary"
+                          // label="Actual Salary"
+                          label="Basic Pay"
                           variant="standard"
                           focused
                           value={values.amount}
@@ -6163,7 +6164,11 @@ const Editemployee = () => {
                       variant="contained"
                       onClick={() => {
                         is00123Subscription
-                          ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
+                          ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,{
+                            state:{
+                              ...state
+                            }
+                          })
                           : navigate(`/Apps/TR027/Personnel`);
                         //  navigate(-1)
                       }}

@@ -167,6 +167,7 @@ const Listview = () => {
   console.log(location, "location -----------------");
   var screenName1 = params.screenName;
   var screenName = rowData.name;
+  console.log("🚀 ~ Listview ~ screenName:", screenName, screenName1)
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -352,10 +353,10 @@ const Listview = () => {
           ? `compID=${compID}`
           : accessID == "TR027" ||
             accessID == "TR321" ?
-            `CompanyID=${compID}`:
+            `CompanyID=${compID}` :
             accessID == "TR331" ?
-            `CompanyID=${compID}`
-            : "",
+              `CompanyID=${compID}`
+              : "",
         "",
         compID
       )
@@ -473,8 +474,8 @@ const Listview = () => {
     () => columns.filter(filterByIDShow),
     [listViewcolumn]
   );
-   console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
-      console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
 
   const rows = React.useMemo(() => {
     return listViewData;
@@ -596,7 +597,11 @@ const Listview = () => {
                 ? screenName || rowData.Screenname
                 : accessID == "TR128"
                   ? screenName || rowData.LocationName
-                  : screenName}</Typography>
+                  : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                    ? screenName1
+                    : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                      ? screenName1
+                      : screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -811,6 +816,14 @@ const Listview = () => {
             <FileUploadIcon />
           </IconButton>
             </Tooltip> */}
+            {accessID === "TR321" && (
+              <Tooltip arrow title="Party Analytics">
+                <IconButton 
+                onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
             {accessID == "TR064" ? (
               <Tooltip arrow title="Excel">
                 <IconButton
@@ -2493,7 +2506,7 @@ const Listview = () => {
                               },
                             })}`}
                           />
-                          
+
 
                           {/* Employee */}
                           <MultiFormikOptimizedAutocomplete
@@ -5114,25 +5127,30 @@ const Listview = () => {
               label="Reset"
               variant="outlined"
             />
+            <Chip
+              icon={<AssessmentIcon />}
+              label="Party Analytics"
+              variant="outlined"
+            />
           </Box>
         ) : accessID == "TR331" || accessID == "TR366" ? (
           <Box display="flex" flexDirection="row" padding="25px">
-           
+
             <Chip
-              icon={< CurrencyRupeeOutlinedIcon color="primary"/>}
+              icon={< CurrencyRupeeOutlinedIcon color="primary" />}
               label="Payment"
               variant="outlined"
-              
+
             />
           </Box>
-        ): accessID == "TR370" ? (
+        ) : accessID == "TR370" ? (
           <Box display="flex" flexDirection="row" padding="25px">
-           
+
             <Chip
-              icon={<ManageAccountsIcon  color="primary"/>}
+              icon={<ManageAccountsIcon color="primary" />}
               label="Enquiry Detail"
               variant="outlined"
-              
+
             />
           </Box>
         ) : accessID == "TR328" ? (

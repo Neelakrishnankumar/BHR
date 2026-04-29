@@ -207,6 +207,7 @@ import Editdocument from "./pages/HR/Editdocument";
 import StaffTimetable from "./pages/Empolyee/StaffTimetable";
 import EditPayment from "./pages/Empolyee/Editpayment";
 import InvoiceAnalytics from "./pages/Empolyee/InvoiceAnalytics";
+import CRMPartyAnalytics from "./pages/DashBoards/CRMPartyAnalytics";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -351,6 +352,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
+                  />
+                  <Route
+                    path="/CRMPartyAnalytics"
+                    element={<CRMPartyAnalytics />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"
