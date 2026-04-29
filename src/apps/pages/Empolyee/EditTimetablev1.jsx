@@ -147,17 +147,32 @@ const EditTimetablev1 = () => {
     : "";
   console.log(SubscriptionCode, is003Subscription, "SubscriptionCode");
   const companyClassification = sessionStorage.getItem("Classification");
-  console.log(companyClassification, "--sessionStorage companyClassification");
+  const UserName = sessionStorage.getItem("UserName");
+  console.log(companyClassification, UserName, "--sessionStorage companyClassification", "UserName");
   const sliceSubscriptionCode = SubscriptionCode.slice(-3);
   const empName = sessionStorage.getItem("EmpName");
-  const ClassificationRecID = sessionStorage.getItem("ClassificationRecID");
+  const getRawData = sessionStorage.getItem("ClassificationData");
 
+  let ClassificationData = [];
+  try {
+    const parsed = JSON.parse(getRawData || "[]");
+    // Handle double-stringified case
+    ClassificationData = typeof parsed === "string" ? JSON.parse(parsed) : parsed;
+  } catch (e) {
+    console.error("ClassificationData parse failed:", getRawData);
+    ClassificationData = [];
+  }
+
+  const classids = ClassificationData
+    .filter(item => ["Board Of Directors", "Staff" || "Teaching Staff"].includes(item.CfcName))
+    .map(item => item.CfcID);
+
+  console.log(classids, "--classids");
+  const ClassificationRecID = sessionStorage.getItem("ClassificationRecID");
   console.log(ClassificationRecID, "--sessionStorage ClassificationRecID");
 
   // const ClassificationData = sessionStorage.getItem("ClassificationData");
-  const ClassificationData = JSON.parse(
-    sessionStorage.getItem("ClassificationData") || "[]"
-  );
+
 
   console.log(ClassificationData, "--find getItem ClassificationData");
 
@@ -330,6 +345,7 @@ const EditTimetablev1 = () => {
   const [page, setPage] = React.useState(0);
 
   const [rows, setRows] = React.useState([]);
+  const hasRows = rows.length > 0;
   const [rowModesModel, setRowModesModel] = React.useState({});
 
 
@@ -519,7 +535,8 @@ const EditTimetablev1 = () => {
       />
     );
   }
-  const [termsIDPass, setTermsIDPas] = useState(data?.TermsID || []);
+  const [termsIDPass, setTermsIDPas] = useState(data?.SlotGroupID || []);
+  console.log(termsIDPass,"termsIDPass");
 
   function EditdeptAutocompleteCell(props) {
     const { id, value, field, api, row } = props;
@@ -612,7 +629,7 @@ const EditTimetablev1 = () => {
         id="Teacher"
         value={Teachlookup}
         onChange={handleChange}
-        url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classificationIDString})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+        url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
       />
     );
   }
@@ -778,8 +795,12 @@ const EditTimetablev1 = () => {
 
     description: isEditMode ? data?.Description || "" : "",
     // assignedPerson: isEditMode ? data?.AssignedByName || "" : "",
-    assignedPerson: empName || "",
-
+    assignedPerson: UserName || "",
+    Slotgroup: data?.SlotGroupID ? 
+    {
+      RecordID: data.SlotGroupID,
+      Name: data.SlotGroupName || "",
+    } : null,
     assignedDate: new Date().toISOString().split("T")[0],
   };
 
@@ -851,7 +872,8 @@ const EditTimetablev1 = () => {
       ProjectID: rowData.projectID || 0,
       MileStoneID: rowData.MilestoneID || 0,
       TermsID: values.Terms?.RecordID || 0,
-      Assignedby: EMPID,
+      SlotGroupID: values.Slotgroup?.RecordID || 0,
+      Assignedby: UserName || "",
       Description: values.description,
       Detail: Detail,
     };
@@ -1019,6 +1041,7 @@ const EditTimetablev1 = () => {
                   label="Class"
                   variant="standard"
                   focused
+                  disabled={hasRows}
                   value={values.class}
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -1043,9 +1066,10 @@ const EditTimetablev1 = () => {
                   }
                   id="Terms"
                   value={values.Terms}
+                  disabled={hasRows}
                   onChange={(newValue) => {
                     if (newValue) {
-                      setTermsIDPas(newValue.RecordID);
+                      // setTermsIDPas(newValue.RecordID);
                       console.log(termsIDPass, "--termsIDPass");
                       setFieldValue("TermsCode", newValue.Code);
                       setFieldValue("Terms", newValue);
@@ -1062,7 +1086,7 @@ const EditTimetablev1 = () => {
                       AccessID: "2169",
                       ScreenName: "Terms",
                       VerticalLicense: Subscriptionlastthree,
-                      Filter: `CompanyID='${compID}'`,
+                      Filter: `CompanyID='${compID}' AND AcademicYearID='${params.YearID}'`,
                       Any: "",
                     },
                   })}`}
@@ -1082,6 +1106,7 @@ const EditTimetablev1 = () => {
                   }
                   id="Slotgroup"
                   value={values.Slotgroup}
+                  disabled={hasRows}
                   onChange={(newValue) => {
                     if (newValue) {
                       setTermsIDPas(newValue.RecordID);
@@ -1108,7 +1133,7 @@ const EditTimetablev1 = () => {
                 />
 
                 <TextField
-                  disabled={mode === "V"}
+                  disabled={mode === "V" || hasRows}
                   name="description"
                   type="text"
                   id="description"
@@ -1124,7 +1149,7 @@ const EditTimetablev1 = () => {
                 />
 
 
-                <TextField
+                {/* <TextField
                   name="assignedPerson"
                   type="text"
                   id="assignedPerson"
@@ -1139,13 +1164,14 @@ const EditTimetablev1 = () => {
                     readOnly: true
                   }}
                 // disabled
-                />
+                /> */}
                 <TextField
                   name="assignedDate"
                   type="date"
                   id="assignedDate"
                   label="Created Date"
                   variant="standard"
+                  disabled={hasRows}
                   focused
                   inputFormat="YYYY-MM-DD"
                   value={values.assignedDate}

@@ -1784,7 +1784,7 @@ export const fetchListview =
 
                   return (
                     <Box>
-                      {/* { && ( */}
+                      {isSeedEditable && (
                       <Link to={`./EditProject/${params.row.RecordID}/E`}>
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -1792,12 +1792,13 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      {/* )} */}
-                      {/* {is003Subscription &&( */}
+                     )} 
+                      {is003Subscription &&(
                       <Link
-                        to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                         state={{
-                          // MilestoneID: params.row.RecordID,
+                          AcademicYear: params.row.AcademicYear,
+                          AcademicYearID: params.row.AcademicYearID,
                           projectID: params.row.RecordID,
                           MilestoneName: params.row.Name,
                           projectName: params.row.Project,
@@ -1810,9 +1811,9 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      {/* )} */}
+                      )}
 
-                      {/* {!isSeedEditable ( */}
+                      {!isSeedEditable && (
                       <Link to={`./EditProject/${params.row.RecordID}/V`}>
                         <Tooltip title="View">
                           <IconButton color="info" size="small">
@@ -1820,7 +1821,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      {/* )} */}
+                      )}
                       {/* <Tooltip title="Download PDF">
                       <IconButton
                         color="info"
@@ -1879,7 +1880,7 @@ export const fetchListview =
                         )}
                       </IconButton>
                     </Tooltip> */}
-                      {isSeedEditable && (
+                      {isSeedEditable && !is003Subscription &&  (
                         <PDFButton
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
@@ -5004,6 +5005,7 @@ export const fetchListview =
                                 MilestoneName: params.row.MilestoneDesc,
                                 projectID: params.row.StandardID,
                                 projectName: params.row.ProjectDesc,
+                                BreadCrumb1: params.row.Project,
                                 BreadCrumb2: params.row.Term,
                                 BreadCrumb3: params.row.Description
                               }}
@@ -5022,6 +5024,7 @@ export const fetchListview =
                                 MilestoneName: params.row.MilestoneDesc,
                                 projectID: params.row.StandardID,
                                 projectName: params.row.ProjectDesc,
+                                BreadCrumb1: params.row.Project,
                                 BreadCrumb2: params.row.Term,
                                 BreadCrumb3: params.row.Description
                               }}
@@ -5042,7 +5045,9 @@ export const fetchListview =
                               projectID: params.row.StandardID,
                               projectName: params.row.ProjectDesc,
                               Description: params.row.Description,
-                              TermName: params.row.TermName
+                              BreadCrumb1: params.row.Project,
+                              TermName: params.row.TermName,
+                              SlotGroupID: params.row.SlotGroupID,
                             }}
                           >
                             <Tooltip title="Timetable">
@@ -7263,7 +7268,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PeopleAltIcon />
               </IconButton>
             </Tooltip>
-            {params.row.Description == "Teaching Staff" && (
+            {params.row.Description == "Teaching Staff" || params.row.Description == "Staff" && (
               <Tooltip title="Teacher Occupancy">
                 <IconButton
                   color="info"

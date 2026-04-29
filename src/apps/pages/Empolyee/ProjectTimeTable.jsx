@@ -71,7 +71,7 @@ const ProjectTimeTable = () => {
     const ProjectID = state.projectID || "";
 
     const empID = sessionStorage.getItem("EmpId");
-    const compID = sessionStorage.getItem("companyId");
+    const compID = sessionStorage.getItem("compID");
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
     const theme = useTheme();
@@ -82,7 +82,8 @@ const ProjectTimeTable = () => {
             projectID: ProjectID,
             milestonesID: SectionID,
             TermsID: TermsID,
-            CompanyID: compID
+            CompanyID: compID,
+            SlotGroupID: state.SlotGroupID || "",
         }));
     }, []);
 
