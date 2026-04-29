@@ -244,6 +244,12 @@ const initialState = {
   PartyResetloading: false,
   PartyResetstatus: "",
 
+
+  //PartyAnalytics POST
+  PartyAnalyticsdata: {},
+  PartyAnalyticsloading: false,
+  PartyAnalyticsstatus: "",
+
   //CONTRACT INVOICE GET
   InvoiceHeaderData: [],
   InvoiceDetailData: [],
@@ -2862,6 +2868,9 @@ export const getApiSlice = createSlice({
       state.costingLeatherCost.latestleatherTwoCost = 0;
       state.costingLeatherCost.latestleatherThreeCost = 0;
     },
+    resetPartyAnalyticsdata(state) {
+      state.PartyAnalyticsdata = {};
+    },
     ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex(
         (value) => value.RecordID === action.payload.id,
@@ -4528,6 +4537,22 @@ export const getApiSlice = createSlice({
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
       })
+      //PartyAnalytics - GET
+      .addCase(PartyAnalytics.pending, (state, action) => {
+        state.PartyAnalyticsstatus = "idle";
+        state.PartyAnalyticsloading = true;
+      })
+      .addCase(PartyAnalytics.fulfilled, (state, action) => {
+        state.PartyAnalyticsstatus = "success";
+        state.PartyAnalyticsloading = false;
+        state.PartyAnalyticsdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(PartyAnalytics.rejected, (state, action) => {
+        state.PartyAnalyticsstatus = "Error";
+        state.PartyAnalyticsloading = false;
+      })
 
       .addCase(ContractInvoice.pending, (state, action) => {
         state.InvoiceHeaderDatastatus = "idle";
@@ -4595,6 +4620,7 @@ export const {
   stockSuccess,
   stockReqSuccess,
   resetTrackingData,
+  resetPartyAnalyticsdata,
   // packingListCarton
   ratingChange,
 } = getApiSlice.actions;
@@ -6372,4 +6398,25 @@ export const ContractInvoice = createAsyncThunk(
 
     return response.data;
   }
+);
+
+export const PartyAnalytics = createAsyncThunk(
+  "PartyAnalytics/Get",
+  async ({ Data }) => {
+    const url = store.getState().globalurl.PartyAnalytics;
+
+    const data = {
+      companyid: Data.CompanyID,
+      fromDate: Data.from,
+      toDate: Data.to
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
 );

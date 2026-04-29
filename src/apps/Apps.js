@@ -212,6 +212,7 @@ import EditAcademicyear from "./pages/HR/EditAcademicyear";
 import EditTerms from "./pages/HR/EditTerms";
 import EditSlotgroup from "./pages/HR/EditSlotgroup";
 import EditSlots from "./pages/HR/EditSlots";
+import CRMPartyAnalytics from "./pages/DashBoards/CRMPartyAnalytics";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 import EditTimetablev1 from "./pages/Empolyee/EditTimetablev1";
 import ProjectTimeTable from "./pages/Empolyee/ProjectTimeTable";
@@ -357,6 +358,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
+                  />
+                  <Route
+                    path="/CRMPartyAnalytics"
+                    element={<CRMPartyAnalytics />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"

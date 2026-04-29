@@ -170,6 +170,7 @@ const Listview = () => {
   console.log(location, "location -----------------");
   var screenName1 = params.screenName;
   var screenName = rowData.name;
+  console.log("🚀 ~ Listview ~ screenName:", screenName, screenName1)
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -603,6 +604,10 @@ const Listview = () => {
                     ? screenName || rowData.Screenname
                     : accessID == "TR128"
                       ? screenName || rowData.LocationName
+                      : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                    ? screenName1
+                    : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                      ? screenName1
                       : screenName}</Typography>
 
         {/* RIGHT SIDE */}
@@ -818,6 +823,14 @@ const Listview = () => {
             <FileUploadIcon />
           </IconButton>
             </Tooltip> */}
+            {accessID === "TR321" && (
+              <Tooltip arrow title="Party Analytics">
+                <IconButton 
+                onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
             {accessID == "TR064" ? (
               <Tooltip arrow title="Excel">
                 <IconButton
@@ -5145,6 +5158,11 @@ const Listview = () => {
             <Chip
               icon={<RestartAltOutlinedIcon color="error" />}
               label="Reset"
+              variant="outlined"
+            />
+            <Chip
+              icon={<AssessmentIcon />}
+              label="Party Analytics"
               variant="outlined"
             />
           </Box>
