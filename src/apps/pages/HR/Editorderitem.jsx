@@ -69,6 +69,11 @@ const EditOrderitem = () => {
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const state = location.state || {};
@@ -771,7 +776,7 @@ const EditOrderitem = () => {
                         }}
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                       />
                     </FormControl>
                     <TextField

@@ -205,8 +205,17 @@ import BatchTimeLine from "./pages/SOP/BatchTimeline";
 import Editdoccategory from "./pages/HR/Editdoccategory";
 import Editdocument from "./pages/HR/Editdocument";
 import StaffTimetable from "./pages/Empolyee/StaffTimetable";
+import EditPayment from "./pages/Empolyee/Editpayment";
+import InvoiceAnalytics from "./pages/Empolyee/InvoiceAnalytics";
+import TeacherOccupancy from "./pages/HR/EditTeachOccupancy";
+import EditAcademicyear from "./pages/HR/EditAcademicyear";
+import EditTerms from "./pages/HR/EditTerms";
+import EditSlotgroup from "./pages/HR/EditSlotgroup";
+import EditSlots from "./pages/HR/EditSlots";
+import CRMPartyAnalytics from "./pages/DashBoards/CRMPartyAnalytics";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
-
+import EditTimetablev1 from "./pages/Empolyee/EditTimetablev1";
+import ProjectTimeTable from "./pages/Empolyee/ProjectTimeTable";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -351,6 +360,10 @@ function App() {
                     element={<EditemployeePayroll />}
                   />
                   <Route
+                    path="/CRMPartyAnalytics"
+                    element={<CRMPartyAnalytics />}
+                  />
+                  <Route
                     path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"
                     element={<EditemployeePayroll />}
                   />
@@ -375,12 +388,20 @@ function App() {
                     path="/:accessID/Regularization/:id/"
                     element={<Regularization />}
                   />
-
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID/:filtertype/EditPayment/:id/:Mode"
+                    element={<EditPayment />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/Invoice/Analytics"
+                    element={<InvoiceAnalytics />}
+                  />
                   {/* SKILL GLOW */}
 
                   {/* SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
+
                     element={<ListviewSecondary />}
                   />
 
@@ -389,6 +410,12 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:screenName/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* /Apps/Secondarylistview/TR371/BFWEnquiry/2/Detail/TR372/691 */}
+                  {/* /Apps/Secondarylistview/TR371/DMEnquiry/2/TR372/693 */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/:Type"
                     element={<ListviewSecondary />}
@@ -432,6 +459,7 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/:accessID/:parentID2/:parentID1"
                     element={<NewSchedule />}
                   />
+
                   {/* QUESTION GROUP */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
@@ -762,7 +790,7 @@ function App() {
                   <Route path="/change Password" element={<Changepass />} />
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
-                  <Route path="/configuration" element={<Configuration />} />
+                  <Route path="/configuration/:Mode" element={<Configuration />} />
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
@@ -941,6 +969,10 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
                   /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:OrderType/:filtertype/:Type/:screenName/:accessID/:filtertype1"
+                    element={<ListviewSecondary />}
+                  />
                   <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
@@ -1211,6 +1243,10 @@ function App() {
                     element={<Editfixedasset />}
                   />
                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditProject/:id/:Mode"
+                    element={<Editproject />}
+                  />
+                  <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
                     element={<Editproject />}
                   />
@@ -1279,6 +1315,26 @@ function App() {
                     path="/:accessID/:screenName/EditShift/:id/:Mode"
                     element={<Editshift />}
                   />
+                   <Route
+                    path="/:accessID/:screenName/EditAcademicyear/:id/:Mode"
+                    element={<EditAcademicyear />}
+                  />
+                   <Route
+                    path="/:accessID/:screenName/EditSlot Group/:id/:Mode"
+                    element={<EditSlotgroup />}
+                  />
+                     <Route
+                    path="/:accessID/:screenName/EditSlot/:id/:Mode"
+                    element={<EditSlots />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTerms/:id/:Mode"
+                    element={<EditTerms />}
+                  />
+                  {/* <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSlots/:id/:Mode"
+                    element={<EditSlots />}
+                  /> */}
                   <Route
                     path="/Edittimesheetreport"
                     element={<Edittimesheetreport />}
@@ -1442,10 +1498,23 @@ function App() {
                     path="/Secondarylistview/AnnexureForm1"
                     element={<AnnexureForm1 />}
                   />
+                  <Route
+                    path="/TeacherOccupancy/:id"
+                    element={<TeacherOccupancy />}
+                  />
                   {/* EDIT ANNEXURE FORM 2 */}
                   <Route
                     path="/Secondarylistview/AnnexureForm2"
                     element={<AnnexureForm2 />}
+                    
+                  />
+                   <Route
+                  path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTimeTable/:id/:Mode"
+                  element={<EditTimetablev1 />}
+                  />
+                  <Route
+                  path="/Secondarylistview/:accessID/:screenName/:filtertype/ProjectTimeTable"
+                  element={<ProjectTimeTable />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

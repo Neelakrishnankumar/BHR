@@ -203,6 +203,7 @@ const Editemployee = () => {
   console.log("API URL:", baseApiUrl);
   const state = location.state || {};
   console.log(state, "emnployee");
+  const screenname = state.screenName;
   const designationType =
     state.Classification ||
     "";
@@ -298,6 +299,8 @@ const Editemployee = () => {
   const [validationSchema14, setValidationSchema14] = useState(null);
   const [validationSchema17, setValidationSchema17] = useState(null);
   const [validationSchema18, setValidationSchema18] = useState(null);
+  const [validationSchema23, setValidationSchema23] = useState(null);
+
   const today = new Date();
 
   const BillableMonth = today.getMonth() + 1; // 0-based → +1
@@ -316,6 +319,7 @@ const Editemployee = () => {
 
   const Invoiceheader = useSelector(state => state.formApi.InvoiceHeaderData);
   const Invoicedetails = useSelector(state => state.formApi.InvoiceDetailData);
+  const PdfBaseUrl = useSelector(state => state.formApi.InvoiceBaseUrl);
 
   const [sign1, setsign1Image] = useState("");
   const [sign2, setsign2Image] = useState("");
@@ -760,16 +764,43 @@ const Editemployee = () => {
         });
 
         setValidationSchema8(schema8);
-        const schema9 = Yup.object().shape({
-          vendor: Yup.object().required(data.ContractsIN.vendor).nullable(),
-          shift: Yup.object().required(data.ContractsIN.shift).nullable(),
+        // const schema9 = Yup.object().shape({
+        //   vendor: Yup.object().required(data.ContractsIN.vendor).nullable(),
+        //   // shift: Yup.object().required(data.ContractsIN.shift).nullable(),
+        //   project: Yup.object().required(data.ContractsIN.project).nullable(),
+        //   BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
+        //   BillingType: Yup.string().required(data.ContractsIN.BillingType),
+        //   UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
+        //   Hsn: Yup.string().required(data.ContractsIN.Hsn),
+        // });
+        // setValidationSchema9(schema9);
+        let schemaFields9 = {
           project: Yup.object().required(data.ContractsIN.project).nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
           Hsn: Yup.string().required(data.ContractsIN.Hsn),
-        });
+        };
+
+        // ✅ conditionally add vendor
+        if (!is003Subscription) {
+          schemaFields9.vendor = Yup.object()
+            .required(data.ContractsIN.vendor)
+            .nullable();
+        }
+
+        // ✅ build schema
+        const schema9 = Yup.object().shape(schemaFields9);
+
         setValidationSchema9(schema9);
+        let schemaFields23 = {
+          project: Yup.object().required(data.CourseAttendence.project).nullable(),
+          shift: Yup.object().required(data.CourseAttendence.shift).nullable(),
+        };
+        // ✅ build schema
+        const schema23 = Yup.object().shape(schemaFields23);
+
+        setValidationSchema23(schema23);
         const schema10 = Yup.object().shape({
           customer: Yup.object().required(data.ContractsIN.customer).nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
@@ -933,17 +964,19 @@ const Editemployee = () => {
   //   dispatch(fetchApidata(accessID, "get", recID));
   // }, [location.key]);
   useEffect(() => {
-    if (show == "0") {
-      if (recID && mode === "E") {
-        dispatch(fetchApidata("TR027", "get", recID));
-      } else {
-        dispatch(fetchApidata("TR027", "get", recID));
-      }
+    // if (show == "0") {
+    if (recID && mode === "E") {
+      dispatch(fetchApidata("TR027", "get", recID));
+    } else {
+      dispatch(fetchApidata("TR027", "get", recID));
     }
+    // }
   }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [employeeName, setEmployeeName] = useState("");
+  const EmployeeName = employeeName || Data?.Name || state?.EmpName;
   const [flag, setFlag] = useState("");
   const [billingTypeForPrint, setBillingTypeForPrint] = useState("");
   var userimg = store.getState().globalurl.imageUrl;
@@ -1335,6 +1368,10 @@ const Editemployee = () => {
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
+      if (mode === "A") {
+        navigate(-1); // go back
+        return;
+      }
       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         CustomisedCaptionGet({
@@ -1343,6 +1380,7 @@ const Editemployee = () => {
         })
       );
       setLoading(false);
+      setEmployeeName(values?.Name);
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
@@ -1598,6 +1636,29 @@ const Editemployee = () => {
 
       dispatch(
         fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
+      );
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    if (event.target.value == "23") {
+
+      dispatch(getDeployment({ HeaderID: recID }));
+      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      // dispatch(
+      //   CustomisedCaptionGet({
+      //     Vertical: Subscriptionlastthree,
+      //     AccessID: "TR369",
+      //   })
+      // );
+      const designationName =
+        Data?.DesignDesc ||
+        deploymentInitialValue?.Designation?.Name ||
+        "";
+
+      const isStudent = designationName === "Student";
+      const filterCondition =
+        `EmpID='${recID}'`;
+      dispatch(
+        fetchExplorelitview("TR369", Subscriptionlastthree, "EMPPROJECTATTENDANCE", filterCondition, "")
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1928,17 +1989,20 @@ const Editemployee = () => {
       toast.success(data.payload.Msg);
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
-      selectCellRowData({
-        rowData: DataExplore,
-        mode: "E",
-        field: "",
-      });
+      dispatch(fetchApidata("TR027", "get", recID));
+      //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
+      //   selectCellRowData({
+      //     rowData: DataExplore,
+      //     mode: "E",
+      //     field: "",
+      //   });
 
-      resetForm({
-        values: {
-          ...contactInitialvalues,
-        },
-      });
+      //   resetForm({
+      //     values: {
+      //       ...contactInitialvalues,
+      //     },
+      //   });
+      //  MANOJ -- COMMENTED ON 22/04/2026 -- BECAUSE WHEN SAVED THE CODE AND NAME IS GETTING CLEARED
 
       // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
@@ -2021,10 +2085,20 @@ const Editemployee = () => {
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
-      "VendorName",
+      // "VendorName",
       "Description",
+      "ProjectName",
       "BillingUnits",
       "UnitRate",
+      "action",
+    ];
+  }
+  else if (show == "23") {
+    VISIBLE_FIELDS = [
+      "slno",
+      "ProjectName",
+      "Shift",
+      "Shift2",
       "action",
     ];
   }
@@ -2291,9 +2365,12 @@ const Editemployee = () => {
                                   ? "List of Documents"
                                   : show == "8"
                                     ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
-                                    : show == "11"
-                                      ? "List of Contracts"
-                                      : "List of Managers"}
+                                    : show == "23"
+                                      // ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
+                                      ? `List of Course Attendance`
+                                      : show == "11"
+                                        ? "List of Contracts"
+                                        : "List of Managers"}
           </Typography>
           {show != "20" && (<Typography variant="h6" fontWeight="bold">{`(${rowCount})`}</Typography>)}
         </Box>
@@ -2387,6 +2464,12 @@ const Editemployee = () => {
     sgst: "",
     igst: "",
     tds: "",
+    shift: "",
+    shift2: "",
+    project: "",
+  });
+  const [courseAttendenceData, setCourseAttendenceData] = useState({
+    recordID: "",
     shift: "",
     shift2: "",
     project: "",
@@ -2522,6 +2605,12 @@ const Editemployee = () => {
         sgst: "",
         igst: "",
         tds: "",
+        shift: "",
+        shift2: "",
+        project: "",
+      });
+      setCourseAttendenceData({
+        recordID: "",
         shift: "",
         shift2: "",
         project: "",
@@ -2700,6 +2789,30 @@ const Editemployee = () => {
           sgst: rowData.Sgst,
           igst: rowData.Igst,
           tds: rowData.Tds,
+          shift: rowData.ShiftID
+            ? {
+              RecordID: rowData.ShiftID,
+              Code: rowData.ShiftCode,
+              Name: rowData.ShiftName,
+            }
+            : null,
+          shift2: rowData.ShiftID
+            ? {
+              RecordID: rowData.ShiftID2,
+              Code: rowData.ShiftCode2,
+              Name: rowData.ShiftName2,
+            }
+            : null,
+        });
+        setCourseAttendenceData({
+          recordID: rowData.RecordID,
+          project: rowData.ProjectID
+            ? {
+              RecordID: rowData.ProjectID,
+              Code: rowData.ProjectCode,
+              Name: rowData.ProjectName,
+            }
+            : null,
           shift: rowData.ShiftID
             ? {
               RecordID: rowData.ShiftID,
@@ -3523,6 +3636,58 @@ const Editemployee = () => {
 
   console.log(gelocData, "--geo");
 
+
+  const CourseAttendenceInitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    project: courseAttendenceData.project || null,
+    shift: courseAttendenceData.shift || null,
+    shift2: courseAttendenceData.shift2 || null,
+  };
+
+  const courseAttendanceSaveFn = async (values, resetForm, del) => {
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+    const idata = {
+      RecordID: courseAttendenceData.recordID,
+      EmpID: recID,
+      ShiftID: values?.shift?.RecordID || 0,
+      ShiftID2: values?.shift2?.RecordID || 0,
+      ProjectID: values?.project?.RecordID || 0,
+    };
+    console.log(idata, "--contract idata");
+    const designationName =
+      Data?.DesignDesc ||
+      deploymentInitialValue?.Designation?.Name ||
+      "";
+
+    const isStudent = designationName === "Student";
+
+    const filterCondition =
+      `EmpID='${recID}'`;
+
+    const response = await dispatch(
+      explorePostData({ accessID: "TR369", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      dispatch(
+        fetchExplorelitview("TR369", Subscriptionlastthree, "EMPPROJECTATTENDANCE", filterCondition, "")
+      );
+      toast.success(response.payload.Msg);
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
+
   const handleGenerate = async (values, resetForm, del) => {
 
     console.log(show, "--find show inside save ");
@@ -3821,6 +3986,7 @@ const Editemployee = () => {
     Code: Data.Code,
     Name: Data.Name,
     itemgroups: Invendata.itemgroups,
+
     itemcategory: Invendata.itemcategory,
     Grpitems: Invendata.Grpitems,
     SortOrder: Invendata.SortOrder,
@@ -4131,8 +4297,10 @@ const Editemployee = () => {
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
-    HorizontalMimNo: deploymentData.HorizontalMimNo || "",
-    VerticalMimNo: deploymentData.VerticalMimNo || "",
+    // HorizontalMimNo: deploymentData.HorizontalMimNo || "",
+    // VerticalMimNo: deploymentData.VerticalMimNo || "",
+    HorizontalMimNo: deploymentData?.HorizontalMimNo ?? 0,
+    VerticalMimNo: deploymentData?.VerticalMimNo ?? 0,
     AutoApprovalYesOrNo:
       deploymentData.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: deploymentData.ApprovelTolerance,
@@ -4226,8 +4394,8 @@ const Editemployee = () => {
       CompanyID,
       Horizontal: deploymentData.Horizontal,
       Vertical: deploymentData.Vertical,
-      HorizontalMimNo: deploymentData.HorizontalMimNo || 0,
-      VerticalMimNo: deploymentData.VerticalMimNo || 0,
+      HorizontalMimNo: deploymentData?.HorizontalMimNo || 0,
+      VerticalMimNo: deploymentData?.VerticalMimNo || 0,
       AutoApprovalYesOrNo: deploymentData.AutoApprovalYesOrNo,
       ApprovelTolerance: deploymentData.ApprovelTolerance || 0,
       AutoRejectionYesOrNo: deploymentData.AutoRejectionYesOrNo,
@@ -4238,8 +4406,14 @@ const Editemployee = () => {
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
-      dispatch(getDeployment({ HeaderID: recID }));
+      // dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
+      dispatch(getDeployment({ HeaderID: recID }));
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR027",
+      })
+      );
     } else {
       toast.error(response.payload.Msg);
     }
@@ -4381,10 +4555,15 @@ const Editemployee = () => {
     // return;
     if (response.payload.Status == "Y") {
       dispatch(getDeployment({ HeaderID: recID }));
+      dispatch(CustomisedCaptionGet({
+        Vertical: Subscriptionlastthree,
+        AccessID: "TR027",
+      })
+      );
       toast.success(response.payload.Msg);
-      setTimeout(() => {
-        navigate("/Apps/TR027/Personnel");
-      }, 4000);
+      // setTimeout(() => {
+      //   navigate("/Apps/TR027/Personnel");
+      // }, 4000);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -4650,9 +4829,14 @@ const Editemployee = () => {
                     {/* {mode === "E"
                       ? `Personnel(${state.EmpName})`
                       : "Personnel(New)"} */}
-                    {
+                    {/* {
                       mode === "E"
                         ? `Personnel(${state?.EmpName || Data?.Name})`
+                        : "Personnel(New)"
+                    } */}
+                    {
+                      mode === "E"
+                        ? `Personnel(${EmployeeName})`
                         : "Personnel(New)"
                     }
 
@@ -4790,6 +4974,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "23" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Course Attendance
+                    </Typography>
+                  ) : (
+                    false
+                  )}
 
                   {show == "11" ? (
                     <Typography
@@ -4922,18 +5117,24 @@ const Editemployee = () => {
                     <MenuItem value={0}>Personnel</MenuItem>
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
+                    {is003Subscription && (
+                      <MenuItem value={15}>Parent</MenuItem>
+                    )}
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
+                    {is003Subscription && (
+                      <MenuItem value={23}>Course Attendance</MenuItem>
+                    )}
                     {initialValues.employeetype === "CO" ? (
                       <MenuItem value={11}>Contract Out</MenuItem>
                     ) : null}
                     {/* {is003Subscription === true ? (
                       <MenuItem value={15}>Parent</MenuItem>
                     ) : null} */}
-                    {is003Subscription && (
+                    {/* {is003Subscription && (
                       <MenuItem value={15}>Parent</MenuItem>
-                    )}
+                    )} */}
                     {is003Subscription === true ? (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
                     ) : null}
@@ -4942,6 +5143,7 @@ const Editemployee = () => {
                     <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={2}>Functions</MenuItem>) : null}
                     <MenuItem value={3}>{getBusinessCaption("Managers", "Managers")}</MenuItem>
+
                     <MenuItem value={9}>{getBusinessCaption("Geolocation", "Geo Location")}</MenuItem>
                     <MenuItem value={10}>{getBusinessCaption("LeaveConfigurations", "Leave Configuration")}</MenuItem>
                     {is003Subscription === false ? (<MenuItem value={6}>List of Documents</MenuItem>) : null}
@@ -5266,7 +5468,8 @@ const Editemployee = () => {
                           name="amount"
                           type="text"
                           id="amount"
-                          label="Actual Salary"
+                          // label="Actual Salary"
+                          label="Basic Pay"
                           variant="standard"
                           focused
                           value={values.amount}
@@ -5957,14 +6160,32 @@ const Editemployee = () => {
                       //   Delete
                       // </Button>
                       null} */}
+                    {/* <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        is00123Subscription
+                          ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,{
+                            state:{
+                              ...state
+                            }
+                          })
+                          : navigate(`/Apps/TR027/Personnel`);
+                        //  navigate(-1)
+                      }}
+                    >
+                      Cancel
+                    </Button> */}
                     <Button
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        // is00123Subscription
-                        //   ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
-                        //   : navigate(`/Apps/TR027/Personnel`);
-                        navigate(-1)
+                        is00123Subscription
+                          ? navigate(
+                            `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                            { state }   //  just pass existing state
+                          )
+                          : navigate(`/Apps/TR027/Personnel`, { state }); //  same here
                       }}
                     >
                       Cancel
@@ -6091,7 +6312,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -6112,7 +6333,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     <Stack
@@ -8535,7 +8756,8 @@ const Editemployee = () => {
                       />
                     </FormControl>
 
-                    <FormControl
+                    {/* COMMENTED AS ON 20/04/2026 -- AS PER HARI */}
+                    {/* <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -8576,7 +8798,7 @@ const Editemployee = () => {
                       //                         url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
                       //  ='${CompanyID}'","Any":""}}`}
                       />
-                    </FormControl>
+                    </FormControl> */}
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
@@ -8720,7 +8942,7 @@ const Editemployee = () => {
                     // error={!!touched.Onsiterole && !!errors.Onsiterole}
                     // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
-                      <MenuItem value="Project">Standard/Activities</MenuItem>
+                      <MenuItem value="Project">{getBusinessCaption("Project", "Project")}</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
                     </TextField>
                     <Box>
@@ -12672,72 +12894,77 @@ const Editemployee = () => {
                           value={vendorlookup.venName}
                         />
                       </Box> */}
-                      <PartySingleSelect
-                        name="vendor"
-                        disabled={is003Subscription === true}
-                        label={
-                          is003Subscription === true ? (
-                            "Parent"
-                          ) : (
-                            <>
-                              Vendor
-                              <span style={{ color: "red", fontSize: "20px" }}> *</span>
-                            </>
-                          )
-                        }
-                        variant="standard"
-                        id="vendor"
-                        focused
-                        // value={vendorlookup}
-                        value={values.vendor}
-                        onChange={(newValue) => {
-                          setFieldValue("vendor", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          console.log(newValue, "--newvalue vendor");
+                      {!is003Subscription && (
+                        <PartySingleSelect
+                          name="vendor"
+                          disabled={is003Subscription === true}
+                          label={
+                            is003Subscription === true ? (
+                              "Parent"
+                            ) : (
+                              <>
+                                Vendor
+                                <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                              </>
+                            )
+                          }
+                          variant="standard"
+                          id="vendor"
+                          focused
+                          // value={vendorlookup}
+                          value={values.vendor}
+                          onChange={(newValue) => {
+                            if (!newValue) {
+                              setFieldValue("vendor", null);
+                              return;
+                            }
+                            setFieldValue("vendor", {
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                            console.log(newValue, "--newvalue vendor");
 
-                          console.log(newValue.RecordID, "vendor RecordID");
+                            console.log(newValue.RecordID, "vendor RecordID");
 
-                          // SetVendorlookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
-                        }}
-                        error={!!touched.vendor && !!errors.vendor}
-                        helperText={touched.vendor && errors.vendor}
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
-                        url={
-                          Data.DesignationName === "Student" ||
-                            deploymentInitialValue?.Designation?.Name ===
-                            "Student"
-                            ? `${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2133",
-                                ScreenName: "Parent",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID=${CompanyID}`,
-                                Any: "",
-                              },
-                            })}`
-                            : `${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2100",
-                                ScreenName: "Vendor",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID=${CompanyID}`,
-                                Any: "",
-                              },
-                            })}`
-                        }
-                      // ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
-                      // : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
+                            // SetVendorlookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
+                          }}
+                          error={!!touched.vendor && !!errors.vendor}
+                          helperText={touched.vendor && errors.vendor}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={
+                            Data.DesignationName === "Student" ||
+                              deploymentInitialValue?.Designation?.Name ===
+                              "Student"
+                              ? `${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2133",
+                                  ScreenName: "Parent",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID=${CompanyID}`,
+                                  Any: "",
+                                },
+                              })}`
+                              : `${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2100",
+                                  ScreenName: "Vendor",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID=${CompanyID}`,
+                                  Any: "",
+                                },
+                              })}`
+                          }
+                        // ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
+                        // : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
 
-                      //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
-                      />
+                        //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        />)}
                       <CheckinAutocomplete
                         id="project"
                         name="project"
@@ -12752,6 +12979,10 @@ const Editemployee = () => {
                         variant="outlined"
                         value={values.project}
                         onChange={(newValue) => {
+                          if (!newValue) {
+                            setFieldValue("project", null);
+                            return;
+                          }
                           setFieldValue("project", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -13092,69 +13323,82 @@ const Editemployee = () => {
                       //     .slice(0, 11);
                       // }}
                       />
-                      <CheckinAutocomplete
-                        id="shift"
-                        name="shift"
-                        label={
-                          <span>
-                            Shift 1
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        value={values.shift}
-                        error={!!touched.shift && !!errors.shift}
-                        helperText={touched.shift && errors.shift}
-                        onChange={(newValue) => {
-                          setFieldValue("shift", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          console.log(newValue, "--newvalue shift");
-                          console.log(newValue.RecordID, "shift RecordID");
-                        }}
-                        url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2108",
-                            ScreenName: "Shift",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `CompanyID=${CompanyID}`,
-                            Any: "",
-                          },
-                        })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                      />
-                      <CheckinAutocomplete
-                        id="shift2"
-                        name="shift2"
-                        label="Shift 2"
-                        variant="outlined"
-                        value={values.shift2}
-                        error={!!touched.shift2 && !!errors.shift2}
-                        helperText={touched.shift2 && errors.shift2}
-                        onChange={(newValue) => {
-                          setFieldValue("shift2", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          console.log(newValue, "--newvalue shift2");
-                          console.log(newValue.RecordID, "shift2 RecordID");
-                        }}
-                        url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2108",
-                            ScreenName: "Shift2",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `CompanyID=${CompanyID}`,
-                            Any: "",
-                          },
-                        })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                      />
+                      {!is003Subscription && (
+                        <>
+                          <CheckinAutocomplete
+                            id="shift"
+                            name="shift"
+                            label={
+                              <span>
+                                Shift 1
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            value={values.shift}
+                            error={!!touched.shift && !!errors.shift}
+                            helperText={touched.shift && errors.shift}
+                            onChange={(newValue) => {
+                              if (!newValue) {
+                                setFieldValue("shift", null);
+                                return;
+                              }
+                              setFieldValue("shift", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+                              console.log(newValue, "--newvalue shift");
+                              console.log(newValue.RecordID, "shift RecordID");
+                            }}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2108",
+                                ScreenName: "Shift",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                          />
+                          <CheckinAutocomplete
+                            id="shift2"
+                            name="shift2"
+                            label="Shift 2"
+                            variant="outlined"
+                            value={values.shift2}
+                            error={!!touched.shift2 && !!errors.shift2}
+                            helperText={touched.shift2 && errors.shift2}
+                            onChange={(newValue) => {
+                              if (!newValue) {
+                                setFieldValue("shift2", null);
+                                return;
+                              }
+                              setFieldValue("shift2", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+                              console.log(newValue, "--newvalue shift2");
+                              console.log(newValue.RecordID, "shift2 RecordID");
+                            }}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2108",
+                                ScreenName: "Shift2",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                          />
+                        </>
+                      )}
+
                       <TextField
                         name="FromPeriod"
                         type="date"
@@ -13191,7 +13435,7 @@ const Editemployee = () => {
                         name="ToPeriod"
                         type="date"
                         id="ToPeriod"
-                        label="To Date"
+                        label="To Period"
                         variant="standard"
                         focused
                         value={values.ToPeriod}
@@ -13235,29 +13479,9 @@ const Editemployee = () => {
                           value={values.DueDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const { name, value } = e.target;
-                        //   setFieldValue(name, value);
-
-                        //   // 🔁 Run same logic if ToDate already exists
-                        //   if (values.ToPeriod) {
-                        //     const toDate = new Date(values.ToPeriod);
-                        //     const fromDate = new Date(value);
-
-                        //     // Renewal days
-                        //     const diffDays = differenceInDays(toDate, fromDate);
-                        //     setFieldValue("RenewableNotification", diffDays);
-
-                        //     // Notification Alert Date (still based on ToDate)
-                        //     const alertDate = subDays(toDate, 1);
-                        //     setFieldValue(
-                        //       "NotificationAlertDate",
-                        //       alertDate.toISOString().split("T")[0]
-                        //     );
-                        //   }
-                        // }}
                         />
                       )}
+
                       <TextField
                         name="NotificationAlertDate"
                         type="date"
@@ -13302,7 +13526,6 @@ const Editemployee = () => {
                           },
                         }}
                       />
-
                       {/* <TextField
                         name="ToPeriod"
                         type="date"
@@ -13419,6 +13642,7 @@ const Editemployee = () => {
                             <ContractCashMemo
                               invoice={Invoiceheader?.[0]}
                               detailData={Invoicedetails}
+                              PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
                               logoUrl={"/Logo.png"}
                               headerUrl={"/Elitelogo.png"}
                               footerUrl={"/pdffooterimg.PNG"}
@@ -13436,6 +13660,7 @@ const Editemployee = () => {
                               // data={InvData}
                               invoice={Invoiceheader?.[0]}
                               detailData={Invoicedetails}
+                              PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
                               logoUrl={"/Logo.png"}
                               headerUrl={"/Elitelogo.png"}
                               footerUrl={"/pdffooterimg.PNG"}
@@ -17486,6 +17711,392 @@ const Editemployee = () => {
                 </Button>
               </Box>
             </Box>
+          </Paper>
+        ) : (
+          false
+        )}
+
+        {/* COURSE ATTENDANCE */}
+        {show == "23" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={CourseAttendenceInitialValue}
+              enableReinitialize={true}
+              validationSchema={validationSchema23}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  courseAttendanceSaveFn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+
+                    <Stack
+                      sx={{
+                        gap: formGap,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+                    <Box>
+                      <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          pageSize={pageSize}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                              setFieldValue,
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{
+                            Toolbar: Employee,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                      <CheckinAutocomplete
+                        id="project"
+                        name="project"
+                        label={
+                          <>
+                            {getBusinessCaption("Project", "Project")}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        value={values.project}
+                        onChange={(newValue) => {
+                          if (!newValue) {
+                            setFieldValue("project", null);
+                            return;
+                          }
+                          setFieldValue("project", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                        error={!!touched.project && !!errors.project}
+                        helperText={touched.project && errors.project}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2054",
+                            ScreenName: "Project",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `parentID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
+                      <CheckinAutocomplete
+                        id="shift"
+                        name="shift"
+                        label={
+                          <span>
+                            Shift 1
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.shift}
+                        error={!!touched.shift && !!errors.shift}
+                        helperText={touched.shift && errors.shift}
+                        onChange={(newValue) => {
+                          if (!newValue) {
+                            setFieldValue("shift", null);
+                            return;
+                          }
+                          setFieldValue("shift", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          console.log(newValue, "--newvalue shift");
+                          console.log(newValue.RecordID, "shift RecordID");
+                        }}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2108",
+                            ScreenName: "Shift",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      />
+                      <CheckinAutocomplete
+                        id="shift2"
+                        name="shift2"
+                        label="Shift 2"
+                        variant="outlined"
+                        value={values.shift2}
+                        error={!!touched.shift2 && !!errors.shift2}
+                        helperText={touched.shift2 && errors.shift2}
+                        onChange={(newValue) => {
+                          if (!newValue) {
+                            setFieldValue("shift2", null);
+                            return;
+                          }
+                          setFieldValue("shift2", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          console.log(newValue, "--newvalue shift2");
+                          console.log(newValue.RecordID, "shift2 RecordID");
+                        }}
+                        url={`${listViewurl}?data=${JSON.stringify({
+                          Query: {
+                            AccessID: "2108",
+                            ScreenName: "Shift2",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `CompanyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    // style={{ marginTop: "-35px" }}
+                    gap={2}
+                  >
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? ( */}
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            courseAttendanceSaveFn(values, resetForm, "harddelete");
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                    {/* ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  {/* <Popup
+                    title="vendor"
+                    openPopup={openvenPopup}
+                    setOpenPopup={setOpenvenPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2100"
+                      screenName="Vendor"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup> */}
+                </form>
+              )}
+            </Formik>
           </Paper>
         ) : (
           false

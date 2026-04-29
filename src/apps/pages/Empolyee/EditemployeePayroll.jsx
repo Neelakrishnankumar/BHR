@@ -551,7 +551,7 @@ const EditemployeePayroll = () => {
       dispatch(fetchApidata(accessID, "get", recID));
       navigate(
         // `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
-        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${data.payload.apiResponse}/E`,
+        `/Apps/TR027/Payroll%20Configuration/EditPayroll%20Configuration/${data.payload.apiResponse}/E`,
       );
     } else {
       toast.error(data.payload.Msg);
@@ -2271,7 +2271,7 @@ const EditemployeePayroll = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR027/Employees");
+          navigate(-1);
         }
       } else {
         return;
@@ -3033,7 +3033,7 @@ const EditemployeePayroll = () => {
                       variant="contained"
                       onClick={() => {
                         // navigate(`/Apps/TR027/Employees`);
-                        navigate("/Apps/TR027/Employee%20Payroll");
+                        navigate(-1);
                       }}
                     >
                       Cancel

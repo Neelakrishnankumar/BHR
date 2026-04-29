@@ -6,6 +6,8 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
     "@mui/icons-material": "^5.16.7",
     "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.10.15",
@@ -19,6 +21,7 @@
     "@testing-library/user-event": "^13.5.0",
     "apexcharts": "^3.39.0",
     "axios": "^1.2.3",
+    "chart.js": "^4.5.1",
     "compressorjs": "^1.2.1",
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
@@ -31,6 +34,7 @@
     "node-modules": "^1.0.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
+    "react-chartjs-2": "^5.3.1",
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-gauge-chart": "^0.5.1",
@@ -53,9 +57,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && react-scripts build"
   },
   "eslintConfig": {
     "extends": [

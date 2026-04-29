@@ -329,7 +329,7 @@ const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-export default function SchoolContractInvoice({ invoice = [], detailData = [],logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
+export default function SchoolContractInvoice({ invoice = [], detailData = [],PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
   filters = {} }) {
 
   const formattedDate = filters.Date
@@ -340,7 +340,8 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],lo
   const items = Array.isArray(invoice) ? invoice : [invoice];
   const attendancedata = Array.isArray(detailData) ? detailData : [detailData];
   // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";  // your image folder path
-  const QR_BASE_URL = `${filters.baseUrl}uploads/images/`;  
+  // const QR_BASE_URL = `${filters.baseUrl}uploads/images/`;  
+  const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
   console.log("🚀 ~ MyInvoiceDocument ~ QR_BASE_URL:", QR_BASE_URL)
   const CompanyID = sessionStorage.getItem("company");
   const qrFullPath = invoice?.QRCode
@@ -401,8 +402,20 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],lo
 
     return helper(num);
   };
+  const toNumber = (value) => {
+  if (value === null || value === undefined) return 0;
+
+  // Convert to string, remove commas, trim spaces
+  const cleaned = String(value).replace(/,/g, "").trim();
+
+  const num = parseFloat(cleaned);
+
+  return isNaN(num) ? 0 : num;
+};
   const getNetTotal = () => {
-    const safe = (v) => Number(v || 0);   // <-- converts undefined, null, "" safely
+    
+    // const safe = (v) => Number(v || 0);   // <-- converts undefined, null, "" safely
+    const safe = toNumber;   // <-- converts undefined, null, "" safely
 
     let base =
       invoice?.BillUnits === "Day"

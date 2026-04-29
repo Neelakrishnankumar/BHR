@@ -166,8 +166,8 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().trim().required(data.Project.name),
-          TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
-          TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
+          // TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
+          // TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
           // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
@@ -394,7 +394,7 @@ const Editproject = () => {
     Name: "",
   });
 
-
+const is003 = SubscriptionCode?.endsWith("003");
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -404,9 +404,14 @@ const Editproject = () => {
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
-    ByProduct: data.ByProduct === "Y" ? true : false,
-    Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
+    //ByProduct: data.ByProduct === "Y" ? true : false,
+    //ByProduct: false,
+
+    ByProduct: is003 ? false : data.ByProduct === "Y",
+    Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
+    //Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
+    //Routine:  false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
     // budget: data.Budget ?? 0.00,
@@ -458,12 +463,16 @@ const Editproject = () => {
       ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
+      // RoutineTasks: "N",
       SortOrder: values.sortorder || 0,
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-      ByProduct: values.ByProduct == true ? "Y" : "N",
-      EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
+      //  ByProduct: values.ByProduct == true ? "Y" : "N",
+      //ByProduct: "N",
+      ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+      EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+      //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -474,8 +483,9 @@ const Editproject = () => {
       Longitude: values.longitude || 0,
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
-      TentativeStartDate: values.TentativeStartDate || "",
-      TentativeEndDate: values.TentativeEndDate || ""
+      AcademicYearID : params.filtertype || 0,
+      // TentativeStartDate: values.TentativeStartDate || "",
+      // TentativeEndDate: values.TentativeEndDate || ""
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -1334,7 +1344,7 @@ const Editproject = () => {
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
 
-                  <TextField
+                  {/* <TextField
                     id="TentativeStartDate"
                     name="TentativeStartDate"
                     type="date"
@@ -1381,7 +1391,7 @@ const Editproject = () => {
                     // value={values.CurrentStatus}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                  />
+                  /> */}
 
                   <TextField
                     disabled={mode == "V"}
@@ -1452,6 +1462,7 @@ const Editproject = () => {
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
+                   
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1482,6 +1493,8 @@ const Editproject = () => {
                     >
                       Service & Maintenance
                     </FormLabel> */}
+                     {!is003Subscription && (
+                      <>
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1498,6 +1511,8 @@ const Editproject = () => {
                     >
                       Product
                     </FormLabel>
+                   
+                
                     <Field
                       disabled={mode == "V"}
                       type="checkbox"
@@ -1509,6 +1524,8 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}>Enable Onsite Activities</FormLabel>
+                         </>
+                      )}
                     <Field
                       //  size="small"
                       disabled={mode == "V"}

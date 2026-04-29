@@ -68,10 +68,10 @@ const EditSalaryComponent = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-const lastThree = SubscriptionCode?.slice(-3) || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
-    : "";  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const location = useLocation();
   const rowData = location.state || {};
   console.log(rowData, "--rowData state");
@@ -124,7 +124,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
 
     return match?.CAPTION || defaultCaption;
   };
-  
+
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -176,9 +176,8 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
 
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(
-        `/Apps/TR205/Salary Component`
-      );
+      navigate(-1);
+
     } else {
       toast.error(response.payload.Msg);
     }
@@ -287,7 +286,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                     id="description"
                     label={
                       <span>
-                       {getBusinessCaption("Name", "Name")}
+                        {getBusinessCaption("Name", "Name")}
                         <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                       </span>
                     }
@@ -307,7 +306,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                       }
                     }} />
 
-                  
+
                   <Box
                     sx={{
                       display: "grid",
@@ -320,12 +319,12 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                   >
                     <TextField
                       fullWidth
-                       label={
-                      <span>
-                        {getBusinessCaption("Type", "Type")}
-                        <span style={{ color: 'red', fontSize: '20px' }}>*</span>
-                      </span>
-                    }
+                      label={
+                        <span>
+                          {getBusinessCaption("Type", "Type")}
+                          <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        </span>
+                      }
                       id="type"
                       name="type"
                       variant="standard"
@@ -363,15 +362,15 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                         error={!!touched.Policy && !!errors.Policy}
                         helperText={touched.Policy && errors.Policy}
                         url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2150",
-                              ScreenName: "Payroll Policy",
-                              VerticalLicense: Subscriptionlastthree,
-                              Filter: `companyID=${CompanyID}`,
-                              Any: "",
-                            },
-                          })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                          Query: {
+                            AccessID: "2150",
+                            ScreenName: "Payroll Policy",
+                            VerticalLicense: Subscriptionlastthree,
+                            Filter: `companyID=${CompanyID}`,
+                            Any: "",
+                          },
+                        })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
                       />
                     ) : (null)}
                   </Box>
@@ -462,7 +461,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                   >
                     Save
                   </LoadingButton>
-                  {YearFlag == "true" ? (
+                  {mode == "E" &&
                     <Button
                       color="error"
                       variant="contained"
@@ -472,15 +471,7 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                     >
                       Delete
                     </Button>
-                  ) : (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Delete
-                    </Button>
-                  )}
+                  }
                   <Button
                     color="warning"
                     variant="contained"

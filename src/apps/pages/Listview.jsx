@@ -71,6 +71,8 @@ import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
+import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {
   ExcelFileDownload,
   ExcelFileUpload,
@@ -89,11 +91,11 @@ import CategoryIcon from "@mui/icons-material/Category";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
-import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import {
   CheckinAutocomplete,
+  Employeeautocomplete,
   MultiFormikOptimizedAutocomplete,
   OrderItemAutocomplete,
   PartymultiSelect,
@@ -119,6 +121,11 @@ import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import InvpaymentPDF from "./pdf/Invpaymentdetailpdf";
+import EventIcon from '@mui/icons-material/Event';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -163,12 +170,29 @@ const Listview = () => {
   console.log(location, "location -----------------");
   var screenName1 = params.screenName;
   var screenName = rowData.name;
+  console.log("🚀 ~ Listview ~ screenName:", screenName, screenName1)
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   console.log("🚀 ~ Listview ~ listViewData:", listViewData)
+  const format = (d) => d.toISOString().split("T")[0];
+  const oneMonthBefore = new Date();
+  const today = new Date();
+  oneMonthBefore.setMonth(today.getMonth() - 1);
+  const defaultFromDate = format(oneMonthBefore);
 
+  const defaultToDate = format(today);
+  const currentMonthNumber = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  // const currentDate = new Date().toISOString().split("T")[0];
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  console.log(SubscriptionCode, is003Subscription, "SubscriptionCode");
+  const baseurl1 = config.UAAM_URL;
   const loading = useSelector((state) => state.listviewApi.loading);
+  const [timeempData, settimeempData] = useState(null);
+
+  var CompId = sessionStorage.getItem("compID");
+
   // const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
   //   useSelector((state) => state.screenRights.data);
   const rights = useSelector((state) => state.screenRights.data) || {};
@@ -327,11 +351,15 @@ const Listview = () => {
           accessID == "TR047" ||
           accessID == "TR152" ||
           accessID == "TR155" ||
+          // accessID == "TR321" ||
           accessID == "TR022"
           ? `compID=${compID}`
-          : accessID == "TR027" ?
-            `CompanyID=${compID}`
-            : "",
+          : accessID == "TR027" ||
+            accessID == "TR321" ?
+            `CompanyID=${compID}` :
+            accessID == "TR331" ?
+              `CompanyID=${compID}`
+              : "",
         "",
         compID
       )
@@ -449,7 +477,9 @@ const Listview = () => {
     () => columns.filter(filterByIDShow),
     [listViewcolumn]
   );
-  // console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columnShow:", columnShow)
+  console.log("🚀 ~ file: Listview.jsx:94 ~ Listview ~ columns:", columns)
+
   const rows = React.useMemo(() => {
     return listViewData;
   }, [listViewData]);
@@ -563,14 +593,22 @@ const Listview = () => {
 
         <Typography variant="h3" noWrap>
           {accessID == "TR330"
-            ? `${screenName1}`:
-            accessID == "TR323"
-             ?  screenName || rowData.Screennameroute :
-             accessID == "TR315"
-             ? screenName || rowData.Screenname 
-              : accessID == "TR128"
-             ? screenName || rowData.LocationName
-             : screenName}</Typography>
+            ? `${screenName1}` :
+            accessID == "TR376"
+              ? `${screenName1}` :
+              accessID == "TR378"
+                ? `${screenName1}` :
+                accessID == "TR323"
+                  ? screenName || rowData.Screennameroute :
+                  accessID == "TR315"
+                    ? screenName || rowData.Screenname
+                    : accessID == "TR128"
+                      ? screenName || rowData.LocationName
+                      : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                    ? screenName1
+                    : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                      ? screenName1
+                      : screenName}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -594,6 +632,8 @@ const Listview = () => {
             {accessID === "TR313" ||
               accessID === "TR243" ||
               accessID === "TR328" ||
+              accessID === "TR331" ||
+              accessID === "TR366" ||
               accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
@@ -622,6 +662,23 @@ const Listview = () => {
                 </IconButton>
               </Tooltip>
             ) : null}
+            {accessID == "TR331" || accessID == "TR366" ? (
+              <Tooltip arrow title="Analytics">
+                <IconButton>
+                  <AnalyticsIcon
+                    onClick={() => {
+                      navigate(`./Invoice/Analytics`, {
+                        state: {
+                          ...rowData,
+                        },
+                      });
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              false
+            )}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -701,6 +758,8 @@ const Listview = () => {
               false
             ) : accessID == "TR315" ? (
               false
+            ) : accessID == "TR370" ? (
+              false
             ) : accessID == "TR330" ? (
               false
             )
@@ -721,7 +780,7 @@ const Listview = () => {
                             `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
                             }`,
                             {
-                             
+
                               state: {
                                 ...rowData,
                                 Routescreen: screenName,
@@ -764,6 +823,14 @@ const Listview = () => {
             <FileUploadIcon />
           </IconButton>
             </Tooltip> */}
+            {accessID === "TR321" && (
+              <Tooltip arrow title="Party Analytics">
+                <IconButton 
+                onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
             {accessID == "TR064" ? (
               <Tooltip arrow title="Excel">
                 <IconButton
@@ -1879,7 +1946,16 @@ const Listview = () => {
                             }}
                             // error={!!touched.party && !!errors.party}
                             // helperText={touched.party && errors.party}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2140",
+                                ScreenName: "Party",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${compID}'`,
+                                Any: "",
+                              },
+                            })}`}
                           />
 
                           <MultiFormikOptimizedAutocomplete
@@ -1898,7 +1974,16 @@ const Listview = () => {
                             }}
                             // error={!!touched.product && !!errors.product}
                             // helperText={touched.product && errors.product}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2137",
+                                ScreenName: "Product",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
+                                Any: "",
+                              },
+                            })}`}
                           />
                           <TextField
                             select
@@ -2271,7 +2356,354 @@ const Listview = () => {
                 </Formik>
               </Box>
             )}
+            {showMore && (accessID === "TR331" || accessID === "TR366") && (() => {
 
+              // Restore session filters
+              const savedFilters =
+                JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
+
+              const initialFormValues = {
+                fromDate: savedFilters.fromDate || defaultFromDate,
+                toDate: savedFilters.toDate || defaultToDate,
+                project: savedFilters.project || [],
+                Employee: savedFilters.Employee || [],
+                attmonth: savedFilters.attmonth || currentMonthNumber,
+                attyear: savedFilters.attyear || currentYear,
+              };
+
+              return (
+                <Box
+                  sx={{
+                    width: 320,
+                    p: 2,
+                    borderRadius: 1,
+                    backgroundColor: "#fff",
+                    position: "relative"
+                  }}
+                >
+                  <Formik
+                    initialValues={initialFormValues}
+                    enableReinitialize
+                    onSubmit={(values, { setSubmitting }) => {
+
+                      // Save filters to session
+                      sessionStorage.setItem(
+                        "TR331_Filters",
+                        JSON.stringify(values)
+                      );
+
+                      const conditions = [];
+                      // const fromDate = formattedDate2(values.fromDate);
+                      // const toDate = formattedDate2(values.toDate);
+
+                      if (values.fromDate && values.toDate) {
+                        conditions.push(
+                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                        );
+                      }
+
+                      if (values.attmonth) {
+                        conditions.push(
+                          `BillableMonth='${values.attmonth}'`
+                        );
+                      }
+
+                      if (values.attyear) {
+                        conditions.push(
+                          `BillableYear='${values.attyear}'`
+                        );
+                      }
+
+                      if (values.Employee?.length > 0) {
+                        const EmpIds = values.Employee
+                          .map((e) => `'${e.RecordID}'`)
+                          .join(",");
+                        conditions.push(`EmployeeID IN (${EmpIds})`);
+                      }
+
+                      if (values.project?.length > 0) {
+                        const projIds = values.project
+                          .map((p) => `'${p.RecordID}'`)
+                          .join(",");
+                        conditions.push(`ProjectID IN (${projIds})`);
+                      }
+
+                      conditions.push(`CompanyID='${CompId}'`);
+
+                      const whereClause = conditions.join(" AND ");
+
+                      dispatch(
+                        fetchListview(
+                          "TR331",
+                          Subscriptionlastthree,
+                          screenName,
+                          whereClause,
+                          "",
+                          CompId
+                        )
+                      );
+
+                      setTimeout(() => setSubmitting(false), 100);
+                    }}
+                  >
+                    {({
+                      values,
+                      handleChange,
+                      handleSubmit,
+                      resetForm,
+                      setFieldValue,
+                      isSubmitting
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        <Box sx={{ height: 600, overflowY: "auto" }}>
+
+                          {/* Close Button */}
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
+
+                          {/* From Date */}
+                          <TextField
+                            fullWidth
+                            label="From Date"
+                            type="date"
+                            name="fromDate"
+                            value={values.fromDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          {/* To Date */}
+                          <TextField
+                            fullWidth
+                            label="To Date"
+                            type="date"
+                            name="toDate"
+                            value={values.toDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          {/* Project */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="project"
+                            label={is003Subscription ? "Standard/Activities" : "Project"}
+                            value={values.project}
+                            onChange={(e, newValue) =>
+                              setFieldValue("project", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
+
+
+                          {/* Employee */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="Employee"
+                            label={is003Subscription ? "Student" : "Personnel"}
+                            value={values.Employee}
+                            onChange={(e, newValue) =>
+                              setFieldValue("Employee", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2116",
+                                ScreenName: "Personnel",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`} />
+
+                          {/*  Month */}
+                          {/* <TextField
+                          sx={{ mt: 2 }}
+                          variant="standard"
+                          label="Month"
+                          name="attmonth"
+                          value={values.attmonth}
+                          onChange={handleChange}
+                          select
+                          fullWidth
+                          focused
+                        >
+                          {[
+                            "January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                          ].map((month, index) => (
+                            <MenuItem key={index + 1} value={index + 1}>
+                              {month}
+                            </MenuItem>
+                          ))}
+                        </TextField> */}
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Month"
+                            name="attmonth"
+                            value={values.attmonth || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attmonth && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attmonth", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            {[
+                              "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"
+                            ].map((month, index) => (
+                              <MenuItem key={index + 1} value={index + 1}>
+                                {month}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+
+                          {/* Year */}
+                          {/* <TextField
+                          sx={{ mt: 2 }}
+                          variant="standard"
+                          label="Year"
+                          name="attyear"
+                          value={values.attyear}
+                          onChange={handleChange}
+                          select
+                          fullWidth
+                          focused
+                        >
+                          <MenuItem value="2026">2026</MenuItem>
+                          <MenuItem value="2025">2025</MenuItem>
+                        </TextField> */}
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Year"
+                            name="attyear"
+                            value={values.attyear || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attyear && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attyear", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            <MenuItem value="2026">2026</MenuItem>
+                            <MenuItem value="2025">2025</MenuItem>
+                          </TextField>
+
+                          {/* Buttons */}
+                          <Stack
+                            direction="row"
+                            justifyContent="end"
+                            spacing={1}
+                            mt={3}
+                          >
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              disabled={isSubmitting}
+                            >
+                              Apply
+                            </Button>
+
+                            <PDFDownloadLink
+                              document={
+                                <InvpaymentPDF
+                                  data={listViewData}
+                                  Project={values?.project}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: HeaderImg,
+                                    FooterImg: FooterImg,
+                                    fromDate: values.fromDate,
+                                    toDate: values.toDate
+                                  }}
+                                />
+                              }
+                              fileName="Invoice_pdf"
+                              style={{ color: "#d32f2f" }}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+                                ) : (
+                                  <PictureAsPdfIcon />
+                                )
+                              }
+                            </PDFDownloadLink>
+
+                            <Button
+                              type="button"
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                sessionStorage.removeItem("TR331_Filters");
+
+                                resetForm({
+                                  values: {
+                                    project: [],
+                                    Employee: [],
+                                    fromDate: defaultFromDate,
+                                    toDate: defaultToDate,
+                                    attmonth: currentMonthNumber,
+                                    attyear: currentYear,
+                                  },
+                                });
+                              }}
+                            >
+                              RESET
+                            </Button>
+                          </Stack>
+
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Box>
+              );
+
+            })()}
             {showMore && accessID === "TR243" && (
               <Box
                 sx={{
@@ -2467,6 +2899,7 @@ const Listview = () => {
                     dispatch(
                       fetchListview(
                         accessID,
+                        Subscriptionlastthree,
                         screenName,
                         whereClause,
                         "",
@@ -3134,6 +3567,7 @@ const Listview = () => {
                       dispatch(
                         fetchListview(
                           accessID,
+                          Subscriptionlastthree,
                           "Party",
                           `CompanyID=${compID}`,
                           "",
@@ -3173,6 +3607,7 @@ const Listview = () => {
                       dispatch(
                         fetchListview(
                           accessID,
+                          Subscriptionlastthree,
                           "Party",
                           simpleWhere,
                           "",
@@ -3244,6 +3679,7 @@ const Listview = () => {
                       dispatch(
                         fetchListview(
                           accessID,
+                          Subscriptionlastthree,
                           "Party",
                           finalWhereClause,
                           "",
@@ -3258,6 +3694,7 @@ const Listview = () => {
                       dispatch(
                         fetchListview(
                           accessID,
+                          Subscriptionlastthree,
                           "Party",
                           `CompanyID=${compID}`,
                           "",
@@ -3951,7 +4388,7 @@ const Listview = () => {
                     const whereClause = conditions.join(" AND ");
                     sessionStorage.setItem("TR328_WHERE", whereClause);
 
-                    dispatch(fetchListview(accessID, screenName, whereClause, "", compID));
+                    dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, whereClause, "", compID));
 
                     setTimeout(() => setSubmitting(false), 100);
                   }}
@@ -4050,7 +4487,16 @@ const Listview = () => {
                             }}
                             // error={!!touched.party && !!errors.party}
                             // helperText={touched.party && errors.party}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2140", "VerticalLicense": Subscriptionlastthree, "ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2140",
+                                ScreenName: "Party",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${compID}'`,
+                                Any: "",
+                              },
+                            })}`}
                           />
                           <MultiFormikOptimizedAutocomplete
                             sx={{ width: 250, mt: 1 }}
@@ -4068,9 +4514,17 @@ const Listview = () => {
                             }}
                             // error={!!touched.product && !!errors.product}
                             // helperText={touched.product && errors.product}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                            // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2137",
+                                ScreenName: "Product",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
+                                Any: "",
+                              },
+                            })}`}
                           />
-
 
 
                           {/* FRESH CALL */}
@@ -4334,6 +4788,32 @@ const Listview = () => {
             <Chip
               icon={<Psychology color="primary" />}
               label="Assessment"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR374" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<EventIcon color="primary" />}
+              label="Terms"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR376" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ScheduleIcon color="primary" />}
+              label="Slot"
               variant="outlined"
             />
           </Box>
@@ -4680,27 +5160,31 @@ const Listview = () => {
               label="Reset"
               variant="outlined"
             />
-          </Box>
-        ) : accessID == "TR313" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
-            {/* <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
+            <Chip
+              icon={<AssessmentIcon />}
+              label="Party Analytics"
               variant="outlined"
             />
+          </Box>
+        ) : accessID == "TR331" || accessID == "TR366" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
 
             <Chip
-              icon={< Diversity2Icon color="primary"/>}
-              label="Leads"
+              icon={< CurrencyRupeeOutlinedIcon color="primary" />}
+              label="Payment"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+
             />
+          </Box>
+        ) : accessID == "TR370" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+
             <Chip
-              icon={< CategoryIcon color="primary"/>}
-              label="Order"
+              icon={<ManageAccountsIcon color="primary" />}
+              label="Enquiry Detail"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
-            /> */}
+
+            />
           </Box>
         ) : accessID == "TR328" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -4771,6 +5255,16 @@ const Listview = () => {
               <Chip
                 icon={<PeopleAltIcon color="primary" />}
                 label="Personnel"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          )
+           : accessID == "TR378" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<SourceOutlinedIcon color="primary" />}
+                label="Standard/Activities"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />

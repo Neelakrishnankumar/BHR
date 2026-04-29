@@ -180,7 +180,7 @@ const initialState = {
   attachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
-  designationImportUrl:"",
+  designationImportUrl: "",
   pcdurl: "",
   pdfurl: "",
   indentUrl: "",
@@ -298,35 +298,44 @@ const initialState = {
   LeaveenquiryGetController: "",
   UserActivityGet: "",
   auditScreennameGet: "",
-  EmployeeVendorGetController:"",
+  EmployeeVendorGetController: "",
   OHPaymentUpdateController: "",
   PartyBydateByamtFilter: "",
-  EmployeeVendorContactGet:"",
-  ExcelFileDownload:"",
-  ExcelFileUpload:"",
-  Setup_MenuExcel:"",
-  Parentposturl:"",
-  Processposturl:"",
-  PayslipGetController:"",
-  PartyReplacementQtyGet:"",
-  ItempriceGeturl:"",
-  SOPAttachmentsController:"",
-  SOPProcess:"",
-  SOPConfigPost:"",
-  SOPConfigGet:"",
-  SpecimenPost:"",
-  SpecimenGet:"",
-  SopEmpMappingController:"",
-  EmpInventoryGetController:"",
-  EmpInventoryPostController:"",
-  Scoreboard:"",
-  RepaymentScheduleGet:"",
-  PartypendingorderlistgetController:"",
-  SopTimeLineController:"",
-  GetOverflowAffectedOrders:"",
-  PartyReset:"",
-  WeeklyTeachercalendarGet:"",
-  ContractInvoicePDF:"",
+  EmployeeVendorContactGet: "",
+  ExcelFileDownload: "",
+  ExcelFileUpload: "",
+  Setup_MenuExcel: "",
+  Parentposturl: "",
+  Processposturl: "",
+  PayslipGetController: "",
+  PartyReplacementQtyGet: "",
+  ItempriceGeturl: "",
+  SOPAttachmentsController: "",
+  SOPProcess: "",
+  SOPConfigPost: "",
+  SOPConfigGet: "",
+  SpecimenPost: "",
+  SpecimenGet: "",
+  SopEmpMappingController: "",
+  EmpInventoryGetController: "",
+  EmpInventoryPostController: "",
+  Scoreboard: "",
+  RepaymentScheduleGet: "",
+  PartypendingorderlistgetController: "",
+  SopTimeLineController: "",
+  GetOverflowAffectedOrders: "",
+  PartyReset: "",
+  WeeklyTeachercalendarGet: "",
+  ContractInvoicePDF: "",
+  CompanyPolicyUpdate: "",
+  CompanyPloicyGET: "",
+  CompanyTermsGet: "",
+  InvoiceAnalytics: "",
+  TeacherOccupancy: "",
+  TimetableProcessController: "",
+  WeeklycaledarUrl: "",
+  PartyAnalytics:"",
+  slotgetUrl: ""
 };
 
 export const getUrlSlice = createSlice({
@@ -345,7 +354,7 @@ export const getUrlSlice = createSlice({
       state.baseUrl = baseurl;
       // state.listViewurl = APIurl + "wslistview_mysqlV1.php";
       state.listViewurl = APIurl + "wslistview_mysql.php";
-      state.loginUrl = APIurl + "LController.php";
+      state.loginUrl = APIurl + "LControllerV1.php";
       state.authUrl = APIurl + "auth.php";
       state.forgotPasswordUrl = APIurl + "BOSForgetPasswordController.php";
       state.comboUrl = APIurl + "APIController.php";
@@ -522,6 +531,16 @@ export const getUrlSlice = createSlice({
       state.CustomisedCaptionGet = APIurl + "CustomisedCaptionGet.php";
       state.WeeklyTeachercalendarGet = APIurl + "TeacherScheduleGetController.php";
       state.ContractInvoicePDF = APIurl + "EmpContractData.php";
+      state.CompanyPloicyGET = APIurl + "CompanyPolicyGetController.php";
+      state.CompanyPolicyUpdate = APIurl + "CompanyPolicyUpdateController.php";
+      state.CompanyTermsGet = APIurl + "TermsGetController.php";
+      state.InvoiceAnalytics = APIurl + "InvoiceAnalytics.php";
+      state.TeacherOccupancy = APIurl + "TeacherOccupancy.php";
+      state.TimetableProcessController = APIurl + "TimetableProcessController.php";
+      state.WeeklycaledarUrl = APIurl + "WeeklyClassCalendarGet.php";
+      state.PartyAnalytics = APIurl + "PartyAnalytics.php";
+      state.slotgetUrl = APIurl + "SlotDetailGetController.php";
+
     },
   },
 });

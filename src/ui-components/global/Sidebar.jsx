@@ -166,6 +166,9 @@ import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettin
 import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import AppShortcutIcon from '@mui/icons-material/AppShortcut';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -208,10 +211,51 @@ const getPersonnelMenu = (is00123Subscription) =>
       UGA_VIEW: true,
       UGA_ACCESSIDS: "TR027",
     };
+const getProjectMenu = (is00123Subscription) =>
+  is00123Subscription
+    ? {
+
+      name: "Project",
+      id: 4346894,
+      url: "./TR378/Academic Year",
+      icon: (
+        <Tooltip
+          title="Project"
+        >
+          <SourceOutlinedIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR275",
+    }
+    : {
+      name: "Project",
+      id: 4346894,
+      url: "./TR275/Project",
+      icon: (
+        <Tooltip
+          title="Project"
+        >
+          <SourceOutlinedIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR275",
+    };
 
 
 
-const Item = ({ title, to, icon, selected, setSelected, isChild ,state,Tooltipname }) => {
+const Item = ({ title, to, icon, selected, setSelected, isChild, state, Tooltipname }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -220,7 +264,7 @@ const Item = ({ title, to, icon, selected, setSelected, isChild ,state,Tooltipna
   function cal() {
     setSelected(title);
     // navigate(to);
-    navigate(to, { state }); 
+    navigate(to, { state });
   }
 
   return (
@@ -232,12 +276,12 @@ const Item = ({ title, to, icon, selected, setSelected, isChild ,state,Tooltipna
       //   <span> {icon} </span>
       // </Tooltip>}
       onClick={cal}
-     >
+    >
       <Typography style={{ marginLeft: isChild ? "16px" : "" }}>
         {title}
       </Typography>
     </MenuItem>
-   
+
   );
 };
 
@@ -259,8 +303,8 @@ const Sidebars = () => {
     SubscriptionCode?.endsWith(code)
   );
 
-  console.log(is003Subscription,is00123Subscription, "is003Subscription");
-  const restrictedMenus003 = ["Party","Functions","Aging Report","Lead Enquiry","Order Enquiry"];
+  console.log(is003Subscription, is00123Subscription, "is003Subscription");
+  const restrictedMenus003 = ["Party", "Functions", "Aging Report", "Lead Enquiry", "Order Enquiry"];
 
   // const firstLogin = "Y";
   console.log(firstLogin, "firstLogin");
@@ -305,7 +349,7 @@ const Sidebars = () => {
   };
   const [menu, setMenu] = useState({});
 
-console.log(menu, "--+heloooooooooooooo menu");
+  console.log(menu, "--+heloooooooooooooo menu");
 
 
   const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
@@ -319,19 +363,22 @@ console.log(menu, "--+heloooooooooooooo menu");
         id,
         UGA_ACCESSIDS,
         MenuID,
-        
+
       }) => {
-   const accessItem = accessRow.find(
-  (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
-);
-console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
- 
-        if (name === "Party") {
-          console.log("Party parent:", parentMenuID);
-        }
+        const accessItem = accessRow.find(
+          (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
+        );
+        console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
+
+        // if (name === "Party") {
+        //   console.log("Party parent:", parentMenuID);
+        // }
         if (is003Subscription && name === "CRM") {
-        return null;
-      }
+          return null;
+        }
+        if (!is003Subscription && (name === "Academic Year" || name === "Slot")) {
+          return null;
+        }
 
         //  HIDE CRM → Party for 003 subscription
         if (
@@ -343,7 +390,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
           return null;
         }
         if (!children) {
-          
+
           return accessRow.map(
             ({
               UGA_ADD,
@@ -364,7 +411,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
                   UGA_VIEW)
               ) {
 
-                
+
                 return (
                   <List component="div" disablePadding key={id}>
                     <ListItem
@@ -381,13 +428,13 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
                         selected={selected}
                         setSelected={setSelected}
                         Tooltipname={accessItem?.SM_CAPTION1 || Tooltipname}
-                       state={{
-                         name: accessItem?.SM_CAPTION1 || name,
+                        state={{
+                          name: accessItem?.SM_CAPTION1 || name,
                           // name: name,
                           accessId: UGA_ACCESSIDS,
                           id: id,
                         }}
-                        
+
                       />
                     </ListItem>
                   </List>
@@ -409,11 +456,11 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
                 >
                   {!collapsed && (
                     <Tooltip title={Tooltipname}>
-                    {/* // <Tooltip title={Tooltipname+"Hello"}> */}
+                      {/* // <Tooltip title={Tooltipname+"Hello"}> */}
                       <ListItemButton style={{ height: menuHeight }}>
                         <ListItemIcon>{icon}</ListItemIcon>
                         {/* <ListItemText primary={name+"hiii"} /> */}
-                           <ListItemText primary={name} />
+                        <ListItemText primary={name} />
                         {menu[name] ? (
                           <ExpandMore />
                         ) : (
@@ -476,8 +523,8 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             url: "./TR122/Designation",
             icon: (
               <Tooltip
-               title="Designation"
-               >
+                title="Designation"
+              >
                 <PersonIcon color="info" />
               </Tooltip>
             ),
@@ -561,26 +608,28 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
           //   UGA_VIEW: true,
           //   UGA_ACCESSIDS: "TR275",
           // },
-            {
-              
-            name: "Project",
-            id: 4346894,
-            url: "./TR275/Project",
-            icon: (
-              <Tooltip
-              title="Project"
-               >
-                <SourceOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR275",
-          },
+          // {
+
+          //   name: "Project",
+          //   id: 4346894,
+          //   url: "./TR378/Academic Year",
+          //   icon: (
+          //     <Tooltip
+          //       title="Project"
+          //     >
+          //       <SourceOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR275",
+          // },
+          getProjectMenu(is00123Subscription),
+
           {
             name: "Functions",
             id: 567,
@@ -631,6 +680,23 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR265",
+          },
+          {
+            name: "Slot",
+            id: 474,
+            url: "./TR376/Slot%20Group",
+            icon: (
+              <Tooltip title="Slot">
+                <HistoryToggleOffIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR376",
           },
           {
             name: "Leave Type",
@@ -892,6 +958,23 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_ACCESSIDS: "TR313",
           },
           {
+            name: "Enquiry (DME)",
+            id: 4346899,
+            url: "./TR370/DMEnquiry",
+            icon: (
+              <Tooltip title="Digital Marketing Enquiry">
+                <AppShortcutIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR370",
+          },
+          {
             name: "Lead Enquiry",
             id: 4346899,
             url: "./TR328/Lead Enquiry",
@@ -977,7 +1060,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
           {
             name: "Payroll Configuration",
             id: 47,
-            url: "./TR027/Employee Payroll",
+            url: "./TR027/Payroll Configuration",
             icon: (
               <Tooltip title="Payroll Configuration">
                 <PriceCheckIcon color="info" />
@@ -1025,6 +1108,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR257",
           },
+
           // {
           //   name: "Approval",
           //   id: 5859,
@@ -1045,12 +1129,12 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
         ],
       },
       {
-        name: "Agile",
+        name: is003Subscription ? "Academics" : "Agile",
         id: 45678,
         MenuID: "EM900",
-        Tooltipname: "Agile",
+        Tooltipname: is003Subscription ? "Academics" : "Agile",
         icon: (
-          <Tooltip title="Agile">
+          <Tooltip title={is003Subscription ? "Academics" : "Agile"}>
             <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
           </Tooltip>
         ),
@@ -1123,6 +1207,26 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
+          },
+          {
+            name: "Invoice",
+            // url: "/Apps/TR250/Invoice",
+            // url: "/Apps/TR331/Invoice",
+            url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+            id: 88,
+            icon: (
+              <Tooltip title="Invoice">
+                <ReceiptIcon color="info" />
+              </Tooltip>
+            ),
+            // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR331",
           },
         ],
       },
@@ -1249,7 +1353,7 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
           {
             name: "Company",
             id: 5846,
-            url: "./configuration",
+            url: "./configuration/E",
             icon: (
               <Tooltip title="Configuration">
                 <DisplaySettingsIcon color="info" />
@@ -1313,6 +1417,23 @@ console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR345",
+          },
+          {
+            name: "Academic Year",
+            id: 58548,
+            url: "./TR374/Academicyear",
+            icon: (
+              <Tooltip title="Academic Year">
+                <EventNoteIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR374",
           },
           {
             name: "Change Password",
