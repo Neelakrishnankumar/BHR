@@ -97,8 +97,13 @@ const NewScheduleLatest = () => {
   const parentID3 = params.parentID3;
   const parentID4 = params.parentID4;
   console.log("🚀 ~ NewSchedule ~ parentID2:", parentID2);
+  console.log("🚀 ~ NewSchedule ~ parentID3:", parentID3);
+  console.log("🚀 ~ NewSchedule ~ parentID4:", parentID4);
 
   const CompanyID = sessionStorage.getItem("compID");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  console.log("🚀 ~ NewScheduleLatest ~ is003Subscription:", is003Subscription)
   const state = location.state || {};
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -446,7 +451,8 @@ const NewScheduleLatest = () => {
       editable: false,
     },
     {
-      headerName: "Employee Name",
+      // headerName: "Employee Name",
+      headerName: is003Subscription ? "Student Name" : "Employee Name",
       field: "EmployeeName",
       width: "200",
       align: "left",
@@ -612,31 +618,31 @@ const NewScheduleLatest = () => {
         if (params.row.STATUS === "Pass") {
           actions.push(
             <Tooltip title="Score Board">
-            <GridActionsCellItem
-              key="ScoreBoard"
-              icon={<AnalyticsIcon style={{ color: "#4cceac" }} />}
-              label="Score Board"
-              onClick={() =>
-                navigate(
-                  `/Apps/Secondarylistview/skillglow/${accessID2}/${screenName}/${parentID4}/${accessID1}/${parentID3}/ScheduleListAssessment/${parentID2}/AssessmentScoreBoard/${params.row.RecordID}`,
-                  {
-                    state: {
-                      ...state,
-                      AssessmentName: params.row.AssessmentName,
-                      AssessmentID: params.row.AssessmentID,
-                      ScheduleID: params.row.RecordID,
-                      Lastattdate: params.row.Lastattdate,
-                      Firstattdate: params.row.Firstattdate,
-                      Lastattscore: params.row.Lastattscore,
-                      NoofAttemp: params.row.NoofAttemp,
-                      EmployeeName: params.row.EmployeeName,
-                      EmployeeID: params.row.EmployeeID,
+              <GridActionsCellItem
+                key="ScoreBoard"
+                icon={<AnalyticsIcon style={{ color: "#4cceac" }} />}
+                label="Score Board"
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/${accessID2}/${screenName}/${parentID4}/${accessID1}/${parentID3}/ScheduleListAssessment/${parentID2}/AssessmentScoreBoard/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        AssessmentName: params.row.AssessmentName,
+                        AssessmentID: params.row.AssessmentID,
+                        ScheduleID: params.row.RecordID,
+                        Lastattdate: params.row.Lastattdate,
+                        Firstattdate: params.row.Firstattdate,
+                        Lastattscore: params.row.Lastattscore,
+                        NoofAttemp: params.row.NoofAttemp,
+                        EmployeeName: params.row.EmployeeName,
+                        EmployeeID: params.row.EmployeeID,
+                      },
                     },
-                  },
-                )
-              }
-              color="inherit"
-            />
+                  )
+                }
+                color="inherit"
+              />
             </Tooltip>
           );
         }
@@ -732,7 +738,18 @@ const NewScheduleLatest = () => {
                       );
                     }}
                   >
-                    List of Assessment ({state.BreadCrumb3})
+                    {params.parentID4 === "AP" ?
+                      "List of Appraisal" :
+                      params.parentID4 === "CL" ?
+                        "List of Compliance" :
+                        params.parentID4 === "SV" ?
+                          "List of Survey" :
+                          params.parentID4 === "FB" ?
+                            "List of Feedback" :
+                            "List of Assessment"
+                    }
+                    {/* List of Assessment */}
+                    ({state.BreadCrumb3})
                   </Typography>
                   <Typography
                     variant="h5"

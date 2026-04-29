@@ -89,8 +89,13 @@ const NewSchedule = () => {
   const parentID1 = params.parentID1;
   const parentID2 = params.parentID2;
   console.log("🚀 ~ NewSchedule ~ parentID2:", parentID2);
+  console.log("🚀 ~ NewSchedule ~ parentID3:", params.parentID3);
+  console.log("🚀 ~ NewSchedule ~ parentID4:", params.parentID4);
 
   const CompanyID = sessionStorage.getItem("compID");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  console.log("🚀 ~ NewSchedule ~ is003Subscription:", is003Subscription)
   const state = location.state || {};
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -407,22 +412,26 @@ const NewSchedule = () => {
       align: "center",
       renderCell: (params) => params.api.getRowIndex(params.id) + 1,
     },
-    { field: "EmployeeName", headerName: "Employee Name", width: 200, headerAlign: "center" },
+    { field: "EmployeeName", 
+      headerName: is003Subscription ? "Student Name" : "Employee Name", 
+      width: 200, headerAlign: "center" },
     { field: "Assessment", headerName: "Assessment", width: 150, headerAlign: "center" },
     { field: "Designation", headerName: "Designation", width: 200, headerAlign: "center" },
-    { field: "Date", 
+    {
+      field: "Date",
       headerName: "Date",
-       width: 150, 
-       headerAlign: "center", 
-       align: "center",
-       valueFormatter: (params) => {
-    if (!params.value) return "";
-    const date = new Date(params.value);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }, },
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      },
+    },
     {
       field: "actions",
       type: "actions",
@@ -616,7 +625,19 @@ const NewSchedule = () => {
                       );
                     }}
                   >
-                    List of Assessment ({state.BreadCrumb3})
+                    {params.parentID4 === "AP" ?
+                      "List of Appraisal" :
+                      params.parentID4 === "CL" ?
+                        "List of Compliance" :
+                        params.parentID4 === "SV" ?
+                          "List of Survey" :
+                          params.parentID4 === "FB" ?
+                            "List of Feedback" :
+                            "List of Assessment"
+                    }
+
+                    {/* List of Assessment */}
+                    ({state.BreadCrumb3})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -733,7 +754,16 @@ const NewSchedule = () => {
                         marginTop: "10px",
                       }}
                       name="EmpName"
-                      label="Employee"
+                      // label="Employee"
+                      label={
+                            is003Subscription ? (
+                              "Student Name"
+                            ) : (
+                              
+                                "Employee"
+                              
+                            )
+                          }
                       id="EmpName"
                       value={selectedEmp}
                       onChange={(e, newValue) => {

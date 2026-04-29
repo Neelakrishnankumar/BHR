@@ -384,7 +384,18 @@ const CreateCompliance = () => {
                   }}
 
                 >
-                  List of Category ({state.BreadCrumb2})
+                  {/* {params.parentID2 === "AP" ? 
+              "List of Appraisal Category" :
+              params.parentID2 === "CL" ?
+              "List of Compliance Category" :
+              params.parentID2 === "SV" ?
+              "List of Survey Category" :
+              params.parentID2 === "FB" ?
+              "List of Feedback Category" :
+              "List of Assessment Category"  
+              } */}
+                  List of Category 
+                  ({state.BreadCrumb2})
                 </Typography>
                 <Typography
                   variant="h5"
@@ -394,7 +405,17 @@ const CreateCompliance = () => {
                     navigate(-1);
                   }}
                 >
-                  List of Assessment
+                  {params.parentID2 === "AP" ? 
+              "List of Appraisal" :
+              params.parentID2 === "CL" ?
+              "List of Compliance" :
+              params.parentID2 === "SV" ?
+              "List of Survey" :
+              params.parentID2 === "FB" ?
+              "List of Feedback" :
+              "List of Assessment"  
+              }
+                  {/* List of Assessment */}
                 </Typography>
                 <Typography
                   variant="h5"

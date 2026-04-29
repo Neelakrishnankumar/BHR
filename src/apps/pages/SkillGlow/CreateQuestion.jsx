@@ -399,7 +399,18 @@ const CreateQuestion = () => {
                       );
                     }}
                   >
-                    List of Category ({state.BreadCrumb2})
+                    {/* {params.parentID3 === "AP" ? 
+              "List of Appraisal Category" :
+              params.parentID3 === "CL" ?
+              "List of Compliance Category" :
+              params.parentID3 === "SV" ?
+              "List of Survey Category" :
+              params.parentID3 === "FB" ?
+              "List of Feedback Category" :
+              "List of Assessment Category"  
+              } */}
+                    List of Category
+                     ({state.BreadCrumb2})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -412,7 +423,18 @@ const CreateQuestion = () => {
                       );
                     }}
                   >
-                    List of Assessment ({state.BreadCrumb3})
+                    {params.parentID4 === "AP" ? 
+              "List of Appraisal" :
+              params.parentID4 === "CL" ?
+              "List of Compliance" :
+              params.parentID4 === "SV" ?
+              "List of Survey" :
+              params.parentID4 === "FB" ?
+              "List of Feedback" :
+              "List of Assessment"  
+              }
+                    {/* List of Assessment  */}
+                    ({state.BreadCrumb3})
                   </Typography>
                   <Typography
                     variant="h5"

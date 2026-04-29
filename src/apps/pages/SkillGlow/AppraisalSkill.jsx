@@ -235,6 +235,9 @@ const CreateAppraisalSkill = () => {
       //Noofquestion: "0",
       Duration: values.Duration,
       Permittedtimes: "1",
+      // FullyAutomatic: values.FullyAutomatic === true ? "Y" : "N",
+      FullyAutomatic: "Y",
+
     };
 
     const response = await dispatch(postData({ accessID: "TR300", action, idata }));
@@ -310,6 +313,8 @@ const CreateAppraisalSkill = () => {
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+    FullyAutomatic: Data.FullyAutomatic == "Y" ? true : false,
+
   };
   const memoizedUrl = useCallback(() => {
     return `${listViewurl}?data=${encodeURIComponent(
@@ -382,7 +387,18 @@ const CreateAppraisalSkill = () => {
                   }}
 
                 >
-                  List of Category ({state.BreadCrumb2})
+                  {/* {params.parentID2 === "AP" ?
+                    "List of Appraisal Category" :
+                    params.parentID2 === "CL" ?
+                      "List of Compliance Category" :
+                      params.parentID2 === "SV" ?
+                        "List of Survey Category" :
+                        params.parentID2 === "FB" ?
+                          "List of Feedback Category" :
+                          "List of Assessment Category"
+                  } */}
+                  List of Category
+                  ({state.BreadCrumb2})
                 </Typography>
                 <Typography
                   variant="h5"
@@ -392,7 +408,17 @@ const CreateAppraisalSkill = () => {
                     navigate(-1);
                   }}
                 >
-                  List of Assessment
+                  {params.parentID2 === "AP" ?
+                    "List of Appraisal" :
+                    params.parentID2 === "CL" ?
+                      "List of Compliance" :
+                      params.parentID2 === "SV" ?
+                        "List of Survey" :
+                        params.parentID2 === "FB" ?
+                          "List of Feedback" :
+                          "List of Assessment"
+                  }
+                  {/* List of Assessment */}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -935,6 +961,16 @@ const CreateAppraisalSkill = () => {
                   />
 
                   <Box>
+                    {/* <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="FullyAutomatic"
+                          checked={values.FullyAutomatic}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Fully Automatic"
+                    /> */}
                     <FormControlLabel
                       control={
                         <Checkbox
