@@ -4252,7 +4252,7 @@ const Editemployee = () => {
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
     resignationnote: ResignationGetData.ResignationNote,
-    exitinterviewby: ResignationGetData.ExitInterviewBy
+    exitinterviewby: ResignationGetData.ExitInterviewBy >0
       ? {
         RecordID: ResignationGetData?.ExitInterviewBy || 0,
         Code: ResignationGetData?.ExitInterviewByCode || "",
@@ -9430,7 +9430,7 @@ const Editemployee = () => {
             <Formik
               initialValues={resignationinitialvalues}
               enableReinitialize={true}
-              // validationSchema={validationSchema22}
+              validationSchema={validationSchema22}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fnsaveresignation(values, resetForm, false);
