@@ -79,6 +79,8 @@ const ProjectTimeTable = () => {
     const TermsID = state.TermsID || "";
     const SectionID = state.MilestoneID || "";
     const ProjectID = state.projectID || "";
+    const HeaderID = state.HeaderID || "";
+    const GroupID = state.GroupID || "";
 
     const empID = sessionStorage.getItem("EmpId");
     const compID = sessionStorage.getItem("compID");
@@ -89,11 +91,11 @@ const ProjectTimeTable = () => {
 
     useEffect(() => {
         dispatch(weeklyclasscaledarGet({
-            projectID: ProjectID,
-            milestonesID: SectionID,
-            TermsID: TermsID,
+            ProjectID: ProjectID,
+            HeaderID: HeaderID,
+            TermID: TermsID,
             CompanyID: compID,
-            SlotGroupID: state.SlotGroupID || "",
+            GroupID: GroupID,
         }));
     }, []);
 

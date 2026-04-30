@@ -5048,6 +5048,8 @@ export const fetchListview =
                               BreadCrumb1: params.row.Project,
                               TermName: params.row.TermName,
                               SlotGroupID: params.row.SlotGroupID,
+                              GroupID: params.row.SlotGroupID,
+                              HeaderID: params.row.RecordID,
                             }}
                           >
                             <Tooltip title="Timetable">

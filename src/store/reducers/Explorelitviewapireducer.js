@@ -166,15 +166,20 @@ export const weeklyTeachercalendarGet = createAsyncThunk(
 );
 export const weeklyclasscaledarGet = createAsyncThunk(
   "TimeTable/classCal",
-  async ({ projectID, milestonesID, TermsID, CompanyID, SlotGroupID }, { rejectWithValue }) => {
+  async ({ ProjectID, HeaderID, TermID, CompanyID, GroupID }, { rejectWithValue }) => {
     try {
       const url = store.getState().globalurl.WeeklycaledarUrl;
       const requestBody = {
-        milestonesID: milestonesID,
-        projectID: projectID,
-        TermsID: TermsID,
+        // milestonesID: milestonesID,
+        // projectID: projectID,
+        // TermsID: TermsID,
+        // CompanyID: CompanyID,
+        // SlotGroupID: SlotGroupID
+        HeaderID: HeaderID,
+        ProjectID: ProjectID,
+        TermID: TermID,
         CompanyID: CompanyID,
-        SlotGroupID: SlotGroupID
+        GroupID: GroupID
       };
 
       console.log("🚀 Sending Body:", requestBody);
