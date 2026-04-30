@@ -279,7 +279,7 @@ const ListviewSecondary = () => {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR368") {
-    filter = `StandardID = '${leaderID}' AND CompanyID = '${compID}'`;
+    filter = `StandardID = '${Type}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR377") {
     filter = `SlotGroupID = '${leaderID}' AND CompanyID = '${compID}'`;
@@ -1134,6 +1134,17 @@ const ListviewSecondary = () => {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
+            <Typography
+              key={8646}
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR378/Academic%20Year");
+              }}
+            >
+              {`Academic Year(${state.AcademicYear})`}
+            </Typography>
             <Typography
               key={8646}
               variant="h5"

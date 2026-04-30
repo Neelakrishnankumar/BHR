@@ -553,6 +553,23 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
+           {
+            name: "Slot",
+            id: 474,
+            url: "./TR376/Slot%20Group",
+            icon: (
+              <Tooltip title="Slot">
+                <HistoryToggleOffIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR376",
+          },
           // {
           //   name: "Role",
           //   url: "./TR232/Role",
@@ -681,23 +698,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR265",
           },
-          {
-            name: "Slot",
-            id: 474,
-            url: "./TR376/Slot%20Group",
-            icon: (
-              <Tooltip title="Slot">
-                <HistoryToggleOffIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR376",
-          },
+         
           {
             name: "Leave Type",
             id: 45680,

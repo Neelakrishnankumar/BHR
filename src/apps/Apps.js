@@ -1323,14 +1323,18 @@ function App() {
                     path="/:accessID/:screenName/EditSlot Group/:id/:Mode"
                     element={<EditSlotgroup />}
                   />
+                     <Route
+                    path="/:accessID/:screenName/EditSlot/:id/:Mode"
+                    element={<EditSlots />}
+                  />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTerms/:id/:Mode"
                     element={<EditTerms />}
                   />
-                  <Route
+                  {/* <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSlots/:id/:Mode"
                     element={<EditSlots />}
-                  />
+                  /> */}
                   <Route
                     path="/Edittimesheetreport"
                     element={<Edittimesheetreport />}
@@ -1505,11 +1509,11 @@ function App() {
                     
                   />
                    <Route
-                  path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTimeTable/:id/:Mode"
+                  path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                   element={<EditTimetablev1 />}
                   />
                   <Route
-                  path="/Secondarylistview/:accessID/:screenName/:filtertype/ProjectTimeTable"
+                  path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"
                   element={<ProjectTimeTable />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}

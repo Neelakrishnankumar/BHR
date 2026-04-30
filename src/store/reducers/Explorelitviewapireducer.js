@@ -166,14 +166,15 @@ export const weeklyTeachercalendarGet = createAsyncThunk(
 );
 export const weeklyclasscaledarGet = createAsyncThunk(
   "TimeTable/classCal",
-  async ({ projectID, milestonesID, TermsID, CompanyID }, { rejectWithValue }) => {
+  async ({ projectID, milestonesID, TermsID, CompanyID, SlotGroupID }, { rejectWithValue }) => {
     try {
       const url = store.getState().globalurl.WeeklycaledarUrl;
-  const requestBody = {
+      const requestBody = {
         milestonesID: milestonesID,
         projectID: projectID,
         TermsID: TermsID,
-        CompanyID: CompanyID
+        CompanyID: CompanyID,
+        SlotGroupID: SlotGroupID
       };
 
       console.log("🚀 Sending Body:", requestBody);
@@ -183,9 +184,9 @@ export const weeklyclasscaledarGet = createAsyncThunk(
         requestBody,
         {
           headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
         }
       );
 
@@ -204,7 +205,7 @@ export const weeklyclasscaledarGet = createAsyncThunk(
 );
 export const slotListView = createAsyncThunk(
   "slot/Companydetail",
-  async ({ accessID, screenName, filter, any,VerticalLicense }) => {
+  async ({ accessID, screenName, filter, any, VerticalLicense }) => {
     var url = store.getState().globalurl.listViewurl;
     var idata = {
       Query: {
@@ -212,7 +213,7 @@ export const slotListView = createAsyncThunk(
         ScreenName: screenName,
         Filter: filter,
         Any: any,
-        VerticalLicense:VerticalLicense
+        VerticalLicense: VerticalLicense
         // CompId:CompID
       },
     };
@@ -436,6 +437,56 @@ export const getApiSlice = createSlice({
         state.Status = "error";
         state.loading = false;
       })
+
+
+      .addCase(weeklyclasscaledarGet.pending, (state) => {
+        state.Status = "loading";
+        state.loading = true;
+        state.Data = {};
+        state.explorerowData = [];
+        state.explorecolumnData = [];
+      })
+
+      .addCase(weeklyclasscaledarGet.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+
+        const data = action.payload;
+
+        // ✅ Save raw response
+        state.Data = data;
+
+        // ✅ Create dynamic columns
+        state.explorecolumnData = [
+          {
+            field: "day",
+            headerName: "Days",
+            flex: 1,
+            headerAlign: "center",
+            align: "center",
+          },
+          ...data.timeSlots.map((slot) => ({
+            field: slot,
+            headerName: slot,
+            flex: 1,
+            headerAlign: "center",
+            align: "center",
+          })),
+        ];
+
+        // ✅ Create dynamic rows
+        state.explorerowData = data.schedule.map((item, index) => ({
+          id: index + 1,
+          day: item.day,
+          ...item.slots,
+        }));
+      })
+
+      .addCase(weeklyclasscaledarGet.rejected, (state) => {
+        state.Status = "error";
+        state.loading = false;
+      })
+
       //SLOT ADDCAE IN COMPANY EXPLORE
       .addCase(slotListView.pending, (state, action) => {
         state.slotcolumnData = []

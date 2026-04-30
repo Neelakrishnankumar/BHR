@@ -260,6 +260,10 @@ const initialState = {
   companytermsgetLoading: false,
   companytermsStatus: "",
   companytermsData: [],
+  slotLoading: false,
+  slotStatus: "",
+  slotgetData: [],
+
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2791,6 +2795,35 @@ export const companyTermsGet = createAsyncThunk(
     return response.data;
   }
 );
+
+// SLOT_GET_FUNCTION
+
+export const SlotGetfunction = createAsyncThunk(
+  "Slots_GET/GET",
+  async ({ GroupID }) => {
+    var url = store.getState().globalurl.slotgetUrl;
+    const data = {
+      GroupID: GroupID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 // Company -- Policy Get
 export const PolicyFetchData = createAsyncThunk(
   "PolicyFetchData/get",
@@ -3053,6 +3086,29 @@ export const getApiSlice = createSlice({
         state.invoiceAnalyticsError = action.payload || "Failed to fetch invoice analytics";
         state.invoiceAnalyticsData = null;
       })
+//SLOTS_GET_addcase
+  .addCase(SlotGetfunction.pending, (state, action) => {
+        state.slotStatus = "idle";
+        state.slotLoading = true;
+        state.slotgetData = [];
+        state.msg = "Loading...";
+      })
+      .addCase(SlotGetfunction.fulfilled, (state, action) => {
+        console.log("🔥SlotGetfunction  FULL PAYLOAD:", action.payload);
+        state.slotStatus = "success";
+        state.slotLoading = false;
+        state.slotgetData = action.payload.Data ? action.payload.Data : [];
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(SlotGetfunction.rejected, (state, action) => {
+        state.slotStatus = "Error";
+        state.slotLoading = false;
+        state.slotgetData = [];
+        toast.error("Something Went Wrong");
+      })
+
+
+
       //COMPANY_TERMS_GET
       .addCase(companyTermsGet.pending, (state, action) => {
         state.companytermsStatus = "idle";

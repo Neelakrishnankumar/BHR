@@ -36,6 +36,7 @@ import {
     GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { useProSidebar } from "react-pro-sidebar";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -46,6 +47,9 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Swal from "sweetalert2";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ProjectTimeTablePDF from "../pdf/ProTimetablepdf";
+import { getConfig } from "../../../config";
 
 const ProjectTimeTable = () => {
     const calendarRef = useRef(null);
@@ -65,13 +69,19 @@ const ProjectTimeTable = () => {
     const params = useParams();
     const location = useLocation();
 
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+
     const state = location.state || {};
     const TermsID = state.TermsID || "";
     const SectionID = state.MilestoneID || "";
     const ProjectID = state.projectID || "";
 
     const empID = sessionStorage.getItem("EmpId");
-    const compID = sessionStorage.getItem("companyId");
+    const compID = sessionStorage.getItem("compID");
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
     const theme = useTheme();
@@ -82,7 +92,8 @@ const ProjectTimeTable = () => {
             projectID: ProjectID,
             milestonesID: SectionID,
             TermsID: TermsID,
-            CompanyID: compID
+            CompanyID: compID,
+            SlotGroupID: state.SlotGroupID || "",
         }));
     }, []);
 
@@ -364,7 +375,38 @@ const ProjectTimeTable = () => {
                         ))}
                     </Box>
 
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+
+
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
+                        <PDFDownloadLink
+                            document={
+                                <ProjectTimeTablePDF
+                                    rows={WCrows}
+                                    columns={WEEKcolumns}
+                                    breakSlots={breakSlots}
+                                    projectName={state.projectName}
+                                    termName={state.TermName}
+                                    filters={{
+                                        Imageurl: baseurlUAAM,
+                                        HeaderImg: HeaderImg,
+                                        FooterImg: FooterImg,
+                                    }}
+                                />
+                            }
+                            fileName={`Timetable_${state.projectName || "report"}.pdf`}
+                            style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
+
+                        >
+                            {({ loading }) =>
+                                loading ? (
+                                    <PictureAsPdfIcon
+                                        sx={{ fontSize: 24, opacity: 0.5 }}
+                                    />
+                                ) : (
+                                    <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                )
+                            }
+                        </PDFDownloadLink>
                         <Button
                             variant="contained"
                             onClick={() => navigate(-1)}
@@ -385,7 +427,7 @@ const ProjectTimeTable = () => {
                     </Box>
                 </Box>
             </Paper>
-        </React.Fragment>
+        </React.Fragment >
     );
 };
 
