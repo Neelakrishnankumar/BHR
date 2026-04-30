@@ -1167,7 +1167,7 @@ const SubjectCell = ({ text }) => {
   );
   const col = getSubjectColor(text);
   const match = text.match(/^(.*?)\s*\(\s*(.*?)\s*\)$/);
-  const gradePart   = match ? match[1].trim() : text;
+  const gradePart = match ? match[1].trim() : text;
   const subjectPart = match ? match[2].trim() : "";
   return (
     <Box sx={{
@@ -1249,9 +1249,9 @@ const TeacherTimetable = ({ teacher, summary }) => {
         {summary && (
           <Box display="flex" gap={1} flexWrap="wrap">
             {[
-              { label: "TOTAL",    value: summary.TotalHours,    color: "#94A3B8" },
+              { label: "TOTAL", value: summary.TotalHours, color: "#94A3B8" },
               { label: "OCCUPIED", value: summary.OccupiedHours, color: "#FB923C" },
-              { label: "FREE",     value: summary.FreeHours,     color: "#4ADE80" },
+              { label: "FREE", value: summary.FreeHours, color: "#4ADE80" },
             ].map(({ label, value, color }) => (
               <Box key={label} sx={{
                 background: "rgba(255,255,255,0.08)",
@@ -1289,7 +1289,7 @@ const TeacherTimetable = ({ teacher, summary }) => {
               flexShrink: 0,
               borderRight: "1px solid #E2E8F0",
               px: "10px", py: "10px",
-              display: "flex", alignItems: "center", justifyContent: "center",            
+              display: "flex", alignItems: "center", justifyContent: "center",
             }}>
               <Typography sx={{ fontSize: "11px", fontWeight: 700, color: "#94A3B8", letterSpacing: "0.06em" }}>
                 Day
@@ -1445,7 +1445,7 @@ const TeacherOccupancy = () => {
   const sliceSubcriptionCode = SubscriptionCode.slice(-3);
   const companyId = sessionStorage.getItem("compID");
 
-  const [apiData, setApiData]       = useState(null);
+  const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
@@ -1454,9 +1454,9 @@ const TeacherOccupancy = () => {
 
   const getFormattedDate = () => {
     const today = new Date();
-    const day   = String(today.getDate()).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     const month = String(today.getMonth() + 1).padStart(2, "0");
-    const year  = today.getFullYear();
+    const year = today.getFullYear();
     return `${day}-${month}-${year}`;
   };
 
@@ -1471,16 +1471,16 @@ const TeacherOccupancy = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         if (props === "Logout") navigate("/");
-        if (props === "Close")  navigate("/Apps/TR232/Role");
+        if (props === "Close") navigate("/Apps/TR232/Role");
       }
     });
   };
 
   const handleApply = async (values) => {
     const payload = {
-      TermsID:     values?.terms?.RecordID || "",
+      TermsID: values?.terms?.RecordID || "",
       EmployeeIDs: values?.Teacher?.map((t) => t.RecordID) || [],
-      CompanyID:   companyId,
+      CompanyID: companyId,
     };
     setApiLoading(true);
     try {
@@ -1566,13 +1566,40 @@ const TeacherOccupancy = () => {
                     },
                   })}`}
                 />
-                <CheckinAutocomplete
+                {/* <CheckinAutocomplete
                   name="terms" label="Term" id="terms"
                   value={values.terms}
                   onChange={(newValue) => setFieldValue("terms", {
                     RecordID: newValue.RecordID, Code: newValue.Code, Name: newValue.Name,
                   })}
-                  url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms","Filter":"CompanyID=${companyId}","Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
+                  url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms", Filter: teacherIds? `EmployeeID IN ('${teacherIds}') AND CompanyID='${companyId}'`: `CompanyID='${companyId}'`,,"Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
+                /> */}
+                <CheckinAutocomplete
+                  name="terms"
+                  label="Term"
+                  id="terms"
+                  value={values.terms}
+                  onChange={(newValue) =>
+                    setFieldValue("terms", {
+                      RecordID: newValue.RecordID,
+                      Code: newValue.Code,
+                      Name: newValue.Name,
+                    })
+                  }
+                  url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                      AccessID: "2164",
+                      ScreenName: "Staff Terms",
+                      Filter: values?.Teacher
+                        ? `EmployeeID IN ('${Array.isArray(values.Teacher)
+                          ? values.Teacher.map(t => t.RecordID).join("','")
+                          : values.Teacher.RecordID
+                        }') AND CompanyID='${companyId}'`
+                        : `CompanyID='${companyId}'`,
+                      Any: "",
+                      VerticalLicense: sliceSubcriptionCode || "",
+                    },
+                  })}`}
                 />
               </Box>
 

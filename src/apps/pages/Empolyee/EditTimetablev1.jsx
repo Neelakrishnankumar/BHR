@@ -164,7 +164,7 @@ const EditTimetablev1 = () => {
   }
 
   const classids = ClassificationData
-    .filter(item => ["Board Of Directors", "Staff" || "Teaching Staff"].includes(item.CfcName))
+    .filter(item => ["Board Of Directors","Teaching Staff"].includes(item.CfcName))
     .map(item => item.CfcID);
 
   console.log(classids, "--classids");

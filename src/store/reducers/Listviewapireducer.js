@@ -1785,42 +1785,42 @@ export const fetchListview =
                   return (
                     <Box>
                       {isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/E`}>
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                     )} 
-                      {is003Subscription &&(
-                      <Link
-                        to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
-                        state={{
-                          AcademicYear: params.row.AcademicYear,
-                          AcademicYearID: params.row.AcademicYearID,
-                          projectID: params.row.RecordID,
-                          MilestoneName: params.row.Name,
-                          projectName: params.row.Project,
-                          BreadCrumb1: params.row.Project,
-                        }}
-                      >
-                        <Tooltip title="Time Table">
-                          <IconButton color="info" size="small">
-                            <DatasetLinkedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {is003Subscription && (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                          state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
+                          <Tooltip title="Time Table">
+                            <IconButton color="info" size="small">
+                              <DatasetLinkedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
                       )}
 
                       {!isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/V`}>
-                        <Tooltip title="View">
-                          <IconButton color="info" size="small">
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                        <Link to={`./EditProject/${params.row.RecordID}/V`}>
+                          <Tooltip title="View">
+                            <IconButton color="info" size="small">
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
                       )}
                       {/* <Tooltip title="Download PDF">
                       <IconButton
@@ -1880,7 +1880,7 @@ export const fetchListview =
                         )}
                       </IconButton>
                     </Tooltip> */}
-                      {isSeedEditable && !is003Subscription &&  (
+                      {isSeedEditable && !is003Subscription && (
                         <PDFButton
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
@@ -1918,8 +1918,8 @@ export const fetchListview =
                   );
                 },
               };
-            } 
-             else if (AccessID == "TR378") {
+            }
+            else if (AccessID == "TR378") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -1935,7 +1935,7 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                        state={{AcademicYear: params.row.AcademicYear }}
+                        state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
                           <IconButton color="info" size="small">
@@ -1947,7 +1947,7 @@ export const fetchListview =
                   );
                 },
               };
-            } 
+            }
             else if (AccessID == "TR265") {
               obj = {
                 field: "action",
@@ -4980,8 +4980,8 @@ export const fetchListview =
                               </Tooltip>
                             </Link>
                             <Link
-                          to={`./EditSlot/${params.row.RecordID}/E`}
-                             state={{ SlotGroupName: params.row.Name, BreadCrumb2: screenName }}
+                              to={`./EditSlot/${params.row.RecordID}/E`}
+                              state={{ SlotGroupName: params.row.Name, BreadCrumb2: screenName }}
                             >
                               <Tooltip title="Slot">
                                 <IconButton color="info" size="small">
@@ -6542,7 +6542,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             }}
           >
             <Tooltip title="Category">
-            {/* <Tooltip title={params.row.Code === "SK" ? "Assessment Category" : params.row.Code === "AP" ? "Appraisal Category" : params.row.Code === "CL" ? "Compliance Category" : params.row.Code === "SV" ? "Survey Category" : params.row.Code === "FB" ? "Feedback Category" : "Assessment Category"}> */}
+              {/* <Tooltip title={params.row.Code === "SK" ? "Assessment Category" : params.row.Code === "AP" ? "Appraisal Category" : params.row.Code === "CL" ? "Compliance Category" : params.row.Code === "SV" ? "Survey Category" : params.row.Code === "FB" ? "Feedback Category" : "Assessment Category"}> */}
               <CategoryOutlinedIcon />
             </Tooltip>
           </IconButton>
@@ -7269,29 +7269,27 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PeopleAltIcon />
               </IconButton>
             </Tooltip>
-            {params.row.Description == "Teaching Staff" || params.row.Description == "Staff" && (
-              <Tooltip title="Teacher Occupancy">
-                <IconButton
-                  color="info"
-                  size="small"
-                  onClick={() =>
-                    navigate(
-                      `/Apps/TeacherOccupancy/${params.row.RecordID}`,
-                      {
+            {(params.row.Description === "Teaching Staff" ||
+              params.row.Description === "Staff") && (
+                <Tooltip title="Teacher Occupancy">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`/Apps/TeacherOccupancy/${params.row.RecordID}`, {
                         state: {
                           ...state,
                           BreadCrumb1: params.row.Description,
                           Classification: params.row.Description,
                           CompanyID: params.row.CompanyID,
                         },
-                      },
-                    )
-                  }
-                >
-                  <SensorOccupiedIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+                      })
+                    }
+                  >
+                    <SensorOccupiedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
           </>
         )}
 
