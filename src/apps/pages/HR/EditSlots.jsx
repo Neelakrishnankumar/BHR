@@ -664,28 +664,60 @@ const EditSlots = () => {
     function EditToolbar(props) {
         const { setRows, setRowModesModel } = props;
 
+        // const handleClick = () => {
+        //     const id = nanoid();
+        //     const nextSLNO =
+        //         rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
+        //     setRows((oldRows) => [
+        //         ...oldRows,
+        //         {
+        //             RecordID: id, // Temporary ID, replaced after backend save
+        //             SLNO: nextSLNO,
+        //             SlotCode: "",
+        //             SlotName: "",
+        //             FromTime: "",
+        //             ToTime: "",
+        //             Comments: "",
+        //             Break: false,
+        //             isNew: true,
+
+        //         },
+        //     ]);
+        //     setRowModesModel((oldModel) => ({
+        //         ...oldModel,
+        //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "SlotCode" },
+        //     }));
+        // };
         const handleClick = () => {
             const id = nanoid();
-            const nextSLNO =
-                rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
-            setRows((oldRows) => [
-                ...oldRows,
-                {
-                    RecordID: id, // Temporary ID, replaced after backend save
-                    SLNO: nextSLNO,
-                    SlotCode: "",
-                    SlotName: "",
-                    FromTime: "",
-                    ToTime: "",
-                    Comments: "",
-                    Break: false,
-                    isNew: true,
 
-                },
-            ]);
+            const newRow = {
+                id,
+                RecordID: id,
+                Days: null,
+                Department: null,
+                Teacher: null,
+                Slots: null,
+                Comments: "",
+                isNew: true,
+            };
+
+            setRows((oldRows) => {
+                const updatedRows = [...oldRows, newRow];
+
+                //  Calculate new page
+                const newTotal = updatedRows.length;
+                const newPageIndex = Math.floor((newTotal - 1) / pageSize);
+
+                //  Move to that page
+                setPage(newPageIndex);
+
+                return updatedRows;
+            });
+
             setRowModesModel((oldModel) => ({
                 ...oldModel,
-                [id]: { mode: GridRowModes.Edit, fieldToFocus: "SlotCode" },
+                [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
             }));
         };
         return (
