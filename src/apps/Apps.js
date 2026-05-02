@@ -669,7 +669,8 @@ function App() {
                   />
                   {/* STAFF TIMETABLE */}
                   <Route
-                    path="/Staff/StaffTimetable/:CompanyID/:EmployeeID/:TermsID"
+                    // path="/Staff/StaffTimetable/:CompanyID/:EmployeeID/:TermsID"
+                    path = "/StaffTimetable/:id"
                     element={<StaffTimetable />}
                   />
 

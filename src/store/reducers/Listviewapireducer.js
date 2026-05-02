@@ -826,9 +826,9 @@ export const fetchListview =
         if (AccessID === "TR303") {
           filter = "PartyID=" + `'${filter}'`;
         }
-        //   if (AccessID === "TR304") {
-        //    filter = "LeaderID=" + `'${filter}'`;
-
+          if (AccessID === "TR099") {
+           filter = "";
+          }
         // }
         // if (AccessID === "TR314") {
         //    filter = "PartyID=" + `'${filter}'`;
@@ -1991,6 +1991,33 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR094") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditUser/${params.row.RecordID}/E`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -7836,7 +7863,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     size="small"
                     onClick={() => {
                       setSTSelectedRow(params.row);
-                      setSTModalOpen(true);
+                      navigate(`/Apps/StaffTimetable/${params.row.RecordID}`, { state: { ...state, EmpName: params.row.Name, Employee: params.row.Personnel } });
+                      // setSTModalOpen(true);
                     }}
                   >
                     <PermContactCalendarOutlinedIcon />

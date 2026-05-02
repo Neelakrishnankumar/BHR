@@ -1087,7 +1087,7 @@ const Editemployee = () => {
                 : Data.EmpType === "Intern"
                   ? "IN"
                   : "",
-    checkbox: Data.Disable,
+    checkbox: Data.Disable === "Y" ? true : false,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -4426,7 +4426,7 @@ const Editemployee = () => {
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
     resignationnote: ResignationGetData.ResignationNote,
-    exitinterviewby: ResignationGetData.ExitInterviewBy >0
+    exitinterviewby: ResignationGetData.ExitInterviewBy > 0
       ? {
         RecordID: ResignationGetData?.ExitInterviewBy || 0,
         Code: ResignationGetData?.ExitInterviewByCode || "",
@@ -13479,6 +13479,10 @@ const Editemployee = () => {
                           value={values.DueDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          inputProps={{
+                            min: values.FromPeriod || "",
+                            max: values.ToPeriod || "",
+                          }}
                         />
                       )}
 

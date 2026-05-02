@@ -164,7 +164,7 @@ const EditTimetablev1 = () => {
   }
 
   const classids = ClassificationData
-    .filter(item => ["Board Of Directors","Teaching Staff"].includes(item.CfcName))
+    .filter(item => ["Board Of Directors", "Teaching Staff"].includes(item.CfcName))
     .map(item => item.CfcID);
 
   console.log(classids, "--classids");
@@ -437,6 +437,8 @@ const EditTimetablev1 = () => {
 
       if (response?.payload?.Status === "Y") {
         toast.success(response.payload.Msg);
+        dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
+
       } else {
         toast.error(response?.payload?.Msg || "Delete failed");
       }
@@ -536,7 +538,7 @@ const EditTimetablev1 = () => {
     );
   }
   const [termsIDPass, setTermsIDPas] = useState(data?.SlotGroupID || []);
-  console.log(termsIDPass,"termsIDPass");
+  console.log(termsIDPass, "termsIDPass");
 
   function EditdeptAutocompleteCell(props) {
     const { id, value, field, api, row } = props;
@@ -796,11 +798,11 @@ const EditTimetablev1 = () => {
     description: isEditMode ? data?.Description || "" : "",
     // assignedPerson: isEditMode ? data?.AssignedByName || "" : "",
     assignedPerson: UserName || "",
-    Slotgroup: data?.SlotGroupID ? 
-    {
-      RecordID: data.SlotGroupID,
-      Name: data.SlotGroupName || "",
-    } : null,
+    Slotgroup: data?.SlotGroupID ?
+      {
+        RecordID: data.SlotGroupID,
+        Name: data.SlotGroupName || "",
+      } : null,
     assignedDate: new Date().toISOString().split("T")[0],
   };
 
@@ -808,29 +810,62 @@ const EditTimetablev1 = () => {
   function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
 
+    // const handleClick = () => {
+    //   const id = nanoid();
+    //   const nextSLNO =
+    //     rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
+    //   setRows((oldRows) => [
+    //     ...oldRows,
+    //     {
+    //       //  id: id,
+    //       id,
+    //       RecordID: id,
+    //       Days: null,
+    //       Department: null,
+    //       Teacher: null,
+    //       Slots: null,
+    //       Comments: "",
+    //       isNew: true,
+    //     }
+    //   ]);
+    //   setRowModesModel((oldModel) => ({
+    //     ...oldModel,
+    //     [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
+    //   }));
+    // };
     const handleClick = () => {
       const id = nanoid();
-      const nextSLNO =
-        rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
-      setRows((oldRows) => [
-        ...oldRows,
-        {
-          //  id: id,
-          id,
-          RecordID: id,
-          Days: null,
-          Department: null,
-          Teacher: null,
-          Slots: null,
-          Comments: "",
-          isNew: true,
-        }
-      ]);
+
+      const newRow = {
+        id,
+        RecordID: id,
+        Days: null,
+        Department: null,
+        Teacher: null,
+        Slots: null,
+        Comments: "",
+        isNew: true,
+      };
+
+      setRows((oldRows) => {
+        const updatedRows = [...oldRows, newRow];
+
+        //  Calculate new page
+        const newTotal = updatedRows.length;
+        const newPageIndex = Math.floor((newTotal - 1) / pageSize);
+
+        //  Move to that page
+        setPage(newPageIndex);
+
+        return updatedRows;
+      });
+
       setRowModesModel((oldModel) => ({
         ...oldModel,
         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
       }));
     };
+
     return (
       <GridToolbarContainer
         sx={{
@@ -1099,8 +1134,7 @@ const EditTimetablev1 = () => {
                     <>
                       Slot Group
                       <span style={{ color: "red", fontSize: "20px" }}>
-                        {" "}
-                        *{" "}
+                        *
                       </span>
                     </>
                   }
@@ -1110,11 +1144,9 @@ const EditTimetablev1 = () => {
                   onChange={(newValue) => {
                     if (newValue) {
                       setTermsIDPas(newValue.RecordID);
-                      console.log(termsIDPass, "--termsIDPass");
-                      setFieldValue("SlotRecordID", newValue.RecordID);
+                      // setFieldValue("SlotRecordID", newValue.RecordID);
                       setFieldValue("Slotgroup", newValue);
                     } else {
-                      setFieldValue("TermsCode", "");
                       setFieldValue("Slotgroup", newValue);
                     }
                   }}
