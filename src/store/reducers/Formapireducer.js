@@ -6476,3 +6476,36 @@ export const PartyAnalytics = createAsyncThunk(
     return response.data;
   },
 );
+
+export const TimeTableExcelGet = createAsyncThunk(
+  "TimeTableExcelGet/BulkExcel/Get",
+  async ({ data }) => {
+    const baseUrl = store.getState().globalurl.TimeTableExcelGet;
+
+    const response = await axios.get(baseUrl, {
+      params: data,
+      responseType: "blob", // 🔥 IMPORTANT for file download
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);
+
+export const TimeTableExcelPost = createAsyncThunk(
+  "TimeTableExcelPost/BulkExcel/Post",
+  async (excelSetUp) => {
+    const baseUrl = store.getState().globalurl.TimeTableExcelPost;
+    const response = await axios.post(baseUrl, excelSetUp, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);

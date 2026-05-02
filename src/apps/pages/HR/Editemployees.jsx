@@ -779,7 +779,12 @@ const Editemployee = () => {
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
-          Hsn: Yup.string().required(data.ContractsIN.Hsn),
+          // Hsn: Yup.string().required(data.ContractsIN.Hsn),
+          Hsn: Yup.string().when("BillingType", {
+            is: (val) => val !== "CashMemo",
+            then: (schema) => schema.required(data.ContractsIN.Hsn),
+            otherwise: (schema) => schema.notRequired(),
+          }),
         };
 
         // ✅ conditionally add vendor
@@ -4426,7 +4431,7 @@ const Editemployee = () => {
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
     resignationnote: ResignationGetData.ResignationNote,
-    exitinterviewby: ResignationGetData.ExitInterviewBy >0
+    exitinterviewby: ResignationGetData.ExitInterviewBy > 0
       ? {
         RecordID: ResignationGetData?.ExitInterviewBy || 0,
         Code: ResignationGetData?.ExitInterviewByCode || "",
@@ -13198,12 +13203,22 @@ const Editemployee = () => {
                         name="Hsn"
                         type="text"
                         id="Hsn"
+                        // label={
+                        //   <span>
+                        //     HSN Code
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
                         label={
                           <span>
                             HSN Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            {values.BillingType !== "CashMemo" && (
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            )}
                           </span>
                         }
                         variant="standard"
@@ -13212,6 +13227,14 @@ const Editemployee = () => {
                         value={values.Hsn}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        // onChange={(e) => {
+                        //   const value = e.target.value;
+                        //   setFieldValue("BillingType", value);
+
+                        //   if (value === "CashMemo") {
+                        //     setFieldValue("Hsn", ""); // 🔥 clear HSN
+                        //   }
+                        // }}
                         error={!!touched.Hsn && !!errors.Hsn}
                         helperText={touched.Hsn && errors.Hsn}
                         autoFocus
