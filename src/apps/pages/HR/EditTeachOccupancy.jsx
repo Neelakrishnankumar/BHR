@@ -1449,6 +1449,7 @@ const TeacherOccupancy = () => {
   const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  console.log("HeaderImg:", HeaderImg);
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;

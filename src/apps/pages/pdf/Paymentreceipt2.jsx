@@ -34,20 +34,31 @@ const styles = StyleSheet.create({
         objectFit: "contain",
     },
 
-    footerWrapper: {
-        position: "absolute",
-        bottom: 25,
-        left: 5,
-        right: 5,
-        height: 75,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+    // footerWrapper: {
+    //     position: "absolute",
+    //     bottom: 25,
+    //     left: 5,
+    //     right: 5,
+    //     height: 75,
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    // },
 
+    // footerImage: {
+    //     width: "100%",
+    //     height: 100,
+    //     objectFit: "cover",
+    // },
+    footerWrapper: {
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        height: 60,
+        overflow: "hidden",
+        display: "flex",
+    },
     footerImage: {
         width: "100%",
-        height: 100,
-        objectFit: "cover",
+        height: "100%",
+        objectFit: "fill",   
     },
 
     // Title
@@ -90,13 +101,13 @@ const styles = StyleSheet.create({
     //     fontWeight: 'bold',
     //     marginBottom: 4,
     //     alignItems: "center",
-        
+
     // },
     columnLabel: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginBottom: 4,
-},
+        fontSize: 10,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
 
     receiverName: {
         fontSize: 10,
@@ -112,53 +123,53 @@ const styles = StyleSheet.create({
 
     // Invoice Section
     invoiceDetailBox: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRightWidth: 1,
-    borderRightColor: '#cccccc',
-},
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderRightWidth: 1,
+        borderRightColor: '#cccccc',
+    },
 
-invoiceDetailBoxLast: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-},
+    invoiceDetailBoxLast: {
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+    },
 
-invoiceLabel: {
-    fontSize: 10,                    // smaller — subordinate to value
-    fontWeight: 'bold',
-    marginBottom: 4,
-    textAlign: 'center',            // header title center aligned
-    letterSpacing: 0.5,
-    paddingBottom: 4,               // space before separator line
-    borderBottomWidth: 0.5,         // ← row separating line
-    borderBottomColor: '#cccccc',
-},
+    invoiceLabel: {
+        fontSize: 10,                    // smaller — subordinate to value
+        fontWeight: 'bold',
+        marginBottom: 4,
+        textAlign: 'center',            // header title center aligned
+        letterSpacing: 0.5,
+        paddingBottom: 4,               // space before separator line
+        borderBottomWidth: 0.5,         // ← row separating line
+        borderBottomColor: '#cccccc',
+    },
 
-invoiceValue: {
-    // fontSize: 11,
-    fontSize: 8,
-    fontWeight: 'bold',
-    textAlign: 'right',             // number field → right aligned
-    marginTop: 4,                   // space after separator line
-},
+    invoiceValue: {
+        // fontSize: 11,
+        fontSize: 8,
+        fontWeight: 'bold',
+        textAlign: 'right',             // number field → right aligned
+        marginTop: 4,                   // space after separator line
+    },
 
-invoiceTextValue: {
-    fontSize: 8,
-    fontWeight: 'bold',
-    textAlign: 'left',              // text field → left aligned
-    marginTop: 4,
-},
+    invoiceTextValue: {
+        fontSize: 8,
+        fontWeight: 'bold',
+        textAlign: 'left',              // text field → left aligned
+        marginTop: 4,
+    },
 
-previousBalanceValue: {
-    // fontSize: 11,
-    fontSize: 8,
-    fontWeight: 'bold',
-    color: '#d97706',
-    textAlign: 'right',             // number field → right aligned
-    marginTop: 4,
-},
+    previousBalanceValue: {
+        // fontSize: 11,
+        fontSize: 8,
+        fontWeight: 'bold',
+        color: '#d97706',
+        textAlign: 'right',             // number field → right aligned
+        marginTop: 4,
+    },
     // invoiceDetailsSection: {
     //     flexDirection: 'row',
     //     // justifyContent:'space-between',
@@ -289,55 +300,55 @@ previousBalanceValue: {
         color: '#666666',
     },
     invoiceDetailsSection: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    borderWidth: 1,           // outer border around entire section
-    borderColor: '#cccccc',
-    borderRadius: 2,
-},
+        flexDirection: 'row',
+        marginBottom: 15,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+        borderWidth: 1,           // outer border around entire section
+        borderColor: '#cccccc',
+        borderRadius: 2,
+    },
 
-invoiceDetailBox: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRightWidth: 1,           // column separator line
-    borderRightColor: '#cccccc',
-},
+    invoiceDetailBox: {
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderRightWidth: 1,           // column separator line
+        borderRightColor: '#cccccc',
+    },
 
-invoiceDetailBoxLast: {           // NEW — no right border on last box
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-},
+    invoiceDetailBoxLast: {           // NEW — no right border on last box
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+    },
 
-// invoiceLabel: {
-//     fontSize: 12,                   // smaller than value
-//     fontWeight: 'bold',
-//     marginBottom: 4,
-//     letterSpacing: 0.5,
-// },
+    // invoiceLabel: {
+    //     fontSize: 12,                   // smaller than value
+    //     fontWeight: 'bold',
+    //     marginBottom: 4,
+    //     letterSpacing: 0.5,
+    // },
 
-// invoiceValue: {
-//     fontSize: 9,                  // larger, prominent
-//     fontWeight: 'bold',
-//     textAlign: 'right',            // right-aligned for number fields
-// },
+    // invoiceValue: {
+    //     fontSize: 9,                  // larger, prominent
+    //     fontWeight: 'bold',
+    //     textAlign: 'right',            // right-aligned for number fields
+    // },
 
-// invoiceTextValue: {                // NEW — left-aligned for text fields
-//     fontSize: 9,
-//     fontWeight: 'bold',
-//     textAlign: 'left',
-// },
+    // invoiceTextValue: {                // NEW — left-aligned for text fields
+    //     fontSize: 9,
+    //     fontWeight: 'bold',
+    //     textAlign: 'left',
+    // },
 
-// previousBalanceValue: {
-//     fontSize: 9,                  // match invoiceValue size
-//     fontWeight: 'bold',
-//     color: '#d97706',
-//     textAlign: 'right',            // right-aligned
-// },
+    // previousBalanceValue: {
+    //     fontSize: 9,                  // match invoiceValue size
+    //     fontWeight: 'bold',
+    //     color: '#d97706',
+    //     textAlign: 'right',            // right-aligned
+    // },
 });
 
 
@@ -448,33 +459,33 @@ const PaymentReceipt = ({ data, filters }) => {
                             <Text style={styles.previousBalanceValue}>{data.PreviouslyPaid}</Text>
                         </View>
                     </View> */}
-                   <View style={styles.invoiceDetailsSection}>
+                    <View style={styles.invoiceDetailsSection}>
 
-    {/* Invoice No — text, left aligned */}
-    <View style={styles.invoiceDetailBox}>
-        <Text style={styles.invoiceLabel}>Invoice No.</Text>
-        <Text style={styles.invoiceTextValue}>{data.InvoiceNo}</Text>
-    </View>
+                        {/* Invoice No — text, left aligned */}
+                        <View style={styles.invoiceDetailBox}>
+                            <Text style={styles.invoiceLabel}>Invoice No.</Text>
+                            <Text style={styles.invoiceTextValue}>{data.InvoiceNo}</Text>
+                        </View>
 
-    {/* Payment Mode — text, left aligned */}
-    <View style={styles.invoiceDetailBox}>
-        <Text style={styles.invoiceLabel}>Payment Mode</Text>
-        <Text style={styles.invoiceTextValue}>{data.PaymentMode}</Text>
-    </View>
+                        {/* Payment Mode — text, left aligned */}
+                        <View style={styles.invoiceDetailBox}>
+                            <Text style={styles.invoiceLabel}>Payment Mode</Text>
+                            <Text style={styles.invoiceTextValue}>{data.PaymentMode}</Text>
+                        </View>
 
-    {/* Amount — number, right aligned */}
-    <View style={styles.invoiceDetailBox}>
-        <Text style={styles.invoiceLabel}>Amount</Text>
-        <Text style={styles.invoiceValue}>{data.InvoiceAmount}</Text>
-    </View>
+                        {/* Amount — number, right aligned */}
+                        <View style={styles.invoiceDetailBox}>
+                            <Text style={styles.invoiceLabel}>Amount</Text>
+                            <Text style={styles.invoiceValue}>{data.InvoiceAmount}</Text>
+                        </View>
 
-    {/* Already Paid — number, right aligned, no right border */}
-    <View style={styles.invoiceDetailBoxLast}>
-        <Text style={styles.invoiceLabel}>Already Paid</Text>
-        <Text style={styles.previousBalanceValue}>{data.PreviouslyPaid}</Text>
-    </View>
+                        {/* Already Paid — number, right aligned, no right border */}
+                        <View style={styles.invoiceDetailBoxLast}>
+                            <Text style={styles.invoiceLabel}>Already Paid</Text>
+                            <Text style={styles.previousBalanceValue}>{data.PreviouslyPaid}</Text>
+                        </View>
 
-</View>
+                    </View>
 
                     {/* Table */}
                     <View style={styles.tableSection}>

@@ -619,11 +619,22 @@ const styles = StyleSheet.create({
   },
   headerImage: { width: "100%", height: 60, marginBottom: 10, objectFit: "contain" },
 
+  // footerWrapper: {
+  //   position: "absolute", bottom: 0, left: 0, right: 0,
+  //   height: 55, alignItems: "center", justifyContent: "center",
+  // },
+  // footerImage: { width: "100%", height: 55, objectFit: "cover" },
   footerWrapper: {
     position: "absolute", bottom: 0, left: 0, right: 0,
-    height: 55, alignItems: "center", justifyContent: "center",
+    height: 60,
+    overflow: "hidden",
+    display: "flex",
   },
-  footerImage: { width: "100%", height: 55, objectFit: "cover" },
+  footerImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "fill",   // ← stretches to fill both width & height exactly, no gaps
+  },
 
   // ─── Report Title (first page only) ───
   reportTitle: {
@@ -649,8 +660,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   timetableTitleText: { fontSize: 11, fontWeight: "bold", color: "#1e1e3a" },
-  timetableTitleSep:  { fontSize: 11, color: "#94A3B8", marginHorizontal: 6 },
-  timetableTitleSub:  { fontSize: 10, color: "#64748B" },
+  timetableTitleSep: { fontSize: 11, color: "#94A3B8", marginHorizontal: 6 },
+  timetableTitleSub: { fontSize: 10, color: "#64748B" },
 
   // ─── Column Header Row (time slot headers) ───
   timetableHeaderRow: {
@@ -705,7 +716,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   dataRowLast: { borderBottomWidth: 0 },
-  dataRowAlt:  { backgroundColor: "#FAFBFF" },
+  dataRowAlt: { backgroundColor: "#FAFBFF" },
 
   // Day name cell (first column)
   dayNameCell: {
@@ -740,9 +751,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     width: "100%",
   },
-  subjectName:  { fontSize: 7, fontWeight: "bold", color: "#92400E", marginBottom: 1 },
+  subjectName: { fontSize: 7, fontWeight: "bold", color: "#92400E", marginBottom: 1 },
   subjectGrade: { fontSize: 6, color: "#F59E0B" },
-  emptyDash:    { fontSize: 8, color: "#CBD5E1", textAlign: "center" },
+  emptyDash: { fontSize: 8, color: "#CBD5E1", textAlign: "center" },
 
   // ─── Summary Page ───
   summaryPageTitle: {
@@ -759,10 +770,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8FAFC", border: "1px solid #E2E8F0",
     borderRadius: 6, alignItems: "center",
   },
-  statValue:         { fontSize: 18, fontWeight: "bold", color: "#1e1e3a", marginBottom: 4 },
-  statLabel:         { fontSize: 8, color: "#64748B", textAlign: "center" },
+  statValue: { fontSize: 18, fontWeight: "bold", color: "#1e1e3a", marginBottom: 4 },
+  statLabel: { fontSize: 8, color: "#64748B", textAlign: "center" },
   statValueOccupied: { color: "#FB923C" },
-  statValueFree:     { color: "#10B981" },
+  statValueFree: { color: "#10B981" },
 
   overallSummaryTable: {
     marginBottom: 20, border: "1px solid #E2E8F0", borderRadius: 4,
@@ -771,26 +782,26 @@ const styles = StyleSheet.create({
     flexDirection: "row", backgroundColor: "#EEF2FF",
     borderBottomWidth: 1, borderBottomColor: "#E2E8F0",
   },
-  overallSummaryRow:     { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#E2E8F0" },
+  overallSummaryRow: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#E2E8F0" },
   overallSummaryRowLast: { flexDirection: "row" },
-  overallSummaryRowAlt:  { backgroundColor: "#F8FAFC" },
+  overallSummaryRowAlt: { backgroundColor: "#F8FAFC" },
 
-  colTeacher:  { width: "28%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0" },
+  colTeacher: { width: "28%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0" },
   colSubjects: { width: "32%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0" },
-  colTotal:    { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0", textAlign: "center" },
+  colTotal: { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0", textAlign: "center" },
   colOccupied: { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0", textAlign: "center" },
-  colFree:     { width: "14%", padding: 8, textAlign: "center" },
+  colFree: { width: "14%", padding: 8, textAlign: "center" },
 
-  overallHeaderText:   { fontSize: 9, fontWeight: "bold", textAlign: "center", color: "#000" },
-  overallCellText:     { fontSize: 9, color: "#334155" },
+  overallHeaderText: { fontSize: 9, fontWeight: "bold", textAlign: "center", color: "#000" },
+  overallCellText: { fontSize: 9, color: "#334155" },
   overallCellOccupied: { fontSize: 9, color: "#FB923C", fontWeight: "bold" },
-  overallCellFree:     { fontSize: 9, color: "#10B981", fontWeight: "bold" },
-  overallCellTeacher:  { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
+  overallCellFree: { fontSize: 9, color: "#10B981", fontWeight: "bold" },
+  overallCellTeacher: { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
 
-  grandTotalRow:      { flexDirection: "row", backgroundColor: "#EEF2FF", borderTopWidth: 1, borderTopColor: "#1e1e3a" },
-  grandTotalText:     { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
+  grandTotalRow: { flexDirection: "row", backgroundColor: "#EEF2FF", borderTopWidth: 1, borderTopColor: "#1e1e3a" },
+  grandTotalText: { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
   grandTotalOccupied: { fontSize: 9, fontWeight: "bold", color: "#FB923C" },
-  grandTotalFree:     { fontSize: 9, fontWeight: "bold", color: "#10B981" },
+  grandTotalFree: { fontSize: 9, fontWeight: "bold", color: "#10B981" },
 
   subjectBreakdownSection: { marginTop: 20 },
   subjectBreakdownTitle: {
@@ -803,7 +814,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8FAFC", borderRadius: 4, border: "1px solid #E2E8F0",
   },
   teacherSubjectBlockName: { fontSize: 10, fontWeight: "bold", color: "#1e1e3a", marginBottom: 6 },
-  subjectTagsRow:          { flexDirection: "row", flexWrap: "wrap" },
+  subjectTagsRow: { flexDirection: "row", flexWrap: "wrap" },
   subjectTag: {
     backgroundColor: "#EEF2FF", border: "0.5px solid #6366F1",
     padding: 4, marginRight: 6, marginBottom: 4, borderRadius: 3,
@@ -854,7 +865,7 @@ const TeacherTimetableTable = ({ teacher }) => {
   const { timeSlots, BreakSlots, BreakSlotsList, schedule, TeacherName } = teacher;
 
   // Exclude break/assembly/lunch/activity — keep only actual teaching periods
-  const breakTexts  = new Set(BreakSlotsList.map((b) => b.SlotText));
+  const breakTexts = new Set(BreakSlotsList.map((b) => b.SlotText));
   const periodSlots = [...timeSlots]
     .filter((s) => !breakTexts.has(s))
     .sort((a, b) => parseTime(a.split(" - ")[0]) - parseTime(b.split(" - ")[0]));
@@ -917,12 +928,12 @@ const TeacherTimetableTable = ({ teacher }) => {
 
           {/* Subject cell per period */}
           {periodSlots.map((slot, slotIdx) => {
-            const cellText    = dayMap[day]?.[slot] ?? "";
-            const parts       = cellText
+            const cellText = dayMap[day]?.[slot] ?? "";
+            const parts = cellText
               ? cellText.split(/\s*\(\s*|\s*\)/).filter(Boolean)
               : [];
             const subjectPart = parts[0] || "";
-            const gradePart   = parts[1] || "";
+            const gradePart = parts[1] || "";
 
             return (
               <View
@@ -934,7 +945,7 @@ const TeacherTimetableTable = ({ teacher }) => {
               >
                 {cellText ? (
                   <View style={styles.subjectCellBox}>
-                    {gradePart   && <Text style={styles.subjectName}>{gradePart}</Text>}
+                    {gradePart && <Text style={styles.subjectName}>{gradePart}</Text>}
                     {subjectPart && <Text style={styles.subjectGrade}>{subjectPart}</Text>}
                   </View>
                 ) : (
@@ -960,7 +971,7 @@ const OverallSummaryPage = ({ apiData, filters }) => {
   const toHM = (mins) => `${Math.floor(mins / 60)}h ${mins % 60}m`;
 
   const totalOccupied = summaries.reduce((s, r) => s + parseMins(r.OccupiedHours), 0);
-  const totalFree     = summaries.reduce((s, r) => s + parseMins(r.FreeHours), 0);
+  const totalFree = summaries.reduce((s, r) => s + parseMins(r.FreeHours), 0);
 
   return (
     <Page style={styles.page}>

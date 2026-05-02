@@ -65,7 +65,7 @@ import { tokens } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditSlots = () => {
-     const theme = useTheme();
+    const theme = useTheme();
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
     const colors = tokens(theme.palette.mode);
@@ -92,7 +92,7 @@ const EditSlots = () => {
     console.log(state, "find state in console");
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [validationSchema, setValidationSchema] = useState(null);
-  
+
     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
     const lastThree = SubscriptionCode?.slice(-3) || "";
     const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -116,7 +116,7 @@ const EditSlots = () => {
                     schemaFields.code = Yup.string().trim().required(data.Slot.code);
                 }
 
-                const schema = Yup.object().shape(schemaFields);              
+                const schema = Yup.object().shape(schemaFields);
                 setValidationSchema(schema);
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -154,84 +154,103 @@ const EditSlots = () => {
 
 
     // SLOT SECTION
-        const exploreLoading = useSelector((state) => state.formApi.slotLoading);
-        const topslot = useSelector((state) => state.formApi.slotgetData);
-           const slotRowDataheader = useSelector((state) => state.formApi.slotgetData.Header);
-        console.log(slotRowDataheader, "--slotRowDataheader");
+    const exploreLoading = useSelector((state) => state.formApi.slotLoading);
+    const topslot = useSelector((state) => state.formApi.slotgetData);
+    const slotRowDataheader = useSelector((state) => state.formApi.slotgetData.Header);
+    console.log(slotRowDataheader, "--slotRowDataheader");
 
-      const slotRowData = useSelector((state) => state.formApi.slotgetData.Detail);
-       console.log(slotRowData, "--slotRowData");
-     
+    const slotRowData = useSelector((state) => state.formApi.slotgetData.Detail);
+    console.log(slotRowData, "--slotRowData");
 
-   const [rows, setRows] = React.useState([]);
-      const [rowModesModel, setRowModesModel] = React.useState({});
-      const [page, setPage] = React.useState(0);
-      const [pageSize, setPageSize] = useState(15);
-      const lookuplistViewurl = useSelector((state) => state.globalurl.listViewurl);
-  
-  useEffect(() => {
-    if (!slotRowData) return;
 
-    const formattedData = slotRowData.map((row) => ({
-        ...row,
-        Break: row.Break === "Y", // ✅ FIX HERE
-    }));
+    const [rows, setRows] = React.useState([]);
+    const [rowModesModel, setRowModesModel] = React.useState({});
+    const [page, setPage] = React.useState(0);
+    const [pageSize, setPageSize] = useState(15);
+    const lookuplistViewurl = useSelector((state) => state.globalurl.listViewurl);
 
-    setRows(formattedData);
-}, [slotRowData]);
+    useEffect(() => {
+        if (!slotRowData) return;
+
+        const formattedData = slotRowData.map((row) => ({
+            ...row,
+            Break: row.Break === "Y", //  FIX HERE
+        }));
+
+        setRows(formattedData);
+    }, [slotRowData]);
     //   useEffect(() => {
     //       setRows(slotRowData || []);
     //   }, [slotRowData]);
-  
 
-      function EditTimeCell(props) {
-        const { id, field, value, api } = props;
 
-        const convertTo24Hour = (time12h) => {
-            if (!time12h) return "";
+    //   function EditTimeCell(props) {
+    //     const { id, field, value, api } = props;
 
-            const [time, modifier] = time12h.split(" ");
-            let [hours, minutes] = time.split(":");
+    //     const convertTo24Hour = (time12h) => {
+    //         if (!time12h) return "";
 
-            if (modifier === "PM" && hours !== "12") {
-                hours = String(parseInt(hours, 10) + 12);
-            }
-            if (modifier === "AM" && hours === "12") {
-                hours = "00";
-            }
+    //         const [time, modifier] = time12h.split(" ");
+    //         let [hours, minutes] = time.split(":");
 
-            return `${hours.padStart(2, "0")}:${minutes}`;
-        };
+    //         if (modifier === "PM" && hours !== "12") {
+    //             hours = String(parseInt(hours, 10) + 12);
+    //         }
+    //         if (modifier === "AM" && hours === "12") {
+    //             hours = "00";
+    //         }
 
-        const convertTo12Hour = (time24) => {
-            if (!time24) return "";
+    //         return `${hours.padStart(2, "0")}:${minutes}`;
+    //     };
 
-            const [hour, minute] = time24.split(":");
-            let h = parseInt(hour);
-            const ampm = h >= 12 ? "PM" : "AM";
+    //     const convertTo12Hour = (time24) => {
+    //         if (!time24) return "";
 
-            h = h % 12 || 12;
+    //         const [hour, minute] = time24.split(":");
+    //         let h = parseInt(hour);
+    //         const ampm = h >= 12 ? "PM" : "AM";
 
-            return `${h}:${minute} ${ampm}`;
-        };
+    //         h = h % 12 || 12;
 
-        const handleChange = (event) => {
-            const val24 = event.target.value; // 16:30
-            const val12 = convertTo12Hour(val24); // 4:30 PM
+    //         return `${h}:${minute} ${ampm}`;
+    //     };
 
-            api.setEditCellValue({ id, field, value: val12 });
+    //     const handleChange = (event) => {
+    //         const val24 = event.target.value; // 16:30
+    //         const val12 = convertTo12Hour(val24); // 4:30 PM
+
+    //         api.setEditCellValue({ id, field, value: val12 });
+    //     };
+
+    //     return (
+    //         <TextField
+    //             type="time"
+    //             fullWidth
+    //             size="small"
+    //             value={convertTo24Hour(value)} // show correct time in picker
+    //             onChange={handleChange}
+    //         />
+    //     );
+    // }
+    const EditTimeCell = (props) => {
+        const { id, field, value, api, row } = props;
+
+        const handleChange = (e) => {
+            const newValue = e.target.value;
+
+            api.setEditCellValue({ id, field, value: newValue });
         };
 
         return (
-            <TextField
+            <input
                 type="time"
-                fullWidth
-                size="small"
-                value={convertTo24Hour(value)} // show correct time in picker
+                value={value || ""}
+                min={field === "ToTime" ? row.FromTime || "" : undefined} // KEY LINE
                 onChange={handleChange}
+                style={{ width: "100%" }}
             />
         );
-    }
+    };
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
@@ -279,7 +298,7 @@ const EditSlots = () => {
                 if (data.payload.Status === "Y") {
                     const resData = data.payload.Data.rows.map((value) => ({
                         ...value,
-                        Break: value.Break === "Y", // ✅ Convert Y/N → boolean
+                        Break: value.Break === "Y", //  Convert Y/N → boolean
                     }));
 
                     setRows(resData);
@@ -304,69 +323,69 @@ const EditSlots = () => {
         }
     };
 
-// ✅ Convert 12hr → 24hr
-// const convertTo24 = (time12h) => {
-//     if (!time12h) return "";
+    //  Convert 12hr → 24hr
+    // const convertTo24 = (time12h) => {
+    //     if (!time12h) return "";
 
-//     if (
-//         !time12h.toUpperCase().includes("AM") &&
-//         !time12h.toUpperCase().includes("PM")
-//     ) {
-//         return time12h;
-//     }
+    //     if (
+    //         !time12h.toUpperCase().includes("AM") &&
+    //         !time12h.toUpperCase().includes("PM")
+    //     ) {
+    //         return time12h;
+    //     }
 
-//     const [time, modifier] = time12h.split(" ");
-//     let [hours, minutes] = time.split(":");
+    //     const [time, modifier] = time12h.split(" ");
+    //     let [hours, minutes] = time.split(":");
 
-//     if (modifier === "PM" && hours !== "12") {
-//         hours = String(parseInt(hours, 10) + 12);
-//     }
-//     if (modifier === "AM" && hours === "12") {
-//         hours = "00";
-//     }
+    //     if (modifier === "PM" && hours !== "12") {
+    //         hours = String(parseInt(hours, 10) + 12);
+    //     }
+    //     if (modifier === "AM" && hours === "12") {
+    //         hours = "00";
+    //     }
 
-//     return `${hours.padStart(2, "0")}:${minutes}`;
-// };
+    //     return `${hours.padStart(2, "0")}:${minutes}`;
+    // };
 
-// ✅ Convert to minutes (BEST METHOD)
-// const toMinutes = (time) => {
-//     const t = convertTo24(time);
-//     const [h, m] = t.split(":").map(Number);
-//     return h * 60 + m;
-// };
-const toMinutes = (time12h) => {
-    if (!time12h) return 0;
+    //  Convert to minutes (BEST METHOD)
+    // const toMinutes = (time) => {
+    //     const t = convertTo24(time);
+    //     const [h, m] = t.split(":").map(Number);
+    //     return h * 60 + m;
+    // };
+    const toMinutes = (time12h) => {
+        if (!time12h) return 0;
 
-    const [time, modifierRaw] = time12h.trim().split(" ");
-    const modifier = modifierRaw?.toUpperCase(); // safety
+        const [time, modifierRaw] = time12h.trim().split(" ");
+        const modifier = modifierRaw?.toUpperCase(); // safety
 
-    let [h, m] = time.split(":").map(Number);
+        let [h, m] = time.split(":").map(Number);
 
-    if (modifier === "PM" && h !== 12) {
-        h += 12;
-    }
-    if (modifier === "AM" && h === 12) {
-        h = 0;
-    }
+        if (modifier === "PM" && h !== 12) {
+            h += 12;
+        }
+        if (modifier === "AM" && h === 12) {
+            h = 0;
+        }
 
-    return h * 60 + m;
-};
+        return h * 60 + m;
+    };
 
-// ✅ Convert 24 → 12hr
-const convertTo12 = (time24) => {
-    if (!time24) return "";
+    //  Convert 24 → 12hr
+    const convertTo12 = (time24) => {
+        if (!time24) return "";
 
-    const [hour, minute] = time24.split(":");
-    let h = parseInt(hour);
-    const ampm = h >= 12 ? "PM" : "AM";
+        const [hour, minute] = time24.split(":");
+        let h = parseInt(hour);
+        const ampm = h >= 12 ? "PM" : "AM";
 
-    h = h % 12 || 12;
+        h = h % 12 || 12;
 
-    return `${h}:${minute} ${ampm}`;
-};
+        return `${h}:${minute} ${ampm}`;
+    };
 
-const validateRowSlot = (row, rows) => {
-  if (!row.SlotName) {
+    const validateRowSlot = (row, rows) => {
+        if (!row.SlotName) {
             return "Please Enter the Slot Name";
         }
         if (!row.FromTime) {
@@ -375,40 +394,40 @@ const validateRowSlot = (row, rows) => {
         if (!row.ToTime) {
             return "Please Select the To Time";
         }
-            // ✅ Time validation
+        //  Time validation
         const from = new Date(`1970-01-01T${row.FromTime}`);
         const to = new Date(`1970-01-01T${row.ToTime}`);
-    // const from = toMinutes(row.FromTime);
-    // const to = toMinutes(row.ToTime);
+        // const from = toMinutes(row.FromTime);
+        // const to = toMinutes(row.ToTime);
 
-    if (to <= from) {
-        return "To Time must be greater than From Time";
-    }
+        if (to <= from) {
+            return "To Time must be greater than From Time";
+        }
 
-    // ✅ OVERLAP CHECK (edge allowed)
-    // const isOverlap = rows.some((existingRow) => {
-    //     if (existingRow.RecordID === row.RecordID) return false;
+        //  OVERLAP CHECK (edge allowed)
+        // const isOverlap = rows.some((existingRow) => {
+        //     if (existingRow.RecordID === row.RecordID) return false;
 
-    //     const existingFrom = toMinutes(existingRow.FromTime);
-    //     const existingTo = toMinutes(existingRow.ToTime);
-    //     console.log("existingFrom,",existingFrom)
-    //     console.log("existingTo,",existingTo)
-    //     console.log("from,",from)
-    //     console.log("to,",to)
+        //     const existingFrom = toMinutes(existingRow.FromTime);
+        //     const existingTo = toMinutes(existingRow.ToTime);
+        //     console.log("existingFrom,",existingFrom)
+        //     console.log("existingTo,",existingTo)
+        //     console.log("from,",from)
+        //     console.log("to,",to)
 
-    //     // return from < existingTo && to > existingFrom;
-    //       return (
-    //     from <= existingFrom ||   // completely before
-    //     to >= existingTo      // completely after
-    // );
-    // });
+        //     // return from < existingTo && to > existingFrom;
+        //       return (
+        //     from <= existingFrom ||   // completely before
+        //     to >= existingTo      // completely after
+        // );
+        // });
 
-    // if (isOverlap) {
-    //     return "Time slot overlaps with existing slot";
-    // }
+        // if (isOverlap) {
+        //     return "Time slot overlaps with existing slot";
+        // }
 
-    return null;
-};
+        return null;
+    };
 
     // const validateRowSlot = (row) => {
     //     if (!row.SlotName) {
@@ -421,7 +440,7 @@ const validateRowSlot = (row, rows) => {
     //         return "Please Select the To Time";
     //     }
 
-    //     // ✅ Time validation
+    //     //  Time validation
     //     const from = new Date(`1970-01-01T${row.FromTime}`);
     //     const to = new Date(`1970-01-01T${row.ToTime}`);
 
@@ -434,7 +453,7 @@ const validateRowSlot = (row, rows) => {
     const formatTo12Hour = (time) => {
         if (!time) return "";
 
-        // ✅ If already formatted (contains AM/PM), return as is
+        //  If already formatted (contains AM/PM), return as is
         if (
             time.toUpperCase().includes("AM") ||
             time.toUpperCase().includes("PM")
@@ -564,52 +583,52 @@ const validateRowSlot = (row, rows) => {
     }
 
     const processRowUpdate = async (newRow, oldRow) => {
-    console.log("🚀 processRowUpdate:", newRow);
+        console.log("🚀 processRowUpdate:", newRow);
 
-    // ✅ Validation
-    //    const error = validateRowSlot(newRow, rows);
+        //  Validation
+        //    const error = validateRowSlot(newRow, rows);
 
-    // if (error) {
-    //     throw new Error(error);
-    //     // return oldRow; // ❗ DON'T THROW → avoids double toast
-    // }
-    const error = validateRowSlot(newRow);
-    if (error) {
-       
-        throw new Error(error);
-    }
- const isNew = newRow.isNew;
-    // ✅ Prepare payload for API
-    const payload = {
-        RecordID: isNew ? -1 : newRow.RecordID,   // ✅ KEY FIX
-        code: newRow.SlotCode || "",
-        name: newRow.SlotName || "",
-        comments: newRow.Comments || "",
-        fromtime: newRow.FromTime,
-        totime: newRow.ToTime,
-        Breakslot: newRow.Break || false,
+        // if (error) {
+        //     throw new Error(error);
+        //     // return oldRow; // ❗ DON'T THROW → avoids double toast
+        // }
+        const error = validateRowSlot(newRow);
+        if (error) {
+
+            throw new Error(error);
+        }
+        const isNew = newRow.isNew;
+        //  Prepare payload for API
+        const payload = {
+            RecordID: isNew ? -1 : newRow.RecordID,   //  KEY FIX
+            code: newRow.SlotCode || "",
+            name: newRow.SlotName || "",
+            comments: newRow.Comments || "",
+            fromtime: newRow.FromTime,
+            totime: newRow.ToTime,
+            Breakslot: newRow.Break || false,
+        };
+
+        try {
+            //  Call API (Insert / Update handled inside Fnsave)
+            await Fnsave(payload, isNew);  //  pass isNew
+
+            //  Update local state after success
+            const updatedRow = { ...newRow, isNew: false };
+
+            setRows((prevRows) =>
+                prevRows.map((row) =>
+                    row.RecordID === newRow.RecordID ? updatedRow : row
+                )
+            );
+
+            return updatedRow; // important
+
+        } catch (err) {
+            console.error("❌ API Save Failed:", err);
+            throw err; // 🔥 keeps row in edit mode
+        }
     };
-
-    try {
-        // ✅ Call API (Insert / Update handled inside Fnsave)
-      await Fnsave(payload, isNew);  // ✅ pass isNew
-
-        // ✅ Update local state after success
-        const updatedRow = { ...newRow, isNew: false };
-
-        setRows((prevRows) =>
-            prevRows.map((row) =>
-                row.RecordID === newRow.RecordID ? updatedRow : row
-            )
-        );
-
-        return updatedRow; // important
-
-    } catch (err) {
-        console.error("❌ API Save Failed:", err);
-        throw err; // 🔥 keeps row in edit mode
-    }
-};
     // const processRowUpdate = (newRow, oldRow) => {
     //     console.log(newRow, "--procesrowupdateterms newrow");
     //     //validation
@@ -634,15 +653,15 @@ const validateRowSlot = (row, rows) => {
 
     //     return updatedRow;
     // };
-  
-  const handleSaveClick = (id) => () => {
-    setRowModesModel((prevModel) => ({
-        ...prevModel,
-        [id]: { mode: GridRowModes.View },
-    }));
-};
-  
-  function EditToolbar(props) {
+
+    const handleSaveClick = (id) => () => {
+        setRowModesModel((prevModel) => ({
+            ...prevModel,
+            [id]: { mode: GridRowModes.View },
+        }));
+    };
+
+    function EditToolbar(props) {
         const { setRows, setRowModesModel } = props;
 
         const handleClick = () => {
@@ -685,7 +704,7 @@ const validateRowSlot = (row, rows) => {
     }
 
 
-  const columns = [
+    const columns = [
         {
             field: "SLNO",
             headerName: "SL#",
@@ -759,7 +778,7 @@ const validateRowSlot = (row, rows) => {
                     From Time <span style={{ color: "red" }}>*</span>
                 </span>
             ),
-            field: "FromTime", // ✅ match exact API field
+            field: "FromTime", //  match exact API field
             width: 150,
             align: "left",
             headerAlign: "center",
@@ -775,7 +794,7 @@ const validateRowSlot = (row, rows) => {
                     To Time <span style={{ color: "red" }}>*</span>
                 </span>
             ),
-            field: "ToTime", // ✅ match exact API field
+            field: "ToTime", //  match exact API field
             width: 150,
             align: "left",
             headerAlign: "center",
@@ -927,10 +946,10 @@ const validateRowSlot = (row, rows) => {
     };
 
     const Fnsave = async (values, isNew) => {
-          const action = isNew ? "insert" : "update";
+        const action = isNew ? "insert" : "update";
 
-    const idata = {
-        RecordID: isNew ? -1 : values.RecordID, 
+        const idata = {
+            RecordID: isNew ? -1 : values.RecordID,
             CompanyID,
             Code: values.code || "",
             Name: values.name,
@@ -942,20 +961,20 @@ const validateRowSlot = (row, rows) => {
             SortOrder: 0,
             Disable: "N",
             DeleteFlag: "N",
-            
+
         };
         console.log(idata, "--finding idata in fnsave");
-        
-// return;
+
+        // return;
         const response = await dispatch(postData({ accessID: "TR377", action, idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-             dispatch(SlotGetfunction({ GroupID: recID }));
-             navigate(`/Apps/TR376/Slot%20Group/EditSlot/${recID}/E`, {
-    state: {
-      ...state
-    }
-  })
+            dispatch(SlotGetfunction({ GroupID: recID }));
+            navigate(`/Apps/TR376/Slot%20Group/EditSlot/${recID}/E`, {
+                state: {
+                    ...state
+                }
+            })
         } else {
             toast.error(response.payload.Msg);
         }
@@ -1024,15 +1043,15 @@ const validateRowSlot = (row, rows) => {
                                     // navigate(-1);
                                 }}
                             >
-                               Slot Group({state.SlotGroupName})
+                                Slot Group({state.SlotGroupName})
                             </Typography>
                             <Typography
                                 variant="h5"
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
-                                // onClick={() => {
-                                //     navigate(-1);
-                                // }}
+                            // onClick={() => {
+                            //     navigate(-1);
+                            // }}
                             >
                                 Slot
                             </Typography>
@@ -1145,9 +1164,9 @@ const validateRowSlot = (row, rows) => {
                                         />
                                     )}
                                     <TextField
-                                    inputProps={{
-                                        readOnly: true
-                                    }}
+                                        inputProps={{
+                                            readOnly: true
+                                        }}
                                         name="name"
                                         type="text"
                                         id="name"
@@ -1175,8 +1194,8 @@ const validateRowSlot = (row, rows) => {
                                         // required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
-      </Box>
-                                    <Box
+                                </Box>
+                                <Box
                                     m="5px 0 0 0"
                                     // height={dataGridHeightExplore}
                                     height="70vh"
@@ -1265,17 +1284,17 @@ const validateRowSlot = (row, rows) => {
                                         onPageChange={(newPage) => setPage(newPage)}
                                     />
                                 </Box>
-                              
-
-
-  
 
 
 
 
 
 
-                          
+
+
+
+
+
                                 {/* <Box display="flex" justifyContent="end" padding={1} gap="20px">
 
                                     <LoadingButton
