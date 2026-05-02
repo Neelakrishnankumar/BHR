@@ -1195,14 +1195,15 @@ const SubjectCell = ({ text }) => {
 // Days = rows | Period slots = columns (breaks excluded)
 // Column headers show: Period label + full "fromTime - toTime"
 const TeacherTimetable = ({ teacher, summary }) => {
-  const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  // const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const { timeSlots, BreakSlots, BreakSlotsList, schedule } = teacher;
-
+  const DAYS = schedule.map((s) => s.day);
   // Only period slots (exclude break/assembly/lunch/activity)
   const breakTexts = new Set(BreakSlotsList.map((b) => b.SlotText));
   const periodSlots = [...timeSlots]
     .filter((s) => !breakTexts.has(s))
     .sort((a, b) => parseTime(a.split(" - ")[0]) - parseTime(b.split(" - ")[0]));
+
 
   const dayMap = {};
   schedule.forEach((d) => { dayMap[d.day] = d.slots; });
@@ -1448,6 +1449,7 @@ const TeacherOccupancy = () => {
   const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  console.log("HeaderImg:", HeaderImg);
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;

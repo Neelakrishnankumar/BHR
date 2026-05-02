@@ -1092,7 +1092,7 @@ const Editemployee = () => {
                 : Data.EmpType === "Intern"
                   ? "IN"
                   : "",
-    checkbox: Data.Disable,
+    checkbox: Data.Disable === "Y" ? true : false,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -3159,7 +3159,7 @@ const Editemployee = () => {
           : "update";
 
     const idata = {
-      VendorID: ParentgetData.RecordID,
+      VendorID: ParentgetData.RecordID || 0,
       ContactPerson1: values.name1,
       ContactPerson2: values.name2,
       ContactPersonEmailID1: values.emailid1,
@@ -4212,21 +4212,27 @@ const Editemployee = () => {
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    Designation: deploymentData.DesignationID
+    Designation: 
+    // deploymentData.DesignationID
+        deploymentData.DesignationID && deploymentData.DesignationID !== "0"
       ? {
         RecordID: deploymentData.DesignationID,
         Code: deploymentData.DesignationCode,
         Name: deploymentData.DesignationName,
       }
       : null,
-    location: deploymentData.LocationID
+    location: 
+    // deploymentData.LocationID
+    deploymentData.LocationID && deploymentData.LocationID !== "0"
       ? {
         RecordID: deploymentData.LocationID,
         Code: deploymentData.LocationCode,
         Name: deploymentData.LocationName,
       }
       : null,
-    gate: deploymentData.StoregatemasterID
+    gate: 
+    // deploymentData.StoregatemasterID
+      deploymentData.StoregatemasterID && deploymentData.StoregatemasterID !== "0"
       ? {
         RecordID: deploymentData.StoregatemasterID,
         Code: deploymentData.StoregatemasterCode,
@@ -4248,14 +4254,18 @@ const Editemployee = () => {
         Name: deploymentData.FunctionName,
       }
       : null,
-    shift: deploymentData.ShiftID
+    shift: 
+    // deploymentData.ShiftID
+      deploymentData.ShiftID && deploymentData.ShiftID !== "0"
       ? {
         RecordID: deploymentData.ShiftID,
         Code: deploymentData.ShiftCode,
         Name: deploymentData.ShiftName,
       }
       : null,
-    shift2: deploymentData.ShiftID2
+    shift2: 
+    // deploymentData.ShiftID2
+      deploymentData.ShiftID2 && deploymentData.ShiftID2 !== "0"
       ? {
         RecordID: deploymentData.ShiftID2,
         Code: deploymentData.ShiftCode2,
@@ -5122,13 +5132,13 @@ const Editemployee = () => {
                     <MenuItem value={0}>Personnel</MenuItem>
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
-                    {is003Subscription && (
+                    {is003Subscription && isStudentClassification && (
                       <MenuItem value={15}>Parent</MenuItem>
                     )}
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
-                    {is003Subscription && (
+                    {is003Subscription && initialValues.employeetype === "CI" &&(
                       <MenuItem value={23}>Course Attendance</MenuItem>
                     )}
                     {initialValues.employeetype === "CO" ? (
@@ -5140,9 +5150,9 @@ const Editemployee = () => {
                     {/* {is003Subscription && (
                       <MenuItem value={15}>Parent</MenuItem>
                     )} */}
-                    {is003Subscription === true ? (
+                    {is003Subscription === true && isStudentClassification && (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
-                    ) : null}
+                    )}
                     <MenuItem value={1}>{getBusinessCaption("Skills", "Skills")}</MenuItem>
                     <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
                     <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
@@ -12049,10 +12059,14 @@ const Editemployee = () => {
                       variant="standard"
                       focused
                       multiline
-                      rows={2}
+                      minRows={1}
+                      maxRows={5}
                       value={values.address}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\s{2,}/g, " "); // avoid double spaces
+                        setFieldValue("address", value);
+                      }}
                       error={!!touched.address && !!errors.address}
                       helperText={touched.address && errors.address}
                       sx={{
@@ -13502,6 +13516,10 @@ const Editemployee = () => {
                           value={values.DueDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          inputProps={{
+                            min: values.FromPeriod || "",
+                            max: values.ToPeriod || "",
+                          }}
                         />
                       )}
 

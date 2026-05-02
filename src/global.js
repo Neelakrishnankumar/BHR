@@ -373,8 +373,6 @@ export const getUrlSlice = createSlice({
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
       // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
-
-
       state.pcdurl = APIurl + "PCDController.php";
       state.pdfurl = baseurl + "tcpdf/";
       state.indentUrl = APIurl + "IndentController.php";

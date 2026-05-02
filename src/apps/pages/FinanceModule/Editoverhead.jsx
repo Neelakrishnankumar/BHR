@@ -319,6 +319,7 @@ const Editoverhead = () => {
       dispatch(
         fetchExplorelitview(
           "TR325",
+          Subscriptionlastthree,
           "Additional Expense",
           `parentID=${recID} AND CompanyID=${CompanyID}`,
           ""
@@ -423,7 +424,7 @@ const Editoverhead = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR325", "Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview("TR325", Subscriptionlastthree,"Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -1087,7 +1088,16 @@ const Editoverhead = () => {
                       }}
                       error={!!touched.overhead && !!errors.overhead}
                       helperText={touched.overhead && errors.overhead}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2032",
+                        ScreenName: "OverHead",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `companyID='${CompanyID}'`,
+                        Any: "",
+                      },
+                    })}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead",VerticalLicense: Subscriptionlastthree,"Filter":"companyID='${CompanyID}'","Any":""}}`}
                     />
                     <TextField
                       fullWidth
