@@ -688,10 +688,10 @@ const EditSlots = () => {
         //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "SlotCode" },
         //     }));
         // };
-         const handleClick = () => {
-              const id = nanoid();
-        
-              const newRow = {
+        const handleClick = () => {
+            const id = nanoid();
+
+            const newRow = {
                 id,
                 RecordID: id,
                 Days: null,
@@ -700,26 +700,26 @@ const EditSlots = () => {
                 Slots: null,
                 Comments: "",
                 isNew: true,
-              };
-        
-              setRows((oldRows) => {
+            };
+
+            setRows((oldRows) => {
                 const updatedRows = [...oldRows, newRow];
-        
+
                 //  Calculate new page
                 const newTotal = updatedRows.length;
                 const newPageIndex = Math.floor((newTotal - 1) / pageSize);
-        
+
                 //  Move to that page
                 setPage(newPageIndex);
-        
+
                 return updatedRows;
-              });
-        
-              setRowModesModel((oldModel) => ({
+            });
+
+            setRowModesModel((oldModel) => ({
                 ...oldModel,
                 [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
-              }));
-            };
+            }));
+        };
         return (
             <GridToolbarContainer
                 sx={{
