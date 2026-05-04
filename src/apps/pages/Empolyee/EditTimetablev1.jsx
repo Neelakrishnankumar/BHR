@@ -806,7 +806,7 @@ const EditTimetablev1 = () => {
     assignedDate: new Date().toISOString().split("T")[0],
   };
 
-
+console.log(data.SlotGroupID,data.SlotGroupName, "--data.SlotGroupID");
   function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
 

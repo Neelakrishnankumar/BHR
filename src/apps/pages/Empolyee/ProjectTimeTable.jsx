@@ -107,6 +107,7 @@ const ProjectTimeTable = () => {
 
     // Inject renderCell into every column to show a styled chip
     const rawColumns = useSelector((state) => state.exploreApi.explorecolumnData);
+    console.log("rawColumns", rawColumns);  
     const WEEKcolumns = (rawColumns || []).map((col) => ({
         ...col,
         renderCell: (params) =>

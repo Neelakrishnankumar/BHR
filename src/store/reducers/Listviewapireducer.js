@@ -1919,6 +1919,34 @@ export const fetchListview =
                 },
               };
             }
+             else if (AccessID == "TR095") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditUser%20Group/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
             else if (AccessID == "TR378") {
               obj = {
                 field: "action",
@@ -2245,6 +2273,8 @@ export const fetchListview =
                                   data={{
 
                                     Employee: params.row?.ReceiverName,
+                                    EmployeeID: params.row?.EmployeeCode,
+                                    FilterEmployee: params.row?.FilterEmployee,
                                     PaymentMode: params.row?.PaymentMode,
                                     InvoiceNo: params.row?.InvoiceNo,
                                     InvoiceAmount: params.row?.InvoiceAmount,
@@ -2550,7 +2580,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR371" || AccessID == "TR372") {
+            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373") {
               obj = {
                 field: "action",
                 headerName: "Action",

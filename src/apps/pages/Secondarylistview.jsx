@@ -4456,6 +4456,12 @@ const ListviewSecondary = () => {
                 false
               ) : accessID == "TR335" ? (
                 false
+              ): accessID == "TR371" ? (
+                false
+              ): accessID == "TR372" ? (
+                false
+              ): accessID == "TR373" ? (
+                false            
               ) : accessID == "TR288" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (

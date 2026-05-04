@@ -5170,7 +5170,7 @@ const Editemployee = () => {
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                     <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
-                    <MenuItem value={22}>Resignation</MenuItem>
+                     {!isStudentClassification && (<MenuItem value={22}>Resignation</MenuItem>)}
 
                   </Select>
                 </FormControl>
@@ -5573,7 +5573,7 @@ const Editemployee = () => {
                             label="Quality Assurance"
                           />
 
-                          <FormLabel focused={false}>Quality Assurance</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5585,7 +5585,7 @@ const Editemployee = () => {
                             label="Scrum Master"
                           />
 
-                          <FormLabel focused={false}>Scrum Master</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5597,7 +5597,7 @@ const Editemployee = () => {
                             label="Project Manager"
                           />
 
-                          <FormLabel focused={false}>Project Manager</FormLabel>
+                          <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
                         </Box>
 
                         <Box>
