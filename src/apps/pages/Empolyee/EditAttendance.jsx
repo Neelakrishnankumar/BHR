@@ -81,6 +81,8 @@ const EditAttendance = () => {
   const [pageSize, setPageSize] = useState(31);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const EMPID = sessionStorage.getItem("EmpId");
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
@@ -93,37 +95,60 @@ const EditAttendance = () => {
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   var accessID = params.accessID;
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
-   useEffect(() => {
-      if (Subscriptionlastthree && accessID) {
-        dispatch(
-          CustomisedCaptionGet({
-            Vertical: Subscriptionlastthree,
-            AccessID: accessID,
-          })
-        );
-      }
-    }, [Subscriptionlastthree, accessID, dispatch]);
-    const Customisedcaptiondata = useSelector(
-      (state) => state.formApi.CustomisedCaptionGetData
-    );
-    // Ensure it's always an array
-    const captionArray = Array.isArray(Customisedcaptiondata)
-      ? Customisedcaptiondata
-      : Customisedcaptiondata?.data || [];
-    console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
-    const getBusinessCaption = (CaptionID, defaultCaption) => {
-      const match = captionArray?.find(
-        (item) => item.CAPTIONID === CaptionID
+  useEffect(() => {
+    if (Subscriptionlastthree && accessID) {
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: accessID,
+        })
       );
-  
-      return match?.CAPTION || defaultCaption;
-    };
+    }
+  }, [Subscriptionlastthree, accessID, dispatch]);
+  const Customisedcaptiondata = useSelector(
+    (state) => state.formApi.CustomisedCaptionGetData
+  );
+  // Ensure it's always an array
+  const captionArray = Array.isArray(Customisedcaptiondata)
+    ? Customisedcaptiondata
+    : Customisedcaptiondata?.data || [];
+  console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+  const getBusinessCaption = (CaptionID, defaultCaption) => {
+    const match = captionArray?.find(
+      (item) => item.CAPTIONID === CaptionID
+    );
+
+    return match?.CAPTION || defaultCaption;
+  };
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
   //     .then((res) => {
@@ -354,13 +379,13 @@ const EditAttendance = () => {
       // ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
       // CompanyID
 
-Month: values.attmonth?.toString() ?? "",
-Year: values.attyear ?? "",
-EmployeeID: useCurrentEmp
-  ? EMPID
-  : empData?.RecordID ?? "",
-ProjectID: proData?.RecordID ?? "",
-CompanyID
+      Month: values.attmonth?.toString() ?? "",
+      Year: values.attyear ?? "",
+      EmployeeID: useCurrentEmp
+        ? EMPID
+        : empData?.RecordID ?? "",
+      ProjectID: proData?.RecordID ?? "",
+      CompanyID
 
     };
     console.log(data, "=====DATA");
@@ -632,15 +657,15 @@ CompanyID
                     //     },
                     //   })
                     // )}`}
-                     url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2054",
-                            ScreenName: "Project",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `parentID='${CompanyID}'`,
-                            Any: "",
-                          },
-                        })}`}
+                    url={`${listViewurl}?data=${JSON.stringify({
+                      Query: {
+                        AccessID: "2054",
+                        ScreenName: "Project",
+                        VerticalLicense: Subscriptionlastthree,
+                        Filter: `parentID='${CompanyID}'`,
+                        Any: "",
+                      },
+                    })}`}
                   />
 
                   <Employeeautocomplete
@@ -784,6 +809,7 @@ CompanyID
                             HeaderImg: HeaderImg,
                             FooterImg: FooterImg,
                           }}
+                          footerHeight={footerHeight}
                         />
                       }
                       fileName={`Attendance_Report_${empData?.Name || "Employee"
@@ -851,7 +877,7 @@ CompanyID
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                padding={1}
+                  padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}

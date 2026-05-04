@@ -1919,6 +1919,34 @@ export const fetchListview =
                 },
               };
             }
+             else if (AccessID == "TR095") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditUser%20Group/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
             else if (AccessID == "TR378") {
               obj = {
                 field: "action",
@@ -2197,102 +2225,104 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR332") {
-              obj = {
-                field: "action",
-                headerName: "Action",
-                minWidth: 250,
-                sortable: false,
-                filterable: false,
-                headerAlign: "center",
-                align: "center",
-                disableColumnMenu: true,
-                disableExport: true,
-                renderCell: (params) => {
-                  return (
-                    <Box>
-                      <>
-                        {/* EDIT */}
-                        <Link
-                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
-                          to={`./EditPayment/${params.row.RecordID}/E`}
-                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+            // else if (AccessID == "TR332") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 250,
+            //     sortable: false,
+            //     filterable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <>
+            //             {/* EDIT */}
+            //             <Link
+            //               // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+            //               to={`./EditPayment/${params.row.RecordID}/E`}
+            //               // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
 
-                          state={{
-                            code: params.row.Code,
-                            Desc: params.row.Name,
-                            MilestoneID: params.row.RecordID,
-                            projectID: params.row.ProjectID,
-                            OperationStageID: params.row.OperationStageID,
-                            projectName: params.row.Project,
-                            Employee: params.row.Employee,
-                          }}
-                        >
-                          <Tooltip title="Edit">
-                            <IconButton color="info" size="small">
-                              <ModeEditOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
+            //               state={{
+            //                 code: params.row.Code,
+            //                 Desc: params.row.Name,
+            //                 MilestoneID: params.row.RecordID,
+            //                 projectID: params.row.ProjectID,
+            //                 OperationStageID: params.row.OperationStageID,
+            //                 projectName: params.row.Project,
+            //                 Employee: params.row.Employee,
+            //               }}
+            //             >
+            //               <Tooltip title="Edit">
+            //                 <IconButton color="info" size="small">
+            //                   <ModeEditOutlinedIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             </Link>
 
-                        {/* PDF */}
-                        <Tooltip title="Download Receipt">
-                          <span>
-                            <PDFDownloadLink
-                              document={
+            //             {/* PDF */}
+            //             <Tooltip title="Download Receipt">
+            //               <span>
+            //                 <PDFDownloadLink
+            //                   document={
 
-                                <PaymentReceipt
-                                  data={{
+            //                     <PaymentReceipt
+            //                       data={{
 
-                                    Employee: params.row?.ReceiverName,
-                                    PaymentMode: params.row?.PaymentMode,
-                                    InvoiceNo: params.row?.InvoiceNo,
-                                    InvoiceAmount: params.row?.InvoiceAmount,
-                                    PreviouslyPaid: params.row?.PreviouslyPaid,
-                                    MobileNo: params.row?.ReceiverMobileNo,
-                                    EmailID: params.row?.ReceiverEmailID,
-                                    Address: params.row?.ReceiverAddress,
-                                    CompanyName: params.row?.CompanyName,
-                                    paymentDetails: [
-                                      {
-                                        sno: 1,
-                                        PaymentReference: params.row?.PaymentRefereance,
-                                        PaidAmount: params.row?.PaidAmount,
-                                        DueAmount: params.row?.Due,
+            //                         Employee: params.row?.ReceiverName,
+            //                         EmployeeID: params.row?.EmployeeCode,
+            //                         FilterEmployee: params.row?.FilterEmployee,
+            //                         PaymentMode: params.row?.PaymentMode,
+            //                         InvoiceNo: params.row?.InvoiceNo,
+            //                         InvoiceAmount: params.row?.InvoiceAmount,
+            //                         PreviouslyPaid: params.row?.PreviouslyPaid,
+            //                         MobileNo: params.row?.ReceiverMobileNo,
+            //                         EmailID: params.row?.ReceiverEmailID,
+            //                         Address: params.row?.ReceiverAddress,
+            //                         CompanyName: params.row?.CompanyName,
+            //                         paymentDetails: [
+            //                           {
+            //                             sno: 1,
+            //                             PaymentReference: params.row?.PaymentRefereance,
+            //                             PaidAmount: params.row?.PaidAmount,
+            //                             DueAmount: params.row?.Due,
 
-                                      }
-                                    ]
-                                  }}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
-                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
-                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+            //                           }
+            //                         ]
+            //                       }}
+            //                       filters={{
+            //                         Imageurl: baseurl1,
+            //                         HeaderImg: sessionStorage.getItem("CompanyHeader"),
+            //                         FooterImg: sessionStorage.getItem("CompanyFooter"),
+            //                         CompanySignature: sessionStorage.getItem("CompanySignature"),
 
-                                  }}
-                                />
-                              }
-                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <IconButton size="small">
-                                    <CircularProgress size={18} />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton size="small">
-                                    <PictureAsPdfIcon color="error" />
-                                  </IconButton>
-                                )
-                              }
-                            </PDFDownloadLink>
-                          </span>
-                        </Tooltip>
-                      </>
-                    </Box>
-                  );
-                },
-              };
-            }
+            //                       }}
+            //                     />
+            //                   }
+            //                   fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
+            //                   {({ loading }) =>
+            //                     loading ? (
+            //                       <IconButton size="small">
+            //                         <CircularProgress size={18} />
+            //                       </IconButton>
+            //                     ) : (
+            //                       <IconButton size="small">
+            //                         <PictureAsPdfIcon color="error" />
+            //                       </IconButton>
+            //                     )
+            //                   }
+            //                 </PDFDownloadLink>
+            //               </span>
+            //             </Tooltip>
+            //           </>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
 
             // else if (AccessID == "TR366") {
             //   obj = {
@@ -2416,6 +2446,7 @@ export const fetchListview =
               AccessID == "TR328" ||
               AccessID == "TR361" ||
               AccessID == "TR027" ||
+              AccessID == "TR332" ||
               AccessID == "TR372" || //WHATSAPP ENQUIRY
               AccessID == "TR319"
             ) {
@@ -2550,7 +2581,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR371" || AccessID == "TR372") {
+            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -6945,6 +6976,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  const baseurl1 = config.UAAM_URL;
   const count = Number(params.row.MarketingCount || 0);
   // const orderType = params.row.OrderType;
   const id = params.row.RecordID;
@@ -6956,6 +6988,40 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
   const [STmodalOpen, setSTModalOpen] = useState(false);
   const [STselectedRow, setSTSelectedRow] = useState(null);
+    const [footerHeight, setFooterHeight] = useState(60);
+    const [isReady, setIsReady] = useState(false);
+    useEffect(() => {
+  if (!FooterImg) return;
+
+  const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+  const img = new Image();
+  img.src = url;
+
+  img.onload = () => {
+    const aspectRatio = img.height / img.width;
+
+    const pageWidth = 595;
+    const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+    const calculatedHeight = Math.min(
+      pageWidth * aspectRatio,
+      MAX_FOOTER_HEIGHT
+    );
+
+    setFooterHeight(calculatedHeight);
+    setIsReady(true);
+  };
+}, [FooterImg]);
+  const getTodayDate = () => {
+        const today = new Date();
+
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
+
+        return `${day}/${month}/${year}`;
+      };
 
   const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
@@ -7788,6 +7854,90 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </Box>
         )}
+
+{accessID === "TR332" && (
+        <Box>
+                      <>
+                        {/* EDIT */}
+                        <Link
+                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+                          to={`./EditPayment/${params.row.RecordID}/E`}
+                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.Project,
+                            Employee: params.row.Employee,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+
+                        {/* PDF */}
+                        <Tooltip title="Download Receipt">
+                          <span>
+                            <PDFDownloadLink
+                              document={
+
+                                <PaymentReceipt
+                                  data={{
+
+                                    Employee: params.row?.ReceiverName,
+                                    EmployeeID: params.row?.EmployeeCode,
+                                    FilterEmployee: params.row?.FilterEmployee,
+                                    PaymentMode: params.row?.PaymentMode,
+                                    InvoiceNo: params.row?.InvoiceNo,
+                                    InvoiceAmount: params.row?.InvoiceAmount,
+                                    PreviouslyPaid: params.row?.PreviouslyPaid,
+                                    MobileNo: params.row?.ReceiverMobileNo,
+                                    EmailID: params.row?.ReceiverEmailID,
+                                    Address: params.row?.ReceiverAddress,
+                                    CompanyName: params.row?.CompanyName,
+                                    paymentDetails: [
+                                      {
+                                        sno: 1,
+                                        PaymentReference: params.row?.PaymentRefereance,
+                                        PaidAmount: params.row?.PaidAmount,
+                                        DueAmount: params.row?.Due,
+
+                                      }
+                                    ]
+                                  }}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
+                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
+                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+
+                                  }}
+                                  footerHeight={footerHeight}
+                                />
+                              }
+                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <IconButton size="small">
+                                    <CircularProgress size={18} />
+                                  </IconButton>
+                                ) : (
+                                  <IconButton size="small">
+                                    <PictureAsPdfIcon color="error" />
+                                  </IconButton>
+                                )
+                              }
+                            </PDFDownloadLink>
+                          </span>
+                        </Tooltip>
+                      </>
+                    </Box>)}
 
         {accessID === "TR027" && (
           <Box>

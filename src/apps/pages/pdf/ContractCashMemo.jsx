@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#000',
         // color: '#FFFFFF',
         color: '#000',
-        
+
     },
 
     tableRow: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#ddd' },
@@ -330,8 +330,8 @@ const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
-export default function ContractCashMemo({ invoice = [], detailData = [],PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
-    filters = {} }) {
+export default function ContractCashMemo({ invoice = [], detailData = [], PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
+    filters = {}, footerHeight }) {
 
     const formattedDate = filters.Date
         ? filters.Date.split("-").reverse().join("-")
@@ -342,7 +342,7 @@ export default function ContractCashMemo({ invoice = [], detailData = [],PdfBase
     const attendancedata = Array.isArray(detailData) ? detailData : [detailData];
     // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";  // your image folder path
     // const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
-    const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
+    const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;
 
     const qrFullPath = invoice?.QRCode
         ? `${QR_BASE_URL}${invoice.QRCode}`
@@ -412,7 +412,21 @@ export default function ContractCashMemo({ invoice = [], detailData = [],PdfBase
 
     return (
         <Document>
-            <Page size="A4" style={styles.page}>
+            <Page size="A4"
+                style={styles.page}
+
+                style={{
+                    fontFamily: "Helvetica",
+
+                    // paddingTop: 80,
+                    // paddingBottom: footerHeight,
+                    // paddingHorizontal: 0,
+
+                    padding: 16,
+                    fontSize: 10,
+                    fontFamily: 'Helvetica',
+                    lineHeight: 1.25,
+                }}>
                 {/* HEADER */}
                 <View style={styles.header}>
                     {headerPath ? (
@@ -747,7 +761,13 @@ export default function ContractCashMemo({ invoice = [], detailData = [],PdfBase
                 <View style={{ width: '100%' }}>
 
                     {footerPath ? (
-                        <Image src={footerPath} style={styles.footerImage} />
+                        <Image src={footerPath}
+                            // style={styles.footerImage} 
+                            style={{
+                                width: "100%",
+                                height: footerHeight,
+                            }}
+                        />
                     ) : (
                         <View style={{ width: "200%", height: 60, backgroundColor: '#eee' }} />
                     )}
@@ -755,7 +775,15 @@ export default function ContractCashMemo({ invoice = [], detailData = [],PdfBase
 
             </Page>
             {withannexure && (
-                <Page size="A4" style={styles.page}>
+                <Page size="A4"
+                    style={styles.page}
+                    style={{
+                        padding: 16,
+                        fontSize: 10,
+                        fontFamily: 'Helvetica',
+                        lineHeight: 1.25,
+                    }}
+                >
                     <View style={styles.header}>
                         {headerPath ? (
                             <Image src={headerPath} style={styles.logo} />
@@ -809,7 +837,13 @@ export default function ContractCashMemo({ invoice = [], detailData = [],PdfBase
                     <View style={styles.spacer} />
                     <View style={{ width: '100%' }}>
                         {footerPath ? (
-                            <Image src={footerPath} style={styles.footerImage} />
+                            <Image src={footerPath}
+                                // style={styles.footerImage}
+
+                                style={{
+                                    width: "100%",
+                                    height: footerHeight,
+                                }} />
                         ) : (
                             <View style={{ width: "200%", height: 60, backgroundColor: '#eee' }} />
                         )}

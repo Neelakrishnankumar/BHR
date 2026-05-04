@@ -147,6 +147,8 @@ const Editemployee = () => {
   const [page2, setPage2] = React.useState(secondaryCurrentPage);
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const CompanyID = sessionStorage.getItem("compID");
@@ -163,6 +165,29 @@ const Editemployee = () => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurl1 = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurl1}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -4212,33 +4237,33 @@ const Editemployee = () => {
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    Designation: 
-    // deploymentData.DesignationID
-        deploymentData.DesignationID && deploymentData.DesignationID !== "0"
-      ? {
-        RecordID: deploymentData.DesignationID,
-        Code: deploymentData.DesignationCode,
-        Name: deploymentData.DesignationName,
-      }
-      : null,
-    location: 
-    // deploymentData.LocationID
-    deploymentData.LocationID && deploymentData.LocationID !== "0"
-      ? {
-        RecordID: deploymentData.LocationID,
-        Code: deploymentData.LocationCode,
-        Name: deploymentData.LocationName,
-      }
-      : null,
-    gate: 
-    // deploymentData.StoregatemasterID
+    Designation:
+      // deploymentData.DesignationID
+      deploymentData.DesignationID && deploymentData.DesignationID !== "0"
+        ? {
+          RecordID: deploymentData.DesignationID,
+          Code: deploymentData.DesignationCode,
+          Name: deploymentData.DesignationName,
+        }
+        : null,
+    location:
+      // deploymentData.LocationID
+      deploymentData.LocationID && deploymentData.LocationID !== "0"
+        ? {
+          RecordID: deploymentData.LocationID,
+          Code: deploymentData.LocationCode,
+          Name: deploymentData.LocationName,
+        }
+        : null,
+    gate:
+      // deploymentData.StoregatemasterID
       deploymentData.StoregatemasterID && deploymentData.StoregatemasterID !== "0"
-      ? {
-        RecordID: deploymentData.StoregatemasterID,
-        Code: deploymentData.StoregatemasterCode,
-        Name: deploymentData.StoregatemasterName,
-      }
-      : null,
+        ? {
+          RecordID: deploymentData.StoregatemasterID,
+          Code: deploymentData.StoregatemasterCode,
+          Name: deploymentData.StoregatemasterName,
+        }
+        : null,
     project:
       deploymentData.DefaultProject && deploymentData.DefaultProject !== "0"
         ? {
@@ -4254,24 +4279,24 @@ const Editemployee = () => {
         Name: deploymentData.FunctionName,
       }
       : null,
-    shift: 
-    // deploymentData.ShiftID
+    shift:
+      // deploymentData.ShiftID
       deploymentData.ShiftID && deploymentData.ShiftID !== "0"
-      ? {
-        RecordID: deploymentData.ShiftID,
-        Code: deploymentData.ShiftCode,
-        Name: deploymentData.ShiftName,
-      }
-      : null,
-    shift2: 
-    // deploymentData.ShiftID2
+        ? {
+          RecordID: deploymentData.ShiftID,
+          Code: deploymentData.ShiftCode,
+          Name: deploymentData.ShiftName,
+        }
+        : null,
+    shift2:
+      // deploymentData.ShiftID2
       deploymentData.ShiftID2 && deploymentData.ShiftID2 !== "0"
-      ? {
-        RecordID: deploymentData.ShiftID2,
-        Code: deploymentData.ShiftCode2,
-        Name: deploymentData.ShiftName2,
-      }
-      : null,
+        ? {
+          RecordID: deploymentData.ShiftID2,
+          Code: deploymentData.ShiftCode2,
+          Name: deploymentData.ShiftName2,
+        }
+        : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
     checkin2: deploymentData.ShiftStartTime2 || "",
@@ -5138,7 +5163,7 @@ const Editemployee = () => {
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
-                    {is003Subscription && initialValues.employeetype === "CI" &&(
+                    {is003Subscription && initialValues.employeetype === "CI" && (
                       <MenuItem value={23}>Course Attendance</MenuItem>
                     )}
                     {initialValues.employeetype === "CO" ? (
@@ -5170,7 +5195,7 @@ const Editemployee = () => {
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                     <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
-                    <MenuItem value={22}>Resignation</MenuItem>
+                    {!isStudentClassification && (<MenuItem value={22}>Resignation</MenuItem>)}
 
                   </Select>
                 </FormControl>
@@ -5573,7 +5598,7 @@ const Editemployee = () => {
                             label="Quality Assurance"
                           />
 
-                          <FormLabel focused={false}>Quality Assurance</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5585,7 +5610,7 @@ const Editemployee = () => {
                             label="Scrum Master"
                           />
 
-                          <FormLabel focused={false}>Scrum Master</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5597,7 +5622,7 @@ const Editemployee = () => {
                             label="Project Manager"
                           />
 
-                          <FormLabel focused={false}>Project Manager</FormLabel>
+                          <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
                         </Box>
 
                         <Box>
@@ -13695,6 +13720,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
+                              footerHeight={footerHeight}
                             />
                           ) : (
                             <SchoolContractInvoice
@@ -13715,7 +13741,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
-
+                              footerHeight={footerHeight}
 
                             />
                           )}
