@@ -93,9 +93,13 @@ const NewSchedule = () => {
   console.log("🚀 ~ NewSchedule ~ parentID4:", params.parentID4);
 
   const CompanyID = sessionStorage.getItem("compID");
-    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
   console.log("🚀 ~ NewSchedule ~ is003Subscription:", is003Subscription)
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const state = location.state || {};
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -412,9 +416,11 @@ const NewSchedule = () => {
       align: "center",
       renderCell: (params) => params.api.getRowIndex(params.id) + 1,
     },
-    { field: "EmployeeName", 
-      headerName: is003Subscription ? "Student Name" : "Employee Name", 
-      width: 200, headerAlign: "center" },
+    {
+      field: "EmployeeName",
+      headerName: is003Subscription ? "Student Name" : "Employee Name",
+      width: 200, headerAlign: "center"
+    },
     { field: "Assessment", headerName: "Assessment", width: 150, headerAlign: "center" },
     { field: "Designation", headerName: "Designation", width: 200, headerAlign: "center" },
     {
@@ -756,14 +762,14 @@ const NewSchedule = () => {
                       name="EmpName"
                       // label="Employee"
                       label={
-                            is003Subscription ? (
-                              "Student Name"
-                            ) : (
-                              
-                                "Employee"
-                              
-                            )
-                          }
+                        is003Subscription ? (
+                          "Student Name"
+                        ) : (
+
+                          "Employee"
+
+                        )
+                      }
                       id="EmpName"
                       value={selectedEmp}
                       onChange={(e, newValue) => {
@@ -781,7 +787,7 @@ const NewSchedule = () => {
                       error={!!touched.EmpName && !!errors.EmpName}
                       helperText={touched.EmpName && errors.EmpName}
                       // url={`${listViewurl}?data={"Query":{"AccessID":"2127","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}'","Any":""}}`}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2154","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}' AND AssessmentID='${parentID2}' AND Status NOT IN ('Pass','Appeared','Scheduled') AND PassStatus ='' GROUP BY RecordID","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2154","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${parentID1}' AND AssessmentID='${parentID2}' AND Status NOT IN ('Pass','Appeared','Scheduled') AND PassStatus ='' GROUP BY RecordID","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                     />
                     <TextField
                       name="Date"

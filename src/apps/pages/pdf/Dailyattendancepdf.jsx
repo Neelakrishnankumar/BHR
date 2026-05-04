@@ -257,7 +257,7 @@
 //         <Document>
 //             {pages.map((pageData, pageIndex) => (
 //                 <Page size="A4" style={styles.page} key={pageIndex}>
-                    
+
 //                       <View fixed style={styles.headerWrapper}>
 //                                   {filters.HeaderImg && (
 //                                     <Image
@@ -545,51 +545,51 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 7,
     },
-  sectionContainer: {
-    marginTop: 10,
-  padding: 10,
-  breakInside: "avoid", 
-  },
+    sectionContainer: {
+        marginTop: 10,
+        padding: 10,
+        breakInside: "avoid",
+    },
 
-  SummheaderText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 8,
-    textAlign: "center",
-    color: "#0B3D91",
-    // textDecoration: "underline",
-  },
+    SummheaderText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 8,
+        textAlign: "center",
+        color: "#0B3D91",
+        // textDecoration: "underline",
+    },
 
-  card: {
-    marginBottom: 10,
-    padding: 8,
-    borderRadius: 5,
-    border: "1px solid #ccc",
-    backgroundColor: "#F9FBFF",
-  },
+    card: {
+        marginBottom: 10,
+        padding: 8,
+        borderRadius: 5,
+        border: "1px solid #ccc",
+        backgroundColor: "#F9FBFF",
+    },
 
-  listTitle: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#1A237E",
-    borderBottom: "1px solid #ddd",
-    paddingBottom: 2,
-  },
+    listTitle: {
+        fontSize: 12,
+        fontWeight: "bold",
+        marginBottom: 5,
+        color: "#1A237E",
+        borderBottom: "1px solid #ddd",
+        paddingBottom: 2,
+    },
 
-  listText: {
-    fontSize: 10,
-    marginLeft: 10,
-    marginBottom: 2,
-    color: "#333",
-  },
+    listText: {
+        fontSize: 10,
+        marginLeft: 10,
+        marginBottom: 2,
+        color: "#333",
+    },
 
-  emptyText: {
-    fontSize: 10,
-    fontStyle: "italic",
-    color: "#999",
-    marginLeft: 10,
-  },
+    emptyText: {
+        fontSize: 10,
+        fontStyle: "italic",
+        color: "#999",
+        marginLeft: 10,
+    },
 });
 
 // ✅ FIXED: Proper pagination - fit more rows per page
@@ -606,30 +606,30 @@ const styles = StyleSheet.create({
 //     return pages;
 // };
 const paginateData = (data) => {
-  if (!data || data.length === 0) return [];
+    if (!data || data.length === 0) return [];
 
-  const pageSize = 30;
-  const lastPageSize = 18; // 👈 leave space for summary
+    const pageSize = 30;
+    const lastPageSize = 18; // 👈 leave space for summary
 
-  const pages = [];
+    const pages = [];
 
-  for (let i = 0; i < data.length; i += pageSize) {
-    pages.push(data.slice(i, i + pageSize));
-  }
+    for (let i = 0; i < data.length; i += pageSize) {
+        pages.push(data.slice(i, i + pageSize));
+    }
 
-  // 👇 Adjust last page
-  const lastPage = pages[pages.length - 1];
+    // 👇 Adjust last page
+    const lastPage = pages[pages.length - 1];
 
-  if (lastPage.length > lastPageSize) {
-    const extra = lastPage.slice(lastPageSize);
-    pages[pages.length - 1] = lastPage.slice(0, lastPageSize);
-    pages.push(extra); // push overflow to new page
-  }
+    if (lastPage.length > lastPageSize) {
+        const extra = lastPage.slice(lastPageSize);
+        pages[pages.length - 1] = lastPage.slice(0, lastPageSize);
+        pages.push(extra); // push overflow to new page
+    }
 
-  return pages;
+    return pages;
 };
 
-const DailyattendancePDF = ({ data = [], filters = {} }) => {
+const DailyattendancePDF = ({ data = [], filters = {}, footerHeight }) => {
     const pages = paginateData(data);
 
     if (!pages || pages.length === 0) {
@@ -648,56 +648,68 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
 
 
 
-// Helper function for dd-mm-yyyy
-const formatDateDisplay = (dateStr) => {
-  if (!dateStr || dateStr === "-") return "-";
-  const datePart = dateStr.split(" ")[0]; 
-  const [year, month, day] = datePart.split("-");
-  return `${day}-${month}-${year}`;
-};
-
-// Update mappings to use 'name' and 'date'
-const permissionList = data
-  .filter(r => r.Permission && r.Permission !== "00:00")
-  .map(r => {
-    console.log(r, "--hii permissionList");  // ✅ valid here
-
-    return {
-      name: r.EmpName,
-      date: formatDateDisplay(r.CheckInDate)
+    // Helper function for dd-mm-yyyy
+    const formatDateDisplay = (dateStr) => {
+        if (!dateStr || dateStr === "-") return "-";
+        const datePart = dateStr.split(" ")[0];
+        const [year, month, day] = datePart.split("-");
+        return `${day}-${month}-${year}`;
     };
-  });
 
-const scheduledLeaveList = data
-  .filter(r => r.Status === "Leave")
-  .map(r => ({ 
-    name: r.EmpName, 
-    date: formatDateDisplay(r.CheckInDate) 
-  }));
+    // Update mappings to use 'name' and 'date'
+    const permissionList = data
+        .filter(r => r.Permission && r.Permission !== "00:00")
+        .map(r => {
+            console.log(r, "--hii permissionList");  // ✅ valid here
 
-const unscheduledLeaveList = data
-  .filter(r => r.Status === "Absent")
-  .map(r => ({ 
-    name: r.EmpName, 
-    date: formatDateDisplay(r.CheckInDate) 
-  }));
+            return {
+                name: r.EmpName,
+                date: formatDateDisplay(r.CheckInDate)
+            };
+        });
+
+    const scheduledLeaveList = data
+        .filter(r => r.Status === "Leave")
+        .map(r => ({
+            name: r.EmpName,
+            date: formatDateDisplay(r.CheckInDate)
+        }));
+
+    const unscheduledLeaveList = data
+        .filter(r => r.Status === "Absent")
+        .map(r => ({
+            name: r.EmpName,
+            date: formatDateDisplay(r.CheckInDate)
+        }));
 
     return (
         <Document>
             {pages.map((pageData, pageIndex) => (
-                <Page size="A4" style={styles.page} key={pageIndex}>
-                    
+                <Page
+                    size="A4"
+                    // style={styles.page} 
+                    style={{
+                        fontFamily: "Helvetica",
+                        backgroundColor: "#ffffff",
+                        paddingTop: 70,
+                        // paddingBottom: 36,
+                        paddingBottom: footerHeight,
+                        paddingHorizontal: 15,
+                        fontSize: 9,
+                    }}
+                    key={pageIndex}>
+
                     {/* Header Image - Optional */}
-                    {filters.HeaderImg && 
-                     filters.HeaderImg.length > 0 &&
-                     filters.HeaderImg.length < 100000 && (
-                        <View fixed style={styles.headerWrapper}>
-                            <Image
-                                src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                                style={styles.headerImage}
-                            />
-                        </View>
-                    )}
+                    {filters.HeaderImg &&
+                        filters.HeaderImg.length > 0 &&
+                        filters.HeaderImg.length < 100000 && (
+                            <View fixed style={styles.headerWrapper}>
+                                <Image
+                                    src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                                    style={styles.headerImage}
+                                />
+                            </View>
+                        )}
 
                     {/* Title - Only on first page */}
                     {pageIndex === 0 && (
@@ -724,8 +736,8 @@ const unscheduledLeaveList = data
                         {pageData.map((row, rowIndex) => {
                             const isLast = rowIndex === pageData.length - 1;
                             return (
-                                <View 
-                                    key={`${pageIndex}-${rowIndex}`} 
+                                <View
+                                    key={`${pageIndex}-${rowIndex}`}
                                     style={isLast ? styles.tableRowLast : styles.tableRow}
                                 >
                                     <Text style={styles.tableCol1}>
@@ -754,79 +766,92 @@ const unscheduledLeaveList = data
 
 
                     {/* Footer Image - Optional */}
-                    {filters.FooterImg && 
-                     filters.FooterImg.length > 0 &&
-                     filters.FooterImg.length < 100000 && (
-                        <View fixed style={styles.footerWrapper}>
-                            <Image
-                                src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-                                style={styles.footerImage}
-                            />
-                        </View>
-                    )}
+                    {filters.FooterImg &&
+                        filters.FooterImg.length > 0 &&
+                        filters.FooterImg.length < 100000 && (
+                            <View fixed
+                                // style={styles.footerWrapper}
+                                style={{
+                                    position: "absolute",
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    height: footerHeight, // 🔥 dynamic
+                                }}
+                            >
+                                <Image
+                                    src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                                    // style={styles.footerImage}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                />
+                            </View>
+                        )}
 
                     {/* Page Number */}
                     <Text fixed style={styles.pageNumber}>
                         Page {pageIndex + 1} of {pages.length}
                     </Text>
 
-         {/* ✅ Summary Page (NEW) */}
-{/* ✅ Summary Page Section */}
-{pageIndex === pages.length - 1 && (
-  <View style={styles.sectionContainer}>
-    <Text style={styles.SummheaderText}>Summary</Text>
+                    {/* ✅ Summary Page (NEW) */}
+                    {/* ✅ Summary Page Section */}
+                    {pageIndex === pages.length - 1 && (
+                        <View style={styles.sectionContainer}>
+                            <Text style={styles.SummheaderText}>Summary</Text>
 
-    {/* ✅ Permission */}
-    {permissionList?.length > 0 && (
-      <View style={styles.card} wrap={false}>
-        <Text style={styles.listTitle}>
-          Permission List ({permissionList.length})
-        </Text>
-        {permissionList.map((item, i) => (
-          <Text key={i} style={styles.listText}>
-            • {item.name}
-          </Text>
-        ))}
-      </View>
-    )}
+                            {/* ✅ Permission */}
+                            {permissionList?.length > 0 && (
+                                <View style={styles.card} wrap={false}>
+                                    <Text style={styles.listTitle}>
+                                        Permission List ({permissionList.length})
+                                    </Text>
+                                    {permissionList.map((item, i) => (
+                                        <Text key={i} style={styles.listText}>
+                                            • {item.name}
+                                        </Text>
+                                    ))}
+                                </View>
+                            )}
 
-    {/* ✅ Scheduled Leave */}
-    {scheduledLeaveList?.length > 0 && (
-      <View style={styles.card} wrap={false}>
-        <Text style={styles.listTitle}>
-          Scheduled Leave ({scheduledLeaveList.length})
-        </Text>
-        {scheduledLeaveList.map((item, i) => (
-          <Text key={i} style={styles.listText}>
-            • {item.name}
-          </Text>
-        ))}
-      </View>
-    )}
+                            {/* ✅ Scheduled Leave */}
+                            {scheduledLeaveList?.length > 0 && (
+                                <View style={styles.card} wrap={false}>
+                                    <Text style={styles.listTitle}>
+                                        Scheduled Leave ({scheduledLeaveList.length})
+                                    </Text>
+                                    {scheduledLeaveList.map((item, i) => (
+                                        <Text key={i} style={styles.listText}>
+                                            • {item.name}
+                                        </Text>
+                                    ))}
+                                </View>
+                            )}
 
-    {/* ✅ Unscheduled Leave */}
-    {unscheduledLeaveList?.length > 0 && (
-      <View style={styles.card} wrap={false}>
-        <Text style={styles.listTitle}>
-          Unscheduled Leave ({unscheduledLeaveList.length})
-        </Text>
-        {unscheduledLeaveList.map((item, i) => (
-          <Text key={i} style={styles.listText}>
-            • {item.name}
-          </Text>
-        ))}
-      </View>
-    )}
-  </View>
-)}
+                            {/* ✅ Unscheduled Leave */}
+                            {unscheduledLeaveList?.length > 0 && (
+                                <View style={styles.card} wrap={false}>
+                                    <Text style={styles.listTitle}>
+                                        Unscheduled Leave ({unscheduledLeaveList.length})
+                                    </Text>
+                                    {unscheduledLeaveList.map((item, i) => (
+                                        <Text key={i} style={styles.listText}>
+                                            • {item.name}
+                                        </Text>
+                                    ))}
+                                </View>
+                            )}
+                        </View>
+                    )}
 
                 </Page>
 
-         
+
             ))}
 
 
-    
+
         </Document>
     );
 };

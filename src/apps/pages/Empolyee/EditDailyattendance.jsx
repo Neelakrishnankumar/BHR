@@ -66,6 +66,7 @@ const EditdailyAttendance = () => {
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const AttendanceData = useSelector(
     (state) => state.formApi.MonthlyAttendanceData
@@ -86,6 +87,8 @@ const EditdailyAttendance = () => {
   const EMPID = sessionStorage.getItem("EmpId");
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
 
@@ -105,40 +108,63 @@ const EditdailyAttendance = () => {
   // }, []);
 
 
-    const savedDate = sessionStorage.getItem("date");
-      const restoredDate =
-        savedDate || new Date().toISOString().split("T")[0];
+  const savedDate = sessionStorage.getItem("date");
+  const restoredDate =
+    savedDate || new Date().toISOString().split("T")[0];
 
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-    
+    const fetchData = async () => {
+      try {
 
-      await dispatch(
-        MonthlyAttendance({
-          data: { Date: restoredDate, CompanyID },
-        })
+
+        await dispatch(
+          MonthlyAttendance({
+            data: { Date: restoredDate, CompanyID },
+          })
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
       );
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  fetchData();
-}, [dispatch]);
-//  useEffect(() => {
-//     const savedDate = sessionStorage.getItem("date");
-//     const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
+  //  useEffect(() => {
+  //     const savedDate = sessionStorage.getItem("date");
+  //     const restoredDate = savedDate || new Date().toISOString().split("T")[0];
 
-//     const data = {
-//       Date: restoredDate,
-//       CompanyID
-//     };
+  //     const data = {
+  //       Date: restoredDate,
+  //       CompanyID
+  //     };
 
-//     console.log("Dispatching MonthlyAttendance:", data);
-//     dispatch(MonthlyAttendance({ data }));
-//   }, []);
+  //     console.log("Dispatching MonthlyAttendance:", data);
+  //     dispatch(MonthlyAttendance({ data }));
+  //   }, []);
 
   function AttendanceTool() {
     return (
@@ -228,7 +254,7 @@ const EditdailyAttendance = () => {
       flex: 1,
       headerAlign: "center",
     },
-     {
+    {
       field: "Permission",
       headerName: "Permission",
       flex: 1,
@@ -551,6 +577,7 @@ const EditdailyAttendance = () => {
                                 HeaderImg: HeaderImg,
                                 FooterImg: FooterImg
                               }}
+                              footerHeight={footerHeight}
                             />
                           );
 
@@ -565,7 +592,7 @@ const EditdailyAttendance = () => {
                             link.click();
                             URL.revokeObjectURL(url);
                             toast.dismiss();
-                            
+
                           } else {
                             toast.dismiss();
                             toast.error("PDF generation failed");
@@ -586,7 +613,7 @@ const EditdailyAttendance = () => {
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                padding={1}
+                  padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}

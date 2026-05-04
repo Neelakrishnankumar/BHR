@@ -603,14 +603,15 @@ import {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-  page: {
-    paddingTop: 70,
-    paddingBottom: 70,
-    paddingHorizontal: 20,
-    fontSize: 10,
-    fontFamily: "Helvetica",
-    backgroundColor: "#fff",
-  },
+  // page: {
+  //   paddingTop: 70,
+  //   // paddingBottom: 70,
+  //   paddingBottom: footerHeight,
+  //   paddingHorizontal: 20,
+  //   fontSize: 10,
+  //   fontFamily: "Helvetica",
+  //   backgroundColor: "#fff",
+  // },
 
   // ─── Fixed Header / Footer Images ───
   headerWrapper: {
@@ -630,10 +631,15 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     display: "flex",
   },
+  // footerImage: {
+  //   width: "100%",
+  //   height: "100%",
+  //   objectFit: "fill",   // ← stretches to fill both width & height exactly, no gaps
+  // },
   footerImage: {
     width: "100%",
-    height: "100%",
-    objectFit: "fill",   // ← stretches to fill both width & height exactly, no gaps
+    height: "auto",      // 🔥 KEY FIX
+    objectFit: "contain" // 🔥 NO crop, NO stretch
   },
 
   // ─── Report Title (first page only) ───
@@ -848,11 +854,28 @@ const PageHeader = ({ filters }) => {
   );
 };
 
-const PageFooter = ({ filters }) => {
+const PageFooter = ({ filters, footerHeight }) => {
   if (!filters?.FooterImg) return null;
   return (
-    <View fixed style={styles.footerWrapper}>
-      <Image src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`} style={styles.footerImage} />
+    <View
+      fixed
+      // style={styles.footerWrapper}
+      style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: footerHeight, // 🔥 dynamic
+      }}
+    >
+      <Image
+        src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+        // style={styles.footerImage} 
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
     </View>
   );
 };
@@ -961,7 +984,7 @@ const TeacherTimetableTable = ({ teacher }) => {
 };
 
 // ─── OVERALL SUMMARY PAGE ────────────────────────────────────────────────────
-const OverallSummaryPage = ({ apiData, filters }) => {
+const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
   const summaries = apiData.Summaries || [];
 
   const parseMins = (str = "0h 0m") => {
@@ -974,8 +997,19 @@ const OverallSummaryPage = ({ apiData, filters }) => {
   const totalFree = summaries.reduce((s, r) => s + parseMins(r.FreeHours), 0);
 
   return (
-    <Page style={styles.page}>
-      <PageHeader filters={filters} />
+    <Page
+      // style={styles.page}
+      style={{
+        paddingTop: 70,
+        // paddingBottom: 70,
+        paddingBottom: footerHeight,
+        paddingHorizontal: 20,
+        fontSize: 10,
+        fontFamily: "Helvetica",
+        backgroundColor: "#fff",
+      }}
+    >
+      <PageHeader filters={filters} footerHeight={footerHeight} />
       <Text style={styles.summaryPageTitle}>Overall Summary</Text>
 
       <View style={styles.overviewCard}>
@@ -1032,11 +1066,23 @@ const OverallSummaryPage = ({ apiData, filters }) => {
           <View style={styles.colFree}><Text style={styles.grandTotalFree}>{toHM(totalFree)}</Text></View>
         </View>
       </View>
-
-      <View style={styles.subjectBreakdownSection}>
+      <View
+        // style={styles.subjectBreakdownSection}
+        // wrap
+        style={{
+          marginTop: 20,
+        }}
+      >
         <Text style={styles.subjectBreakdownTitle}>Subject Details per Teacher</Text>
         {summaries.map((s) => (
-          <View key={s.EmployeeID} style={styles.teacherSubjectBlock}>
+          <View key={s.EmployeeID}
+            // style={styles.teacherSubjectBlock}
+            style={{
+              padding: 10,
+              marginBottom: 10,
+              backgroundColor: "#F8FAFC", borderRadius: 4, border: "1px solid #E2E8F0",
+            }}
+          >
             <Text style={styles.teacherSubjectBlockName}>
               {s.TeacherName}{"  "}
               <Text style={{ color: "#64748B", fontWeight: "normal" }}>
@@ -1054,13 +1100,14 @@ const OverallSummaryPage = ({ apiData, filters }) => {
         ))}
       </View>
 
-      <PageFooter filters={filters} />
+      <View style={{ height: footerHeight }} />
+      <PageFooter filters={filters} footerHeight={footerHeight} />
     </Page>
   );
 };
 
 // ─── MAIN PDF DOCUMENT ────────────────────────────────────────────────────────
-const TeacherOccupancyPDF = ({ apiData, filters = {} }) => {
+const TeacherOccupancyPDF = ({ apiData, filters = {}, footerHeight }) => {
   if (!apiData || !apiData.Teachers) {
     return (
       <Document>
@@ -1072,7 +1119,19 @@ const TeacherOccupancyPDF = ({ apiData, filters = {} }) => {
   return (
     <Document>
       {apiData.Teachers.map((teacher, index) => (
-        <Page key={teacher.EmployeeID} style={styles.page}>
+        <Page
+          key={teacher.EmployeeID}
+          // style={styles.page}
+          style={{
+            paddingTop: 70,
+            // paddingBottom: 70,
+            paddingBottom: footerHeight,
+            paddingHorizontal: 20,
+            fontSize: 10,
+            fontFamily: "Helvetica",
+            backgroundColor: "#fff",
+          }}
+        >
           <PageHeader filters={filters} />
 
           {/* Report title — first page only */}
@@ -1082,11 +1141,11 @@ const TeacherOccupancyPDF = ({ apiData, filters = {} }) => {
 
           <TeacherTimetableTable teacher={teacher} />
 
-          <PageFooter filters={filters} />
+          <PageFooter filters={filters} footerHeight={footerHeight} />
         </Page>
       ))}
 
-      <OverallSummaryPage apiData={apiData} filters={filters} />
+      <OverallSummaryPage apiData={apiData} filters={filters} footerHeight={footerHeight}/>
     </Document>
   );
 };

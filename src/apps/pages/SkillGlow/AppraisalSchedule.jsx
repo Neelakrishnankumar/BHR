@@ -90,7 +90,11 @@ const AppraisalSchedule = () => {
   const parentID2 = params.parentID2;
 
   const CompanyID = sessionStorage.getItem("compID");
-    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const is003Subscription = SubscriptionCode.endsWith("003");
   const state = location.state || {};
   const theme = useTheme();
@@ -183,10 +187,10 @@ const AppraisalSchedule = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
+          ? delAction === "harddelete"
+            ? "harddelete"
+            : "update"
+          : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -547,6 +551,7 @@ const AppraisalSchedule = () => {
                             ScreenName: "List+Of+Question+Groups",
                             Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Self' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
+                            VerticalLicense: Subscriptionlastthree
                           },
                         })
                       )}`}
@@ -574,6 +579,7 @@ const AppraisalSchedule = () => {
                             ScreenName: "List+Of+Question+Groups",
                             Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Manager' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
+                            VerticalLicense:Subscriptionlastthree
                           },
                         })
                       )}`}
@@ -597,6 +603,7 @@ const AppraisalSchedule = () => {
                             ScreenName: "List+Of+Question+Groups",
                             Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Peer' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
+                            VerticalLicense:Subscriptionlastthree
                           },
                         })
                       )}`}
@@ -634,6 +641,7 @@ const AppraisalSchedule = () => {
                             ScreenName: "List+Of+Question+Groups",
                             Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Subordinate' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
+                            VerticalLicense:Subscriptionlastthree
                           },
                         })
                       )}`}
@@ -668,14 +676,14 @@ const AppraisalSchedule = () => {
                         marginTop: "10px",
                       }}
                       name="EmpName"
-                      label="Employee"
+                      // label="Employee"
                       label={
-                            is003Subscription ? (
-                              "Personnel"
-                            ) : (
-                              "Employee"
-                            )
-                          }
+                        is003Subscription ? (
+                          "Personnel"
+                        ) : (
+                          "Employee"
+                        )
+                      }
                       //  label={
                       //   <span>
                       //     Employee{" "}
@@ -700,7 +708,7 @@ const AppraisalSchedule = () => {
                       }}
                       error={!!touched.EmpName && !!errors.EmpName}
                       helperText={touched.EmpName && errors.EmpName}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2127","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${DesignationID}'","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2127","ScreenName":"Edit List Of Schedule","Filter":"CompanyID='${CompanyID}' AND DesignationID='${DesignationID}'","Any":"","VerticalLicense": "${Subscriptionlastthree}"}}`}
                     />
                     <TextField
                       name="Date"
@@ -1015,9 +1023,8 @@ const AppraisalSchedule = () => {
                               //       : "0",
                               // });
                               newRows.push({
-                                id: `${emp.RecordID}-${
-                                  type.label
-                                }-${Date.now()}`,
+                                id: `${emp.RecordID}-${type.label
+                                  }-${Date.now()}`,
                                 EmployeeID: emp.RecordID,
                                 EmployeeName:
                                   emp.EmployeeName || emp.Name || "N/A",

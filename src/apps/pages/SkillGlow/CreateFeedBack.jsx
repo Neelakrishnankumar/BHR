@@ -73,6 +73,11 @@ const CreateFeedBack = () => {
   const mode = params.Mode;
   const CatId = params.parentID1;
   const CompanyID = sessionStorage.getItem("compID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -321,6 +326,7 @@ const CreateFeedBack = () => {
           ScreenName: "Designation",
           Filter: `parentID='${CompanyID}'`,
           Any: "",
+          VerticalLicense: Subscriptionlastthree
         },
       })
     )}`;
@@ -394,7 +400,7 @@ const CreateFeedBack = () => {
               "List of Feedback Category" :
               "List of Assessment Category"  
               } */}
-                  List of Category 
+                  List of Category
                   ({state.BreadCrumb2})
                 </Typography>
                 <Typography
@@ -405,16 +411,16 @@ const CreateFeedBack = () => {
                     navigate(-1);
                   }}
                 >
-                  {params.parentID2 === "AP" ? 
-              "List of Appraisal" :
-              params.parentID2 === "CL" ?
-              "List of Compliance" :
-              params.parentID2 === "SV" ?
-              "List of Survey" :
-              params.parentID2 === "FB" ?
-              "List of Feedback" :
-              "List of Assessment"  
-              }
+                  {params.parentID2 === "AP" ?
+                    "List of Appraisal" :
+                    params.parentID2 === "CL" ?
+                      "List of Compliance" :
+                      params.parentID2 === "SV" ?
+                        "List of Survey" :
+                        params.parentID2 === "FB" ?
+                          "List of Feedback" :
+                          "List of Assessment"
+                  }
                   {/* List of Assessment */}
                 </Typography>
                 <Typography

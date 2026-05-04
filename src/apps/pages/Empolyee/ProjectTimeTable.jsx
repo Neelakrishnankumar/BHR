@@ -59,7 +59,8 @@ const ProjectTimeTable = () => {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const [clickedDate, setClickedDate] = useState("");
     const [errorMsgData, setErrorMsgData] = useState(null);
-
+    const [footerHeight, setFooterHeight] = useState(60);
+    const [isReady, setIsReady] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -74,7 +75,29 @@ const ProjectTimeTable = () => {
     console.log("HeaderImg", HeaderImg, FooterImg);
     const config = getConfig();
     const baseurlUAAM = config.UAAM_URL;
+    useEffect(() => {
+        if (!FooterImg) return;
 
+        const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+        const img = new Image();
+        img.src = url;
+
+        img.onload = () => {
+            const aspectRatio = img.height / img.width;
+
+            const pageWidth = 595;
+            const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+            const calculatedHeight = Math.min(
+                pageWidth * aspectRatio,
+                MAX_FOOTER_HEIGHT
+            );
+
+            setFooterHeight(calculatedHeight);
+            setIsReady(true);
+        };
+    }, [FooterImg]);
     const state = location.state || {};
     const TermsID = state.TermsID || "";
     const SectionID = state.MilestoneID || "";
@@ -393,6 +416,7 @@ const ProjectTimeTable = () => {
                                         HeaderImg: HeaderImg,
                                         FooterImg: FooterImg,
                                     }}
+                                    footerHeight={footerHeight}
                                 />
                             }
                             fileName={`Timetable_${state.projectName || "report"}.pdf`}
