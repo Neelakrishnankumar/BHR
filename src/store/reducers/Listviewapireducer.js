@@ -123,6 +123,7 @@ import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 
 const initialState = {
   rowData: [],
@@ -607,57 +608,7 @@ export const fetchListview =
       //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
       // };
-      const handleTermsProcess = async (values) => {
 
-        const result = await Swal.fire({
-          title: "If you process this Timetable you will not able to edit. Do you want to proceed?",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          cancelButtonText: "No",
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-        });
-
-        if (result.isConfirmed) {
-          const data = await dispatch(TimetableProcessController({
-            data: {
-              HeaderID: values.RecordID,
-              TeacherID: empID,
-              Process: "Y",
-            },
-          }));
-
-          if (data.payload.Status === "Y") {
-            Swal.fire({
-              title: data.payload.Message,
-              icon: "success",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#3085d6",
-            });
-          } else {
-            Swal.fire({
-              title: data.payload.Message,
-              // text: data.payload.Msg,
-              icon: "warning",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#3085d6",
-            });
-          }
-          dispatch(
-            fetchListview(
-              "TR368",
-              VerticalLicense,
-              screenName,
-              `CompanyID='${CompId}' AND StandardID='${values.StandardID || 0}'`,
-              "",
-              CompId,
-              "003"
-
-            )
-          );
-        }
-      }
       if (
         filter != "" &&
         AccessID !== "TR115" &&
@@ -826,9 +777,9 @@ export const fetchListview =
         if (AccessID === "TR303") {
           filter = "PartyID=" + `'${filter}'`;
         }
-          if (AccessID === "TR099") {
-           filter = "";
-          }
+        if (AccessID === "TR099") {
+          filter = "";
+        }
         // }
         // if (AccessID === "TR314") {
         //    filter = "PartyID=" + `'${filter}'`;
@@ -1919,7 +1870,7 @@ export const fetchListview =
                 },
               };
             }
-             else if (AccessID == "TR095") {
+            else if (AccessID == "TR095") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2473,7 +2424,7 @@ export const fetchListview =
                   />
                 ),
               };
-            } else if (AccessID == "TR321") {
+            } else if (AccessID == "TR321" || AccessID == "TR368") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -5052,96 +5003,7 @@ export const fetchListview =
                       ) : (
                         false
                       )}
-                      {AccessID === "TR368" && (
-                        <>
-                          {params.row.IsProcess === "N" ? (
-                            <Link
-                              to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                              state={{
-                                MilestoneID: params.row.Section,
-                                MilestoneName: params.row.MilestoneDesc,
-                                projectID: params.row.StandardID,
-                                projectName: params.row.ProjectDesc,
-                                BreadCrumb1: params.row.Project,
-                                BreadCrumb2: params.row.Term,
-                                BreadCrumb3: params.row.Description
-                              }}
-                            >
-                              <Tooltip title="Edit">
-                                <IconButton color="info" size="small">
-                                  <ModeEditOutlinedIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Link>
-                          ) : (
-                            <Link
-                              to={`./Edit${screenName}/${params.row.RecordID}/V`}
-                              state={{
-                                MilestoneID: params.row.Section,
-                                MilestoneName: params.row.MilestoneDesc,
-                                projectID: params.row.StandardID,
-                                projectName: params.row.ProjectDesc,
-                                BreadCrumb1: params.row.Project,
-                                BreadCrumb2: params.row.Term,
-                                BreadCrumb3: params.row.Description
-                              }}
-                            >
-                              <Tooltip title="View">
-                                <IconButton color="info" size="small">
-                                  <VisibilityIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Link>
-                          )}
-                          <Link
-                            to={`./ProjectTimeTable`}
-                            state={{
-                              MilestoneID: params.row.Section,
-                              MilestoneName: params.row.MilestoneDesc,
-                              TermsID: params.row.TermID,
-                              projectID: params.row.StandardID,
-                              projectName: params.row.ProjectDesc,
-                              Description: params.row.Description,
-                              BreadCrumb1: params.row.Project,
-                              TermName: params.row.TermName,
-                              SlotGroupID: params.row.SlotGroupID,
-                              GroupID: params.row.SlotGroupID,
-                              HeaderID: params.row.RecordID,
-                            }}
-                          >
-                            <Tooltip title="Timetable">
-                              <IconButton color="info" size="small">
-                                <CalendarMonthOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
 
-                          {params.row.IsProcess === "N" ? (
-                            <Tooltip title="Process">
-                              <IconButton
-                                color="error"
-                                size="small"
-                                onClick={() => handleTermsProcess(params.row)}
-                              >
-                                <LockResetOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-
-                          ) : (
-                            <Tooltip title="Process">
-                              <IconButton
-                                color="error"
-                                size="small"
-                                sx={{
-                                  opacity: 0.5
-                                }}
-                              // onClick={() =>handleTermsProcess(params.row)}
-                              >
-                                <LockResetOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>)}
-                        </>
-                      )}
 
                       {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
                       {AccessID == "TR083" ? (
@@ -7938,7 +7800,58 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const handleTermsProcess = async (values) => {
 
+    const result = await Swal.fire({
+      title: "If you process this Timetable you will not able to edit. Do you want to proceed?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    });
+
+    if (result.isConfirmed) {
+      const data = await dispatch(TimetableProcessController({
+        data: {
+          HeaderID: values.RecordID,
+          TeacherID: EmployeeID,
+          Process: "Y",
+          Reason: values.reason || ""
+        },
+      }));
+
+      if (data.payload.Status === "Y") {
+        Swal.fire({
+          title: data.payload.Message,
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      } else {
+        Swal.fire({
+          title: data.payload.Message,
+          // text: data.payload.Msg,
+          icon: "warning",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      }
+      dispatch(
+        fetchListview(
+          "TR368",
+          "003",
+          screenName,
+          `CompanyID='${CompanyID}' AND StandardID='${values.StandardID || 0}'`,
+          "",
+          CompanyID,
+          "003"
+
+        )
+      );
+    }
+  }
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -8045,6 +7958,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
 
+
             {/* RESET FOR PARTY */}
 
             <Tooltip title="Reset">
@@ -8059,6 +7973,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <RestartAltOutlinedIcon />
               </IconButton>
             </Tooltip>
+
             <ResetPartyOrder
               open={modalOpen}
               onClose={() => {
@@ -8070,6 +7985,129 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               CompanyID={CompanyID}
             />
           </Box>
+        )}
+
+        {accessID === "TR368" && (
+          <>
+            {params.row.IsProcess === "N" ? (
+              <Link
+                to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                state={{
+                  MilestoneID: params.row.Section,
+                  MilestoneName: params.row.MilestoneDesc,
+                  projectID: params.row.StandardID,
+                  projectName: params.row.ProjectDesc,
+                  BreadCrumb1: params.row.Project,
+                  BreadCrumb2: params.row.Term,
+                  BreadCrumb3: params.row.Description,
+                  isprocess: params.row.IsProcess
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            ) : (
+              <Link
+                to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                state={{
+                  MilestoneID: params.row.Section,
+                  MilestoneName: params.row.MilestoneDesc,
+                  projectID: params.row.StandardID,
+                  projectName: params.row.ProjectDesc,
+                  BreadCrumb1: params.row.Project,
+                  BreadCrumb2: params.row.Term,
+                  BreadCrumb3: params.row.Description,
+
+                }}
+              >
+                <Tooltip title="View">
+                  <IconButton color="info" size="small">
+                    <VisibilityIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            )}
+            <Link
+              to={`./ProjectTimeTable`}
+              state={{
+                MilestoneID: params.row.Section,
+                MilestoneName: params.row.MilestoneDesc,
+                TermsID: params.row.TermID,
+                projectID: params.row.StandardID,
+                projectName: params.row.ProjectDesc,
+                Description: params.row.Description,
+                BreadCrumb1: params.row.Project,
+                TermName: params.row.TermName,
+                SlotGroupID: params.row.SlotGroupID,
+                GroupID: params.row.SlotGroupID,
+                HeaderID: params.row.RecordID,
+                isprocess: params.row.IsProcess
+
+              }}
+            >
+              <Tooltip title="Timetable">
+                <IconButton color="info" size="small">
+                  <CalendarMonthOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+
+            {params.row.IsProcess === "N" ? (
+              <Tooltip title="Process">
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => handleTermsProcess(params.row)}
+                >
+                  <LockResetOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+
+            ) : (
+              // <Tooltip title="Process">
+              //   <IconButton
+              //     color="error"
+              //     size="small"
+              //     sx={{
+              //       opacity: 0.5
+              //     }}
+              //   // onClick={() =>handleTermsProcess(params.row)}
+              //   >
+              //     <LockResetOutlinedIcon />
+              //   </IconButton>
+              // </Tooltip>
+              <>
+                <Tooltip title="Unprocess">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => {
+                      setSelectedRow(params.row);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <RestartAltOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Timetableprocess
+                  open={modalOpen}
+                  onClose={() => {
+                    setModalOpen(false);
+                    setSelectedRow(null);
+                  }}
+                  rowData={selectedRow}
+                  RecordID={params.row.RecordID}
+                  StandardID={params.row.StandardID}
+                  EmployeeID={EmployeeID}
+                  CompanyID={CompanyID}
+                />
+              </>
+            )}
+          </>
         )}
       </div>
     </Fragment>

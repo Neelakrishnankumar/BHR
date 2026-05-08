@@ -244,6 +244,10 @@ const initialState = {
   PartyResetloading: false,
   PartyResetstatus: "",
 
+  Timetableresetstatus:"",
+  Timetableresetloading:false,
+  Timetableresetdata:{},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -2754,7 +2758,8 @@ export const TimetableProcessController = createAsyncThunk(
     {
       HeaderID: data.HeaderID,
       TeacherID: data.TeacherID,
-      Process: data.Process
+      Process: data.Process,
+      Reason: data.Reason
     }
     const response = await axios.post(url, payload, {
       headers: {
@@ -4592,6 +4597,21 @@ export const getApiSlice = createSlice({
       .addCase(PartyReset.rejected, (state, action) => {
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
+      })
+       .addCase(TimetableProcessController.pending, (state, action) => {
+        state.Timetableresetstatus = "idle";
+        state.Timetableresetloading = true;
+      })
+      .addCase(TimetableProcessController.fulfilled, (state, action) => {
+        state.Timetableresetstatus = "success";
+        state.Timetableresetloading = false;
+        state.Timetableresetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TimetableProcessController.rejected, (state, action) => {
+        state.Timetableresetstatus = "Error";
+        state.Timetableresetloading = false;
       })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {

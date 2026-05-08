@@ -136,16 +136,17 @@ const EditSalaryComponent = () => {
 
   const InitialValue = {
     description: data.Name,
-    type: data.Type == "Percentage of Allowance 1" ? "A1" :
-      data.Type == "Percentage of Allowance 1 + Allowance 2 + Allowance 3" ? "A3" :
-        data.Type == "Percentage of Allowance 1 + Allowance 2" ? "A2" :
+    type: data.Type == "Percentage of Basic Pay" ? "A" :
+     data.Type == "Percentage of Basic Pay + Allowance 1" ? "A1" :
+      data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2" ? "A2" :   
+      data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2 + Allowance 3" ? "A3" :
           data.Type == "Fixed Amount" ? "FX" :
             data.Type == "Policy" ? "PC" : "",
     category: data.Category == "Allowance" ? "A" :
       data.Category == "Deduction" ? "D" : "",
     sortOrder: data.Sortorder || 0,
     disable: data.Disable === "Y" ? true : false,
-    Policy: data.StatuaryRecordID ? { RecordID: data.StatuaryRecordID, Name: data.Policy } : null,
+    Policy: data.StatuaryRecordID != 0 && data.Policy != null ? { RecordID: data.StatuaryRecordID, Name: data.Policy } : null,
   };
 
   const Fnsave = async (values, del) => {
@@ -337,9 +338,10 @@ const EditSalaryComponent = () => {
                       helperText={touched.type && errors.type}
                     >
                       <MenuItem value="FX">Fixed Amount</MenuItem>
-                      <MenuItem value="A1">Percentage Of Allowance 1</MenuItem>
-                      <MenuItem value="A2">Percentage Of Allowance 1 + Allowance 2</MenuItem>
-                      <MenuItem value="A3">Percentage Of Allowance 1 + Allowance 2 + Allowance 3</MenuItem>
+                      <MenuItem value="A">Percentage Of Basic Pay</MenuItem>
+                      <MenuItem value="A1">Percentage Of Basic Pay + Allowance 1</MenuItem>
+                      <MenuItem value="A2">Percentage Of Basic Pay + Allowance 1 + Allowance 2</MenuItem>
+                      <MenuItem value="A3">Percentage Of Basic Pay + Allowance 1 + Allowance 2 + Allowance 3 </MenuItem>
                       <MenuItem value="PC">Policy</MenuItem>
                     </TextField>
 

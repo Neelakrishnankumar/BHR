@@ -85,14 +85,14 @@ const EditSlotgroup = () => {
             .then((data) => {
                 setErrorMsgData(data);
                 let schemaFields = {
-                    name: Yup.string().required(data.Slotgroup.Description).nullable(),                 
+                    name: Yup.string().required(data.Slotgroup.Description).nullable(),
                 };
 
                 if (CompanyAutoCode === "N") {
                     schemaFields.code = Yup.string().trim().required(data.Slotgroup.code);
                 }
 
-                const schema = Yup.object().shape(schemaFields);              
+                const schema = Yup.object().shape(schemaFields);
                 setValidationSchema(schema);
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -133,12 +133,19 @@ const EditSlotgroup = () => {
     };
 
     const currentDate = new Date().toISOString().split('T')[0];
-    const InitialValue = {       
+    const InitialValue = {
         disable: data.Disable === "Y" ? true : false,
         delete: data.DeleteFlag === "Y" ? true : false,
         sortorder: mode === "E" ? data.Sortorder : 0,
         name: mode === "E" ? data.Name : "",
-        code: mode === "E" ? data.Code : "",       
+        code: mode === "E" ? data.Code : "",
+        monday: data.Monday === "Y" ? true : false,
+        tuesday: data.Tuesday === "Y" ? true : false,
+        wednesday: data.Wednesday === "Y" ? true : false,
+        thursday: data.Thursday === "Y" ? true : false,
+        friday: data.Friday === "Y" ? true : false,
+        saturday: data.Saturday === "Y" ? true : false,
+        sunday: data.Sunday === "Y" ? true : false,
     };
 
     const Fnsave = async (values, del) => {
@@ -157,8 +164,15 @@ const EditSlotgroup = () => {
         const idata = {
             RecordID: recID || -1,
             Code: values.code || "",
-            Name: values.name,                     
+            Name: values.name,
             Sortorder: values.sortorder || 0,
+            Monday: values.monday === true ? "Y" : "N",
+            Tuesday: values.tuesday === true ? "Y" : "N",
+            Wednesday: values.wednesday === true ? "Y" : "N",
+            Thursday: values.thursday === true ? "Y" : "N",
+            Friday: values.friday === true ? "Y" : "N",
+            Saturday: values.saturday === true ? "Y" : "N",
+            Sunday: values.sunday === true ? "Y" : "N",
             Disable: values.disable == true ? "Y" : "N",
             DeleteFlag: values.delete == true ? "Y" : "N",
             CompanyID
@@ -212,7 +226,7 @@ const EditSlotgroup = () => {
                             maxItems={3}
                             aria-label="breadcrumb"
                             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                        >                          
+                        >
                             <Typography
                                 variant="h5"
                                 color="#0000D1"
@@ -251,7 +265,7 @@ const EditSlotgroup = () => {
                                 Fnsave(values);
                             }, 100);
                         }}
-                         validationSchema={validationSchema}
+                        validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
                         {({
@@ -359,7 +373,7 @@ const EditSlotgroup = () => {
                                         // required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
-                                   
+
                                     <TextField
                                         name="sortorder"
                                         type="number"
@@ -385,6 +399,101 @@ const EditSlotgroup = () => {
                                                 .slice(0, 8);
                                         }}
                                     />
+                                    <Box>
+                                        {/* <Typography variant="subtitle1" sx={{ mb: -1, fontWeight: 'bold' }}>
+                                            Week Off
+                                        </Typography> */}
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="monday"
+                                            id="monday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Monday"
+                                        />
+
+                                        <FormLabel focused={false}>Mon</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="tuesday"
+                                            id="tuesday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Tuesday"
+                                        />
+
+                                        <FormLabel focused={false}>Tues</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="wednesday"
+                                            id="wednesday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Wednesday"
+                                        />
+
+                                        <FormLabel focused={false}>Wed</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="thursday"
+                                            id="thursday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Thursday"
+                                        />
+
+                                        <FormLabel focused={false}>Thurs</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="friday"
+                                            id="friday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Friday"
+                                        />
+
+                                        <FormLabel focused={false}>Fri</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="saturday"
+                                            id="saturday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Saturday"
+                                        />
+
+                                        <FormLabel focused={false}>Sat</FormLabel>
+
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="sunday"
+                                            id="sunday"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Sunday"
+                                        />
+                                        .
+                                        <FormLabel focused={false}>Sun</FormLabel>
+                                    </Box>
                                     <Box>
                                         <Field
                                             //  size="small"
