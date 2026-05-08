@@ -946,17 +946,6 @@ const EditSlots = () => {
         setRowModesModel(newRowModesModel);
     };
 
-
-
-
-
-
-
-
-
-
-
-
     const style = {
         height: "55px",
         border: "2px solid #1769aa ",
@@ -1316,17 +1305,6 @@ const EditSlots = () => {
                                         onPageChange={(newPage) => setPage(newPage)}
                                     />
                                 </Box>
-
-
-
-
-
-
-
-
-
-
-
                                 {/* <Box display="flex" justifyContent="end" padding={1} gap="20px">
 
                                     <LoadingButton

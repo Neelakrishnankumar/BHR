@@ -633,6 +633,9 @@ const Editemployee = () => {
           // Department: Yup.object()
           //   .nullable()
           //   .required(data.Employee.Department),
+          Department: Yup.array()
+            .min(1, data.Employee.Department)  //FIXED
+            .required(data.Employee.Department),
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
@@ -1121,13 +1124,12 @@ const Editemployee = () => {
   //   .filter(id => id !== null);
 
   const initialValues = {
-    Department: Data.DeptRecordID
-      ? {
-        RecordID: Data.DeptRecordID,
-        Code: Data.DeptCode,
-        Name: Data.DeptName,
-      }
-      : null,
+    Department: Array.isArray(Data.DeptRecordID)
+      ? Data.DeptRecordID.map((d) => ({
+        RecordID: String(d.DeptID), 
+        Name: d.DeptName,
+      }))
+      : [],
     Code: Data.Code,
     Name: Data.Name,
     Password: Data.Password,
@@ -1385,12 +1387,21 @@ const Editemployee = () => {
     if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
+    const deptIds = isStudentClassification
+      ? [0]
+      : values.Department?.map((d) => d.RecordID) || [];
+
+    const deptNames = isStudentClassification
+      ? [""]
+      : values.Department?.map((d) => d.Name) || [];
 
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
-      DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
-      DeptName: isStudentClassification ? "" : values.Department?.Name || "",
+      // DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
+      // DeptName: isStudentClassification ? "" : values.Department?.Name || "",
+      DeptRecordID: deptIds.join(","),   // "1,2,3"
+      DeptName: deptNames.join(","),     // "HR,Admin"
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
@@ -5269,6 +5280,7 @@ const Editemployee = () => {
                 setFieldValue,
               }) => (
                 <form onSubmit={handleSubmit}>
+                  {/* {JSON.stringify(errors)} */}
                   {!isStudentClassification ? (
                     <Box
                       display="grid"
@@ -5305,19 +5317,18 @@ const Editemployee = () => {
                       <FormControl sx={{ gap: formGap }}>
 
                         <FormControl>
-                          <CheckinAutocomplete
+                          {/* <CheckinAutocomplete
                             sx={{ marginTop: "7px" }}
                             name="Department"
-                            label="Department"
-                            // label={
-                            //   <>
-                            //     Department
-                            //     <span style={{ color: "red", fontSize: "20px" }}>
-                            //       {" "}
-                            //       *{" "}
-                            //     </span>
-                            //   </>
-                            // }
+                            // label="Department"
+                            label={
+                              <>
+                                Department
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
                             variant="outlined"
                             id="Department"
                             value={values.Department}
@@ -5340,12 +5351,46 @@ const Editemployee = () => {
                               },
                             })}`}
                           // url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          /> */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{
+                              width: "100%",
+                              gridColumn: "span 2",
+                            }}
+                            name="Department"
+                            label={
+                              <>
+                                Department
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            id="Department"
+                            value={values.Department}
+                            onChange={(e, newValue) => {
+                              setFieldValue("Department", newValue, true); 
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                              String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Department && !!errors.Department}
+                            helperText={touched.Department && errors.Department}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2010",
+                                ScreenName: "Department",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`}
                           />
-                          {/* {touched.Department && errors.Department && (
-                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {touched.Department && errors.Department && (
+                          <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
                             {errors.Department}
                           </div>
-                        )} */}
+                        )}
                         </FormControl>
                         {CompanyAutoCode == "Y" ? (
                           <TextField
