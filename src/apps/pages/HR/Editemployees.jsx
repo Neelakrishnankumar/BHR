@@ -204,6 +204,35 @@ const Editemployee = () => {
   console.log(YearFlag, "--YearFlag");
   // FOR ITEM SERVICES DATA GRID
   const ItemdataGridHeight = "57vh";
+  const handleDateChange = (e, handleChange) => {
+    const value = e.target.value;
+
+    // allow empty
+    if (!value) {
+      handleChange(e);
+      return;
+    }
+
+    // allow only YYYY-MM-DD typing structure
+    if (!/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) {
+      return;
+    }
+
+    const parts = value.split("-");
+
+    const month = parts[1];
+    const day = parts[2];
+
+    // validate month/day ranges
+    if (
+      (month && Number(month) > 12) ||
+      (day && Number(day) > 31)
+    ) {
+      return;
+    }
+
+    handleChange(e);
+  };
   const partyContactgetdata = useSelector(
     (state) => state.formApi.partyContactgetdata
   );
@@ -5683,13 +5712,14 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.dateofbirth}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.dateofbirth && !!errors.dateofbirth}
                           helperText={touched.dateofbirth && errors.dateofbirth}
                           sx={{ background: "" }}
-                          InputProps={{
-                            onKeyDown: (e) => e.preventDefault(),
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5703,17 +5733,18 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.joindate}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.joindate && !!errors.joindate}
                           helperText={touched.joindate && errors.joindate}
                           sx={{ background: "" }}
-                          // InputProps={{
-                          //   onKeyDown: (e) => e.preventDefault(),
-                          // }}
-                          inputProps={{
-                            max: "9999-12-31",
-                            min: "1900-01-01"
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
+                        // inputProps={{
+                        //   max: "9999-12-31",
+                        //   min: "1900-01-01"
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5727,13 +5758,14 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.confirmdate}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.confirmdate && !!errors.confirmdate}
                           helperText={touched.confirmdate && errors.confirmdate}
                           sx={{ background: "" }}
-                          InputProps={{
-                            onKeyDown: (e) => e.preventDefault(),
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -6000,7 +6032,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.dateofbirth}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.dateofbirth && !!errors.dateofbirth}
                             helperText={touched.dateofbirth && errors.dateofbirth}
                             sx={{ background: "" }}
@@ -6017,7 +6050,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.joindate}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.joindate && !!errors.joindate}
                             helperText={touched.joindate && errors.joindate}
                             sx={{ background: "" }}
@@ -6083,7 +6117,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.confirmdate}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.confirmdate && !!errors.confirmdate}
                             helperText={touched.confirmdate && errors.confirmdate}
                             sx={{ background: "" }}
@@ -13141,7 +13176,9 @@ const Editemployee = () => {
                       <TextField
                         fullWidth
                         variant="standard"
-                        type="number"
+                        // type="number"
+                        type="text"
+                        inputMode="decimal"
                         value={values.UnitRate}
                         id="UnitRate"
                         name="UnitRate"

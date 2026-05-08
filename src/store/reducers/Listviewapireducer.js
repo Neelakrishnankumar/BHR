@@ -6977,6 +6977,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const baseurl1 = config.UAAM_URL;
+  
   const count = Number(params.row.MarketingCount || 0);
   // const orderType = params.row.OrderType;
   const id = params.row.RecordID;
@@ -7207,6 +7208,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               HeaderImg: HeaderImg,
               FooterImg: FooterImg,
               CompanySignature: CompanySignature,
+              footerHeight:footerHeight
             }}
           />,
         ).toBlob();

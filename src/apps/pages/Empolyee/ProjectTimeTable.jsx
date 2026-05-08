@@ -86,7 +86,7 @@ const ProjectTimeTable = () => {
         img.onload = () => {
             const aspectRatio = img.height / img.width;
 
-            const pageWidth = 595;
+            const pageWidth = 842;
             const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
 
             const calculatedHeight = Math.min(

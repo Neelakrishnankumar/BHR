@@ -524,7 +524,8 @@ useEffect(() => {
             {/* ── HEADER ── */}
             <Box display="flex" alignItems="center" justifyContent="space-between" mb="10px">
                 <Typography sx={{ fontSize: "22px", fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>
-                    Invoice Analytics Dashboard
+                    {/* Invoice Analytics Dashboard */}
+                    Invoice Analytics
                 </Typography>
                 {/* <Box sx={{
                     fontSize: "11px", px: "10px", py: "4px",

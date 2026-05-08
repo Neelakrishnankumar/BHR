@@ -2904,6 +2904,9 @@ export const getApiSlice = createSlice({
     resetPartyAnalyticsdata(state) {
       state.PartyAnalyticsdata = {};
     },
+    resetTimeSheetAttendance(state) {
+      state.timeSheetData = [];
+    },
     ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex(
         (value) => value.RecordID === action.payload.id,
@@ -4677,6 +4680,7 @@ export const {
   stockReqSuccess,
   resetTrackingData,
   resetPartyAnalyticsdata,
+  resetTimeSheetAttendance,
   // packingListCarton
   ratingChange,
 } = getApiSlice.actions;

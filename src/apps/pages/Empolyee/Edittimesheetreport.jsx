@@ -42,6 +42,7 @@ import {
   timeSheetPostData,
   timeSheetreport,
   CustomisedCaptionGet,
+  resetTimeSheetAttendance,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -123,6 +124,8 @@ const Edittimesheetreport = () => {
   console.log(Year, "Received Year");
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
+  const pdfEnabled = Array.isArray(AttendanceData) && AttendanceData.length > 0;
+  console.log("🚀 ~ Edittimesheetreport ~ pdfEnabled:", pdfEnabled)
   const projectName = useSelector((state) => state.formApi.projectName);
   const managerName = useSelector((state) => state.formApi.managerName);
   console.log("AttendanceData", AttendanceData);
@@ -144,6 +147,8 @@ const Edittimesheetreport = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [empData, setempData] = useState(null);
   const [selectedPro, setSelectedPro] = useState([]);
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -176,7 +181,10 @@ const Edittimesheetreport = () => {
   };
   useEffect(() => {
     dispatch(resetTrackingData());
-  }, []);
+    return () => {
+      dispatch(resetTimeSheetAttendance());
+    };
+  }, [dispatch]);
   const [errorMsgData, setErrorMsgData] = useState(null);
 
   // useEffect(() => {
@@ -414,7 +422,29 @@ const Edittimesheetreport = () => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
 
+  useEffect(() => {
+    if (!FooterImg) return;
 
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 842;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const safeAttendanceData = Array.isArray(AttendanceData)
     ? AttendanceData
     : [];
@@ -699,15 +729,15 @@ const Edittimesheetreport = () => {
                         }
                       }}
                       url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2054",
-                                ScreenName: "Project",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        Query: {
+                          AccessID: "2054",
+                          ScreenName: "Project",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID='${CompanyID}'`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                   </Box>
 
@@ -735,16 +765,16 @@ const Edittimesheetreport = () => {
                         else sessionStorage.removeItem("empData");
                         setUseCurrentEmp(false);
                       }}
-                       url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2116",
-                                ScreenName: "EMPLOYEETEAMS",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2116",
+                          ScreenName: "EMPLOYEETEAMS",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `CompanyID='${CompanyID}'`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                     />
                   </Box>
                   {/* )} */}
@@ -1026,34 +1056,45 @@ const Edittimesheetreport = () => {
                 >
                   Cancel
                 </Button>
-                <PDFDownloadLink
-                  document={
-                    <TimeSheetreportpdf
-                      data={safeAttendanceData}
-                      projectName={projectName}
-                      managerName={managerName}
-                      filters={{
-                        Month: Month,
-                        Year: Year,
-                        EmployeeID: empData?.Name || EMPNAME,
-                        Imageurl: baseurlUAAM,
-                        HeaderImg: HeaderImg,
-                        FooterImg: FooterImg,
-                      }}
-                    />
-                  }
-                  fileName={`TimeSheet_Report_${empData?.Name || "Employee"}.pdf`}
-                  style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
-                >
-                  {({ loading }) =>
-                    loading ? (
-                      <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
-                    ) : (
-                      <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                    )
-                  }
-                </PDFDownloadLink>
-
+                {pdfEnabled ? (
+                  <PDFDownloadLink
+                    document={
+                      <TimeSheetreportpdf
+                        data={safeAttendanceData}
+                        projectName={projectName}
+                        managerName={managerName}
+                        filters={{
+                          Month: Month,
+                          Year: Year,
+                          EmployeeID: empData?.Name || EMPNAME,
+                          Imageurl: baseurlUAAM,
+                          HeaderImg: HeaderImg,
+                          FooterImg: FooterImg,
+                        }}
+                        footerHeight={footerHeight}
+                      />
+                    }
+                    fileName={`TimeSheet_Report_${empData?.Name || "Employee"}.pdf`}
+                    style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
+                  >
+                    {({ loading }) =>
+                      loading ? (
+                        <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                      ) : (
+                        <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                      )
+                    }
+                  </PDFDownloadLink>
+                ) : (
+                  <PictureAsPdfIcon
+                    sx={{
+                      fontSize: 24,
+                      opacity: 0.4,
+                      color: "#9e9e9e",
+                      cursor: "not-allowed",
+                    }}
+                  />
+                )}
                 <FaFileExcel
                   size={20}
                   color="#1D6F42"
