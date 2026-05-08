@@ -147,6 +147,8 @@ const Editemployee = () => {
   const [page2, setPage2] = React.useState(secondaryCurrentPage);
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const CompanyID = sessionStorage.getItem("compID");
@@ -163,6 +165,29 @@ const Editemployee = () => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurl1 = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurl1}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -13740,6 +13765,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
+                              footerHeight={footerHeight}
                             />
                           ) : (
                             <SchoolContractInvoice
@@ -13760,7 +13786,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
-
+                              footerHeight={footerHeight}
 
                             />
                           )}

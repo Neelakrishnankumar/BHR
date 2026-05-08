@@ -890,6 +890,7 @@ const ProjectTimeTablePDF = ({
   projectName = "",
   termName = "",
   filters = {},
+  footerHeight
 }) => {
   const pdfColumns = extractColumns(columns);
 
@@ -900,7 +901,16 @@ const ProjectTimeTablePDF = ({
       <Page
         size="A4"
         orientation="landscape"
-        style={s.page}
+        // style={s.page}
+        style={{
+          fontFamily: "Helvetica",
+          fontSize: 8,
+          backgroundColor: "#ffffff",
+          paddingTop: 80,
+          // paddingBottom: 36,
+          paddingBottom: footerHeight,
+          paddingHorizontal: 0,
+        }}
       >
         {/* ── Header Banner ── */}
         <View fixed style={s.headerWrapper}>
@@ -954,11 +964,24 @@ const ProjectTimeTablePDF = ({
         </View>
 
         {/* ── Footer ── */}
-        <View fixed style={s.footerWrapper}>
+        <View fixed
+          // style={s.footerWrapper}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: footerHeight, // 🔥 dynamic
+          }}
+        >
           {filters.FooterImg && (
             <Image
               src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-              style={s.footerImage}
+              // style={s.footerImage}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
             />
           )}
         </View>

@@ -4,7 +4,7 @@ import {
   Text,
   View,
   Document,
-  StyleSheet,Image
+  StyleSheet, Image
 } from "@react-pdf/renderer";
 
 
@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
   },
   firstPageSection: {
     //  marginBottom: 10,
-  marginTop: 80, // 👈 extra space only for first page
-},
+    marginTop: 80, // 👈 extra space only for first page
+  },
   table: {
     display: "table",
     width: "100%",
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10
-    
+
   },
   headerCell2: {
     flex: 1,
@@ -113,35 +113,35 @@ const styles = StyleSheet.create({
   },
 
   /* HEADER */
-    headerWrapper: {
-        position: "absolute",
-        top: 10,
-        left: 20,
-        right: 20,
-        height: 60,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+  headerWrapper: {
+    position: "absolute",
+    top: 10,
+    left: 20,
+    right: 20,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-    headerImage: {
-        width: "100%",
-        height: 60,
-        objectFit: "contain",
-    },
-    /* FOOTER */
+  headerImage: {
+    width: "100%",
+    height: 60,
+    objectFit: "contain",
+  },
+  /* FOOTER */
   footerWrapper: {
-  position: "absolute",
-  bottom: 30,
-  left: 5,
-  right: 5,
-  height: 80,
-},
+    position: "absolute",
+    bottom: 30,
+    left: 5,
+    right: 5,
+    height: 80,
+  },
 
-    footerImage: {
-        width: "100%",
-        height: 100,
-        objectFit: "cover",
-    },
+  footerImage: {
+    width: "100%",
+    height: 100,
+    objectFit: "cover",
+  },
 
 
 });
@@ -192,9 +192,9 @@ const paginateData = (
 };
 
 
-const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
+const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight }) => {
   // const pages = paginateData(data);
-const pages = paginateData(data, 28, 30);
+  const pages = paginateData(data, 28, 30);
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -204,23 +204,23 @@ const pages = paginateData(data, 28, 30);
     <Document>
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-         {/* HEADER */}
-                    <View fixed style={styles.headerWrapper}>
-                      {filters.HeaderImg && (
-                        <Image
-                          src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                          style={styles.headerImage}
-                        />
-                      )}
-                    </View>
-        
+          {/* HEADER */}
+          <View fixed style={styles.headerWrapper}>
+            {filters.HeaderImg && (
+              <Image
+                src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                style={styles.headerImage}
+              />
+            )}
+          </View>
+
           {pageIndex === 0 && (
-            <View 
-            // style={styles.section}
-            style={[
-      styles.section,
-      pageIndex === 0 && styles.firstPageSection
-    ]}
+            <View
+              // style={styles.section}
+              style={[
+                styles.section,
+                pageIndex === 0 && styles.firstPageSection
+              ]}
             >
               {/* <Text style={{ fontSize: 10, marginBottom: 4 }}>Attendance Report</Text>
               <Text>Month: {monthNames[filters.Month - 1]}</Text>
@@ -231,11 +231,11 @@ const pages = paginateData(data, 28, 30);
             </View>
           )}
           <View style={[styles.legendContainer,
-pageIndex !== 0 && styles.firstPageSection,
+          pageIndex !== 0 && styles.firstPageSection,
             //  pageIndex === pages.length - 1 && { marginTop: 100 }
           ]}
-         
-                  
+
+
           >
             <Text style={styles.legendText}>{"P -> Present"}</Text>
             <Text style={styles.legendText}>{"A -> Absent"}</Text>
@@ -344,16 +344,29 @@ pageIndex !== 0 && styles.firstPageSection,
               </View>
             ))}
           </View>
-          
-                      {/* FOOTER */}
-                      <View fixed style={styles.footerWrapper}>
-                        {filters.FooterImg && (
-                          <Image
-                            src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-                            style={styles.footerImage}
-                          />
-                        )}
-                      </View>
+
+          {/* FOOTER */}
+          <View fixed
+            // style={styles.footerWrapper}
+            style={{
+              height: footerHeight, // 🔥 dynamic
+              position: "absolute",
+              bottom: 30,
+              left: 5,
+              right: 5,
+            }}
+          >
+            {filters.FooterImg && (
+              <Image
+                src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                // style={styles.footerImage}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )}
+          </View>
           <View
             fixed
             style={{

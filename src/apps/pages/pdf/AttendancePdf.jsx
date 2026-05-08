@@ -541,17 +541,17 @@ const styles = StyleSheet.create({
   },
 
 
-listTitle: {
-  fontSize: 11,
-  fontWeight: "bold",
-  marginTop: 10,
-  marginBottom: 4,
-},
+  listTitle: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 4,
+  },
 
-listText: {
-  fontSize: 9,
-  marginBottom: 2,
-},
+  listText: {
+    fontSize: 9,
+    marginBottom: 2,
+  },
 
 
 });
@@ -567,7 +567,7 @@ const paginateData = (data) => {
 };
 
 // ===================== COMPONENT =====================
-const AttendancePDF = ({ data = [], filters = {} }) => {
+const AttendancePDF = ({ data = [], filters = {},footerHeight }) => {
   const pages = paginateData(data);
   const isSelf = filters.Self === "Y";
   const monthNames = [
@@ -599,7 +599,17 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
         );
 
         return (
-          <Page size="A4" style={styles.page} key={pageIndex}>
+          <Page size="A4"
+            // style={styles.page}
+            key={pageIndex}
+            style={{
+              fontSize: 9,
+              paddingTop: 80,
+              // paddingBottom: 36,
+              paddingBottom: footerHeight,
+              paddingHorizontal: 20,
+            }}
+          >
             {/* HEADER */}
             <View fixed style={styles.headerWrapper}>
               {filters.HeaderImg && (
@@ -614,7 +624,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
               <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>
                   {/* {`Attendance Report - ${filters.employee} (${monthNames[filters.month - 1]} - ${filters.year})`} */}
-                  {`Attendance Report - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+                  {`Attendance Report - ${filters.EmployeeID ?? ""} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
                   {/* {filters.Self === "Y"
                     ? `Attendance Report - ${filters.employee}`
                     : `Attendance Report - Reporting to ${filters.employee}`} */}
@@ -655,7 +665,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
 
 
               {filteredRows.map((row, i) => (
-                <View 
+                <View
                   style={[
                     styles.tableRow,
                     i === filteredRows.length - 1 && { borderBottomWidth: 0 }
@@ -693,11 +703,24 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
             </View>
 
             {/* FOOTER */}
-            <View fixed style={styles.footerWrapper}>
+            <View fixed
+              // style={styles.footerWrapper}
+              style={{
+                position: "absolute",
+                bottom: 25,
+                left: 0,
+                right: 0,
+                height: footerHeight, // 🔥 dynamic
+              }}
+            >
               {filters.FooterImg && (
                 <Image
                   src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-                  style={styles.footerImage}
+                  // style={styles.footerImage}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
                 />
               )}
             </View>
@@ -723,7 +746,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.summaryHeaderCell}>Sick Leave</Text>
                     <Text style={styles.summaryHeaderCell}>Medical Leave</Text>
                   </View> */}
-       <View style={styles.summaryRow}>
+                  <View style={styles.summaryRow}>
                     {["Present", "Absent", "Holidays", "Week Off", "Casual Leave", "Sick Leave", "Medical Leave", "Permission"]
                       .map((item, index, arr) => (
                         <Text
@@ -737,7 +760,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                         </Text>
                       ))}
                   </View>
- 
+
                   {/* Value Row */}
                   {/* <View style={styles.summaryRow}>
                     <Text style={styles.summaryValueCell}>{totalPresent}</Text>
@@ -748,10 +771,10 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.summaryValueCell}>{leaveSummary.SL}</Text>
                     <Text style={styles.summaryValueCell}>{leaveSummary.EL}</Text>
                   </View> */}
-             
- 
+
+
                   <View style={styles.summaryRow}>
-                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL,totalPermission]
+                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL, totalPermission]
                       .map((val, index, arr) => (
                         <Text
                           key={index}
@@ -766,13 +789,13 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                       ))}
 
                   </View>
-      </View>
-    
-          
+                </View>
+
+
               </View>
             )}
 
- 
+
           </Page>
 
         );

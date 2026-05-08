@@ -92,11 +92,11 @@ const EditAttendanceHistory = () => {
   // const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   // console.log("AttendanceData", AttendanceData);
 
-    const HeaderImg = sessionStorage.getItem("CompanyHeader");
-    const FooterImg = sessionStorage.getItem("CompanyFooter");
-    console.log("HeaderImg", HeaderImg, FooterImg);
-    const config = getConfig();
-    const baseurlUAAM = config.UAAM_URL;
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
 
   const AttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
@@ -119,7 +119,8 @@ const EditAttendanceHistory = () => {
   const colors = tokens(theme.palette.mode);
 
   const [errorMsgData, setErrorMsgData] = useState(null);
-
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
   //     .then((res) => {
@@ -131,6 +132,30 @@ const EditAttendanceHistory = () => {
   //     })
   //     .catch((err) => console.error("Error loading validationcms.json:", err));
   // }, []);
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 842; // ✅ LANDSCAPE WIDTH
+
+      const MAX_FOOTER_HEIGHT = 80;
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   useEffect(() => {
 
     const savedMonth = sessionStorage.getItem("month");
@@ -191,7 +216,7 @@ const EditAttendanceHistory = () => {
       headerName: "SL#",
       width: 40,
       headerAlign: "center",
-      align:"right",
+      align: "right",
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
@@ -241,15 +266,15 @@ const EditAttendanceHistory = () => {
     { field: "Day29", headerName: "29", width: 5 },
     { field: "Day30", headerName: "30", width: 5 },
     { field: "Day31", headerName: "31", width: 5 },
-    { field: "Present", headerName: "Present",headerAlign: "center",align:"right", },
+    { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "Unpaidleave", headerName: "Unpaid Leave",headerAlign: "center",align:"right", },
-    { field: "Absent", headerName: "Absent",headerAlign: "center",align:"right", },
-        // { field: "Irregular", headerName: "IRREGULAR" },
-    { field: "Holidays", headerName: "Holidays",headerAlign: "center",align:"right", },
-    { field: "Weekoff", headerName: "Week Off",headerAlign: "center",align:"right", },
-    { field: "Total", headerName: "Total Days",headerAlign: "center",align:"right", },
-    ];
+    { field: "Unpaidleave", headerName: "Unpaid Leave", headerAlign: "center", align: "right", },
+    { field: "Absent", headerName: "Absent", headerAlign: "center", align: "right", },
+    // { field: "Irregular", headerName: "IRREGULAR" },
+    { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
+    { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
+    { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
+  ];
   // const AttendanceData = [
   //   {
   //     id: 1,
@@ -311,7 +336,7 @@ const EditAttendanceHistory = () => {
     };
 
     dispatch(empAttendance({ data }));
-     setPage(0); 
+    setPage(0);
   };
 
   const attendaceProcessFnSave = async (values) => {
@@ -453,8 +478,8 @@ const EditAttendanceHistory = () => {
               onSubmit={handleSubmit}
               onReset={() => {
                 resetForm();
-                setFieldValue("month",currentMonthNumber)
-                setFieldValue("year",currentYear)
+                setFieldValue("month", currentMonthNumber)
+                setFieldValue("year", currentYear)
                 sessionStorage.removeItem("month");
                 sessionStorage.removeItem("year");
                 dispatch(resetTrackingData());
@@ -568,6 +593,7 @@ const EditAttendanceHistory = () => {
                             HeaderImg: HeaderImg,
                             FooterImg: FooterImg,
                           }}
+                          footerHeight={footerHeight}
                         />
                       }
                       fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
@@ -587,16 +613,16 @@ const EditAttendanceHistory = () => {
                   )}
                   {AttendanceData?.length > 0 && (
 
-                   <FaFileExcel
+                    <FaFileExcel
                       size={20}
                       color="#1D6F42"
                       style={{ cursor: "pointer", }}
                       onClick={() =>
-                      AttendanceHistoryExcel(
+                        AttendanceHistoryExcel(
                           AttendanceData,
                           {
-                           month: values.month, 
-                           year: values.year 
+                            month: values.month,
+                            year: values.year
                           },
                           empData
                         )
@@ -734,7 +760,7 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
-               <Stack
+              <Stack
                 direction="row"
                 padding={1}
                 alignItems="center"
@@ -743,13 +769,13 @@ const EditAttendanceHistory = () => {
               >
                 {/* LEFT SIDE ITEMS */}
                 <Box display="flex" alignItems="center" gap={2} >
-                   <Chip
+                  <Chip
                     avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
                     label="Present"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />
-                   <Chip
+                  <Chip
                     avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
                     label="Absent"
                     variant="outlined"
@@ -767,7 +793,7 @@ const EditAttendanceHistory = () => {
                     avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
                     label="Holiday"
                     variant="outlined"
-                    sx={{ backgroundColor: "#ccc4c4",  }}
+                    sx={{ backgroundColor: "#ccc4c4", }}
                   />
 
                   <Chip

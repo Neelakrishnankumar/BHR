@@ -1101,7 +1101,7 @@
 // // };
 
 // // export default TeacherOccupancy;
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button, IconButton, Typography, Box, Tooltip,
   Paper, useMediaQuery, Breadcrumbs,
@@ -1448,12 +1448,36 @@ const TeacherOccupancy = () => {
 
   const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   console.log("HeaderImg:", HeaderImg);
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
 
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 70; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const getFormattedDate = () => {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, "0");
@@ -1621,6 +1645,7 @@ const TeacherOccupancy = () => {
                           HeaderImg: HeaderImg,
                           FooterImg: FooterImg,
                         }}
+                        footerHeight={footerHeight}
                         reportTitle="Teacher Occupancy Report"
                       />
                     }

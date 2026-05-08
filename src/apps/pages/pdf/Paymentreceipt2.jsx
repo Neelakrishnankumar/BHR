@@ -859,14 +859,26 @@ const TableRow = ({ rowData }) => (
 
 
 // ── Main PDF ──────────────────────────────────────────────────────────────────
-const PaymentReceipt = ({ data, filters }) => {
+const PaymentReceipt = ({ data, filters, footerHeight }) => {
     const signaturePath = filters?.CompanySignature
         ? `${filters?.Imageurl}/uploads/images/${filters.CompanySignature}`
         : null;
 
     return (
         <Document>
-            <Page size="A4" style={styles.page}>
+            <Page
+                size="A4"
+                // style={styles.page}
+                style={{
+                    fontFamily: "Helvetica",
+                    //   fontSize: 8,
+                    backgroundColor: "#ffffff",
+                    paddingTop: 80,
+                    // paddingBottom: 36,
+                    paddingBottom: footerHeight,
+                    paddingHorizontal: 30,
+                }}
+            >
 
                 {/* ── Header Image ── */}
                 <View fixed style={styles.headerWrapper}>
@@ -893,16 +905,16 @@ const PaymentReceipt = ({ data, filters }) => {
                         {/* Left — receiver details */}
                         <View style={styles.leftColumn}>
                             <Text style={styles.columnLabel}>Receiver Details:</Text>
-                            <InfoRow label="Enroll No"    value={data.EmployeeID} />
-                            <InfoRow label="Pupil Name"   value={data.FilterEmployee} />
-                            <InfoRow label="Parent Name"  value={data.Employee} />
+                            <InfoRow label="Enroll No" value={data.EmployeeID} />
+                            <InfoRow label="Pupil Name" value={data.FilterEmployee} />
+                            <InfoRow label="Parent Name" value={data.Employee} />
                         </View>
 
                         {/* Right — contact info */}
                         <View style={styles.rightColumn}>
-                            <InfoRow label="Email"    value={data.EmailID} />
-                            <InfoRow label="Mobile"   value={data.MobileNo} />
-                            <InfoRow label="Address"  value={data.Address} />
+                            <InfoRow label="Email" value={data.EmailID} />
+                            <InfoRow label="Mobile" value={data.MobileNo} />
+                            <InfoRow label="Address" value={data.Address} />
                         </View>
 
                     </View>
@@ -962,11 +974,25 @@ const PaymentReceipt = ({ data, filters }) => {
                 </View>
 
                 {/* ── Footer Image ── */}
-                <View fixed style={styles.footerWrapper}>
+                <View
+                    fixed
+                    // style={styles.footerWrapper}
+                    style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: footerHeight, // 🔥 dynamic
+                    }}
+                >
                     {filters?.FooterImg && (
                         <Image
                             src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-                            style={styles.footerImage}
+                            // style={styles.footerImage}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
                         />
                     )}
                 </View>

@@ -329,8 +329,8 @@ const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-export default function SchoolContractInvoice({ invoice = [], detailData = [],PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
-  filters = {} }) {
+export default function SchoolContractInvoice({ invoice = [], detailData = [], PdfBaseUrl, logoUrl, qrUrl, totalHours, signUrl, headerUrl, footerUrl, data = [], withannexure,
+  filters = {},footerHeight }) {
 
   const formattedDate = filters.Date
     ? filters.Date.split("-").reverse().join("-")
@@ -341,7 +341,7 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],Pd
   const attendancedata = Array.isArray(detailData) ? detailData : [detailData];
   // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";  // your image folder path
   // const QR_BASE_URL = `${filters.baseUrl}uploads/images/`;  
-  const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;  
+  const QR_BASE_URL = `${PdfBaseUrl}uploads/images/`;
   console.log("🚀 ~ MyInvoiceDocument ~ QR_BASE_URL:", QR_BASE_URL)
   const CompanyID = sessionStorage.getItem("company");
   const qrFullPath = invoice?.QRCode
@@ -403,17 +403,17 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],Pd
     return helper(num);
   };
   const toNumber = (value) => {
-  if (value === null || value === undefined) return 0;
+    if (value === null || value === undefined) return 0;
 
-  // Convert to string, remove commas, trim spaces
-  const cleaned = String(value).replace(/,/g, "").trim();
+    // Convert to string, remove commas, trim spaces
+    const cleaned = String(value).replace(/,/g, "").trim();
 
-  const num = parseFloat(cleaned);
+    const num = parseFloat(cleaned);
 
-  return isNaN(num) ? 0 : num;
-};
+    return isNaN(num) ? 0 : num;
+  };
   const getNetTotal = () => {
-    
+
     // const safe = (v) => Number(v || 0);   // <-- converts undefined, null, "" safely
     const safe = toNumber;   // <-- converts undefined, null, "" safely
 
@@ -870,7 +870,13 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],Pd
         <View style={{ width: '100%' }}>
 
           {footerPath ? (
-            <Image src={footerPath} style={styles.footerImage} />
+            <Image src={footerPath}
+              // style={styles.footerImage}
+              style={{
+                width: "100%",
+                height: footerHeight,
+              }}
+            />
           ) : (
             <View style={{ width: "200%", height: 60, backgroundColor: '#eee' }} />
           )}
@@ -932,7 +938,13 @@ export default function SchoolContractInvoice({ invoice = [], detailData = [],Pd
           <View style={styles.spacer} />
           <View style={{ width: '100%' }}>
             {footerPath ? (
-              <Image src={footerPath} style={styles.footerImage} />
+              <Image src={footerPath}
+              //  style={styles.footerImage} 
+                style={{
+                width: "100%",
+                height: footerHeight,
+              }}
+               />
             ) : (
               <View style={{ width: "200%", height: 60, backgroundColor: '#eee' }} />
             )}
