@@ -337,7 +337,8 @@ const initialState = {
   PartyAnalytics:"",
   slotgetUrl: "",
   TimeTableExcelGet: "",
-  TimeTableExcelPost: ""
+  TimeTableExcelPost: "",
+  TimeTableGenerateget:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -355,8 +356,8 @@ export const getUrlSlice = createSlice({
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
       // state.listViewurl = APIurl + "wslistview_mysqlV1.php";
-      state.listViewurl = APIurl + "wslistview_mysqlV1.php";
-      state.loginUrl = APIurl + "LControllerV1.php";
+      state.listViewurl = APIurl + "wslistview_mysql.php";
+      state.loginUrl = APIurl + "LController.php";
       state.authUrl = APIurl + "auth.php";
       state.forgotPasswordUrl = APIurl + "BOSForgetPasswordController.php";
       state.comboUrl = APIurl + "APIController.php";
@@ -543,6 +544,7 @@ export const getUrlSlice = createSlice({
       state.slotgetUrl = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
+      state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController";
 
     },
   },

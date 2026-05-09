@@ -1946,7 +1946,7 @@ export const CustomisedCaptionGet = createAsyncThunk(
         },
       });
 
-      console.log("✅ API Response:", response.data);
+      console.log("API Response:", response.data);
 
       return response.data;
     } catch (error) {
@@ -2740,7 +2740,7 @@ export const TeacherOccupancyget = createAsyncThunk(
       },
       });
 
-      console.log("✅ API RESPONSE:", response.data);
+      console.log("API RESPONSE:", response.data);
 
       return response.data;
     } catch (error) {
@@ -2774,6 +2774,29 @@ export const TimetableProcessController = createAsyncThunk(
     return response.data;
   }
 );
+export const TimeTableGenerateget = createAsyncThunk(
+  "Standard/TimeTableGenerateget",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.TimeTableGenerateget;
+
+      const response = await axios.post(url, payload, {
+        headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 export const companyTermsGet = createAsyncThunk(
   "COMPANY_TERMS_GET/GET",
   async ({ CompanyID }) => {
@@ -6108,7 +6131,7 @@ export const auditScreennameGET = createAsyncThunk(
 
       const response = await axios.post(
         url,
-        null, // ✅ no payload
+        null, // no payload
         {
           headers: {
             Authorization:
