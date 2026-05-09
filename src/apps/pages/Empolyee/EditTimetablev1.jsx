@@ -474,10 +474,11 @@ const EditTimetablev1 = () => {
         })
       );
 
-      if (response?.payload?.Status === "Y") {
+      if (response?.payload?.Status == "Y") {
         toast.success(response.payload.Msg);
         dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
-      } else {
+      } 
+      else {
         toast.error(response?.payload?.Msg || "Delete failed");
       }
     } catch (error) {
@@ -604,7 +605,7 @@ const EditTimetablev1 = () => {
 
       return HeaderID; // optional if needed outside
     }
-    else if (response?.payload?.Status === "E") {
+    else if (response?.payload?.Status === "E" || response?.payload?.Status === "N") {
       toast.error(response.payload.Msg);
 
       // extract TT_RECID

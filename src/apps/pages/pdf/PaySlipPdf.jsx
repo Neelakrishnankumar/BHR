@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
 
 });
 
-const PayslipPdf = ({ data = {}, filters = {} }) => {
+const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
 
     const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;
     const headerPath = filters?.HeaderImg
@@ -537,7 +537,16 @@ const PayslipPdf = ({ data = {}, filters = {} }) => {
     const payableInWords = numberToWordsInRupees(Netpayable);
     return (
         <Document>
-            <Page size="A4" style={styles.page} wrap>
+            <Page size="A4"
+                // style={styles.page}
+                style={{
+                    paddingBottom: footerHeight,
+                    padding: 20,
+                    paddingBottom: 55,
+                    fontSize: 9,
+                    border: "1px solid #000",
+                }}
+                wrap>
 
                 {/* ---------------- COMPANY HEADER ---------------- */}
                 <View style={styles.companyHeader}>
@@ -583,12 +592,16 @@ const PayslipPdf = ({ data = {}, filters = {} }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>Developer</Text>
                         </View> */}
-                        <View style={styles.gridRow}>
+                        {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Grade</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeLevel}</Text>
+                        </View> */}
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Type</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.EmployeeType}</Text>
                         </View>
-
 
 
                     </View>
@@ -638,16 +651,16 @@ const PayslipPdf = ({ data = {}, filters = {} }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.TotalPaidDays}</Text>
                         </View>
-                        <View style={styles.gridRow}>
-                            <Text style={styles.label}>Type</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.EmployeeType}</Text>
-                        </View>
                         {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Basic Pay</Text>
                             <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.Salary}</Text>
+                            <Text style={styles.value}>{data?.Basicpay ? data?.Basicpay : 0}</Text>
                         </View> */}
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Basic Pay</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.Salary ?? 0 }</Text>
+                        </View>
                     </View>
 
                 </View>
@@ -910,11 +923,24 @@ const PayslipPdf = ({ data = {}, filters = {} }) => {
                         This is a system generated pay slip. Hence, signature is not needed
                     </Text>
                 </View> */}
-                <View fixed style={styles.footerWrapper}>
+                <View fixed
+                    // style={styles.footerWrapper}
+                    style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: footerHeight, // 🔥 dynamic
+                    }}
+                >
                     {footerPath && (
                         <Image
                             src={footerPath}
-                            style={styles.footerImage}
+                            // style={styles.footerImage}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
                         />
                     )}
                 </View>

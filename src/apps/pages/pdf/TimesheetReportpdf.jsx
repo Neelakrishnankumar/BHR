@@ -4,7 +4,7 @@ import {
   Text,
   View,
   Document,
-  StyleSheet,Image
+  StyleSheet, Image
 } from "@react-pdf/renderer";
 
 
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableColApprDate: {
-     width: 70,
+    width: 70,
     // borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: "left",
   },
-  tablerowApprDate : {
-width: 70,
+  tablerowApprDate: {
+    width: 70,
     // borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
@@ -251,7 +251,7 @@ width: 70,
   },
 
 
-    /* HEADER */
+  /* HEADER */
   headerWrapper: {
     position: "absolute",
     top: 15,
@@ -267,16 +267,16 @@ width: 70,
     objectFit: "contain",
   },
 
- /* FOOTER */
-   footerWrapper: {
-        position: "absolute",
-        bottom: 30,
-        left: 5,
-        right: 5,     // forces full width
-        height: 80,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+  /* FOOTER */
+  footerWrapper: {
+    position: "absolute",
+    bottom: 30,
+    left: 5,
+    right: 5,     // forces full width
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   footerImage: {
     width: "100%",
     height: 100,
@@ -335,9 +335,9 @@ const paginateData = (data) => {
 
 
 //const TimeSheetreportpdf = ({ data = [], filters = {} }) => {
-const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
+const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", managerName = "", footerHeight }) => {
   const pages = paginateData(data);
-// const pages = paginateData(data, 13, 15);
+  // const pages = paginateData(data, 13, 15);
 
   pages.forEach((page, i) => {
     console.log(`Page ${i + 1} first row index:`, data.indexOf(page[0]));
@@ -357,18 +357,28 @@ const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", manager
   return (
     <Document>
       {pages.map((pageData, pageIndex) => (
-        <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-          
-               {/* HEADER */}
-                              <View fixed style={styles.headerWrapper}>
-                                {filters.HeaderImg && (
-                                  <Image
-                                    src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                                    style={styles.headerImage}
-                                  />
-                                )}
-                              </View>
-          
+        <Page size="A4" orientation="landscape"
+          // style={styles.page}
+          style={{
+            paddingBottom: footerHeight,
+            // padding: 20,
+            paddingHorizontal:20,
+            fontSize: 10,
+            paddingTop: 80,
+          }}
+
+          key={pageIndex}>
+
+          {/* HEADER */}
+          <View fixed style={styles.headerWrapper}>
+            {filters.HeaderImg && (
+              <Image
+                src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                style={styles.headerImage}
+              />
+            )}
+          </View>
+
           {pageIndex === 0 && (
             // <View style={styles.headerContainer}>
             //   <Text style={styles.headerText}>
@@ -411,13 +421,13 @@ const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", manager
             </View>
 
             {pageData.map((row, rowIndex) => {
-                 const globalIndex =
-  pageIndex === 0
-    ? rowIndex + 1
-    : FIRST_PAGE_COUNT +
-      (pageIndex - 1) * OTHER_PAGE_COUNT +
-      rowIndex +
-      1;
+              const globalIndex =
+                pageIndex === 0
+                  ? rowIndex + 1
+                  : FIRST_PAGE_COUNT +
+                  (pageIndex - 1) * OTHER_PAGE_COUNT +
+                  rowIndex +
+                  1;
               const isLast = rowIndex === pageData.length - 1;
               return (
                 <View
@@ -437,15 +447,28 @@ const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", manager
             })}
           </View>
 
-                 {/* FOOTER */}
-                                <View fixed style={styles.footerWrapper}>
-                                  {filters.FooterImg && (
-                                    <Image
-                                      src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-                                      style={styles.footerImage}
-                                    />
-                                  )}
-                                </View>
+          {/* FOOTER */}
+          <View fixed
+            // style={styles.footerWrapper}
+            style={{
+              position: "absolute",
+              bottom: 30,
+              left: 5,
+              right: 5,
+              height: footerHeight, // 🔥 dynamic
+            }}
+          >
+            {filters.FooterImg && (
+              <Image
+                src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                // style={styles.footerImage}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )}
+          </View>
 
 
           <View

@@ -52,6 +52,7 @@ const initialState = {
     categories: [],
     TableData: { data: [] },
   },
+ 
   stockorderData: {},
   matrialDcTrackData: [],
   purchaseorderratingData: [],
@@ -179,6 +180,10 @@ const initialState = {
   paySlipdata: [],
   paySlipstatus: "",
   paySliploading: false,
+//CRM_ITEM_STOCK_ANALYTICS
+Itemstockstatus: "",
+ itemstockDataAnalyticsLoading: false,
+  itemstockDataAnalytics:{},
 
   //ORDER ITEM --> REPLACEMENT QTY
   replacementQtyGetdata: {},
@@ -597,6 +602,40 @@ export const purchaseorderrating = createAsyncThunk(
   },
 );
 
+
+
+
+// CRM/ITEM_STOCK_GET
+export const ItemstockAnalyticsGET = createAsyncThunk(
+  "CRM/ITEM_STOCK_GET",
+  async ({ CompanyID, EmployeeID, FromDate, ToDate }) => {
+    var url = store.getState().globalurl.ItemAlyticsUrl;
+    var data = {
+      // Query: {
+        CompanyID: CompanyID,
+        EmployeeID: EmployeeID,
+        FromDate: FromDate,
+        ToDate: ToDate
+
+      // },
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.get(url, {
+      params: {
+        data: JSON.stringify(data),
+      },
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 // Material Procurement
 
 export const procurementTrackingGet = createAsyncThunk(
@@ -2932,6 +2971,9 @@ export const getApiSlice = createSlice({
     resetPartyAnalyticsdata(state) {
       state.PartyAnalyticsdata = {};
     },
+    resetTimeSheetAttendance(state) {
+      state.timeSheetData = [];
+    },
     ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex(
         (value) => value.RecordID === action.payload.id,
@@ -3907,6 +3949,33 @@ export const getApiSlice = createSlice({
       .addCase(getResignation.fulfilled, (state, action) => {
         state.ResignationGetData = action.payload.Data;
       })
+//CRM_ITEM_STOCK_GET
+
+  .addCase(ItemstockAnalyticsGET.pending, (state, action) => {
+        state.Itemstockstatus = "idle";
+        state.itemstockDataAnalyticsLoading = true;
+        // state.materialTrackingData = {
+        //   Rateseries: {},
+        //   Qtyseries: {},
+        //   Amountseries: {},
+        //   categories: [],
+        //   TableData: { data: [] },
+        // };
+        state.itemstockDataAnalytics = {}
+      })
+
+      .addCase(ItemstockAnalyticsGET.fulfilled, (state, action) => {
+        state.Itemstockstatus = "success";
+        state.itemstockDataAnalyticsLoading = false;
+        state.itemstockDataAnalytics = action.payload.Data;
+      })
+      .addCase(ItemstockAnalyticsGET.rejected, (state, action) => {
+        state.Itemstockstatus = "Error";
+        state.itemstockDataAnalyticsLoading = false;
+        state.itemstockDataAnalytics = {};
+      })
+
+
 
       .addCase(procurementTrackingGet.pending, (state, action) => {
         state.Status = "idle";
@@ -4720,6 +4789,7 @@ export const {
   stockReqSuccess,
   resetTrackingData,
   resetPartyAnalyticsdata,
+  resetTimeSheetAttendance,
   // packingListCarton
   ratingChange,
 } = getApiSlice.actions;

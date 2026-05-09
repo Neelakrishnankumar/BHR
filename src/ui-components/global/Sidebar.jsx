@@ -9,6 +9,7 @@ import {
   SubMenu,
 } from "react-pro-sidebar";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import ContactsIcon from '@mui/icons-material/Contacts';
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import SettingsIcon from "@mui/icons-material/Settings";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -169,6 +170,7 @@ import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -905,6 +907,24 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR321",
           },
+          // {
+          //   name: "Settlement",
+          //   id: 434891,
+          //   //  url: "./TR243/Party",
+          //   url: "./TR380/Settlements",
+          //   icon: (
+          //     <Tooltip title="Settlement">
+          //       <CreditCardOffOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR380",
+          // },
           {
             name: "Aging Report",
             id: 434685,
@@ -1140,6 +1160,23 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
+            {
+            name: "Admission",
+            url: "./TR379/Admission",
+            id: 5596,
+            icon: (
+              <Tooltip title="Admission">
+                <ContactsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR379",
+          },
           {
             name: "Attendance(D)",
             url: "/Apps/TR260/Editdailyattendance",
