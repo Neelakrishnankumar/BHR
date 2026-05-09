@@ -746,6 +746,7 @@ export const fetchListview =
           AccessID != "TR371" &&
           AccessID != "TR375" &&
           AccessID != "TR368" &&
+          AccessID != "TR380" &&
           AccessID != "TR377"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -2425,7 +2426,12 @@ export const fetchListview =
                   />
                 ),
               };
-            } else if (AccessID == "TR321" || AccessID == "TR368") {
+            } else if (
+              AccessID == "TR321" ||
+              AccessID == "TR380" ||
+               AccessID == "TR368"
+              
+              ) {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -8229,6 +8235,23 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 />
               </>
             )}
+          </>
+        )}
+        {accessID === "TR380" && (
+          <>
+           
+              <Link
+                to={`./EditSettlements/${params.row.RecordID}/E`}
+                state={{
+                  BreadCrumb1: params.row.Project,
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
           </>
         )}
       </div>

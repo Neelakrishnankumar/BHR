@@ -1152,6 +1152,7 @@ const Editemployee = () => {
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
+    CRMUser: Data.CrmUserChkbox === "Y" ? true : false,
     joindate: Data.DateOfJoin,
     dateofbirth: Data.DateOfBirth,
     confirmdate: Data.DateOfConfirmation,
@@ -1409,6 +1410,7 @@ const Editemployee = () => {
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
+      CrmUserChkbox: values.CRMUser === true ? "Y" : "N",
       Job: isStudentClassification ? "" : values.Job || "",
       Mgr: values.Mgr,
       Sal: values.amount || 0,
@@ -5697,6 +5699,18 @@ const Editemployee = () => {
                           />
 
                           <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
+                           <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="CRMUser"
+                            id="CRMUser"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="CRM User"
+                          />
+
+                          <FormLabel focused={false}>CRM User</FormLabel>
                         </Box>
 
                         <Box>
