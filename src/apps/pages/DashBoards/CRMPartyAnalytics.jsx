@@ -313,12 +313,13 @@ function MonthlyBarChart({ orders }) {
 }
 
 // ─── PARTY LIST PAGE ──────────────────────────────────────────────────────────
-function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOpenAnalytics, onApply, loading }) {
-    const [search, setSearch] = useState("");
-    const [typeFilter, setTypeFilter] = useState("all");
-    const [paymentStatus, setPaymentStatus] = useState("all");
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
+function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOpenAnalytics, onApply, loading, filters, setFilters }) {
+    // const [search, setSearch] = useState("");
+    // const [typeFilter, setTypeFilter] = useState("all");
+    // const [paymentStatus, setPaymentStatus] = useState("all");
+    // const [from, setFrom] = useState("");
+    // const [to, setTo] = useState("");
+    const { search, typeFilter, paymentStatus, from, to } = filters;
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -328,6 +329,114 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
     //     return ((p.name || "").toLowerCase().includes(q) ||
     //         (p.city || "").toLowerCase().includes(q))
     //         && (typeFilter === "all" || p.type.toLowerCase() === typeFilter);
+    // });
+
+
+    const ALLOWED_STATUSES = [
+        "created",
+        "processing",
+        "picked",
+        "ready to deliver",
+        "pending",
+        "paid"
+    ];
+
+    const normalizeStatus = (s) =>
+        (s || "").trim().toLowerCase();
+
+    const getLatestStatus = (partyOrders) => {
+        if (!partyOrders || partyOrders.length === 0) {
+            return "created";
+        }
+
+        const latestOrder = partyOrders.reduce((latest, curr) => {
+            const d1 = new Date(latest.date.split("-").reverse().join("-"));
+            const d2 = new Date(curr.date.split("-").reverse().join("-"));
+            return d2 > d1 ? curr : latest;
+        });
+
+        const status = normalizeStatus(latestOrder.status);
+
+        return ALLOWED_STATUSES.includes(status)
+            ? status
+            : "created";
+    };
+    const statusList = ALLOWED_STATUSES;
+
+    const statusCounts = useMemo(() => {
+        const counts = {};
+
+        parties.forEach(p => {
+            const q = search.toLowerCase();
+
+            const matchesSearch =
+                (p.name || "").toLowerCase().includes(q) ||
+                (p.city || "").toLowerCase().includes(q);
+
+            const matchesType =
+                typeFilter === "all" || p.type.toLowerCase() === typeFilter;
+
+            if (!(matchesSearch && matchesType)) return;
+
+            const partyOrders = allOrders[p.id] || [];
+
+            const finalStatus = getLatestStatus(partyOrders);
+
+            counts[finalStatus] = (counts[finalStatus] || 0) + 1;
+        });
+
+        return counts;
+    }, [parties, allOrders, search, typeFilter]);
+
+
+    // const filtered = parties.filter(p => {
+    //     const q = search.toLowerCase();
+
+    //     const matchesSearch =
+    //         (p.name || "").toLowerCase().includes(q) ||
+    //         (p.city || "").toLowerCase().includes(q);
+
+    //     const matchesType =
+    //         typeFilter === "all" || p.type.toLowerCase() === typeFilter;
+
+    //     // 👉 Compute totals
+    //     const partyOrders = allOrders[p.id] || [];
+    //     const partyPayments = allPayments[p.id] || [];
+
+
+    //     const ordersTotal = partyOrders.reduce((s, o) => s + o.amount, 0);
+    //     const paidTotal = partyPayments
+    //         .filter(r => r.status === "Cleared")
+    //         .reduce((s, r) => s + r.amount, 0);
+
+    //     const due = partyOrders.reduce((sum, o) => sum + (o.due || 0), 0);
+    //     // const due = Math.max(0, ordersTotal - paidTotal);
+
+    //     // 👉 Payment status logic
+    //     // let matchesPayment = true;
+
+    //     // if (paymentStatus === "paid") {
+    //     //     matchesPayment = ordersTotal > 0 && due === 0;
+    //     // } else if (paymentStatus === "due") {
+    //     //     matchesPayment = due > 0;
+    //     // } else if (paymentStatus === "created") {
+    //     //     matchesPayment = ordersTotal === 0;
+    //     // }
+    //     let matchesPayment = true;
+
+    //     if (paymentStatus === "paid") {
+    //         matchesPayment = ordersTotal > 0 && due === 0;
+    //     }
+    //     else if (paymentStatus === "due") {
+    //         matchesPayment = due > 0;
+    //     }
+    //     else if (paymentStatus !== "all") {
+    //         matchesPayment = partyOrders.some(
+    //             o => normalizeStatus(o.status) === paymentStatus
+    //         );
+    //     }
+
+    //     return matchesSearch && matchesType && matchesPayment;
     // });
 
     const filtered = parties.filter(p => {
@@ -340,28 +449,14 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
         const matchesType =
             typeFilter === "all" || p.type.toLowerCase() === typeFilter;
 
-        // 👉 Compute totals
         const partyOrders = allOrders[p.id] || [];
-        const partyPayments = allPayments[p.id] || [];
 
-        
-        const ordersTotal = partyOrders.reduce((s, o) => s + o.amount, 0);
-        const paidTotal = partyPayments
-            .filter(r => r.status === "Cleared")
-            .reduce((s, r) => s + r.amount, 0);
+        const finalStatus = getLatestStatus(partyOrders);
 
-            const due = partyOrders.reduce((sum, o) => sum + (o.due || 0), 0);
-        // const due = Math.max(0, ordersTotal - paidTotal);
-
-        // 👉 Payment status logic
         let matchesPayment = true;
 
-        if (paymentStatus === "paid") {
-            matchesPayment = ordersTotal > 0 && due === 0;
-        } else if (paymentStatus === "due") {
-            matchesPayment = due > 0;
-        } else if (paymentStatus === "created") {
-            matchesPayment = ordersTotal === 0;
+        if (paymentStatus !== "all") {
+            matchesPayment = finalStatus === paymentStatus;
         }
 
         return matchesSearch && matchesType && matchesPayment;
@@ -369,11 +464,42 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
     const customerCount = parties.filter(p => p.type === "Customer").length;
     const supplierCount = parties.filter(p => p.type === "Supplier").length;
 
+    const baseCounts = useMemo(() => {
+        let all = 0;
+
+        parties.forEach(p => {
+            const q = search.toLowerCase();
+
+            const matchesSearch =
+                (p.name || "").toLowerCase().includes(q) ||
+                (p.city || "").toLowerCase().includes(q);
+
+            const matchesType =
+                typeFilter === "all" || p.type.toLowerCase() === typeFilter;
+
+            if (!(matchesSearch && matchesType)) return;
+
+            all++;
+        });
+
+        return { all };
+    }, [parties, search, typeFilter]);
+    const allCounts = {
+        all: baseCounts.all,
+        ...statusCounts
+    };
+    const allFilters = [
+        "all",
+        ...ALLOWED_STATUSES
+    ];
+    // const allFilters = ALLOWED_STATUSES;
     const paymentCounts = useMemo(() => {
         let all = 0;
         let paid = 0;
         let dueCount = 0;
         let created = 0;
+        let processing = 0;
+        let picked = 0;
 
         parties.forEach(p => {
             const partyOrders = allOrders[p.id] || [];
@@ -384,7 +510,7 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                 .filter(r => r.status === "Cleared")
                 .reduce((s, r) => s + r.amount, 0);
 
-                const due = partyOrders.reduce((sum, o) => sum + (o.due || 0), 0);
+            const due = partyOrders.reduce((sum, o) => sum + (o.due || 0), 0);
             // const due = Math.max(0, ordersTotal - paidTotal);
 
             // Apply SAME filters (search + type)
@@ -402,11 +528,12 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
 
             if (ordersTotal === 0) {
                 created++;
-            } else if (due === 0) {
-                paid++;
-            } else {
-                dueCount++;
-            }
+            } else
+                if (due === 0) {
+                    paid++;
+                } else {
+                    dueCount++;
+                }
         });
 
         return {
@@ -417,6 +544,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
         };
     }, [parties, allOrders, allPayments, search, typeFilter]);
 
+    const formatLabel = (s) =>
+        s.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
     return (
         <Box>
             {/* App Header */}
@@ -488,7 +617,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                     size="small"
                     placeholder="Search party.."
                     value={search}
-                    onChange={e => setSearch(e.target.value)}
+                    // onChange={e => setSearch(e.target.value)}
+                    onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
                     sx={{
                         flex: 1,
                         minWidth: { xs: "100%", sm: 200 }
@@ -509,7 +639,11 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                         minWidth: { xs: "100%", sm: 140 }
                     }}
                 >
-                    <Select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>
+                    <Select value={typeFilter}
+                        // onChange={e => setTypeFilter(e.target.value)}
+                        onChange={e => setFilters(prev => ({ ...prev, typeFilter: e.target.value }))
+                        }
+                    >
                         <MenuItem value="all">All Types</MenuItem>
                         <MenuItem value="customer">Customer</MenuItem>
                         <MenuItem value="supplier">Supplier</MenuItem>
@@ -522,7 +656,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                     type="date"
                     label="From"
                     value={from}
-                    onChange={(e) => setFrom(e.target.value)}
+                    // onChange={(e) => setFrom(e.target.value)}
+                    onChange={(e) => setFilters(prev => ({ ...prev, from: e.target.value }))}
                     InputLabelProps={{ shrink: true }}
                     sx={{
                         minWidth: { xs: "100%", sm: 160 }
@@ -535,7 +670,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                     type="date"
                     label="To"
                     value={to}
-                    onChange={(e) => setTo(e.target.value)}
+                    // onChange={(e) => setTo(e.target.value)}
+                    onChange={(e) => setFilters(prev => ({ ...prev, to: e.target.value }))}
                     inputProps={{ min: from || undefined }}
                     InputLabelProps={{ shrink: true }}
                     sx={{
@@ -555,7 +691,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                     <Button
                         variant="contained"
                         fullWidth={false}
-                        onClick={() => onApply({ search, typeFilter, from, to })}
+                        // onClick={() => onApply({ search, typeFilter, from, to })}
+                        onClick={() => onApply(filters)}
                         sx={{
                             flex: { xs: 1, sm: "unset" }
                         }}
@@ -565,7 +702,8 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
 
                     <Button
                         variant="contained"
-                        onClick={() => dispatch(resetPartyAnalyticsdata())}
+                        onClick={() => 
+                            dispatch(resetPartyAnalyticsdata())}
                         sx={{
                             flex: { xs: 1, sm: "unset" },
                             background: "linear-gradient(135deg, #ef3f1c, #ed664b)"
@@ -578,20 +716,23 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
 
 
             <Box sx={{ mb: 2 }}>
-                <Stack direction="row" alignItems="center" spacing={1.5} flexWrap="wrap">
+                <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
 
                     {/* Label */}
                     <Typography sx={{ fontSize: 12, color: "#6B7A99", fontWeight: 600 }}>
-                        PAYMENT STATUS:
+                        {/* Payment Status: */}
+                        Order Status:
                     </Typography>
 
                     {/* Chips */}
-                    {
+                    {/* {
                         [
                             { label: "All", value: "all", count: paymentCounts.all },
-                            { label: "✓ Paid", value: "paid", count: paymentCounts.paid },
-                            { label: "◷ Due", value: "due", count: paymentCounts.due },
-                            { label: "◌ Created", value: "created", count: paymentCounts.created }
+                            { label: "Paid", value: "paid", count: paymentCounts.paid },
+                            { label: "Due", value: "due", count: paymentCounts.due },
+                            { label: "Created", value: "created", count: paymentCounts.created },
+                            { label: "Picked", value: "picked", count: paymentCounts.picked },
+                            { label: "Processing", value: "processing", count: paymentCounts.processing }
                         ].map(opt => (
                             <Chip
                                 key={opt.value}
@@ -624,7 +765,42 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                                     }
                                 }}
                             />
-                        ))}
+                        ))} */}
+                    {allFilters.map(status => (
+                        <Chip
+                            key={status}
+                            // label={`${status.toUpperCase()} (${allCounts[status] ?? 0})`}
+                            label={`${formatLabel(status)} (${allCounts[status] ?? 0})`}
+                            // onClick={() => setPaymentStatus(status)}
+                            onClick={() =>
+                                setFilters(prev => ({
+                                    ...prev,
+                                    paymentStatus: status
+                                }))
+                            }
+                            sx={{
+                                fontSize: 11,
+                                height: 24,
+                                cursor: "pointer",
+                                px: 0.5,
+
+                                background:
+                                    paymentStatus === status
+                                        ? "rgba(61,142,240,0.15)"
+                                        : "rgba(255,255,255,0.05)",
+
+                                color:
+                                    paymentStatus === status
+                                        ? "#3D8EF0"
+                                        : "#6B7A99",
+
+                                border:
+                                    paymentStatus === status
+                                        ? "1px solid rgba(61,142,240,0.4)"
+                                        : "1px solid rgba(255,255,255,0.08)"
+                            }}
+                        />
+                    ))}
                 </Stack>
             </Box>
 
@@ -636,7 +812,7 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                     // TODO: Replace with API computed summary per party
                     const ordersTotal = (allOrders[p.id] || []).reduce((s, o) => s + o.amount, 0);
                     const paidTotal = (allPayments[p.id] || []).filter(r => r.status === "Cleared").reduce((s, r) => s + r.amount, 0);
-                   const due = allOrders[p.id].reduce((sum, o) => sum + (o.due || 0), 0);
+                    const due = allOrders[p.id].reduce((sum, o) => sum + (o.due || 0), 0);
                     // const due = Math.max(0, ordersTotal - paidTotal);
                     const collPct = pct(paidTotal, ordersTotal);
                     const orderCount = (allOrders[p.id] || []).length;
@@ -678,7 +854,7 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
 
                                 <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1.25, pt: 1.75, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                                     {/* {[["Orders", fmtShort(ordersTotal), "#3D8EF0"], ["Paid", fmtShort(paidTotal), "#2EC99A"], ["Due", fmtShort(due), due > 0 ? "#F06464" : "#6B7A99"]].map(([lbl, val, clr]) => ( */}
-                                    {[["Orders", fmt(ordersTotal), "#3D8EF0"], ["Paid", fmt(paidTotal), "#2EC99A"], ["Due", fmt(due), due > 0 ? "#F06464" : "#6B7A99"]].map(([lbl, val, clr]) => (
+                                    {[["Orders", fmt(ordersTotal), "#3D8EF0"], ["Paid", fmt(paidTotal), "#2EC99A"], ["Pending", fmt(due), due > 0 ? "#F06464" : "#6B7A99"]].map(([lbl, val, clr]) => (
                                         <Box key={lbl}>
                                             <Typography sx={{
                                                 fontSize: 10, color: "#6B7A99",
@@ -1117,7 +1293,8 @@ function PartyAnalyticsPage({ parties, allOrders, allPayments, preselected, onBa
                                     const paidAmt = (allPayments[result.partyId] || []).filter(r => r.order_ref === o.id && r.status === "Cleared").reduce((s, r) => s + r.amount, 0);
                                     // const bal = Math.max(0, o.amount - paidAmt);
                                     // const balPct = pct(bal, o.amount);
-                                    const bal = (allPayments[result.partyId] || []).reduce((sum, o) => sum + (o.due || 0), 0);
+                                    // const bal = (allPayments[result.partyId] || []).reduce((sum, o) => sum + (o.due || 0), 0);
+                                    const bal = o.due || 0;
                                     const balPct = pct(bal, o.amount);
                                     return (
                                         <TableRow key={o.id} sx={{
@@ -1201,7 +1378,9 @@ export default function CRMPartyAnalytics() {
     const [view, setView] = useState("list");
     const [selectedParty, setSelectedParty] = useState(null);
     const CompanyID = sessionStorage.getItem("compID");
+    // const OldCompanyID = sessionStorage.getItem("OldCompanyID");
     console.log("🚀 ~ CRMPartyAnalytics ~ CompanyID:", CompanyID)
+    // console.log("🚀 ~ CRMPartyAnalytics ~ OldCompanyID:", OldCompanyID)
 
     const PartyAnalyticsData = useSelector((state) => state.formApi.PartyAnalyticsdata);
     const PartyAnalyticsloading = useSelector((state) => state.formApi.PartyAnalyticsloading);
@@ -1215,12 +1394,20 @@ export default function CRMPartyAnalytics() {
     //         dispatch(PartyAnalytics({ Data: { CompanyID } }));
     //     }
     // }, [dispatch, CompanyID]);
+    // useEffect(() => {
+    //     if (CompanyID && CompanyID !== OldCompanyID) {
+    //         dispatch(resetPartyAnalyticsdata());  
+    //     }
+    // }, [CompanyID]);
     useEffect(() => {
-        dispatch(resetPartyAnalyticsdata());
-    }, []);
+        if (CompanyID) {
+            dispatch(resetPartyAnalyticsdata());  
+        }
+    }, [CompanyID]);
     const handleApply = (filters) => {
         if (CompanyID) {
             dispatch(PartyAnalytics({ Data: { CompanyID, ...filters } }));
+            // sessionStorage.setItem("OldCompanyID", CompanyID);
         }
     };
 
@@ -1235,6 +1422,13 @@ export default function CRMPartyAnalytics() {
     };
 
 
+    const [filters, setFilters] = useState({
+        search: "",
+        typeFilter: "all",
+        paymentStatus: "all",
+        from: "",
+        to: ""
+    });
     return (
         <ThemeProvider
         // theme={darkTheme}
@@ -1253,6 +1447,8 @@ export default function CRMPartyAnalytics() {
                             onOpenAnalytics={openAnalytics}
                             onApply={handleApply}
                             loading={PartyAnalyticsloading}
+                            filters={filters}
+                            setFilters={setFilters}
                         />
                     )}
 

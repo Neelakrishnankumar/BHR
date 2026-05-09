@@ -321,13 +321,39 @@ const EditAcademicyear = () => {
                                         focused
                                         value={values.academicyear}
                                         onBlur={handleBlur}
+                                        // onChange={(e) => {
+                                        //     let value = e.target.value.replace(/[^0-9]/g, "");
+
+                                        //     if (value.length > 6) value = value.slice(0, 6);
+
+                                        //     if (value.length > 4) {
+                                        //         value = value.slice(0, 4) + "-" + value.slice(4);
+                                        //     }
+
+                                        //     setFieldValue("academicyear", value);
+                                        //     setAcademicYear(value);
+                                        // }}
                                         onChange={(e) => {
-                                            let value = e.target.value.replace(/[^0-9]/g, "");
+                                            let rawValue = e.target.value;
 
-                                            if (value.length > 6) value = value.slice(0, 6);
+                                            // If user is deleting, allow it without forcing format
+                                            if (rawValue.length < values.academicyear.length) {
+                                                setFieldValue("academicyear", rawValue);
+                                                setAcademicYear(rawValue);
+                                                return;
+                                            }
 
-                                            if (value.length > 4) {
-                                                value = value.slice(0, 4) + "-" + value.slice(4);
+                                            // Remove non-numbers
+                                            let value = rawValue.replace(/[^0-9]/g, "");
+
+                                            // Limit to 6 digits
+                                            if (value.length > 6) {
+                                                value = value.slice(0, 6);
+                                            }
+
+                                            // Add hyphen only when typing forward
+                                            if (value.length >= 3) {
+                                                value = `${value.slice(0, 4)}-${value.slice(4)}`;
                                             }
 
                                             setFieldValue("academicyear", value);
@@ -387,7 +413,7 @@ const EditAcademicyear = () => {
                                             min: minDate,
                                             max: maxDate,
                                         }}
-                                        />
+                                    />
                                     <TextField
                                         name="sortorder"
                                         type="number"

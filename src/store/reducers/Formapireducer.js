@@ -249,6 +249,10 @@ Itemstockstatus: "",
   PartyResetloading: false,
   PartyResetstatus: "",
 
+  Timetableresetstatus:"",
+  Timetableresetloading:false,
+  Timetableresetdata:{},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -2793,7 +2797,8 @@ export const TimetableProcessController = createAsyncThunk(
     {
       HeaderID: data.HeaderID,
       TeacherID: data.TeacherID,
-      Process: data.Process
+      Process: data.Process,
+      Reason: data.Reason
     }
     const response = await axios.post(url, payload, {
       headers: {
@@ -2942,6 +2947,9 @@ export const getApiSlice = createSlice({
     },
     resetPartyAnalyticsdata(state) {
       state.PartyAnalyticsdata = {};
+    },
+    resetTimeSheetAttendance(state) {
+      state.timeSheetData = [];
     },
     ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex(
@@ -4659,6 +4667,21 @@ export const getApiSlice = createSlice({
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
       })
+       .addCase(TimetableProcessController.pending, (state, action) => {
+        state.Timetableresetstatus = "idle";
+        state.Timetableresetloading = true;
+      })
+      .addCase(TimetableProcessController.fulfilled, (state, action) => {
+        state.Timetableresetstatus = "success";
+        state.Timetableresetloading = false;
+        state.Timetableresetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TimetableProcessController.rejected, (state, action) => {
+        state.Timetableresetstatus = "Error";
+        state.Timetableresetloading = false;
+      })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {
         state.PartyAnalyticsstatus = "idle";
@@ -4743,6 +4766,7 @@ export const {
   stockReqSuccess,
   resetTrackingData,
   resetPartyAnalyticsdata,
+  resetTimeSheetAttendance,
   // packingListCarton
   ratingChange,
 } = getApiSlice.actions;
@@ -6539,6 +6563,39 @@ export const PartyAnalytics = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
+    return response.data;
+  },
+);
+
+export const TimeTableExcelGet = createAsyncThunk(
+  "TimeTableExcelGet/BulkExcel/Get",
+  async ({ data }) => {
+    const baseUrl = store.getState().globalurl.TimeTableExcelGet;
+
+    const response = await axios.get(baseUrl, {
+      params: data,
+      responseType: "blob", // 🔥 IMPORTANT for file download
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);
+
+export const TimeTableExcelPost = createAsyncThunk(
+  "TimeTableExcelPost/BulkExcel/Post",
+  async (excelSetUp) => {
+    const baseUrl = store.getState().globalurl.TimeTableExcelPost;
+    const response = await axios.post(baseUrl, excelSetUp, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
     return response.data;
   },
 );

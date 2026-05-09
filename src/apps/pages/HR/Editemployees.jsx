@@ -147,6 +147,8 @@ const Editemployee = () => {
   const [page2, setPage2] = React.useState(secondaryCurrentPage);
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const CompanyID = sessionStorage.getItem("compID");
@@ -163,6 +165,29 @@ const Editemployee = () => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurl1 = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurl1}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -179,6 +204,35 @@ const Editemployee = () => {
   console.log(YearFlag, "--YearFlag");
   // FOR ITEM SERVICES DATA GRID
   const ItemdataGridHeight = "57vh";
+  const handleDateChange = (e, handleChange) => {
+    const value = e.target.value;
+
+    // allow empty
+    if (!value) {
+      handleChange(e);
+      return;
+    }
+
+    // allow only YYYY-MM-DD typing structure
+    if (!/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) {
+      return;
+    }
+
+    const parts = value.split("-");
+
+    const month = parts[1];
+    const day = parts[2];
+
+    // validate month/day ranges
+    if (
+      (month && Number(month) > 12) ||
+      (day && Number(day) > 31)
+    ) {
+      return;
+    }
+
+    handleChange(e);
+  };
   const partyContactgetdata = useSelector(
     (state) => state.formApi.partyContactgetdata
   );
@@ -579,6 +633,9 @@ const Editemployee = () => {
           // Department: Yup.object()
           //   .nullable()
           //   .required(data.Employee.Department),
+          Department: Yup.array()
+            .min(1, data.Employee.Department)  //FIXED
+            .required(data.Employee.Department),
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
@@ -779,7 +836,12 @@ const Editemployee = () => {
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
-          Hsn: Yup.string().required(data.ContractsIN.Hsn),
+          // Hsn: Yup.string().required(data.ContractsIN.Hsn),
+          Hsn: Yup.string().when("BillingType", {
+            is: (val) => val !== "CashMemo",
+            then: (schema) => schema.required(data.ContractsIN.Hsn),
+            otherwise: (schema) => schema.notRequired(),
+          }),
         };
 
         // ✅ conditionally add vendor
@@ -1062,13 +1124,12 @@ const Editemployee = () => {
   //   .filter(id => id !== null);
 
   const initialValues = {
-    Department: Data.DeptRecordID
-      ? {
-        RecordID: Data.DeptRecordID,
-        Code: Data.DeptCode,
-        Name: Data.DeptName,
-      }
-      : null,
+    Department: Array.isArray(Data.DeptRecordID)
+      ? Data.DeptRecordID.map((d) => ({
+        RecordID: String(d.DeptID), 
+        Name: d.DeptName,
+      }))
+      : [],
     Code: Data.Code,
     Name: Data.Name,
     Password: Data.Password,
@@ -1087,10 +1148,11 @@ const Editemployee = () => {
                 : Data.EmpType === "Intern"
                   ? "IN"
                   : "",
-    checkbox: Data.Disable,
+    checkbox: Data.Disable === "Y" ? true : false,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
+    CRMUser: Data.CrmUserChkbox === "Y" ? true : false,
     joindate: Data.DateOfJoin,
     dateofbirth: Data.DateOfBirth,
     confirmdate: Data.DateOfConfirmation,
@@ -1326,12 +1388,21 @@ const Editemployee = () => {
     if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
+    const deptIds = isStudentClassification
+      ? [0]
+      : values.Department?.map((d) => d.RecordID) || [];
+
+    const deptNames = isStudentClassification
+      ? [""]
+      : values.Department?.map((d) => d.Name) || [];
 
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
-      DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
-      DeptName: isStudentClassification ? "" : values.Department?.Name || "",
+      // DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
+      // DeptName: isStudentClassification ? "" : values.Department?.Name || "",
+      DeptRecordID: deptIds.join(","),   // "1,2,3"
+      DeptName: deptNames.join(","),     // "HR,Admin"
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
@@ -1339,6 +1410,7 @@ const Editemployee = () => {
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
+      CrmUserChkbox: values.CRMUser === true ? "Y" : "N",
       Job: isStudentClassification ? "" : values.Job || "",
       Mgr: values.Mgr,
       Sal: values.amount || 0,
@@ -3154,7 +3226,7 @@ const Editemployee = () => {
           : "update";
 
     const idata = {
-      VendorID: ParentgetData.RecordID,
+      VendorID: ParentgetData.RecordID || 0,
       ContactPerson1: values.name1,
       ContactPerson2: values.name2,
       ContactPersonEmailID1: values.emailid1,
@@ -4207,27 +4279,33 @@ const Editemployee = () => {
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    Designation: deploymentData.DesignationID
-      ? {
-        RecordID: deploymentData.DesignationID,
-        Code: deploymentData.DesignationCode,
-        Name: deploymentData.DesignationName,
-      }
-      : null,
-    location: deploymentData.LocationID
-      ? {
-        RecordID: deploymentData.LocationID,
-        Code: deploymentData.LocationCode,
-        Name: deploymentData.LocationName,
-      }
-      : null,
-    gate: deploymentData.StoregatemasterID
-      ? {
-        RecordID: deploymentData.StoregatemasterID,
-        Code: deploymentData.StoregatemasterCode,
-        Name: deploymentData.StoregatemasterName,
-      }
-      : null,
+    Designation:
+      // deploymentData.DesignationID
+      deploymentData.DesignationID && deploymentData.DesignationID !== "0"
+        ? {
+          RecordID: deploymentData.DesignationID,
+          Code: deploymentData.DesignationCode,
+          Name: deploymentData.DesignationName,
+        }
+        : null,
+    location:
+      // deploymentData.LocationID
+      deploymentData.LocationID && deploymentData.LocationID !== "0"
+        ? {
+          RecordID: deploymentData.LocationID,
+          Code: deploymentData.LocationCode,
+          Name: deploymentData.LocationName,
+        }
+        : null,
+    gate:
+      // deploymentData.StoregatemasterID
+      deploymentData.StoregatemasterID && deploymentData.StoregatemasterID !== "0"
+        ? {
+          RecordID: deploymentData.StoregatemasterID,
+          Code: deploymentData.StoregatemasterCode,
+          Name: deploymentData.StoregatemasterName,
+        }
+        : null,
     project:
       deploymentData.DefaultProject && deploymentData.DefaultProject !== "0"
         ? {
@@ -4243,20 +4321,24 @@ const Editemployee = () => {
         Name: deploymentData.FunctionName,
       }
       : null,
-    shift: deploymentData.ShiftID
-      ? {
-        RecordID: deploymentData.ShiftID,
-        Code: deploymentData.ShiftCode,
-        Name: deploymentData.ShiftName,
-      }
-      : null,
-    shift2: deploymentData.ShiftID2
-      ? {
-        RecordID: deploymentData.ShiftID2,
-        Code: deploymentData.ShiftCode2,
-        Name: deploymentData.ShiftName2,
-      }
-      : null,
+    shift:
+      // deploymentData.ShiftID
+      deploymentData.ShiftID && deploymentData.ShiftID !== "0"
+        ? {
+          RecordID: deploymentData.ShiftID,
+          Code: deploymentData.ShiftCode,
+          Name: deploymentData.ShiftName,
+        }
+        : null,
+    shift2:
+      // deploymentData.ShiftID2
+      deploymentData.ShiftID2 && deploymentData.ShiftID2 !== "0"
+        ? {
+          RecordID: deploymentData.ShiftID2,
+          Code: deploymentData.ShiftCode2,
+          Name: deploymentData.ShiftName2,
+        }
+        : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
     checkin2: deploymentData.ShiftStartTime2 || "",
@@ -4426,7 +4508,7 @@ const Editemployee = () => {
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
     resignationnote: ResignationGetData.ResignationNote,
-    exitinterviewby: ResignationGetData.ExitInterviewBy >0
+    exitinterviewby: ResignationGetData.ExitInterviewBy > 0
       ? {
         RecordID: ResignationGetData?.ExitInterviewBy || 0,
         Code: ResignationGetData?.ExitInterviewByCode || "",
@@ -5117,13 +5199,13 @@ const Editemployee = () => {
                     <MenuItem value={0}>Personnel</MenuItem>
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
-                    {is003Subscription && (
+                    {is003Subscription && isStudentClassification && (
                       <MenuItem value={15}>Parent</MenuItem>
                     )}
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
                     ) : null}
-                    {is003Subscription && (
+                    {is003Subscription && initialValues.employeetype === "CI" && (
                       <MenuItem value={23}>Course Attendance</MenuItem>
                     )}
                     {initialValues.employeetype === "CO" ? (
@@ -5135,9 +5217,9 @@ const Editemployee = () => {
                     {/* {is003Subscription && (
                       <MenuItem value={15}>Parent</MenuItem>
                     )} */}
-                    {is003Subscription === true ? (
+                    {is003Subscription === true && isStudentClassification && (
                       <MenuItem value={16}>Parent Contact Details</MenuItem>
-                    ) : null}
+                    )}
                     <MenuItem value={1}>{getBusinessCaption("Skills", "Skills")}</MenuItem>
                     <MenuItem value={4}>{getBusinessCaption("Deployment", "Deployment")}</MenuItem>
                     <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
@@ -5155,7 +5237,7 @@ const Editemployee = () => {
                     {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
                     {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                     <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
-                    <MenuItem value={22}>Resignation</MenuItem>
+                    {!isStudentClassification && (<MenuItem value={22}>Resignation</MenuItem>)}
 
                   </Select>
                 </FormControl>
@@ -5200,6 +5282,7 @@ const Editemployee = () => {
                 setFieldValue,
               }) => (
                 <form onSubmit={handleSubmit}>
+                  {/* {JSON.stringify(errors)} */}
                   {!isStudentClassification ? (
                     <Box
                       display="grid"
@@ -5236,19 +5319,18 @@ const Editemployee = () => {
                       <FormControl sx={{ gap: formGap }}>
 
                         <FormControl>
-                          <CheckinAutocomplete
+                          {/* <CheckinAutocomplete
                             sx={{ marginTop: "7px" }}
                             name="Department"
-                            label="Department"
-                            // label={
-                            //   <>
-                            //     Department
-                            //     <span style={{ color: "red", fontSize: "20px" }}>
-                            //       {" "}
-                            //       *{" "}
-                            //     </span>
-                            //   </>
-                            // }
+                            // label="Department"
+                            label={
+                              <>
+                                Department
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
                             variant="outlined"
                             id="Department"
                             value={values.Department}
@@ -5271,12 +5353,46 @@ const Editemployee = () => {
                               },
                             })}`}
                           // url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          /> */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{
+                              width: "100%",
+                              gridColumn: "span 2",
+                            }}
+                            name="Department"
+                            label={
+                              <>
+                                Department
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            id="Department"
+                            value={values.Department}
+                            onChange={(e, newValue) => {
+                              setFieldValue("Department", newValue, true); 
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                              String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Department && !!errors.Department}
+                            helperText={touched.Department && errors.Department}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2010",
+                                ScreenName: "Department",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID=${CompanyID}`,
+                                Any: "",
+                              },
+                            })}`}
                           />
-                          {/* {touched.Department && errors.Department && (
-                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {touched.Department && errors.Department && (
+                          <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
                             {errors.Department}
                           </div>
-                        )} */}
+                        )}
                         </FormControl>
                         {CompanyAutoCode == "Y" ? (
                           <TextField
@@ -5558,7 +5674,7 @@ const Editemployee = () => {
                             label="Quality Assurance"
                           />
 
-                          <FormLabel focused={false}>Quality Assurance</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5570,7 +5686,7 @@ const Editemployee = () => {
                             label="Scrum Master"
                           />
 
-                          <FormLabel focused={false}>Scrum Master</FormLabel>
+                          <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
                           <Field
                             //  size="small"
                             type="checkbox"
@@ -5582,7 +5698,19 @@ const Editemployee = () => {
                             label="Project Manager"
                           />
 
-                          <FormLabel focused={false}>Project Manager</FormLabel>
+                          <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
+                           <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="CRMUser"
+                            id="CRMUser"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="CRM User"
+                          />
+
+                          <FormLabel focused={false}>CRM User</FormLabel>
                         </Box>
 
                         <Box>
@@ -5643,13 +5771,14 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.dateofbirth}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.dateofbirth && !!errors.dateofbirth}
                           helperText={touched.dateofbirth && errors.dateofbirth}
                           sx={{ background: "" }}
-                          InputProps={{
-                            onKeyDown: (e) => e.preventDefault(),
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5663,17 +5792,18 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.joindate}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.joindate && !!errors.joindate}
                           helperText={touched.joindate && errors.joindate}
                           sx={{ background: "" }}
-                          // InputProps={{
-                          //   onKeyDown: (e) => e.preventDefault(),
-                          // }}
-                          inputProps={{
-                            max: "9999-12-31",
-                            min: "1900-01-01"
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
+                        // inputProps={{
+                        //   max: "9999-12-31",
+                        //   min: "1900-01-01"
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5687,13 +5817,14 @@ const Editemployee = () => {
                           inputFormat="YYYY-MM-DD"
                           value={values.confirmdate}
                           onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleDateChange(e, handleChange)}
                           error={!!touched.confirmdate && !!errors.confirmdate}
                           helperText={touched.confirmdate && errors.confirmdate}
                           sx={{ background: "" }}
-                          InputProps={{
-                            onKeyDown: (e) => e.preventDefault(),
-                          }}
+                        // InputProps={{
+                        //   onKeyDown: (e) => e.preventDefault(),
+                        // }}
                         // required
                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
@@ -5960,7 +6091,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.dateofbirth}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.dateofbirth && !!errors.dateofbirth}
                             helperText={touched.dateofbirth && errors.dateofbirth}
                             sx={{ background: "" }}
@@ -5977,7 +6109,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.joindate}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.joindate && !!errors.joindate}
                             helperText={touched.joindate && errors.joindate}
                             sx={{ background: "" }}
@@ -6043,7 +6176,8 @@ const Editemployee = () => {
                             inputFormat="YYYY-MM-DD"
                             value={values.confirmdate}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
+                            onChange={(e) => handleDateChange(e, handleChange)}
                             error={!!touched.confirmdate && !!errors.confirmdate}
                             helperText={touched.confirmdate && errors.confirmdate}
                             sx={{ background: "" }}
@@ -12044,10 +12178,14 @@ const Editemployee = () => {
                       variant="standard"
                       focused
                       multiline
-                      rows={2}
+                      minRows={1}
+                      maxRows={5}
                       value={values.address}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\s{2,}/g, " "); // avoid double spaces
+                        setFieldValue("address", value);
+                      }}
                       error={!!touched.address && !!errors.address}
                       helperText={touched.address && errors.address}
                       sx={{
@@ -13097,7 +13235,9 @@ const Editemployee = () => {
                       <TextField
                         fullWidth
                         variant="standard"
-                        type="number"
+                        // type="number"
+                        type="text"
+                        inputMode="decimal"
                         value={values.UnitRate}
                         id="UnitRate"
                         name="UnitRate"
@@ -13198,12 +13338,22 @@ const Editemployee = () => {
                         name="Hsn"
                         type="text"
                         id="Hsn"
+                        // label={
+                        //   <span>
+                        //     HSN Code
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </span>
+                        // }
                         label={
                           <span>
                             HSN Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            {values.BillingType !== "CashMemo" && (
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            )}
                           </span>
                         }
                         variant="standard"
@@ -13212,6 +13362,14 @@ const Editemployee = () => {
                         value={values.Hsn}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        // onChange={(e) => {
+                        //   const value = e.target.value;
+                        //   setFieldValue("BillingType", value);
+
+                        //   if (value === "CashMemo") {
+                        //     setFieldValue("Hsn", ""); // 🔥 clear HSN
+                        //   }
+                        // }}
                         error={!!touched.Hsn && !!errors.Hsn}
                         helperText={touched.Hsn && errors.Hsn}
                         autoFocus
@@ -13479,6 +13637,10 @@ const Editemployee = () => {
                           value={values.DueDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          inputProps={{
+                            min: values.FromPeriod || "",
+                            max: values.ToPeriod || "",
+                          }}
                         />
                       )}
 
@@ -13654,6 +13816,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
+                              footerHeight={footerHeight}
                             />
                           ) : (
                             <SchoolContractInvoice
@@ -13674,7 +13837,7 @@ const Editemployee = () => {
                                 EmployeeID: recID,
                                 baseUrl: baseurl1
                               }}
-
+                              footerHeight={footerHeight}
 
                             />
                           )}

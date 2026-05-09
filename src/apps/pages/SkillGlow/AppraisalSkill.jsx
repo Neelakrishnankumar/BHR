@@ -73,6 +73,11 @@ const CreateAppraisalSkill = () => {
   const mode = params.Mode;
   const CatId = params.parentID1;
   const CompanyID = sessionStorage.getItem("compID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -324,6 +329,7 @@ const CreateAppraisalSkill = () => {
           ScreenName: "Designation",
           Filter: `parentID='${CompanyID}'`,
           Any: "",
+          VerticalLicense: Subscriptionlastthree
         },
       })
     )}`;

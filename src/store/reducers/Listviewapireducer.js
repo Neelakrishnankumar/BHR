@@ -125,6 +125,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
+import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 
 const initialState = {
   rowData: [],
@@ -609,57 +610,7 @@ export const fetchListview =
       //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
       // };
-      const handleTermsProcess = async (values) => {
 
-        const result = await Swal.fire({
-          title: "If you process this Timetable you will not able to edit. Do you want to proceed?",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          cancelButtonText: "No",
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-        });
-
-        if (result.isConfirmed) {
-          const data = await dispatch(TimetableProcessController({
-            data: {
-              HeaderID: values.RecordID,
-              TeacherID: empID,
-              Process: "Y",
-            },
-          }));
-
-          if (data.payload.Status === "Y") {
-            Swal.fire({
-              title: data.payload.Message,
-              icon: "success",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#3085d6",
-            });
-          } else {
-            Swal.fire({
-              title: data.payload.Message,
-              // text: data.payload.Msg,
-              icon: "warning",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#3085d6",
-            });
-          }
-          dispatch(
-            fetchListview(
-              "TR368",
-              VerticalLicense,
-              screenName,
-              `CompanyID='${CompId}' AND StandardID='${values.StandardID || 0}'`,
-              "",
-              CompId,
-              "003"
-
-            )
-          );
-        }
-      }
       if (
         filter != "" &&
         AccessID !== "TR115" &&
@@ -797,6 +748,7 @@ export const fetchListview =
           AccessID != "TR371" &&
           AccessID != "TR375" &&
           AccessID != "TR368" &&
+          AccessID != "TR380" &&
           AccessID != "TR377"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -828,9 +780,9 @@ export const fetchListview =
         if (AccessID === "TR303") {
           filter = "PartyID=" + `'${filter}'`;
         }
-        //   if (AccessID === "TR304") {
-        //    filter = "LeaderID=" + `'${filter}'`;
-
+        if (AccessID === "TR099") {
+          filter = "";
+        }
         // }
         // if (AccessID === "TR314") {
         //    filter = "PartyID=" + `'${filter}'`;
@@ -1787,42 +1739,42 @@ export const fetchListview =
                   return (
                     <Box>
                       {isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/E`}>
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                     )} 
-                      {is003Subscription &&(
-                      <Link
-                        to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
-                        state={{
-                          AcademicYear: params.row.AcademicYear,
-                          AcademicYearID: params.row.AcademicYearID,
-                          projectID: params.row.RecordID,
-                          MilestoneName: params.row.Name,
-                          projectName: params.row.Project,
-                          BreadCrumb1: params.row.Project,
-                        }}
-                      >
-                        <Tooltip title="Time Table">
-                          <IconButton color="info" size="small">
-                            <DatasetLinkedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
+                      {is003Subscription && (
+                        <Link
+                          to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                          state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
+                          <Tooltip title="Time Table">
+                            <IconButton color="info" size="small">
+                              <DatasetLinkedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
                       )}
 
                       {!isSeedEditable && (
-                      <Link to={`./EditProject/${params.row.RecordID}/V`}>
-                        <Tooltip title="View">
-                          <IconButton color="info" size="small">
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                        <Link to={`./EditProject/${params.row.RecordID}/V`}>
+                          <Tooltip title="View">
+                            <IconButton color="info" size="small">
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
                       )}
                       {/* <Tooltip title="Download PDF">
                       <IconButton
@@ -1882,7 +1834,7 @@ export const fetchListview =
                         )}
                       </IconButton>
                     </Tooltip> */}
-                      {isSeedEditable && !is003Subscription &&  (
+                      {isSeedEditable && !is003Subscription && (
                         <PDFButton
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
@@ -2073,8 +2025,36 @@ export const fetchListview =
                   );
                 },
               };
-            } 
-             else if (AccessID == "TR378") {
+            }
+            else if (AccessID == "TR095") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditUser%20Group/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR378") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2090,7 +2070,7 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                        state={{AcademicYear: params.row.AcademicYear }}
+                        state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
                           <IconButton color="info" size="small">
@@ -2102,7 +2082,7 @@ export const fetchListview =
                   );
                 },
               };
-            } 
+            }
             else if (AccessID == "TR265") {
               obj = {
                 field: "action",
@@ -2146,6 +2126,33 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={`./EditPayroll%20Policy/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } else if (AccessID == "TR094") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./EditUser/${params.row.RecordID}/E`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -2325,102 +2332,104 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR332") {
-              obj = {
-                field: "action",
-                headerName: "Action",
-                minWidth: 250,
-                sortable: false,
-                filterable: false,
-                headerAlign: "center",
-                align: "center",
-                disableColumnMenu: true,
-                disableExport: true,
-                renderCell: (params) => {
-                  return (
-                    <Box>
-                      <>
-                        {/* EDIT */}
-                        <Link
-                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
-                          to={`./EditPayment/${params.row.RecordID}/E`}
-                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+            // else if (AccessID == "TR332") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 250,
+            //     sortable: false,
+            //     filterable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <>
+            //             {/* EDIT */}
+            //             <Link
+            //               // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+            //               to={`./EditPayment/${params.row.RecordID}/E`}
+            //               // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
 
-                          state={{
-                            code: params.row.Code,
-                            Desc: params.row.Name,
-                            MilestoneID: params.row.RecordID,
-                            projectID: params.row.ProjectID,
-                            OperationStageID: params.row.OperationStageID,
-                            projectName: params.row.Project,
-                            Employee: params.row.Employee,
-                          }}
-                        >
-                          <Tooltip title="Edit">
-                            <IconButton color="info" size="small">
-                              <ModeEditOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
+            //               state={{
+            //                 code: params.row.Code,
+            //                 Desc: params.row.Name,
+            //                 MilestoneID: params.row.RecordID,
+            //                 projectID: params.row.ProjectID,
+            //                 OperationStageID: params.row.OperationStageID,
+            //                 projectName: params.row.Project,
+            //                 Employee: params.row.Employee,
+            //               }}
+            //             >
+            //               <Tooltip title="Edit">
+            //                 <IconButton color="info" size="small">
+            //                   <ModeEditOutlinedIcon />
+            //                 </IconButton>
+            //               </Tooltip>
+            //             </Link>
 
-                        {/* PDF */}
-                        <Tooltip title="Download Receipt">
-                          <span>
-                            <PDFDownloadLink
-                              document={
+            //             {/* PDF */}
+            //             <Tooltip title="Download Receipt">
+            //               <span>
+            //                 <PDFDownloadLink
+            //                   document={
 
-                                <PaymentReceipt
-                                  data={{
+            //                     <PaymentReceipt
+            //                       data={{
 
-                                    Employee: params.row?.ReceiverName,
-                                    PaymentMode: params.row?.PaymentMode,
-                                    InvoiceNo: params.row?.InvoiceNo,
-                                    InvoiceAmount: params.row?.InvoiceAmount,
-                                    PreviouslyPaid: params.row?.PreviouslyPaid,
-                                    MobileNo: params.row?.ReceiverMobileNo,
-                                    EmailID: params.row?.ReceiverEmailID,
-                                    Address: params.row?.ReceiverAddress,
-                                    CompanyName: params.row?.CompanyName,
-                                    paymentDetails: [
-                                      {
-                                        sno: 1,
-                                        PaymentReference: params.row?.PaymentRefereance,
-                                        PaidAmount: params.row?.PaidAmount,
-                                        DueAmount: params.row?.Due,
+            //                         Employee: params.row?.ReceiverName,
+            //                         EmployeeID: params.row?.EmployeeCode,
+            //                         FilterEmployee: params.row?.FilterEmployee,
+            //                         PaymentMode: params.row?.PaymentMode,
+            //                         InvoiceNo: params.row?.InvoiceNo,
+            //                         InvoiceAmount: params.row?.InvoiceAmount,
+            //                         PreviouslyPaid: params.row?.PreviouslyPaid,
+            //                         MobileNo: params.row?.ReceiverMobileNo,
+            //                         EmailID: params.row?.ReceiverEmailID,
+            //                         Address: params.row?.ReceiverAddress,
+            //                         CompanyName: params.row?.CompanyName,
+            //                         paymentDetails: [
+            //                           {
+            //                             sno: 1,
+            //                             PaymentReference: params.row?.PaymentRefereance,
+            //                             PaidAmount: params.row?.PaidAmount,
+            //                             DueAmount: params.row?.Due,
 
-                                      }
-                                    ]
-                                  }}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
-                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
-                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+            //                           }
+            //                         ]
+            //                       }}
+            //                       filters={{
+            //                         Imageurl: baseurl1,
+            //                         HeaderImg: sessionStorage.getItem("CompanyHeader"),
+            //                         FooterImg: sessionStorage.getItem("CompanyFooter"),
+            //                         CompanySignature: sessionStorage.getItem("CompanySignature"),
 
-                                  }}
-                                />
-                              }
-                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <IconButton size="small">
-                                    <CircularProgress size={18} />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton size="small">
-                                    <PictureAsPdfIcon color="error" />
-                                  </IconButton>
-                                )
-                              }
-                            </PDFDownloadLink>
-                          </span>
-                        </Tooltip>
-                      </>
-                    </Box>
-                  );
-                },
-              };
-            }
+            //                       }}
+            //                     />
+            //                   }
+            //                   fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
+            //                   {({ loading }) =>
+            //                     loading ? (
+            //                       <IconButton size="small">
+            //                         <CircularProgress size={18} />
+            //                       </IconButton>
+            //                     ) : (
+            //                       <IconButton size="small">
+            //                         <PictureAsPdfIcon color="error" />
+            //                       </IconButton>
+            //                     )
+            //                   }
+            //                 </PDFDownloadLink>
+            //               </span>
+            //             </Tooltip>
+            //           </>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
 
             // else if (AccessID == "TR366") {
             //   obj = {
@@ -2544,6 +2553,7 @@ export const fetchListview =
               AccessID == "TR328" ||
               AccessID == "TR361" ||
               AccessID == "TR027" ||
+              AccessID == "TR332" ||
               AccessID == "TR372" || //WHATSAPP ENQUIRY
               AccessID == "TR319"
             ) {
@@ -2571,7 +2581,12 @@ export const fetchListview =
                   />
                 ),
               };
-            } else if (AccessID == "TR321") {
+            } else if (
+              AccessID == "TR321" ||
+              AccessID == "TR380" ||
+               AccessID == "TR368"
+              
+              ) {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2678,7 +2693,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR371" || AccessID == "TR372") {
+            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -5135,8 +5150,8 @@ export const fetchListview =
                               </Tooltip>
                             </Link>
                             <Link
-                          to={`./EditSlot/${params.row.RecordID}/E`}
-                             state={{ SlotGroupName: params.row.Name, BreadCrumb2: screenName }}
+                              to={`./EditSlot/${params.row.RecordID}/E`}
+                              state={{ SlotGroupName: params.row.Name, BreadCrumb2: screenName }}
                             >
                               <Tooltip title="Slot">
                                 <IconButton color="info" size="small">
@@ -5150,94 +5165,7 @@ export const fetchListview =
                       ) : (
                         false
                       )}
-                      {AccessID === "TR368" && (
-                        <>
-                          {params.row.IsProcess === "N" ? (
-                            <Link
-                              to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                              state={{
-                                MilestoneID: params.row.Section,
-                                MilestoneName: params.row.MilestoneDesc,
-                                projectID: params.row.StandardID,
-                                projectName: params.row.ProjectDesc,
-                                BreadCrumb1: params.row.Project,
-                                BreadCrumb2: params.row.Term,
-                                BreadCrumb3: params.row.Description
-                              }}
-                            >
-                              <Tooltip title="Edit">
-                                <IconButton color="info" size="small">
-                                  <ModeEditOutlinedIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Link>
-                          ) : (
-                            <Link
-                              to={`./Edit${screenName}/${params.row.RecordID}/V`}
-                              state={{
-                                MilestoneID: params.row.Section,
-                                MilestoneName: params.row.MilestoneDesc,
-                                projectID: params.row.StandardID,
-                                projectName: params.row.ProjectDesc,
-                                BreadCrumb1: params.row.Project,
-                                BreadCrumb2: params.row.Term,
-                                BreadCrumb3: params.row.Description
-                              }}
-                            >
-                              <Tooltip title="View">
-                                <IconButton color="info" size="small">
-                                  <VisibilityIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Link>
-                          )}
-                          <Link
-                            to={`./ProjectTimeTable`}
-                            state={{
-                              MilestoneID: params.row.Section,
-                              MilestoneName: params.row.MilestoneDesc,
-                              TermsID: params.row.TermID,
-                              projectID: params.row.StandardID,
-                              projectName: params.row.ProjectDesc,
-                              Description: params.row.Description,
-                              BreadCrumb1: params.row.Project,
-                              TermName: params.row.TermName,
-                              SlotGroupID: params.row.SlotGroupID,
-                            }}
-                          >
-                            <Tooltip title="Timetable">
-                              <IconButton color="info" size="small">
-                                <CalendarMonthOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
 
-                          {params.row.IsProcess === "N" ? (
-                            <Tooltip title="Process">
-                              <IconButton
-                                color="error"
-                                size="small"
-                                onClick={() => handleTermsProcess(params.row)}
-                              >
-                                <LockResetOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-
-                          ) : (
-                            <Tooltip title="Process">
-                              <IconButton
-                                color="error"
-                                size="small"
-                                sx={{
-                                  opacity: 0.5
-                                }}
-                              // onClick={() =>handleTermsProcess(params.row)}
-                              >
-                                <LockResetOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>)}
-                        </>
-                      )}
 
                       {/* http://skillglow.beyondexs.com/trinity/tcpdf/BOMCC.php?compID=3&PBBHID=99 */}
                       {AccessID == "TR083" ? (
@@ -6697,7 +6625,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             }}
           >
             <Tooltip title="Category">
-            {/* <Tooltip title={params.row.Code === "SK" ? "Assessment Category" : params.row.Code === "AP" ? "Appraisal Category" : params.row.Code === "CL" ? "Compliance Category" : params.row.Code === "SV" ? "Survey Category" : params.row.Code === "FB" ? "Feedback Category" : "Assessment Category"}> */}
+              {/* <Tooltip title={params.row.Code === "SK" ? "Assessment Category" : params.row.Code === "AP" ? "Appraisal Category" : params.row.Code === "CL" ? "Compliance Category" : params.row.Code === "SV" ? "Survey Category" : params.row.Code === "FB" ? "Feedback Category" : "Assessment Category"}> */}
               <CategoryOutlinedIcon />
             </Tooltip>
           </IconButton>
@@ -7071,6 +6999,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  const baseurl1 = config.UAAM_URL;
+  
   const count = Number(params.row.MarketingCount || 0);
   // const orderType = params.row.OrderType;
   const id = params.row.RecordID;
@@ -7082,6 +7012,40 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
   const [STmodalOpen, setSTModalOpen] = useState(false);
   const [STselectedRow, setSTSelectedRow] = useState(null);
+    const [footerHeight, setFooterHeight] = useState(60);
+    const [isReady, setIsReady] = useState(false);
+    useEffect(() => {
+  if (!FooterImg) return;
+
+  const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+  const img = new Image();
+  img.src = url;
+
+  img.onload = () => {
+    const aspectRatio = img.height / img.width;
+
+    const pageWidth = 595;
+    const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+
+    const calculatedHeight = Math.min(
+      pageWidth * aspectRatio,
+      MAX_FOOTER_HEIGHT
+    );
+
+    setFooterHeight(calculatedHeight);
+    setIsReady(true);
+  };
+}, [FooterImg]);
+  const getTodayDate = () => {
+        const today = new Date();
+
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
+
+        return `${day}/${month}/${year}`;
+      };
 
   const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
@@ -7267,6 +7231,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               HeaderImg: HeaderImg,
               FooterImg: FooterImg,
               CompanySignature: CompanySignature,
+              footerHeight:footerHeight
             }}
           />,
         ).toBlob();
@@ -7424,29 +7389,27 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PeopleAltIcon />
               </IconButton>
             </Tooltip>
-            {params.row.Description == "Teaching Staff" || params.row.Description == "Staff" && (
-              <Tooltip title="Teacher Occupancy">
-                <IconButton
-                  color="info"
-                  size="small"
-                  onClick={() =>
-                    navigate(
-                      `/Apps/TeacherOccupancy/${params.row.RecordID}`,
-                      {
+            {(params.row.Description === "Teaching Staff" ||
+              params.row.Description === "Staff") && (
+                <Tooltip title="Teacher Occupancy">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`/Apps/TeacherOccupancy/${params.row.RecordID}`, {
                         state: {
                           ...state,
                           BreadCrumb1: params.row.Description,
                           Classification: params.row.Description,
                           CompanyID: params.row.CompanyID,
                         },
-                      },
-                    )
-                  }
-                >
-                  <SensorOccupiedIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+                      })
+                    }
+                  >
+                    <SensorOccupiedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
           </>
         )}
 
@@ -7918,6 +7881,90 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Box>
         )}
 
+{accessID === "TR332" && (
+        <Box>
+                      <>
+                        {/* EDIT */}
+                        <Link
+                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+                          to={`./EditPayment/${params.row.RecordID}/E`}
+                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+
+                          state={{
+                            code: params.row.Code,
+                            Desc: params.row.Name,
+                            MilestoneID: params.row.RecordID,
+                            projectID: params.row.ProjectID,
+                            OperationStageID: params.row.OperationStageID,
+                            projectName: params.row.Project,
+                            Employee: params.row.Employee,
+                          }}
+                        >
+                          <Tooltip title="Edit">
+                            <IconButton color="info" size="small">
+                              <ModeEditOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+
+                        {/* PDF */}
+                        <Tooltip title="Download Receipt">
+                          <span>
+                            <PDFDownloadLink
+                              document={
+
+                                <PaymentReceipt
+                                  data={{
+
+                                    Employee: params.row?.ReceiverName,
+                                    EmployeeID: params.row?.EmployeeCode,
+                                    FilterEmployee: params.row?.FilterEmployee,
+                                    PaymentMode: params.row?.PaymentMode,
+                                    InvoiceNo: params.row?.InvoiceNo,
+                                    InvoiceAmount: params.row?.InvoiceAmount,
+                                    PreviouslyPaid: params.row?.PreviouslyPaid,
+                                    MobileNo: params.row?.ReceiverMobileNo,
+                                    EmailID: params.row?.ReceiverEmailID,
+                                    Address: params.row?.ReceiverAddress,
+                                    CompanyName: params.row?.CompanyName,
+                                    paymentDetails: [
+                                      {
+                                        sno: 1,
+                                        PaymentReference: params.row?.PaymentRefereance,
+                                        PaidAmount: params.row?.PaidAmount,
+                                        DueAmount: params.row?.Due,
+
+                                      }
+                                    ]
+                                  }}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
+                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
+                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+
+                                  }}
+                                  footerHeight={footerHeight}
+                                />
+                              }
+                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <IconButton size="small">
+                                    <CircularProgress size={18} />
+                                  </IconButton>
+                                ) : (
+                                  <IconButton size="small">
+                                    <PictureAsPdfIcon color="error" />
+                                  </IconButton>
+                                )
+                              }
+                            </PDFDownloadLink>
+                          </span>
+                        </Tooltip>
+                      </>
+                    </Box>)}
+
         {accessID === "TR027" && (
           <Box>
             <Tooltip title="Edit">
@@ -7992,7 +8039,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     size="small"
                     onClick={() => {
                       setSTSelectedRow(params.row);
-                      setSTModalOpen(true);
+                      navigate(`/Apps/StaffTimetable/${params.row.RecordID}`, { state: { ...state, EmpName: params.row.Name, Employee: params.row.Personnel } });
+                      // setSTModalOpen(true);
                     }}
                   >
                     <PermContactCalendarOutlinedIcon />
@@ -8036,7 +8084,58 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const handleTermsProcess = async (values) => {
 
+    const result = await Swal.fire({
+      title: "If you process this Timetable you will not able to edit. Do you want to proceed?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    });
+
+    if (result.isConfirmed) {
+      const data = await dispatch(TimetableProcessController({
+        data: {
+          HeaderID: values.RecordID,
+          TeacherID: EmployeeID,
+          Process: "Y",
+          Reason: values.reason || ""
+        },
+      }));
+
+      if (data.payload.Status === "Y") {
+        Swal.fire({
+          title: data.payload.Message,
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      } else {
+        Swal.fire({
+          title: data.payload.Message,
+          // text: data.payload.Msg,
+          icon: "warning",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      }
+      dispatch(
+        fetchListview(
+          "TR368",
+          "003",
+          screenName,
+          `CompanyID='${CompanyID}' AND StandardID='${values.StandardID || 0}'`,
+          "",
+          CompanyID,
+          "003"
+
+        )
+      );
+    }
+  }
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -8143,6 +8242,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
 
+
             {/* RESET FOR PARTY */}
 
             <Tooltip title="Reset">
@@ -8157,6 +8257,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <RestartAltOutlinedIcon />
               </IconButton>
             </Tooltip>
+
             <ResetPartyOrder
               open={modalOpen}
               onClose={() => {
@@ -8168,6 +8269,146 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               CompanyID={CompanyID}
             />
           </Box>
+        )}
+
+        {accessID === "TR368" && (
+          <>
+            {params.row.IsProcess === "N" ? (
+              <Link
+                to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                state={{
+                  MilestoneID: params.row.Section,
+                  MilestoneName: params.row.MilestoneDesc,
+                  projectID: params.row.StandardID,
+                  projectName: params.row.ProjectDesc,
+                  BreadCrumb1: params.row.Project,
+                  BreadCrumb2: params.row.Term,
+                  BreadCrumb3: params.row.Description,
+                  isprocess: params.row.IsProcess
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            ) : (
+              <Link
+                to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                state={{
+                  MilestoneID: params.row.Section,
+                  MilestoneName: params.row.MilestoneDesc,
+                  projectID: params.row.StandardID,
+                  projectName: params.row.ProjectDesc,
+                  BreadCrumb1: params.row.Project,
+                  BreadCrumb2: params.row.Term,
+                  BreadCrumb3: params.row.Description,
+
+                }}
+              >
+                <Tooltip title="View">
+                  <IconButton color="info" size="small">
+                    <VisibilityIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            )}
+            <Link
+              to={`./ProjectTimeTable`}
+              state={{
+                MilestoneID: params.row.Section,
+                MilestoneName: params.row.MilestoneDesc,
+                TermsID: params.row.TermID,
+                projectID: params.row.StandardID,
+                projectName: params.row.ProjectDesc,
+                Description: params.row.Description,
+                BreadCrumb1: params.row.Project,
+                TermName: params.row.TermName,
+                SlotGroupID: params.row.SlotGroupID,
+                GroupID: params.row.SlotGroupID,
+                HeaderID: params.row.RecordID,
+                isprocess: params.row.IsProcess
+
+              }}
+            >
+              <Tooltip title="Timetable">
+                <IconButton color="info" size="small">
+                  <CalendarMonthOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+
+            {params.row.IsProcess === "N" ? (
+              <Tooltip title="Process">
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => handleTermsProcess(params.row)}
+                >
+                  <LockResetOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+
+            ) : (
+              // <Tooltip title="Process">
+              //   <IconButton
+              //     color="error"
+              //     size="small"
+              //     sx={{
+              //       opacity: 0.5
+              //     }}
+              //   // onClick={() =>handleTermsProcess(params.row)}
+              //   >
+              //     <LockResetOutlinedIcon />
+              //   </IconButton>
+              // </Tooltip>
+              <>
+                <Tooltip title="Unprocess">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => {
+                      setSelectedRow(params.row);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <RestartAltOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Timetableprocess
+                  open={modalOpen}
+                  onClose={() => {
+                    setModalOpen(false);
+                    setSelectedRow(null);
+                  }}
+                  rowData={selectedRow}
+                  RecordID={params.row.RecordID}
+                  StandardID={params.row.StandardID}
+                  EmployeeID={EmployeeID}
+                  CompanyID={CompanyID}
+                />
+              </>
+            )}
+          </>
+        )}
+        {accessID === "TR380" && (
+          <>
+           
+              <Link
+                to={`./EditSettlements/${params.row.RecordID}/E`}
+                state={{
+                  BreadCrumb1: params.row.Project,
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+          </>
         )}
       </div>
     </Fragment>

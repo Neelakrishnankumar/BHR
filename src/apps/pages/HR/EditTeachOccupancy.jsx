@@ -1101,7 +1101,7 @@
 // // };
 
 // // export default TeacherOccupancy;
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button, IconButton, Typography, Box, Tooltip,
   Paper, useMediaQuery, Breadcrumbs,
@@ -1167,7 +1167,7 @@ const SubjectCell = ({ text }) => {
   );
   const col = getSubjectColor(text);
   const match = text.match(/^(.*?)\s*\(\s*(.*?)\s*\)$/);
-  const gradePart   = match ? match[1].trim() : text;
+  const gradePart = match ? match[1].trim() : text;
   const subjectPart = match ? match[2].trim() : "";
   return (
     <Box sx={{
@@ -1195,14 +1195,15 @@ const SubjectCell = ({ text }) => {
 // Days = rows | Period slots = columns (breaks excluded)
 // Column headers show: Period label + full "fromTime - toTime"
 const TeacherTimetable = ({ teacher, summary }) => {
-  const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  // const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const { timeSlots, BreakSlots, BreakSlotsList, schedule } = teacher;
-
+  const DAYS = schedule.map((s) => s.day);
   // Only period slots (exclude break/assembly/lunch/activity)
   const breakTexts = new Set(BreakSlotsList.map((b) => b.SlotText));
   const periodSlots = [...timeSlots]
     .filter((s) => !breakTexts.has(s))
     .sort((a, b) => parseTime(a.split(" - ")[0]) - parseTime(b.split(" - ")[0]));
+
 
   const dayMap = {};
   schedule.forEach((d) => { dayMap[d.day] = d.slots; });
@@ -1249,9 +1250,9 @@ const TeacherTimetable = ({ teacher, summary }) => {
         {summary && (
           <Box display="flex" gap={1} flexWrap="wrap">
             {[
-              { label: "TOTAL",    value: summary.TotalHours,    color: "#94A3B8" },
+              { label: "TOTAL", value: summary.TotalHours, color: "#94A3B8" },
               { label: "OCCUPIED", value: summary.OccupiedHours, color: "#FB923C" },
-              { label: "FREE",     value: summary.FreeHours,     color: "#4ADE80" },
+              { label: "FREE", value: summary.FreeHours, color: "#4ADE80" },
             ].map(({ label, value, color }) => (
               <Box key={label} sx={{
                 background: "rgba(255,255,255,0.08)",
@@ -1289,7 +1290,7 @@ const TeacherTimetable = ({ teacher, summary }) => {
               flexShrink: 0,
               borderRight: "1px solid #E2E8F0",
               px: "10px", py: "10px",
-              display: "flex", alignItems: "center", justifyContent: "center",            
+              display: "flex", alignItems: "center", justifyContent: "center",
             }}>
               <Typography sx={{ fontSize: "11px", fontWeight: 700, color: "#94A3B8", letterSpacing: "0.06em" }}>
                 Day
@@ -1445,18 +1446,43 @@ const TeacherOccupancy = () => {
   const sliceSubcriptionCode = SubscriptionCode.slice(-3);
   const companyId = sessionStorage.getItem("compID");
 
-  const [apiData, setApiData]       = useState(null);
+  const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  console.log("HeaderImg:", HeaderImg);
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  useEffect(() => {
+    if (!FooterImg) return;
 
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 70; // 🔥 IMPORTANT
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const getFormattedDate = () => {
     const today = new Date();
-    const day   = String(today.getDate()).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     const month = String(today.getMonth() + 1).padStart(2, "0");
-    const year  = today.getFullYear();
+    const year = today.getFullYear();
     return `${day}-${month}-${year}`;
   };
 
@@ -1471,16 +1497,16 @@ const TeacherOccupancy = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         if (props === "Logout") navigate("/");
-        if (props === "Close")  navigate("/Apps/TR232/Role");
+        if (props === "Close") navigate("/Apps/TR232/Role");
       }
     });
   };
 
   const handleApply = async (values) => {
     const payload = {
-      TermsID:     values?.terms?.RecordID || "",
+      TermsID: values?.terms?.RecordID || "",
       EmployeeIDs: values?.Teacher?.map((t) => t.RecordID) || [],
-      CompanyID:   companyId,
+      CompanyID: companyId,
     };
     setApiLoading(true);
     try {
@@ -1566,13 +1592,40 @@ const TeacherOccupancy = () => {
                     },
                   })}`}
                 />
-                <CheckinAutocomplete
+                {/* <CheckinAutocomplete
                   name="terms" label="Term" id="terms"
                   value={values.terms}
                   onChange={(newValue) => setFieldValue("terms", {
                     RecordID: newValue.RecordID, Code: newValue.Code, Name: newValue.Name,
                   })}
-                  url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms","Filter":"CompanyID=${companyId}","Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
+                  url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms", Filter: teacherIds? `EmployeeID IN ('${teacherIds}') AND CompanyID='${companyId}'`: `CompanyID='${companyId}'`,,"Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
+                /> */}
+                <CheckinAutocomplete
+                  name="terms"
+                  label="Term"
+                  id="terms"
+                  value={values.terms}
+                  onChange={(newValue) =>
+                    setFieldValue("terms", {
+                      RecordID: newValue.RecordID,
+                      Code: newValue.Code,
+                      Name: newValue.Name,
+                    })
+                  }
+                  url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                      AccessID: "2164",
+                      ScreenName: "Staff Terms",
+                      Filter: values?.Teacher
+                        ? `EmployeeID IN ('${Array.isArray(values.Teacher)
+                          ? values.Teacher.map(t => t.RecordID).join("','")
+                          : values.Teacher.RecordID
+                        }') AND CompanyID='${companyId}'`
+                        : `CompanyID='${companyId}'`,
+                      Any: "",
+                      VerticalLicense: sliceSubcriptionCode || "",
+                    },
+                  })}`}
                 />
               </Box>
 
@@ -1592,6 +1645,7 @@ const TeacherOccupancy = () => {
                           HeaderImg: HeaderImg,
                           FooterImg: FooterImg,
                         }}
+                        footerHeight={footerHeight}
                         reportTitle="Teacher Occupancy Report"
                       />
                     }

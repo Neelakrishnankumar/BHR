@@ -104,7 +104,7 @@ const EditPayment = ({ appId, empId }) => {
     const mode = params.Mode;
     console.log(mode, "Mode");
     const dispatch = useDispatch();
-    var CompanyID = sessionStorage.getItem("companyId");
+    var CompanyID = sessionStorage.getItem("compID");
     const [open, setOpen] = useState(false);
     var recID = params.id;
     var accessID = params.accessID;
@@ -249,10 +249,12 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
             PaymentReference: values.paymentreference,
             LastPaidDate: values.lastpaiddate,
             InvoiceHaderID: parentID,
-            ProjectID: state.ProjectID || 0,
+            ProjectID: mode == "E" ? state.projectID : state.ProjectID,
             CompanyID
 
         };
+        console.log(idata,"idata");
+        // return;
         const response = await dispatch(
             postData({ accessID: "TR332", action, idata })
         );

@@ -218,6 +218,7 @@ import EditTimetablev1 from "./pages/Empolyee/EditTimetablev1";
 import ProjectTimeTable from "./pages/Empolyee/ProjectTimeTable";
 import Editadmissionform from "./pages/Empolyee/Editadmissionform";
 import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
+import EditSettlements from "./pages/HR/EditSettlements";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -675,7 +676,8 @@ function App() {
                   />
                   {/* STAFF TIMETABLE */}
                   <Route
-                    path="/Staff/StaffTimetable/:CompanyID/:EmployeeID/:TermsID"
+                    // path="/Staff/StaffTimetable/:CompanyID/:EmployeeID/:TermsID"
+                    path = "/StaffTimetable/:id"
                     element={<StaffTimetable />}
                   />
 
@@ -1284,6 +1286,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditSettlements/:id/:Mode"
+                    element={<EditSettlements />}
                   />
 
                   <Route

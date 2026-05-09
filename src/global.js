@@ -336,7 +336,9 @@ const initialState = {
   TimetableProcessController: "",
   WeeklycaledarUrl: "",
   PartyAnalytics:"",
-  slotgetUrl: ""
+  slotgetUrl: "",
+  TimeTableExcelGet: "",
+  TimeTableExcelPost: ""
 };
 
 export const getUrlSlice = createSlice({
@@ -372,8 +374,6 @@ export const getUrlSlice = createSlice({
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
       // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
-
-
       state.pcdurl = APIurl + "PCDController.php";
       state.pdfurl = baseurl + "tcpdf/";
       state.indentUrl = APIurl + "IndentController.php";
@@ -539,9 +539,12 @@ export const getUrlSlice = createSlice({
       state.InvoiceAnalytics = APIurl + "InvoiceAnalytics.php";
       state.TeacherOccupancy = APIurl + "TeacherOccupancy.php";
       state.TimetableProcessController = APIurl + "TimetableProcessController.php";
-      state.WeeklycaledarUrl = APIurl + "WeeklyClassCalendarGet.php";
+      state.WeeklycaledarUrl = APIurl + "WeeklyClassCalendarGetv1.php";
+      //  state.WeeklycaledarUrl = APIurl + "TimeScheduleGetController.php"
       state.PartyAnalytics = APIurl + "PartyAnalytics.php";
       state.slotgetUrl = APIurl + "SlotDetailGetController.php";
+      state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
+      state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
 
     },
   },

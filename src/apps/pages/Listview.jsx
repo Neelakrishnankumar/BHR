@@ -773,6 +773,9 @@ const Listview = () => {
               : accessID == "TR337" ? (
                 false
               )
+               : accessID == "TR378" ? (
+                false
+              )
                 // : YearFlag == "true" ? (
                 : UGA_ADD ? (
 
@@ -5181,11 +5184,17 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR331" || accessID == "TR366" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
 
             <Chip
               icon={< CurrencyRupeeOutlinedIcon color="primary" />}
               label="Payment"
+              variant="outlined"
+
+            />
+            <Chip
+              icon={< AnalyticsIcon/>}
+              label="Analytics"
               variant="outlined"
 
             />

@@ -2739,7 +2739,8 @@ const EditemployeePayroll = () => {
                         name="amount"
                         type="text"
                         id="amount"
-                        label="Actual Salary"
+                        // label="Actual Salary"
+                        label="Basic Pay"
                         variant="standard"
                         focused
                         value={values.amount}

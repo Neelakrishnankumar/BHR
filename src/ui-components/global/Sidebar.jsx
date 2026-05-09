@@ -170,6 +170,7 @@ import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -554,6 +555,23 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
+           {
+            name: "Slot",
+            id: 474,
+            url: "./TR376/Slot%20Group",
+            icon: (
+              <Tooltip title="Slot">
+                <HistoryToggleOffIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR376",
+          },
           // {
           //   name: "Role",
           //   url: "./TR232/Role",
@@ -682,23 +700,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR265",
           },
-          {
-            name: "Slot",
-            id: 474,
-            url: "./TR376/Slot%20Group",
-            icon: (
-              <Tooltip title="Slot">
-                <HistoryToggleOffIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR376",
-          },
+         
           {
             name: "Leave Type",
             id: 45680,
@@ -905,6 +907,24 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR321",
           },
+          // {
+          //   name: "Settlement",
+          //   id: 434891,
+          //   //  url: "./TR243/Party",
+          //   url: "./TR380/Settlements",
+          //   icon: (
+          //     <Tooltip title="Settlement">
+          //       <CreditCardOffOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR380",
+          // },
           {
             name: "Aging Report",
             id: 434685,
@@ -1515,7 +1535,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR099",
+            UGA_ACCESSIDS: "TR095",
           },
         ],
       },
