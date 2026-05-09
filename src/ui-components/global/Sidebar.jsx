@@ -9,6 +9,7 @@ import {
   SubMenu,
 } from "react-pro-sidebar";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import ContactsIcon from '@mui/icons-material/Contacts';
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import SettingsIcon from "@mui/icons-material/Settings";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -1139,6 +1140,23 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
+            {
+            name: "Admission",
+            url: "./TR379/Admission",
+            id: 5596,
+            icon: (
+              <Tooltip title="Admission">
+                <ContactsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR379",
+          },
           {
             name: "Attendance(D)",
             url: "/Apps/TR260/Editdailyattendance",

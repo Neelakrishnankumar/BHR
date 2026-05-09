@@ -118,6 +118,96 @@ export const Productautocomplete = ({
     />
   );
 };
+
+export const AcademicAutocomplete = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="medium"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          // label={props.label || "Academic Year"}
+          placeholder="Academic Year"
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="outlined"
+          // focused
+            sx={{
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#ccc", // default grey
+      },
+      "&:hover fieldset": {
+        borderColor: "#999", // hover grey
+      },
+      // "&.Mui-focused fieldset": {
+      //   borderColor: "#1976d2", // focus blue (optional)
+      //   borderWidth: "1px",
+      // },
+    },
+  }}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
 export const CheckinAutocomplete = ({
   value = null,
   onChange,
@@ -2522,6 +2612,86 @@ export const Employeeautocomplete = ({
   );
 };
 
+export const Employeeautocomplete_v1 = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setOptions([]);
+        setError("Failed to load. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+  //   useEffect(()=>{
+  // if(defaultValue){
+  //   const defaultOption=options.find((option)=>option.Name ===defaultValue);
+  //   if(defaultOption && !value){
+  //     onChange(defaultOption);
+  //   }
+  // }
+  //   },[options,defaultValue,onChange])
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          focused
+          variant="standard"
+          {...params}
+          label={props.label}
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
 //ITEMGROUP
 export const ItemGroupLookup = ({
   value = null,

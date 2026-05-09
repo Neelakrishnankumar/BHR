@@ -216,6 +216,8 @@ import CRMPartyAnalytics from "./pages/DashBoards/CRMPartyAnalytics";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 import EditTimetablev1 from "./pages/Empolyee/EditTimetablev1";
 import ProjectTimeTable from "./pages/Empolyee/ProjectTimeTable";
+import Editadmissionform from "./pages/Empolyee/Editadmissionform";
+import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -362,6 +364,10 @@ function App() {
                   <Route
                     path="/CRMPartyAnalytics"
                     element={<CRMPartyAnalytics />}
+                  />
+                  <Route
+                    path="/ItemStokAnalytics"
+                    element={<ItemStokAnalytics />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditPayroll configuration/:id/:Mode"
@@ -1291,6 +1297,10 @@ function App() {
                   <Route
                     path="/:accessID/Editdailyattendance"
                     element={<EditdailyAttendance />}
+                  />
+                  <Route
+                  path="/:accessID/:screenName/EditAdmission/:id/:Mode"
+                  element={<Editadmissionform />}
                   />
                   <Route
                     path="/:accessID/EditAttendanceHistory"

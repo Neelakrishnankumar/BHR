@@ -219,6 +219,7 @@ const initialState = {
   getResignationUrl: "",
   postResignation: "",
   matProcurementUrl: "",
+  ItemAlyticsUrl: "",
   stockorderUrl: "",
   dcsummaryUrl: "",
   dcpostsummaryUrl: "",
@@ -411,6 +412,7 @@ export const getUrlSlice = createSlice({
       state.getResignationUrl = APIurl + "ResignationGet.php";
       state.postResignation = APIurl + "ResignationPost.php";
       state.matProcurementUrl = APIurl + "MaterialProcurementChart.php";
+      state.ItemAlyticsUrl = APIurl + "ItemAnalyticsGetController.php";
       state.stockorderUrl = APIurl + "MaterialOrderReportController.php";
       state.dcsummaryUrl = APIurl + "getdcsummary.php";
       state.dcpostsummaryUrl = APIurl + "postdcsummary.php";
