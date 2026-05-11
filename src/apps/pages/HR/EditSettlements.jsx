@@ -47,7 +47,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-d
 import { dataGridHeight } from "../../../ui-components/global/utils";
 import { useTheme } from "@emotion/react";
 import { tokens } from "../../../Theme";
-import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, PartySingleSelect, SettlementSingleSelect } from "../../../ui-components/global/Autocomplete";
 
 // import CryptoJS from "crypto-js";
 const EditSettlements = () => {
@@ -94,9 +94,9 @@ const EditSettlements = () => {
     const [dueRows, setDueRows] = useState([]);
     const [dueLoading, setDueLoading] = useState(false);
 
-    // useEffect(() => {
-    //     dispatch(getFetchData({ accessID, get: "get", recID }));
-    // }, [location.key]);
+    useEffect(() => {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+    }, [location.key]);
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -106,13 +106,25 @@ const EditSettlements = () => {
             .then((data) => {
                 setErrorMsgData(data);
                 let schemaFields = {
-                    paidamount: Yup.number()
-                        .typeError(data.OHPayment.paidamount)
-                        .required(data.OHPayment.paidamount),
+                    Amount: Yup.number()
+                        .typeError(data.Settlement.Amount)
+                        .required(data.Settlement.Amount)
+                         .moreThan(0, "Amount must be greater than 0"),
 
                     paymentmode: Yup.string()
-                        .typeError(data.OHPayment.paymentmode)
-                        .required(data.OHPayment.paymentmode),
+                        .typeError(data.Settlement.paymentmode)
+                        .required(data.Settlement.paymentmode),
+                    Date: Yup.string()
+                        .typeError(data.Settlement.Date)
+                        .required(data.Settlement.Date),
+                    GiverID: Yup.object()
+                        .typeError(data.Settlement.GiverID)
+                        .required(data.Settlement.GiverID)
+                        .nullable(),
+                    ReceiverID: Yup.object()
+                        .typeError(data.Settlement.ReceiverID)
+                        .required(data.Settlement.ReceiverID)
+                        .nullable(),
                 };
 
                 const schema = Yup.object().shape(schemaFields);
@@ -155,34 +167,52 @@ const EditSettlements = () => {
     const InitialValue = {
 
         CompanyID: CompanyID,
-        GiverID: data.GiverID || 0,
-        ReceiverID: data.ReceiverID || 0,
-        Date: data.Date || "",
-        paymentmode: data.paymentmode || "",
-        Remarks: data.Remarks || "",
+        ReceiverID: data.ReceiverID
+            ? {
+                RecordID: data.ReceiverID,
+                Code: data.ReceiverCode,
+                Name: data.ReceiverName,
+            }
+            : null,
+
+        GiverID: data.GiverID
+            ? {
+                RecordID: data.GiverID,
+                Code: data.GiverCode,
+                Name: data.GiverName,
+            }
+            : null,
+        Date: data.SettlementDate || currentDate,
+        paymentmode: data.ModeofPayment || "",
+        Remarks: data.Remark || "",
         Amount: data.Amount || 0
     };
 
 
     const Fnsave = async (values, del, override = {}) => {
 
+        let action =
+            mode === "A" && !del
+                ? "insert"
+                : mode === "E" && del
+                    ? "harddelete"
+                    : "update";
+
         const idata = {
-            PaymentMethod: values.paymentmode || "",
-            ReceiverName: values.receivername || "",
-            ReceiverMobile: values.mobilenumber || "",
-            OrderHeaderID: recID,
-            EmpID: LoginID,
-            DeliveryComments: values.DeliveryComments || "",
-            PaidComments: values.PaidComments || "",
-            NextOrdDate: values.NextOrdDate || "",
-            // ToBePaid: toBePaid || 0,
-            PaidAmount: values.paidamount || 0,
-            Rating: values.Rating || 0,
-            Comments: values.RatingComments || "",
-            AmountType: "P",
+            RecordID: recID,
+            CompanyID: CompanyID,
+            GiverID: values.GiverID.RecordID || 0,
+            ReceiverID: values.ReceiverID.RecordID || 0,
+            SettlementDate: values.Date || "",
+            ModeofPayment: values.paymentmode || "",
+            Remarks: values.Remarks || "",
+            Sortorder: "0",
+            Disable: "N",
+            DeleteFlag: "N",
+            Amount: values.Amount || "0.00"
         };
 
-        const response = await dispatch(OHPaymentUpdateController(idata));
+        const response = await dispatch(postData({ accessID, action, idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -251,7 +281,8 @@ const EditSettlements = () => {
                                 }}
                             >
                                 {mode === "E"
-                                    ? `Settlement (${state.Code || ""} )`
+                                    // ? `Settlement (${state.Code || ""} )`
+                                    ? `Settlement (Edit)`
                                     : `Settlement(New)` || ""}
                             </Typography>
                         </Breadcrumbs>
@@ -313,7 +344,15 @@ const EditSettlements = () => {
                                             name="Date"
                                             type="date"
                                             id="Date"
-                                            label="Date"
+                                            // label="Date"
+                                            label={
+                                                <span>
+                                                    Date
+                                                    <span style={{ color: "red", fontSize: "20px" }}>
+                                                        *
+                                                    </span>
+                                                </span>
+                                            }
                                             variant="standard"
                                             focused
                                             inputFormat="YYYY-MM-DD"
@@ -326,19 +365,21 @@ const EditSettlements = () => {
                                         // required
                                         //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                                         />
-                                        <CheckinAutocomplete
+                                        <SettlementSingleSelect
                                             name="GiverID"
                                             label={
                                                 <span>
-                                                    Giver Name
+                                                    {/* Giver Name */}
+                                                    Giver
                                                     <span style={{ color: "red", fontSize: "20px" }}>
                                                         *
                                                     </span>
                                                 </span>
                                             }
-                                            variant="outlined"
+                                            // variant="outlined"
                                             id="GiverID"
                                             value={values.GiverID}
+                                            focused
                                             onChange={(newValue) => {
                                                 setFieldValue("GiverID", {
                                                     RecordID: newValue.RecordID,
@@ -352,28 +393,39 @@ const EditSettlements = () => {
                                             helperText={
                                                 touched.GiverID && errors.GiverID
                                             }
+                                            // url={`${listViewurl}?data=${JSON.stringify({
+                                            //     Query: {
+                                            //         AccessID: "2178",
+                                            //         ScreenName: "SETTLEMENTGIVER",
+                                            //         VerticalLicense: Subscriptionlastthree,
+                                            //         Filter: `CompanyID=${CompanyID}`,
+                                            //         Any: "",
+                                            //     },
+                                            // })}`}
                                             url={`${listViewurl}?data=${JSON.stringify({
                                                 Query: {
-                                                    AccessID: "2048",
-                                                    ScreenName: "GiverID",
+                                                    AccessID: "2179",
+                                                    ScreenName: "SETTLEMENTGIVER",
                                                     VerticalLicense: Subscriptionlastthree,
                                                     Filter: `CompanyID=${CompanyID}`,
                                                     Any: "",
                                                 },
                                             })}`}
                                         />
-                                        <CheckinAutocomplete
+                                        <SettlementSingleSelect
                                             name="ReceiverID"
                                             label={
                                                 <span>
-                                                    Receiver Name
+                                                    {/* Receiver Name */}
+                                                    Receiver
                                                     <span style={{ color: "red", fontSize: "20px" }}>
                                                         *
                                                     </span>
                                                 </span>
                                             }
-                                            variant="outlined"
+                                            // variant="outlined"
                                             id="ReceiverID"
+                                            focused
                                             value={values.ReceiverID}
                                             onChange={(newValue) => {
                                                 setFieldValue("ReceiverID", {
@@ -388,10 +440,11 @@ const EditSettlements = () => {
                                             helperText={
                                                 touched.ReceiverID && errors.ReceiverID
                                             }
-                                            url={`${listViewurl}?data=${JSON.stringify({
+                                            
+                                             url={`${listViewurl}?data=${JSON.stringify({
                                                 Query: {
-                                                    AccessID: "2048",
-                                                    ScreenName: "ReceiverID",
+                                                    AccessID: "2178",
+                                                    ScreenName: "SETTLEMENTRECEIVER",
                                                     VerticalLicense: Subscriptionlastthree,
                                                     Filter: `CompanyID=${CompanyID}`,
                                                     Any: "",
@@ -400,7 +453,15 @@ const EditSettlements = () => {
                                         />
                                         <TextField
                                             select
-                                            label="Payment Mode"
+                                            // label="Payment Mode"
+                                            label={
+                                                <span>
+                                                    Mode Of Payment
+                                                    <span style={{ color: "red", fontSize: "20px" }}>
+                                                        *
+                                                    </span>
+                                                </span>
+                                            }
                                             id="paymentmode"
                                             name="paymentmode"
                                             value={values.paymentmode}
@@ -425,14 +486,42 @@ const EditSettlements = () => {
                                         <TextField
                                             name="Amount"
                                             id="Amount"
-                                            label="Amount"
+                                            // label="Amount"
+                                            label={
+                                                <span>
+                                                    Amount
+                                                    <span style={{ color: "red", fontSize: "20px" }}>
+                                                        *
+                                                    </span>
+                                                </span>
+                                            }
                                             type="text"
                                             inputMode="decimal"
                                             variant="standard"
                                             focused
                                             value={values.Amount}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
+                                            // onBlur={handleBlur}
+                                            // onChange={handleChange}
+                                            onChange={(e) => {
+                                                // allow only numbers + decimal
+                                                const val = e.target.value;
+                                                if (/^\d*\.?\d*$/.test(val)) {
+                                                    setFieldValue("Amount", val);
+                                                }
+                                            }}
+                                            onBlur={(e) => {
+                                                let val = e.target.value;
+
+                                                if (val === "" || val === ".") {
+                                                    setFieldValue("Amount", "");
+                                                    return;
+                                                }
+
+                                                const num = parseFloat(val);
+                                                if (!isNaN(num)) {
+                                                    setFieldValue("Amount", num.toFixed(2)); // ✅ forces .00
+                                                }
+                                            }}
                                             error={!!touched.Amount && !!errors.Amount}
                                             helperText={touched.Amount && errors.Amount}
                                             InputProps={{

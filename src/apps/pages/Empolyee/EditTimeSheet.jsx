@@ -72,7 +72,7 @@ import { useDispatch } from "react-redux";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import EditIcon from "@mui/icons-material/Edit";
 import { toast } from "react-hot-toast";
-import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
+import { Employeeautocomplete, TimeSheetEmployeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoneIcon from "@mui/icons-material/Done";
@@ -705,7 +705,8 @@ const EditTimeSheet = () => {
                       width: 200,
                     }}
                   />
-                  <Employeeautocomplete
+                  {/* <Employeeautocomplete */}
+                  <TimeSheetEmployeeautocomplete
                     sx={{ width: 400 }}
                     name="Employee"
                     label="Personnel"
