@@ -6337,12 +6337,12 @@ const ListviewSecondary = () => {
                       />
                       <Chip
                         icon={<LockResetOutlinedIcon color="error" />}
-                        label="Unprocess"
+                        label="Process"
                         variant="outlined"
                       />
                        <Chip
                       icon={<RestartAltOutlinedIcon color="error" />}
-                        label="Process"
+                        label="Unprocess"
                         variant="outlined"
                       />
 

@@ -338,7 +338,8 @@ const initialState = {
   PartyAnalytics:"",
   slotgetUrl: "",
   TimeTableExcelGet: "",
-  TimeTableExcelPost: ""
+  TimeTableExcelPost: "",
+  TimeTableGenerateget:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -545,6 +546,7 @@ export const getUrlSlice = createSlice({
       state.slotgetUrl = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
+      state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController";
 
     },
   },
