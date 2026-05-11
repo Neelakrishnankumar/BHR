@@ -12,6 +12,7 @@ import LoginChangepass from "./apps/Security/Loginchangepassword";
 import Logochange from "./apps/Security/Changelogo";
 import Forgetpassword_1 from "./apps/Security/Forgetpswrd";
 import Forgetpassword_2 from "./apps/Security/Forgetchangepswrd";
+import EditadmissionForm_v1 from "./apps/pages/Empolyee/EditadmissionForm_v1";
 
 const App = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const App = () => {
               {/* <Route path="/*" element={<UnderMaintenance />} /> */}
         <Route path="/*" element={<Login />} />
         <Route path="/Apps/*" element={<Apps />} />
+         <Route path="/AdmissionForm" element={<EditadmissionForm_v1 />} />
         {/* <Route path="/Forgotpassword" element={<Forgotlogin />} /> */}
           {/* <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
           <Route path="/ChangeyourPassword_2" element={<Logochange />} />

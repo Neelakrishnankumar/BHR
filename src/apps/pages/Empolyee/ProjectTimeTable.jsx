@@ -36,9 +36,6 @@ import { getConfig } from "../../../config";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
 import { DataGrid } from "@mui/x-data-grid";
 
-// ─── Helper ──────────────────────────────────────────────────────────────────
-// Unique key per cell: "rowId__timeSlotString"
-// e.g. "3__1:30 PM - 2:10 PM"
 const cellKey = (rowId, colField) => `${rowId}__${colField}`;
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -84,7 +81,8 @@ const ProjectTimeTable = () => {
     // ── slotID map from GET: { "9:00 AM - 9:45 AM": 1240, ... } ─────────────
     // colField (the time string) → SlotID (number)
     const slotIDMap = calendarData?.slotID || {};
-
+const [footerHeight, setFooterHeight] = useState(60);
+    const [isReady, setIsReady] = useState(false);
     // ── detailID map from GET ─────────────────────────────────────────────────
     // GET structure: { "Monday": { "1:30 PM - 2:10 PM": 1866, ... }, ... }
     // We convert this to cellKey format: { "rowId__timeSlot": DetailID }
@@ -142,7 +140,29 @@ const ProjectTimeTable = () => {
             .then((data) => setErrorMsgData(data))
             .catch(() => {});
     }, []);
+    useEffect(() => {
+    if (!FooterImg) return;
 
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+    const aspectRatio = img.height / img.width;
+
+    const pageWidth = 595;
+    const MAX_FOOTER_HEIGHT = 80; 
+
+    const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+    );
+
+    setFooterHeight(calculatedHeight);
+    setIsReady(true);
+    };
+    }, [FooterImg]);
     // ── Initial GET ───────────────────────────────────────────────────────────
     useEffect(() => {
         dispatch(
@@ -341,7 +361,19 @@ const ProjectTimeTable = () => {
 
             // Only persist locally when API confirms success (Status === "Y")
             // Status === "E" means backend rejected it — do NOT show chips
-            if (result?.success == false) {
+            // if (result?.success == false) {
+            //     setCellEdits((prev) => ({
+            //         ...prev,
+            //         [activeKey]: {
+            //             subject   : draft.subject,
+            //             teacher   : draft.teacher,
+            //             isExisting: true,
+            //             DetailID  : storedDetailID > 0 ? storedDetailID : (getDetailID ?? -1),
+            //         },
+            //     }));
+            //     closeEdit();
+            // }
+             if (result?.success) {
                 setCellEdits((prev) => ({
                     ...prev,
                     [activeKey]: {
@@ -353,16 +385,7 @@ const ProjectTimeTable = () => {
                 }));
                 closeEdit();
             }
-             if (result?.success) {
-                setCellEdits((prev) => ({
-                    ...prev,
-                    [activeKey]: {
-                        subject   : draft.subject,
-                        teacher   : draft.teacher,
-                        isExisting: true,
-                        DetailID  : storedDetailID > 0 ? storedDetailID : (getDetailID ?? -1),
-                    },
-                }));
+             if (!result?.success) {               
                 closeEdit();
             }
             // On E: popover stays open, user can correct and retry
@@ -642,6 +665,7 @@ const ProjectTimeTable = () => {
                             <ProjectTimeTablePDF
                                 rows={WCrows || []} columns={WEEKcolumns || []}
                                 breakSlots={breakSlots}
+                                footerHeight={footerHeight}
                                 projectName={rowData.projectName} termName={rowData.TermName}
                                 filters={{ Imageurl: baseurlUAAM, HeaderImg, FooterImg }}
                             />

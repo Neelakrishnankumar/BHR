@@ -160,9 +160,17 @@ const EditAttendanceHistory = () => {
 
     const savedMonth = sessionStorage.getItem("month");
     const savedYear = Number(sessionStorage.getItem("year"));
-    const month = savedMonth || currentMonthNumber;
-    const year = savedYear || currentYear;
+    // const month = savedMonth || currentMonthNumber;
+    // const year = savedYear || currentYear;
+ 
+//for always dispalys current month & Current Year
 
+    const month = currentMonthNumber ? currentMonthNumber : savedMonth;
+    const year = currentYear ? currentYear : savedYear;
+    console.log(currentMonthNumber,year, savedMonth, savedYear, "--month & year in useeffect");
+    sessionStorage.setItem("month", month);
+    sessionStorage.setItem("year", year);
+  // end ---
     const data = {
       Month: month,
       Year: year,

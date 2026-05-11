@@ -536,9 +536,9 @@ const TeacherTimetable = ({ teacher, summary }) => {
                 {summary && (
                     <Box display="flex" gap={1} flexWrap="wrap">
                         {[
-                            { label: "TOTAL", value: summary.TotalHours, color: "#94A3B8" },
-                            { label: "OCCUPIED", value: summary.OccupiedHours, color: "#FB923C" },
-                            { label: "FREE", value: summary.FreeHours, color: "#4ADE80" },
+                            { label: "Total", value: summary.TotalHours, color: "#94A3B8" },
+                            { label: "Occupied", value: summary.OccupiedHours, color: "#FB923C" },
+                            { label: "Free", value: summary.FreeHours, color: "#4ADE80" },
                         ].map(({ label, value, color }) => (
                             <Box key={label} sx={{
                                 background: "rgba(255,255,255,0.08)",
@@ -848,7 +848,7 @@ const StaffTimetable = () => {
                     enableReinitialize
                     validationSchema={validationSchema}
                 >
-                    {({ values, touched, errors, handleSubmit, setFieldValue }) => (
+                    {({ values, touched, errors, handleSubmit, setFieldValue, resetForm }) => (
                         <form onSubmit={handleSubmit}>
                             {/* ── FILTERS ── */}
                             <Box
@@ -893,6 +893,18 @@ const StaffTimetable = () => {
                                 <Button color="secondary" variant="contained" type="submit" disabled={apiLoading}>
                                     {apiLoading ? "Loading…" : "Apply"}
                                 </Button>
+                                        {/* ✅ RESET BUTTON — clears everything */}
+                                      <Button
+                                        color="error"
+                                        variant="contained"
+                                        // disabled={apiLoading}
+                                        onClick={() => {
+                                          resetForm();          // resets Teacher & terms to initial values
+                                          setApiData(null);     // hides PDF icon, summary chips, timetables
+                                        }}
+                                      >
+                                        Reset
+                                      </Button>
 
                                 {apiData && apiData.Teachers && apiData.Teachers.length > 0 && (
                                     <PDFDownloadLink
@@ -903,11 +915,12 @@ const StaffTimetable = () => {
                                                     Imageurl: baseurlUAAM,
                                                     HeaderImg: HeaderImg,
                                                     FooterImg: FooterImg,
+                                                    TitleName: "Staff Timetable Report"
                                                 }}
-                                                reportTitle="Teacher Occupancy Report"
+                                                reportTitle="Staff Timetable Report"
                                             />
                                         }
-                                        fileName={`Teacher_Occupancy_Report_${getFormattedDate()}.pdf`}
+                                        fileName={`Staff_Timetable_Report_${getFormattedDate()}.pdf`}
                                         style={{ color: "#d32f2f", cursor: "pointer" }}
                                     >
                                         {({ loading }) =>

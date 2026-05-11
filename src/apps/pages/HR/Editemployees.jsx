@@ -9085,14 +9085,16 @@ const Editemployee = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         as={Checkbox}
-                        label="office"
+                        label={SubscriptionCode ? "School" : "office"}
                       // disabled
                       />
 
                       <FormLabel focused={false}>
-                        Office
+                        {SubscriptionCode ? "School" : "office"}
                       </FormLabel>
-                      <Field
+                     {/* Extra options only when no SubscriptionCode */}
+
+                       <Field
                         //  size="small"
                         type="checkbox"
                         name="workfromhome"
@@ -9100,13 +9102,15 @@ const Editemployee = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         as={Checkbox}
-                        label="workfromhome"
+                        label={SubscriptionCode ? "Online Class" : "Work From Home"}
                       // disabled
                       />
 
                       <FormLabel focused={false}>
-                        Work From Home
+                        
+                         {SubscriptionCode ? "Online Class" : "Work From Home"}
                       </FormLabel>
+
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -9122,6 +9126,8 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Hybrid
                       </FormLabel>
+                          {!SubscriptionCode && (
+      <>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -9137,7 +9143,10 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Onsite
                       </FormLabel>
+                     </>
+    )}
                     </Box>
+                     
                   </Box>
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />

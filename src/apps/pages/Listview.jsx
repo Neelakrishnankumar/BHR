@@ -29,6 +29,7 @@ import {
 } from "@mui/x-data-grid";
 import Swal from "sweetalert2";
 import BalanceIcon from "@mui/icons-material/Balance";
+import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -762,6 +763,8 @@ const Listview = () => {
               false
             ) : accessID == "TR370" ? (
               false
+            ) : accessID == "TR379" ? (
+              false
             ) : accessID == "TR330" ? (
               false
             )
@@ -832,6 +835,15 @@ const Listview = () => {
               <Tooltip arrow title="Party Analytics">
                 <IconButton 
                 onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
+
+                   {accessID === "TR315" && (
+              <Tooltip arrow title="Item Analytics">
+                <IconButton 
+                onClick={() => navigate("/Apps/ItemStokAnalytics")}
                 >
                   <AssessmentIcon />
                 </IconButton>
@@ -5270,6 +5282,12 @@ const Listview = () => {
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
+               <Chip
+                icon={<SensorOccupiedIcon color="primary" />}
+                label="Teacher Productivity"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
             </Box>
           )
            : accessID == "TR378" ? (
@@ -5336,11 +5354,23 @@ const Listview = () => {
                   label="Download PDF"
                   variant="outlined"
                 />
-                {/* <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Milestone"
-              variant="outlined"
-            /> */}
+             
+              </Box>
+                ) : accessID == "TR379" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+               
+                <Chip
+                  icon={<PictureAsPdfIcon color="error" />}
+                  label="AdmissionForm PDF"
+                  variant="outlined"
+                />
+             
               </Box>
             ) : accessID == "TR128" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap="5px">

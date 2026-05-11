@@ -219,6 +219,7 @@ const initialState = {
   getResignationUrl: "",
   postResignation: "",
   matProcurementUrl: "",
+  ItemAlyticsUrl: "",
   stockorderUrl: "",
   dcsummaryUrl: "",
   dcpostsummaryUrl: "",
@@ -337,7 +338,8 @@ const initialState = {
   PartyAnalytics:"",
   slotgetUrl: "",
   TimeTableExcelGet: "",
-  TimeTableExcelPost: ""
+  TimeTableExcelPost: "",
+  TimeTableGenerateget:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -411,6 +413,7 @@ export const getUrlSlice = createSlice({
       state.getResignationUrl = APIurl + "ResignationGet.php";
       state.postResignation = APIurl + "ResignationPost.php";
       state.matProcurementUrl = APIurl + "MaterialProcurementChart.php";
+      state.ItemAlyticsUrl = APIurl + "ItemAnalyticsGetController.php";
       state.stockorderUrl = APIurl + "MaterialOrderReportController.php";
       state.dcsummaryUrl = APIurl + "getdcsummary.php";
       state.dcpostsummaryUrl = APIurl + "postdcsummary.php";
@@ -543,6 +546,7 @@ export const getUrlSlice = createSlice({
       state.slotgetUrl = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
+      state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController";
 
     },
   },

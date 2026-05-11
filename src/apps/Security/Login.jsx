@@ -724,6 +724,7 @@ const Login = () => {
       var CompanyLogo = data.payload.CompanyLogo
       var CompanyHeader = data.payload.CompanyHeader
       var CompanyFooter = data.payload.CompanyFooter
+      var CompanyCode = data.payload.CompanyCode
       var firstLogin = data.payload.firstLogin
       var CompanySignature = data.payload.CompanySignature
       //  var firstLogin = "Y";
@@ -756,6 +757,7 @@ const Login = () => {
       sessionStorage.setItem("CompanyLogo", CompanyLogo)
       sessionStorage.setItem("CompanyHeader", CompanyHeader)
       sessionStorage.setItem("CompanyFooter", CompanyFooter)
+      sessionStorage.setItem("CompanyCode", CompanyCode)
       sessionStorage.setItem("Overhead", Overhead)
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("CompanySignature", CompanySignature)

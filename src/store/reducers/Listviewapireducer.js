@@ -47,6 +47,7 @@ import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import {
+  getFetchData,
   getOrderdetailReport,
   getProjectCosting,
   paySlipGet,
@@ -123,6 +124,7 @@ import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 
 const initialState = {
@@ -1843,6 +1845,159 @@ export const fetchListview =
                 },
               };
             }
+
+             else if (AccessID == "TR379") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  const dispatch = store.dispatch;
+                  // const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
+                  // const PDFButton = ({ ProjectID, EmployeeID }) => {
+                  //   const dispatch = store.dispatch;
+                  //   const [loading, setLoading] = React.useState(false);
+
+                  //   const handlePDFGET = async () => {
+                  //     try {
+                  //       setLoading(true);
+
+                  //       const resultAction = await dispatch(
+                  //         // getProjectCosting({ ProjectID, EmployeeID }),
+                  //         getFetchData({
+                  //           accessid: "TR379",
+                  //           action: "get",
+                  //           recID: params.row.RecordID
+                  //         })
+                  //       );
+
+                  //       const data = resultAction.payload; // <-- this depends on how your thunk is defined
+                  //       if (!data?.HeaderData?.DetailData?.length) {
+                  //         alert(
+                  //           "No Costing available to generate PDF. Kindly add costing...",
+                  //         );
+                  //         return;
+                  //       }
+
+                  //       // Generate and download PDF
+                  //       const blob = await pdf(
+                  //         <AdmissionPDF data={data} UserName={UserName} />,
+                  //       ).toBlob();
+                  //       const link = document.createElement("a");
+                  //       link.href = URL.createObjectURL(blob);
+                  //       link.download = "admissionform.pdf";
+                  //       link.click();
+                  //     } catch (err) {
+                  //       console.error("PDF generation failed", err);
+                  //     } finally {
+                  //       setLoading(false);
+                  //     }
+                  //   };
+
+                  //   return (
+                  //     <Tooltip title="Form PDF">
+                  //       <IconButton
+                  //         color="info"
+                  //         size="small"
+                  //         onClick={handlePDFGET}
+                  //       >
+                  //         {loading ? (
+                  //           <CircularProgress size={20} />
+                  //         ) : (
+                  //           <PictureAsPdfIcon color="error" />
+                  //         )}
+                  //       </IconButton>
+                  //     </Tooltip>
+                  //   );
+                  // };
+                  
+                  
+                  const PDFButton = ({ recordID, UserName }) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = React.useState(false);
+
+  const handlePDFGET = async () => {
+    try {
+      setLoading(true);
+
+      const resultAction = await dispatch(
+        getFetchData({
+          accessID: "TR379",
+          get: "get",
+          recID: recordID,
+        })
+      );
+
+      const data = resultAction.payload;
+
+    if (!data?.Data) {
+  alert("No data available to generate PDF");
+  return;
+}
+
+      const blob = await pdf(
+        <AdmissionPDF data={data} UserName={UserName} />
+      ).toBlob();
+
+      // const link = document.createElement("a");
+      // link.href = URL.createObjectURL(blob);
+          const url = URL.createObjectURL(blob);
+
+          // ✅ OPEN IN NEW TAB
+    window.open(url, "_blank");
+      // link.download = "admissionform.pdf";
+      // link.click();
+    } catch (err) {
+      console.error("PDF generation failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Tooltip title="Download PDF">
+      <IconButton color="error" size="small" onClick={handlePDFGET}>
+        {loading ? <CircularProgress size={20} /> : <PictureAsPdfIcon />}
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+                  return (
+                    <Box>
+                        <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      <PDFButton
+        recordID={params.row.RecordID}
+        UserName={params.row.UserName}
+      />
+                     {/* <Link 
+                     to={`./EditAdmission/${params.row.RecordID}/E`}
+                     >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <PictureAsPdfIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link> */}
+                    
+                    </Box>
+                  );
+                },
+              };
+            }
+
             else if (AccessID == "TR205") {
               obj = {
                 field: "action",
@@ -7236,7 +7391,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             {(params.row.Description === "Teaching Staff" ||
               params.row.Description === "Staff") && (
-                <Tooltip title="Teacher Occupancy">
+                <Tooltip title="Teacher Productivity">
                   <IconButton
                     color="info"
                     size="small"
@@ -7377,6 +7532,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
+        
 
         {accessID === "TR318" && (
           <>
