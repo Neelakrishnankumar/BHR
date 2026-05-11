@@ -7391,7 +7391,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             {(params.row.Description === "Teaching Staff" ||
               params.row.Description === "Staff") && (
-                <Tooltip title="Teacher Occupancy">
+                <Tooltip title="Teacher Productivity">
                   <IconButton
                     color="info"
                     size="small"

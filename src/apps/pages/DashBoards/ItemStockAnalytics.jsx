@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {
   Box,
   Typography,
@@ -131,8 +132,17 @@ export default function ItemStokAnalytics() {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   var accessID = params.accessID;
+  const baseAPIurl = config.API_URL;
+console.log(baseAPIurl , "---baseAPIurl");
+
+  const sessionFromDate = sessionStorage.getItem("fromDate") || "";
+const sessionToDate = sessionStorage.getItem("toDate") || "";
+const CompCode = sessionStorage.getItem("CompanyCode");
+console.log(CompCode, "session CompCode");
+
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
+
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
@@ -198,13 +208,68 @@ console.log(itemstockDataAnalytics, "--Find itemstockDataAnalytics");
 
 //=================================================step one================================ 
 const [officerIdx, setOfficerIdx] = useState(0);
+// Add this state after your existing states
+const [activeTab, setActiveTab] = useState("stockIn"); // default to Stock Take
+const officer = itemstockDataAnalytics[officerIdx] || null;
+const [empCode, SetempCode] = useState(''); 
 
+const [page, setPage] = useState(0);
+// Change from const to state
+const [rowsPerPage, setRowsPerPage] = useState(5);
+// Handle rows per page change
+const handleRowsPerPageChange = (newValue) => {
+  setRowsPerPage(newValue);
+  setPage(0); // reset to first page
+};
+// Map KPI key to data array
+const getActiveData = () => {
+  if (!officer) return [];
+  const dataMap = {
+    stockIn: officer.StockTakeData || [],
+    orders: officer.StockRequirementData || [],
+    returns: officer.StockRearrangementData || [],
+    pending: officer.StockExpiryData || [],
+    removed: officer.StockScrapData || [],
+  };
+  return dataMap[activeTab] || [];
+};
+
+// Add this mapping near your KPI_CONFIG
+const TAB_TYPE_MAP = {
+  stockIn: "ST",
+  orders:  "SR",
+  returns: "SA",
+  pending: "SE",
+  removed: "SS",
+};
+const activeData = getActiveData();
 // Reset officer index when data changes
 useEffect(() => {
   setOfficerIdx(0);
+  setActiveTab("stockIn");
+   setPage(0);
 }, [itemstockDataAnalytics.length]);
 
-const officer = itemstockDataAnalytics[officerIdx] || null;
+const groupedByDate = useMemo(() => {
+  const groups = {};
+  activeData.forEach((row) => {
+    const date = row.CreatedDate;
+    if (!groups[date]) {
+      groups[date] = { date, rows: [], count: 0 };
+    }
+    groups[date].rows.push(row);
+    groups[date].count += 1;
+  });
+  // Return as sorted array
+  return Object.values(groups).sort((a, b) =>
+    new Date(b.date.split("-").reverse().join("-")) -
+    new Date(a.date.split("-").reverse().join("-"))
+  );
+}, [activeData]);
+
+// Paginate the grouped entries (not individual rows)
+const paginatedGroups = groupedByDate.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+const totalPages = Math.ceil(groupedByDate.length / rowsPerPage);
 
 const switchOfficer = () => {
   setOfficerIdx((prev) => (prev + 1) % itemstockDataAnalytics.length);
@@ -337,6 +402,8 @@ const KPI_CONFIG = [
               value={values.Employee}
               onChange={(newValue) => {
                 setFieldValue("Employee", newValue);
+                console.log(newValue, "--emplouee code find");
+                SetempCode(newValue.Code);
               }}
               url={`${listViewurl}?data=${encodeURIComponent(
                 JSON.stringify({
@@ -374,7 +441,13 @@ const KPI_CONFIG = [
               type="date"
               name="fromDate"
               value={values.fromDate}
-              onChange={handleChange}
+              // onChange={handleChange}
+               onChange={(e) => {
+    handleChange(e);
+
+    // Store in sessionStorage
+    sessionStorage.setItem("fromDate", e.target.value);
+  }}
               InputLabelProps={{ shrink: true }}
             />
           </Box>
@@ -400,7 +473,13 @@ const KPI_CONFIG = [
               type="date"
               name="toDate"
               value={values.toDate}
-              onChange={handleChange}
+                onChange={(e) => {
+    handleChange(e);
+
+    // Store in sessionStorage
+    sessionStorage.setItem("toDate", e.target.value);
+  }}
+              // onChange={handleChange}
               InputLabelProps={{ shrink: true }}
             />
           </Box>
@@ -431,6 +510,34 @@ const KPI_CONFIG = [
           >
             RESET
           </Button>
+
+              <Button
+              variant="outlined"
+              size="small"
+              startIcon={
+         
+               <IconButton
+                component="a"
+    href={`${baseAPIurl}dompdf/Stock_Report.php?CompanyCode=${CompCode}&EmployeeCode=${empCode}&FromDate=${sessionFromDate}&ToDate=${sessionToDate}&Type=all`}
+    target="_blank"
+    rel="noreferrer"
+                size="small"
+                sx={{
+                  // border: "1px solid #E0DDD6",
+                  // borderRadius: 1.5,
+                  color: "#fa4545",
+                  background: "#FFF5F5",
+                  "&:hover": { background: "#FFE5E5" },
+                }}
+              >
+                <PictureAsPdfIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+              }
+              sx={{ borderColor: "#D3D1C7", color: "#555", fontSize: 12, "&:hover": { borderColor: "#1D6B4E" } }}
+            >
+              All
+            </Button>
+
         </Stack>
       </Box>
     </form>
@@ -481,59 +588,76 @@ const KPI_CONFIG = [
   </Box>
 )}
 
-          {/* ── KPI ROW ───────────────────────────────────────────────── */}
-          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", borderBottom: "1px solid #E0DDD6", background: "#fff" }}>
-            {KPI_CONFIG.map(({ key, label, Icon, bg, color }, i) => (
-              <Box
-                key={key}
-                sx={{
-                  py: 2.5, textAlign: "center",
-                  borderRight: i < 4 ? "1px solid #E0DDD6" : "none",
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 0.75,
-                }}
-              >
-                <Box sx={{ width: 40, height: 40, background: bg, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon sx={{ fontSize: 20, color }} />
-                </Box>
-                <Typography sx={{ fontSize: 26, fontWeight: 700, color, lineHeight: 1 }}>
-                  {kpiValues[key]}
-                </Typography>
-                <Typography sx={{ fontSize: 12, color: "#888780" }}>{label}</Typography>
-              </Box>
-            ))}
-          </Box>
+        {/* ── KPI ROW ───────────────────────────────────────────────── */}
+<Box sx={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", borderBottom: "1px solid #E0DDD6", background: "#fff" }}>
+  {KPI_CONFIG.map(({ key, label, Icon, bg, color }, i) => (
+    <Box
+      key={key}
+      onClick={() => setActiveTab(key)}
+      sx={{
+        py: 2.5, textAlign: "center",
+        borderRight: i < 4 ? "1px solid #E0DDD6" : "none",
+        display: "flex", flexDirection: "column", alignItems: "center", gap: 0.75,
+        cursor: "pointer",
+        transition: "background 0.15s",
+        background: activeTab === key ? `${bg}99` : "#fff",
+        borderBottom: activeTab === key ? `3px solid ${color}` : "3px solid transparent",
+        "&:hover": { background: `${bg}55` },
+      }}
+    >
+      <Box sx={{ width: 40, height: 40, background: bg, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Icon sx={{ fontSize: 20, color }} />
+      </Box>
+      <Typography sx={{ fontSize: 26, fontWeight: 700, color, lineHeight: 1 }}>
+        {kpiValues[key]}
+      </Typography>
+      <Typography sx={{ fontSize: 12, color: activeTab === key ? color : "#888780", fontWeight: activeTab === key ? 600 : 400 }}>
+        {label}
+      </Typography>
+    </Box>
+  ))}
+</Box>
 
           {/* ── TOTAL ROW ─────────────────────────────────────────────── */}
           <Box sx={{ px: 3, py: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", background: "#F8F6F1", borderBottom: "1px solid #E0DDD6" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 500, color: "#444" }}>Total activities</Typography>
-            <Box sx={{ background: "#1D6B4E", color: "#fff", fontWeight: 700, fontSize: 16, width: 38, height: 38, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {filtered.length}
+            <Box sx={{ background: "#1d8077", color: "#fff", fontWeight: 700, fontSize: 16, width: 38, height: 38, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {groupedByDate.length}
             </Box>
           </Box>
 
           {/* ── LIST HEADER ───────────────────────────────────────────── */}
           <Box sx={{ px: 3, py: 1.25, display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fff", borderBottom: "1px solid #E0DDD6" }}>
             <Stack direction="row" spacing={1} alignItems="center">
-              <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#1A1A1A" }}>Stock take</Typography>
-              {["All", "Completed", "Pending", "In Review"].map((s) => (
-                <Chip
-                  key={s}
-                  label={s}
-                  size="small"
-                  onClick={() => setStatusTab(s)}
-                  sx={{
-                    fontWeight: 500, fontSize: 12, cursor: "pointer",
-                    background: statusTab === s ? "#1D6B4E" : "transparent",
-                    color: statusTab === s ? "#fff" : "#555",
-                    border: statusTab === s ? "1px solid #1D6B4E" : "1px solid #D3D1C7",
-                  }}
-                />
-              ))}
+              <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#1A1A1A" }}>
+              
+                {KPI_CONFIG.find((k) => k.key === activeTab)?.label ?? "Stock Take"}
+
+                </Typography>
+            
             </Stack>
             <Button
               variant="outlined"
               size="small"
-              startIcon={<FileDownloadOutlinedIcon />}
+              startIcon={
+         
+               <IconButton
+                component="a"
+    href={`${baseAPIurl}dompdf/Stock_Report.php?CompanyCode=${CompCode}&EmployeeCode=${empCode}&FromDate=${sessionFromDate}&ToDate=${sessionToDate}&Type=${TAB_TYPE_MAP[activeTab]}`}
+    target="_blank"
+    rel="noreferrer"
+                size="small"
+                sx={{
+                  // border: "1px solid #E0DDD6",
+                  // borderRadius: 1.5,
+                  color: "#fa4545",
+                  background: "#FFF5F5",
+                  "&:hover": { background: "#FFE5E5" },
+                }}
+              >
+                <PictureAsPdfIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+              }
               sx={{ borderColor: "#D3D1C7", color: "#555", fontSize: 12, "&:hover": { borderColor: "#1D6B4E" } }}
             >
               Export
@@ -541,71 +665,263 @@ const KPI_CONFIG = [
           </Box>
 
           {/* ── TABLE ─────────────────────────────────────────────────── */}
-          <TableContainer sx={{ background: "#fff" }}>
-            <Table size="medium">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ width: 48 }}>#</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Employee</TableCell>
-                  <TableCell>Department</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell align="right">Items</TableCell>
-                  <TableCell sx={{ width: 48 }} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filtered.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center" sx={{ py: 4, color: "#B4B2A9", fontSize: 14 }}>
-                      No records found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filtered.map((row, i) => {
-                    const { bg, color } = statusStyle(row.status);
-                    return (
-                      <TableRow key={row.id} hover sx={{ "&:hover": { background: "#F5FBF7" }, cursor: "pointer" }}>
-                        <TableCell sx={{ color: "#B4B2A9", fontSize: 13, fontWeight: 500 }}>
-                          {String(i + 1).padStart(2, "0")}
-                        </TableCell>
-                        <TableCell>
-                          <Stack direction="row" alignItems="center" spacing={1}>
-                            <FiberManualRecordIcon sx={{ fontSize: 10, color: "#1D9E75" }} />
-                            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>{row.date}</Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell>
-                          <Stack direction="row" alignItems="center" spacing={1.5}>
-                            <Avatar sx={{ width: 30, height: 30, fontSize: 11, fontWeight: 600, background: avColor(row.av), color: avText(row.av) }}>
-                              {row.av}
-                            </Avatar>
-                            <Typography sx={{ fontSize: 13 }}>{row.emp}</Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell sx={{ fontSize: 13, color: "#666" }}>{row.dept}</TableCell>
-                        <TableCell>
-                          <Chip
-                            label={row.status}
-                            size="small"
-                            sx={{ background: bg, color, fontWeight: 600, fontSize: 11, border: "none" }}
-                          />
-                        </TableCell>
-                        <TableCell align="right" sx={{ fontSize: 14, fontWeight: 600, color: "#1A1A1A" }}>
-                          {row.items}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton size="small" sx={{ border: "1px solid #E0DDD6", borderRadius: 1.5, color: "#E24B4A" }}>
-                            <PictureAsPdfOutlinedIcon sx={{ fontSize: 16 }} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+<TableContainer sx={{ background: "#fff" }}>
+  <Table size="medium">
+    <TableHead>
+      <TableRow>
+        <TableCell sx={{ width: 48 }}>#SL</TableCell>
+        <TableCell>Date</TableCell>
+        <TableCell align="right">Items Count</TableCell>
+        <TableCell sx={{ width: 60 }} />
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {groupedByDate.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={4} align="center" sx={{ py: 4, color: "#B4B2A9", fontSize: 14 }}>
+            No records found
+          </TableCell>
+        </TableRow>
+      ) : (
+        paginatedGroups.map((group, i) => (
+          <TableRow
+            key={group.date}
+            hover
+            sx={{ "&:hover": { background: "#F5FBF7" }, cursor: "pointer" }}
+          >
+            {/* Serial Number */}
+            <TableCell sx={{ color: "#B4B2A9", fontSize: 13, fontWeight: 500 }}>
+              {String(page * rowsPerPage + i + 1).padStart(2, "0")}
+            </TableCell>
+
+            {/* Date with calendar icon */}
+            <TableCell>
+              <Stack direction="row" alignItems="center" spacing={1.5}>
+                <Box
+                  sx={{
+                    width: 34, height: 34,
+                    background: "#FFF0EE",
+                    borderRadius: 1.5,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  {/* Calendar icon SVG */}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#E05A3A">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                  </svg>
+                </Box>
+                <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#1A1A1A" }}>
+                  {group.date}
+                </Typography>
+              </Stack>
+            </TableCell>
+
+            {/* Items Count badge */}
+            <TableCell align="right">
+              <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1}>
+                <Typography sx={{ fontSize: 13, color: "#666" }}>
+                  {group.count} {group.count === 1 ? "Item" : "Items"}
+                </Typography>
+                <Box
+                  sx={{
+                    minWidth: 28, height: 28,
+                    background: "#1d8077",
+                    color: "#fff",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 13,
+                    fontWeight: 700,
+                  }}
+                >
+                  {group.count}
+                </Box>
+              </Stack>
+            </TableCell>
+
+            {/* PDF Button */}
+            <TableCell>
+              <IconButton
+               component="a"
+    href={`${baseAPIurl}dompdf/Stock_Report.php?CompanyCode=${CompCode}&EmployeeCode=${empCode}&FromDate=${group.date}&ToDate=${group.date}&Type=${TAB_TYPE_MAP[activeTab]}`}
+    target="_blank"
+    rel="noreferrer"
+                size="small"
+                sx={{
+                  border: "1px solid #E0DDD6",
+                  borderRadius: 1.5,
+                  color: "#fa4545",
+                  background: "#FFF5F5",
+                  "&:hover": { background: "#FFE5E5" },
+                }}
+              >
+                <PictureAsPdfIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
+    </TableBody>
+  </Table>
+
+  {/* ── PAGINATION FOOTER ── */}
+  {/* {groupedByDate.length > 0 && (
+    <Box
+      sx={{
+        background: "#1d8077",
+        px: 3, py: 1.2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        gap: 3,
+      }}
+    >
+      <Typography sx={{ fontSize: 13, color: "rgba(255,255,255,0.85)" }}>
+        Rows per page:
+      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+        <Typography sx={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>
+          {rowsPerPage}
+        </Typography>
+        <Box component="span" sx={{
+          width: 0, height: 0,
+          borderLeft: "4px solid transparent",
+          borderRight: "4px solid transparent",
+          borderTop: "5px solid rgba(255,255,255,0.7)",
+          ml: 0.5,
+        }} />
+      </Box>
+      <Typography sx={{ fontSize: 13, color: "rgba(255,255,255,0.85)", minWidth: 90, textAlign: "right" }}>
+        {page * rowsPerPage + 1}–{Math.min(page * rowsPerPage + rowsPerPage, groupedByDate.length)} of {groupedByDate.length}
+      </Typography>
+      <IconButton
+        size="small"
+        onClick={() => setPage((p) => Math.max(p - 1, 0))}
+        disabled={page === 0}
+        sx={{ color: page === 0 ? "rgba(255,255,255,0.3)" : "#fff", p: 0.5, "&:hover": { background: "rgba(255,255,255,0.15)" }, "&.Mui-disabled": { color: "rgba(255,255,255,0.3)" } }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+        </svg>
+      </IconButton>
+      <IconButton
+        size="small"
+        onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+        disabled={page >= totalPages - 1}
+        sx={{ color: page >= totalPages - 1 ? "rgba(255,255,255,0.3)" : "#fff", p: 0.5, "&:hover": { background: "rgba(255,255,255,0.15)" }, "&.Mui-disabled": { color: "rgba(255,255,255,0.3)" } }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg>
+      </IconButton>
+    </Box>
+  )} */}
+  {/* ── PAGINATION FOOTER ── */}
+{groupedByDate.length > 0 && (
+  <Box
+    sx={{
+      background: "#1d8077",
+      px: 3, py: 1.2,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      gap: 3,
+    }}
+  >
+    <Typography sx={{ fontSize: 13, color: "rgba(255,255,255,0.85)" }}>
+      Rows per page:
+    </Typography>
+
+    {/* Rows per page dropdown */}
+    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, position: "relative" }}>
+      <select
+        value={rowsPerPage}
+        onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+        style={{
+          background: "transparent",
+          border: "1px solid rgba(255,255,255,0.4)",
+          borderRadius: 4,
+          color: "#fff",
+          fontSize: 13,
+          fontWeight: 500,
+          padding: "2px 24px 2px 8px",
+          cursor: "pointer",
+          outline: "none",
+          appearance: "none",
+          WebkitAppearance: "none",
+          MozAppearance: "none",
+        }}
+      >
+        {[5, 10, 15].map((opt) => (
+          <option
+            key={opt}
+            value={opt}
+            style={{ background: "#1d8077", color: "#fff" }}
+          >
+            {opt}
+          </option>
+        ))}
+      </select>
+      {/* Custom dropdown arrow */}
+      <Box
+        component="span"
+        sx={{
+          position: "absolute",
+          right: 6,
+          pointerEvents: "none",
+          width: 0, height: 0,
+          borderLeft: "4px solid transparent",
+          borderRight: "4px solid transparent",
+          borderTop: "5px solid rgba(255,255,255,0.8)",
+        }}
+      />
+    </Box>
+
+    {/* Range label */}
+    <Typography sx={{ fontSize: 13, color: "rgba(255,255,255,0.85)", minWidth: 90, textAlign: "right" }}>
+      {page * rowsPerPage + 1}–{Math.min(page * rowsPerPage + rowsPerPage, groupedByDate.length)} of {groupedByDate.length}
+    </Typography>
+
+    {/* Prev button */}
+    <IconButton
+      size="small"
+      onClick={() => setPage((p) => Math.max(p - 1, 0))}
+      disabled={page === 0}
+      sx={{
+        color: page === 0 ? "rgba(255,255,255,0.3)" : "#fff",
+        p: 0.5,
+        "&:hover": { background: "rgba(255,255,255,0.15)" },
+        "&.Mui-disabled": { color: "rgba(255,255,255,0.3)" },
+      }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+      </svg>
+    </IconButton>
+
+    {/* Next button */}
+    <IconButton
+      size="small"
+      onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+      disabled={page >= totalPages - 1}
+      sx={{
+        color: page >= totalPages - 1 ? "rgba(255,255,255,0.3)" : "#fff",
+        p: 0.5,
+        "&:hover": { background: "rgba(255,255,255,0.15)" },
+        "&.Mui-disabled": { color: "rgba(255,255,255,0.3)" },
+      }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+      </svg>
+    </IconButton>
+  </Box>
+)}
+</TableContainer>
 
         </Paper>
       </Box>

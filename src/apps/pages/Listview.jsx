@@ -29,6 +29,7 @@ import {
 } from "@mui/x-data-grid";
 import Swal from "sweetalert2";
 import BalanceIcon from "@mui/icons-material/Balance";
+import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -5278,6 +5279,12 @@ const Listview = () => {
               <Chip
                 icon={<PeopleAltIcon color="primary" />}
                 label="Personnel"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+               <Chip
+                icon={<SensorOccupiedIcon color="primary" />}
+                label="Teacher Productivity"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
