@@ -403,7 +403,7 @@
 //                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
 //               >
 //                 <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }} onClick={() => navigate(-1)}>
-//                   Teacher Occupancy
+//                   Teacher Productivity
 //                 </Typography>
 //               </Breadcrumbs>
 //             )}
@@ -481,7 +481,7 @@
 //                         HeaderImg: HeaderImg,
 //                         FooterImg: FooterImg,
 //                       }}
-//                       reportTitle="Teacher Occupancy Report" />}
+//                       reportTitle="Teacher Productivity Report" />}
 //                      fileName={`Teacher_Occupancy_Report_${getFormattedDate()}.pdf`}
 
 //                     style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
@@ -497,7 +497,7 @@
 //                     }
 //                   </PDFDownloadLink>
 //                   //   <PDFDownloadLink
-//                   //     document={<TeacherOccupancyPDF apiData={apiData} reportTitle="Teacher Occupancy Report" />}
+//                   //     document={<TeacherOccupancyPDF apiData={apiData} reportTitle="Teacher Productivity Report" />}
 //                   //     fileName={`Teacher_Occupancy_Report_${new Date().toISOString().split('T')[0]}.pdf`}
 //                   //   >
 //                   //     {({ blob, url, loading, error }) => (
@@ -969,7 +969,7 @@
 // //                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
 // //               >
 // //                 <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }} onClick={() => navigate(-1)}>
-// //                   Teacher Occupancy
+// //                   Teacher Productivity
 // //                 </Typography>
 // //               </Breadcrumbs>
 // //             )}
@@ -1250,9 +1250,9 @@ const TeacherTimetable = ({ teacher, summary }) => {
         {summary && (
           <Box display="flex" gap={1} flexWrap="wrap">
             {[
-              { label: "TOTAL", value: summary.TotalHours, color: "#94A3B8" },
-              { label: "OCCUPIED", value: summary.OccupiedHours, color: "#FB923C" },
-              { label: "FREE", value: summary.FreeHours, color: "#4ADE80" },
+              { label: "Total", value: summary.TotalHours, color: "#94A3B8" },
+              { label: "Occupied", value: summary.OccupiedHours, color: "#FB923C" },
+              { label: "Free", value: summary.FreeHours, color: "#4ADE80" },
             ].map(({ label, value, color }) => (
               <Box key={label} sx={{
                 background: "rgba(255,255,255,0.08)",
@@ -1540,7 +1540,7 @@ const TeacherOccupancy = () => {
                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
                 <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }} onClick={() => navigate(-1)}>
-                  Teacher Occupancy
+                  Teacher Productivity
                 </Typography>
               </Breadcrumbs>
             )}
@@ -1566,7 +1566,7 @@ const TeacherOccupancy = () => {
           onSubmit={(values) => { setTimeout(() => handleApply(values), 100); }}
           enableReinitialize
         >
-          {({ values, handleSubmit, setFieldValue }) => (
+          {({ values, handleSubmit, setFieldValue, resetForm  }) => (
             <form onSubmit={handleSubmit}>
               {/* ── FILTERS ── */}
               <Box
@@ -1634,6 +1634,19 @@ const TeacherOccupancy = () => {
                 <Button color="secondary" variant="contained" type="submit" disabled={apiLoading}>
                   {apiLoading ? "Loading…" : "Apply"}
                 </Button>
+                  {/* ✅ RESET BUTTON — clears everything */}
+      <Button
+        color="error"
+        variant="contained"
+        // disabled={apiLoading}
+        onClick={() => {
+          resetForm();          // resets Teacher & terms to initial values
+          setApiData(null);     // hides PDF icon, summary chips, timetables
+        }}
+      >
+        Reset
+      </Button>
+
 
                 {apiData && apiData.Teachers && apiData.Teachers.length > 0 && (
                   <PDFDownloadLink
@@ -1644,12 +1657,13 @@ const TeacherOccupancy = () => {
                           Imageurl: baseurlUAAM,
                           HeaderImg: HeaderImg,
                           FooterImg: FooterImg,
+                          TitleName: "Teacher Productivity Report"
                         }}
                         footerHeight={footerHeight}
-                        reportTitle="Teacher Occupancy Report"
+                        reportTitle="Teacher Productivity Report"
                       />
                     }
-                    fileName={`Teacher_Occupancy_Report_${getFormattedDate()}.pdf`}
+                    fileName={`Teacher_Productivity_Report_${getFormattedDate()}.pdf`}
                     style={{ color: "#d32f2f", cursor: "pointer" }}
                   >
                     {({ loading }) =>

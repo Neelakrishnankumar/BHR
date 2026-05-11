@@ -248,7 +248,8 @@ const Editshift = () => {
                                     sx={{ cursor: "default" }}
 
                                 >
-                                    Shift
+                                    {getBusinessCaption("Shift", "Shift")}
+                                  
                                 </Typography>
 
                             </Breadcrumbs>

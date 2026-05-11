@@ -684,7 +684,16 @@ const Edittimesheetreport = () => {
                 setempData(null);
                 sessionStorage.removeItem("proData");
                 sessionStorage.removeItem("empData");
+                sessionStorage.removeItem("checkbox1");
+                sessionStorage.removeItem("checkbox2");
+                sessionStorage.removeItem("checkbox3");
+                sessionStorage.removeItem("checkbox4");
+                sessionStorage.removeItem("checkbox5");
+                sessionStorage.removeItem("checkbox6");
+                sessionStorage.removeItem("checkbox7");
+                sessionStorage.removeItem("checkbox8");
                 dispatch(resetTrackingData());
+
               }}
             >
               <Box

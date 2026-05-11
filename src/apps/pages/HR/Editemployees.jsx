@@ -22,6 +22,8 @@ import {
   Grid,
   LinearProgress,
   Chip,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -1126,7 +1128,7 @@ const Editemployee = () => {
   const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
-        RecordID: String(d.DeptID), 
+        RecordID: String(d.DeptID),
         Name: d.DeptName,
       }))
       : [],
@@ -1435,7 +1437,7 @@ const Editemployee = () => {
     //  return;
     const data = await dispatch(
       // postData({ accessID, action, idata: saveData })
-      postData({ accessID: "TR027V1", action, idata: saveData })
+      postData({ accessID: "TR027", action, idata: saveData })
     );
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
@@ -3591,6 +3593,7 @@ const Editemployee = () => {
   const contractSavefn = async (values, resetForm, del) => {
     console.log(show, "--find show inside save ");
     const BillingUnit = values.BillingUnits || "";
+    const BillingType = values.BillingType || "";
     setLoading(true);
     let action =
       funMode === "A" && !del
@@ -3635,11 +3638,16 @@ const Editemployee = () => {
             ? values?.customer?.Name || ""
             : "",
       Description: values.Description,
-      Hsn: values.Hsn || "000000",
-      Gst: values.Gst || 0,
-      Sgst: values.Sgst || 0,
-      Igst: values.Igst || 0,
-      Tds: values.TDS || 0,
+      // Hsn: values.Hsn || "000000",
+      // Gst: values.Gst || 0,
+      // Sgst: values.Sgst || 0,
+      // Igst: values.Igst || 0,
+      // Tds: values.TDS || 0,
+      Hsn: BillingType !== "CashMemo" ? values.Hsn || "000000" : "000000",
+      Gst: BillingType !== "CashMemo" ? values.Gst || 0 : 0,
+      Sgst: BillingType !== "CashMemo" ? values.Sgst || 0 : 0,
+      Igst: BillingType !== "CashMemo" ? values.Igst || 0 : 0,
+      Tds: BillingType !== "CashMemo" ? values.TDS || 0 : 0,
       // Vendors: show == "8" ? "Y" : "N",
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
@@ -5371,7 +5379,7 @@ const Editemployee = () => {
                             id="Department"
                             value={values.Department}
                             onChange={(e, newValue) => {
-                              setFieldValue("Department", newValue, true); 
+                              setFieldValue("Department", newValue, true);
                             }}
                             isOptionEqualToValue={(option, value) =>
                               String(option.RecordID) === String(value.RecordID)
@@ -5389,10 +5397,10 @@ const Editemployee = () => {
                             })}`}
                           />
                           {touched.Department && errors.Department && (
-                          <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
-                            {errors.Department}
-                          </div>
-                        )}
+                            <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
+                              {errors.Department}
+                            </div>
+                          )}
                         </FormControl>
                         {CompanyAutoCode == "Y" ? (
                           <TextField
@@ -5453,6 +5461,61 @@ const Editemployee = () => {
                           />
                         )}
 
+                        {/* <FormControl>
+                          <FormLabel
+                            sx={{
+                              fontSize: "11px",
+                              color: "#1976d2",
+                            }}
+                          >
+                            Gender
+                          </FormLabel>
+                          <RadioGroup
+                            row
+                            value={values.Gender}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setFieldValue("Gender", value);
+                            }}
+                          >
+                            <FormControlLabel value="M" control={<Radio />} label="Male" />
+                            <FormControlLabel value="F" control={<Radio />} label="Female" />
+                            <FormControlLabel value="O" control={<Radio />} label="Others" />
+                          </RadioGroup>
+                        </FormControl> */}
+                        {/* <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={
+                            <>
+                              Gender
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          value={values.Gender}
+                          id="Gender"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Gender"
+                          error={!!touched.Gender && !!errors.Gender}
+                          helperText={touched.Gender && errors.Gender}
+                          // required
+                          focused
+                          sx={{
+                            gridColumn: "span 2",
+                            // backgroundColor: "#ffffff",
+                            // "& .MuiInputBase-root": {
+                            //   backgroundColor: "",
+                            // },
+                          }}
+                        >
+                          <MenuItem value="M">Male</MenuItem>
+                          <MenuItem value="F">Female</MenuItem>
+                          <MenuItem value="O">Others</MenuItem>
+                        </TextField> */}
                         <TextField
                           fullWidth
                           variant="standard"
@@ -5517,6 +5580,9 @@ const Editemployee = () => {
                             },
                           }}
                           focused
+                        // sx={{
+                        //   marginTop:"3px"
+                        // }}
                         />
 
                         <TextField
@@ -5596,7 +5662,7 @@ const Editemployee = () => {
                           // autoFocus
                           InputProps={{
                             inputProps: {
-                              style: { textAlign: "right" },
+                              style: { textAlign: "right", marginTop: "1px" },
                               min: 0,
                               max: 24,
                             },
@@ -5699,18 +5765,23 @@ const Editemployee = () => {
                           />
 
                           <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
-                           <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="CRMUser"
-                            id="CRMUser"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="CRM User"
-                          />
 
-                          <FormLabel focused={false}>CRM User</FormLabel>
+                          {!is003Subscription && (
+                            <>
+                              <Field
+                                //  size="small"
+                                type="checkbox"
+                                name="CRMUser"
+                                id="CRMUser"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                as={Checkbox}
+                                label="CRM User"
+                              />
+
+                              <FormLabel focused={false}>CRM User</FormLabel>
+                            </>
+                          )}
                         </Box>
 
                         <Box>
@@ -5976,6 +6047,61 @@ const Editemployee = () => {
                             />
                           )}
 
+                          {/* <FormControl>
+                          <FormLabel
+                            sx={{
+                              fontSize: "11px",
+                              color: "#1976d2",
+                            }}
+                          >
+                            Gender
+                          </FormLabel>
+                          <RadioGroup
+                            row
+                            value={values.Gender}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setFieldValue("Gender", value);
+                            }}
+                          >
+                            <FormControlLabel value="M" control={<Radio />} label="Male" />
+                            <FormControlLabel value="F" control={<Radio />} label="Female" />
+                            <FormControlLabel value="O" control={<Radio />} label="Others" />
+                          </RadioGroup>
+                        </FormControl> */}
+                          {/* <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={
+                            <>
+                              Gender
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          value={values.Gender}
+                          id="Gender"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Gender"
+                          error={!!touched.Gender && !!errors.Gender}
+                          helperText={touched.Gender && errors.Gender}
+                          // required
+                          focused
+                          sx={{
+                            gridColumn: "span 2",
+                            // backgroundColor: "#ffffff",
+                            // "& .MuiInputBase-root": {
+                            //   backgroundColor: "",
+                            // },
+                          }}
+                        >
+                          <MenuItem value="M">Male</MenuItem>
+                          <MenuItem value="F">Female</MenuItem>
+                          <MenuItem value="O">Others</MenuItem>
+                        </TextField> */}
                           <TextField
                             fullWidth
                             variant="standard"
@@ -8959,14 +9085,16 @@ const Editemployee = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         as={Checkbox}
-                        label="office"
+                        label={SubscriptionCode ? "School" : "office"}
                       // disabled
                       />
 
                       <FormLabel focused={false}>
-                        Office
+                        {SubscriptionCode ? "School" : "office"}
                       </FormLabel>
-                      <Field
+                     {/* Extra options only when no SubscriptionCode */}
+
+                       <Field
                         //  size="small"
                         type="checkbox"
                         name="workfromhome"
@@ -8974,13 +9102,15 @@ const Editemployee = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         as={Checkbox}
-                        label="workfromhome"
+                        label={SubscriptionCode ? "Online Class" : "Work From Home"}
                       // disabled
                       />
 
                       <FormLabel focused={false}>
-                        Work From Home
+                        
+                         {SubscriptionCode ? "Online Class" : "Work From Home"}
                       </FormLabel>
+
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -8996,6 +9126,8 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Hybrid
                       </FormLabel>
+                          {!SubscriptionCode && (
+      <>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -9011,7 +9143,10 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Onsite
                       </FormLabel>
+                     </>
+    )}
                     </Box>
+                     
                   </Box>
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
@@ -9095,21 +9230,27 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Allow Backlog Data Entry
                       </FormLabel>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="Geninvoice"
-                        id="Geninvoice"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Geninvoice"
-                      // disabled
-                      />
 
-                      <FormLabel focused={false}>
-                        Generate Invoice
-                      </FormLabel> <Field
+                      {!isStudentClassification && (
+                        <>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="Geninvoice"
+                            id="Geninvoice"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Geninvoice"
+                          // disabled
+                          />
+
+                          <FormLabel focused={false}>
+                            Generate Invoice
+                          </FormLabel>
+                        </>
+                      )}
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="Essaccess"
@@ -13334,153 +13475,281 @@ const Editemployee = () => {
                         <MenuItem value="CashMemo">Cash Memo</MenuItem>
                         <MenuItem value="GSTInvoice">GST Invoice</MenuItem>
                       </TextField>
-                      <TextField
-                        name="Hsn"
-                        type="text"
-                        id="Hsn"
-                        // label={
-                        //   <span>
-                        //     HSN Code
-                        //     <span style={{ color: "red", fontSize: "20px" }}>
-                        //       *
-                        //     </span>
-                        //   </span>
-                        // }
-                        label={
-                          <span>
-                            HSN Code
-                            {values.BillingType !== "CashMemo" && (
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            )}
-                          </span>
-                        }
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Hsn}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const value = e.target.value;
-                        //   setFieldValue("BillingType", value);
 
-                        //   if (value === "CashMemo") {
-                        //     setFieldValue("Hsn", ""); // 🔥 clear HSN
-                        //   }
-                        // }}
-                        error={!!touched.Hsn && !!errors.Hsn}
-                        helperText={touched.Hsn && errors.Hsn}
-                        autoFocus
-                      />
-                      <TextField
-                        // disabled={mode === "V"}
-                        name="Sgst"
-                        type="number"
-                        id="Sgst"
-                        label="SGST"
-                        variant="standard"
-                        value={values.Sgst}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Sgst && !!errors.Sgst}
-                        helperText={touched.Sgst && errors.Sgst}
-                        sx={{
-                          background: "",
-                          input: { textAlign: "right" },
-                        }}
-                        inputprops={{
-                          maxlength: 13,
-                          step: 0.01,
-                        }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
-                      />
-                      <TextField
-                        // disabled={mode === "V"}
-                        name="Gst"
-                        type="number"
-                        id="Gst"
-                        label="CGST"
-                        variant="standard"
-                        value={values.Gst}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Gst && !!errors.Gst}
-                        helperText={touched.Gst && errors.Gst}
-                        sx={{ background: "" }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                        inputProps={{ maxLength: 25 }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
-                      />
-                      <TextField
-                        // disabled={mode === "V"}
-                        name="Igst"
-                        type="number"
-                        id="Igst"
-                        label="IGST"
-                        variant="standard"
-                        value={values.Igst}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Igst && !!errors.Igst}
-                        helperText={touched.Igst && errors.Igst}
-                        sx={{ background: "" }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
-                      />
-                      <TextField
-                        // disabled={mode === "V"}
-                        name="TDS"
-                        type="number"
-                        id="TDS"
-                        label="TDS"
-                        variant="standard"
-                        value={values.TDS}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.TDS && !!errors.TDS}
-                        helperText={touched.TDS && errors.TDS}
-                        sx={{ background: "" }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
-                      />
+                      {values.BillingType !== "CashMemo" && (
+                        <>
+                          <TextField
+                            name="Hsn"
+                            type="text"
+                            id="Hsn"
+                            // label={
+                            //   <span>
+                            //     HSN Code
+                            //     <span style={{ color: "red", fontSize: "20px" }}>
+                            //       *
+                            //     </span>
+                            //   </span>
+                            // }
+                            label={
+                              <span>
+                                HSN Code
+                                {values.BillingType !== "CashMemo" && (
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                )}
+                              </span>
+                            }
+                            variant="standard"
+                            focused
+                            // required
+                            value={values.Hsn}
+                            onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onChange={(e) => {
+                            //   const value = e.target.value;
+                            //   setFieldValue("BillingType", value);
+
+                            //   if (value === "CashMemo") {
+                            //     setFieldValue("Hsn", ""); // 🔥 clear HSN
+                            //   }
+                            // }}
+                            onChange={(e) => {
+                              const val = e.target.value;
+
+                              // Allow numbers with optional decimal (up to 2 digits)
+                              if (/^\d{0,8}$/.test(val)) {
+                                setFieldValue("Hsn", val);
+                              }
+                            }}
+                            error={!!touched.Hsn && !!errors.Hsn}
+                            helperText={touched.Hsn && errors.Hsn}
+                            autoFocus
+                          />
+                          <TextField
+                            // disabled={mode === "V"}
+                            name="Sgst"
+                            // type="number"
+                            type="text"
+                            inputMode="decimal"
+                            id="Sgst"
+                            label="SGST"
+                            variant="standard"
+                            value={values.Sgst}
+                            // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              const val = e.target.value;
+
+                              // Allow numbers with optional decimal (up to 2 digits)
+                              if (/^\d*\.?\d{0,2}$/.test(val)) {
+                                setFieldValue("Sgst", val);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              handleBlur(e);
+                              let val = e.target.value;
+
+                              if (val === "" || val === ".") {
+                                setFieldValue("Sgst", "0.00");
+                                return;
+                              }
+
+                              // Ensure decimal exists
+                              if (!val.includes(".")) {
+                                val = `${val}.00`;
+                              }
+
+                              const num = Number(val);
+
+                              // ✅ Force exactly 2 decimals
+                              setFieldValue("Sgst", num.toFixed(2));
+                            }}
+                            error={!!touched.Sgst && !!errors.Sgst}
+                            helperText={touched.Sgst && errors.Sgst}
+                            sx={{
+                              background: "",
+                              input: { textAlign: "right" },
+                            }}
+                            inputprops={{
+                              maxlength: 13,
+                              step: 0.01,
+                            }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
+                          />
+                          <TextField
+                            // disabled={mode === "V"}
+                            name="Gst"
+                            // type="number"
+                            type="text"
+                            inputMode="decimal"
+                            id="Gst"
+                            label="CGST"
+                            variant="standard"
+                            value={values.Gst}
+                            // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              const val = e.target.value;
+
+                              // Allow numbers with optional decimal (up to 2 digits)
+                              if (/^\d*\.?\d{0,2}$/.test(val)) {
+                                setFieldValue("Gst", val);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              handleBlur(e);
+                              let val = e.target.value;
+
+                              if (val === "" || val === ".") {
+                                setFieldValue("Gst", "0.00");
+                                return;
+                              }
+
+                              // Ensure decimal exists
+                              if (!val.includes(".")) {
+                                val = `${val}.00`;
+                              }
+
+                              const num = Number(val);
+
+                              // ✅ Force exactly 2 decimals
+                              setFieldValue("Gst", num.toFixed(2));
+                            }}
+                            error={!!touched.Gst && !!errors.Gst}
+                            helperText={touched.Gst && errors.Gst}
+                            sx={{ background: "" }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                            inputProps={{ maxLength: 25 }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
+                          />
+                          <TextField
+                            // disabled={mode === "V"}
+                            name="Igst"
+                            // type="number"
+                            type="text"
+                            inputMode="decimal"
+                            id="Igst"
+                            label="IGST"
+                            variant="standard"
+                            value={values.Igst}
+                            // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              const val = e.target.value;
+
+                              // Allow numbers with optional decimal (up to 2 digits)
+                              if (/^\d*\.?\d{0,2}$/.test(val)) {
+                                setFieldValue("Igst", val);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              handleBlur(e);
+                              let val = e.target.value;
+
+                              if (val === "" || val === ".") {
+                                setFieldValue("Igst", "0.00");
+                                return;
+                              }
+
+                              // Ensure decimal exists
+                              if (!val.includes(".")) {
+                                val = `${val}.00`;
+                              }
+
+                              const num = Number(val);
+
+                              // ✅ Force exactly 2 decimals
+                              setFieldValue("Igst", num.toFixed(2));
+                            }}
+                            error={!!touched.Igst && !!errors.Igst}
+                            helperText={touched.Igst && errors.Igst}
+                            sx={{ background: "" }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
+                          />
+                          <TextField
+                            // disabled={mode === "V"}
+                            name="TDS"
+                            // type="number"
+                            type="text"
+                            inputMode="decimal"
+                            id="TDS"
+                            label="TDS"
+                            variant="standard"
+                            value={values.TDS}
+                            // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              const val = e.target.value;
+
+                              // Allow numbers with optional decimal (up to 2 digits)
+                              if (/^\d*\.?\d{0,2}$/.test(val)) {
+                                setFieldValue("TDS", val);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              handleBlur(e);
+                              let val = e.target.value;
+
+                              if (val === "" || val === ".") {
+                                setFieldValue("TDS", "0.00");
+                                return;
+                              }
+
+                              // Ensure decimal exists
+                              if (!val.includes(".")) {
+                                val = `${val}.00`;
+                              }
+
+                              const num = Number(val);
+
+                              // ✅ Force exactly 2 decimals
+                              setFieldValue("TDS", num.toFixed(2));
+                            }}
+                            error={!!touched.TDS && !!errors.TDS}
+                            helperText={touched.TDS && errors.TDS}
+                            sx={{ background: "" }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
+                          />
+                        </>)}
                       {!is003Subscription && (
                         <>
                           <CheckinAutocomplete

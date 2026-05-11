@@ -572,9 +572,9 @@
 //         <Page key={teacher.EmployeeID} style={styles.page}>
 //           <PageHeader filters={filters} />
 
-//           {/* "Teacher Occupancy Report" title — FIRST PAGE ONLY */}
+//           {/* "Teacher Productivity Report" title — FIRST PAGE ONLY */}
 //           {index === 0 && (
-//             <Text style={styles.reportTitle}>Teacher Occupancy Report</Text>
+//             <Text style={styles.reportTitle}>Teacher Productivity Report</Text>
 //           )}
 
 //           {/* Timetable — teacher name shown as title row inside the table */}
@@ -883,7 +883,7 @@ const PageFooter = ({ filters, footerHeight }) => {
 // ─── TIMETABLE TABLE ─────────────────────────────────────────────────────────
 // Layout: Days = rows | Period slots = columns
 // Column headers: Period label (from BreakSlots) + full "fromTime - toTime"
-const TeacherTimetableTable = ({ teacher }) => {
+const TeacherTimetableTable = ({ teacher, summary }) => {
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const { timeSlots, BreakSlots, BreakSlotsList, schedule, TeacherName } = teacher;
 
@@ -900,17 +900,86 @@ const TeacherTimetableTable = ({ teacher }) => {
     <View style={styles.timetableContainer}>
 
       {/* ── Teacher name title row ── */}
-      <View style={styles.timetableTitleRow}>
+      {/* <View style={styles.timetableTitleRow}>
         <Text style={styles.timetableTitleText}>{TeacherName}</Text>
         <Text style={styles.timetableTitleSep}>|</Text>
         <Text style={styles.timetableTitleSub}>Timetable</Text>
+      </View> */}
+      {/* ── Teacher name title row ── */}
+ {/* ── Teacher name title row ── */}
+      <View style={[styles.timetableTitleRow, { justifyContent: "space-between" }]}>
+
+        {/* Left: Name | Timetable */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.timetableTitleText}>{TeacherName}</Text>
+          <Text style={styles.timetableTitleSep}>|</Text>
+          <Text style={styles.timetableTitleSub}>Timetable</Text>
+        </View>
+
+        {/* Right: Total / Occupied / Free from matched summary */}
+        {summary && (
+          <View style={{ flexDirection: "row", gap: 6 }}>
+
+            {/* TOTAL */}
+            <View style={{
+              backgroundColor: "#E8EDF5",
+              borderRadius: 4,
+              paddingHorizontal: 7,
+              paddingVertical: 3,
+              alignItems: "center",
+              minWidth: 52,
+            }}>
+              <Text style={{ fontSize: 7, color: "#64748B", fontWeight: "bold", marginBottom: 2 }}>
+                Total
+              </Text>
+              <Text style={{ fontSize: 8, fontWeight: "bold", color: "#1e1e3a" }}>
+                {summary.TotalHours}
+              </Text>
+            </View>
+
+            {/* OCCUPIED */}
+            <View style={{
+              backgroundColor: "#E8EDF5",
+              borderRadius: 4,
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              alignItems: "center",
+              minWidth: 60,
+            }}>
+              <Text style={{ fontSize: 7, color: "#64748B", fontWeight: "bold", marginBottom: 2 }}>
+                Occupied
+              </Text>
+              <Text style={{ fontSize: 8, fontWeight: "bold", color: "#FB923C" }}>
+                {summary.OccupiedHours}
+              </Text>
+            </View>
+
+            {/* FREE */}
+            <View style={{
+              backgroundColor: "#E8EDF5",
+              borderRadius: 4,
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              alignItems: "center",
+              minWidth: 56,
+            }}>
+              <Text style={{ fontSize: 7, color: "#64748B", fontWeight: "bold", marginBottom: 2 }}>
+                Free
+              </Text>
+              <Text style={{ fontSize: 8, fontWeight: "bold", color: "#10B981" }}>
+                {summary.FreeHours}
+              </Text>
+            </View>
+
+          </View>
+        )}
       </View>
 
       {/* ── Column header row ── */}
       <View style={styles.timetableHeaderRow}>
         {/* Corner "Day" cell */}
         <View style={styles.dayCornerCell}>
-          <Text style={styles.dayCornerText}>DAY</Text>
+          <Text style={styles.dayCornerText}>Day</Text>
         </View>
 
         {/* One column header per period slot */}
@@ -1106,8 +1175,16 @@ const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
   );
 };
 
+
+  
 // ─── MAIN PDF DOCUMENT ────────────────────────────────────────────────────────
 const TeacherOccupancyPDF = ({ apiData, filters = {}, footerHeight }) => {
+
+  const summaryMap = {};
+  (apiData.Summaries || []).forEach((s) => {
+    summaryMap[s.EmployeeID] = s;
+  });
+
   if (!apiData || !apiData.Teachers) {
     return (
       <Document>
@@ -1136,10 +1213,16 @@ const TeacherOccupancyPDF = ({ apiData, filters = {}, footerHeight }) => {
 
           {/* Report title — first page only */}
           {index === 0 && (
-            <Text style={styles.reportTitle}>Teacher Occupancy Report</Text>
+            <Text style={styles.reportTitle}>
+              {filters.TitleName}
+              {/* Teacher Productivity Report */}
+              </Text>
           )}
 
-          <TeacherTimetableTable teacher={teacher} />
+          <TeacherTimetableTable
+           teacher={teacher}
+            summary={summaryMap[teacher.EmployeeID]} 
+            />
 
           <PageFooter filters={filters} footerHeight={footerHeight} />
         </Page>
