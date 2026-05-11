@@ -70,9 +70,9 @@ const ProjectTimeTable = () => {
 
     // ── Redux selectors ───────────────────────────────────────────────────────
     const listViewurl  = useSelector((s) => s.globalurl.listViewurl);
-    const WCrows       = useSelector((s) => s.exploreApi.explorerowData);
+     const WCrows       = useSelector((s) => s.exploreApi.explorerowData);
     const calendarData = useSelector((s) => s.exploreApi.Data);
-    const rawColumns   = useSelector((s) => s.exploreApi.explorecolumnData);
+     const rawColumns   = useSelector((s) => s.exploreApi.explorecolumnData);
     const WEEKloading  = useSelector((s) => s.exploreApi.loading);
 
     const breakSlots = Array.isArray(calendarData?.BreakSlots)
@@ -112,6 +112,7 @@ const [footerHeight, setFooterHeight] = useState(60);
         console.log("detailIDMap built from GET detailID:", map);
         return map;
     }, [calendarData?.detailID, WCrows, rawColumns]);
+    // ── Derive rows and columns directly from calendarData ────────────────────
 
     // ── Theme ─────────────────────────────────────────────────────────────────
     const theme       = useTheme();
@@ -313,12 +314,12 @@ const [footerHeight, setFooterHeight] = useState(60);
         if (response?.payload?.Status == "Y") {
             toast.success(response.payload.Msg);
             if (returnedHeaderID) refresh(returnedHeaderID);
-            return { success: true, returnedHeaderID };   // ✅ only Y = success
+            return { success: true, returnedHeaderID };   //  only Y = success
 
         } else if (response?.payload?.Status == "E") {
             toast.error(response.payload.Msg);
             if (returnedHeaderID) refresh(returnedHeaderID);
-            return { success: false, returnedHeaderID };  // ❌ E = do NOT update cellEdits
+            return { success: false, returnedHeaderID };  //  E = do NOT update cellEdits
 
         } else {
             throw new Error(response?.payload?.Msg || "Save failed");

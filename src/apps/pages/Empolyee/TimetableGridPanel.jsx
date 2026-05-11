@@ -1,18 +1,3 @@
-// TimetableGridPanel.jsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Reusable timetable grid panel extracted from ProjectTimeTable.
-// Used in both:
-//   1. ProjectTimeTable.jsx  — standalone route page
-//   2. EditTimetablev1.jsx   — embedded inside the form, below the header fields
-//
-// Props:
-//   HeaderID    {number|string}  — timetable header PK
-//   ProjectID   {number|string}  — StandardID
-//   TermsID     {number|string}  — TermID
-//   GroupID     {number|string}  — SlotGroupID
-//   Isprocess   {string}         — "Y" | "N"
-//   rowData     {object}         — full location.state (Description, projectName, etc.)
-// ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
