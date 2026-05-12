@@ -183,7 +183,7 @@ const initialState = {
 //CRM_ITEM_STOCK_ANALYTICS
 Itemstockstatus: "",
  itemstockDataAnalyticsLoading: false,
-  itemstockDataAnalytics:{},
+  itemstockDataAnalytics:[],
 
   //ORDER ITEM --> REPLACEMENT QTY
   replacementQtyGetdata: {},
@@ -2947,6 +2947,7 @@ export const getApiSlice = createSlice({
   initialState,
   reducers: {
     resetTrackingData(state) {
+      state.itemstockDataAnalytics = [];
       state.trackingData = [];
       state.customerData = {};
       state.productanalysisData = {};
@@ -3961,7 +3962,7 @@ export const getApiSlice = createSlice({
         //   categories: [],
         //   TableData: { data: [] },
         // };
-        state.itemstockDataAnalytics = {}
+        state.itemstockDataAnalytics = []
       })
 
       .addCase(ItemstockAnalyticsGET.fulfilled, (state, action) => {
@@ -3972,7 +3973,7 @@ export const getApiSlice = createSlice({
       .addCase(ItemstockAnalyticsGET.rejected, (state, action) => {
         state.Itemstockstatus = "Error";
         state.itemstockDataAnalyticsLoading = false;
-        state.itemstockDataAnalytics = {};
+        state.itemstockDataAnalytics = [];
       })
 
 

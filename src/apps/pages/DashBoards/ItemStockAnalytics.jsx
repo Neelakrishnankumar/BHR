@@ -34,7 +34,7 @@ import { Employeeautocomplete, Employeeautocomplete_v1 } from "../../../ui-compo
 import { getConfig } from "../../../config";
 import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CustomisedCaptionGet, ItemstockAnalyticsGET } from "../../../store/reducers/Formapireducer";
+import { CustomisedCaptionGet, ItemstockAnalyticsGET, resetTrackingData } from "../../../store/reducers/Formapireducer";
 import { Formik } from "formik";
 
 const theme = createTheme({
@@ -310,6 +310,18 @@ const KPI_CONFIG = [
   { key: "removed", label: "Scrap",          Icon: DeleteOutlineOutlinedIcon, bg: "#FAD9D9", color: "#8C2222" },
 ];
 
+const handleReset = (resetForm) => {
+  resetForm();                                    // clears Formik values (Employee, fromDate, toDate)
+  dispatch(resetTrackingData());            // clears the grid data
+  setOfficerIdx(0);                              // resets officer strip
+  setActiveTab("stockIn");                       // resets KPI tab
+  setPage(0);                                    // resets pagination
+  SetempCode('');                                // clears empCode used in PDF links
+  sessionStorage.removeItem("fromDate");         // clears session dates
+  sessionStorage.removeItem("toDate");
+};
+
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ background: "#F5F3EE", minHeight: "100vh", p: 2, fontFamily: "Inter, sans-serif" }}>
@@ -367,7 +379,8 @@ const KPI_CONFIG = [
                             isSubmitting,
                             values,
                             handleSubmit,
-                            setFieldValue
+                            setFieldValue,
+                            resetForm
                            }) => (
     <form onSubmit={handleSubmit}>
       <Box
@@ -506,7 +519,7 @@ const KPI_CONFIG = [
             variant="contained"
             color="error"
             sx={{ height: 40 }}
-            // onClick={() => handleReset(resetForm)}
+            onClick={() => handleReset(resetForm)}
           >
             RESET
           </Button>
