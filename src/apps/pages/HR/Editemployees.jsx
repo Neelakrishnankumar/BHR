@@ -834,7 +834,7 @@ const Editemployee = () => {
         // });
         // setValidationSchema9(schema9);
         let schemaFields9 = {
-          project: Yup.object().required(data.ContractsIN.project).nullable(),
+          project: Yup.object().required(data.ContractsIN.standardActivities).nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
@@ -851,6 +851,14 @@ const Editemployee = () => {
           schemaFields9.vendor = Yup.object()
             .required(data.ContractsIN.vendor)
             .nullable();
+          schemaFields9.shift = Yup.object()
+            .required(data.ContractsIN.shift)
+            .nullable();
+          schemaFields9.project = Yup.object()
+            .required(data.ContractsIN.project)
+            .nullable();
+
+
         }
 
         // ✅ build schema
@@ -2160,9 +2168,11 @@ const Editemployee = () => {
     VISIBLE_FIELDS = [
       "slno",
       // "VendorName",
+      ...(!is003Subscription ? ["VendorName"] : []),
       "Description",
       "ProjectName",
       "BillingUnits",
+      "BillingType",
       "UnitRate",
       "action",
     ];
@@ -2438,7 +2448,8 @@ const Editemployee = () => {
                                 : show == "21"
                                   ? "List of Documents"
                                   : show == "8"
-                                    ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
+                                    ? `List of ${getBusinessCaption("ContractIn",
+                                       "Contract In")}`
                                     : show == "23"
                                       // ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
                                       ? `List of Course Attendance`
@@ -3568,9 +3579,9 @@ const Editemployee = () => {
                   ? "TF"
                   : "",
     BillingType:
-      contractorData.BillingType === "CashMemo"
+      contractorData.BillingType === "Cash Memo"
         ? "CashMemo"
-        : contractorData.BillingType === "GSTInvoice"
+        : contractorData.BillingType === "GST Invoice"
           ? "GSTInvoice"
           : "",
     Hsn: funMode === "A" ? "000000" : contractorData.hsnCode,
@@ -5059,7 +5070,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      {getBusinessCaption("ContractIn", "ContractIn")}
+                      {getBusinessCaption("ContractIn", "Contract In")}
                     </Typography>
                   ) : (
                     false
@@ -5211,7 +5222,7 @@ const Editemployee = () => {
                       <MenuItem value={15}>Parent</MenuItem>
                     )}
                     {initialValues.employeetype === "CI" ? (
-                      <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contracts In")}</MenuItem>
+                      <MenuItem value={8}>{getBusinessCaption("ContractIn", "Contract In")}</MenuItem>
                     ) : null}
                     {is003Subscription && initialValues.employeetype === "CI" && (
                       <MenuItem value={23}>Course Attendance</MenuItem>
@@ -5580,9 +5591,9 @@ const Editemployee = () => {
                             },
                           }}
                           focused
-                        // sx={{
-                        //   marginTop:"3px"
-                        // }}
+                        sx={{
+                          marginTop:"1px"
+                        }}
                         />
 
                         <TextField
