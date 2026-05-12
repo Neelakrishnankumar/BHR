@@ -2168,7 +2168,7 @@ const Editemployee = () => {
     VISIBLE_FIELDS = [
       "slno",
       // "VendorName",
-      ...(!is003Subscription ? ["VendorName"] : []),
+      ...(!is003Subscription ? ["Party"] : []),
       "Description",
       "ProjectName",
       "BillingUnits",
