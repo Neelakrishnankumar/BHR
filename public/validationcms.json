@@ -186,14 +186,15 @@
 "exitinterviewby": "Please Select the Exit Interview By"
   },
   "ContractsIN": {
-    "vendor": "Please enter the Vendor",
-    "project": "Please enter the Project",
+    "vendor": "Please select the Vendor",
+    "project": "Please select the Project",
     "customer": "Please enter the Customer",
-    "BillingUnits": "Please enter the Billing Units",
-    "BillingType": "Please enter the Billing Type",
+    "BillingUnits": "Please select the Billing Units",
+    "BillingType": "Please select the Billing Type",
     "UnitRate": "Please enter the Unit Rate",
     "Hsn": "Please enter the HSN Code",
-    "shift": "Please enter the Shift 1"
+    "shift": "Please select the Shift 1",
+    "standardActivities": "Please select the Standard/Activities"
   },
   "CourseAttendence": {
     "project": "Please select the Standard/Activities",
