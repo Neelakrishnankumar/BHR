@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Icon,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -54,6 +55,7 @@ import {
   postData,
   SOPProcessPost,
   StockProcessApi,
+  TimeTableDelete,
   TimetableProcessController,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
@@ -8084,6 +8086,31 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const handleGenerateTimetable = async (values) => {
+    const payload = {
+      HeaderID: values.RecordID,
+      CompanyID: CompanyID,
+    }
+    console.log(payload, "-- GENERATE PAYLOAD");
+    const response = await dispatch(
+      TimeTableDelete(payload)
+    );
+    console.log(response, "-- generate response");
+
+    if (response?.payload?.Status === "Y") {
+      toast.success(response?.payload?.Msg);
+      // dispatch(
+      //   getFetchData({
+      //     accessID: "TR368v1",
+      //     get: "get",
+      //     recID: headerid,
+      //   })
+      // );      
+    }
+    else if (response?.payload?.Status == "N") {
+      toast.error(response?.payload?.Msg);
+    }
+  };
   const handleTermsProcess = async (values) => {
 
     const result = await Swal.fire({
@@ -8349,15 +8376,39 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link> */}
 
             {params.row.IsProcess === "N" ? (
-              <Tooltip title="Process">
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={() => handleTermsProcess(params.row)}
+              <>
+                <Link
+                  state={
+                    {
+                      TermsID: params.row.TermID,
+                      projectID: params.row.StandardID,
+                      projectName: params.row.ProjectDesc,
+                      Description: params.row.Description,
+                      BreadCrumb1: params.row.Project,
+                      TermName: params.row.TermName,
+                      SlotGroupID: params.row.SlotGroupID,
+                      GroupID: params.row.SlotGroupID,
+                      HeaderID: params.row.RecordID,
+                      isprocess: params.row.IsProcess,
+                      AcademicYear: params.row.AcademicYear
+                    }}
                 >
-                  <LockResetOutlinedIcon />
-                </IconButton>
-              </Tooltip>
+                  <Tooltip title="Delete">
+                    <IconButton color="error" size="small" onClick={() => handleGenerateTimetable(params.row)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+                <Tooltip title="Process">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => handleTermsProcess(params.row)}
+                  >
+                    <LockResetOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
 
             ) : (
               // <Tooltip title="Process">

@@ -29,6 +29,7 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -6335,6 +6336,11 @@ const ListviewSecondary = () => {
                         label="TimeTable"
                         variant="outlined"
                       /> */}
+                      <Chip
+                        icon={<DeleteIcon color="error" />}
+                        label="Delete"
+                        variant="outlined"
+                      />
                       <Chip
                         icon={<LockResetOutlinedIcon color="error" />}
                         label="Process"

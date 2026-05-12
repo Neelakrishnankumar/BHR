@@ -1072,10 +1072,10 @@ const EditTimetablev1 = () => {
       }
     }
 
-    setDraft({
-      subject: prefillSubject,
-      teacher: prefillTeacher,
-    });
+    // setDraft({
+    //   subject: prefillSubject,
+    //   teacher: prefillTeacher,
+    // });
 
     setActiveKey(key);
 
@@ -1316,7 +1316,7 @@ const EditTimetablev1 = () => {
 
     if (finalTotal > maxSlots) {
       throw new Error(
-        `Total Periods (${finalTotal}) cannot exceed Total Slots (${maxSlots})`
+        `Total Periods ${finalTotal} cannot exceed Total Slots ${maxSlots}`
       );
 
     }
@@ -1882,6 +1882,7 @@ const EditTimetablev1 = () => {
                   <LoadingButton
                     variant="contained"
                     loading={isGenerating}
+                    disabled={Isprocess === "Y"}
                     loadingPosition="start"
                     onClick={() => handleGenerateTimetable(values)}
                     sx={{
