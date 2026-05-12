@@ -907,24 +907,24 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR321",
           },
-          // {
-          //   name: "Settlement",
-          //   id: 434891,
-          //   //  url: "./TR243/Party",
-          //   url: "./TR380/Settlements",
-          //   icon: (
-          //     <Tooltip title="Settlement">
-          //       <CreditCardOffOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR380",
-          // },
+          {
+            name: "Settlement",
+            id: 434891,
+            //  url: "./TR243/Party",
+            url: "./TR380/Settlements",
+            icon: (
+              <Tooltip title="Settlement">
+                <CreditCardOffOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR380",
+          },
           {
             name: "Aging Report",
             id: 434685,

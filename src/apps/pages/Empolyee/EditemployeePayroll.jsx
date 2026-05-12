@@ -2599,7 +2599,7 @@ const EditemployeePayroll = () => {
                       {/* <Productautocomplete */}
                       <CheckinAutocomplete
                         disabled={mode == "E"}
-                        sx={{ marginTop: "7px" }}
+                        // sx={{ marginTop: "7px" }}
                         name="Department"
                         label="Department"
                         variant="outlined"
@@ -2661,7 +2661,7 @@ const EditemployeePayroll = () => {
                         }}
                         focused
                         inputProps={{ maxLength: 90 }}
-                        multiline
+                        // multiline
                       />
                       <TextField
                         disabled={mode == "E"}
@@ -2681,6 +2681,7 @@ const EditemployeePayroll = () => {
                           "& .MuiFilledInput-root": {
                             backgroundColor: "", // Ensure the filled variant also has a white background
                           },
+                          marginTop:"3.5px"
                         }}
                         focused
                       />
@@ -2712,7 +2713,7 @@ const EditemployeePayroll = () => {
                         select
                         fullWidth
                         variant="standard"
-                        label={<span>Employee Type</span>}
+                        label={<span>Type</span>}
                         value={values.employeetype}
                         id="employeetype"
                         onBlur={handleBlur}
@@ -2751,14 +2752,14 @@ const EditemployeePayroll = () => {
                         // autoFocus
                         InputProps={{
                           inputProps: {
-                            style: { textAlign: "right" },
+                            style: { textAlign: "right", marginTop:"1px"},
                             min: 0,
                             max: 24,
                           },
                         }}
                       />
 
-                      <Box>
+                      {/* <Box>
                         <MultiSelectDropdown
                           disabled={mode == "E"}
                           id="module"
@@ -2770,7 +2771,7 @@ const EditemployeePayroll = () => {
                             setApiReturnValue(val);
                           }}
                         />
-                      </Box>
+                      </Box> */}
                       <Box>
                         <Field
                           disabled={mode == "E"}

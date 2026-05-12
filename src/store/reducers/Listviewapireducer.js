@@ -1846,7 +1846,7 @@ export const fetchListview =
               };
             }
 
-             else if (AccessID == "TR379") {
+            else if (AccessID == "TR379") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -1916,62 +1916,62 @@ export const fetchListview =
                   //     </Tooltip>
                   //   );
                   // };
-                  
-                  
+
+
                   const PDFButton = ({ recordID, UserName }) => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = React.useState(false);
+                    const dispatch = useDispatch();
+                    const [loading, setLoading] = React.useState(false);
 
-  const handlePDFGET = async () => {
-    try {
-      setLoading(true);
+                    const handlePDFGET = async () => {
+                      try {
+                        setLoading(true);
 
-      const resultAction = await dispatch(
-        getFetchData({
-          accessID: "TR379",
-          get: "get",
-          recID: recordID,
-        })
-      );
+                        const resultAction = await dispatch(
+                          getFetchData({
+                            accessID: "TR379",
+                            get: "get",
+                            recID: recordID,
+                          })
+                        );
 
-      const data = resultAction.payload;
+                        const data = resultAction.payload;
 
-    if (!data?.Data) {
-  alert("No data available to generate PDF");
-  return;
-}
+                        if (!data?.Data) {
+                          alert("No data available to generate PDF");
+                          return;
+                        }
 
-      const blob = await pdf(
-        <AdmissionPDF data={data} UserName={UserName} />
-      ).toBlob();
+                        const blob = await pdf(
+                          <AdmissionPDF data={data} UserName={UserName} />
+                        ).toBlob();
 
-      // const link = document.createElement("a");
-      // link.href = URL.createObjectURL(blob);
-          const url = URL.createObjectURL(blob);
+                        // const link = document.createElement("a");
+                        // link.href = URL.createObjectURL(blob);
+                        const url = URL.createObjectURL(blob);
 
-          // ✅ OPEN IN NEW TAB
-    window.open(url, "_blank");
-      // link.download = "admissionform.pdf";
-      // link.click();
-    } catch (err) {
-      console.error("PDF generation failed", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+                        // ✅ OPEN IN NEW TAB
+                        window.open(url, "_blank");
+                        // link.download = "admissionform.pdf";
+                        // link.click();
+                      } catch (err) {
+                        console.error("PDF generation failed", err);
+                      } finally {
+                        setLoading(false);
+                      }
+                    };
 
-  return (
-    <Tooltip title="Download PDF">
-      <IconButton color="error" size="small" onClick={handlePDFGET}>
-        {loading ? <CircularProgress size={20} /> : <PictureAsPdfIcon />}
-      </IconButton>
-    </Tooltip>
-  );
-};
+                    return (
+                      <Tooltip title="Download PDF">
+                        <IconButton color="error" size="small" onClick={handlePDFGET}>
+                          {loading ? <CircularProgress size={20} /> : <PictureAsPdfIcon />}
+                        </IconButton>
+                      </Tooltip>
+                    );
+                  };
 
                   return (
                     <Box>
-                        <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
+                      <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
@@ -1979,10 +1979,10 @@ export const fetchListview =
                         </Tooltip>
                       </Link>
                       <PDFButton
-        recordID={params.row.RecordID}
-        UserName={params.row.UserName}
-      />
-                     {/* <Link 
+                        recordID={params.row.RecordID}
+                        UserName={params.row.UserName}
+                      />
+                      {/* <Link 
                      to={`./EditAdmission/${params.row.RecordID}/E`}
                      >
                         <Tooltip title="Edit">
@@ -1991,7 +1991,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link> */}
-                    
+
                     </Box>
                   );
                 },
@@ -2584,9 +2584,9 @@ export const fetchListview =
             } else if (
               AccessID == "TR321" ||
               AccessID == "TR380" ||
-               AccessID == "TR368"
-              
-              ) {
+              AccessID == "TR368"
+
+            ) {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -7000,7 +7000,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const baseurl1 = config.UAAM_URL;
-  
+
   const count = Number(params.row.MarketingCount || 0);
   // const orderType = params.row.OrderType;
   const id = params.row.RecordID;
@@ -7012,40 +7012,40 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
   const [STmodalOpen, setSTModalOpen] = useState(false);
   const [STselectedRow, setSTSelectedRow] = useState(null);
-    const [footerHeight, setFooterHeight] = useState(60);
-    const [isReady, setIsReady] = useState(false);
-    useEffect(() => {
-  if (!FooterImg) return;
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (!FooterImg) return;
 
-  const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
 
-  const img = new Image();
-  img.src = url;
+    const img = new Image();
+    img.src = url;
 
-  img.onload = () => {
-    const aspectRatio = img.height / img.width;
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
 
-    const pageWidth = 595;
-    const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80; // 🔥 IMPORTANT
 
-    const calculatedHeight = Math.min(
-      pageWidth * aspectRatio,
-      MAX_FOOTER_HEIGHT
-    );
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
 
-    setFooterHeight(calculatedHeight);
-    setIsReady(true);
-  };
-}, [FooterImg]);
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
   const getTodayDate = () => {
-        const today = new Date();
+    const today = new Date();
 
-        const day = String(today.getDate()).padStart(2, "0");
-        const month = String(today.getMonth() + 1).padStart(2, "0");
-        const year = today.getFullYear();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
 
-        return `${day}/${month}/${year}`;
-      };
+    return `${day}/${month}/${year}`;
+  };
 
   const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
@@ -7231,7 +7231,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               HeaderImg: HeaderImg,
               FooterImg: FooterImg,
               CompanySignature: CompanySignature,
-              footerHeight:footerHeight
+              footerHeight: footerHeight
             }}
           />,
         ).toBlob();
@@ -7532,7 +7532,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
-        
+
 
         {accessID === "TR318" && (
           <>
@@ -7881,89 +7881,89 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Box>
         )}
 
-{accessID === "TR332" && (
-        <Box>
-                      <>
-                        {/* EDIT */}
-                        <Link
-                          // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
-                          to={`./EditPayment/${params.row.RecordID}/E`}
-                          // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+        {accessID === "TR332" && (
+          <Box>
+            <>
+              {/* EDIT */}
+              <Link
+                // to={`/Apps/Secondarylistview/TR332/Payment/135/320/EditPayment/${params.row.RecordID}/E`}
+                to={`./EditPayment/${params.row.RecordID}/E`}
+                // to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
 
-                          state={{
-                            code: params.row.Code,
-                            Desc: params.row.Name,
-                            MilestoneID: params.row.RecordID,
-                            projectID: params.row.ProjectID,
-                            OperationStageID: params.row.OperationStageID,
-                            projectName: params.row.Project,
-                            Employee: params.row.Employee,
-                          }}
-                        >
-                          <Tooltip title="Edit">
-                            <IconButton color="info" size="small">
-                              <ModeEditOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
+                state={{
+                  code: params.row.Code,
+                  Desc: params.row.Name,
+                  MilestoneID: params.row.RecordID,
+                  projectID: params.row.ProjectID,
+                  OperationStageID: params.row.OperationStageID,
+                  projectName: params.row.Project,
+                  Employee: params.row.Employee,
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
 
-                        {/* PDF */}
-                        <Tooltip title="Download Receipt">
-                          <span>
-                            <PDFDownloadLink
-                              document={
+              {/* PDF */}
+              <Tooltip title="Download Receipt">
+                <span>
+                  <PDFDownloadLink
+                    document={
 
-                                <PaymentReceipt
-                                  data={{
+                      <PaymentReceipt
+                        data={{
 
-                                    Employee: params.row?.ReceiverName,
-                                    EmployeeID: params.row?.EmployeeCode,
-                                    FilterEmployee: params.row?.FilterEmployee,
-                                    PaymentMode: params.row?.PaymentMode,
-                                    InvoiceNo: params.row?.InvoiceNo,
-                                    InvoiceAmount: params.row?.InvoiceAmount,
-                                    PreviouslyPaid: params.row?.PreviouslyPaid,
-                                    MobileNo: params.row?.ReceiverMobileNo,
-                                    EmailID: params.row?.ReceiverEmailID,
-                                    Address: params.row?.ReceiverAddress,
-                                    CompanyName: params.row?.CompanyName,
-                                    paymentDetails: [
-                                      {
-                                        sno: 1,
-                                        PaymentReference: params.row?.PaymentRefereance,
-                                        PaidAmount: params.row?.PaidAmount,
-                                        DueAmount: params.row?.Due,
+                          Employee: params.row?.ReceiverName,
+                          EmployeeID: params.row?.EmployeeCode,
+                          FilterEmployee: params.row?.FilterEmployee,
+                          PaymentMode: params.row?.PaymentMode,
+                          InvoiceNo: params.row?.InvoiceNo,
+                          InvoiceAmount: params.row?.InvoiceAmount,
+                          PreviouslyPaid: params.row?.PreviouslyPaid,
+                          MobileNo: params.row?.ReceiverMobileNo,
+                          EmailID: params.row?.ReceiverEmailID,
+                          Address: params.row?.ReceiverAddress,
+                          CompanyName: params.row?.CompanyName,
+                          paymentDetails: [
+                            {
+                              sno: 1,
+                              PaymentReference: params.row?.PaymentRefereance,
+                              PaidAmount: params.row?.PaidAmount,
+                              DueAmount: params.row?.Due,
 
-                                      }
-                                    ]
-                                  }}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: sessionStorage.getItem("CompanyHeader"),
-                                    FooterImg: sessionStorage.getItem("CompanyFooter"),
-                                    CompanySignature: sessionStorage.getItem("CompanySignature"),
+                            }
+                          ]
+                        }}
+                        filters={{
+                          Imageurl: baseurl1,
+                          HeaderImg: sessionStorage.getItem("CompanyHeader"),
+                          FooterImg: sessionStorage.getItem("CompanyFooter"),
+                          CompanySignature: sessionStorage.getItem("CompanySignature"),
 
-                                  }}
-                                  footerHeight={footerHeight}
-                                />
-                              }
-                              fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <IconButton size="small">
-                                    <CircularProgress size={18} />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton size="small">
-                                    <PictureAsPdfIcon color="error" />
-                                  </IconButton>
-                                )
-                              }
-                            </PDFDownloadLink>
-                          </span>
-                        </Tooltip>
-                      </>
-                    </Box>)}
+                        }}
+                        footerHeight={footerHeight}
+                      />
+                    }
+                    fileName={`Receipt_${params.row?.ReceiverName}_${getTodayDate()}.pdf`}                            >
+                    {({ loading }) =>
+                      loading ? (
+                        <IconButton size="small">
+                          <CircularProgress size={18} />
+                        </IconButton>
+                      ) : (
+                        <IconButton size="small">
+                          <PictureAsPdfIcon color="error" />
+                        </IconButton>
+                      )
+                    }
+                  </PDFDownloadLink>
+                </span>
+              </Tooltip>
+            </>
+          </Box>)}
 
         {accessID === "TR027" && (
           <Box>
@@ -8284,6 +8284,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   BreadCrumb1: params.row.Project,
                   BreadCrumb2: params.row.Term,
                   BreadCrumb3: params.row.Description,
+                  TermName: params.row.TermName,
+                  TermsID: params.row.TermID,
+                  SlotGroupID: params.row.SlotGroupID,
+                  GroupID: params.row.SlotGroupID,
+                  HeaderID: params.row.RecordID,
                   isprocess: params.row.IsProcess
                 }}
               >
@@ -8304,7 +8309,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   BreadCrumb1: params.row.Project,
                   BreadCrumb2: params.row.Term,
                   BreadCrumb3: params.row.Description,
-
+                  TermName: params.row.TermName,
+                  SlotGroupID: params.row.SlotGroupID,
+                  GroupID: params.row.SlotGroupID,
+                  HeaderID: params.row.RecordID,
+                  isprocess: params.row.IsProcess
                 }}
               >
                 <Tooltip title="View">
@@ -8314,7 +8323,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            <Link
+            {/* <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8337,7 +8346,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link>
+            </Link> */}
 
             {params.row.IsProcess === "N" ? (
               <Tooltip title="Process">
@@ -8395,19 +8404,19 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR380" && (
           <>
-           
-              <Link
-                to={`./EditSettlements/${params.row.RecordID}/E`}
-                state={{
-                  BreadCrumb1: params.row.Project,
-                }}
-              >
-                <Tooltip title="Edit">
-                  <IconButton color="info" size="small">
-                    <ModeEditOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Link>
+
+            <Link
+              to={`./EditSettlements/${params.row.RecordID}/E`}
+              state={{
+                BreadCrumb1: params.row.Project,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
           </>
         )}
       </div>

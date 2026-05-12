@@ -491,6 +491,7 @@ export const getApiSlice = createSlice({
         state.Status = "error";
         state.loading = false;
       })
+     
 
       //SLOT ADDCAE IN COMPANY EXPLORE
       .addCase(slotListView.pending, (state, action) => {

@@ -451,5 +451,12 @@
   },
   "Allowance": {
     "Allowance": "Please select the Allowance"
+},
+  "Settlement": {
+    "Amount": "Please enter the Amount",
+    "paymentmode": "Please select the Mode Of Payment",
+    "Date": "Please select the Date",
+    "GiverID": "Please select the Giver",
+    "ReceiverID": "Please select the Receiver"
 }
 }
