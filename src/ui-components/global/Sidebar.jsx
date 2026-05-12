@@ -1160,23 +1160,23 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
-            {
-            name: "Admission",
-            url: "./TR379/Admission",
-            id: 5596,
-            icon: (
-              <Tooltip title="Admission">
-                <ContactsIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR379",
-          },
+          //   {
+          //   name: "Admission",
+          //   url: "./TR379/Admission",
+          //   id: 5596,
+          //   icon: (
+          //     <Tooltip title="Admission">
+          //       <ContactsIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR379",
+          // },
           {
             name: "Attendance(D)",
             url: "/Apps/TR260/Editdailyattendance",
@@ -1340,26 +1340,26 @@ const Sidebars = () => {
       //   ],
       // },
 
-      {
-        name: "Assessment",
-        id: 4579,
-        MenuID: "ST1609",
-        Tooltipname: "Assessment",
-        icon: (
-          <Tooltip title="Assessment">
-            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        url: "/Apps/TR299/List Of Assessment Type",
-        UGA_ADD: true,
-        UGA_DEL: true,
-        UGA_MOD: true,
-        UGA_PRINT: true,
-        UGA_PROCESS: true,
-        UGA_VIEW: true,
-        UGA_ACCESSIDS: "TR299",
+      // {
+      //   name: "Assessment",
+      //   id: 4579,
+      //   MenuID: "ST1609",
+      //   Tooltipname: "Assessment",
+      //   icon: (
+      //     <Tooltip title="Assessment">
+      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   url: "/Apps/TR299/List Of Assessment Type",
+      //   UGA_ADD: true,
+      //   UGA_DEL: true,
+      //   UGA_MOD: true,
+      //   UGA_PRINT: true,
+      //   UGA_PROCESS: true,
+      //   UGA_VIEW: true,
+      //   UGA_ACCESSIDS: "TR299",
 
-      },
+      // },
       {
         name: "Document",
         id: 43468,

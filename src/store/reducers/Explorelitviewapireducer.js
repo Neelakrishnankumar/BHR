@@ -382,10 +382,10 @@ export const getApiSlice = createSlice({
         state.Status = "success";
         state.loading = false;
 
-        state.Data = action.payload.Data;
+        state.Data = action.payload?.Data;
 
-        if (action.payload.Data.Groupaccess) {
-          state.explorerowData = action.payload.Data.Groupaccess;
+        if (action.payload?.Data?.Groupaccess) {
+          state.explorerowData = action.payload?.Data?.Groupaccess;
         }
 
         // state.explorecolumnData= action.payload.columndata

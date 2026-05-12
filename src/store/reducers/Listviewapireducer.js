@@ -8323,7 +8323,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {/* <Link
+            <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8346,7 +8346,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link> */}
+            </Link>
 
             {params.row.IsProcess === "N" ? (
               <Tooltip title="Process">
