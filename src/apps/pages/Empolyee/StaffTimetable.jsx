@@ -786,6 +786,7 @@ const StaffTimetable = () => {
     const handleApply = async (values) => {
         const payload = {
             TermsID: values?.terms?.RecordID || "",
+            SlotGroupID: values?.Slotgroup?.RecordID || "",
             EmployeeIDs: params.id || "",
             CompanyID: companyId,
         };
@@ -863,7 +864,7 @@ const StaffTimetable = () => {
                                     name="terms"
                                     label={
                                         <>
-                                            Terms
+                                            Term
                                             <span style={{ color: "red", fontSize: "20px" }}>
                                                 *
                                             </span>
@@ -886,6 +887,42 @@ const StaffTimetable = () => {
                                     helperText={touched.terms && errors.terms}
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms","Filter":"EmployeeID IN ('${params.id}') AND CompanyID=${companyId}","Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
                                 />
+
+                                 <CheckinAutocomplete
+                                                  name="Slotgroup"
+                                                   label={
+                                                    <>
+                                                      Slot Group
+                                                      <span style={{ color: "red", fontSize: "20px" }}>
+                                                        *
+                                                      </span>
+                                                    </>
+                                                  }
+                                                  id="Slotgroup"
+                                                  value={values.Slotgroup}
+                                                  onChange={(newValue) =>
+                                                    setFieldValue("Slotgroup", {
+                                                      RecordID: newValue.RecordID,
+                                                      Code: newValue.Code,
+                                                      Name: newValue.Name,
+                                                    })
+                                                  }
+                                                  url={`${listViewurl}?data=${JSON.stringify({
+                                                    Query: {
+                                                      AccessID: "2180",
+                                                      ScreenName: "Slotgroup",
+                                                    //   Filter: values?.Teacher
+                                                    //     ? `EmployeeID IN ('${Array.isArray(values.Teacher)
+                                                    //       ? values.Teacher.map(t => t.RecordID).join("','")
+                                                    //       : values.Teacher.RecordID
+                                                    //     }') AND CompanyID='${companyId}'`
+                                                    //     : `CompanyID='${companyId}'`,
+                                                      Filter: `EmployeeID IN('${params.id}') AND CompanyID='${companyId}' GROUP BY RecordID`,
+                                                      Any: "",
+                                                      VerticalLicense: sliceSubcriptionCode || "",
+                                                    },
+                                                  })}`}
+                                                />
                             </Box>
 
                             {/* ── ACTION BUTTONS ── */}
