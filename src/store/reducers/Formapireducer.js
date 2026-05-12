@@ -52,7 +52,8 @@ const initialState = {
     categories: [],
     TableData: { data: [] },
   },
- 
+  AutogeneratecolumnData: [],
+  AutogeneraterowData: [],
   stockorderData: {},
   matrialDcTrackData: [],
   purchaseorderratingData: [],
@@ -183,7 +184,7 @@ const initialState = {
 //CRM_ITEM_STOCK_ANALYTICS
 Itemstockstatus: "",
  itemstockDataAnalyticsLoading: false,
-  itemstockDataAnalytics:{},
+  itemstockDataAnalytics:[],
 
   //ORDER ITEM --> REPLACEMENT QTY
   replacementQtyGetdata: {},
@@ -249,9 +250,9 @@ Itemstockstatus: "",
   PartyResetloading: false,
   PartyResetstatus: "",
 
-  Timetableresetstatus:"",
-  Timetableresetloading:false,
-  Timetableresetdata:{},
+  Timetableresetstatus: "",
+  Timetableresetloading: false,
+  Timetableresetdata: {},
 
 
   //PartyAnalytics POST
@@ -612,10 +613,10 @@ export const ItemstockAnalyticsGET = createAsyncThunk(
     var url = store.getState().globalurl.ItemAlyticsUrl;
     var data = {
       // Query: {
-        CompanyID: CompanyID,
-        EmployeeID: EmployeeID,
-        FromDate: FromDate,
-        ToDate: ToDate
+      CompanyID: CompanyID,
+      EmployeeID: EmployeeID,
+      FromDate: FromDate,
+      ToDate: ToDate
 
       // },
     };
@@ -1989,7 +1990,7 @@ export const CustomisedCaptionGet = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.error("❌ API Error:", error);
+      console.error("API Error:", error);
       throw error;
     }
   }
@@ -2751,10 +2752,10 @@ export const InvoiceAnalyticsget = createAsyncThunk(
       console.log(" URL:", url);
 
       const response = await axios.post(url, payload, {
-       headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
       });
 
       console.log(" API RESPONSE:", response.data);
@@ -2774,9 +2775,9 @@ export const TeacherOccupancyget = createAsyncThunk(
 
       const response = await axios.post(url, payload, {
         headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
       });
 
       console.log("API RESPONSE:", response.data);
@@ -2821,9 +2822,9 @@ export const TimeTableGenerateget = createAsyncThunk(
 
       const response = await axios.post(url, payload, {
         headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
       });
 
       console.log("API RESPONSE:", response.data);
@@ -2947,6 +2948,7 @@ export const getApiSlice = createSlice({
   initialState,
   reducers: {
     resetTrackingData(state) {
+      state.itemstockDataAnalytics = [];
       state.trackingData = [];
       state.customerData = {};
       state.productanalysisData = {};
@@ -3068,6 +3070,14 @@ export const getApiSlice = createSlice({
         AppliedStatus: "",
       };
     },
+    clearData: (state, action) => {
+      state.Data = {};
+      state.AutogeneraterowData = [];
+      state.AutogeneratecolumnData = [];
+      state.breakSlots = [];
+      state.Status = "";
+      state.loading = false;
+    },
   },
   extraReducers(builder) {
     builder
@@ -3156,8 +3166,8 @@ export const getApiSlice = createSlice({
         state.invoiceAnalyticsError = action.payload || "Failed to fetch invoice analytics";
         state.invoiceAnalyticsData = null;
       })
-//SLOTS_GET_addcase
-  .addCase(SlotGetfunction.pending, (state, action) => {
+      //SLOTS_GET_addcase
+      .addCase(SlotGetfunction.pending, (state, action) => {
         state.slotStatus = "idle";
         state.slotLoading = true;
         state.slotgetData = [];
@@ -3949,9 +3959,9 @@ export const getApiSlice = createSlice({
       .addCase(getResignation.fulfilled, (state, action) => {
         state.ResignationGetData = action.payload.Data;
       })
-//CRM_ITEM_STOCK_GET
+      //CRM_ITEM_STOCK_GET
 
-  .addCase(ItemstockAnalyticsGET.pending, (state, action) => {
+      .addCase(ItemstockAnalyticsGET.pending, (state, action) => {
         state.Itemstockstatus = "idle";
         state.itemstockDataAnalyticsLoading = true;
         // state.materialTrackingData = {
@@ -3961,7 +3971,7 @@ export const getApiSlice = createSlice({
         //   categories: [],
         //   TableData: { data: [] },
         // };
-        state.itemstockDataAnalytics = {}
+        state.itemstockDataAnalytics = []
       })
 
       .addCase(ItemstockAnalyticsGET.fulfilled, (state, action) => {
@@ -3972,7 +3982,7 @@ export const getApiSlice = createSlice({
       .addCase(ItemstockAnalyticsGET.rejected, (state, action) => {
         state.Itemstockstatus = "Error";
         state.itemstockDataAnalyticsLoading = false;
-        state.itemstockDataAnalytics = {};
+        state.itemstockDataAnalytics = [];
       })
 
 
@@ -4377,7 +4387,110 @@ export const getApiSlice = createSlice({
         state.itemMainGetDataloading = false;
         state.error = action.error.message;
       })
+      // .addCase(TimeTableGenerateget.pending, (state) => {
+      //   state.Status = "loading";
+      //   state.loading = true;
+      //   state.Data = {};
+      //   state.AutogeneratecolumnData = [];
+      //   state.AutogeneratecolumnData = [];
+      // })
 
+      // .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.loading = false;
+
+      //   const data = action.payload.TimetableView;
+      //   const breakSlots = action.payload.TimetableView?.BreakSlots;
+
+      //   //  Save raw response
+      //   state.Data = data;
+      //   state.breakSlots = breakSlots; 
+      //   //  Create dynamic columns
+      //   state.AutogeneratecolumnData = [
+      //     {
+      //       field: "day",
+      //       headerName: "Days",
+      //       flex: 1,
+      //       headerAlign: "center",
+      //       align: "center",
+      //     },
+      //     ...data.timeSlots.map((slot) => ({
+      //       field: slot,
+      //       headerName: slot,
+      //       flex: 1,
+      //       headerAlign: "center",
+      //       align: "center",
+      //     })),
+      //   ];
+
+      //   //  Create dynamic rows
+      //   state.AutogeneraterowData = data.schedule.map((item, index) => ({
+      //     id: index + 1,
+      //     day: item.day,
+      //     ...item.slots,
+      //   }));
+      // })
+
+      // .addCase(TimeTableGenerateget.rejected, (state) => {
+      //   state.Status = "error";
+      //   state.loading = false;
+      // })
+      .addCase(TimeTableGenerateget.pending, (state) => {
+        state.Status = "loading";
+        state.loading = true;
+        // REMOVE: state.Data = {}; — don't clear Data on pending
+        state.AutogeneratecolumnData = [];
+        state.AutogeneraterowData = [];   //  fix typo: was AutogeneratecolumnData twice
+      })
+
+      .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+
+        const fullPayload = action.payload;
+        const timetableView = fullPayload?.TimetableView;
+
+        if (!timetableView) return; // guard if TimetableView missing
+
+        //  Store the FULL response so calendarData?.TimetableView works in component
+        state.Data = fullPayload;
+        state.breakSlots = timetableView?.BreakSlots || [];
+
+        //  Build columns: first col = Day, then one per timeSlot
+        const timeSlots = timetableView.timeSlots || [];
+        const schedule = timetableView.schedule || [];
+
+        state.AutogeneratecolumnData = [
+          {
+            field: "day",
+            headerName: "Days",
+            width: 110,
+            headerAlign: "center",
+            align: "center",
+          },
+          ...timeSlots.map((slot, index) => ({
+            field: `slot_${index}`,   //  safe field key (matches component logic)
+            headerName: slot,
+            width: 140,
+            headerAlign: "center",
+            align: "center",
+          })),
+        ];
+
+        //  Build rows: one per day, slot_N as field keys
+        state.AutogeneraterowData = schedule.map((item, index) => {
+          const row = { id: index, day: item.day };
+          timeSlots.forEach((slot, i) => {
+            row[`slot_${i}`] = item.slots?.[slot] || "";
+          });
+          return row;
+        });
+      })
+
+      .addCase(TimeTableGenerateget.rejected, (state) => {
+        state.Status = "error";
+        state.loading = false;
+      })
       //LEADER GET
       .addCase(LeadEnquiryFilterGet.pending, (state) => {
         state.leaderEnquiryGetData = {};
@@ -4690,7 +4803,7 @@ export const getApiSlice = createSlice({
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
       })
-       .addCase(TimetableProcessController.pending, (state, action) => {
+      .addCase(TimetableProcessController.pending, (state, action) => {
         state.Timetableresetstatus = "idle";
         state.Timetableresetloading = true;
       })
@@ -4791,6 +4904,7 @@ export const {
   resetPartyAnalyticsdata,
   resetTimeSheetAttendance,
   // packingListCarton
+  clearData,
   ratingChange,
 } = getApiSlice.actions;
 

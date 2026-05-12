@@ -9487,7 +9487,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -9501,7 +9501,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -9515,7 +9515,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -9529,7 +9529,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Thursday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Thursday</FormLabel>
@@ -9543,7 +9543,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Friday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Friday</FormLabel>
@@ -9557,7 +9557,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Saturday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Saturday</FormLabel>
@@ -9571,7 +9571,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Sunday"
-                      disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
