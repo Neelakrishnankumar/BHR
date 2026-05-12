@@ -126,7 +126,7 @@ import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
-
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -727,6 +727,7 @@ export const fetchListview =
           AccessID != "TR328" &&
           AccessID != "TR243" &&
           AccessID != "TR321" &&
+          AccessID != "TR382" &&
           AccessID != "TR315" &&
           AccessID != "TR362" &&
           AccessID != "TR316" &&
@@ -740,6 +741,7 @@ export const fetchListview =
           AccessID != "TR338" &&
           AccessID != "TR339" &&
           AccessID != "TR331" &&
+          AccessID != "TR366" &&
           AccessID != "TR351" &&
           AccessID != "TR127" &&
           AccessID != "TR332" &&
@@ -828,6 +830,7 @@ export const fetchListview =
         AccessID == "TR351" ||
         AccessID == "TR282" ||
         AccessID == "TR331" ||
+        AccessID == "TR366" ||
         AccessID == "TR332" ||
         AccessID == "TR373"
       ) {
@@ -1167,6 +1170,58 @@ export const fetchListview =
       else if (AccessID == "TR331") {
         const savedFilters =
           JSON.parse(sessionStorage.getItem("TR331_Filters")) || null;
+
+        if (savedFilters) {
+          const conditions = [];
+
+          // 🔹 FORMAT DATE HERE
+          if (savedFilters.fromDate && savedFilters.toDate) {
+            const fromDate = formatToDMY(savedFilters.fromDate);
+            const toDate = formatToDMY(savedFilters.toDate);
+
+            conditions.push(`Date BETWEEN '${fromDate}' AND '${toDate}'`);
+          }
+
+          if (savedFilters.attmonth) {
+            conditions.push(`BillableMonth='${savedFilters.attmonth}'`);
+          }
+
+          if (savedFilters.attyear) {
+            conditions.push(`BillableYear='${savedFilters.attyear}'`);
+          }
+
+          if (savedFilters.Employee?.length > 0) {
+            const EmpIds = savedFilters.Employee.map(
+              (e) => `'${e.RecordID}'`,
+            ).join(",");
+            conditions.push(`EmployeeID IN (${EmpIds})`);
+          }
+
+          if (savedFilters.project?.length > 0) {
+            const projIds = savedFilters.project
+              .map((p) => `'${p.RecordID}'`)
+              .join(",");
+            conditions.push(`ProjectID IN (${projIds})`);
+          }
+
+          conditions.push(`CompanyID ='${CompId}'`);
+
+          filter = conditions.join(" AND ");
+        } else {
+          const MangerEmpID =
+            JSON.parse(sessionStorage.getItem("MangerEmpID")) || [];
+
+          if (!MangerEmpID.length) return;
+
+          // const fromDate = formatToDMY(defaultFromDate);
+          // const toDate = formatToDMY(defaultToDate);
+
+          filter = `EmployeeID IN (${MangerEmpID.join(",")}, '${empID}') AND Date BETWEEN '${defaultFromDate}'AND '${defaultToDate}'AND BillableMonth ='${currentMonthNumber}'AND BillableYear='${currentYear}'AND CompanyID ='${CompId}'`;
+        }
+      }
+      else if (AccessID == "TR366") {
+        const savedFilters =
+          JSON.parse(sessionStorage.getItem("TR366_Filters")) || null;
 
         if (savedFilters) {
           const conditions = [];
@@ -2075,6 +2130,35 @@ export const fetchListview =
                         <Tooltip title="Standard/Activities">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR382") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/SecondarylistView/TR382/Event Category/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Event Category">
+                          <IconButton color="info" size="small">
+                            <EventOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
