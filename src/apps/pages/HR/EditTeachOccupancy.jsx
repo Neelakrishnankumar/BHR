@@ -1506,6 +1506,7 @@ const TeacherOccupancy = () => {
     const payload = {
       TermsID: values?.terms?.RecordID || "",
       EmployeeIDs: values?.Teacher?.map((t) => t.RecordID) || [],
+      SlotGroupID: values?.Slotgroup?.RecordID || "",
       CompanyID: companyId,
     };
     setApiLoading(true);
@@ -1573,11 +1574,25 @@ const TeacherOccupancy = () => {
                 display="grid"
                 gap={formGap}
                 p={1}
-                gridTemplateColumns="repeat(2, minMax(0,1fr))"
+                 gridTemplateColumns={
+    isNonMobile
+      ? "repeat(3, minmax(0,1fr))"
+      : "repeat(1, minmax(0,1fr))"
+  }
+                // gridTemplateColumns="repeat(2, minMax(0,1fr))"
                 sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
               >
                 <MultiFormikOptimizedAutocomplete
-                  name="Teacher" label="Teacher" id="Teacher"
+                  name="Teacher"
+                     label={
+                    <>
+                      Teachers
+                      <span style={{ color: "red", fontSize: "20px" }}>
+                        *
+                      </span>
+                    </>
+                  }
+                    id="Teacher"
                   value={values.Teacher}
                   onChange={(e, newValue) => {
                     setFieldValue("Teacher", newValue);
@@ -1592,17 +1607,17 @@ const TeacherOccupancy = () => {
                     },
                   })}`}
                 />
-                {/* <CheckinAutocomplete
-                  name="terms" label="Term" id="terms"
-                  value={values.terms}
-                  onChange={(newValue) => setFieldValue("terms", {
-                    RecordID: newValue.RecordID, Code: newValue.Code, Name: newValue.Name,
-                  })}
-                  url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms", Filter: teacherIds? `EmployeeID IN ('${teacherIds}') AND CompanyID='${companyId}'`: `CompanyID='${companyId}'`,,"Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
-                /> */}
+         
                 <CheckinAutocomplete
                   name="terms"
-                  label="Term"
+                   label={
+                    <>
+                     Term
+                      <span style={{ color: "red", fontSize: "20px" }}>
+                        *
+                      </span>
+                    </>
+                  }
                   id="terms"
                   value={values.terms}
                   onChange={(newValue) =>
@@ -1622,6 +1637,42 @@ const TeacherOccupancy = () => {
                           : values.Teacher.RecordID
                         }') AND CompanyID='${companyId}'`
                         : `CompanyID='${companyId}'`,
+                      Any: "",
+                      VerticalLicense: sliceSubcriptionCode || "",
+                    },
+                  })}`}
+                />
+
+                    <CheckinAutocomplete
+                  name="Slotgroup"
+                   label={
+                    <>
+                      Slot Group
+                      <span style={{ color: "red", fontSize: "20px" }}>
+                        *
+                      </span>
+                    </>
+                  }
+                  id="Slotgroup"
+                  value={values.Slotgroup}
+                  onChange={(newValue) =>
+                    setFieldValue("Slotgroup", {
+                      RecordID: newValue.RecordID,
+                      Code: newValue.Code,
+                      Name: newValue.Name,
+                    })
+                  }
+                  url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                      AccessID: "2180",
+                      ScreenName: "Slotgroup",
+                      Filter: values?.Teacher
+                        ? `EmployeeID IN ('${Array.isArray(values.Teacher)
+                          ? values.Teacher.map(t => t.RecordID).join("','")
+                          : values.Teacher.RecordID
+                        }') AND CompanyID='${companyId}' GROUP BY RecordID`
+                        : `CompanyID='${companyId}' GROUP BY RecordID`,
+                      // Filter: `CompanyID='${companyId}'`,
                       Any: "",
                       VerticalLicense: sliceSubcriptionCode || "",
                     },

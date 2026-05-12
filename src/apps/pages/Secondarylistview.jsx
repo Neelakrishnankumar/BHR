@@ -125,6 +125,7 @@ const ListviewSecondary = () => {
   console.log("🚀 ~ ListviewSecondary ~ params:", params)
   const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const is003Subscription = SubscriptionCode.endsWith("003");
   // const Subscriptionlastthree = SubscriptionCode.slice(-3) || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -1144,7 +1145,13 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   //navigate("/Apps/TR133/Project");
-                  navigate(-1);
+                  // navigate(-1);
+                  {
+                    is003Subscription ?
+                      navigate("/Apps/TR331/Invoice") :
+                      navigate("/Apps/TR366/Invoice");
+                  }
+
                 }}
               >
                 {`Invoice(${state.Employee})`}
@@ -4458,12 +4465,12 @@ const ListviewSecondary = () => {
                 false
               ) : accessID == "TR335" ? (
                 false
-              ): accessID == "TR371" ? (
+              ) : accessID == "TR371" ? (
                 false
-              ): accessID == "TR372" ? (
+              ) : accessID == "TR372" ? (
                 false
-              ): accessID == "TR373" ? (
-                false            
+              ) : accessID == "TR373" ? (
+                false
               ) : accessID == "TR288" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -6346,8 +6353,8 @@ const ListviewSecondary = () => {
                         label="Process"
                         variant="outlined"
                       />
-                       <Chip
-                      icon={<RestartAltOutlinedIcon color="error" />}
+                      <Chip
+                        icon={<RestartAltOutlinedIcon color="error" />}
                         label="Unprocess"
                         variant="outlined"
                       />
