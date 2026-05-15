@@ -2892,7 +2892,28 @@ export const TimeTableGenerateget = createAsyncThunk(
     }
   }
 );
+export const TimeTableDelete = createAsyncThunk(
+  "Standard/TimeTableDelete",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.TimeTableDelete;
 
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const companyTermsGet = createAsyncThunk(
   "COMPANY_TERMS_GET/GET",
   async ({ CompanyID }) => {

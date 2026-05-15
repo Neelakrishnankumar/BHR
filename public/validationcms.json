@@ -2,7 +2,8 @@
   "Designation": {
     "code": "Please enter the Code",
     "name": "Please enter the Name",
-    "rank": "Please enter the Rank"
+    "rank": "Please enter the Rank",
+    "InstiLevel": "Please enter the Level"
   },
   "Department": {
     "Code": "Please enter the Code",
@@ -192,6 +193,7 @@
     "BillingUnits": "Please select the Billing Units",
     "BillingType": "Please select the Billing Type",
     "UnitRate": "Please enter the Unit Rate",
+    "Description": "Please enter the Description",
     "Hsn": "Please enter the HSN Code",
     "shift": "Please select the Shift 1",
     "standardActivities": "Please select the Standard/Activities"

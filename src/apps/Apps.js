@@ -224,6 +224,12 @@ import EditEmergency from "./pages/HR/EditEmergency";
 import EditAcademicsForm from "./pages/HR/EditAcademicsForm";
 import EditSports from "./pages/HR/EditSports";
 import EditCulturals from "./pages/HR/EditCulturals";
+import Circular from "./pages/HR/Cirucular";
+import EditPTA from "./pages/HR/EditPTAmeeting";
+import EditWorkshop from "./pages/HR/EditWorkshop";
+import EditHolidayevent from "./pages/HR/EditHolidayevent";
+import EditTermfeesstructure from "./pages/Empolyee/EditTermfeestruct";
+import EditAnnaulfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -426,6 +432,11 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:screenName/:accessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID2/:screenName2/:parentID2/:screenName1/:accessID1/:parentID1/:screenName/:accessID/:parentID"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* /Apps/SecondarylistView/TR275/Project/2/Academic%20Type/TR386/L/Termwise/TR387/1 */}
                   {/* /Apps/Secondarylistview/TR371/BFWEnquiry/2/Detail/TR372/691 */}
                   {/* /Apps/Secondarylistview/TR371/DMEnquiry/2/TR372/693 */}
                   <Route
@@ -804,9 +815,16 @@ function App() {
                     path="/:accessID/:screenName/EditLeave Type/:id/:Mode"
                     element={<LeaveType />}
                   />
-                  <Route
+                  {/* <Route
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
+                  /> */}
+                  <Route
+                    path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // element={<Circular />}
+                    // element={<EditPTA />}
+                    // element={<EditWorkshop />}
+                    element={<EditHolidayevent />}
                   />
 
                   <Route
@@ -1561,6 +1579,15 @@ function App() {
                    <Route
                   path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                   element={<EditTimetablev1 />}
+                  />
+                   <Route
+                  //  /Apps/SecondarylistView/TR275/Project/2/Academic%20Type/TR386/L/Fees%20Structure/TR387/2/EditFees%20Structure/-1/A
+                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditTermFeestructure/:id/:Mode"
+                  element={<EditTermfeesstructure />}
+                  />
+                   <Route
+                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditAnnualFeestructure/:id/:Mode"
+                  element={<EditAnnaulfeestructure />}
                   />
                   <Route
                   path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"
