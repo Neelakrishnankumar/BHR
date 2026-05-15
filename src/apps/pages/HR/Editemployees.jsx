@@ -635,15 +635,18 @@ const Editemployee = () => {
           // Department: Yup.object()
           //   .nullable()
           //   .required(data.Employee.Department),
-          Department: Yup.array()
-            .min(1, data.Employee.Department)  //FIXED
-            .required(data.Employee.Department),
+
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
 
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
+        }
+        if (!isStudentClassification) {
+          Department: Yup.array()
+            .min(1, data.Employee.Department)  //FIXED
+            .required(data.Employee.Department)
         }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
@@ -838,7 +841,7 @@ const Editemployee = () => {
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
-          // Hsn: Yup.string().required(data.ContractsIN.Hsn),
+          Description: Yup.string().required(data.ContractsIN.Description),
           Hsn: Yup.string().when("BillingType", {
             is: (val) => val !== "CashMemo",
             then: (schema) => schema.required(data.ContractsIN.Hsn),
@@ -846,7 +849,7 @@ const Editemployee = () => {
           }),
         };
 
-        // ✅ conditionally add vendor
+        // conditionally add vendor
         if (!is003Subscription) {
           schemaFields9.vendor = Yup.object()
             .required(data.ContractsIN.vendor)
@@ -2449,7 +2452,7 @@ const Editemployee = () => {
                                   ? "List of Documents"
                                   : show == "8"
                                     ? `List of ${getBusinessCaption("ContractIn",
-                                       "Contract In")}`
+                                      "Contract In")}`
                                     : show == "23"
                                       // ? `List of ${getBusinessCaption("ContractIn", "Contracts")}`
                                       ? `List of Course Attendance`
@@ -5300,6 +5303,7 @@ const Editemployee = () => {
                 handleSubmit,
                 setFieldValue,
               }) => (
+
                 <form onSubmit={handleSubmit}>
                   {/* {JSON.stringify(errors)} */}
                   {!isStudentClassification ? (
@@ -5591,9 +5595,9 @@ const Editemployee = () => {
                             },
                           }}
                           focused
-                        sx={{
-                          marginTop:"1px"
-                        }}
+                          sx={{
+                            marginTop: "1px"
+                          }}
                         />
 
                         <TextField
@@ -6345,7 +6349,7 @@ const Editemployee = () => {
                             multiline
                           // rows={2}
                           />
-                          <TextField
+                          {/* <TextField
                             fullWidth
                             variant="standard"
                             type="number"
@@ -6370,7 +6374,7 @@ const Editemployee = () => {
                                 style: { textAlign: "right" },
                               },
                             }}
-                          />
+                          /> */}
                         </FormControl>
                       </Box>)}
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
@@ -9103,9 +9107,9 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         {SubscriptionCode ? "School" : "office"}
                       </FormLabel>
-                     {/* Extra options only when no SubscriptionCode */}
+                      {/* Extra options only when no SubscriptionCode */}
 
-                       <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="workfromhome"
@@ -9118,8 +9122,8 @@ const Editemployee = () => {
                       />
 
                       <FormLabel focused={false}>
-                        
-                         {SubscriptionCode ? "Online Class" : "Work From Home"}
+
+                        {SubscriptionCode ? "Online Class" : "Work From Home"}
                       </FormLabel>
 
                       <Field
@@ -9137,27 +9141,27 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Hybrid
                       </FormLabel>
-                          {!SubscriptionCode && (
-      <>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="onsite"
-                        id="onsite"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="onsite"
-                      // disabled
-                      />
+                      {!SubscriptionCode && (
+                        <>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="onsite"
+                            id="onsite"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="onsite"
+                          // disabled
+                          />
 
-                      <FormLabel focused={false}>
-                        Onsite
-                      </FormLabel>
-                     </>
-    )}
+                          <FormLabel focused={false}>
+                            Onsite
+                          </FormLabel>
+                        </>
+                      )}
                     </Box>
-                     
+
                   </Box>
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
@@ -9487,7 +9491,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -9501,7 +9505,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -9515,7 +9519,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -9529,7 +9533,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Thursday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Thursday</FormLabel>
@@ -9543,7 +9547,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Friday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Friday</FormLabel>
@@ -9557,7 +9561,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Saturday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Saturday</FormLabel>
@@ -9571,7 +9575,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Sunday"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
@@ -13302,8 +13306,17 @@ const Editemployee = () => {
                         value={values.Description}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Description"
+                        label={
+                          <>
+                            Description
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
                         focused
+                         error={!!touched.Description && !!errors.Description}
+                        helperText={touched.Description && errors.Description}
                       // inputProps={{ readOnly: true }}
                       />
                       {/* <SingleFormikOptimizedAutocomplete

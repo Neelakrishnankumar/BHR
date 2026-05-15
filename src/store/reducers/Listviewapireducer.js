@@ -73,6 +73,7 @@ import {
   Download,
   Psychology,
 } from "@mui/icons-material";
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import { Visibility } from "@mui/icons-material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -753,7 +754,9 @@ export const fetchListview =
           AccessID != "TR375" &&
           AccessID != "TR368" &&
           AccessID != "TR380" &&
-          AccessID != "TR377"
+          AccessID != "TR377" &&
+          AccessID != "TR387" &&
+          AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
           // console.log("---4---",filter);
@@ -834,7 +837,9 @@ export const fetchListview =
         AccessID == "TR331" ||
         AccessID == "TR366" ||
         AccessID == "TR332" ||
-        AccessID == "TR373"
+        AccessID == "TR373" ||
+        AccessID == "TR386" ||
+        AccessID == "TR387"
       ) {
         filter = filter;
       }
@@ -2071,6 +2076,71 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={`./EditSalary%20Component/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR386") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        // to={`./Fees Structure/TR387/${params.row.RecordID}`}
+                        to={
+                          params.row.RecordID == 1
+                            ? `./TermFeestructure/TR387/${params.row.RecordID}`
+                            : `./AnnualFeestructure/TR387/${params.row.RecordID}`
+                        }
+                      >
+                        <Tooltip title="Fees Structure">
+                          <IconButton color="info" size="small">
+                            <ArtTrackIcon/>
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR387") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={
+                          params.row.AcademicyearID == 1
+                            ? `./EditTermFeestructure/${params.row.RecordID}/E`
+                            : `./EditAnnualFeestructure/${params.row.RecordID}/E`
+                        }
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">

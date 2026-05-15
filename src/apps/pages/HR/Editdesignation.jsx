@@ -86,7 +86,7 @@ const Editdesignation = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
- const lastThree = SubscriptionCode?.slice(-3) || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
@@ -107,7 +107,11 @@ const Editdesignation = () => {
         if (CompanyAutoCode === "N") {
           schemaFields.code = Yup.string().trim().required(data.Designation.code);
         }
-
+        if (Subscriptionlastthree === "003") {
+          schemaFields.rank = Yup.string()
+            .trim()
+            .required(data.Designation.InstiLevel);
+        }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
       })

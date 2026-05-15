@@ -30,6 +30,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -42,6 +43,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import PaymentIcon from '@mui/icons-material/Payment';
 import {
   fetchListview,
   productionColorlookupOpen,
@@ -296,6 +298,12 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR275") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR386") {
+    filter = "";
+  }
+   else if (accessID == "TR387") {
+    filter = `AcademicYearID = '${parentID2}' AND AcadamicTypeID='${params.parentID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID === "TR371") {
 
@@ -4288,6 +4296,7 @@ const ListviewSecondary = () => {
             ) : (
               false
             )}
+
             {/* {accessID === "TR368" && (
               <Formik
                 initialValues={{
@@ -4426,6 +4435,18 @@ const ListviewSecondary = () => {
               </Formik>
             )} */}
             <GridToolbarQuickFilter />
+            {accessID === "TR275" && is003Subscription && (
+              <IconButton>
+                <Tooltip title="Fees Structure">
+                  <PaymentIcon
+                    onClick={() => {
+                      navigate(`./Academic Type/TR386/L`)
+                      // navigate(`./TR444/EditFees Structure/-1/A`)
+                      }}
+                  />
+                </Tooltip>
+              </IconButton>          
+            )}
             {accessID == "TR048" ? (
               false
             ) : accessID == "TR051" ? (
@@ -4776,7 +4797,7 @@ const ListviewSecondary = () => {
             </Tooltip>
           </Box>
         </GridToolbarContainer>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 
@@ -5567,6 +5588,14 @@ const ListviewSecondary = () => {
                       label="Skill Assessment"
                       variant="outlined"
                     />
+                  </Box>
+                ) : (accessID == "TR386") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ArtTrackIcon color="primary" />}
+                      label="Fees Structure"
+                      variant="outlined"
+                    />                  
                   </Box>
                 ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
                   <Box display="flex" flexDirection="row" gap={2} padding="25px">
