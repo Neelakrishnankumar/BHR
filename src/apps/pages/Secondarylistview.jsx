@@ -111,7 +111,7 @@ import { TimeTableExcelGet, TimeTableExcelPost } from "../../store/reducers/Form
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
-
+import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -235,6 +235,9 @@ const ListviewSecondary = () => {
   let parentID1 = params.parentID1;
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
+  console.log("🚀 ~ ListviewSecondary ~ parentID1:", parentID1)
+  console.log("🚀 ~ ListviewSecondary ~ parentID2:", parentID2)
+  console.log("🚀 ~ ListviewSecondary ~ parentID3:", parentID3)
   let parentID4 = params.parentID4;
   let SOPId = params.SOPId;
 
@@ -294,6 +297,9 @@ const ListviewSecondary = () => {
     filter = `SlotGroupID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR275") {
+    filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR384") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID === "TR371") {
@@ -457,6 +463,9 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR351") {
     filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
+  }
+  else if (accessID == "TR385") {
+    filter = `EventCategoryID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -2283,7 +2292,98 @@ const ListviewSecondary = () => {
                   </Typography>
                 </Breadcrumbs>
               </Box>
-            ) : accessID == "TR319" ? (
+            ): accessID == "TR384" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Event Categories
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ): accessID == "TR384" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Event Categories
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ) : accessID == "TR385" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`,
+                     {
+                        state: {
+                          ...state,
+                        }
+                      })}
+                  >
+                    Event Categories ({state.BreadCrumb1 || ""})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Events
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ): accessID == "TR319" ? (
               <Box display="flex" borderRadius="3px" alignItems="center">
                 <Breadcrumbs
                   maxItems={2}
@@ -4470,6 +4570,8 @@ const ListviewSecondary = () => {
                 false
               ) : accessID == "TR373" ? (
                 false
+              ) : accessID == "TR384" ? (
+                false
               ) : accessID == "TR288" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -6381,6 +6483,16 @@ const ListviewSecondary = () => {
                           icon={<DatasetLinkedIcon
                             color="primary" />}
                           label="Timetable"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ): 
+                    accessID == "TR384" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                        <Chip
+                          icon={<EventAvailableOutlinedIcon
+                            color="primary" />}
+                          label="Events"
                           variant="outlined"
                         />
                       </Box>

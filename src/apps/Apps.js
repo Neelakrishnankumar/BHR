@@ -219,6 +219,11 @@ import ProjectTimeTable from "./pages/Empolyee/ProjectTimeTable";
 import Editadmissionform from "./pages/Empolyee/Editadmissionform";
 import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
 import EditSettlements from "./pages/HR/EditSettlements";
+import EventsType from "./pages/HR/EventsType";
+import EditEmergency from "./pages/HR/EditEmergency";
+import EditAcademicsForm from "./pages/HR/EditAcademicsForm";
+import EditSports from "./pages/HR/EditSports";
+import EditCulturals from "./pages/HR/EditCulturals";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -455,6 +460,31 @@ function App() {
                   <Route
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1"
                     element={<ListviewSecondary />}
+                  />
+                  {/* EVENTS */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* EMERGENCY */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/E/EditEvents/:id/:Mode"
+                    element={<EditEmergency />}
+                  />
+                  {/* ACADEMMICS */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/A/EditEvents/:id/:Mode"
+                    element={<EditAcademicsForm />}
+                  />
+                  {/* SPORTS */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/S/EditEvents/:id/:Mode"
+                    element={<EditSports />}
+                  />
+                  {/* CULTURALS */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/C/EditEvents/:id/:Mode"
+                    element={<EditCulturals />}
                   />
                   {/* NEW SESSION */}
                   <Route
@@ -1295,6 +1325,10 @@ function App() {
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
+                  />
+                  <Route
+                    path="/Event Category"
+                    element={<EventsType />}
                   />
                   <Route
                     path="/:accessID/EditAudit"

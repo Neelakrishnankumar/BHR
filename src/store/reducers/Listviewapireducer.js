@@ -127,6 +127,7 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -735,6 +736,7 @@ export const fetchListview =
           AccessID != "TR318" &&
           AccessID != "TR027" &&
           AccessID != "TR275" &&
+          AccessID != "TR384" &&
           AccessID != "TR319" &&
           AccessID != "TR324" &&
           AccessID != "TR335" &&
@@ -751,6 +753,7 @@ export const fetchListview =
           AccessID != "TR375" &&
           AccessID != "TR368" &&
           AccessID != "TR380" &&
+          AccessID != "TR385" &&
           AccessID != "TR377"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -2138,7 +2141,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR382") {
+            else if (AccessID == "TR383") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2153,7 +2156,7 @@ export const fetchListview =
                   return (
                     <Box>
                       <Link
-                        to={`/Apps/SecondarylistView/TR382/Event Category/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR384/Event Category/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Event Category">
@@ -2668,6 +2671,8 @@ export const fetchListview =
             } else if (
               AccessID == "TR321" ||
               AccessID == "TR380" ||
+              AccessID == "TR384" ||
+              AccessID == "TR385" ||
               AccessID == "TR368"
 
             ) {
@@ -8500,6 +8505,43 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <ModeEditOutlinedIcon />
                 </IconButton>
               </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR384" && (
+          <>
+
+            <Link
+              to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+                BreadCrumb1: params.row.Category,
+              }}
+            >
+              <Tooltip title="Events">
+                <IconButton color="info" size="small">
+                  <EventAvailableOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR385" && (
+          <>
+            <Link
+              to={`./EditEvents/${params.row.RecordID}/E`}
+              state={{
+                ...state,
+                // AcademicYear: params.row.AcademicYear,
+                // BreadCrumb1: params.row.Category,
+                BreadCrumb2: params.row.Title,
+              }}
+            >
+             <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
             </Link>
           </>
         )}
