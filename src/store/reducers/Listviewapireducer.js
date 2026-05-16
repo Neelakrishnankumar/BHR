@@ -2106,13 +2106,13 @@ export const fetchListview =
                         // to={`./Fees Structure/TR387/${params.row.RecordID}`}
                         to={
                           params.row.RecordID == 1
-                            ? `./TermFeestructure/TR387/${params.row.RecordID}`
-                            : `./AnnualFeestructure/TR387/${params.row.RecordID}`
+                            ? `./Term Fees Structure/TR387/${params.row.RecordID}`
+                            : `./Annual Fees Structure/TR387/${params.row.RecordID}`
                         }
                       >
                         <Tooltip title="Fees Structure">
                           <IconButton color="info" size="small">
-                            <ArtTrackIcon/>
+                            <ArtTrackIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
@@ -2137,10 +2137,11 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={
-                          params.row.AcademicyearID == 1
-                            ? `./EditTermFeestructure/${params.row.RecordID}/E`
-                            : `./EditAnnualFeestructure/${params.row.RecordID}/E`
+                          params.row.AcadamicTypeID == 1
+                            ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
+                            : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
                         }
+                        state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -8504,7 +8505,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {/* <Link
+            <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8527,11 +8528,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link> */}
+            </Link>
 
             {params.row.IsProcess === "N" ? (
               <>
-                <Link
+                {/* <Link
                   state={
                     {
                       TermsID: params.row.TermID,
@@ -8552,7 +8553,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </Link>
+                </Link> */}
                 <Tooltip title="Process">
                   <IconButton
                     color="error"
