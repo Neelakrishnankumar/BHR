@@ -17,8 +17,16 @@ import {
   CircularProgress,
   Breadcrumbs,
   Chip,
+  InputAdornment,
+  List,
+  ListItemButton,
+  ListItemText
 } from "@mui/material";
 
+import SearchIcon from "@mui/icons-material/Search";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import PersonIcon from "@mui/icons-material/Person";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -1042,6 +1050,18 @@ const is003 = SubscriptionCode?.endsWith("003");
 
 
 
+const [staffList, setStaffList] = useState([
+  { Name: "Arun Kumar", checked: false },
+  { Name: "Priya", checked: true },
+  { Name: "John", checked: false },
+]);
+ const [search, setSearch] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+
+  // const filteredSubjects = subjectsData.filter((item) =>
+  //   item.toLowerCase().includes(search.toLowerCase())
+  // );
+
 
 
 
@@ -1853,6 +1873,269 @@ const is003 = SubscriptionCode?.endsWith("003");
                     </Box>
                   </>
                 ) : null}
+
+
+                  {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1,
+          borderBottom: "1px solid #dcdcdc",
+          bgcolor: "#fafafa",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 500,
+            color: "#555",
+          }}
+        >
+          Subject - Teacher Mapping
+        </Typography>
+      </Box>
+
+      {/* Main Layout */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          minHeight: "450px",
+        }}
+      >
+        {/* LEFT PANEL */}
+        <Box
+          sx={{
+            borderRight: "1px solid #dcdcdc",
+          }}
+        >
+          {/* Left Header */}
+          <Box
+            sx={{
+              px: 2,
+              py: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              borderBottom: "1px solid #e5e5e5",
+              bgcolor: "#fafafa",
+            }}
+          >
+            <MenuBookIcon fontSize="small" />
+            <Typography variant="body1">Subjects</Typography>
+          </Box>
+
+          {/* Search Box */}
+          <Box p={2}>
+            <Box display="flex">
+               <CheckinAutocomplete
+                      disabled={mode == "V"}
+                      name="subjects"
+                      label="Subjects"
+                      // label={getBusinessCaption("ProjectOwner", "Project Owner")}
+                      variant="outlined"
+                      id="subjects"
+                      value={values.subjects}
+                      onChange={(newValue) => {
+                        setFieldValue("subjects", {
+                          RecordID: newValue.RecordID,
+                          Code: newValue.Code,
+                          Name: newValue.Name,
+                        });
+                        console.log(newValue, "--newvalue subjects");
+
+                        console.log(newValue.RecordID, "subjects RecordID");
+                      }}
+                      // error={!!touched.subjects && !!errors.subjects}
+                      // helperText={touched.subjects && errors.subjects}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2102",
+                          ScreenName: "Customer",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `parentID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })}`}
+                    // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                    />
+              {/* <TextField
+                fullWidth
+                size="small"
+                placeholder="Search and add subject..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                    height: "38px",
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+              /> */}
+
+              {/* <Button
+                variant="contained"
+                sx={{
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  minWidth: "110px",
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
+                startIcon={<FormatListBulletedIcon />}
+              >
+                Lookup
+              </Button> */}
+            </Box>
+
+            {/* Dropdown List */}
+            {/* <Paper
+              elevation={3}
+              sx={{
+                mt: 0.5,
+                borderRadius: "0 0 10px 10px",
+                overflow: "hidden",
+              }}
+            >
+              {filteredSubjects.length > 0 ? (
+                <List disablePadding>
+                  {filteredSubjects.map((item, index) => (
+                    <ListItemButton
+                      key={index}
+                      onClick={() => setSelectedSubject(item)}
+                      sx={{
+                        py: 1,
+                        "&:hover": {
+                          bgcolor: "#f5f5f5",
+                        },
+                      }}
+                    >
+                      <ListItemText primary={item} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              ) : (
+                <Box
+                  sx={{
+                    py: 3,
+                    textAlign: "center",
+                    color: "#888",
+                    fontSize: "14px",
+                  }}
+                >
+                  No subjects found
+                </Box>
+              )}
+            </Paper> */}
+          </Box>
+        </Box>
+
+        {/* RIGHT PANEL */}
+       {/* RIGHT PANEL */}
+<Box>
+  {/* Right Header */}
+  <Box
+    sx={{
+      px: 2,
+      py: 1,
+      display: "flex",
+      alignItems: "center",
+      gap: 1,
+      borderBottom: "1px solid #e5e5e5",
+      bgcolor: "#fafafa",
+    }}
+  >
+    <PersonIcon fontSize="small" />
+    <Typography variant="body1">Assign Teachers</Typography>
+  </Box>
+
+  {/* Teacher List */}
+  <Box p={2}>
+    {selectedSubject ? (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+        }}
+      >
+        {staffList?.map((staff, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+              px: 2,
+              py: 1,
+              bgcolor: "#fff",
+            }}
+          >
+            {/* Left Side */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <Checkbox
+                checked={staff.checked || false}
+                onChange={(e) => {
+                  const updated = [...staffList];
+                  updated[index].checked = e.target.checked;
+                  setStaffList(updated);
+                }}
+              />
+
+              <Typography variant="body2">
+                {staff.Name}
+              </Typography>
+            </Box>
+
+            {/* Right Side */}
+            <Typography
+              variant="caption"
+              sx={{
+                color: "#757575",
+                fontWeight: 500,
+              }}
+            >
+              {selectedSubject?.Name}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    ) : (
+      <Box
+        sx={{
+          height: "300px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#9e9e9e",
+          fontSize: "15px",
+        }}
+      >
+        ← Select a subject to assign teachers
+      </Box>
+    )}
+  </Box>
+</Box>
+      </Box>
+
+
+
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
@@ -1915,6 +2198,9 @@ const is003 = SubscriptionCode?.endsWith("003");
                     Cancel
                   </Button>
                 </Box>
+
+
+
               </form>
             )}
           </Formik>

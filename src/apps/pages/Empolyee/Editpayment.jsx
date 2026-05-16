@@ -148,9 +148,9 @@ const lastThree = SubscriptionCode?.slice(-3) || "";
                 setErrorMsgData(data);
                 const schema = Yup.object().shape({
 
-                    paymentmode: Yup.string().required(data.Payment.paymentmode),
-                    amount: Yup.string().trim().required(data.Payment.amount),
-                    lastpaiddate: Yup.string().required(data.Payment.lastpaiddate),
+                    paymentmode: Yup.string().required(data.OHPayment.paymentmode),
+                    amount: Yup.string().trim().required(data.OHPayment.paidamount),
+                    lastpaiddate: Yup.string().required(data.OHPayment.lastpaiddate),
 
                 });
 

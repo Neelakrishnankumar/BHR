@@ -641,7 +641,11 @@ const Editemployee = () => {
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
-
+ if (!isStudentClassification) {
+             Department: Yup.array()
+            .min(1, data.Employee.Department)  //FIXED
+            .required(data.Employee.Department)
+        }
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
         }
@@ -838,6 +842,7 @@ const Editemployee = () => {
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
+          Description: Yup.string().required(data.ContractsIN.Description),
           // Hsn: Yup.string().required(data.ContractsIN.Hsn),
           Hsn: Yup.string().when("BillingType", {
             is: (val) => val !== "CashMemo",
@@ -2217,7 +2222,7 @@ const Editemployee = () => {
     ];
   } else if (show == "10") {
     VISIBLE_FIELDS = [
-      "slno",
+      "SLNO",
       "LeavePart",
       "AvailDays",
       "EligibleDays",
@@ -3152,7 +3157,7 @@ const Editemployee = () => {
     let action;
     if (del) {
       action = "harddelete";
-    } else if (recordId !== -1 && recordId !== "-1") {
+    } else if (recordId !== -1) {
       action = "update";
     } else {
       action = "insert";
@@ -3161,7 +3166,7 @@ const Editemployee = () => {
     const payload = {
       action,
       data: {
-        RecordID: ParentgetData.RecordID || -1,
+        RecordID: ParentgetData?.RecordID || -1,
         // RecordID: "-1",
         Code: values.code1 || "",
         Name: values.name1 || "",
@@ -6345,7 +6350,7 @@ const Editemployee = () => {
                             multiline
                           // rows={2}
                           />
-                          <TextField
+                          {/* <TextField
                             fullWidth
                             variant="standard"
                             type="number"
@@ -6370,7 +6375,7 @@ const Editemployee = () => {
                                 style: { textAlign: "right" },
                               },
                             }}
-                          />
+                          /> */}
                         </FormControl>
                       </Box>)}
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
@@ -13302,7 +13307,17 @@ const Editemployee = () => {
                         value={values.Description}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Description"
+                        // label="Description"
+                   
+                          label={
+    <>
+      Description
+      <span style={{ color: "red", fontSize: "20px" }}> *</span>
+    </>
+  }
+   error={!!touched.Description && !!errors.Description}
+                        helperText={touched.Description && errors.Description}
+                          
                         focused
                       // inputProps={{ readOnly: true }}
                       />

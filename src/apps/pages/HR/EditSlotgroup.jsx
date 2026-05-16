@@ -491,7 +491,7 @@ const EditSlotgroup = () => {
                                             as={Checkbox}
                                             label="Sunday"
                                         />
-                                        .
+                                        
                                         <FormLabel focused={false}>Sun</FormLabel>
                                     </Box>
                                     <Box>
