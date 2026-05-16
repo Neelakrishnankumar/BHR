@@ -45,7 +45,7 @@ import { useDispatch } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import AttendancePDF from "../pdf/AttendancePdf";
 import { toast } from "react-hot-toast";
-import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
+import { Employeeautocomplete, TimeSheetEmployeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -631,7 +631,8 @@ const EditAttendance = () => {
 
                      /> */}
 
-                  <Employeeautocomplete
+                  {/* <Employeeautocomplete */}
+                  <TimeSheetEmployeeautocomplete
                     sx={{ width: 400 }}
                     name="ProName"
                     label={getBusinessCaption("Project", "Project")}
@@ -668,7 +669,8 @@ const EditAttendance = () => {
                     })}`}
                   />
 
-                  <Employeeautocomplete
+                  {/* <Employeeautocomplete */}
+                  <TimeSheetEmployeeautocomplete
                     sx={{ width: 400 }}
                     name="Employee"
                     label="Personnel"

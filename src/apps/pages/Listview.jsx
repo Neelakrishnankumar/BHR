@@ -127,7 +127,7 @@ import InvpaymentPDF from "./pdf/Invpaymentdetailpdf";
 import EventIcon from '@mui/icons-material/Event';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
-
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -358,7 +358,7 @@ const Listview = () => {
           : accessID == "TR027" ||
             accessID == "TR321" ?
             `CompanyID=${compID}` :
-            accessID == "TR331" ?
+            (accessID == "TR331" || accessID == "TR366") ?
               `CompanyID=${compID}`
               : "",
         "",
@@ -598,6 +598,8 @@ const Listview = () => {
             accessID == "TR376"
               ? `${screenName1}` :
               accessID == "TR378"
+                ? `${screenName1}`:
+                accessID == "TR383"
                 ? `${screenName1}` :
                 accessID == "TR323"
                   ? screenName || rowData.Screennameroute :
@@ -774,7 +776,13 @@ const Listview = () => {
               : accessID == "TR337" ? (
                 false
               )
+              : accessID == "TR331" ? (
+                false
+              )
                : accessID == "TR378" ? (
+                false
+              )
+               : accessID == "TR383" ? (
                 false
               )
                 // : YearFlag == "true" ? (
@@ -2373,7 +2381,312 @@ const Listview = () => {
                 </Formik>
               </Box>
             )}
-            {showMore && (accessID === "TR331" || accessID === "TR366") && (() => {
+            {/* {showMore && (accessID === "TR331" || accessID === "TR366") && (() => {
+
+              const savedFilters =
+                JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
+
+              const initialFormValues = {
+                fromDate: savedFilters.fromDate || defaultFromDate,
+                toDate: savedFilters.toDate || defaultToDate,
+                project: savedFilters.project || [],
+                Employee: savedFilters.Employee || [],
+                attmonth: savedFilters.attmonth || currentMonthNumber,
+                attyear: savedFilters.attyear || currentYear,
+              };
+
+              return (
+                <Box
+                  sx={{
+                    width: 320,
+                    p: 2,
+                    borderRadius: 1,
+                    backgroundColor: "#fff",
+                    position: "relative"
+                  }}
+                >
+                  <Formik
+                    initialValues={initialFormValues}
+                    enableReinitialize
+                    onSubmit={(values, { setSubmitting }) => {
+
+                      sessionStorage.setItem(
+                        "TR331_Filters",
+                        JSON.stringify(values)
+                      );
+
+                      const conditions = [];
+                      
+
+                      if (values.fromDate && values.toDate) {
+                        conditions.push(
+                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                        );
+                      }
+
+                      if (values.attmonth) {
+                        conditions.push(
+                          `BillableMonth='${values.attmonth}'`
+                        );
+                      }
+
+                      if (values.attyear) {
+                        conditions.push(
+                          `BillableYear='${values.attyear}'`
+                        );
+                      }
+
+                      if (values.Employee?.length > 0) {
+                        const EmpIds = values.Employee
+                          .map((e) => `'${e.RecordID}'`)
+                          .join(",");
+                        conditions.push(`EmployeeID IN (${EmpIds})`);
+                      }
+
+                      if (values.project?.length > 0) {
+                        const projIds = values.project
+                          .map((p) => `'${p.RecordID}'`)
+                          .join(",");
+                        conditions.push(`ProjectID IN (${projIds})`);
+                      }
+
+                      conditions.push(`CompanyID='${CompId}'`);
+
+                      const whereClause = conditions.join(" AND ");
+
+                      dispatch(
+                        fetchListview(
+                          "TR331",
+                          Subscriptionlastthree,
+                          screenName,
+                          whereClause,
+                          "",
+                          CompId
+                        )
+                      );
+
+                      setTimeout(() => setSubmitting(false), 100);
+                    }}
+                  >
+                    {({
+                      values,
+                      handleChange,
+                      handleSubmit,
+                      resetForm,
+                      setFieldValue,
+                      isSubmitting
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        <Box sx={{ height: 600, overflowY: "auto" }}>
+
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
+
+                          <TextField
+                            fullWidth
+                            label="From Date"
+                            type="date"
+                            name="fromDate"
+                            value={values.fromDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="To Date"
+                            type="date"
+                            name="toDate"
+                            value={values.toDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="project"
+                            label={is003Subscription ? "Standard/Activities" : "Project"}
+                            value={values.project}
+                            onChange={(e, newValue) =>
+                              setFieldValue("project", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
+
+
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="Employee"
+                            label={is003Subscription ? "Student" : "Personnel"}
+                            value={values.Employee}
+                            onChange={(e, newValue) =>
+                              setFieldValue("Employee", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2116",
+                                ScreenName: "Personnel",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`} />
+
+                         
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Month"
+                            name="attmonth"
+                            value={values.attmonth || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attmonth && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attmonth", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            {[
+                              "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"
+                            ].map((month, index) => (
+                              <MenuItem key={index + 1} value={index + 1}>
+                                {month}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+
+                         
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Year"
+                            name="attyear"
+                            value={values.attyear || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attyear && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attyear", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            <MenuItem value="2026">2026</MenuItem>
+                            <MenuItem value="2025">2025</MenuItem>
+                          </TextField>
+
+                          <Stack
+                            direction="row"
+                            justifyContent="end"
+                            spacing={1}
+                            mt={3}
+                          >
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              disabled={isSubmitting}
+                            >
+                              Apply
+                            </Button>
+
+                            <PDFDownloadLink
+                              document={
+                                <InvpaymentPDF
+                                  data={listViewData}
+                                  Project={values?.project}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: HeaderImg,
+                                    FooterImg: FooterImg,
+                                    fromDate: values.fromDate,
+                                    toDate: values.toDate
+                                  }}
+                                />
+                              }
+                              fileName="Invoice_pdf"
+                              style={{ color: "#d32f2f" }}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+                                ) : (
+                                  <PictureAsPdfIcon />
+                                )
+                              }
+                            </PDFDownloadLink>
+
+                            <Button
+                              type="button"
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                sessionStorage.removeItem("TR331_Filters");
+
+                                resetForm({
+                                  values: {
+                                    project: [],
+                                    Employee: [],
+                                    fromDate: defaultFromDate,
+                                    toDate: defaultToDate,
+                                    attmonth: currentMonthNumber,
+                                    attyear: currentYear,
+                                  },
+                                });
+                              }}
+                            >
+                              RESET
+                            </Button>
+                          </Stack>
+
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Box>
+              );
+
+            })()} */}
+            {showMore && (accessID === "TR331") && (() => {
 
               // Restore session filters
               const savedFilters =
@@ -2696,6 +3009,354 @@ const Listview = () => {
                               color="error"
                               onClick={() => {
                                 sessionStorage.removeItem("TR331_Filters");
+
+                                resetForm({
+                                  values: {
+                                    project: [],
+                                    Employee: [],
+                                    fromDate: defaultFromDate,
+                                    toDate: defaultToDate,
+                                    attmonth: currentMonthNumber,
+                                    attyear: currentYear,
+                                  },
+                                });
+                              }}
+                            >
+                              RESET
+                            </Button>
+                          </Stack>
+
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Box>
+              );
+
+            })()}
+            {showMore && (accessID === "TR366") && (() => {
+
+              // Restore session filters
+              const savedFilters =
+                JSON.parse(sessionStorage.getItem("TR366_Filters")) || {};
+
+              const initialFormValues = {
+                fromDate: savedFilters.fromDate || defaultFromDate,
+                toDate: savedFilters.toDate || defaultToDate,
+                project: savedFilters.project || [],
+                Employee: savedFilters.Employee || [],
+                attmonth: savedFilters.attmonth || currentMonthNumber,
+                attyear: savedFilters.attyear || currentYear,
+              };
+
+              return (
+                <Box
+                  sx={{
+                    width: 320,
+                    p: 2,
+                    borderRadius: 1,
+                    backgroundColor: "#fff",
+                    position: "relative"
+                  }}
+                >
+                  <Formik
+                    initialValues={initialFormValues}
+                    enableReinitialize
+                    onSubmit={(values, { setSubmitting }) => {
+
+                      // Save filters to session
+                      sessionStorage.setItem(
+                        "TR366_Filters",
+                        JSON.stringify(values)
+                      );
+
+                      const conditions = [];
+                      // const fromDate = formattedDate2(values.fromDate);
+                      // const toDate = formattedDate2(values.toDate);
+
+                      if (values.fromDate && values.toDate) {
+                        conditions.push(
+                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                        );
+                      }
+
+                      if (values.attmonth) {
+                        conditions.push(
+                          `BillableMonth='${values.attmonth}'`
+                        );
+                      }
+
+                      if (values.attyear) {
+                        conditions.push(
+                          `BillableYear='${values.attyear}'`
+                        );
+                      }
+
+                      if (values.Employee?.length > 0) {
+                        const EmpIds = values.Employee
+                          .map((e) => `'${e.RecordID}'`)
+                          .join(",");
+                        conditions.push(`EmployeeID IN (${EmpIds})`);
+                      }
+
+                      if (values.project?.length > 0) {
+                        const projIds = values.project
+                          .map((p) => `'${p.RecordID}'`)
+                          .join(",");
+                        conditions.push(`ProjectID IN (${projIds})`);
+                      }
+
+                      conditions.push(`CompanyID='${CompId}'`);
+
+                      const whereClause = conditions.join(" AND ");
+
+                      dispatch(
+                        fetchListview(
+                          "TR366",
+                          Subscriptionlastthree,
+                          screenName,
+                          whereClause,
+                          "",
+                          CompId
+                        )
+                      );
+
+                      setTimeout(() => setSubmitting(false), 100);
+                    }}
+                  >
+                    {({
+                      values,
+                      handleChange,
+                      handleSubmit,
+                      resetForm,
+                      setFieldValue,
+                      isSubmitting
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        <Box sx={{ height: 600, overflowY: "auto" }}>
+
+                          {/* Close Button */}
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
+
+                          {/* From Date */}
+                          <TextField
+                            fullWidth
+                            label="From Date"
+                            type="date"
+                            name="fromDate"
+                            value={values.fromDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          {/* To Date */}
+                          <TextField
+                            fullWidth
+                            label="To Date"
+                            type="date"
+                            name="toDate"
+                            value={values.toDate}
+                            onChange={handleChange}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ mt: 2 }}
+                            focused
+                          />
+
+                          {/* Project */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="project"
+                            label={is003Subscription ? "Standard/Activities" : "Project"}
+                            value={values.project}
+                            onChange={(e, newValue) =>
+                              setFieldValue("project", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
+
+
+                          {/* Employee */}
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="Employee"
+                            label={is003Subscription ? "Student" : "Personnel"}
+                            value={values.Employee}
+                            onChange={(e, newValue) =>
+                              setFieldValue("Employee", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2116",
+                                ScreenName: "Personnel",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CompanyID='${CompId}'`,
+                                Any: "",
+                              },
+                            })}`} />
+
+                          {/*  Month */}
+                          {/* <TextField
+                          sx={{ mt: 2 }}
+                          variant="standard"
+                          label="Month"
+                          name="attmonth"
+                          value={values.attmonth}
+                          onChange={handleChange}
+                          select
+                          fullWidth
+                          focused
+                        >
+                          {[
+                            "January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                          ].map((month, index) => (
+                            <MenuItem key={index + 1} value={index + 1}>
+                              {month}
+                            </MenuItem>
+                          ))}
+                        </TextField> */}
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Month"
+                            name="attmonth"
+                            value={values.attmonth || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attmonth && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attmonth", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            {[
+                              "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"
+                            ].map((month, index) => (
+                              <MenuItem key={index + 1} value={index + 1}>
+                                {month}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+
+                          {/* Year */}
+                          {/* <TextField
+                          sx={{ mt: 2 }}
+                          variant="standard"
+                          label="Year"
+                          name="attyear"
+                          value={values.attyear}
+                          onChange={handleChange}
+                          select
+                          fullWidth
+                          focused
+                        >
+                          <MenuItem value="2026">2026</MenuItem>
+                          <MenuItem value="2025">2025</MenuItem>
+                        </TextField> */}
+                          <TextField
+                            sx={{ mt: 2 }}
+                            variant="standard"
+                            label="Year"
+                            name="attyear"
+                            value={values.attyear || ""}
+                            onChange={handleChange}
+                            select
+                            fullWidth
+                            focused
+                            InputProps={{
+                              endAdornment: values.attyear && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("attyear", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          >
+                            <MenuItem value="2026">2026</MenuItem>
+                            <MenuItem value="2025">2025</MenuItem>
+                          </TextField>
+
+                          {/* Buttons */}
+                          <Stack
+                            direction="row"
+                            justifyContent="end"
+                            spacing={1}
+                            mt={3}
+                          >
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              disabled={isSubmitting}
+                            >
+                              Apply
+                            </Button>
+
+                            <PDFDownloadLink
+                              document={
+                                <InvpaymentPDF
+                                  data={listViewData}
+                                  Project={values?.project}
+                                  filters={{
+                                    Imageurl: baseurl1,
+                                    HeaderImg: HeaderImg,
+                                    FooterImg: FooterImg,
+                                    fromDate: values.fromDate,
+                                    toDate: values.toDate
+                                  }}
+                                />
+                              }
+                              fileName="Invoice_pdf"
+                              style={{ color: "#d32f2f" }}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+                                ) : (
+                                  <PictureAsPdfIcon />
+                                )
+                              }
+                            </PDFDownloadLink>
+
+                            <Button
+                              type="button"
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                sessionStorage.removeItem("TR366_Filters");
 
                                 resetForm({
                                   values: {
@@ -5295,6 +5956,16 @@ const Listview = () => {
               <Chip
                 icon={<SourceOutlinedIcon color="primary" />}
                 label="Standard/Activities"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          )
+           : accessID == "TR383" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<EventOutlinedIcon color="primary" />}
+                label="Event Category"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />

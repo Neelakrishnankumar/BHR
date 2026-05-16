@@ -29,6 +29,8 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -41,6 +43,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import PaymentIcon from '@mui/icons-material/Payment';
 import {
   fetchListview,
   productionColorlookupOpen,
@@ -111,7 +114,7 @@ import { TimeTableExcelGet, TimeTableExcelPost } from "../../store/reducers/Form
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
-
+import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -124,6 +127,7 @@ const ListviewSecondary = () => {
   console.log("🚀 ~ ListviewSecondary ~ params:", params)
   const VerticalLicense = sessionStorage.getItem("VerticalLicense") || "";
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const is003Subscription = SubscriptionCode.endsWith("003");
   // const Subscriptionlastthree = SubscriptionCode.slice(-3) || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -234,6 +238,9 @@ const ListviewSecondary = () => {
   let parentID1 = params.parentID1;
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
+  console.log("🚀 ~ ListviewSecondary ~ parentID1:", parentID1)
+  console.log("🚀 ~ ListviewSecondary ~ parentID2:", parentID2)
+  console.log("🚀 ~ ListviewSecondary ~ parentID3:", parentID3)
   let parentID4 = params.parentID4;
   let SOPId = params.SOPId;
 
@@ -294,6 +301,15 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR275") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR384") {
+    filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR386") {
+    filter = "";
+  }
+   else if (accessID == "TR387") {
+    filter = `AcademicYearID = '${parentID2}' AND AcadamicTypeID='${params.parentID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID === "TR371") {
 
@@ -456,6 +472,9 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR351") {
     filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
+  }
+  else if (accessID == "TR385") {
+    filter = `EventCategoryID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -1143,7 +1162,13 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   //navigate("/Apps/TR133/Project");
-                  navigate(-1);
+                  // navigate(-1);
+                  {
+                    is003Subscription ?
+                      navigate("/Apps/TR331/Invoice") :
+                      navigate("/Apps/TR366/Invoice");
+                  }
+
                 }}
               >
                 {`Invoice(${state.Employee})`}
@@ -2276,7 +2301,98 @@ const ListviewSecondary = () => {
                   </Typography>
                 </Breadcrumbs>
               </Box>
-            ) : accessID == "TR319" ? (
+            ): accessID == "TR384" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Event Categories
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ): accessID == "TR384" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Event Categories
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ) : accessID == "TR385" ? (
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR383/Academic Year");
+                    }}
+                  >
+                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`,
+                     {
+                        state: {
+                          ...state,
+                        }
+                      })}
+                  >
+                    Event Categories ({state.BreadCrumb1 || ""})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Events
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
+            ): accessID == "TR319" ? (
               <Box display="flex" borderRadius="3px" alignItems="center">
                 <Breadcrumbs
                   maxItems={2}
@@ -4280,6 +4396,7 @@ const ListviewSecondary = () => {
             ) : (
               false
             )}
+
             {/* {accessID === "TR368" && (
               <Formik
                 initialValues={{
@@ -4418,6 +4535,18 @@ const ListviewSecondary = () => {
               </Formik>
             )} */}
             <GridToolbarQuickFilter />
+            {/* {accessID === "TR275" && is003Subscription && (
+              <IconButton>
+                <Tooltip title="Fees Structure">
+                  <PaymentIcon
+                    onClick={() => {
+                      navigate(`./Academic Type/TR386/L`)
+                      // navigate(`./TR444/EditFees Structure/-1/A`)
+                      }}
+                  />
+                </Tooltip>
+              </IconButton>          
+            )} */}
             {accessID == "TR048" ? (
               false
             ) : accessID == "TR051" ? (
@@ -4457,12 +4586,14 @@ const ListviewSecondary = () => {
                 false
               ) : accessID == "TR335" ? (
                 false
-              ): accessID == "TR371" ? (
+              ) : accessID == "TR371" ? (
                 false
-              ): accessID == "TR372" ? (
+              ) : accessID == "TR372" ? (
                 false
-              ): accessID == "TR373" ? (
-                false            
+              ) : accessID == "TR373" ? (
+                false
+              ) : accessID == "TR384" ? (
+                false
               ) : accessID == "TR288" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -4768,7 +4899,7 @@ const ListviewSecondary = () => {
             </Tooltip>
           </Box>
         </GridToolbarContainer>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 
@@ -5560,6 +5691,14 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                   </Box>
+                ) : (accessID == "TR386") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ArtTrackIcon color="primary" />}
+                      label="Fees Structure"
+                      variant="outlined"
+                    />                  
+                  </Box>
                 ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
                   <Box display="flex" flexDirection="row" gap={2} padding="25px">
                     <Chip
@@ -6330,9 +6469,14 @@ const ListviewSecondary = () => {
                         label="View"
                         variant="outlined"
                       />
-                      {/* <Chip
+                      <Chip
                         icon={<CalendarMonthOutlinedIcon color="primary" />}
                         label="TimeTable"
+                        variant="outlined"
+                      />
+                      {/* <Chip
+                        icon={<DeleteIcon color="error" />}
+                        label="Delete"
                         variant="outlined"
                       /> */}
                       <Chip
@@ -6340,8 +6484,8 @@ const ListviewSecondary = () => {
                         label="Process"
                         variant="outlined"
                       />
-                       <Chip
-                      icon={<RestartAltOutlinedIcon color="error" />}
+                      <Chip
+                        icon={<RestartAltOutlinedIcon color="error" />}
                         label="Unprocess"
                         variant="outlined"
                       />
@@ -6374,6 +6518,16 @@ const ListviewSecondary = () => {
                           icon={<DatasetLinkedIcon
                             color="primary" />}
                           label="Timetable"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ): 
+                    accessID == "TR384" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                        <Chip
+                          icon={<EventAvailableOutlinedIcon
+                            color="primary" />}
+                          label="Events"
                           variant="outlined"
                         />
                       </Box>

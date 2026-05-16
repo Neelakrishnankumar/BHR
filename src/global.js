@@ -335,11 +335,12 @@ const initialState = {
   TeacherOccupancy: "",
   TimetableProcessController: "",
   WeeklycaledarUrl: "",
-  PartyAnalytics:"",
+  PartyAnalytics: "",
   slotgetUrl: "",
   TimeTableExcelGet: "",
   TimeTableExcelPost: "",
-  TimeTableGenerateget:"",
+  TimeTableGenerateget: "",
+  TimeTableDelete:""
 };
 
 export const getUrlSlice = createSlice({
@@ -547,7 +548,7 @@ export const getUrlSlice = createSlice({
       state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
       state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController.php";
-
+      state.TimeTableDelete = APIurl + "TimetableDelete.php"
     },
   },
 });

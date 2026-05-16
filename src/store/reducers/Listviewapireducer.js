@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Icon,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -54,6 +55,7 @@ import {
   postData,
   SOPProcessPost,
   StockProcessApi,
+  TimeTableDelete,
   TimetableProcessController,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
@@ -71,6 +73,7 @@ import {
   Download,
   Psychology,
 } from "@mui/icons-material";
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import { Visibility } from "@mui/icons-material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -126,7 +129,8 @@ import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
-
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -727,6 +731,7 @@ export const fetchListview =
           AccessID != "TR328" &&
           AccessID != "TR243" &&
           AccessID != "TR321" &&
+          AccessID != "TR382" &&
           AccessID != "TR315" &&
           AccessID != "TR362" &&
           AccessID != "TR316" &&
@@ -734,12 +739,14 @@ export const fetchListview =
           AccessID != "TR318" &&
           AccessID != "TR027" &&
           AccessID != "TR275" &&
+          AccessID != "TR384" &&
           AccessID != "TR319" &&
           AccessID != "TR324" &&
           AccessID != "TR335" &&
           AccessID != "TR338" &&
           AccessID != "TR339" &&
           AccessID != "TR331" &&
+          AccessID != "TR366" &&
           AccessID != "TR351" &&
           AccessID != "TR127" &&
           AccessID != "TR332" &&
@@ -749,7 +756,10 @@ export const fetchListview =
           AccessID != "TR375" &&
           AccessID != "TR368" &&
           AccessID != "TR380" &&
-          AccessID != "TR377"
+          AccessID != "TR385" &&
+          AccessID != "TR377" &&
+          AccessID != "TR387" &&
+          AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
           // console.log("---4---",filter);
@@ -828,8 +838,11 @@ export const fetchListview =
         AccessID == "TR351" ||
         AccessID == "TR282" ||
         AccessID == "TR331" ||
+        AccessID == "TR366" ||
         AccessID == "TR332" ||
-        AccessID == "TR373"
+        AccessID == "TR373" ||
+        AccessID == "TR386" ||
+        AccessID == "TR387"
       ) {
         filter = filter;
       }
@@ -1167,6 +1180,58 @@ export const fetchListview =
       else if (AccessID == "TR331") {
         const savedFilters =
           JSON.parse(sessionStorage.getItem("TR331_Filters")) || null;
+
+        if (savedFilters) {
+          const conditions = [];
+
+          // 🔹 FORMAT DATE HERE
+          if (savedFilters.fromDate && savedFilters.toDate) {
+            const fromDate = formatToDMY(savedFilters.fromDate);
+            const toDate = formatToDMY(savedFilters.toDate);
+
+            conditions.push(`Date BETWEEN '${fromDate}' AND '${toDate}'`);
+          }
+
+          if (savedFilters.attmonth) {
+            conditions.push(`BillableMonth='${savedFilters.attmonth}'`);
+          }
+
+          if (savedFilters.attyear) {
+            conditions.push(`BillableYear='${savedFilters.attyear}'`);
+          }
+
+          if (savedFilters.Employee?.length > 0) {
+            const EmpIds = savedFilters.Employee.map(
+              (e) => `'${e.RecordID}'`,
+            ).join(",");
+            conditions.push(`EmployeeID IN (${EmpIds})`);
+          }
+
+          if (savedFilters.project?.length > 0) {
+            const projIds = savedFilters.project
+              .map((p) => `'${p.RecordID}'`)
+              .join(",");
+            conditions.push(`ProjectID IN (${projIds})`);
+          }
+
+          conditions.push(`CompanyID ='${CompId}'`);
+
+          filter = conditions.join(" AND ");
+        } else {
+          const MangerEmpID =
+            JSON.parse(sessionStorage.getItem("MangerEmpID")) || [];
+
+          if (!MangerEmpID.length) return;
+
+          // const fromDate = formatToDMY(defaultFromDate);
+          // const toDate = formatToDMY(defaultToDate);
+
+          filter = `EmployeeID IN (${MangerEmpID.join(",")}, '${empID}') AND Date BETWEEN '${defaultFromDate}'AND '${defaultToDate}'AND BillableMonth ='${currentMonthNumber}'AND BillableYear='${currentYear}'AND CompanyID ='${CompId}'`;
+        }
+      }
+      else if (AccessID == "TR366") {
+        const savedFilters =
+          JSON.parse(sessionStorage.getItem("TR366_Filters")) || null;
 
         if (savedFilters) {
           const conditions = [];
@@ -2026,6 +2091,72 @@ export const fetchListview =
                 },
               };
             }
+            else if (AccessID == "TR386") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        // to={`./Fees Structure/TR387/${params.row.RecordID}`}
+                        to={
+                          params.row.RecordID == 1
+                            ? `./Term Fees Structure/TR387/${params.row.RecordID}`
+                            : `./Annual Fees Structure/TR387/${params.row.RecordID}`
+                        }
+                      >
+                        <Tooltip title="Fees Structure">
+                          <IconButton color="info" size="small">
+                            <ArtTrackIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR387") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={
+                          params.row.AcadamicTypeID == 1
+                            ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
+                            : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
+                        }
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
             else if (AccessID == "TR095") {
               obj = {
                 field: "action",
@@ -2075,6 +2206,35 @@ export const fetchListview =
                         <Tooltip title="Standard/Activities">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR383") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        to={`/Apps/SecondarylistView/TR384/Event Category/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Event Category">
+                          <IconButton color="info" size="small">
+                            <EventOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
@@ -2584,6 +2744,8 @@ export const fetchListview =
             } else if (
               AccessID == "TR321" ||
               AccessID == "TR380" ||
+              AccessID == "TR384" ||
+              AccessID == "TR385" ||
               AccessID == "TR368"
 
             ) {
@@ -8084,6 +8246,31 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const handleGenerateTimetable = async (values) => {
+    const payload = {
+      HeaderID: values.RecordID,
+      CompanyID: CompanyID,
+    }
+    console.log(payload, "-- GENERATE PAYLOAD");
+    const response = await dispatch(
+      TimeTableDelete(payload)
+    );
+    console.log(response, "-- generate response");
+
+    if (response?.payload?.Status === "Y") {
+      toast.success(response?.payload?.Msg);
+      // dispatch(
+      //   getFetchData({
+      //     accessID: "TR368v1",
+      //     get: "get",
+      //     recID: headerid,
+      //   })
+      // );      
+    }
+    else if (response?.payload?.Status == "N") {
+      toast.error(response?.payload?.Msg);
+    }
+  };
   const handleTermsProcess = async (values) => {
 
     const result = await Swal.fire({
@@ -8323,7 +8510,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {/* <Link
+            <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8346,18 +8533,42 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link> */}
+            </Link>
 
             {params.row.IsProcess === "N" ? (
-              <Tooltip title="Process">
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={() => handleTermsProcess(params.row)}
+              <>
+                {/* <Link
+                  state={
+                    {
+                      TermsID: params.row.TermID,
+                      projectID: params.row.StandardID,
+                      projectName: params.row.ProjectDesc,
+                      Description: params.row.Description,
+                      BreadCrumb1: params.row.Project,
+                      TermName: params.row.TermName,
+                      SlotGroupID: params.row.SlotGroupID,
+                      GroupID: params.row.SlotGroupID,
+                      HeaderID: params.row.RecordID,
+                      isprocess: params.row.IsProcess,
+                      AcademicYear: params.row.AcademicYear
+                    }}
                 >
-                  <LockResetOutlinedIcon />
-                </IconButton>
-              </Tooltip>
+                  <Tooltip title="Delete">
+                    <IconButton color="error" size="small" onClick={() => handleGenerateTimetable(params.row)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Link> */}
+                <Tooltip title="Process">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => handleTermsProcess(params.row)}
+                  >
+                    <LockResetOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
 
             ) : (
               // <Tooltip title="Process">
@@ -8416,6 +8627,43 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <ModeEditOutlinedIcon />
                 </IconButton>
               </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR384" && (
+          <>
+
+            <Link
+              to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+                BreadCrumb1: params.row.Category,
+              }}
+            >
+              <Tooltip title="Events">
+                <IconButton color="info" size="small">
+                  <EventAvailableOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR385" && (
+          <>
+            <Link
+              to={`./EditEvents/${params.row.RecordID}/E`}
+              state={{
+                ...state,
+                // AcademicYear: params.row.AcademicYear,
+                // BreadCrumb1: params.row.Category,
+                BreadCrumb2: params.row.Title,
+              }}
+            >
+             <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
             </Link>
           </>
         )}

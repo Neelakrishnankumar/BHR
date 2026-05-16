@@ -176,6 +176,7 @@ import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined
 // const is00123Subscription = ["001", "002", "003"].some(code =>
 //   SubscriptionCode?.endsWith(code)
 // );
+import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
 
 const getPersonnelMenu = (is00123Subscription) =>
   is00123Subscription
@@ -1245,6 +1246,23 @@ const Sidebars = () => {
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
+          },
+          {
+            name: "Events",
+            url: "/Apps/TR383/Academic Year",
+            id: 5595,
+            icon: (
+              <Tooltip title="Events">
+                <NotificationAddOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR383",
           },
           {
             name: "Invoice",

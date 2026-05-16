@@ -2,7 +2,8 @@
   "Designation": {
     "code": "Please enter the Code",
     "name": "Please enter the Name",
-    "rank": "Please enter the Rank"
+    "rank": "Please enter the Rank",
+    "InstiLevel": "Please enter the Level"
   },
   "Department": {
     "Code": "Please enter the Code",
@@ -192,6 +193,7 @@
     "BillingUnits": "Please select the Billing Units",
     "BillingType": "Please select the Billing Type",
     "UnitRate": "Please enter the Unit Rate",
+    "Description": "Please enter the Description",
     "Hsn": "Please enter the HSN Code",
     "shift": "Please select the Shift 1",
     "standardActivities": "Please select the Standard/Activities",
@@ -461,5 +463,41 @@
     "Date": "Please select the Date",
     "GiverID": "Please select the Giver",
     "ReceiverID": "Please select the Receiver"
+},
+  "EventEmergency": {
+    "EmergencyTitle": "Please enter the Emergency Title",
+    "Priority": "Please select the Priority",
+    "Standard1": "Please select the Standard/Activities",
+    "Standard": "Please select the Standard/Activities",
+    "Student": "Please select the Student",
+    "Message": "Please enter the Message",
+    "ContactPersonAndNumber": "Please enter the Contact Person And Number"
+},
+  "EventAcademics": {
+    "EventTitle": "Please enter the Event Title",
+    "EventType": "Please select the Event Type",
+    "ApplicableTo": "Please select the Applicable To",
+    "Subject": "Please select the Subject",
+    "Message": "Please enter the Preparation Notes",
+    "EventStartTime": "Please select the Start Time",
+    "EventEndTime": "Please select the End Time",
+    "EventDate": "Please select the Event Date"
+},
+  "EventSports": {
+    "EventTitle": "Please enter the Event Title",
+    "EventType": "Please select the Sport Type",
+    "ApplicableTo": "Please select the Applicable To",
+    "Message": "Please enter the Preparation Notes",
+    "EventStartTime": "Please select the Start Time",
+    "EventDate": "Please select the Event Date",
+    "Venue": "Please enter the Venue"
+},
+  "EventCulturals": {
+    "EventTitle": "Please enter the Event Title",
+    "EventType": "Please select the Sport Type",
+    "Message": "Please enter the Preparation Notes",
+    "EventStartTime": "Please select the Time",
+    "EventDate": "Please select the Event Date",
+    "Venue": "Please enter the Venue"
 }
 }

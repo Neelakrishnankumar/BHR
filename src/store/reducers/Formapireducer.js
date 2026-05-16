@@ -1290,6 +1290,37 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   },
 );
+export const EventsgetData = createAsyncThunk(
+  "EventsgetData/get",
+  async ({ accessID, get, recID, Type }) => {
+    var url = store.getState().globalurl.apiUrl;
+
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+      Type:Type
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 export const ModuleUrl = createAsyncThunk(
   "ModuleFetchData/Header",
   async ({ CompanyID }) => {
@@ -2033,6 +2064,31 @@ export const postData = createAsyncThunk(
       accessid: accessID,
       action: action,
       data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const EventspostData = createAsyncThunk(
+  "EventspostData/post",
+  async ({ accessID, action, idata, Type }) => {
+    const url = store.getState().globalurl.apiUrl;
+
+    const data = {
+      accessid: accessID,
+      action: action,
+      data: idata,
+      Type:Type
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -2836,7 +2892,28 @@ export const TimeTableGenerateget = createAsyncThunk(
     }
   }
 );
+export const TimeTableDelete = createAsyncThunk(
+  "Standard/TimeTableDelete",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.TimeTableDelete;
 
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const companyTermsGet = createAsyncThunk(
   "COMPANY_TERMS_GET/GET",
   async ({ CompanyID }) => {
@@ -3292,6 +3369,24 @@ export const getApiSlice = createSlice({
       })
 
       .addCase(getFetchData.rejected, (state) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        toast.error("Something Went Wrong");
+      })
+      .addCase(EventsgetData.pending, (state) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.msg = "Loading...";
+      })
+
+      .addCase(EventsgetData.fulfilled, (state, action) => {
+        console.log("API SUCCESS", action.payload);
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload?.Data || {};
+      })
+
+      .addCase(EventsgetData.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
         toast.error("Something Went Wrong");
@@ -3789,6 +3884,23 @@ export const getApiSlice = createSlice({
         state.Data = action.meta.arg.idata;
       })
       .addCase(postData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+      .addCase(EventspostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(EventspostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(EventspostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
       })
