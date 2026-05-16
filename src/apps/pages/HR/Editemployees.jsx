@@ -639,7 +639,11 @@ const Editemployee = () => {
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
-
+        if (!isStudentClassification) {
+          Department: Yup.array()
+            .min(1, data.Employee.Department)  //FIXED
+            .required(data.Employee.Department)
+        }
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
         }
@@ -842,6 +846,7 @@ const Editemployee = () => {
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
           Description: Yup.string().required(data.ContractsIN.Description),
+          // Hsn: Yup.string().required(data.ContractsIN.Hsn),
           Hsn: Yup.string().when("BillingType", {
             is: (val) => val !== "CashMemo",
             then: (schema) => schema.required(data.ContractsIN.Hsn),
@@ -1161,6 +1166,14 @@ const Editemployee = () => {
                 : Data.EmpType === "Intern"
                   ? "IN"
                   : "",
+    Gender:
+      Data.Gender === "Male"
+        ? "M"
+        : Data.Gender === "Female"
+          ? "F"
+          : Data.Gender === "Others"
+            ? "O"
+            : "",
     checkbox: Data.Disable === "Y" ? true : false,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -1424,6 +1437,7 @@ const Editemployee = () => {
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       CrmUserChkbox: values.CRMUser === true ? "Y" : "N",
+      Gender: values.Gender,
       Job: isStudentClassification ? "" : values.Job || "",
       Mgr: values.Mgr,
       Sal: values.amount || 0,
@@ -2220,7 +2234,7 @@ const Editemployee = () => {
     ];
   } else if (show == "10") {
     VISIBLE_FIELDS = [
-      "slno",
+      "SLNO",
       "LeavePart",
       "AvailDays",
       "EligibleDays",
@@ -3155,7 +3169,7 @@ const Editemployee = () => {
     let action;
     if (del) {
       action = "harddelete";
-    } else if (recordId !== -1 && recordId !== "-1") {
+    } else if (recordId !== -1) {
       action = "update";
     } else {
       action = "insert";
@@ -3164,7 +3178,7 @@ const Editemployee = () => {
     const payload = {
       action,
       data: {
-        RecordID: ParentgetData.RecordID || -1,
+        RecordID: ParentgetData?.RecordID || -1,
         // RecordID: "-1",
         Code: values.code1 || "",
         Name: values.name1 || "",
@@ -4372,13 +4386,13 @@ const Editemployee = () => {
     // friday: deploymentData.Friday === "Y" ? true : false,
     // saturday: deploymentData.Saturday === "Y" ? true : false,
     // sunday: deploymentData.Sunday === "Y" ? true : false,
-    Monday: deploymentData.Monday=== "Y" ? true : false,
-    Tuesday: deploymentData.Tuesday=== "Y" ? true : false,
-    Wednesday: deploymentData.Wednesday=== "Y" ? true : false,
-    Thursday: deploymentData.Thursday=== "Y" ? true : false,
-    Friday: deploymentData.Friday=== "Y" ? true : false,
-    Saturday: deploymentData.Saturday=== "Y" ? true : false,
-    Sunday: deploymentData.Sunday=== "Y" ? true : false,
+    Monday: deploymentData.Monday === "Y" ? true : false,
+    Tuesday: deploymentData.Tuesday === "Y" ? true : false,
+    Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+    Thursday: deploymentData.Thursday === "Y" ? true : false,
+    Friday: deploymentData.Friday === "Y" ? true : false,
+    Saturday: deploymentData.Saturday === "Y" ? true : false,
+    Sunday: deploymentData.Sunday === "Y" ? true : false,
     // biometric: deploymentData.Biometric === "Y"? true : false,
     // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
     office: deploymentData.Office === "Y" ? true : false,
@@ -5498,7 +5512,7 @@ const Editemployee = () => {
                             <FormControlLabel value="O" control={<Radio />} label="Others" />
                           </RadioGroup>
                         </FormControl> */}
-                        {/* <TextField
+                        <TextField
                           select
                           fullWidth
                           variant="standard"
@@ -5530,7 +5544,7 @@ const Editemployee = () => {
                           <MenuItem value="M">Male</MenuItem>
                           <MenuItem value="F">Female</MenuItem>
                           <MenuItem value="O">Others</MenuItem>
-                        </TextField> */}
+                        </TextField>
                         <TextField
                           fullWidth
                           variant="standard"
@@ -6084,39 +6098,39 @@ const Editemployee = () => {
                             <FormControlLabel value="O" control={<Radio />} label="Others" />
                           </RadioGroup>
                         </FormControl> */}
-                          {/* <TextField
-                          select
-                          fullWidth
-                          variant="standard"
-                          label={
-                            <>
-                              Gender
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          value={values.Gender}
-                          id="Gender"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Gender"
-                          error={!!touched.Gender && !!errors.Gender}
-                          helperText={touched.Gender && errors.Gender}
-                          // required
-                          focused
-                          sx={{
-                            gridColumn: "span 2",
-                            // backgroundColor: "#ffffff",
-                            // "& .MuiInputBase-root": {
-                            //   backgroundColor: "",
-                            // },
-                          }}
-                        >
-                          <MenuItem value="M">Male</MenuItem>
-                          <MenuItem value="F">Female</MenuItem>
-                          <MenuItem value="O">Others</MenuItem>
-                        </TextField> */}
+                          <TextField
+                            select
+                            fullWidth
+                            variant="standard"
+                            label={
+                              <>
+                                Gender
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            value={values.Gender}
+                            id="Gender"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Gender"
+                            error={!!touched.Gender && !!errors.Gender}
+                            helperText={touched.Gender && errors.Gender}
+                            // required
+                            focused
+                            sx={{
+                              gridColumn: "span 2",
+                              // backgroundColor: "#ffffff",
+                              // "& .MuiInputBase-root": {
+                              //   backgroundColor: "",
+                              // },
+                            }}
+                          >
+                            <MenuItem value="M">Male</MenuItem>
+                            <MenuItem value="F">Female</MenuItem>
+                            <MenuItem value="O">Others</MenuItem>
+                          </TextField>
                           <TextField
                             fullWidth
                             variant="standard"
@@ -13306,16 +13320,19 @@ const Editemployee = () => {
                         value={values.Description}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        // label="Description"
+
                         label={
                           <>
                             Description
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}> *</span>
                           </>
                         }
+                        error={!!touched.Description && !!errors.Description}
+                        helperText={touched.Description && errors.Description}
+
                         focused
-                         error={!!touched.Description && !!errors.Description}
+                        error={!!touched.Description && !!errors.Description}
                         helperText={touched.Description && errors.Description}
                       // inputProps={{ readOnly: true }}
                       />
