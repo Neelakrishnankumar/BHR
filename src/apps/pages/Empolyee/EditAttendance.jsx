@@ -29,6 +29,7 @@ import {
   paySlipGet,
   CustomisedCaptionGet,
 } from "../../../store/reducers/Formapireducer";
+import CircularProgress from "@mui/material/CircularProgress";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { Formik } from "formik";
@@ -70,7 +71,7 @@ const EditAttendance = () => {
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
-
+  const AttendanceDataLoading = useSelector((state) => state.formApi.AttendanceDataLoading)
   const getLoading = useSelector((state) => state.formApi.AttendanceDataLoading);
   //PAYSLIP
   const paySlipdata = useSelector((state) => state.formApi.paySlipdata);
@@ -389,23 +390,28 @@ const EditAttendance = () => {
 
     };
     console.log(data, "=====DATA");
-    dispatch(Attendance({ data }));
+    const response = await dispatch(Attendance({ data }));
+    // if (response.payload.Status === "Y") {
+    //   toast.success(response.payload.Msg);
+    // }
+    // else {
+    //   toast.error(response.payload.Msg);
+    // }
+    // const payslip = {
+    //   Month: values.attmonth?.toString() ?? "",
+    //   Finyear: values.attyear,
+    //   EmployeeID: empData?.RecordID || 0,
+    //   CompanyID
+    // }
 
-    const payslip = {
-      Month: "February",
-      Finyear: values.attyear,
-      EmployeeID: "117",
-      CompanyID
-    }
+    // const paySlipResponse = await dispatch(paySlipGet(payslip))
 
-    const paySlipResponse = await dispatch(paySlipGet(payslip))
-
-    if (paySlipResponse.payload.Status === "Y") {
-      toast.success(paySlipResponse.payload.Message);
-    }
-    else {
-      toast.error(paySlipResponse.payload.Message);
-    }
+    // if (paySlipResponse.payload.Status === "Y") {
+    //   toast.success(paySlipResponse.payload.Message);
+    // }
+    // else {
+    //   toast.error(paySlipResponse.payload.Message);
+    // }
     // setButtonVisible(true)
   };
 
@@ -798,7 +804,56 @@ const EditAttendance = () => {
                   <Button type="reset" variant="contained" color="error">
                     RESET
                   </Button>
-                  {AttendanceData?.length > 0 && (
+                  {AttendanceDataLoading ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    AttendanceData?.length > 0 && (
+                      <>
+                        <PDFDownloadLink
+                          document={
+                            <AttendancePDF
+                              data={AttendanceData}
+                              filters={{
+                                Month: values.attmonth,
+                                Year: values.attyear,
+                                EmployeeID: empData?.Name,
+                                Imageurl: baseurlUAAM,
+                                HeaderImg: HeaderImg,
+                                FooterImg: FooterImg,
+                              }}
+                              footerHeight={footerHeight}
+                            />
+                          }
+                          fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                          style={{ color: "#d32f2f", cursor: "pointer" }}
+                        >
+                          {({ loading }) =>
+                            loading ? (
+                              <PictureAsPdfIcon
+                                sx={{ fontSize: 24, opacity: 0.5 }}
+                              />
+                            ) : (
+                              <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                            )
+                          }
+                        </PDFDownloadLink>
+
+                        <FaFileExcel
+                          size={20}
+                          color="#1D6F42"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            MonthlyAttendanceExcel(AttendanceData, {
+                              month: values.attmonth,
+                              year: values.attyear,
+                              employee: empData?.Name,
+                            })
+                          }
+                        />
+                      </>
+                    )
+                  )}
+                  {/* {AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendancePDF
@@ -829,9 +884,6 @@ const EditAttendance = () => {
                       }
                     </PDFDownloadLink>
                   )}
-
-
-
                   {AttendanceData?.length > 0 && (
                     <FaFileExcel
                       size={20}
@@ -865,7 +917,7 @@ const EditAttendance = () => {
                     //     }
                     //   />
 
-                  )}
+                  )} */}
 
                   {/* //For SOP PDF */}
                   {/* <Tooltip title="View PDF">
