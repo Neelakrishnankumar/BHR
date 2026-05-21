@@ -254,6 +254,10 @@ Itemstockstatus: "",
   Timetableresetloading: false,
   Timetableresetdata: {},
 
+  PublishEventstatus: "",
+  PublishEventloading: false,
+  PublishEventdata: {},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -2081,14 +2085,15 @@ export const postData = createAsyncThunk(
 );
 export const EventspostData = createAsyncThunk(
   "EventspostData/post",
-  async ({ accessID, action, idata, Type }) => {
+  async ({ accessID, action, idata, Type,CompanyID }) => {
     const url = store.getState().globalurl.apiUrl;
 
     const data = {
       accessid: accessID,
       action: action,
       data: idata,
-      Type:Type
+      Type:Type,
+      CompanyID:CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -2856,6 +2861,29 @@ export const TimetableProcessController = createAsyncThunk(
       TeacherID: data.TeacherID,
       Process: data.Process,
       Reason: data.Reason
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const PublishEvent = createAsyncThunk(
+  "PublishEvent/Post",
+  async ({ data }) => {
+    var url = store.getState().globalurl.PublishEventController;
+
+    const payload =
+    {
+      CompanyID: data.CompanyID,
+      EventCategoryID: data.EventCategoryID,
     }
     const response = await axios.post(url, payload, {
       headers: {
@@ -4929,6 +4957,21 @@ export const getApiSlice = createSlice({
       .addCase(TimetableProcessController.rejected, (state, action) => {
         state.Timetableresetstatus = "Error";
         state.Timetableresetloading = false;
+      })
+      .addCase(PublishEvent.pending, (state, action) => {
+        state.PublishEventstatus = "idle";
+        state.PublishEventloading = true;
+      })
+      .addCase(PublishEvent.fulfilled, (state, action) => {
+        state.PublishEventstatus = "success";
+        state.PublishEventloading = false;
+        state.PublishEventdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(PublishEvent.rejected, (state, action) => {
+        state.PublishEventstatus = "Error";
+        state.PublishEventloading = false;
       })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {

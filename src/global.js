@@ -178,6 +178,7 @@ const initialState = {
   imageNameUpdateUrl: "",
   //attachmentUrl:baseurl + 'uploads/images/',
   attachmentUrl: "",
+  videoAttachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
   designationImportUrl: "",
@@ -334,6 +335,7 @@ const initialState = {
   InvoiceAnalytics: "",
   TeacherOccupancy: "",
   TimetableProcessController: "",
+  PublishEventController: "",
   WeeklycaledarUrl: "",
   PartyAnalytics: "",
   slotgetUrl: "",
@@ -372,6 +374,7 @@ export const getUrlSlice = createSlice({
       state.imageNameUpdateUrl = APIurl + "CMController.php";
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
+      state.videoAttachmentUrl = baseurl + "uploads/videos/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
@@ -541,6 +544,7 @@ export const getUrlSlice = createSlice({
       state.InvoiceAnalytics = APIurl + "InvoiceAnalytics.php";
       state.TeacherOccupancy = APIurl + "TeacherOccupancy.php";
       state.TimetableProcessController = APIurl + "TimetableProcessController.php";
+      state.PublishEventController = APIurl + "EventCalendarPost.php";
       state.WeeklycaledarUrl = APIurl + "WeeklyClassCalendarGetv1.php";
       //  state.WeeklycaledarUrl = APIurl + "TimeScheduleGetController.php"
       state.PartyAnalytics = APIurl + "PartyAnalytics.php";

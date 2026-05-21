@@ -53,6 +53,7 @@ import {
   getProjectCosting,
   paySlipGet,
   postData,
+  PublishEvent,
   SOPProcessPost,
   StockProcessApi,
   TimeTableDelete,
@@ -131,6 +132,7 @@ import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
+import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -8245,6 +8247,10 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+
+    // — state (inside your component) — TR310
+  const [modalOpenE, setModalOpenE] = useState(false);
+  const [selectedRowE, setSelectedRowE] = useState(null);
   const handleGenerateTimetable = async (values) => {
     const payload = {
       HeaderID: values.RecordID,
@@ -8317,6 +8323,55 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           "",
           CompanyID,
           "003"
+
+        )
+      );
+    }
+  }
+
+   const handlePublish = async (values) => {
+
+    const result = await Swal.fire({
+      title: "Do you want to publish this Event Category? Once published you will not able to edit the Events.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    });
+
+    if (result.isConfirmed) {
+      const data = await dispatch(PublishEvent({
+        data: {
+          CompanyID: values.CompanyID,
+          EventCategoryID: values.RecordID,
+        },
+      }));
+
+      if (data.payload.Status === "Y") {
+        Swal.fire({
+          title: data.payload.Msg,
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      } else {
+        Swal.fire({
+          title: data.payload.Msg,
+          // text: data.payload.Msg,
+          icon: "warning",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#3085d6",
+        });
+      }
+      dispatch(
+        fetchListview(
+          "TR384",
+          "003",
+          screenName ?? "Event%20Category",
+          `AcademicYearID = '${values.AcademicYearID}' AND CompanyID = '${CompanyID}'`,
+          ""
 
         )
       );
@@ -8645,11 +8700,38 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
+            {params.row.IsPublish === "Y" &&(
+
+             <Tooltip title="Publish Event Category">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => {handlePublish(params.row)}}
+                  >
+                    <PublishedWithChangesOutlinedIcon />
+                  </IconButton>
+                </Tooltip> 
+)} 
           </>
         )}
         {accessID === "TR385" && (
           <>
+          {params.row.IsPublish === "Y" ? (
             <Link
+              to={`./EditEvents/${params.row.RecordID}/V`}
+              state={{
+                ...state,
+                // AcademicYear: params.row.AcademicYear,
+                // BreadCrumb1: params.row.Category,
+                BreadCrumb2: params.row.Title,
+              }}
+            >
+             <Tooltip title="View">
+                  <IconButton color="info" size="small">
+                    <VisibilityIcon />
+                  </IconButton>
+                </Tooltip>
+            </Link>):(<Link
               to={`./EditEvents/${params.row.RecordID}/E`}
               state={{
                 ...state,
@@ -8663,7 +8745,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     <ModeEditOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-            </Link>
+            </Link>)}
           </>
         )}
       </div>

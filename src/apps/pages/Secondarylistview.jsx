@@ -115,6 +115,8 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
+import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -5570,6 +5572,20 @@ const ListviewSecondary = () => {
               />
             </Box>
           )
+          : accessID == "TR385" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<VisibilityIcon color="primary" />}
+                label="View"
+                variant="outlined"
+              />
+            </Box>
+          )
             : accessID == "TR027" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
@@ -6530,6 +6546,11 @@ const ListviewSecondary = () => {
                           label="Events"
                           variant="outlined"
                         />
+                          <Chip
+                icon={<PublishedWithChangesOutlinedIcon color="error" />}
+                label="Publish Event Category"
+                variant="outlined"
+              />
                       </Box>
                     ) : accessID == "TR234" ? (
                       <Box display="flex" flexDirection="row" padding="25px" gap="5px">

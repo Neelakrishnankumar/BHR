@@ -59,6 +59,7 @@ const EditHolidayevent = () => {
     const recID = params.id;
     const mode = params.Mode;
     const accessID = params.accessID;
+    const state = location.state || {};
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [validationSchema, setValidationSchema] = useState(null);
     const [gstImage, setGstImage] = useState("");
@@ -207,27 +208,57 @@ const EditHolidayevent = () => {
                                 <MenuOutlinedIcon />
                             </IconButton>
                         )}
-                        <Box
-                            display={isNonMobile ? "flex" : "none"}
-                            borderRadius="3px"
-                            alignItems="center"
+                        <Breadcrumbs
+                            maxItems={2}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                         >
-                            <Breadcrumbs
-                                maxItems={3}
-                                aria-label="breadcrumb"
-                                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    // navigate("/Apps/TR243/Party");
+                                    navigate("/Apps/TR383/Academic%20Year");
+                                }}
                             >
-                                <Typography
-                                    variant="h5"
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
+                                {`Academic Year(${state.AcademicYear || ""})`}
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    // navigate("/Apps/TR243/Party");
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`, {
+                                        state: { ...state }
+                                    })
+                                }}
+                            >
+                                {`Event Category(${state.BreadCrumb1 || ""})`}
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    // navigate("/Apps/TR243/Party");
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/HO`, {
+                                        state: { ...state }
+                                    })
+                                }}
+                            >
+                                {`Event(${state.BreadCrumb2 || ""})`}
+                            </Typography>
 
-                                >
-                                    Holiday
-                                </Typography>
-
-                            </Breadcrumbs>
-                        </Box>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                            >
+                                {mode === "E" ? "Add (Holiday)" : "Edit (Holiday)"}
+                            </Typography>
+                        </Breadcrumbs>
                     </Box>
 
                     <Box display="flex">
@@ -459,7 +490,7 @@ const EditHolidayevent = () => {
                                     />
 
                                     <FormLabel focused={false}>Whatsapp</FormLabel>
-                                   
+
                                 </Box>
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                                     {YearFlag == "true" ? (
