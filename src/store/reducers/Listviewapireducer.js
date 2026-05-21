@@ -785,6 +785,7 @@ export const fetchListview =
           AccessID != "TR318" &&
           AccessID != "TR027" &&
           AccessID != "TR275" &&
+          AccessID != "TR391" &&
           AccessID != "TR384" &&
           AccessID != "TR319" &&
           AccessID != "TR324" &&
@@ -2279,6 +2280,36 @@ export const fetchListview =
                 },
               };
             }
+            else if (AccessID == "TR390") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR391/RaiseComplaints/${params.row.RecordID}`}
+                      >
+                        <Tooltip title="View">
+                          <IconButton color="info" size="small">
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            } 
+                      
             else if (AccessID == "TR378") {
               obj = {
                 field: "action",
@@ -2354,7 +2385,7 @@ export const fetchListview =
                       <Link
                         to={`./EditShift/${params.row.RecordID}/E`}
                       >
-                        <Tooltip title="Edit">
+                        <Tooltip title="Edits">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
                           </IconButton>
@@ -2364,7 +2395,8 @@ export const fetchListview =
                   );
                 },
               };
-            } else if (AccessID == "TR207") {
+            } 
+            else if (AccessID == "TR207") {
               obj = {
                 field: "action",
                 headerName: "Action",

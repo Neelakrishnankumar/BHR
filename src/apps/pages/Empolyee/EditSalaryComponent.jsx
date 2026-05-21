@@ -90,11 +90,33 @@ const EditSalaryComponent = () => {
       .then((data) => {
         setErrorMsgData(data);
         //Permission
-        const schema = Yup.object().shape({
-          description: Yup.string().required(data.Salarycomp.Name),
-          type: Yup.string().required(data.Salarycomp.Type),
-          category: Yup.string().required(data.Salarycomp.Category),
-        })
+        // const schema = Yup.object().shape({
+        //   description: Yup.string().required(data.Salarycomp.Name),
+        //   type: Yup.string().required(data.Salarycomp.Type),
+        //   category: Yup.string().required(data.Salarycomp.Category),
+        // })
+
+        let schemaFields = {
+          description: Yup.string()
+            .trim()
+            .required(data.Salarycomp.Name),
+
+          type: Yup.string()
+            .trim()
+            .required(data.Salarycomp.Type),
+
+          category: Yup.string()
+            .trim()
+            .required(data.Salarycomp.Category),
+        };
+
+        if (Subscriptionlastthree === "003") {
+          schemaFields.description = Yup.string().trim().required(data.Salarycomp.CompName);
+          schemaFields.type = Yup.string().required(data.Salarycomp.CalculationType);
+          schemaFields.category = Yup.string().required(data.Salarycomp.ComponentCategory);
+        }
+        const schema = Yup.object().shape(schemaFields);
+
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -137,11 +159,11 @@ const EditSalaryComponent = () => {
   const InitialValue = {
     description: data.Name,
     type: data.Type == "Percentage of Basic Pay" ? "A" :
-     data.Type == "Percentage of Basic Pay + Allowance 1" ? "A1" :
-      data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2" ? "A2" :   
-      data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2 + Allowance 3" ? "A3" :
-          data.Type == "Fixed Amount" ? "FX" :
-            data.Type == "Policy" ? "PC" : "",
+      data.Type == "Percentage of Basic Pay + Allowance 1" ? "A1" :
+        data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2" ? "A2" :
+          data.Type == "Percentage of Basic Pay + Allowance 1 + Allowance 2 + Allowance 3" ? "A3" :
+            data.Type == "Fixed Amount" ? "FX" :
+              data.Type == "Policy" ? "PC" : "",
     category: data.Category == "Allowance" ? "A" :
       data.Category == "Deduction" ? "D" : "",
     sortOrder: data.Sortorder || 0,

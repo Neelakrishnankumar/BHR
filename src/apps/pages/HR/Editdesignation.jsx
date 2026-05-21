@@ -108,6 +108,9 @@ const Editdesignation = () => {
           schemaFields.code = Yup.string().trim().required(data.Designation.code);
         }
         if (Subscriptionlastthree === "003") {
+          schemaFields.name = Yup.string()
+            .trim()
+            .required(data.Designation.Role)
           schemaFields.rank = Yup.string()
             .trim()
             .required(data.Designation.InstiLevel);

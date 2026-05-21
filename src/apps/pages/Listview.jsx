@@ -785,6 +785,9 @@ const Listview = () => {
                : accessID == "TR383" ? (
                 false
               )
+               : accessID == "TR390" || Category == "Parent" ? (
+                false
+              )
                 // : YearFlag == "true" ? (
                 : UGA_ADD ? (
 
