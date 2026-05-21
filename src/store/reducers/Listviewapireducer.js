@@ -54,6 +54,7 @@ import {
   paySlipGet,
   postData,
   SOPProcessPost,
+  standardDelete,
   StockProcessApi,
   TimeTableDelete,
   TimetableProcessController,
@@ -604,6 +605,48 @@ export const fetchListview =
       oneMonthBefore.setMonth(today.getMonth() - 1);
       const defaultFromDate = format(oneMonthBefore);
       const defaultToDate = format(today);
+
+  const handlestdDelete = async (values) => {
+    const payload = {
+      ProjectId: values.RecordID,
+      CompanyID: values.CompanyID,
+    }
+    console.log(payload, "-- GENERATE PAYLOAD");
+    const response = await dispatch(
+      standardDelete(payload)
+    );
+    console.log(response, "-- generate response");
+
+    if (response?.payload?.Status === "Y") {
+      toast.success(response?.payload?.Msg);
+         dispatch(
+        fetchListview(
+          "TR275",
+          "003",
+          screenName,
+          `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+          "",
+        
+
+        )
+      );
+      // dispatch(
+      //   getFetchData({
+      //     accessID: "TR368v1",
+      //     get: "get",
+      //     recID: headerid,
+      //   })
+      // );      
+    }
+    else if (response?.payload?.Status == "N") {
+      toast.error(response?.payload?.Msg);
+    }
+  };
+
+
+
+
+
       // const handlePDFGET = (ProjectID, EmployeeID) => {
       //   console.log("Dispatching with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
@@ -1804,7 +1847,16 @@ export const fetchListview =
                   return (
                     <Box>
                       {isSeedEditable && (
-                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                        <Link to={`./EditProject/${params.row.RecordID}/E`}
+                         state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
                           <Tooltip title="Edit">
                             <IconButton color="info" size="small">
                               <ModeEditOutlinedIcon />
@@ -1904,6 +1956,28 @@ export const fetchListview =
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
                         />
+                      )}
+
+                       {is003Subscription && (
+                        // <Link
+                        //   to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                        //   state={{
+                        //     AcademicYear: params.row.AcademicYear,
+                        //     AcademicYearID: params.row.AcademicYearID,
+                        //     projectID: params.row.RecordID,
+                        //     MilestoneName: params.row.Name,
+                        //     projectName: params.row.Project,
+                        //     BreadCrumb1: params.row.Project,
+                        //   }}
+                        // >
+                          <Tooltip title="Delete">
+                            <IconButton color="error" size="small">
+                              <DeleteIcon
+                              onClick={() => handlestdDelete(params.row)}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        // </Link>
                       )}
                     </Box>
                   );
@@ -2746,7 +2820,8 @@ export const fetchListview =
               AccessID == "TR380" ||
               AccessID == "TR384" ||
               AccessID == "TR385" ||
-              AccessID == "TR368"
+              AccessID == "TR368" 
+             
 
             ) {
               obj = {
@@ -8236,6 +8311,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+      const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const count = Number(params.row.MarketingCount || 0);
@@ -8271,6 +8348,9 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       toast.error(response?.payload?.Msg);
     }
   };
+
+ 
+
   const handleTermsProcess = async (values) => {
 
     const result = await Swal.fire({
@@ -8323,6 +8403,9 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       );
     }
   }
+
+  
+
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -8613,6 +8696,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             )}
           </>
         )}
+
         {accessID === "TR380" && (
           <>
 

@@ -6520,6 +6520,12 @@ const ListviewSecondary = () => {
                           label="Timetable"
                           variant="outlined"
                         />
+                         <Chip
+                          icon={<DeleteIcon
+                            color="error" />}
+                          label="Delete"
+                          variant="outlined"
+                        />
                       </Box>
                     ): 
                     accessID == "TR384" ? (

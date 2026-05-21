@@ -208,6 +208,108 @@ export const AcademicAutocomplete = ({
   );
 };
 
+export const CheckinAutocomplete_v12 = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  options: externalOptions,
+  getOptionLabel: externalGetOptionLabel, // destructure out
+  isOptionEqualToValue: externalIsOptionEqual, // destructure out
+  disabled,
+  label,
+  ...props // now props is clean - no options/getOptionLabel/isOptionEqualToValue
+}) => {
+  const [fetchedOptions, setFetchedOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (externalOptions && externalOptions.length > 0) return;
+
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: "eyJhbGci...",
+          },
+        });
+        const data = response.data?.Data;
+        setFetchedOptions(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setFetchedOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  const options = Array.isArray(externalOptions) && externalOptions.length > 0
+    ? externalOptions
+    : fetchedOptions;
+
+  // Default label getter works for both {Name} and {DeptName} structures
+  const defaultGetOptionLabel = (option) =>
+    option?.DeptName || option?.Name || "";
+
+  const defaultIsOptionEqual = (option, val) =>
+    option?.DeptrecID === val?.DeptrecID ||
+    option?.RecordID === val?.RecordID;
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      disabled={disabled}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={externalIsOptionEqual || defaultIsOptionEqual}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={externalGetOptionLabel || defaultGetOptionLabel}
+      
+      // ADD THIS - fixes white text on white background
+      // ListboxProps={{
+      //   sx: {
+      //     bgcolor: "#ffffff",
+      //     "& .MuiAutocomplete-option": {
+      //       color: "#000000",
+      //       "&:hover": {
+      //         bgcolor: "#f0f0f0",
+      //       },
+      //       '&[aria-selected="true"]': {
+      //         bgcolor: "#e3f2fd",
+      //         color: "#000000",
+      //       },
+      //     },
+      //   },
+      // }}
+
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label || "Select Options"}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? <CircularProgress color="error" size={20} /> : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+    />
+  );
+};
 export const CheckinAutocomplete = ({
   value = null,
   onChange,
@@ -282,6 +384,8 @@ export const CheckinAutocomplete = ({
   );
 };
 //ITEM - HSN CATEGORY
+
+
 export const HSNCategoryAutocomplete = ({
   value = null,
   onChange,

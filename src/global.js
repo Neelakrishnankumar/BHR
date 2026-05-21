@@ -340,7 +340,8 @@ const initialState = {
   TimeTableExcelGet: "",
   TimeTableExcelPost: "",
   TimeTableGenerateget: "",
-  TimeTableDelete:""
+  TimeTableDelete:"",
+  standardDeleteUrl: ""
 };
 
 export const getUrlSlice = createSlice({
@@ -548,7 +549,8 @@ export const getUrlSlice = createSlice({
       state.TimeTableExcelGet = APIurl + "SlotDetailGetController.php";
       state.TimeTableExcelPost = APIurl + "SlotDetailGetController.php";
       state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController.php";
-      state.TimeTableDelete = APIurl + "TimetableDelete.php"
+      state.TimeTableDelete = APIurl + "TimetableDelete.php";
+      state.standardDeleteUrl = APIurl + "ProjectDeleteController.php"
     },
   },
 });
