@@ -497,6 +497,26 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/C/EditEvents/:id/:Mode"
                     element={<EditCulturals />}
                   />
+                  {/* HOLIDAY */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/HO/EditEvents/:id/:Mode"
+                    element={<EditHolidayevent />}
+                  />
+                  {/* CIRCULAR */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/CI/EditEvents/:id/:Mode"
+                    element={<Circular />}
+                  />
+                  {/* PTA */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/PTA/EditEvents/:id/:Mode"
+                    element={<EditPTA />}
+                  />
+                  {/* WORKSHOP */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/W/EditEvents/:id/:Mode"
+                    element={<EditWorkshop />}
+                  />
                   {/* NEW SESSION */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1/EditListOfSession/:id/:Mode"

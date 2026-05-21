@@ -528,6 +528,7 @@ const Editemployee = () => {
         toast.success(response.payload.Msg);
         setLoading(false);
         setScreen("19");
+        dispatch(SOPConfigGet({ EmployeeID: recID, CompanyID: CompanyID }));
       } else {
         toast.error(response.payload.Msg);
       }

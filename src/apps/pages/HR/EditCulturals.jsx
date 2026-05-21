@@ -46,6 +46,8 @@ import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { PartySingleSelect } from "../../../ui-components/global/Autocomplete";
 import * as Yup from "yup";
+import store from "../../..";
+import { fileUpload, videoUpload } from "../../../store/reducers/Imguploadreducer";
 // import CryptoJS from "crypto-js";
 const EditCulturals = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -60,11 +62,18 @@ const EditCulturals = () => {
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
+    const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+
+    const uploadLoading = useSelector((state) => state.imageApi.videoLoading);
+    console.log("🚀 ~ EditCulturals ~ getLoading:", getLoading)
+    console.log("🚀 ~ EditCulturals ~ imageLoading:", imageLoading)
+    console.log("🚀 ~ EditCulturals ~ uploadLoading:", uploadLoading)
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
+    const EmployeeID = sessionStorage.getItem("empID");
     const LoginID = sessionStorage.getItem("loginrecordID");
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
@@ -76,11 +85,13 @@ const EditCulturals = () => {
     const [buttonValue, setButtonValue] = useState("whole");
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [culturalImage, setCulturalImage] = useState("");
+    const [culturalVideo, setCulturalVideo] = useState("");
     const [validationSchema, setValidationSchema] = useState(null);
-    // useEffect(() => {
-    //     dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "C" }));
-    //     setCulturalImage(mode === "A" ? "" : data?.Attachment || "");
-    // }, [location.key, mode]);
+    useEffect(() => {
+        dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "C" }));
+        setCulturalImage(mode === "A" ? "" : data?.Attachment || "");
+        setCulturalVideo(mode === "A" ? "" : data?.VideoAttachment || "");
+    }, [location.key, mode]);
 
 
     useEffect(() => {
@@ -96,25 +107,35 @@ const EditCulturals = () => {
                         .typeError(data.EventCulturals.EventTitle)
                         .required(data.EventCulturals.EventTitle),
 
-                    EventDate: Yup.string()
-                        .typeError(data.EventCulturals.EventDate)
-                        .required(data.EventCulturals.EventDate),
+                    StartDate: Yup.string()
+                        .typeError(data.EventCulturals.StartDate)
+                        .required(data.EventCulturals.StartDate),
+                    EndDate: Yup.string()
+                        .typeError(data.EventCulturals.EndDate)
+                        .required(data.EventCulturals.EndDate),
 
                     EventType: Yup.string()
                         .typeError(data.EventCulturals.EventType)
                         .required(data.EventCulturals.EventType),
 
-                    EventStartTime: Yup.string()
-                        .typeError(data.EventCulturals.EventStartTime)
-                        .required(data.EventCulturals.EventStartTime),
-                   
+                    StartTime: Yup.string()
+                        .typeError(data.EventCulturals.StartTime)
+                        .required(data.EventCulturals.StartTime),
+
+                    EndTime: Yup.string()
+                        .typeError(data.EventCulturals.EndTime)
+                        .required(data.EventCulturals.EndTime),
+
                     Message: Yup.string()
                         .typeError(data.EventCulturals.Message)
                         .required(data.EventCulturals.Message),
                     Venue: Yup.string()
                         .typeError(data.EventCulturals.Venue)
                         .required(data.EventCulturals.Venue),
-                   
+                    AddressedTo: Yup.string()
+                        .typeError(data.EventCulturals.AddressedTo)
+                        .required(data.EventCulturals.AddressedTo),
+
                 };
                 const schema = Yup.object().shape(schemaFields);
                 setValidationSchema(schema);
@@ -125,16 +146,19 @@ const EditCulturals = () => {
     const currentDate = new Date().toISOString().split("T")[0];
 
     const InitialValue = {
-        EventTitle: "",
-        EventType: "",
-        EventDate:"",
-        EventStartTime:"",
-        Venue:"",
-        Theme:"",
-        ChiefGuest:"",
-        Message:"",
-        NotifyMail:"",
-        TicketEntryRequired:""
+        EventTitle: data.EventTitle || "",
+        EventType: data.EventType || "",
+        StartDate: data.StartDate || "",
+        EndDate: data.EndDate || "",
+        StartTime: data.StartTime || "",
+        EndTime: data.EndTime || "",
+        Venue: data.Venue || "",
+        Theme: data.Theme || "",
+        AddressedTo: data.AddressedTo || "",
+        ChiefGuest: data.ChiefGuest || "",
+        Message: data.Description || "",
+        NotifyMail: mode === "E" ? (data?.NotifyEmail === "Y" ? true : false) : true,
+        PassRequired: mode === "E" ? (data?.PassRequired === "Y" ? true : false) : true,
     };
 
     const Fnsave = async (values, del, override = {}) => {
@@ -148,30 +172,26 @@ const EditCulturals = () => {
         const idata = {
             RecordID: recID,
             EventCategoryID: params.parentID2,
-            Title: values.EventTitle || "",
-            EventDate: values.EventDate || "",
+            EventTitle: values.EventTitle || "",
+            StartDate: values.StartDate || "",
+            EndDate: values.EndDate || "",
             EventType: values.EventType || "",
-            StartTime: values.EventStartTime || "",
-            EndTime: values.EventEndTime || "",
-            ResultPublishDate: values.ResultPublishdate || "",
-            PassingCriteria: values.PassingCriteria || "",
+            StartTime: values.StartTime || "",
+            EndTime: values.EndTime || "",
             Description: values.Message || "",
+            ChiefGuest: values.ChiefGuest || "",
+            Venue: values.Venue || "",
+            Theme: values.Theme || "",
+            AddressedTo: values.AddressedTo || "",
             Attachment: culturalImage || "",
-            StdActivitiesID:
-                values?.ApplicableTo
-                    ?.map((item) => item.RecordID)
-                    .join(",")
-                || "",
-            SubjectID:
-                values?.Subject
-                    ?.map((item) => item.RecordID)
-                    .join(",")
-                || "",
-            NotifyWhatsapp: values.WhatsApp === true ? "Y" : "N",
-            NotifyEmail: values.Email === true ? "Y" : "N",
+            // NotifyWhatsapp: values.WhatsApp === true ? "Y" : "N",
+            NotifyEmail: values.NotifyMail === true ? "Y" : "N",
+            PassRequired: values.PassRequired === true ? "Y" : "N",
+            CreatedBy: LoginID,
+            VideoAttachment: culturalVideo || "",
         };
 
-        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "C", idata }));
+        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "C", idata, CompanyID }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -186,6 +206,35 @@ const EditCulturals = () => {
         setButtonValue(value);
     }
 
+        const handleDateChange = (e, handleChange) => {
+        const value = e.target.value;
+
+        // allow empty
+        if (!value) {
+            handleChange(e);
+            return;
+        }
+
+        // allow only YYYY-MM-DD typing structure
+        if (!/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) {
+            return;
+        }
+
+        const parts = value.split("-");
+
+        const month = parts[1];
+        const day = parts[2];
+
+        // validate month/day ranges
+        if (
+            (month && Number(month) > 12) ||
+            (day && Number(day) > 31)
+        ) {
+            return;
+        }
+
+        handleChange(e);
+    };
     const fnLogOut = (props) => {
         Swal.fire({
             title: `Do you want ${props}?`,
@@ -209,9 +258,85 @@ const EditCulturals = () => {
         });
     };
 
+    const getFileChange = async (event) => {
+        setCulturalImage(event.target.files[0]);
+
+        console.log(event.target.files[0]);
+
+        const formData = new FormData();
+        formData.append("file", event.target.files[0]);
+        formData.append("type", "images");
+
+        const fileData = await dispatch(fileUpload({ formData }));
+        setCulturalImage(fileData.payload.name);
+        // sessionStorage.setItem("academyImage", fileData.payload.name);
+        console.log(">>>", fileData.payload);
+        console.log(
+            "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
+            fileData
+        );
+        if (fileData.payload.Status == "Y") {
+            // console.log("I am here");
+            toast.success(fileData.payload.Msg);
+        }
+    };
+
+    const getVideoChange = async (event) => {
+        // setAcademyVideo(event.target.files[0]);
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        // Allowed formats
+        const allowedTypes = [
+            "video/mp4",
+            "video/webm",
+            "video/ogg",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Only MP4/WebM/Ogg videos allowed");
+            return;
+        }
+
+        // 100MB limit
+        if (file.size > 100 * 1024 * 1024) {
+            toast.error("Video size should be below 100MB");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("type", "videos");
+
+        try {
+
+            const fileData = await dispatch(
+                videoUpload({ formData })
+            );
+
+            if (fileData.payload.Status === "Y") {
+
+                setCulturalVideo(fileData.payload.name);
+
+                toast.success(fileData.payload.Msg);
+
+            } else {
+
+                toast.error(fileData.payload.Msg);
+            }
+
+        } catch (err) {
+
+            toast.error("Upload failed");
+        }
+    };
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
+            {uploadLoading ? <LinearProgress /> : false}
+            {imageLoading ? <LinearProgress /> : false}
             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -292,11 +417,11 @@ const EditCulturals = () => {
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
                         initialValues={InitialValue}
-                        // onSubmit={(values, setSubmitting) => {
-                        //     setTimeout(() => {
-                        //         Fnsave(values);
-                        //     }, 100);
-                        // }}
+                        onSubmit={(values, setSubmitting) => {
+                            setTimeout(() => {
+                                Fnsave(values);
+                            }, 100);
+                        }}
                         validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
@@ -327,7 +452,7 @@ const EditCulturals = () => {
                                     <Box
                                         display="flex"
                                         flexDirection="column"
-                                        gap={3}
+                                        gap={1.5}
                                         padding={3}
                                     >
                                         {/* TOP ROW */}
@@ -364,7 +489,7 @@ const EditCulturals = () => {
                                                 focused
                                                 name="EventType"
                                                 // label="Programme Type"
-                                                 label={
+                                                label={
                                                     <>
                                                         Programme Type
                                                         <span style={{ color: "red", fontSize: "20px" }}>
@@ -375,7 +500,7 @@ const EditCulturals = () => {
                                                 value={values.EventType}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                 error={!!touched.EventType && !!errors.EventType}
+                                                error={!!touched.EventType && !!errors.EventType}
                                                 helperText={touched.EventType && errors.EventType}
                                             >
                                                 <MenuItem value="AnnualDay">Annual Day</MenuItem>
@@ -385,54 +510,118 @@ const EditCulturals = () => {
                                                 <MenuItem value="ArtExhibition">Art Exhibition</MenuItem>
                                                 <MenuItem value="Elocution">Elocution</MenuItem>
                                             </TextField>
-                                        </Box>
-                                        <Box
-                                            display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr 1fr 1fr" : "1fr"}
-                                            gap={2}
-                                        >
+
                                             <TextField
                                                 fullWidth
                                                 type="date"
                                                 variant="standard"
                                                 focused
-                                                name="EventDate"
+                                                name="StartDate"
                                                 // label="Event Date"
-                                                 label={
+                                                label={
                                                     <>
-                                                        Event Date
+                                                        Start Date
                                                         <span style={{ color: "red", fontSize: "20px" }}>
                                                             *
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventDate}
+                                                value={values.StartDate}
                                                 inputFormat="YYYY-MM-DD"
                                                 onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.EventDate && !!errors.EventDate}
-                                                helperText={touched.EventDate && errors.EventDate}
+                                                // onChange={handleChange}
+                                                onChange={(e) => handleDateChange(e, handleChange)}
+                                                error={!!touched.StartDate && !!errors.StartDate}
+                                                helperText={touched.StartDate && errors.StartDate}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                type="date"
+                                                variant="standard"
+                                                focused
+                                                name="EndDate"
+                                                // label="Event Date"
+                                                label={
+                                                    <>
+                                                        End Date
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.EndDate}
+                                                inputFormat="YYYY-MM-DD"
+                                                onBlur={handleBlur}
+                                                // onChange={handleChange}
+                                                onChange={(e) => handleDateChange(e, handleChange)}
+                                                error={!!touched.EndDate && !!errors.EndDate}
+                                                helperText={touched.EndDate && errors.EndDate}
+                                                InputProps={{
+                                                    inputProps: {
+                                                        min: values.StartDate || ""
+                                                    }
+                                                }}
                                             />
                                             <TextField
                                                 fullWidth
                                                 type="time"
                                                 variant="standard"
                                                 focused
-                                                name="EventStartTime"
+                                                name="StartTime"
                                                 // label="Time"
-                                                 label={
+                                                label={
                                                     <>
-                                                        Time
+                                                        Start Time
                                                         <span style={{ color: "red", fontSize: "20px" }}>
                                                             *
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventStartTime}
+                                                value={values.StartTime}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                error={!!touched.EventStartTime && !!errors.EventStartTime}
-                                                helperText={touched.EventStartTime && errors.EventStartTime}
+                                                error={!!touched.StartTime && !!errors.StartTime}
+                                                helperText={touched.StartTime && errors.StartTime}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                type="time"
+                                                variant="standard"
+                                                focused
+                                                name="EndTime"
+                                                // label="End Time"
+                                                label={
+                                                    <>
+                                                        End Time
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.EndTime}
+                                                onBlur={handleBlur}
+                                                onChange={(e) => {
+                                                    const endTime = e.target.value;
+                                                    const startTime = values.StartTime;
+
+                                                    if (!startTime) {
+                                                        handleChange(e);
+                                                        return;
+                                                    }
+
+                                                    const start = new Date(`1970-01-01T${startTime}`);
+                                                    const end = new Date(`1970-01-01T${endTime}`);
+
+                                                    if (end <= start) {
+                                                        setFieldValue("EndTime", "");
+                                                        toast.error("End Time cannot be lesser than or equal to Start Time")
+                                                        return;
+                                                    }
+
+                                                    handleChange(e);
+                                                }}
+                                                error={!!touched.EndTime && !!errors.EndTime}
+                                                helperText={touched.EndTime && errors.EndTime}
                                             />
                                             <TextField
                                                 fullWidth
@@ -441,7 +630,7 @@ const EditCulturals = () => {
                                                 focused
                                                 name="Venue"
                                                 // label="Venue"
-                                                 label={
+                                                label={
                                                     <>
                                                         Venue
                                                         <span style={{ color: "red", fontSize: "20px" }}>
@@ -459,12 +648,7 @@ const EditCulturals = () => {
                                             />
 
 
-                                        </Box>
-                                        <Box
-                                            display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
-                                            gap={2}
-                                        >
+
                                             <TextField
                                                 fullWidth
                                                 type="text"
@@ -496,20 +680,45 @@ const EditCulturals = () => {
                                                 helperText={touched.ChiefGuest && errors.ChiefGuest}
                                             />
 
+  <TextField
+                                                fullWidth
+                                                select
+                                                variant="standard"
+                                                focused
+                                                name="AddressedTo"
+                                                // label="Event Type"
+                                                label={
+                                                    <>
+                                                        Addressed To
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.AddressedTo}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.AddressedTo && !!errors.AddressedTo}
+                                                helperText={touched.AddressedTo && errors.AddressedTo}
+                                            >
+                                                <MenuItem value="All">All</MenuItem>
+                                                <MenuItem value="Parents&Students">Parents & Students</MenuItem>
+                                                <MenuItem value="ParentsOnly">Parents Only</MenuItem>
+                                                <MenuItem value="StaffOnly">Staff Only</MenuItem>
+                                                
+                                            </TextField>
+                                           
                                         </Box>
-
-
-
-                                        {/* MESSAGE */}
-                                        <TextField
-                                            fullWidth
-                                            multiline
-                                            variant="standard"
-                                            focused
-                                            rows={2}
-                                            name="Message"
-                                            // label="Programme Schedule"
-                                             label={
+                                        <Box display="grid" gridTemplateColumns="1fr" gap={2}>
+                                             <TextField
+                                                fullWidth
+                                                // multiline
+                                                variant="standard"
+                                                focused
+                                                rows={2}
+                                                name="Message"
+                                                // label="Programme Schedule"
+                                                label={
                                                     <>
                                                         Programme Schedule
                                                         <span style={{ color: "red", fontSize: "20px" }}>
@@ -517,11 +726,166 @@ const EditCulturals = () => {
                                                         </span>
                                                     </>
                                                 }
-                                            placeholder="List Of performances, timings..."
-                                            value={values.Message}
-                                            onChange={handleChange}
-                                        />
+                                                placeholder="List Of performances, timings..."
+                                                value={values.Message}
+                                                onChange={handleChange}
+                                                error={!!touched.Message && !!errors.Message}
+                                                helperText={touched.Message && errors.Message}
+                                            />
+                                        </Box>
+                                        {/* ACTION + CONTACT */}
+                                        <Box
+                                            display="grid"
+                                            gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
+                                            gap={2}
+                                        >
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    sx={{
+                                                        mb: 1,
+                                                        fontWeight: 600,
+                                                        color: "#6B7280",
+                                                    }}
+                                                >
+                                                    Attach Syllabus (PDF)
+                                                </Typography>
 
+                                                <Box
+                                                    component="label"
+                                                    sx={{
+                                                        border: "1px dashed #D1D5DB",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: "#F9FAFB",
+                                                        height: "56px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        cursor: "pointer",
+                                                        transition: "0.2s",
+                                                        "&:hover": {
+                                                            backgroundColor: "#F3F4F6",
+                                                        },
+                                                    }}
+                                                >
+                                                    <input
+                                                        hidden
+                                                        type="file"
+                                                        accept=".pdf"
+                                                        // onChange={(event) => {
+                                                        //     const file = event.currentTarget.files[0];
+                                                        //     setFieldValue("SyllabusFile", file);
+                                                        // }}
+                                                        onChange={getFileChange}
+                                                    />
+
+                                                    <Typography
+                                                        fontSize="14px"
+                                                        color="#6B7280"
+                                                    >
+                                                        Click to upload PDF
+                                                    </Typography>
+                                                </Box>
+
+                                                <Button
+                                                    // size="small"
+                                                    variant="contained"
+                                                    component={"a"}
+                                                    sx={{
+                                                        marginTop: "10px",
+                                                        width: "100%"
+                                                    }}
+                                                    onClick={() => {
+                                                        data?.Attachment || culturalImage
+                                                            ? window.open(
+                                                                culturalImage
+                                                                    ? store.getState().globalurl.attachmentUrl +
+                                                                    culturalImage
+                                                                    : store.getState().globalurl.attachmentUrl +
+                                                                    data?.Attachment,
+                                                                "_blank"
+                                                            )
+                                                            : toast.error("Please Upload File");
+                                                    }}
+                                                >
+                                                    View Uploaded File
+                                                </Button>
+
+                                            </Box>
+
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    sx={{
+                                                        mb: 1,
+                                                        fontWeight: 600,
+                                                        color: "#6B7280",
+                                                    }}
+                                                >
+                                                    Upload Event Video
+                                                </Typography>
+
+                                                <Box
+                                                    component="label"
+                                                    sx={{
+                                                        border: "1px dashed #D1D5DB",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: "#F9FAFB",
+                                                        height: "56px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    <input
+                                                        hidden
+                                                        type="file"
+                                                        accept="video/*"
+                                                        onChange={getVideoChange}
+                                                    />
+
+                                                    <Typography fontSize="14px" color="#6B7280">
+                                                        Click to upload Video
+                                                    </Typography>
+                                                </Box>
+                                                {/* {videoDisplayName  && (
+                                                                                                <Typography
+                                                                                                    sx={{
+                                                                                                        mt: 1,
+                                                                                                        fontSize: "13px",
+                                                                                                        color: "#1976d2",
+                                                                                                        wordBreak: "break-all",
+                                                                                                    }}
+                                                                                                >
+                                                                                                    Uploaded Video: {videoDisplayName }
+                                                                                                </Typography>
+                                                                                            )} */}
+                                                <Button
+                                                    // size="small"
+                                                    variant="contained"
+                                                    component={"a"}
+                                                    sx={{
+                                                        marginTop: "10px",
+                                                        width: "100%"
+                                                    }}
+                                                    onClick={() => {
+                                                        data?.VideoAttachment || culturalVideo
+                                                            ? window.open(
+                                                                culturalVideo
+                                                                    ? store.getState().globalurl.videoAttachmentUrl +
+                                                                    culturalVideo
+                                                                    : store.getState().globalurl.videoAttachmentUrl +
+                                                                    data?.VideoAttachment,
+                                                                "_blank"
+                                                            )
+                                                            : toast.error("Please Upload Video");
+                                                    }}
+                                                >
+                                                    View Uploaded File
+                                                </Button>
+                                            </Box>
+                                        </Box>
                                         {/* NOTIFY OPTIONS */}
                                         <Box>
                                             <Typography
@@ -543,15 +907,15 @@ const EditCulturals = () => {
                                                 {[
                                                     {
                                                         label: "Mail",
-                                                        field: "PushNotification",
+                                                        field: "NotifyMail",
                                                     },
+                                                    // {
+                                                    //     label: "WhatsApp",
+                                                    //     field: "WhatsApp",
+                                                    // },
                                                     {
-                                                        label: "WhatsApp",
-                                                        field: "WhatsApp",
-                                                    },
-                                                    {
-                                                        label: "TicketEntryPass",
-                                                        field: "Ticket / Entry Pass Required",
+                                                        label: "Ticket/Entry Pass Required",
+                                                        field: "PassRequired",
                                                     },
                                                     // {
                                                     //     label: "Acknowledgement Required",
@@ -596,8 +960,9 @@ const EditCulturals = () => {
                                                 variant="contained"
                                                 type="submit"
                                                 loading={isLoading}
+                                                disabled={mode === "V" || uploadLoading || imageLoading}
                                             >
-                                                Notify & Publish
+                                                Save
                                             </LoadingButton>
                                             <Button
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}

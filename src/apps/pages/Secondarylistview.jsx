@@ -115,6 +115,8 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
+import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -5660,6 +5662,20 @@ const ListviewSecondary = () => {
               />
             </Box>
           )
+          : accessID == "TR385" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<VisibilityIcon color="primary" />}
+                label="View"
+                variant="outlined"
+              />
+            </Box>
+          )
             : accessID == "TR027" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
@@ -6610,60 +6626,71 @@ const ListviewSecondary = () => {
                           label="Timetable"
                           variant="outlined"
                         />
+                         <Chip
+                          icon={<DeleteIcon
+                            color="error" />}
+                          label="Delete"
+                          variant="outlined"
+                        />
                       </Box>
-                    ) :
-                      accessID == "TR384" ? (
-                        <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    ): 
+                    accessID == "TR384" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                        <Chip
+                          icon={<EventAvailableOutlinedIcon
+                            color="primary" />}
+                          label="Events"
+                          variant="outlined"
+                        />
                           <Chip
-                            icon={<EventAvailableOutlinedIcon
-                              color="primary" />}
-                            label="Events"
-                            variant="outlined"
-                          />
-                        </Box>
-                      ) : accessID == "TR234" ? (
-                        <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                          <Chip
-                            icon={<BalanceIcon color="primary" />}
-                            label="Task Weightage"
-                            variant="outlined"
-                          />
-                          <Chip
-                            icon={<ModeEditOutlinedIcon color="primary" />}
-                            label="Edit"
-                            variant="outlined"
-                          />
-                          <Chip
-                            icon={<ListAltOutlinedIcon color="primary" />}
-                            label="List of Tasks"
-                            variant="outlined"
-                          />
-                        </Box>
-                      ) : accessID == "TR335" ? (
-                        <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                          <Chip
-                            icon={<TimelineOutlinedIcon color="primary" />}
-                            label="Timeline"
-                            variant="outlined"
-                          />
-                        </Box>
-                      ) : accessID == "TR314" ? (
-                        <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                          <Chip
-                            icon={<VisibilityIcon color="primary" />}
-                            label="View"
-                            variant="outlined"
-                          />
-                        </Box>
-                      ) : accessID != "TR373" && accessID != "TR371" ? (
-                        <Box display="flex" flexDirection="row" padding="25px">
-                          <Chip
-                            icon={<ModeEditOutlinedIcon color="primary" />}
-                            label="Edit"
-                            variant="outlined"
-                          />
-                        </Box>
-                      ) : (null)}
+                icon={<PublishedWithChangesOutlinedIcon color="error" />}
+                label="Publish Event Category"
+                variant="outlined"
+              />
+                      </Box>
+                    ) : accessID == "TR234" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<BalanceIcon color="primary" />}
+                          label="Task Weightage"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<ModeEditOutlinedIcon color="primary" />}
+                          label="Edit"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<ListAltOutlinedIcon color="primary" />}
+                          label="List of Tasks"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID == "TR335" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<TimelineOutlinedIcon color="primary" />}
+                          label="Timeline"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID == "TR314" ? (
+                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                        <Chip
+                          icon={<VisibilityIcon color="primary" />}
+                          label="View"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : accessID != "TR373" && accessID != "TR371" ? (
+                      <Box display="flex" flexDirection="row" padding="25px">
+                        <Chip
+                          icon={<ModeEditOutlinedIcon color="primary" />}
+                          label="Edit"
+                          variant="outlined"
+                        />
+                      </Box>
+                    ) : (null)}
       </Box>
       <MatxCustomizer
         open={open}

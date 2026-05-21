@@ -477,7 +477,7 @@ const Logochange = () => {
                                         label="Office Address"
                                         variant="standard"
                                         multiline
-                                        rows={3}
+                                        // rows={3}
                                         focused
                                         value={values.address}
                                         // onChange={(e) => setOffaddress(e.target.value)}

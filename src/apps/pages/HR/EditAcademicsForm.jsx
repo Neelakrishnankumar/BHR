@@ -45,7 +45,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { EventsmultiSelect, PartySingleSelect } from "../../../ui-components/global/Autocomplete";
-import { fileUpload } from "../../../store/reducers/Imguploadreducer";
+import { fileUpload, videoUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
 import * as Yup from "yup";
 
@@ -62,12 +62,15 @@ const EditAcademicsForm = () => {
     const Status = useSelector((state) => state.formApi.Status);
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
+    const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+    const uploadLoading = useSelector((state) => state.imageApi.videoLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
+    const EmployeeID = sessionStorage.getItem("empID");
     const LoginID = sessionStorage.getItem("loginrecordID");
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
@@ -78,11 +81,14 @@ const EditAcademicsForm = () => {
     const [validationSchema, setValidationSchema] = useState(null);
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [academyImage, setAcademyImage] = useState("");
+    const [academyVideo, setAcademyVideo] = useState("");
+    const [videoDisplayName, setVideoDisplayName] = useState("");
 
     useEffect(() => {
         dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "A" }));
         setAcademyImage(mode === "A" ? "" : data?.Attachment || "");
-    }, [location.key,mode]);
+        setAcademyVideo(mode === "A" ? "" : data?.VideoAttachment || "");
+    }, [location.key, mode]);
 
 
     useEffect(() => {
@@ -98,23 +104,29 @@ const EditAcademicsForm = () => {
                         .typeError(data.EventAcademics.EventTitle)
                         .required(data.EventAcademics.EventTitle),
 
-                    EventDate: Yup.string()
-                        .typeError(data.EventAcademics.EventDate)
-                        .required(data.EventAcademics.EventDate),
+                    StartDate: Yup.string()
+                        .typeError(data.EventAcademics.StartDate)
+                        .required(data.EventAcademics.StartDate),
+                    EndDate: Yup.string()
+                        .typeError(data.EventAcademics.EndDate)
+                        .required(data.EventAcademics.EndDate),
 
                     EventType: Yup.string()
                         .typeError(data.EventAcademics.EventType)
                         .required(data.EventAcademics.EventType),
 
-                    EventStartTime: Yup.string()
-                        .typeError(data.EventAcademics.EventStartTime)
-                        .required(data.EventAcademics.EventStartTime),
-                    EventEndTime: Yup.string()
-                        .typeError(data.EventAcademics.EventEndTime)
-                        .required(data.EventAcademics.EventEndTime),
+                    StartTime: Yup.string()
+                        .typeError(data.EventAcademics.StartTime)
+                        .required(data.EventAcademics.StartTime),
+                    EndTime: Yup.string()
+                        .typeError(data.EventAcademics.EndTime)
+                        .required(data.EventAcademics.EndTime),
                     Message: Yup.string()
                         .typeError(data.EventAcademics.Message)
                         .required(data.EventAcademics.Message),
+                    AddressedTo: Yup.string()
+                        .typeError(data.EventAcademics.AddressedTo)
+                        .required(data.EventAcademics.AddressedTo),
                     ApplicableTo: Yup.array()
                         .min(1, data.EventAcademics.ApplicableTo)
                         .required(data.EventAcademics.ApplicableTo),
@@ -153,11 +165,13 @@ const EditAcademicsForm = () => {
         Message: data.Description || "",
         PassingCriteria: data.PassingCriteria || "",
         ResultPublishdate: data.ResultPublishDate || "",
-        EventDate: data.EventDate || "",
-        EventStartTime: data.StartTime || "",
-        EventEndTime: data.EndTime || "",
+        StartDate: data.StartDate || "",
+        EndDate: data.EndDate || "",
+        StartTime: data.StartTime || "",
+        EndTime: data.EndTime || "",
         WhatsApp: mode === "E" ? (data.NotifyWhatsapp === "Y" ? true : false) : true,
         Email: mode === "E" ? (data.NotifyEmail === "Y" ? true : false) : true,
+        AddressedTo: data.AddressedTo || "",
     };
 
     const Fnsave = async (values, del, override = {}) => {
@@ -172,10 +186,11 @@ const EditAcademicsForm = () => {
             RecordID: recID,
             EventCategoryID: params.parentID2,
             Title: values.EventTitle || "",
-            EventDate: values.EventDate || "",
+            StartDate: values.StartDate || "",
+            EndDate: values.EndDate || "",
             EventType: values.EventType || "",
-            StartTime: values.EventStartTime || "",
-            EndTime: values.EventEndTime || "",
+            StartTime: values.StartTime || "",
+            EndTime: values.EndTime || "",
             ResultPublishDate: values.ResultPublishdate || "",
             PassingCriteria: values.PassingCriteria || "",
             Description: values.Message || "",
@@ -192,9 +207,12 @@ const EditAcademicsForm = () => {
                 || "",
             NotifyWhatsapp: values.WhatsApp === true ? "Y" : "N",
             NotifyEmail: values.Email === true ? "Y" : "N",
+            VideoAttachment: academyVideo || "",
+            CreatedBy: LoginID,
+            AddressedTo: values.AddressedTo || "",
         };
 
-        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "A", idata }));
+        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "A", idata, CompanyID }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -279,9 +297,63 @@ const EditAcademicsForm = () => {
             toast.success(fileData.payload.Msg);
         }
     };
+    const getVideoChange = async (event) => {
+        // setAcademyVideo(event.target.files[0]);
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        setVideoDisplayName(file.name);
+        // Allowed formats
+        const allowedTypes = [
+            "video/mp4",
+            "video/webm",
+            "video/ogg",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Only MP4/WebM/Ogg videos allowed");
+            return;
+        }
+
+        // 100MB limit
+        if (file.size > 100 * 1024 * 1024) {
+            toast.error("Video size should be below 100MB");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("type", "videos");
+
+        try {
+
+            const fileData = await dispatch(
+                videoUpload({ formData })
+            );
+
+            if (fileData.payload.Status === "Y") {
+
+                setAcademyVideo(fileData.payload.name);
+
+                toast.success(fileData.payload.Msg);
+
+            } else {
+
+                toast.error(fileData.payload.Msg);
+            }
+
+        } catch (err) {
+
+            toast.error("Upload failed");
+        }
+    };
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
+            {uploadLoading ? <LinearProgress /> : false}
+            {imageLoading ? <LinearProgress /> : false}
             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -397,7 +469,7 @@ const EditAcademicsForm = () => {
                                     <Box
                                         display="flex"
                                         flexDirection="column"
-                                        gap={3}
+                                        gap={1.5}
                                         padding={3}
                                     >
                                         {/* TOP ROW */}
@@ -457,7 +529,7 @@ const EditAcademicsForm = () => {
                                         </Box>
                                         <Box
                                             display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr 1fr 1fr" : "1fr"}
+                                            gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
                                             gap={2}
                                         >
                                             <TextField
@@ -465,30 +537,58 @@ const EditAcademicsForm = () => {
                                                 type="date"
                                                 variant="standard"
                                                 focused
-                                                name="EventDate"
+                                                name="StartDate"
                                                 // label="Event Date"
                                                 label={
                                                     <>
-                                                        Event Date
+                                                        Start Date
                                                         <span style={{ color: "red", fontSize: "20px" }}>
                                                             *
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventDate}
+                                                value={values.StartDate}
                                                 inputFormat="YYYY-MM-DD"
                                                 onBlur={handleBlur}
                                                 // onChange={handleChange}
                                                 onChange={(e) => handleDateChange(e, handleChange)}
-                                                error={!!touched.EventDate && !!errors.EventDate}
-                                                helperText={touched.EventDate && errors.EventDate}
+                                                error={!!touched.StartDate && !!errors.StartDate}
+                                                helperText={touched.StartDate && errors.StartDate}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                type="date"
+                                                variant="standard"
+                                                focused
+                                                name="EndDate"
+                                                // label="Event Date"
+                                                label={
+                                                    <>
+                                                        End Date
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.EndDate}
+                                                inputFormat="YYYY-MM-DD"
+                                                onBlur={handleBlur}
+                                                // onChange={handleChange}
+                                                onChange={(e) => handleDateChange(e, handleChange)}
+                                                error={!!touched.EndDate && !!errors.EndDate}
+                                                helperText={touched.EndDate && errors.EndDate}
+                                                InputProps={{
+                                                    inputProps:{
+                                                        min:values.StartDate || ""
+                                                    }
+                                                }}
                                             />
                                             <TextField
                                                 fullWidth
                                                 type="time"
                                                 variant="standard"
                                                 focused
-                                                name="EventStartTime"
+                                                name="StartTime"
                                                 // label="Start Time"
                                                 label={
                                                     <>
@@ -498,18 +598,18 @@ const EditAcademicsForm = () => {
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventStartTime}
+                                                value={values.StartTime}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                error={!!touched.EventStartTime && !!errors.EventStartTime}
-                                                helperText={touched.EventStartTime && errors.EventStartTime}
+                                                error={!!touched.StartTime && !!errors.StartTime}
+                                                helperText={touched.StartTime && errors.StartTime}
                                             />
                                             <TextField
                                                 fullWidth
                                                 type="time"
                                                 variant="standard"
                                                 focused
-                                                name="EventEndTime"
+                                                name="EndTime"
                                                 // label="End Time"
                                                 label={
                                                     <>
@@ -519,11 +619,11 @@ const EditAcademicsForm = () => {
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventEndTime}
+                                                value={values.EndTime}
                                                 onBlur={handleBlur}
                                                 onChange={(e) => {
                                                     const endTime = e.target.value;
-                                                    const startTime = values.EventStartTime;
+                                                    const startTime = values.StartTime;
 
                                                     if (!startTime) {
                                                         handleChange(e);
@@ -534,15 +634,15 @@ const EditAcademicsForm = () => {
                                                     const end = new Date(`1970-01-01T${endTime}`);
 
                                                     if (end <= start) {
-                                                        setFieldValue("EventEndTime", "");
+                                                        setFieldValue("EndTime", "");
                                                         toast.error("End Time cannot be lesser than or equal to Start Time")
                                                         return;
                                                     }
 
                                                     handleChange(e);
                                                 }}
-                                                error={!!touched.EventEndTime && !!errors.EventEndTime}
-                                                helperText={touched.EventEndTime && errors.EventEndTime}
+                                                error={!!touched.EndTime && !!errors.EndTime}
+                                                helperText={touched.EndTime && errors.EndTime}
                                             />
 
 
@@ -670,34 +770,67 @@ const EditAcademicsForm = () => {
                                             />
                                         </Box>
 
-                                        {/* MESSAGE */}
-                                        <TextField
-                                            fullWidth
-                                            multiline
-                                            variant="standard"
-                                            focused
-                                            rows={2}
-                                            name="Message"
-                                            // label="Preparation Notes"
-                                            label={
-                                                <>
-                                                    Preparation Notes
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </>
-                                            }
-                                            placeholder="Topics, tips, reference materials.."
-                                            value={values.Message}
-                                            onChange={handleChange}
-                                            error={!!touched.Message && !!errors.Message}
-                                            helperText={touched.Message && errors.Message}
-                                        />
+                                        <Box
+                                            display="grid"
+                                            gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
+                                            gap={2}
+                                        >
 
+                                             <TextField
+                                                fullWidth
+                                                select
+                                                variant="standard"
+                                                focused
+                                                name="AddressedTo"
+                                                // label="Event Type"
+                                                label={
+                                                    <>
+                                                        Addressed To
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.AddressedTo}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.AddressedTo && !!errors.AddressedTo}
+                                                helperText={touched.AddressedTo && errors.AddressedTo}
+                                            >
+                                                <MenuItem value="All">All</MenuItem>
+                                                <MenuItem value="Parents&Students">Parents & Students</MenuItem>
+                                                <MenuItem value="ParentsOnly">Parents Only</MenuItem>
+                                                <MenuItem value="StaffOnly">Staff Only</MenuItem>
+                                                
+                                            </TextField>
+                                            {/* MESSAGE */}
+                                            <TextField
+                                                fullWidth
+                                                // multiline
+                                                variant="standard"
+                                                focused
+                                                rows={2}
+                                                name="Message"
+                                                // label="Preparation Notes"
+                                                label={
+                                                    <>
+                                                        Preparation Notes
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                placeholder="Topics, tips, reference materials.."
+                                                value={values.Message}
+                                                onChange={handleChange}
+                                                error={!!touched.Message && !!errors.Message}
+                                                helperText={touched.Message && errors.Message}
+                                            />
+                                        </Box>
                                         {/* ACTION + CONTACT */}
                                         <Box
                                             display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
+                                            gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
                                             gap={2}
                                         >
                                             <Box>
@@ -753,8 +886,8 @@ const EditAcademicsForm = () => {
                                                     variant="contained"
                                                     component={"a"}
                                                     sx={{
-                                                        marginTop:"10px",
-                                                        width:"100%"
+                                                        marginTop: "10px",
+                                                        width: "100%"
                                                     }}
                                                     onClick={() => {
                                                         data?.Attachment || academyImage
@@ -772,6 +905,79 @@ const EditAcademicsForm = () => {
                                                     View Uploaded File
                                                 </Button>
 
+                                            </Box>
+
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    sx={{
+                                                        mb: 1,
+                                                        fontWeight: 600,
+                                                        color: "#6B7280",
+                                                    }}
+                                                >
+                                                    Upload Event Video
+                                                </Typography>
+
+                                                <Box
+                                                    component="label"
+                                                    sx={{
+                                                        border: "1px dashed #D1D5DB",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: "#F9FAFB",
+                                                        height: "56px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    <input
+                                                        hidden
+                                                        type="file"
+                                                        accept="video/*"
+                                                        onChange={getVideoChange}
+                                                    />
+
+                                                    <Typography fontSize="14px" color="#6B7280">
+                                                        Click to upload Video
+                                                    </Typography>
+                                                </Box>
+                                                {/* {videoDisplayName  && (
+                                                    <Typography
+                                                        sx={{
+                                                            mt: 1,
+                                                            fontSize: "13px",
+                                                            color: "#1976d2",
+                                                            wordBreak: "break-all",
+                                                        }}
+                                                    >
+                                                        Uploaded Video: {videoDisplayName }
+                                                    </Typography>
+                                                )} */}
+                                                <Button
+                                                    // size="small"
+                                                    variant="contained"
+                                                    component={"a"}
+                                                    sx={{
+                                                        marginTop: "10px",
+                                                        width: "100%"
+                                                    }}
+                                                    onClick={() => {
+                                                        data?.VideoAttachment || academyVideo
+                                                            ? window.open(
+                                                                academyVideo
+                                                                    ? store.getState().globalurl.videoAttachmentUrl +
+                                                                    academyVideo
+                                                                    : store.getState().globalurl.videoAttachmentUrl +
+                                                                    data?.VideoAttachment,
+                                                                "_blank"
+                                                            )
+                                                            : toast.error("Please Upload Video");
+                                                    }}
+                                                >
+                                                    View Uploaded File
+                                                </Button>
                                             </Box>
                                         </Box>
                                         {/* <Box
@@ -884,8 +1090,9 @@ const EditAcademicsForm = () => {
                                                 variant="contained"
                                                 type="submit"
                                                 loading={isLoading}
+                                                disabled={mode === "V" || uploadLoading || imageLoading}
                                             >
-                                                Publish Academic Event
+                                                Save
                                             </LoadingButton>
                                             <Button
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}

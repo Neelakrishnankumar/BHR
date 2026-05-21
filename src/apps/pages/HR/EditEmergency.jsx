@@ -62,6 +62,8 @@ const EditEmergency = () => {
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
+        const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+    const uploadLoading = useSelector((state) => state.imageApi.videoLoading);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
@@ -75,6 +77,7 @@ const EditEmergency = () => {
 
 
     const [buttonValue, setButtonValue] = useState("");
+    console.log("🚀 ~ EditEmergency ~ buttonValue:", buttonValue)
     const [validationSchema, setValidationSchema] = useState(null);
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [emergencyImage, setEmergencyImage] = useState("");
@@ -82,7 +85,7 @@ const EditEmergency = () => {
 
     useEffect(() => {
         dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "E" }));
-        setButtonValue(data?.SchoolorSpecific ? data?.SchoolorSpecific : "Y")
+        setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific ||"Y");
         setEmergencyImage(mode === "A" ? "" : data?.Attachment || "");
     }, [location.key, mode]);
 
@@ -151,12 +154,13 @@ const EditEmergency = () => {
             }))
             : [],
         Standard: data?.SpecificStdActID ? {
-            Record: data?.SpecificStdActID,
+            RecordID: data?.SpecificStdActID,
             Code: data?.SpecificStdActCode,
             Name: data?.SpecificStdActName
         } : null,
         Student: data?.StudentID ? {
-            Record: data?.StudentID,
+            // RecordID: data?.StudentID,
+            EmployeeID: data?.StudentID,
             Code: data?.StudentCode,
             Name: data?.StudentName
         } : null,
@@ -200,9 +204,10 @@ const EditEmergency = () => {
             NotifyEmail: values.Email === true ? "Y" : "N",
             AcknowledgementRequired: values.Acknowledgement === true ? "Y" : "N",
             Attachment:emergencyImage || "",
+            CreatedBy:LoginID,
         };
-
-        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "E", idata }));
+        
+        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "E", idata,CompanyID }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -270,6 +275,7 @@ const EditEmergency = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
+            {imageLoading ? <LinearProgress /> : false}
             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -867,8 +873,9 @@ const EditEmergency = () => {
                                                 variant="contained"
                                                 type="submit"
                                                 loading={isLoading}
+                                                disabled={mode === "V" || imageLoading}
                                             >
-                                                Send Emergency Alert
+                                                Save
                                             </LoadingButton>
                                             <Button
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
