@@ -635,7 +635,7 @@ const Editemployee = () => {
           // Department: Yup.object()
           //   .nullable()
           //   .required(data.Employee.Department),
-
+          Gender: Yup.string().required(data.Employee.Gender),
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
@@ -6363,7 +6363,7 @@ const Editemployee = () => {
                             multiline
                           // rows={2}
                           />
-                          {/* <TextField
+                          <TextField
                             fullWidth
                             variant="standard"
                             type="number"
@@ -6388,7 +6388,7 @@ const Editemployee = () => {
                                 style: { textAlign: "right" },
                               },
                             }}
-                          /> */}
+                          />
                         </FormControl>
                       </Box>)}
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
@@ -13414,6 +13414,7 @@ const Editemployee = () => {
                           <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                         ]}
                       </TextField>
+                    
                       <TextField
                         fullWidth
                         variant="standard"

@@ -45,6 +45,7 @@ const Holidaylist = () => {
 
   // Redux state
   const data = useSelector((state) => state.formApi.Data);
+  console.log("Fetched Data:", data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
@@ -217,13 +218,13 @@ const Holidaylist = () => {
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
+            validationSchema={validationSchema}
+            enableReinitialize={true}
             onSubmit={(values, setSubmitting) => {
               setTimeout(() => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={validationSchema}
-            enableReinitialize={true}
           >
             {({
               errors,
@@ -395,7 +396,7 @@ const Holidaylist = () => {
                     >
                       Save
                     </Button>
-                  )}   
+                  )}
                   {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"

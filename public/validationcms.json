@@ -10,6 +10,10 @@
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
+   "Timetable": {
+    "Terms": "Please select the Term",
+    "Slotgroup": "Please select the Slot Group"
+  },
   "Doccategory": {
     "Code": "Please enter the Code",
     "Name": "Please enter the Name"
@@ -110,12 +114,18 @@
     "aadharcardnumber1": "Aadhar Card Number must be exactly 12 alphanumeric characters",
     "aadharcardnumber2": "Aadhar Card Number must be exactly 12 alphanumeric characters"
   },
+  "TermFees": {
+    "Terms": "Please select the Term",
+    "Standard": "Please select the Standard",
+    "Structurename": "Please enter the Structure Name"
+  },
   "Employee": {
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
-    "employeetype": "Please select the Type"
+    "employeetype": "Please select the Type",
+    "Gender": "Please select the Gender"
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"

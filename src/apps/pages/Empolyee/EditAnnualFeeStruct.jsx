@@ -4,30 +4,15 @@ import {
     Grid,
     Typography,
     useTheme,
-    FormControl,
-    FormLabel,
     Button,
     IconButton,
-    Stack,
-    FormControlLabel,
     Tooltip,
-    Checkbox,
-    InputLabel,
-    Select,
-    MenuItem,
     Breadcrumbs,
     LinearProgress,
-    Chip,
     Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Hidden,
     Divider,
-    Switch
+    Switch,
+    FormControlLabel,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -38,7 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { nanoid } from "@reduxjs/toolkit";
 import AddIcon from "@mui/icons-material/Add";
-import WarningIcon from '@mui/icons-material/Warning';
+import WarningIcon from "@mui/icons-material/Warning";
 import {
     GridActionsCellItem,
     DataGrid,
@@ -46,7 +31,6 @@ import {
     GridToolbarContainer,
     GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -55,817 +39,246 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
-    getFetchData,
+    getFetchFeeData,
     postData,
-    requestMail,
 } from "../../../store/reducers/Formapireducer";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { tokens } from "../../../Theme";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
-    CheckinAutocomplete,
-    Employeeautocomplete,
-    ManagerTaskEmpAutocomplete,
     MultiFormikOptimizedAutocomplete,
-    Productautocomplete,
-    SprintEmpAutocomplete,
-    SprintEmpAutocomplete1,
 } from "../../../ui-components/global/Autocomplete";
 import {
     dataGridHeaderFooterHeight,
     dataGridRowHeight,
     formGap,
 } from "../../../ui-components/global/utils";
-//import Productautocomplete from "../../../ui-components/global/Autocomplete";
-// import FileListPopup from "../../../ui-components/FIleViewDialog";
-// import FileUploadIconButton from "../../../ui-components/FileUploadButton";
-import { attachmentPost } from "../../../store/reducers/LoginReducer";
-import GradingIcon from "@mui/icons-material/Grading";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import axios from "axios";
-import store from "../../..";
-// import ErrorMsgData from "../../Security/validationMsg.json"
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import * as Yup from "yup";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { getConfig } from "../../../config";
-import TimetableGridPanel from "./TimetableGridPanel";
-// const validationSchema = Yup.object().shape({
-//   TargetDate: Yup.string().required(ErrorMsgData.Managertask.TargetDate).nullable(),
-//   date: Yup.string().required(ErrorMsgData.Managertask.date),
-//   TaskType: Yup.string().required(ErrorMsgData.Managertask.TaskType),
-//   TaskPriority: Yup.string().required(ErrorMsgData.Managertask.TaskPriority),
-//   Comment: Yup.string().required(ErrorMsgData.Managertask.Comment),
-// });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────────────────────
 const EditAnnualfeestructure = () => {
-
     const config = getConfig();
     const baseurl1 = config.BASE_URL;
-    console.log(baseurl1, "url path");
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
     const params = useParams();
-    console.log(params, "Feeparams")
     const dispatch = useDispatch();
-    var recID = params.id;
+
+    const recID = params.id;
+    const mode = params.Mode; // "A" = Add, "E" = Edit, "V" = View
+    const isEditMode = mode !== "A";
+
     const compID = sessionStorage.getItem("compID");
-    console.log(compID, "---sessionStorage compID");
-
-    var QA = sessionStorage.getItem("qualityassurance");
-    var mode = params.Mode;
-    const data = useSelector((state) => state.formApi.Data);
-    // console.log(data.Detail, "--Detail get listview");
-
-    const Status = useSelector((state) => state.formApi.Status);
-    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-    const Msg = useSelector((state) => state.formApi.msg);
-    const loading = useSelector((state) => state.formApi.getLoading);
-    const isLoading = useSelector((state) => state.formApi.postLoading);
-    const getLoading = useSelector((state) => state.formApi.getLoading);
-    const exploreLoading = useSelector((state) => state.exploreApi.loading);
-    const [open, setOpen] = useState(false);
-    const [files, setFiles] = useState([]);
-    const [Loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const rowSx = { height: 36, "& td, & th": { py: 0.5 } };
-    const YearFlag = sessionStorage.getItem("YearFlag");
-    const EMPID = sessionStorage.getItem("EmpId");
-    const Year = sessionStorage.getItem("year");
-    const { toggleSidebar, broken, rtl } = useProSidebar();
-    const location = useLocation();
-    const rowData = location.state || {};
-    console.log(rowData, "---rowData");
-    const [subjectid, setSubjectid] = useState(null);
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-
-
+    const UserName = sessionStorage.getItem("UserName");
     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-    const is003Subscription = SubscriptionCode.endsWith("003");
     const lastThree = SubscriptionCode?.slice(-3) || "";
     const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
         ? lastThree
         : "";
-    console.log(SubscriptionCode, is003Subscription, "SubscriptionCode");
-    const companyClassification = sessionStorage.getItem("Classification");
-    const UserName = sessionStorage.getItem("UserName");
-    console.log(companyClassification, UserName, "--sessionStorage companyClassification", "UserName");
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
-    const empName = sessionStorage.getItem("EmpName");
-    const getRawData = sessionStorage.getItem("ClassificationData");
+    const is003Subscription = SubscriptionCode.endsWith("003");
 
-    let ClassificationData = [];
-    try {
-        const parsed = JSON.parse(getRawData || "[]");
-        // Handle double-stringified case
-        ClassificationData = typeof parsed === "string" ? JSON.parse(parsed) : parsed;
-    } catch (e) {
-        console.error("ClassificationData parse failed:", getRawData);
-        ClassificationData = [];
-    }
+    // ── Redux state ────────────────────────────────────────────────────────────
+    const data = useSelector((state) => state.formApi.Data);
+    const isLoading = useSelector((state) => state.formApi.postLoading);
+    const getLoading = useSelector((state) => state.formApi.getLoading);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
-    const classids = ClassificationData
-        .filter(item => ["Board Of Directors", "Teaching Staff"].includes(item.CfcName))
-        .map(item => item.CfcID);
+    const { toggleSidebar, broken, rtl } = useProSidebar();
+    const location = useLocation();
+    const rowData = location.state || {};
 
-    console.log(classids, "--classids");
-    const ClassificationRecID = sessionStorage.getItem("ClassificationRecID");
-    console.log(ClassificationRecID, "--sessionStorage ClassificationRecID");
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
 
-    // const ClassificationData = sessionStorage.getItem("ClassificationData");
-
-
-    console.log(ClassificationData, "--find getItem ClassificationData");
-
-    const filteredClassification = ClassificationData.filter(
-        (item) => item.CfcName !== "Student"
-    );
-    const classificationIDs = filteredClassification.map(
-        (item) => item.CfcID
-    );
-
-    const classificationIDString = classificationIDs
-        .map((id) => `'${id}'`)
-        .join(",");
-
-    const [showImage, setShowImage] = useState(
-        params.Mode == "IM" ? true : false,
-    );
+    // ── Local state ────────────────────────────────────────────────────────────
+    const [rows, setRows] = useState([]);
+    const [rowModesModel, setRowModesModel] = useState({});
+    const [pageSize, setPageSize] = useState(15);
+    const [page, setPage] = useState(0);
     const [errorMsgData, setErrorMsgData] = useState(null);
-    const [validationSchema, setValidationSchema] = useState(null);
-    //FOR ADDITONAL DROPDOWNS
-    const [showMore, setShowMore] = React.useState(false);
 
+    const hasRows = rows.length > 0;
+
+    // ── Load validation messages ───────────────────────────────────────────────
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-                return res.json();
-            })
-            .then((data) => {
-                setErrorMsgData(data);
-                const schema = Yup.object().shape({
-                    ProName: Yup.object().required(data.Managertask.ProName).nullable(),
-                    empName: Yup.object().required(data.Managertask.empName).nullable(),
-                    TargetDate: Yup.string()
-                        .required(data.Managertask.TargetDate)
-                        .nullable(),
-                    date: Yup.string().required(data.Managertask.date),
-                    TaskType: Yup.string().required(data.Managertask.TaskType),
-                    TaskPriority: Yup.string().required(data.Managertask.TaskPriority),
-                    Comment: Yup.string().required(data.Managertask.Comment),
-                    estimatedHours: Yup.string().required(
-                        data.Managertask.estimatedHours,
-                    ),
-                });
-
-                setValidationSchema(schema);
-            })
+            .then((res) => res.json())
+            .then((d) => setErrorMsgData(d))
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, []);
 
+    // ── Fetch existing record ──────────────────────────────────────────────────
     useEffect(() => {
-        if (mode !== "A") {
-            dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
+        if (isEditMode) {
+            dispatch(
+                getFetchFeeData({ accessID: "TR387", get: "get", recID, AcademicType: "A" })
+            );
         }
     }, []);
 
-
-    const targettoday = new Date().toISOString().split("T")[0];
-
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); // January is 0
-    const yyyy = today.getFullYear();
-
-    const getCurrentDate = () => {
-        const today = new Date();
-        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
-            2,
-            "0",
-        )}-${String(today.getDate()).padStart(2, "0")}`;
-    };
-    console.log(mode, "mode");
-    const assigneddDate = `${yyyy}-${mm}-${dd}`;
-    const EmpName = sessionStorage.getItem("EmpName");
-
-
-    const fnLogOut = (props) => {
-        Swal.fire({
-            title: errorMsgData.Warningmsg[props],
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: props,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (props === "Logout") {
-                    navigate("/");
-                }
-                if (props === "Close") {
-                    navigate(-1);
-                }
-            } else {
-                return;
-            }
-        });
-    };
-
-    async function fileUpload(file, EmpId, action, id, purpose) {
-        if (!EmpId) {
-            toast.error("Please choose Personnel");
-            return;
-        }
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("empId", EmpId);
-        formData.append("appId", data.RecordID);
-        formData.append("type", "T");
-        formData.append("source", "Manager");
-        formData.append("action", action);
-        formData.append("id", id);
-        formData.append("purpose", purpose);
-        const respose = await dispatch(attachmentPost({ data: formData }));
-
-        if (respose.payload.success) {
-            toast.success(respose.payload.message);
-            var url = store.getState().globalurl.empGetAttachmentUrl;
-            axios
-                .get(url, {
-                    params: {
-                        empId: EmpId,
-                        appId: recID,
-                    },
-                })
-                .then((response) => {
-                    setFiles(response.data);
-                })
-                .catch((err) => {
-                    setError("Failed to fetch attachments.");
-                    console.error(err);
-                })
-                .finally(() => setLoading(false));
-        } else {
-            toast.success(respose.payload.message);
-        }
-    }
-
-
-    //---------------------------Time Table Screen ----------START------------>
-
-    const TTrows = [
-        {
-            id: 1,
-            RecordID: 1,
-            Days: { RecordID: 1, Name: "Monday" },
-            Department: { RecordID: 1, Name: "Maths" },
-            Slots: { RecordID: 1, Name: "Slot 1" },
-            Comments: "Morning",
-        },
-        {
-            id: 2,
-            RecordID: 2,
-            Days: { RecordID: 2, Name: "Tuesday" },
-            Department: { RecordID: 2, Name: "Science" },
-            Slots: { RecordID: 3, Name: "Slot 3" },
-            Comments: "Middle",
-        },
-        {
-            id: 3,
-            RecordID: 3,
-            Days: { RecordID: 3, Name: "Wednesday" },
-            Department: { RecordID: 4, Name: "English" },
-            Slots: { RecordID: 4, Name: "Slot 4" },
-            Comments: "Afternoon",
-        },
-    ];
-
-
-    const [pageSize, setPageSize] = useState(15);
-    const [page, setPage] = React.useState(0);
-
-    const [rows, setRows] = React.useState([]);
-    const hasRows = rows.length > 0;
-    const [rowModesModel, setRowModesModel] = React.useState({});
-
-
+    // ── Map GET Detail → DataGrid rows ────────────────────────────────────────
     useEffect(() => {
-        if (mode !== "A" && data?.Detail) {
+        if (isEditMode && data?.Detail) {
             const formattedRows = data.Detail.map((item) => ({
                 id: Number(item.DetailID),
                 RecordID: Number(item.DetailID),
-                Days: { RecordID: item.Day, Name: item.Day },
-                Department: { RecordID: item.DepartmentID, Name: item.DepartmentName },
-                Teacher: { RecordID: item.EmployeeID, Name: item.EmployeeName },
-                Slots: { RecordID: item.SlotID, Name: item.SlotName },
-                Comments: item?.Comments,
+                TermsID: item.TermsID || 0,
+                TermName: item.TermName || "",
+                Component: item.Component || "",
+                Amount: parseFloat(item.Amount || 0),
+                // GET response uses "Fine"; we store as Fine, send as FinePerDay on save
+                Fine: parseFloat(item.Fine || 0),
+                IsActive: item.IsActive || "Y",
             }));
-
-            setRows([]);              // clear old buggy state
-            setTimeout(() => {
-                setRows(formattedRows); // set fresh
-            }, 0);
+            setRows([]);
+            setTimeout(() => setRows(formattedRows), 0);
         }
     }, [data]);
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Formik initial values — correctly maps GET response shape
+    // ─────────────────────────────────────────────────────────────────────────
+    const initialValues = {
+        // Header fields
+        StructureName: isEditMode ? data?.StructureName || "" : "",
+        DueDate: isEditMode ? data?.DueDate || "" : "",
+        GSTApplicable: isEditMode ? data?.GSTApplicable || "N" : "N",
 
-    // React.useEffect(() => {
-    //   if (mode !== "A" && data?.Detail) {
-    //     const formattedRows = data.Detail.map((item, index) => ({
-    //       id: item.DetailID,
-    //       RecordID: item.DetailID,
-    //       Days: { RecordID: item.Day, Name: item.Day },
-    //       Department: { RecordID: item.DepartmentID, Name: item.DepartmentName },
-    //       Teacher: { RecordID: item.EmployeeID, Name: item.EmployeeName },
-    //       Slots: { RecordID: item.SlotID, Name: item.SlotName },
-    //       Comments: item?.Comments,
-    //     }));
-    // console.log(formattedRows, "--formattedRows");
+        // Multi-select: GET returns TermsList[] and Standards[]
+        Terms: isEditMode && Array.isArray(data?.TermsList) && data.TermsList.length
+            ? data.TermsList.map((t) => ({ RecordID: String(t.RecordID), Name: t.Name }))
+            : [],
 
-    //     setRows(formattedRows);
-    //   }
-    // }, [data, mode]);
+        Standard:
+            isEditMode && Array.isArray(data?.Standards) && data.Standards.length
+                ? data.Standards.map((s) => ({ RecordID: String(s.RecordID), Name: s.Name }))
+                : [],
 
+        // Toggle switches — stored as booleans inside Formik, converted to "Y"/"N" on save
+        SendReminderBefore:
+            isEditMode ? data?.SendReminderBefore === "Y" : true,
+        AutoApplyLateFine:
+            isEditMode ? data?.AutoApplyLateFine === "Y" : true,
+        AllowPartialPayment:
+            isEditMode ? data?.AllowPartialPayment === "Y" : false,
+    };
 
-
+    // ─────────────────────────────────────────────────────────────────────────
+    // DataGrid helpers
+    // ─────────────────────────────────────────────────────────────────────────
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
         }
     };
-    const handleEditClick = (RecordID) => () => {
+
+    const handleEditClick = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    };
+
+    const handleSaveClick = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const handleCancelClick = (id) => () => {
         setRowModesModel({
             ...rowModesModel,
-            [RecordID]: { mode: GridRowModes.Edit },
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-    };
-
-    const handleSaveClick = (RecordID) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [RecordID]: { mode: GridRowModes.View },
-        });
-    };
-
-
-    // const handleDeleteClick = (RecordID) => async () => {
-    //   try {
-    //     console.log("Deleting ID:", RecordID, typeof RecordID);
-
-    //     // Remove row from UI first
-    //     setRows((prevRows) =>
-    //       prevRows.filter((row) => row.RecordID !== RecordID)
-    //     );
-
-    //     // Only call API if RecordID is numeric
-    //     if (!RecordID || isNaN(Number(RecordID))) {
-    //       // console.log("Temporary row deleted locally only");
-    //       toast.success("Deleted Successfully");
-    //       return;
-    //     }
-
-
-    //     const response = await dispatch(
-    //       postData({
-    //         accessID: "TR368",   // ⚠ use correct case
-    //         action: "harddelete",
-    //         idata: {             // ⚠ use data instead of idata if backend expects data
-    //           DetailID: Number(RecordID),
-    //         },
-    //       })
-    //     );
-
-    //     if (response?.payload?.Status === "Y") {
-    //       toast.success(response.payload.Msg);
-    //       dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
-
-    //     } else {
-    //       toast.error(response?.payload?.Msg || "Delete failed");
-    //     }
-
-    //   } catch (error) {
-    //     console.error("Delete Error:", error);
-    //     toast.error("Error occurred while deleting.");
-    //   }
-    // };
-    const handleDeleteClick = (id) => async () => {
-        try {
-            const targetRow = rows.find((row) => row.id === id);
-            const RecordID = targetRow?.RecordID;
-
-            // Remove from UI
-            setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-
-            // Only call API if it's a real (numeric) RecordID
-            if (!RecordID || isNaN(Number(RecordID))) {
-                toast.success("Deleted Successfully");
-                return;
-            }
-
-            const response = await dispatch(
-                postData({
-                    accessID: "TR368v1",
-                    action: "harddelete",
-                    idata: {
-                        DetailID: Number(RecordID),
-                        CompanyID: compID,
-                    }
-                })
-            );
-
-            if (response?.payload?.Status === "Y") {
-                toast.success(response.payload.Msg);
-                dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
-            } else {
-                toast.error(response?.payload?.Msg || "Delete failed");
-            }
-        } catch (error) {
-            console.error("Delete Error:", error);
-            toast.error("Error occurred while deleting.");
-        }
-    };
-    const handleCancelClick = (RecordID) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
-
-        const editedRow = rows.find((row) => row.RecordID === RecordID);
-        if (editedRow.isNew) {
-            setRows(rows.filter((row) => row.RecordID !== RecordID));
+        const editedRow = rows.find((row) => row.id === id);
+        if (editedRow?.isNew) {
+            setRows(rows.filter((row) => row.id !== id));
         }
     };
 
+    const handleDeleteClick = (id) => () => {
+        setRows((prev) => prev.filter((row) => row.id !== id));
+    };
 
-    const validateRowTT = (row) => {
-        if (!row.Days) {
-            return "please Select the Days";
+    const validateRow = (row) => {
+        if (!row.Component || String(row.Component).trim() === "") {
+            return "Component name is required";
         }
-        if (!row.Department) {
-            return "Please Select the Subject";
+        if (row.Amount === undefined || row.Amount === null || row.Amount === "") {
+            return "Amount is required";
         }
-        if (!row.Teacher) {
-            return "Please Select the Teacher";
-        }
-        if (!row.Slots) {
-            return "Please Select the Slots";
-        }
-
         return null;
     };
-    const [selectedTermsID, setSelectedTermsID] = useState(data.TermsID ? data.TermsID : 0);
-    // const Fnsave = async (payload, isNew) => {
-    //   const action = isNew ? "insert" : "update";
 
-    //   const idata = {
-    //     CompanyID: compID?.toString(),
-    //     HeaderID: recID,
-    //     ProjectID: rowData.projectID || 0,
-    //     TermsID: payload.TermsID || 0,
-    //     SlotGroupID: termsIDPass || 0,
-    //     Assignedby: UserName || "",
-    //     Description: "",
-
-    //     // IMPORTANT: wrap inside Detail array
-    //     Detail: [
-    //       {
-    //         DepartmentID: payload.DepartmentID?.toString() || "0",
-    //         SlotID: payload.SlotID?.toString() || "0",
-    //         EmployeeID: payload.EmployeeID?.toString() || "0",
-    //         Day: payload.Day || "",
-    //         Comments: payload.Comments || "",
-    //         DetailID: isNew ? -1 : Number(payload.DetailID),
-    //       },
-    //     ],
-    //   };
-
-    //   console.log(action, idata, "--Fnsave idata");
-
-    //   const response = await dispatch(
-    //     postData({ accessID: "TR368v1", action, idata })
-    //   );
-
-    //   if (response?.payload?.Status === "Y") {
-    //     toast.success(response.payload.Msg);
-
-    //     // Refresh grid
-    //     dispatch(getFetchData({ accessID: "TR368", get: "get", recID }));
-    //   } else {
-    //     throw new Error(response?.payload?.Msg || "Save failed");
-    //   }
-    // };
-
-
-
-    const Fnsave = async (payload, isNew) => {
-        const action = isNew ? "insert" : "update";
-
-        const idata = {
-            CompanyID: compID?.toString(),
-            HeaderID: recID,
-            ProjectID: rowData.projectID || 0,
-            TermsID: payload.TermsID || 0,
-            SlotGroupID: termsIDPass || 0,
-            Assignedby: UserName || "",
-            Description: formDescription || "",
-            Detail: [
-                {
-                    DepartmentID: payload.DepartmentID?.toString() || "0",
-                    SlotID: payload.SlotID?.toString() || "0",
-                    EmployeeID: payload.EmployeeID?.toString() || "0",
-                    Day: payload.Day || "",
-                    Comments: payload.Comments || "",
-                    DetailID: isNew ? -1 : Number(payload.DetailID),
-                },
-            ],
-        };
-
-        const response = await dispatch(
-            postData({ accessID: "TR368v1", action, idata })
-        );
-
-        if (response?.payload?.Status === "Y") {
-            toast.success(response.payload.Msg);
-
-            // extract TT_RECID
-            const HeaderID = response.payload?.HeaderID;
-
-            // dispatch using new TT_RECID
-            if (HeaderID) {
-                dispatch(
-                    getFetchData({
-                        accessID: "TR368",
-                        get: "get",
-                        recID: HeaderID, // THIS IS THE FIX
-                    })
-                );
-            }
-
-            return HeaderID; // optional if needed outside
-        }
-        else if (response?.payload?.Status === "E") {
-            // toast.error(response.payload.Msg);
-            toast(response.payload.Msg, {
-                icon: <WarningIcon style={{ color: "#f59e0b" }} />
-            });
-            // extract TT_RECID
-            const HeaderID = response.payload?.HeaderID;
-
-            // dispatch using new TT_RECID
-            if (HeaderID) {
-                dispatch(
-                    getFetchData({
-                        accessID: "TR368",
-                        get: "get",
-                        recID: HeaderID, // THIS IS THE FIX
-                    })
-                );
-            }
-
-            return HeaderID; // optional if needed outside
-        } else if (response?.payload?.Status === "N") {
-            toast.error(response.payload.Msg);
-            // toast(response.payload.Msg, {
-            //   icon: <WarningIcon style={{ color: "#f59e0b" }} />
-            // });
-            // extract TT_RECID
-            // const HeaderID = response.payload?.HeaderID;
-
-            // // dispatch using new TT_RECID
-            // if (HeaderID) {
-            //   dispatch(
-            //     getFetchData({
-            //       accessID: "TR368",
-            //       get: "get",
-            //       recID: HeaderID, // THIS IS THE FIX
-            //     })
-            //   );
-            // }
-
-            // return HeaderID; 
-        }
-    };
-    // const processRowUpdate = async (newRow, oldRow) => {
-    //   console.log(rows, "--inside proceeess");
-
-    //   //validation
-    //   const error = validateRowTT(newRow);
-    //   if (error) {
-    //     throw new Error(error);
-    //   }
-    //   const isNew = !oldRow?.RecordID;
-    //   const updatedRow = { ...newRow, isNew };
-
-    //   setRows((prev) => {
-    //     const index = prev.findIndex(
-    //       (row) => row.RecordID === updatedRow.RecordID
-    //     );
-    //     if (index !== -1) {
-    //       const newData = [...prev];
-    //       newData[index] = updatedRow;
-    //       return newData;
-    //     }
-    //     return [...prev, updatedRow];
-    //   });
-
-    //   console.log(updatedRow, "--updatedRow");
-
-    //   return updatedRow;
-    // };
     const processRowUpdate = async (newRow, oldRow) => {
-        const error = validateRowTT(newRow);
+        const error = validateRow(newRow);
         if (error) throw new Error(error);
 
-        const isNew = isNaN(Number(newRow.RecordID));
+        const updatedRow = { ...newRow, isNew: false };
 
-        const payload = {
-            DepartmentID: newRow.Department?.RecordID || 0,
-            SlotID: newRow.Slots?.RecordID || 0,
-            EmployeeID: newRow.Teacher?.RecordID || 0,
-            Day: newRow.Days?.Name || "",
-            Comments: newRow.Comments || "",
-            DetailID: isNew ? -1 : Number(newRow.RecordID),
-            TermsID: selectedTermsID,
-        };
+        setRows((prev) =>
+            prev.map((row) => (row.id === newRow.id ? updatedRow : row))
+        );
 
-        try {
-            // ✅ get new ID from API
-            const HeaderID = await Fnsave(payload, isNew);
-
-            const updatedRow = {
-                ...newRow,
-
-                // ✅ replace temporary ID with real DB ID
-                RecordID: HeaderID,
-                isNew: false,
-            };
-
-            setRows((prevRows) =>
-                prevRows.map((row) =>
-                    row.id === newRow.id ? updatedRow : row
-                )
-            );
-
-            return updatedRow;
-        } catch (err) {
-            console.error("Row save failed:", err);
-            throw err;
-        }
+        return updatedRow;
     };
-
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
 
-    function EditDaysAutocompleteCell(props) {
-        const { id, value, field, api, row } = props;
-
-        const handleChange = async (newValue) => {
-            console.log("🚀 ~ Days  handleChange ~ Days newValue:", newValue);
-            if (!newValue) return;
-
-            setDayslookup(newValue);
-            await api.setEditCellValue({
+    // ─────────────────────────────────────────────────────────────────────────
+    // Toolbar
+    // ─────────────────────────────────────────────────────────────────────────
+    function EditToolbar({ setRows, setRowModesModel }) {
+        const handleClick = () => {
+            const id = nanoid();
+            const newRow = {
                 id,
-                field: "Days",
-                value: newValue,
+                RecordID: id, // temporary string — detected as new on save
+                TermsID: 0,
+                TermName: "",
+                Component: "",
+                Amount: 0,
+                Fine: 0,
+                IsActive: "Y",
+                isNew: true,
+            };
+
+            setRows((oldRows) => {
+                const updatedRows = [...oldRows, newRow];
+                const newPageIndex = Math.floor((updatedRows.length - 1) / pageSize);
+                setPage(newPageIndex);
+                return updatedRows;
             });
 
-            api.stopCellEditMode({ id, field });
+            setRowModesModel((oldModel) => ({
+                ...oldModel,
+                [id]: { mode: GridRowModes.Edit, fieldToFocus: "Component" },
+            }));
         };
-        const [dayslookup, setDayslookup] = useState(row.Days ? row.Days : null);
+
         return (
-            <SprintEmpAutocomplete1
-                name="Days"
-                label="Days"
-                id="Days"
-                value={dayslookup}
-                onChange={handleChange}
-                url={`${listViewurl}?data={"Query":{"AccessID":"2147","ScreenName":"Days","Filter":"","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-            />
-        );
-    }
-    const [termsIDPass, setTermsIDPas] = useState(data?.SlotGroupID ? data?.SlotGroupID : 0);
-    const [formDescription, setFormDescription] = useState(data?.Description ? data?.Description : "");
-    console.log(termsIDPass, "termsIDPass");
-
-    function EditdeptAutocompleteCell(props) {
-        const { id, value, field, api, row } = props;
-
-        const handleChange = async (newValue) => {
-            console.log("🚀 ~ Department handleChange ~ Department newValue:", newValue);
-            if (!newValue) return;
-
-            setDeptlookup(newValue);
-            setSubjectid(newValue.RecordID);
-
-            await api.setEditCellValue({
-                id,
-                field: "Department",
-                value: newValue,
-            });
-
-            api.stopCellEditMode({ id, field });
-        };
-        const [deptlookup, setDeptlookup] = useState(row.Department ? row.Department : null);
-        return (
-            <SprintEmpAutocomplete1
-                name="Department"
-                label="Department"
-                id="Department"
-                value={deptlookup}
-                onChange={handleChange}
-                url={`${listViewurl}?data={"Query":{"AccessID":"2149","ScreenName":"Department","Filter":"parentID=${compID} AND ProjectID = ${rowData.projectID}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-            />
-        );
-    }
-    function EditSlotsAutocompleteCell(props) {
-        const { id, value, field, api, row } = props;
-
-        const handleChange = async (newValue) => {
-            console.log("🚀 ~ Slots handleChange ~ Slots newValue:", newValue);
-            if (!newValue) return;
-
-            setSlotslookup(newValue);
-            await api.setEditCellValue({
-                id,
-                field: "Slots",
-                value: newValue,
-            });
-
-            api.stopCellEditMode({ id, field });
-        };
-        const [slotslookup, setSlotslookup] = useState(row.Slots ? row.Slots : null);
-        return (
-            <SprintEmpAutocomplete1
-                name="Slots"
-                label="Slots"
-                id="Slots"
-                value={slotslookup}
-                onChange={handleChange}
-                // url={`${listViewurl}?data={"Query":{"AccessID":"2171","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}","ScreenName":"Slots","Filter":"parentID='${termsIDPass}'","Any":""}}`}
-                url={`${listViewurl}?data=${JSON.stringify({
-                    Query: {
-                        AccessID: "2170",
-                        ScreenName: "Slots",
-                        VerticalLicense: Subscriptionlastthree,
-                        Filter: `parentID='${termsIDPass}'`,
-                        Any: "",
-                    },
-                })}`}
-            />
+            <GridToolbarContainer sx={{ mb: "10px" }}>
+                <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+                    Add Record
+                </Button>
+            </GridToolbarContainer>
         );
     }
 
-
-    function EditTeacherAutocomplete(props) {
-        const { id, value, field, api, row } = props;
-
-        const handleChange = async (newValue) => {
-            console.log("🚀 ~ Teacher handleChange ~ Teacher newValue:", newValue);
-            if (!newValue) return;
-
-            setTeachlookup(newValue);
-            await api.setEditCellValue({
-                id,
-                field: "Teacher",
-                value: newValue,
-            });
-
-            api.stopCellEditMode({ id, field });
-        };
-        const [Teachlookup, setTeachlookup] = useState(row.Teacher ? row.Teacher : null);
-        return (
-            <SprintEmpAutocomplete1
-                name="Teacher"
-                label="Teacher"
-                id="Teacher"
-                value={Teachlookup}
-                onChange={handleChange}
-                // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-                url={`${listViewurl}?data={"Query":{"AccessID":"2175","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-
-            />
-        );
-    }
-
+    // ─────────────────────────────────────────────────────────────────────────
+    // DataGrid columns
+    // ─────────────────────────────────────────────────────────────────────────
     const TTColumns = [
         {
             field: "RecordID",
             headerName: "Record ID",
-            width: 120,
+            width: 100,
             hide: true,
         },
-
         {
             headerName: "Component",
             field: "Component",
@@ -873,26 +286,18 @@ const EditAnnualfeestructure = () => {
             editable: true,
             headerAlign: "center",
         },
-
-        {
-            headerName: "Category",
-            field: "Category",
-            width: 250,
-            editable: true,
-            headerAlign: "center",
-        },
-
-        // Amount Number Field
         {
             headerName: "Amount",
             field: "Amount",
-            width: 120,
+            width: 140,
             editable: true,
             headerAlign: "center",
             type: "number",
+            valueFormatter: ({ value }) =>
+                value !== undefined && value !== null
+                    ? `₹${Number(value).toLocaleString()}`
+                    : "₹0",
         },
-
-        // Fine Number Field
         {
             headerName: "Fine/Day",
             field: "Fine",
@@ -900,49 +305,28 @@ const EditAnnualfeestructure = () => {
             editable: true,
             headerAlign: "center",
             type: "number",
-        },
-
-        // Checkbox Field
-        {
-            headerName: "ON",
-            field: "ON",
-            width: 80,
-            editable: true,
-            headerAlign: "center",
-            type: "boolean",
-            renderCell: (params) => (
-                <Checkbox checked={Boolean(params.value)} disabled />
-            ),
-        },
-
+        },     
         {
             field: "actions",
             type: "actions",
             headerName: "Actions",
             width: 100,
-            hide: mode == "V" ? true : false,
+            hide: mode === "V",
             cellClassName: "actions",
-
             getActions: ({ id }) => {
-                const isInEditMode =
-                    rowModesModel[id]?.mode === GridRowModes.Edit;
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
                             icon={<SaveIcon />}
                             label="Save"
-                            material={{
-                                sx: {
-                                    color: "primary.main",
-                                },
-                            }}
                             onClick={handleSaveClick(id)}
+                            color="primary"
                         />,
                         <GridActionsCellItem
                             icon={<CancelIcon />}
                             label="Cancel"
-                            className="textPrimary"
                             onClick={handleCancelClick(id)}
                             color="inherit"
                         />,
@@ -953,7 +337,6 @@ const EditAnnualfeestructure = () => {
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        className="textPrimary"
                         onClick={handleEditClick(id)}
                         color="inherit"
                     />,
@@ -968,171 +351,112 @@ const EditAnnualfeestructure = () => {
         },
     ];
 
-    const isEditMode = mode !== "A";
+    // ─────────────────────────────────────────────────────────────────────────
+    // Logout / Close dialog
+    // ─────────────────────────────────────────────────────────────────────────
+    const fnLogOut = (action) => {
+        const warningMsg =
+            errorMsgData?.Warningmsg?.[action] ||
+            (action === "Logout" ? "Are you sure you want to Logout?" : "Are you sure you want to Close?");
 
-    const TimeTableInitialValue = {
-        // class: `${rowData.projectName || ""} || ${rowData.MilestoneName || ""}`,
-        class: `${rowData.projectName || ""}`,
-
-        Terms: [],
-        // Array.isArray(Data.DeptRecordID)
-        //     ? Data.DeptRecordID.map((d) => ({
-        //         RecordID: String(d.DeptID),
-        //         Name: d.DeptName,
-        //     }))
-        //     : [],
-
-        description: isEditMode ? data?.Description || "" : "",
-        // assignedPerson: isEditMode ? data?.AssignedByName || "" : "",
-        assignedPerson: UserName || "",
-        Standard: isEditMode && data?.SlotGroupID ?
-            {
-                RecordID: data.SlotGroupID,
-                Name: data.SlotGroupName || "",
-            } : [],
-        assignedDate: new Date().toISOString().split("T")[0],
-        academicyear: rowData.AcademicYear || ""
+        Swal.fire({
+            title: warningMsg,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: action,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (action === "Logout") navigate("/");
+                if (action === "Close") navigate(-1);
+            }
+        });
     };
 
-    console.log(data.SlotGroupID, data.SlotGroupName, "--data.SlotGroupID");
-    function EditToolbar(props) {
-        const { setRows, setRowModesModel } = props;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Save handler — builds correct insert / update payload
+    // ─────────────────────────────────────────────────────────────────────────
+    const handleSaveButtonClick = async (values) => {
+        // Validate at least one fee component
+        if (rows.length === 0) {
+            toast.error("Please add at least one fee component.");
+            return;
+        }
 
-        // const handleClick = () => {
-        //   const id = nanoid();
-        //   const nextSLNO =
-        //     rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
-        //   setRows((oldRows) => [
-        //     ...oldRows,
-        //     {
-        //       //  id: id,
-        //       id,
-        //       RecordID: id,
-        //       Days: null,
-        //       Department: null,
-        //       Teacher: null,
-        //       Slots: null,
-        //       Comments: "",
-        //       isNew: true,
-        //     }
-        //   ]);
-        //   setRowModesModel((oldModel) => ({
-        //     ...oldModel,
-        //     [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
-        //   }));
-        // };
-        const handleClick = () => {
-            const id = nanoid();
+        // Build Detail array
+        const Detail = rows.map((row) => ({
+            // Temporary nanoid strings → -1 (new record); real numeric IDs kept as-is
+            DetailID: !isNaN(Number(row.RecordID)) ? Number(row.RecordID) : -1,
+            TermsID: Number(row.TermsID) || 0,
+            Component: row.Component || "",
+            Amount: Number(row.Amount || 0),
+            FinePerDay: Number(row.Fine || 0),   // Fine in GET → FinePerDay on save
+            IsActive: row.IsActive || "Y",
+        }));
 
-            const newRow = {
-                id,
-                RecordID: id,
-                Days: null,
-                Department: null,
-                Teacher: null,
-                Slots: null,
-                Comments: "",
-                isNew: true,
-            };
+        // TermsID: send comma-separated string from multi-select
+        const TermsIDValue = Array.isArray(values.Terms)
+            ? values.Terms.map((t) => t.RecordID).join(",")
+            : values.Terms?.RecordID || 0;
 
-            setRows((oldRows) => {
-                const updatedRows = [...oldRows, newRow];
+        // StandardID: send comma-separated string from multi-select
+        const StandardIDValue = Array.isArray(values.Standard)
+            ? values.Standard.map((s) => s.RecordID).join(",")
+            : values.Standard?.RecordID || 0;
 
-                //  Calculate new page
-                const newTotal = updatedRows.length;
-                const newPageIndex = Math.floor((newTotal - 1) / pageSize);
-
-                //  Move to that page
-                setPage(newPageIndex);
-
-                return updatedRows;
-            });
-
-            setRowModesModel((oldModel) => ({
-                ...oldModel,
-                [id]: { mode: GridRowModes.Edit, fieldToFocus: "Days" },
-            }));
-        };
-
-        return (
-            <GridToolbarContainer
-                sx={{
-                    marginBottom: "10px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                }}
-            >
-                <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                    Add Record
-                </Button>
-            </GridToolbarContainer>
-        );
-    }
-
-
-    const handleSaveButtonClick = async (values, resetForm) => {
-        console.log(rows, "--inside save");
-
-
-        const Detail = rows.map((row, index) => {
-            return {
-                DepartmentID: row.Department?.RecordID || 0,
-                SlotID: row.Slots?.RecordID || 0,
-                EmployeeID: row.Teacher?.RecordID || 0,
-                Day: row.Days?.Name || "",
-                Comments: row.Comments,
-                // DetailID: row.RecordID
-                DetailID: !isNaN(Number(row.RecordID)) ? Number(row.RecordID) : -1
-            };
-        });
-
-        console.log(Detail, "--handleSaveButtonClick Detail");
-        // 🔹 Build full API structure
         const idata = {
-
             CompanyID: compID?.toString(),
-            HeaderID: recID,
-            ProjectID: rowData.projectID || 0,
-            // MileStoneID: rowData.MilestoneID || 0,
-            TermsID: values.Terms?.RecordID || 0,
-            SlotGroupID: values.Slotgroup?.RecordID || 0,
-            Assignedby: UserName || "",
-            Description: values.description,
-            Detail: Detail,
+            HeaderID: isEditMode ? recID : 0,
+            StructureName: values.StructureName,
+            AcademicYearID: params.id2 || "",
+            AcademicType: "A",
+            TermsID: TermsIDValue,
+            StandardID: StandardIDValue,
+            DueDate: values.DueDate,
+            GSTApplicable: values.GSTApplicable || "N",
+            SendReminderBefore: values.SendReminderBefore ? "Y" : "N",
+            AutoApplyLateFine: values.AutoApplyLateFine ? "Y" : "N",
+            AllowPartialPayment: values.AllowPartialPayment ? "Y" : "N",
+            Detail,
+            Disable:"N",
         };
 
-        console.log(idata, "-- Final data");
-        // return;
+        console.log("handleSaveButtonClick idata →", idata);
+
         try {
             const response = await dispatch(
                 postData({
-                    accessID: "TR368v1",
-                    action: "insert",
-                    idata: idata,
+                    accessID: "TR387",
+                    action: mode === "A" ? "insert" : "update",
+                    idata,
                 })
             );
-            // const response = await dispatch(postData(payload));
-            // Check response status for success
-            if (response.payload.Status === "Y") {
-                setRows([]);
+
+            if (response?.payload?.Status === "Y") {
                 toast.success(response.payload.Msg);
                 navigate(-1);
-                // Clear DataGrid
-
-
-                // // Reset Formik fields
-                // resetForm();
-
+            } else if (response?.payload?.Status === "E") {
+                toast(response.payload.Msg, {
+                    icon: <WarningIcon style={{ color: "#f59e0b" }} />,
+                });
             } else {
-                toast.error(response.payload.Msg);
+                toast.error(response?.payload?.Msg || "Save failed.");
             }
-        } catch (error) {
+        } catch (err) {
+            console.error("Save error:", err);
             toast.error("Error occurred during save.");
         }
     };
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Render
+    // ─────────────────────────────────────────────────────────────────────────
     return (
         <React.Fragment>
-            {getLoading ? <LinearProgress /> : false}
+            {getLoading && <LinearProgress />}
+
+            {/* ── Top bar ── */}
             <Paper
                 elevation={3}
                 sx={{ margin: "0px 10px", background: "#F2F0F0", height: "50px" }}
@@ -1144,12 +468,7 @@ const EditAnnualfeestructure = () => {
                                 <MenuOutlinedIcon />
                             </IconButton>
                         )}
-                        <Box
-                            display={isNonMobile ? "flex" : "none"}
-                            borderRadius="3px"
-                            alignItems="center"
-                        >
-
+                        <Box display={isNonMobile ? "flex" : "none"} alignItems="center">
                             <Breadcrumbs
                                 maxItems={3}
                                 aria-label="breadcrumb"
@@ -1158,21 +477,15 @@ const EditAnnualfeestructure = () => {
                                 <Typography
                                     variant="h5"
                                     color="#0000D1"
-                                    sx={{
-                                        cursor: "default",
-                                        marginLeft: "10px",
-                                        fontSize: "17px",
-                                    }}
+                                    sx={{ cursor: "pointer", marginLeft: "10px", fontSize: "17px" }}
                                     onClick={() => navigate(-1)}
                                 >
                                     Annual Fee Structure
                                 </Typography>
                             </Breadcrumbs>
-
                         </Box>
                     </Box>
                     <Box display="flex">
-
                         <Tooltip title="Close">
                             <IconButton onClick={() => fnLogOut("Close")} color="error">
                                 <ResetTvIcon />
@@ -1187,30 +500,29 @@ const EditAnnualfeestructure = () => {
                 </Box>
             </Paper>
 
-
-
-
+            {/* ── Main form ── */}
             <Paper elevation={3} sx={{ margin: "10px" }}>
                 <Formik
-                    initialValues={TimeTableInitialValue}
-                    onSubmit={(values, { resetForm }) => {
-                    }}
+                    initialValues={initialValues}
                     enableReinitialize={true}
+                    onSubmit={(values, { resetForm }) => {
+                        handleSaveButtonClick(values);
+                    }}
                 >
                     {({
                         errors,
                         touched,
                         handleBlur,
                         handleChange,
-                        isSubmitting,
                         values,
                         handleSubmit,
                         setFieldValue,
                     }) => (
                         <form onSubmit={handleSubmit}>
+                            {/* ── Header fields ── */}
                             <Box
                                 display="grid"
-                                gridTemplateColumns="repeat(4 , minMax(0,1fr))"
+                                gridTemplateColumns="repeat(4, minMax(0,1fr))"
                                 gap={formGap}
                                 padding={1}
                                 sx={{
@@ -1219,52 +531,45 @@ const EditAnnualfeestructure = () => {
                                     },
                                 }}
                             >
-
+                                {/* Structure Name */}
                                 <TextField
-                                    name="Structurename"
+                                    name="StructureName"
                                     type="text"
-                                    id="Structurename"
+                                    id="StructureName"
                                     label={
                                         <>
                                             Structure Name
-                                            <span style={{ color: "red", fontSize: "20px" }}>
-                                                *
-                                            </span>
+                                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
                                         </>
                                     }
                                     variant="standard"
                                     focused
-                                    disabled={hasRows}
-                                    value={values.Structurename}
+                                    value={values.StructureName}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     sx={{ gridColumn: "span 2" }}
-                                // disabled
-                                //   inputProps={{ readOnly: true }}
+                                    disabled={mode === "V"}
                                 />
 
-
+                                {/* Terms — multi-select */}
                                 <MultiFormikOptimizedAutocomplete
                                     sx={{ gridColumn: "span 2" }}
                                     name="Terms"
                                     label={
                                         <>
                                             Term
-                                            <span style={{ color: "red", fontSize: "20px" }}>
-                                                *
-                                            </span>
+                                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
                                         </>
                                     }
                                     id="Terms"
                                     value={values.Terms}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Terms", newValue, true);
-                                    }}
+                                    onChange={(e, newValue) => setFieldValue("Terms", newValue, true)}
                                     isOptionEqualToValue={(option, value) =>
                                         String(option.RecordID) === String(value.RecordID)
                                     }
                                     error={!!touched.Terms && !!errors.Terms}
                                     helperText={touched.Terms && errors.Terms}
+                                    disabled={mode === "V"}
                                     url={`${listViewurl}?data=${JSON.stringify({
                                         Query: {
                                             AccessID: "2169",
@@ -1275,29 +580,28 @@ const EditAnnualfeestructure = () => {
                                         },
                                     })}`}
                                 />
-                                <MultiFormikOptimizedAutocomplete
 
+                                {/* Applicable Standards — multi-select */}
+                                <MultiFormikOptimizedAutocomplete
                                     sx={{ gridColumn: "span 2" }}
                                     name="Standard"
                                     label={
                                         <>
                                             Applicable Standards
-                                            <span style={{ color: "red", fontSize: "20px" }}>
-                                                *
-                                            </span>
+                                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
                                         </>
                                     }
                                     id="Standard"
                                     value={values.Standard}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Standard", newValue, true);
-                                    }}
+                                    onChange={(e, newValue) =>
+                                        setFieldValue("Standard", newValue, true)
+                                    }
                                     isOptionEqualToValue={(option, value) =>
                                         String(option.RecordID) === String(value.RecordID)
                                     }
                                     error={!!touched.Standard && !!errors.Standard}
                                     helperText={touched.Standard && errors.Standard}
-                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2170","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}","ScreenName":"Slotgroup","Filter":"CompanyID='${compID}'","Any":"","CompId":${compID}}}`}
+                                    disabled={mode === "V"}
                                     url={`${listViewurl}?data=${JSON.stringify({
                                         Query: {
                                             AccessID: "2054",
@@ -1308,94 +612,33 @@ const EditAnnualfeestructure = () => {
                                         },
                                     })}`}
                                 />
-                                {/* <CheckinAutocomplete
-                                        id="project"
-                                        name="project"
-                                        label={getBusinessCaption("Project", "Project")}
-                                        variant="outlined"
-                                        value={values.project}
-                                        onChange={(newValue) => {
-                                          setFieldValue("project", newValue);
-                                          console.log(newValue, "--newvalue project");
-                                          console.log(newValue.RecordID, "project RecordID");
-                                        }}
-                                        error={!!touched.project && !!errors.project}
-                                        helperText={touched.project && errors.project}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: {
-                                            AccessID: "2054",
-                                            ScreenName: "Project",
-                                            VerticalLicense: Subscriptionlastthree,
-                                            Filter: `parentID='${CompanyID}'`,
-                                            Any: "",
-                                          },
-                                        })}`}
-                                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                      /> */}
 
+                                {/* Due Date */}
                                 <TextField
-                                    name="academicyear"
-                                    type="text"
-                                    id="academicyear"
-                                    label="Academic Year"
-                                    variant="standard"
-                                    focused
-                                    value={values.academicyear}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    sx={{ gridColumn: "span 2" }}
-                                    InputLabelProps={{ readOnly: true }}
-                                />
-                                <TextField
-                                    name="term1duedate"
+                                    name="DueDate"
                                     type="date"
-                                    id="term1duedate"
-                                    label="Term I Due Date"
+                                    id="DueDate"
+                                    label="Due Date"
                                     variant="standard"
                                     focused
-                                    value={values.term1duedate}
+                                    value={values.DueDate}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     sx={{ gridColumn: "span 2" }}
-                                    InputLabelProps={{ readOnly: true }}
-                                />
-                                <TextField
-                                    name="term2duedate"
-                                    type="date"
-                                    id="term2duedate"
-                                    label="Term II Due Date"
-                                    variant="standard"
-                                    focused
-                                    value={values.term2duedate}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    sx={{ gridColumn: "span 2" }}
-                                    InputLabelProps={{ readOnly: true }}
-                                />
-                                <TextField
-                                    name="term3duedate"
-                                    type="date"
-                                    id="term3duedate"
-                                    label="Term III Due Date"
-                                    variant="standard"
-                                    focused
-                                    value={values.term3duedate}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    sx={{ gridColumn: "span 2" }}
-                                    InputLabelProps={{ readOnly: true }}
+                                    disabled={mode === "V"}
                                 />
 
-
-
+                         
+                              
                             </Box>
-                            <Grid container spacing={2} alignItems="flex-start">
 
-                                {/* LEFT SIDE */}
+                            {/* ── DataGrid + Fee Summary ── */}
+                            <Grid container spacing={2} alignItems="flex-start" padding={1}>
+                                {/* LEFT — fee components grid */}
                                 <Grid item xs={12} md={9}>
                                     <Box
                                         height="350px"
-                                        marginTop={2}
+                                        marginTop={1}
                                         sx={{
                                             "& .MuiDataGrid-columnHeaders": {
                                                 backgroundColor: colors.blueAccent[800],
@@ -1409,9 +652,7 @@ const EditAnnualfeestructure = () => {
                                             "& .MuiCheckbox-root": {
                                                 color: `${colors.greenAccent[200]} !important`,
                                             },
-                                            "& .even-row": {
-                                                backgroundColor: "#d0edec",
-                                            },
+                                            "& .even-row": { backgroundColor: "#d0edec" },
                                         }}
                                     >
                                         <DataGrid
@@ -1437,24 +678,25 @@ const EditAnnualfeestructure = () => {
                                             pagination
                                             pageSize={pageSize}
                                             page={page}
+                                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                            onPageChange={(newPage) => setPage(newPage)}
                                             components={{
-                                                Toolbar: EditToolbar,
+                                                Toolbar: mode !== "V" ? EditToolbar : null,
                                             }}
                                             componentsProps={{
                                                 toolbar: { setRows, setRowModesModel },
                                             }}
-                                            onPageSizeChange={(newPageSize) =>
-                                                setPageSize(newPageSize)
-                                            }
-                                            onPageChange={(newPage) => setPage(newPage)}
+                                            onProcessRowUpdateError={(err) => {
+                                                toast.error(err.message || "Row update error");
+                                            }}
                                         />
                                     </Box>
                                 </Grid>
 
-                                {/* RIGHT SIDE - FEE SUMMARY */}
+                                {/* RIGHT — fee summary panel */}
                                 <Grid item xs={12} md={3}>
                                     <Box
-                                        mt={2}
+                                        mt={1}
                                         p={3}
                                         sx={{
                                             backgroundColor: "#d9ece8",
@@ -1462,19 +704,14 @@ const EditAnnualfeestructure = () => {
                                             borderRadius: "12px",
                                         }}
                                     >
-                                        {/* Header */}
                                         <Typography
                                             variant="h6"
                                             fontWeight="bold"
-                                            sx={{
-                                                color: "#00695c",
-                                                mb: 3,
-                                            }}
+                                            sx={{ color: "#00695c", mb: 3 }}
                                         >
-                                             FEE SUMMARY
+                                            FEE SUMMARY
                                         </Typography>
 
-                                        {/* Fee Items */}
                                         {rows.map((item, index) => (
                                             <Box key={index}>
                                                 <Box
@@ -1483,59 +720,57 @@ const EditAnnualfeestructure = () => {
                                                     py={1}
                                                 >
                                                     <Typography color="#2f6f67">
-                                                        {item.Component}
+                                                        {item.Component || "—"}
                                                     </Typography>
-
                                                     <Typography fontWeight="bold" color="#004d40">
                                                         ₹{Number(item.Amount || 0).toLocaleString()}
                                                     </Typography>
                                                 </Box>
-
                                                 <Divider sx={{ borderColor: "#a8d5cf" }} />
                                             </Box>
                                         ))}
 
-                                        {/* Total */}
-                                        <Box
-                                            display="flex"
-                                            justifyContent="space-between"
-                                            mt={3}
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontWeight="bold"
-                                                color="#004d40"
-                                            >
-                                                Per term
+                                        {/* Annual Total */}
+                                        <Box display="flex" justifyContent="space-between" mt={3}>
+                                            <Typography variant="h6" fontWeight="bold" color="#004d40">
+                                                Annual Total
                                             </Typography>
-
-                                            <Typography
-                                                variant="h4"
-                                                fontWeight="bold"
-                                                color="#004d40"
-                                            >
+                                            <Typography variant="h4" fontWeight="bold" color="#004d40">
                                                 ₹
                                                 {rows
-                                                    .reduce(
-                                                        (sum, row) =>
-                                                            sum + Number(row.Amount || 0),
-                                                        0
-                                                    )
+                                                    .reduce((sum, row) => sum + Number(row.Amount || 0), 0)
+                                                    .toLocaleString()}
+                                            </Typography>
+                                        </Box>
+
+                                        {/* Total Fine/Day */}
+                                        <Box display="flex" justifyContent="space-between" mt={1}>
+                                            <Typography variant="body2" color="#2f6f67">
+                                                Total Fine/Day
+                                            </Typography>
+                                            <Typography variant="body2" fontWeight="bold" color="#004d40">
+                                                ₹
+                                                {rows
+                                                    .reduce((sum, row) => sum + Number(row.Fine || 0), 0)
                                                     .toLocaleString()}
                                             </Typography>
                                         </Box>
                                     </Box>
                                 </Grid>
                             </Grid>
+
+                            {/* ── Toggle switches ── */}
                             <Box
                                 sx={{
                                     background: "#fff",
                                     borderRadius: "16px",
                                     p: 2,
+                                    mx: 1,
+                                    mt: 1,
                                     boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
                                 }}
                             >
-                                {/* Toggle Item */}
+                                {/* Send Reminder Before */}
                                 <Box
                                     display="flex"
                                     justifyContent="space-between"
@@ -1543,33 +778,29 @@ const EditAnnualfeestructure = () => {
                                     py={2}
                                 >
                                     <Box display="flex" gap={2} alignItems="center">
-                                        <NotificationsNoneIcon
-                                            sx={{ color: "#94a3b8" }}
-                                        />
-
+                                        <NotificationsNoneIcon sx={{ color: "#94a3b8" }} />
                                         <Box>
-                                            <Typography
-                                                fontWeight={500}
-                                                fontSize="14px"
-                                            >
+                                            <Typography fontWeight={500} fontSize="14px">
                                                 Send reminder 7 days before
                                             </Typography>
-
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: "#94a3b8" }}
-                                            >
-                                                Via SMS & email to parents
+                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>
+                                                Via SMS &amp; email to parents
                                             </Typography>
                                         </Box>
                                     </Box>
-
-                                    <Switch defaultChecked color="success" />
+                                    <Switch
+                                        checked={values.SendReminderBefore}
+                                        onChange={(e) =>
+                                            setFieldValue("SendReminderBefore", e.target.checked)
+                                        }
+                                        color="success"
+                                        disabled={mode === "V"}
+                                    />
                                 </Box>
 
                                 <Divider />
 
-                                {/* Toggle Item */}
+                                {/* Auto-apply Late Fine */}
                                 <Box
                                     display="flex"
                                     justifyContent="space-between"
@@ -1577,33 +808,29 @@ const EditAnnualfeestructure = () => {
                                     py={2}
                                 >
                                     <Box display="flex" gap={2} alignItems="center">
-                                        <AccessTimeIcon
-                                            sx={{ color: "#94a3b8" }}
-                                        />
-
+                                        <AccessTimeIcon sx={{ color: "#94a3b8" }} />
                                         <Box>
-                                            <Typography
-                                                fontWeight={500}
-                                                fontSize="14px"
-                                            >
+                                            <Typography fontWeight={500} fontSize="14px">
                                                 Auto-apply late fine
                                             </Typography>
-
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: "#94a3b8" }}
-                                            >
+                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>
                                                 Per fine/day set in components
                                             </Typography>
                                         </Box>
                                     </Box>
-
-                                    <Switch defaultChecked color="success" />
+                                    <Switch
+                                        checked={values.AutoApplyLateFine}
+                                        onChange={(e) =>
+                                            setFieldValue("AutoApplyLateFine", e.target.checked)
+                                        }
+                                        color="success"
+                                        disabled={mode === "V"}
+                                    />
                                 </Box>
 
                                 <Divider />
 
-                                {/* Toggle Item */}
+                                {/* Allow Partial Payment */}
                                 <Box
                                     display="flex"
                                     justifyContent="space-between"
@@ -1611,31 +838,28 @@ const EditAnnualfeestructure = () => {
                                     py={1}
                                 >
                                     <Box display="flex" gap={2} alignItems="center">
-                                        <CreditCardIcon
-                                            sx={{ color: "#94a3b8" }}
-                                        />
-
+                                        <CreditCardIcon sx={{ color: "#94a3b8" }} />
                                         <Box>
-                                            <Typography
-                                                fontWeight={500}
-                                                fontSize="14px"
-                                            >
+                                            <Typography fontWeight={500} fontSize="14px">
                                                 Allow partial payment
                                             </Typography>
-
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: "#94a3b8" }}
-                                            >
+                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>
                                                 Students can pay in instalments
                                             </Typography>
                                         </Box>
                                     </Box>
-
-                                    <Switch color="success" />
+                                    <Switch
+                                        checked={values.AllowPartialPayment}
+                                        onChange={(e) =>
+                                            setFieldValue("AllowPartialPayment", e.target.checked)
+                                        }
+                                        color="success"
+                                        disabled={mode === "V"}
+                                    />
                                 </Box>
                             </Box>
 
+                            {/* ── Action buttons ── */}
                             <Box
                                 display="flex"
                                 justifyContent="end"
@@ -1647,7 +871,6 @@ const EditAnnualfeestructure = () => {
                                     disabled={mode === "V"}
                                     color="secondary"
                                     variant="contained"
-                                    onClick={() => handleSaveButtonClick(values)}
                                     type="submit"
                                     loading={isLoading}
                                 >
@@ -1657,19 +880,15 @@ const EditAnnualfeestructure = () => {
                                 <Button
                                     color="warning"
                                     variant="contained"
-                                    onClick={() => {
-                                        navigate(-1);
-                                    }}
+                                    onClick={() => navigate(-1)}
                                 >
                                     Cancel
                                 </Button>
                             </Box>
-
                         </form>
                     )}
                 </Formik>
             </Paper>
-
         </React.Fragment>
     );
 };

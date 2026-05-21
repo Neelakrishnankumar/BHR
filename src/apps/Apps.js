@@ -815,17 +815,17 @@ function App() {
                     path="/:accessID/:screenName/EditLeave Type/:id/:Mode"
                     element={<LeaveType />}
                   />
-                  {/* <Route
+                  <Route
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
-                  /> */}
-                  <Route
+                  />
+                  {/* <Route
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     // element={<Circular />}
                     // element={<EditPTA />}
                     // element={<EditWorkshop />}
                     element={<EditHolidayevent />}
-                  />
+                  /> */}
 
                   <Route
                     path="/:accessID/:screenName/EditJobwork Category/:id/:Mode"

@@ -48,6 +48,7 @@ import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import {
+  FeesStructureDelete,
   getFetchData,
   getOrderdetailReport,
   getProjectCosting,
@@ -2112,6 +2113,11 @@ export const fetchListview =
                             ? `./Term Fees Structure/TR387/${params.row.RecordID}`
                             : `./Annual Fees Structure/TR387/${params.row.RecordID}`
                         }
+                        state={{
+                          AcademicType: params.row.Description,
+                          AcademicYearID: params.row.AcademicYearID,
+                          AcademicYear: params.row.AcademicYear
+                        }}
                       >
                         <Tooltip title="Fees Structure">
                           <IconButton color="info" size="small">
@@ -2124,39 +2130,51 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR387") {
-              obj = {
-                field: "action",
-                headerName: "Action",
-                minWidth: 250,
-                sortable: false,
-                filterable: false,
-                headerAlign: "center",
-                align: "center",
-                disableColumnMenu: true,
-                disableExport: true,
-                renderCell: (params) => {
-                  return (
-                    <Box>
-                      <Link
-                        to={
-                          params.row.AcadamicTypeID == 1
-                            ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
-                            : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
-                        }
-                        state={{ AcademicYear: params.row.AcademicYear }}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    </Box>
-                  );
-                },
-              };
-            }
+            // else if (AccessID == "TR387") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 250,
+            //     sortable: false,
+            //     filterable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <Link
+            //             to={
+            //               params.row.AcadamicTypeID == 1
+            //                 ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
+            //                 : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
+            //             }
+            //             state={{
+            //               AcademicYear: params.row.AcademicYear,
+            //               AcademicYearID: params.row.AcademicYearID,
+            //               AcadamicTypeID: params.row.AcadamicTypeID
+            //             }}
+            //           >
+            //             <Tooltip title="Edit">
+            //               <IconButton color="info" size="small">
+            //                 <ModeEditOutlinedIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+            //           <Link>
+            //             <Tooltip title="Delete">
+            //               <IconButton color="error" size="small" onClick={() => handleDeleteTermFees(params.row)}>
+            //                 <DeleteIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
             else if (AccessID == "TR095") {
               obj = {
                 field: "action",
@@ -2746,6 +2764,7 @@ export const fetchListview =
               AccessID == "TR380" ||
               AccessID == "TR384" ||
               AccessID == "TR385" ||
+              AccessID == "TR387" ||
               AccessID == "TR368"
 
             ) {
@@ -4834,6 +4853,7 @@ export const fetchListview =
                         AccessID !== "TR374" &&
                         AccessID !== "TR376" &&
                         AccessID !== "TR368" &&
+                        AccessID !== "TR387" &&
                         AccessID !== "TR052" ? (
                         <Link
                           to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -8246,6 +8266,31 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const handleDeleteTermFees = async (values) => {
+    const payload = {
+      HeaderID: values.RecordID,
+      CompanyID: CompanyID,
+    }
+    console.log(payload, "-- GENERATE PAYLOAD");
+    const response = await dispatch(
+      FeesStructureDelete(payload)
+    );
+    console.log(response, "-- generate response");
+
+    if (response?.payload?.Status === "Y") {
+      toast.success(response?.payload?.Msg);
+      // dispatch(
+      //   getFetchData({
+      //     accessID: "TR368v1",
+      //     get: "get",
+      //     recID: headerid,
+      //   })
+      // );      
+    }
+    else if (response?.payload?.Status == "N") {
+      toast.error(response?.payload?.Msg);
+    }
+  };
   const handleGenerateTimetable = async (values) => {
     const payload = {
       HeaderID: values.RecordID,
@@ -8510,7 +8555,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            <Link
+            {/* <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8533,11 +8578,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link>
+            </Link> */}
 
             {params.row.IsProcess === "N" ? (
               <>
-                {/* <Link
+                <Link
                   state={
                     {
                       TermsID: params.row.TermID,
@@ -8558,7 +8603,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </Link> */}
+                </Link>
                 <Tooltip title="Process">
                   <IconButton
                     color="error"
@@ -8630,6 +8675,41 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
           </>
         )}
+        {accessID === "TR387" && (
+          <>
+            <Link
+              to={
+                params.row.AcadamicTypeID == 1
+                  ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
+                  : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
+              }
+              state={{
+                AcademicYear: params.row.AcademicYear,
+                AcademicYearID: params.row.AcademicYearID,
+                AcadamicTypeID: params.row.AcadamicTypeID
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+             state={{
+                AcademicYear: params.row.AcademicYear,
+                AcademicYearID: params.row.AcademicYearID,
+                AcadamicType: params.row.AcadamicType
+              }} 
+              >            
+              <Tooltip title="Delete">
+                <IconButton color="error" size="small" onClick={() => handleDeleteTermFees(params.row)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
         {accessID === "TR384" && (
           <>
 
@@ -8659,11 +8739,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 BreadCrumb2: params.row.Title,
               }}
             >
-             <Tooltip title="Edit">
-                  <IconButton color="info" size="small">
-                    <ModeEditOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             </Link>
           </>
         )}
