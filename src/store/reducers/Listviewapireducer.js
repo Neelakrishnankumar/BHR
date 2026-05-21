@@ -55,6 +55,7 @@ import {
   postData,
   PublishEvent,
   SOPProcessPost,
+  standardDelete,
   StockProcessApi,
   TimeTableDelete,
   TimetableProcessController,
@@ -606,6 +607,48 @@ export const fetchListview =
       oneMonthBefore.setMonth(today.getMonth() - 1);
       const defaultFromDate = format(oneMonthBefore);
       const defaultToDate = format(today);
+
+  const handlestdDelete = async (values) => {
+    const payload = {
+      ProjectId: values.RecordID,
+      CompanyID: values.CompanyID,
+    }
+    console.log(payload, "-- GENERATE PAYLOAD");
+    const response = await dispatch(
+      standardDelete(payload)
+    );
+    console.log(response, "-- generate response");
+
+    if (response?.payload?.Status === "Y") {
+      toast.success(response?.payload?.Msg);
+         dispatch(
+        fetchListview(
+          "TR275",
+          "003",
+          screenName,
+          `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+          "",
+        
+
+        )
+      );
+      // dispatch(
+      //   getFetchData({
+      //     accessID: "TR368v1",
+      //     get: "get",
+      //     recID: headerid,
+      //   })
+      // );      
+    }
+    else if (response?.payload?.Status == "N") {
+      toast.error(response?.payload?.Msg);
+    }
+  };
+
+
+
+
+
       // const handlePDFGET = (ProjectID, EmployeeID) => {
       //   console.log("Dispatching with:", { ProjectID, EmployeeID });
       //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
@@ -1806,7 +1849,16 @@ export const fetchListview =
                   return (
                     <Box>
                       {isSeedEditable && (
-                        <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                        <Link to={`./EditProject/${params.row.RecordID}/E`}
+                         state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
                           <Tooltip title="Edit">
                             <IconButton color="info" size="small">
                               <ModeEditOutlinedIcon />
@@ -1906,6 +1958,28 @@ export const fetchListview =
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
                         />
+                      )}
+
+                       {is003Subscription && (
+                        // <Link
+                        //   to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                        //   state={{
+                        //     AcademicYear: params.row.AcademicYear,
+                        //     AcademicYearID: params.row.AcademicYearID,
+                        //     projectID: params.row.RecordID,
+                        //     MilestoneName: params.row.Name,
+                        //     projectName: params.row.Project,
+                        //     BreadCrumb1: params.row.Project,
+                        //   }}
+                        // >
+                          <Tooltip title="Delete">
+                            <IconButton color="error" size="small">
+                              <DeleteIcon
+                              onClick={() => handlestdDelete(params.row)}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        // </Link>
                       )}
                     </Box>
                   );
@@ -2111,13 +2185,13 @@ export const fetchListview =
                         // to={`./Fees Structure/TR387/${params.row.RecordID}`}
                         to={
                           params.row.RecordID == 1
-                            ? `./TermFeestructure/TR387/${params.row.RecordID}`
-                            : `./AnnualFeestructure/TR387/${params.row.RecordID}`
+                            ? `./Term Fees Structure/TR387/${params.row.RecordID}`
+                            : `./Annual Fees Structure/TR387/${params.row.RecordID}`
                         }
                       >
                         <Tooltip title="Fees Structure">
                           <IconButton color="info" size="small">
-                            <ArtTrackIcon/>
+                            <ArtTrackIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
@@ -2142,10 +2216,11 @@ export const fetchListview =
                     <Box>
                       <Link
                         to={
-                          params.row.AcademicyearID == 1
-                            ? `./EditTermFeestructure/${params.row.RecordID}/E`
-                            : `./EditAnnualFeestructure/${params.row.RecordID}/E`
+                          params.row.AcadamicTypeID == 1
+                            ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
+                            : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
                         }
+                        state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -2747,7 +2822,8 @@ export const fetchListview =
               AccessID == "TR380" ||
               AccessID == "TR384" ||
               AccessID == "TR385" ||
-              AccessID == "TR368"
+              AccessID == "TR368" 
+             
 
             ) {
               obj = {
@@ -8237,6 +8313,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+      const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const count = Number(params.row.MarketingCount || 0);
@@ -8276,6 +8354,9 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       toast.error(response?.payload?.Msg);
     }
   };
+
+ 
+
   const handleTermsProcess = async (values) => {
 
     const result = await Swal.fire({
@@ -8564,7 +8645,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {/* <Link
+            <Link
               to={`./ProjectTimeTable`}
               state={{
                 MilestoneID: params.row.Section,
@@ -8587,11 +8668,11 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <CalendarMonthOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Link> */}
+            </Link>
 
             {params.row.IsProcess === "N" ? (
               <>
-                <Link
+                {/* <Link
                   state={
                     {
                       TermsID: params.row.TermID,
@@ -8612,7 +8693,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                </Link>
+                </Link> */}
                 <Tooltip title="Process">
                   <IconButton
                     color="error"
@@ -8667,6 +8748,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             )}
           </>
         )}
+
         {accessID === "TR380" && (
           <>
 

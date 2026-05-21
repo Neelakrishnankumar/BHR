@@ -1567,24 +1567,24 @@ const TeacherOccupancy = () => {
           onSubmit={(values) => { setTimeout(() => handleApply(values), 100); }}
           enableReinitialize
         >
-          {({ values, handleSubmit, setFieldValue, resetForm  }) => (
+          {({ values, handleSubmit, setFieldValue, resetForm }) => (
             <form onSubmit={handleSubmit}>
               {/* ── FILTERS ── */}
               <Box
                 display="grid"
                 gap={formGap}
                 p={1}
-                 gridTemplateColumns={
-    isNonMobile
-      ? "repeat(3, minmax(0,1fr))"
-      : "repeat(1, minmax(0,1fr))"
-  }
+                gridTemplateColumns={
+                  isNonMobile
+                    ? "repeat(3, minmax(0,1fr))"
+                    : "repeat(1, minmax(0,1fr))"
+                }
                 // gridTemplateColumns="repeat(2, minMax(0,1fr))"
                 sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
               >
                 <MultiFormikOptimizedAutocomplete
                   name="Teacher"
-                     label={
+                  label={
                     <>
                       Teachers
                       <span style={{ color: "red", fontSize: "20px" }}>
@@ -1592,7 +1592,7 @@ const TeacherOccupancy = () => {
                       </span>
                     </>
                   }
-                    id="Teacher"
+                  id="Teacher"
                   value={values.Teacher}
                   onChange={(e, newValue) => {
                     setFieldValue("Teacher", newValue);
@@ -1607,12 +1607,12 @@ const TeacherOccupancy = () => {
                     },
                   })}`}
                 />
-         
+
                 <CheckinAutocomplete
                   name="terms"
-                   label={
+                  label={
                     <>
-                     Term
+                      Term
                       <span style={{ color: "red", fontSize: "20px" }}>
                         *
                       </span>
@@ -1620,13 +1620,24 @@ const TeacherOccupancy = () => {
                   }
                   id="terms"
                   value={values.terms}
-                  onChange={(newValue) =>
-                    setFieldValue("terms", {
-                      RecordID: newValue.RecordID,
-                      Code: newValue.Code,
-                      Name: newValue.Name,
-                    })
-                  }
+                  // onChange={(newValue) =>
+                  //   setFieldValue("terms", {
+                  //     RecordID: newValue.RecordID,
+                  //     Code: newValue.Code,
+                  //     Name: newValue.Name,
+                  //   })
+                  // }
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      setFieldValue("terms", {
+                        RecordID: newValue.RecordID,
+                        Code: newValue.Code,
+                        Name: newValue.Name,
+                      })
+                    } else {
+                      setFieldValue("terms", newValue);
+                    }
+                  }}
                   url={`${listViewurl}?data=${JSON.stringify({
                     Query: {
                       AccessID: "2164",
@@ -1635,7 +1646,7 @@ const TeacherOccupancy = () => {
                         ? `EmployeeID IN ('${Array.isArray(values.Teacher)
                           ? values.Teacher.map(t => t.RecordID).join("','")
                           : values.Teacher.RecordID
-                        }') AND CompanyID='${companyId}'`
+                        }') AND CompanyID='${companyId}' GROUP BY RecordID`
                         : `CompanyID='${companyId}'`,
                       Any: "",
                       VerticalLicense: sliceSubcriptionCode || "",
@@ -1643,9 +1654,9 @@ const TeacherOccupancy = () => {
                   })}`}
                 />
 
-                    <CheckinAutocomplete
+                <CheckinAutocomplete
                   name="Slotgroup"
-                   label={
+                  label={
                     <>
                       Slot Group
                       <span style={{ color: "red", fontSize: "20px" }}>
@@ -1685,18 +1696,18 @@ const TeacherOccupancy = () => {
                 <Button color="secondary" variant="contained" type="submit" disabled={apiLoading}>
                   {apiLoading ? "Loading…" : "Apply"}
                 </Button>
-                  {/* ✅ RESET BUTTON — clears everything */}
-      <Button
-        color="error"
-        variant="contained"
-        // disabled={apiLoading}
-        onClick={() => {
-          resetForm();          // resets Teacher & terms to initial values
-          setApiData(null);     // hides PDF icon, summary chips, timetables
-        }}
-      >
-        Reset
-      </Button>
+                {/* ✅ RESET BUTTON — clears everything */}
+                <Button
+                  color="error"
+                  variant="contained"
+                  // disabled={apiLoading}
+                  onClick={() => {
+                    resetForm();          // resets Teacher & terms to initial values
+                    setApiData(null);     // hides PDF icon, summary chips, timetables
+                  }}
+                >
+                  Reset
+                </Button>
 
 
                 {apiData && apiData.Teachers && apiData.Teachers.length > 0 && (

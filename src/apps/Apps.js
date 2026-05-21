@@ -229,7 +229,7 @@ import EditPTA from "./pages/HR/EditPTAmeeting";
 import EditWorkshop from "./pages/HR/EditWorkshop";
 import EditHolidayevent from "./pages/HR/EditHolidayevent";
 import EditTermfeesstructure from "./pages/Empolyee/EditTermfeestruct";
-import EditAnnaulfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
+import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -1602,12 +1602,12 @@ function App() {
                   />
                    <Route
                   //  /Apps/SecondarylistView/TR275/Project/2/Academic%20Type/TR386/L/Fees%20Structure/TR387/2/EditFees%20Structure/-1/A
-                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditTermFeestructure/:id/:Mode"
+                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditTerm Fees Structure/:id/:Mode"
                   element={<EditTermfeesstructure />}
                   />
                    <Route
-                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditAnnualFeestructure/:id/:Mode"
-                  element={<EditAnnaulfeestructure />}
+                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditAnnual Fees Structure/:id/:Mode"
+                  element={<EditAnnualfeestructure />}
                   />
                   <Route
                   path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"

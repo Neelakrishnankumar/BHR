@@ -196,7 +196,8 @@
     "Description": "Please enter the Description",
     "Hsn": "Please enter the HSN Code",
     "shift": "Please select the Shift 1",
-    "standardActivities": "Please select the Standard/Activities"
+    "standardActivities": "Please select the Standard/Activities",
+    "Description": "Please enter the Description"
   },
   "CourseAttendence": {
     "project": "Please select the Standard/Activities",
@@ -222,7 +223,8 @@
   },
   "OHPayment": {
     "paidamount": "Please enter the Paid Amount",
-    "paymentmode": "Please select the Payment Mode"
+    "paymentmode": "Please select the Payment Mode",
+    "lastpaiddate": "Please select the Last Paid Date"
   },
   "Locality": {
     "code": "Please enter the Code",

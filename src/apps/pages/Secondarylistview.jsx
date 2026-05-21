@@ -4537,7 +4537,7 @@ const ListviewSecondary = () => {
               </Formik>
             )} */}
             <GridToolbarQuickFilter />
-            {accessID === "TR275" && is003Subscription && (
+            {/* {accessID === "TR275" && is003Subscription && (
               <IconButton>
                 <Tooltip title="Fees Structure">
                   <PaymentIcon
@@ -4548,7 +4548,7 @@ const ListviewSecondary = () => {
                   />
                 </Tooltip>
               </IconButton>          
-            )}
+            )} */}
             {accessID == "TR048" ? (
               false
             ) : accessID == "TR051" ? (
@@ -6485,16 +6485,16 @@ const ListviewSecondary = () => {
                         label="View"
                         variant="outlined"
                       />
-                      {/* <Chip
+                      <Chip
                         icon={<CalendarMonthOutlinedIcon color="primary" />}
                         label="TimeTable"
                         variant="outlined"
-                      /> */}
-                      <Chip
+                      />
+                      {/* <Chip
                         icon={<DeleteIcon color="error" />}
                         label="Delete"
                         variant="outlined"
-                      />
+                      /> */}
                       <Chip
                         icon={<LockResetOutlinedIcon color="error" />}
                         label="Process"
@@ -6534,6 +6534,12 @@ const ListviewSecondary = () => {
                           icon={<DatasetLinkedIcon
                             color="primary" />}
                           label="Timetable"
+                          variant="outlined"
+                        />
+                         <Chip
+                          icon={<DeleteIcon
+                            color="error" />}
+                          label="Delete"
                           variant="outlined"
                         />
                       </Box>

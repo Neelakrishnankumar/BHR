@@ -26,8 +26,13 @@ import {
     TableHead,
     TableRow,
     Hidden,
+    Divider,
+    Switch
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -860,96 +865,56 @@ const EditTermfeestructure = () => {
             width: 120,
             hide: true,
         },
-        {
-            field: "Days",
-            headerName: (
-                <span>
-                    Days <span style={{ color: "red" }}>*</span>
-                </span>
-            ),
-
-            headerAlign: "center",
-            align: "left",
-            width: 100,
-            hide: false,
-            editable: true,
-            sortable: false,
-            renderCell: (params) => {
-                return params.value?.Name || ""; // show only the name
-            },
-            renderEditCell: (params) => {
-                return <EditDaysAutocompleteCell {...params} />;
-            },
-
-        },
 
         {
-            field: "Department",
-            headerName: (
-                <span>
-                    Subjects <span style={{ color: "red" }}>*</span>
-                </span>
-            ),
-            headerAlign: "center",
-            width: 260,
-            hide: false,
-            editable: true,
-            sortable: false,
-            renderCell: (params) => {
-                return params.value?.Name || ""; // show only the name
-            },
-            renderEditCell: (params) => {
-                return <EditdeptAutocompleteCell {...params} />;
-            },
-        },
-        {
-            field: "Teacher",
-            headerName: (
-                <span>
-                    Teacher <span style={{ color: "red" }}>*</span>
-                </span>
-            ),
-
-            headerAlign: "center",
-            width: 260,
-            hide: false,
-            editable: true,
-            sortable: false,
-            renderCell: (params) => {
-                return params.value?.Name || ""; // show only the name
-            },
-            renderEditCell: (params) => {
-                return <EditTeacherAutocomplete {...params} />;
-            },
-        },
-        {
-            field: "Slots",
-            headerName: (
-                <span>
-                    Slots <span style={{ color: "red" }}>*</span>
-                </span>
-            ),
-            width: 200,
-            hide: false,
+            headerName: "Component",
+            field: "Component",
+            width: 250,
             editable: true,
             headerAlign: "center",
-            sortable: false,
-            renderCell: (params) => {
-                return params.value?.Name || ""; // show only the name
-            },
-            renderEditCell: (params) => {
-                return <EditSlotsAutocompleteCell {...params} />;
-            },
+        },
 
-        },
         {
-            headerName: "Comments",
-            field: "Comments",
-            width: "320",
-            hide: false,
+            headerName: "Category",
+            field: "Category",
+            width: 250,
             editable: true,
-            headerAlign: "center"
+            headerAlign: "center",
         },
+
+        // Amount Number Field
+        {
+            headerName: "Amount",
+            field: "Amount",
+            width: 120,
+            editable: true,
+            headerAlign: "center",
+            type: "number",
+        },
+
+        // Fine Number Field
+        {
+            headerName: "Fine/Day",
+            field: "Fine",
+            width: 120,
+            editable: true,
+            headerAlign: "center",
+            type: "number",
+        },
+
+        // Checkbox Field
+        {
+            headerName: "ON",
+            field: "ON",
+            width: 80,
+            editable: true,
+            headerAlign: "center",
+            type: "boolean",
+            renderCell: (params) => (
+                <Checkbox checked={Boolean(params.value)} disabled />
+            ),
+        },
+
         {
             field: "actions",
             type: "actions",
@@ -957,8 +922,10 @@ const EditTermfeestructure = () => {
             width: 100,
             hide: mode == "V" ? true : false,
             cellClassName: "actions",
+
             getActions: ({ id }) => {
-                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+                const isInEditMode =
+                    rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
                     return [
@@ -1024,6 +991,7 @@ const EditTermfeestructure = () => {
                 Name: data.SlotGroupName || "",
             } : [],
         assignedDate: new Date().toISOString().split("T")[0],
+        academicyear: rowData.AcademicYear || ""
     };
 
     console.log(data.SlotGroupID, data.SlotGroupName, "--data.SlotGroupID");
@@ -1256,7 +1224,14 @@ const EditTermfeestructure = () => {
                                     name="Structurename"
                                     type="text"
                                     id="Structurename"
-                                    label="Structure Name"
+                                    label={
+                                        <>
+                                            Structure Name
+                                            <span style={{ color: "red", fontSize: "20px" }}>
+                                                *
+                                            </span>
+                                        </>
+                                    }
                                     variant="standard"
                                     focused
                                     disabled={hasRows}
@@ -1295,7 +1270,7 @@ const EditTermfeestructure = () => {
                                             AccessID: "2169",
                                             ScreenName: "Terms",
                                             VerticalLicense: Subscriptionlastthree,
-                                            Filter: `CompanyID='${compID}' AND AcademicYearID='${params.id1}'`,
+                                            Filter: `CompanyID='${compID}' AND AcademicYearID='${params.id2}'`,
                                             Any: "",
                                         },
                                     })}`}
@@ -1314,7 +1289,7 @@ const EditTermfeestructure = () => {
                                     }
                                     id="Standard"
                                     value={values.Standard}
-                                     onChange={(e, newValue) => {
+                                    onChange={(e, newValue) => {
                                         setFieldValue("Standard", newValue, true);
                                     }}
                                     isOptionEqualToValue={(option, value) =>
@@ -1333,31 +1308,7 @@ const EditTermfeestructure = () => {
                                         },
                                     })}`}
                                 />
-                                {/* <CheckinAutocomplete
-                                        id="project"
-                                        name="project"
-                                        label={getBusinessCaption("Project", "Project")}
-                                        variant="outlined"
-                                        value={values.project}
-                                        onChange={(newValue) => {
-                                          setFieldValue("project", newValue);
-                                          console.log(newValue, "--newvalue project");
-                                          console.log(newValue.RecordID, "project RecordID");
-                                        }}
-                                        error={!!touched.project && !!errors.project}
-                                        helperText={touched.project && errors.project}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: {
-                                            AccessID: "2054",
-                                            ScreenName: "Project",
-                                            VerticalLicense: Subscriptionlastthree,
-                                            Filter: `parentID='${CompanyID}'`,
-                                            Any: "",
-                                          },
-                                        })}`}
-                                      // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                      /> */}
-
+                               
                                 <TextField
                                     name="academicyear"
                                     type="text"
@@ -1371,44 +1322,71 @@ const EditTermfeestructure = () => {
                                     sx={{ gridColumn: "span 2" }}
                                     InputLabelProps={{ readOnly: true }}
                                 />
+                                <TextField
+                                    name="term1duedate"
+                                    type="date"
+                                    id="term1duedate"
+                                    label="Term I Due Date"
+                                    variant="standard"
+                                    focused
+                                    value={values.term1duedate}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    sx={{ gridColumn: "span 2" }}
+                                    InputLabelProps={{ readOnly: true }}
+                                />
+                                <TextField
+                                    name="term2duedate"
+                                    type="date"
+                                    id="term2duedate"
+                                    label="Term II Due Date"
+                                    variant="standard"
+                                    focused
+                                    value={values.term2duedate}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    sx={{ gridColumn: "span 2" }}
+                                    InputLabelProps={{ readOnly: true }}
+                                />
+                                <TextField
+                                    name="term3duedate"
+                                    type="date"
+                                    id="term3duedate"
+                                    label="Term III Due Date"
+                                    variant="standard"
+                                    focused
+                                    value={values.term3duedate}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    sx={{ gridColumn: "span 2" }}
+                                    InputLabelProps={{ readOnly: true }}
+                                />
 
 
-                                <Box sx={{ gridColumn: "span 4" }}>
+
+                            </Box>
+                            <Grid container spacing={2} alignItems="flex-start">
+
+                                {/* LEFT SIDE */}
+                                <Grid item xs={12} md={9}>
                                     <Box
-                                        height="500px"
-                                        // height={dataGridHeight}
+                                        height="350px"
                                         marginTop={2}
                                         sx={{
-                                            "& .MuiDataGrid-root": {
-                                                // border: "none",
-                                            },
-                                            "& .MuiDataGrid-cell": {
-                                                // borderBottom: "none",
-                                            },
-                                            "& .name-column--cell": {
-                                                color: colors.greenAccent[300],
-                                            },
                                             "& .MuiDataGrid-columnHeaders": {
                                                 backgroundColor: colors.blueAccent[800],
-                                                // borderBottom: "none",
                                             },
                                             "& .MuiDataGrid-virtualScroller": {
                                                 backgroundColor: colors.primary[400],
                                             },
                                             "& .MuiDataGrid-footerContainer": {
-                                                // borderTop: "none",
                                                 backgroundColor: colors.blueAccent[800],
                                             },
                                             "& .MuiCheckbox-root": {
                                                 color: `${colors.greenAccent[200]} !important`,
                                             },
-                                            "& .odd-row": {
-                                                backgroundColor: "",
-                                                color: "", // Color for odd rows
-                                            },
                                             "& .even-row": {
                                                 backgroundColor: "#d0edec",
-                                                color: "", // Color for even rows
                                             },
                                         }}
                                     >
@@ -1429,42 +1407,209 @@ const EditTermfeestructure = () => {
                                             onRowModesModelChange={handleRowModesModelChange}
                                             onRowEditStop={handleRowEditStop}
                                             processRowUpdate={processRowUpdate}
-                                            // getRowId={(row) => row.RecordID}
                                             getRowId={(row) => row.id}
-                                            // getRowId={(row) => row.id}
                                             disableRowSelectionOnClick
                                             experimentalFeatures={{ newEditingApi: true }}
-                                            onProcessRowUpdateError={(error) => {
-                                                console.error(
-                                                    "Row update validation failed:",
-                                                    error.message,
-                                                );
-
-                                                toast.error(error.message);
-                                            }}
+                                            pagination
+                                            pageSize={pageSize}
+                                            page={page}
                                             components={{
                                                 Toolbar: EditToolbar,
                                             }}
                                             componentsProps={{
                                                 toolbar: { setRows, setRowModesModel },
                                             }}
-                                            rowsPerPageOptions={[5, 10, 20]}
-                                            getRowClassName={(params) =>
-                                                params.indexRelativeToCurrentPage % 2 === 0
-                                                    ? "odd-row"
-                                                    : "even-row"
-                                            }
-                                            pagination
-                                            pageSize={pageSize}
-                                            page={page}
                                             onPageSizeChange={(newPageSize) =>
                                                 setPageSize(newPageSize)
                                             }
                                             onPageChange={(newPage) => setPage(newPage)}
                                         />
                                     </Box>
+                                </Grid>
+
+                                {/* RIGHT SIDE - FEE SUMMARY */}
+                                <Grid item xs={12} md={3}>
+                                    <Box
+                                        mt={2}
+                                        p={3}
+                                        sx={{
+                                            backgroundColor: "#d9ece8",
+                                            border: "1px solid #58c7b6",
+                                            borderRadius: "12px",
+                                        }}
+                                    >
+                                        {/* Header */}
+                                        <Typography
+                                            variant="h6"
+                                            fontWeight="bold"
+                                            sx={{
+                                                color: "#00695c",
+                                                mb: 3,
+                                            }}
+                                        >
+                                             FEE SUMMARY
+                                        </Typography>
+
+                                        {/* Fee Items */}
+                                        {rows.map((item, index) => (
+                                            <Box key={index}>
+                                                <Box
+                                                    display="flex"
+                                                    justifyContent="space-between"
+                                                    py={1}
+                                                >
+                                                    <Typography color="#2f6f67">
+                                                        {item.Component}
+                                                    </Typography>
+
+                                                    <Typography fontWeight="bold" color="#004d40">
+                                                        ₹{Number(item.Amount || 0).toLocaleString()}
+                                                    </Typography>
+                                                </Box>
+
+                                                <Divider sx={{ borderColor: "#a8d5cf" }} />
+                                            </Box>
+                                        ))}
+
+                                        {/* Total */}
+                                        <Box
+                                            display="flex"
+                                            justifyContent="space-between"
+                                            mt={3}
+                                        >
+                                            <Typography
+                                                variant="h6"
+                                                fontWeight="bold"
+                                                color="#004d40"
+                                            >
+                                                Per term
+                                            </Typography>
+
+                                            <Typography
+                                                variant="h4"
+                                                fontWeight="bold"
+                                                color="#004d40"
+                                            >
+                                                ₹
+                                                {rows
+                                                    .reduce(
+                                                        (sum, row) =>
+                                                            sum + Number(row.Amount || 0),
+                                                        0
+                                                    )
+                                                    .toLocaleString()}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <Box
+                                sx={{
+                                    background: "#fff",
+                                    borderRadius: "16px",
+                                    p: 2,
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+                                }}
+                            >
+                                {/* Toggle Item */}
+                                <Box
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    py={2}
+                                >
+                                    <Box display="flex" gap={2} alignItems="center">
+                                        <NotificationsNoneIcon
+                                            sx={{ color: "#94a3b8" }}
+                                        />
+
+                                        <Box>
+                                            <Typography
+                                                fontWeight={500}
+                                                fontSize="14px"
+                                            >
+                                                Send reminder 7 days before
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ color: "#94a3b8" }}
+                                            >
+                                                Via SMS & email to parents
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    <Switch defaultChecked color="success" />
                                 </Box>
 
+                                <Divider />
+
+                                {/* Toggle Item */}
+                                <Box
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    py={2}
+                                >
+                                    <Box display="flex" gap={2} alignItems="center">
+                                        <AccessTimeIcon
+                                            sx={{ color: "#94a3b8" }}
+                                        />
+
+                                        <Box>
+                                            <Typography
+                                                fontWeight={500}
+                                                fontSize="14px"
+                                            >
+                                                Auto-apply late fine
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ color: "#94a3b8" }}
+                                            >
+                                                Per fine/day set in components
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    <Switch defaultChecked color="success" />
+                                </Box>
+
+                                <Divider />
+
+                                {/* Toggle Item */}
+                                <Box
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    py={1}
+                                >
+                                    <Box display="flex" gap={2} alignItems="center">
+                                        <CreditCardIcon
+                                            sx={{ color: "#94a3b8" }}
+                                        />
+
+                                        <Box>
+                                            <Typography
+                                                fontWeight={500}
+                                                fontSize="14px"
+                                            >
+                                                Allow partial payment
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ color: "#94a3b8" }}
+                                            >
+                                                Students can pay in instalments
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    <Switch color="success" />
+                                </Box>
                             </Box>
 
                             <Box
@@ -1474,17 +1619,16 @@ const EditTermfeestructure = () => {
                                 gap="20px"
                                 padding={1}
                             >
-                                {/* <LoadingButton
-                  disabled={mode === "V"}
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => handleSaveButtonClick(values)}
-                  type="submit"
-
-                  loading={isLoading}
-                >
-                  Generate
-                </LoadingButton> */}
+                                <LoadingButton
+                                    disabled={mode === "V"}
+                                    color="secondary"
+                                    variant="contained"
+                                    onClick={() => handleSaveButtonClick(values)}
+                                    type="submit"
+                                    loading={isLoading}
+                                >
+                                    Save
+                                </LoadingButton>
 
                                 <Button
                                     color="warning"

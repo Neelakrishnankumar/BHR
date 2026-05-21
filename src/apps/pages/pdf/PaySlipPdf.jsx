@@ -566,7 +566,7 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
 
                 {/* ---------------- TITLE ---------------- */}
                 <View style={styles.titleSection}>
-                    <Text>Pay Slip for the month of {data?.Month || ""} {data?.Finyear || ""}</Text>
+                    <Text>Payslip for the month of {data?.Month || ""} {data?.Finyear || ""}</Text>
                 </View>
 
                 {/* ---------------- EMPLOYEE DETAILS GRID ---------------- */}
