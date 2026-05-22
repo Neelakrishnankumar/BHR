@@ -203,7 +203,8 @@
     "Description": "Please enter the Description",
     "Hsn": "Please enter the HSN Code",
     "shift": "Please select the Shift 1",
-    "standardActivities": "Please select the Standard/Activities"
+    "standardActivities": "Please select the Standard/Activities",
+    "Description": "Please enter the Description"
   },
   "CourseAttendence": {
     "project": "Please select the Standard/Activities",
@@ -229,7 +230,8 @@
   },
   "OHPayment": {
     "paidamount": "Please enter the Paid Amount",
-    "paymentmode": "Please select the Payment Mode"
+    "paymentmode": "Please select the Payment Mode",
+    "lastpaiddate": "Please select the Last Paid Date"
   },
   "Locality": {
     "code": "Please enter the Code",
@@ -487,25 +489,65 @@
     "ApplicableTo": "Please select the Applicable To",
     "Subject": "Please select the Subject",
     "Message": "Please enter the Preparation Notes",
-    "EventStartTime": "Please select the Start Time",
-    "EventEndTime": "Please select the End Time",
-    "EventDate": "Please select the Event Date"
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time",
+    "StartDate": "Please select the Start Date",
+    "AddressedTo": "Please select the Addressed To",
+    "EndDate": "Please select the End Date"
 },
   "EventSports": {
     "EventTitle": "Please enter the Event Title",
     "EventType": "Please select the Sport Type",
     "ApplicableTo": "Please select the Applicable To",
     "Message": "Please enter the Preparation Notes",
-    "EventStartTime": "Please select the Start Time",
-    "EventDate": "Please select the Event Date",
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time",
+    "StartDate": "Please select the Start Date",
+    "EndDate": "Please select the End Date",
+    "AddressedTo": "Please select the Addressed To",
     "Venue": "Please enter the Venue"
 },
   "EventCulturals": {
     "EventTitle": "Please enter the Event Title",
-    "EventType": "Please select the Sport Type",
-    "Message": "Please enter the Preparation Notes",
-    "EventStartTime": "Please select the Time",
-    "EventDate": "Please select the Event Date",
-    "Venue": "Please enter the Venue"
+    "EventType": "Please select the Programme Type",
+    "Message": "Please enter the Programme Schedule",
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time",
+    "StartDate": "Please select the Start Date",
+    "EndDate": "Please select the End Date",
+    "Venue": "Please enter the Venue",
+    "AddressedTo": "Please select the Addressed To"
+},
+  "EventCircular": {
+    "EventTitle": "Please enter the Subject",
+    "Message": "Please enter the Message",
+    "StartDate": "Please select the Start Date",
+    "EndDate": "Please select the End Date",
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time",
+    "AddressedTo": "Please select the Addressed To"
+},
+  "EventPTA": {
+    "EventTitle": "Please enter the Meeting Title",
+    "EventType": "Please enter the Meeting Type",
+    "Venue": "Please enter the Venue",
+    "Message": "Please enter the Agenda/ Description",
+    "StartDate": "Please select the Start Date",
+    "EndDate": "Please select the End Date",
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time",
+    "ApplicableTo": "Please select the Applicable To",
+    "AddressedTo": "Please select the Addressed To"
+
+},
+  "EventWorkshop": {
+    "EventTitle": "Please enter the Working Title",
+    "EventType": "Please enter the Type",
+    "Message": "Please enter the Description",
+    "StartDate": "Please select the Start Date",
+    "EndDate": "Please select the End Date",
+    "AddressedTo": "Please select the Addressed To",
+    "StartTime": "Please select the Start Time",
+    "EndTime": "Please select the End Time"
 }
 }

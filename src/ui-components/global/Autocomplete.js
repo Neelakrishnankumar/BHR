@@ -208,6 +208,108 @@ export const AcademicAutocomplete = ({
   );
 };
 
+export const CheckinAutocomplete_v12 = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  options: externalOptions,
+  getOptionLabel: externalGetOptionLabel, // destructure out
+  isOptionEqualToValue: externalIsOptionEqual, // destructure out
+  disabled,
+  label,
+  ...props // now props is clean - no options/getOptionLabel/isOptionEqualToValue
+}) => {
+  const [fetchedOptions, setFetchedOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (externalOptions && externalOptions.length > 0) return;
+
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: "eyJhbGci...",
+          },
+        });
+        const data = response.data?.Data;
+        setFetchedOptions(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setFetchedOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  const options = Array.isArray(externalOptions) && externalOptions.length > 0
+    ? externalOptions
+    : fetchedOptions;
+
+  // Default label getter works for both {Name} and {DeptName} structures
+  const defaultGetOptionLabel = (option) =>
+    option?.DeptName || option?.Name || "";
+
+  const defaultIsOptionEqual = (option, val) =>
+    option?.DeptrecID === val?.DeptrecID ||
+    option?.RecordID === val?.RecordID;
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      disabled={disabled}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={externalIsOptionEqual || defaultIsOptionEqual}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={externalGetOptionLabel || defaultGetOptionLabel}
+      
+      // ADD THIS - fixes white text on white background
+      // ListboxProps={{
+      //   sx: {
+      //     bgcolor: "#ffffff",
+      //     "& .MuiAutocomplete-option": {
+      //       color: "#000000",
+      //       "&:hover": {
+      //         bgcolor: "#f0f0f0",
+      //       },
+      //       '&[aria-selected="true"]': {
+      //         bgcolor: "#e3f2fd",
+      //         color: "#000000",
+      //       },
+      //     },
+      //   },
+      // }}
+
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label || "Select Options"}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? <CircularProgress color="error" size={20} /> : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+    />
+  );
+};
 export const CheckinAutocomplete = ({
   value = null,
   onChange,
@@ -282,6 +384,8 @@ export const CheckinAutocomplete = ({
   );
 };
 //ITEM - HSN CATEGORY
+
+
 export const HSNCategoryAutocomplete = ({
   value = null,
   onChange,
@@ -3513,6 +3617,163 @@ export function EventsmultiSelect({
         "& .MuiAutocomplete-tag": { maxWidth: "90px" },
       }}
       // size="small"
+      multiple={multiple}
+      limitTags={1}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      // onChange={onChange}
+      //       onChange={(event, newValue) => {
+      //   const hasAll = newValue.some(
+      //     (item) => item.RecordID === "ALL"
+      //   );
+
+      //   if (hasAll) {
+      //     const allValues = options.filter(
+      //       (item) => item.RecordID !== "ALL"
+      //     );
+
+      //     onChange(event, allValues);
+      //   } else {
+      //     onChange(event, newValue);
+      //   }
+      // }}
+      onChange={(event, newValue, reason, details) => {
+        if (!Array.isArray(newValue)) {
+          onChange(event, []);
+          return;
+        }
+
+        const clickedOption = details?.option;
+
+        const realOptions = options.filter((item) => item.RecordID !== "ALL");
+
+        const isAllClicked = clickedOption?.RecordID === "ALL";
+
+        if (isAllClicked) {
+          const allSelected = value.length === realOptions.length;
+
+          if (allSelected) {
+            // UNSELECT ALL
+            onChange(event, []);
+          } else {
+            // SELECT ALL
+            onChange(event, realOptions);
+          }
+
+          return;
+        }
+
+        onChange(event, newValue);
+      }}
+      options={options}
+      variant="standard" // Set variant to "standard"
+      focused
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === value?.RecordID
+      }
+      // getOptionLabel={(option) => option?.Name || ""}
+      getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      disableCloseOnSelect
+      loading={loading}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", gap: 2, height: 30 }}>
+          <Checkbox size="small" sx={{ marginLeft: -1 }} 
+          // checked={selected} 
+          checked={
+    option.RecordID === "ALL"
+      ? value.length ===
+        options.filter(
+          (item) => item.RecordID !== "ALL"
+        ).length
+      : selected
+  }
+          />
+          {/* {option.Name} */}
+          {`${option.Code} || ${option.Name}`}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          // error={errors}
+          variant="standard"
+          focused
+          // helperText={helper}
+          error={Boolean(error)}
+  helperText={helperText || ""}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+export function EventsSportsmultiSelect({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  error,
+  helper,
+  helperText,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        console.log("API Response:", response.data);
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
+        // setOptions(Array.isArray(data) ? data : []);
+        const allOption = {
+          RecordID: "ALL",
+          Code: "ALL",
+          Name: "Select All",
+        };
+
+        setOptions(Array.isArray(data) ? [allOption, ...data] : [allOption]);
+        //setOptions(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); // Fallback to an empty array
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      sx={{
+        "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+      }}
+      size="small"
       multiple={multiple}
       limitTags={1}
       open={open}

@@ -44,9 +44,9 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { EventsmultiSelect, PartySingleSelect } from "../../../ui-components/global/Autocomplete";
+import { EventsmultiSelect, EventsSportsmultiSelect, PartySingleSelect } from "../../../ui-components/global/Autocomplete";
 import * as Yup from "yup";
-import { fileUpload } from "../../../store/reducers/Imguploadreducer";
+import { fileUpload, videoUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
 // import CryptoJS from "crypto-js";
 const EditSports = () => {
@@ -62,6 +62,8 @@ const EditSports = () => {
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
+    const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+    const uploadLoading = useSelector((state) => state.imageApi.videoLoading);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
@@ -77,10 +79,13 @@ const EditSports = () => {
     const [validationSchema, setValidationSchema] = useState(null);
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [sportsImage, setSportsImage] = useState("");
+    const [sportsVideo, setSportsVideo] = useState("");
 
     useEffect(() => {
         dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "S" }));
         setSportsImage(mode === "A" ? "" : data?.Attachment || "");
+        setSportsVideo(mode === "A" ? "" : data?.VideoAttachment || "");
+
     }, [location.key, mode]);
 
     useEffect(() => {
@@ -96,20 +101,29 @@ const EditSports = () => {
                         .typeError(data.EventSports.EventTitle)
                         .required(data.EventSports.EventTitle),
 
-                    EventDate: Yup.string()
-                        .typeError(data.EventSports.EventDate)
-                        .required(data.EventSports.EventDate),
+                    StartDate: Yup.string()
+                        .typeError(data.EventSports.StartDate)
+                        .required(data.EventSports.StartDate),
+                    EndDate: Yup.string()
+                        .typeError(data.EventSports.EndDate)
+                        .required(data.EventSports.EndDate),
 
                     EventType: Yup.string()
                         .typeError(data.EventSports.EventType)
                         .required(data.EventSports.EventType),
 
-                    EventStartTime: Yup.string()
-                        .typeError(data.EventSports.EventStartTime)
-                        .required(data.EventSports.EventStartTime),
+                    StartTime: Yup.string()
+                        .typeError(data.EventSports.StartTime)
+                        .required(data.EventSports.StartTime),
+                    EndTime: Yup.string()
+                        .typeError(data.EventSports.EndTime)
+                        .required(data.EventSports.EndTime),
                     Venue: Yup.string()
                         .typeError(data.EventSports.Venue)
                         .required(data.EventSports.Venue),
+                    AddressedTo: Yup.string()
+                        .typeError(data.EventSports.AddressedTo)
+                        .required(data.EventSports.AddressedTo),
                     Message: Yup.string()
                         .typeError(data.EventSports.Message)
                         .required(data.EventSports.Message),
@@ -129,7 +143,8 @@ const EditSports = () => {
     const InitialValue = {
         EventTitle: data.EventTitle || "",
         EventType: data.EventType || "",
-        EventDate: data.EventDate || "",
+        StartDate: data.StartDate || "",
+        EndDate: data.EndDate || "",
         ApplicableTo: Array.isArray(data?.StdActivitiesID)
             ? data?.StdActivitiesID.map((d) => ({
                 RecordID: String(d.StdActivitiesID),
@@ -139,10 +154,12 @@ const EditSports = () => {
             : [],
         Message: data.Description || "",
         ParticipationLimit: data.ParticipantLimit || "",
-        EventStartTime: data.StartTime || "",
+        StartTime: data.StartTime || "",
+        EndTime: data.EndTime || "",
         Venue: data.Venue || "",
         Format: data.Format || "",
         AgeGroup: data.AgeGroup || "",
+        AddressedTo: data.AddressedTo || "",
         WhatsApp: mode === "E" ? (data?.NotifyWhatsapp === "Y" ? true : false) : true,
         // Email: mode === "E" ? (data?.NotifyWhatsapp === "Y" ? true : false) : true,
         RegistrationRequired: mode === "E" ? (data?.RegistrationRequired === "Y" ? true : false) : true,
@@ -165,7 +182,8 @@ const EditSports = () => {
             RecordID: recID,
             EventCategoryID: params.parentID2,
             EventTitle: values.EventTitle || "",
-            EventDate: values.EventDate || "",
+            StartDate: values.StartDate || "",
+            EndDate: values.EndDate || "",
             EventType: values.EventType || "",
             StdActivitiesID:
                 values?.ApplicableTo
@@ -174,17 +192,21 @@ const EditSports = () => {
                 || "",
             Description: values.Message || "",
             ParticipantLimit: values.ParticipationLimit || "",
-            StartTime: values.EventStartTime || "",
+            StartTime: values.StartTime || "",
+            EndTime: values.EndTime || "",
             Venue: values.Venue || "",
             Format: values.Format || "",
             AgeGroup: values.AgeGroup || "",
+            AddressedTo: values.AddressedTo || "",
             NotifyWhatsapp: values.WhatsApp === true ? "Y" : "N",
             // NotifyEmail: values.Email === true ? "Y" : "N",
             RegistrationRequired: values.RegistrationRequired === true ? "Y" : "N",
-            Attachment: sportsImage || ""
+            Attachment: sportsImage || "",
+            CreatedBy: LoginID,
+            VideoAttachment: sportsVideo || "",
         };
 
-        const response = await dispatch(EventspostData({ accessID: "TR385", action, idata, Type: "S" }));
+        const response = await dispatch(EventspostData({ accessID: "TR385", action, idata, Type: "S", CompanyID }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -199,6 +221,35 @@ const EditSports = () => {
         setButtonValue(value);
     }
 
+    const handleDateChange = (e, handleChange) => {
+        const value = e.target.value;
+
+        // allow empty
+        if (!value) {
+            handleChange(e);
+            return;
+        }
+
+        // allow only YYYY-MM-DD typing structure
+        if (!/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) {
+            return;
+        }
+
+        const parts = value.split("-");
+
+        const month = parts[1];
+        const day = parts[2];
+
+        // validate month/day ranges
+        if (
+            (month && Number(month) > 12) ||
+            (day && Number(day) > 31)
+        ) {
+            return;
+        }
+
+        handleChange(e);
+    };
     const fnLogOut = (props) => {
         Swal.fire({
             title: `Do you want ${props}?`,
@@ -239,9 +290,62 @@ const EditSports = () => {
             toast.success(fileData.payload.Msg);
         }
     };
+    const getVideoChange = async (event) => {
+        // setAcademyVideo(event.target.files[0]);
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        // Allowed formats
+        const allowedTypes = [
+            "video/mp4",
+            "video/webm",
+            "video/ogg",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Only MP4/WebM/Ogg videos allowed");
+            return;
+        }
+
+        // 100MB limit
+        if (file.size > 100 * 1024 * 1024) {
+            toast.error("Video size should be below 100MB");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("type", "videos");
+
+        try {
+
+            const fileData = await dispatch(
+                videoUpload({ formData })
+            );
+
+            if (fileData.payload.Status === "Y") {
+
+                setSportsVideo(fileData.payload.name);
+
+                toast.success(fileData.payload.Msg);
+
+            } else {
+
+                toast.error(fileData.payload.Msg);
+            }
+
+        } catch (err) {
+
+            toast.error("Upload failed");
+        }
+    };
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
+            {uploadLoading ? <LinearProgress /> : false}
+            {imageLoading ? <LinearProgress /> : false}
             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -357,7 +461,7 @@ const EditSports = () => {
                                     <Box
                                         display="flex"
                                         flexDirection="column"
-                                        gap={3}
+                                        gap={1.5}
                                         padding={3}
                                     >
                                         {/* TOP ROW */}
@@ -417,40 +521,66 @@ const EditSports = () => {
                                                 <MenuItem value="Throwball">Throw Ball</MenuItem>
                                                 <MenuItem value="Others">Others</MenuItem>
                                             </TextField>
-                                        </Box>
-                                        <Box
-                                            display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr 1fr 1fr" : "1fr"}
-                                            gap={2}
-                                        >
+
+
                                             <TextField
                                                 fullWidth
                                                 type="date"
                                                 variant="standard"
                                                 focused
-                                                name="EventDate"
+                                                name="StartDate"
                                                 // label="Event Date"
                                                 label={
                                                     <>
-                                                        Event Date
+                                                        Start Date
                                                         <span style={{ color: "red", fontSize: "20px" }}>
                                                             *
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventDate}
+                                                value={values.StartDate}
                                                 inputFormat="YYYY-MM-DD"
                                                 onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.EventDate && !!errors.EventDate}
-                                                helperText={touched.EventDate && errors.EventDate}
+                                                // onChange={handleChange}
+                                                onChange={(e) => handleDateChange(e, handleChange)}
+
+                                                error={!!touched.StartDate && !!errors.StartDate}
+                                                helperText={touched.StartDate && errors.StartDate}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                type="date"
+                                                variant="standard"
+                                                focused
+                                                name="EndDate"
+                                                // label="Event Date"
+                                                label={
+                                                    <>
+                                                        End Date
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.EndDate}
+                                                inputFormat="YYYY-MM-DD"
+                                                onBlur={handleBlur}
+                                                // onChange={handleChange}
+                                                onChange={(e) => handleDateChange(e, handleChange)}
+                                                error={!!touched.EndDate && !!errors.EndDate}
+                                                helperText={touched.EndDate && errors.EndDate}
+                                                InputProps={{
+                                                    inputProps: {
+                                                        min: values.StartDate || ""
+                                                    }
+                                                }}
                                             />
                                             <TextField
                                                 fullWidth
                                                 type="time"
                                                 variant="standard"
                                                 focused
-                                                name="EventStartTime"
+                                                name="StartTime"
                                                 // label="Event Date"
                                                 label={
                                                     <>
@@ -460,11 +590,51 @@ const EditSports = () => {
                                                         </span>
                                                     </>
                                                 }
-                                                value={values.EventStartTime}
+                                                value={values.StartTime}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                error={!!touched.EventStartTime && !!errors.EventStartTime}
-                                                helperText={touched.EventStartTime && errors.EventStartTime}
+                                                error={!!touched.StartTime && !!errors.StartTime}
+                                                helperText={touched.StartTime && errors.StartTime}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                type="time"
+                                                variant="standard"
+                                                focused
+                                                name="EndTime"
+                                                // label="End Time"
+                                                label={
+                                                    <>
+                                                        End Time
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.EndTime}
+                                                onBlur={handleBlur}
+                                                onChange={(e) => {
+                                                    const endTime = e.target.value;
+                                                    const startTime = values.StartTime;
+
+                                                    if (!startTime) {
+                                                        handleChange(e);
+                                                        return;
+                                                    }
+
+                                                    const start = new Date(`1970-01-01T${startTime}`);
+                                                    const end = new Date(`1970-01-01T${endTime}`);
+
+                                                    if (end <= start) {
+                                                        setFieldValue("EndTime", "");
+                                                        toast.error("End Time cannot be lesser than or equal to Start Time")
+                                                        return;
+                                                    }
+
+                                                    handleChange(e);
+                                                }}
+                                                error={!!touched.EndTime && !!errors.EndTime}
+                                                helperText={touched.EndTime && errors.EndTime}
                                             />
                                             <TextField
                                                 fullWidth
@@ -491,12 +661,7 @@ const EditSports = () => {
                                             />
 
 
-                                        </Box>
-                                        <Box
-                                            display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr 1fr 1fr" : "1fr"}
-                                            gap={2}
-                                        >
+
                                             <TextField
                                                 fullWidth
                                                 select
@@ -536,7 +701,7 @@ const EditSports = () => {
 
                                             <TextField
                                                 fullWidth
-                                                type="number"
+                                                type="text"
                                                 variant="standard"
                                                 focused
                                                 name="ParticipationLimit"
@@ -549,31 +714,34 @@ const EditSports = () => {
                                                 helperText={touched.ParticipationLimit && errors.ParticipationLimit}
                                             />
 
-                                        </Box>
+                                            <TextField
+                                                fullWidth
+                                                select
+                                                variant="standard"
+                                                focused
+                                                name="AddressedTo"
+                                                // label="Event Type"
+                                                label={
+                                                    <>
+                                                        Addressed To
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                                value={values.AddressedTo}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.AddressedTo && !!errors.AddressedTo}
+                                                helperText={touched.AddressedTo && errors.AddressedTo}
+                                            >
+                                                <MenuItem value="All">All</MenuItem>
+                                                <MenuItem value="Parents&Students">Parents & Students</MenuItem>
+                                                <MenuItem value="ParentsOnly">Parents Only</MenuItem>
+                                                <MenuItem value="StaffOnly">Staff Only</MenuItem>
+                                            </TextField>
 
-
-
-                                        {/* MESSAGE */}
-                                        <TextField
-                                            fullWidth
-                                            multiline
-                                            variant="standard"
-                                            focused
-                                            rows={2}
-                                            name="Message"
-                                            label="Prizes/Awards"
-                                            placeholder="Gold, Silver, Bronze, Participation certificate.."
-                                            value={values.Message}
-                                            onChange={handleChange}
-                                        />
-
-                                        {/* ACTION + CONTACT */}
-                                        <Box
-                                            display="grid"
-                                            gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
-                                            gap={2}
-                                        >
-                                            <EventsmultiSelect
+                                            <EventsSportsmultiSelect
                                                 id="ApplicableTo"
                                                 name="ApplicableTo"
                                                 label={
@@ -605,14 +773,27 @@ const EditSports = () => {
                                                     },
                                                 })}`}
                                             />
-
                                         </Box>
-
                                         <Box
+
                                             display="grid"
                                             gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
-                                            gap={2}
                                         >
+                                            {/* MESSAGE */}
+                                            <TextField
+                                                fullWidth
+                                                // multiline
+                                                variant="standard"
+                                                focused
+                                                rows={2}
+                                                name="Message"
+                                                label="Prizes/Awards"
+                                                placeholder="Gold, Silver, Bronze, Participation certificate.."
+                                                value={values.Message}
+                                                onChange={handleChange}
+                                            />
+                                        </Box>
+                                        <Box display="grid" gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"} gap={2}>
                                             <Box>
                                                 <Typography
                                                     variant="subtitle2"
@@ -685,6 +866,66 @@ const EditSports = () => {
                                                     View Uploaded File
                                                 </Button>
 
+                                            </Box>
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    sx={{
+                                                        mb: 1,
+                                                        fontWeight: 600,
+                                                        color: "#6B7280",
+                                                    }}
+                                                >
+                                                    Upload Event Video
+                                                </Typography>
+
+                                                <Box
+                                                    component="label"
+                                                    sx={{
+                                                        border: "1px dashed #D1D5DB",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: "#F9FAFB",
+                                                        height: "56px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    <input
+                                                        hidden
+                                                        type="file"
+                                                        accept="video/*"
+                                                        onChange={getVideoChange}
+                                                    />
+
+                                                    <Typography fontSize="14px" color="#6B7280">
+                                                        Click to upload Video
+                                                    </Typography>
+                                                </Box>
+                                                <Button
+                                                    // size="small"
+                                                    variant="contained"
+                                                    component={"a"}
+                                                    sx={{
+                                                        marginTop: "10px",
+                                                        width: "100%"
+                                                    }}
+                                                    onClick={() => {
+                                                        data?.VideoAttachment || sportsVideo
+                                                            ? window.open(
+                                                                sportsVideo
+                                                                    ? store.getState().globalurl.videoAttachmentUrl +
+                                                                    sportsVideo
+                                                                    : store.getState().globalurl.videoAttachmentUrl +
+                                                                    data?.VideoAttachment,
+                                                                "_blank"
+                                                            )
+                                                            : toast.error("Please Upload Video");
+                                                    }}
+                                                >
+                                                    View Uploaded File
+                                                </Button>
                                             </Box>
                                         </Box>
                                         {/* NOTIFY OPTIONS */}
@@ -761,8 +1002,9 @@ const EditSports = () => {
                                                 variant="contained"
                                                 type="submit"
                                                 loading={isLoading}
+                                                disabled={mode === "V" || uploadLoading || imageLoading}
                                             >
-                                                Open Registrarion & Publish
+                                                Save
                                             </LoadingButton>
                                             <Button
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}

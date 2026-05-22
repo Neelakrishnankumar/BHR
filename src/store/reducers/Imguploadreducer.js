@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
 import store from "../../index";
 import { toast } from "react-hot-toast";
 
@@ -16,7 +15,7 @@ const initialState = {
 export const imageUpload = createAsyncThunk(
   "Image/deliverychalan",
   async ({ formData }) => {
-    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData)
+    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData);
     const url = store.getState().globalurl.imgUploadUrl;
     //const url = store.getState().globalurl.fileUploadUrl;
     const response = await axios.post(url, formData, {
@@ -25,14 +24,14 @@ export const imageUpload = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response)
+    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const fileUpload = createAsyncThunk(
   "Image/Finance Entry",
   async ({ formData }) => {
-    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData)
+    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData);
     const url = store.getState().globalurl.fileUploadUrl;
     const response = await axios.post(url, formData, {
       headers: {
@@ -40,39 +39,104 @@ export const fileUpload = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response)
+    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response);
     return response.data;
-  }
+  },
+);
+export const videoUpload = createAsyncThunk(
+  "videoUpload/post",
+  async ({ formData }) => {
+    const url = store.getState().globalurl.fileUploadUrl;
+    const response = await axios.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response);
+    return response.data;
+  },
 );
 
 export const getApiSlice = createSlice({
   name: "imageApi",
-  initialState,
-  reducers: {
-    pending(state) {
-      return {
-        ...state,
-        imgLoading: true,
-        imgError: false,
-      };
-    },
-    errored(state, action) {
-      return {
-        ...state,
-        imgLoading: false,
-        imgError: action.payload,
-      };
-    },
-    Success(state, action) {
-      return {
-        ...state,
-        imgLoading: false,
-        imgError: "",
-        uploadedImgName: action.payload.apiResponse,
-        imgStatus: action.payload.Status,
-        imgMsg: action.payload.Msg,
-      };
-    },
+  // initialState,
+  initialState: {
+    imgLoading: false,
+    videoLoading: false,
+    imgError: "",
+    uploadedImgName: "",
+    uploadedVideoName: "",
+    imgStatus: "",
+    videoStatus: "",
+    imgMsg: "",
+    videoMsg: "",
+    Data: {},
+  },
+  // reducers: {
+  //   pending(state) {
+  //     return {
+  //       ...state,
+  //       imgLoading: true,
+  //       imgError: false,
+  //     };
+  //   },
+  //   errored(state, action) {
+  //     return {
+  //       ...state,
+  //       imgLoading: false,
+  //       imgError: action.payload,
+  //     };
+  //   },
+  //   Success(state, action) {
+  //     return {
+  //       ...state,
+  //       imgLoading: false,
+  //       imgError: "",
+  //       uploadedImgName: action.payload.apiResponse,
+  //       imgStatus: action.payload.Status,
+  //       imgMsg: action.payload.Msg,
+  //     };
+  //   },
+  // },
+  reducers: {},
+
+  extraReducers: (builder) => {
+    // IMAGE
+    builder
+      .addCase(fileUpload.pending, (state) => {
+        state.imgLoading = true;
+        state.imgError = "";
+      })
+
+      .addCase(fileUpload.fulfilled, (state, action) => {
+        state.imgLoading = false;
+        state.uploadedImgName = action.payload.name;
+        state.imgStatus = action.payload.Status;
+        state.imgMsg = action.payload.Msg;
+      })
+
+      .addCase(fileUpload.rejected, (state, action) => {
+        state.imgLoading = false;
+        state.imgError = action.error.message;
+      })
+
+      // VIDEO
+      .addCase(videoUpload.pending, (state) => {
+        state.videoLoading = true;
+      })
+
+      .addCase(videoUpload.fulfilled, (state, action) => {
+        state.videoLoading = false;
+        state.videoStatus = action.payload.Status;
+        state.videoMsg = action.payload.Msg;
+      })
+
+      .addCase(videoUpload.rejected, (state, action) => {
+        state.videoLoading = false;
+        state.imgError = action.error.message;
+      });
   },
 });
 
@@ -82,8 +146,6 @@ export const { pending, errored, Success } = getApiSlice.actions;
 export default getApiSlice.reducer;
 
 export const fnFetchImage = (AccessID, recID) => (dispatch, getState) => {
-
-
   var url = store.getState().globalurl.imageNameUpdateUrl;
   var data = {
     accessid: AccessID,
@@ -113,11 +175,23 @@ export const fnFetchImage = (AccessID, recID) => (dispatch, getState) => {
           apidata.Imgname = "Defaultimg.jpg";
         }
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
+          Success({
+            Status: "Y",
+            apiResponse: apidata.Imgname,
+            Msg: "",
+            accessid: AccessID,
+            action: "get",
+          }),
         );
       } else {
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
+          Success({
+            Status: "Y",
+            apiResponse: apidata.Imgname,
+            Msg: "",
+            accessid: AccessID,
+            action: "get",
+          }),
         );
       }
     })
@@ -150,8 +224,8 @@ export const fnImageUpload =
             Status: "Y",
             apiResponse: response.data.name,
             Msg: response.data.Msg,
-            accessid:accessid
-          })
+            accessid: accessid,
+          }),
         );
 
         var uploadImgurl = store.getState().globalurl.imageNameUpdateUrl;
@@ -193,8 +267,8 @@ export function fnFileUpload(formData, id, accessid) {
           Status: "Y",
           apiResponse: success.data.name,
           Msg: success.data.Msg,
-          accessid:accessid
-        })
+          accessid: accessid,
+        }),
       );
       var uploadImgurl = store.getState().globalurl.imageNameUpdateUrl;
       var imgData = {
@@ -274,7 +348,7 @@ export function fnCsvFileUploadnew(formData) {
   };
 }
 export function fnCsvFileUpload(formData) {
-  console.log("🚀 ~ fnCsvFileUpload ~ formData:", JSON.stringify(formData))
+  console.log("🚀 ~ fnCsvFileUpload ~ formData:", JSON.stringify(formData));
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
@@ -285,7 +359,7 @@ export function fnCsvFileUpload(formData) {
           Status: "Y",
           apiResponse: success.data.name,
           Msg: success.data.Msg,
-        })
+        }),
       );
 
       return datawait;
@@ -312,7 +386,6 @@ export function fnCsvFileUpload(formData) {
   };
 }
 
-
 // // designationImport.js
 // export function fnDesignationImport(formData) {
 //   return async (dispatch) => {
@@ -322,11 +395,10 @@ export function fnCsvFileUpload(formData) {
 //       //const baseUrl = store.getState().globalurl.designationImportUrl;
 
 //       const file = formData.get("file");
-//       const fileName = file?.name; 
+//       const fileName = file?.name;
 
 //        const url = `https://essuat.beyondexs.com?filename=${encodeURIComponent(fileName)}`;
 
-       
 //       const response = await axios.post(url, formData, {
 //         headers: {
 //           Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4MTA0OTV9.y3Bq2I7MMJLevEIVzb7m6UIirv86uvhoCBbb5qxF3lk",
@@ -359,7 +431,7 @@ export function fnCsvFileUpload(formData) {
 export const SOPfileUpload = createAsyncThunk(
   "Image/Finance Entry",
   async ({ formData }) => {
-    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData)
+    console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData);
     const url = store.getState().globalurl.SOPAttachmentsController;
     const response = await axios.post(url, formData, {
       headers: {
@@ -367,7 +439,7 @@ export const SOPfileUpload = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response)
+    console.log("🚀 ~ file: Imguploadreducer.js:26 ~ response:", response);
     return response.data;
-  }
+  },
 );

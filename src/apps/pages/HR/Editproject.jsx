@@ -17,8 +17,16 @@ import {
   CircularProgress,
   Breadcrumbs,
   Chip,
+  InputAdornment,
+  List,
+  ListItemButton,
+  ListItemText
 } from "@mui/material";
 
+import SearchIcon from "@mui/icons-material/Search";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import PersonIcon from "@mui/icons-material/Person";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -33,6 +41,7 @@ import {
   explorePostData,
   fetchApidata,
   getFetchData,
+  getFetchData_v1,
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
@@ -44,10 +53,13 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
 import {
+  
   CheckinAutocomplete,
+  CheckinAutocomplete_v12,
   Employeeautocomplete,
   Productautocomplete,
   ProjectVendor,
+  SprintEmpAutocomplete1,
 } from "../../../ui-components/global/Autocomplete";
 import { DataGrid, GridActionsCellItem, GridRowModes, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
@@ -65,6 +77,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { GridRowEditStopReasons } from "@mui/x-data-grid";
 import { nanoid } from "@reduxjs/toolkit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
+import { SECTION_TYPE_GRANULARITY } from "@mui/x-date-pickers/internals/utils/getDefaultReferenceDate";
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -79,6 +92,10 @@ const Editproject = () => {
   var accessID = params.accessID;
 
   const data = useSelector((state) => state.formApi.Data) || {};
+const Department = useSelector((state) => state.formApi.Department.Department) || [];
+console.log(Department, "---Department in Autocomplete");
+// const departmentEmp = useSelector((state) => state.formApi.Department.Department.Employee) || [];
+
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -101,13 +118,15 @@ const Editproject = () => {
     sessionStorage.getItem("secondaryCurrentPage")
   );
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  console.log(SubscriptionCode, "--SubscriptionCode");
+  
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
   console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
-
+  const sliceSubscriptionCode = SubscriptionCode.slice(-3);
   const [show, setScreen] = React.useState("0");
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
@@ -118,6 +137,8 @@ const Editproject = () => {
   const [rowLoading, setRowLoading] = useState(false);
   const [deletedRows, setDeletedRows] = useState([]);
   const [editedRows, setEditedRows] = useState([]);
+const [passrecid, setPassrecid] = useState(null);
+const [detailrecid, setDetailrecid] = useState(null);
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
   );
@@ -127,9 +148,445 @@ const Editproject = () => {
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const [rows, setRows] = useState([]);
   const rowData = location.state || {};
-  console.log(rowData, "--rowData state");
+
+  console.log(rowData, "--rowData statehii");
   // var screenName1 = params.screenName;
   var screenName = rowData.name
+
+//STUDENT-TEACHER MAPPING
+
+const [teachrows, setTeachrows] = useState([]);
+ const [rowModesModelteach, setRowModesModelteach] = React.useState({});
+
+   const validateRowTT = (row) => {
+   
+    if (!row.Department) {
+      return "Please Select the Subject";
+    }
+    if (!row.Teacher) {
+      return "Please Select the Teacher";
+    }
+    return null;
+  };
+
+  const processRowUpdateTeach = async (newRow, oldRow) => {
+  console.log(newRow,InitialValue, "--inside process");
+    const currentFormikValues = formikRef.current.values;
+
+  console.log(currentFormikValues,"currentFormikValues");
+
+  const error = validateRowTT(newRow);
+
+  if (error) throw new Error(error);
+
+  const isNew = isNaN(Number(newRow.RecordID));
+
+  const payload = {
+    ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+    EmpID: newRow.Teacher?.RecordID || 0,
+    DeptID: newRow.Department?.RecordID || 0,
+  };
+  try {
+    // const HeaderID = await Fnsave(payload, isNew);
+const HeaderID = await FnsaveTech(
+  currentFormikValues,   // values (header form data)
+  false,          // del
+  payload,        // payload
+  isNew           // isNew
+);
+    const updatedRow = {
+      ...newRow,
+      id: HeaderID,
+      RecordID: HeaderID,
+      isNew: false,
+    };
+
+    setTeachrows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === newRow.id ? updatedRow : row
+      )
+    );
+
+    return updatedRow;
+  } catch (err) {
+    console.error("Row save failed:", err);
+    throw err;
+  }
+};
+//    const processRowUpdateTeach = async (newRow, oldRow) => {
+//      console.log(rows, "--inside proceeess");
+//     const error = validateRowTT(newRow);
+//     if (error) throw new Error(error);
+
+//     const isNew = isNaN(Number(newRow.RecordID));
+
+//     const payload = {
+//       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+//       // ProjectID: newRow.Slots?.RecordID || 0,
+//       EmpID: newRow.Teacher?.RecordID || 0,
+//       DeptID: newRow.Department?.RecordID || 0,
+//      };
+//      console.log(payload, "--passing paYload for fnSave");
+     
+// // return;
+
+//     try {
+//       // ✅ get new ID from API
+//       const HeaderID = await Fnsave(payload, isNew);
+
+//       const updatedRow = {
+//         ...newRow,
+//         id: HeaderID,
+//         RecordID: HeaderID,
+//         isNew: false,
+//       };
+
+//       setTeachrows((prevRows) =>
+//         prevRows.map((row) =>
+//           row.id === newRow.id ? updatedRow : row
+//         )
+//       );
+
+//       return updatedRow;
+//     } catch (err) {
+//       console.error("Row save failed:", err);
+//       throw err;
+//     }
+//   };
+
+  const handleRowEditStopTeach = (params, event) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+  const handleEditClickTeach = (RecordID) => () => {
+    setRowModesModelteach({
+      ...rowModesModelteach,
+      [RecordID]: { mode: GridRowModes.Edit },
+    });
+  };
+
+  const handleSaveClickTeach = (RecordID) => () => {
+    setRowModesModelteach({
+      ...rowModesModelteach,
+      [RecordID]: { mode: GridRowModes.View },
+    });
+  };
+  const handleDeleteClickTeach = (id) => async () => {
+    try {
+      const targetRow = teachrows.find((row) => row.id === id);
+      console.log(targetRow, "---targetRow find in delete");
+
+      const RecordID = targetRow?.RecordID;
+
+      // Remove from UI
+      setTeachrows((prevRows) => prevRows.filter((row) => row.id !== id));
+
+      // Only call API if it's a real (numeric) RecordID
+      if (!RecordID || isNaN(Number(RecordID))) {
+        toast.success("Deleted Successfully");
+        return;
+      }
+// return;
+      const response = await dispatch(
+        postData({
+          accessID: "TR389",
+          action: "harddelete",
+          idata: {
+            ProjectTeamRecordID: Number(RecordID),
+            
+          }
+        })
+      );
+
+      if (response?.payload?.Status === "Y") {
+        toast.success(response.payload.Msg);
+        dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }));
+      } else {
+        toast.error(response?.payload?.Msg || "Delete failed");
+      }
+    } catch (error) {
+      console.error("Delete Error:", error);
+      toast.error("Error occurred while deleting.");
+    }
+  };
+
+  // const handleDeleteClickTeach = (RecordID) => async () => {
+  //   console.log("Deleting ID:", RecordID, typeof RecordID);
+
+  //   // ✅ Remove row from UI first
+  //   setTeachrows((prevRows) =>
+  //     prevRows.filter((row) => row.RecordID !== RecordID)
+  //   );
+
+  //   // ✅ Only call API if RecordID is numeric
+  //   if (!RecordID || isNaN(Number(RecordID))) {
+  //     // toast.success("Deleted Successfully");
+  //     return;
+  //   }
+
+  //   const numericID = Number(RecordID);
+
+  //   setDeletedRows((prev) => {
+  //     if (prev.some((d) => d.RecordID === numericID)) return prev;
+  //     return [...prev, { RecordID: numericID }];
+  //   });
+
+  //   // 🔥 REMOVE from editedRows
+  //   setEditedRows((prev) =>
+  //     prev.filter((row) => row.RecordID !== numericID)
+  //   );
+
+  // };
+
+  const handleCancelClickTeach = (RecordID) => () => {
+    setRowModesModelteach({
+      ...rowModesModelteach,
+      [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = teachrows.find((row) => row.RecordID === RecordID);
+    if (editedRow.isNew) {
+      setTeachrows(teachrows.filter((row) => row.RecordID !== RecordID));
+    }
+  };
+  const [subjectid, setSubjectid] = useState(null);
+
+  function EditdeptAutocompleteCell(props) {
+    const { id, value, field, api, row } = props;
+
+    const handleChange = async (newValue) => {
+      console.log("🚀 ~ Department handleChange ~ Department newValue:", newValue);
+      if (!newValue) return;
+
+      setDeptlookup(newValue);
+      setSubjectid(newValue.RecordID);
+
+      await api.setEditCellValue({
+        id,
+        field: "Department",
+        value: newValue,
+      });
+
+      api.stopCellEditMode({ id, field });
+    };
+    const [deptlookup, setDeptlookup] = useState(row.Department ? row.Department : null);
+    return (
+      <SprintEmpAutocomplete1
+        name="Department"
+        label="Department"
+        id="Department"
+        value={deptlookup}
+        onChange={handleChange}
+        url={`${listViewurl}?data={"Query":{"AccessID":"2187","ScreenName":"Department","Filter":"CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+      />
+    );
+  }
+
+      function EditTeacherAutocomplete(props) {
+    const { id, value, field, api, row } = props;
+
+    const handleChange = async (newValue) => {
+      console.log("🚀 ~ Teacher handleChange ~ Teacher newValue:", newValue);
+      if (!newValue) return;
+
+      setTeachlookup(newValue);
+      await api.setEditCellValue({
+        id,
+        field: "Teacher",
+        value: newValue,
+      });
+
+      api.stopCellEditMode({ id, field });
+    };
+    const [Teachlookup, setTeachlookup] = useState(row.Teacher ? row.Teacher : null);
+    return (
+      <SprintEmpAutocomplete1
+        name="Teacher"
+        label="Teacher"
+        id="Teacher"
+        value={Teachlookup}
+        onChange={handleChange}
+        // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+        url={`${listViewurl}?data={"Query":{"AccessID":"2175","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+
+      />
+    );
+  }
+  const Teachcolumns = [
+        {
+            field: "Slno",
+            headerName: "SL#",
+            width: 60,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            valueGetter: (params) => {
+                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+                const totalVisibleRows = params.api.getAllRowIds().length;
+                const totalAllRows = params.api.getRowsCount();
+
+                if (totalVisibleRows < totalAllRows) {
+                    return index + 1;
+                } else {
+                    return page * pageSize + index + 1;
+                }
+            },
+        },
+        {
+            headerName: "RecordID",
+            field: "RecordID",
+            width: 100,
+            align: "left",
+            headerAlign: "center",
+            hide: true,
+        },
+        {
+          
+           headerName: "ProjectTeamRecordID",
+            field: "ProjectTeamsID",
+            width: 100,
+            align: "left",
+            headerAlign: "center",
+            hide: true,
+        },
+          {
+      field: "Department",
+      headerName: (
+        <span>
+          Subjects <span style={{ color: "red" }}>*</span>
+        </span>
+      ),
+      headerAlign: "center",
+      width: 260,
+      hide: false,
+      editable: true,
+      sortable: false,
+      renderCell: (params) => {
+        return params.value?.Name || ""; // show only the name
+      },
+      renderEditCell: (params) => {
+        return <EditdeptAutocompleteCell {...params} />;
+      },
+    },
+    {
+      field: "Teacher",
+      headerName: (
+        <span>
+          Teacher <span style={{ color: "red" }}>*</span>
+        </span>
+      ),
+
+      headerAlign: "center",
+      width: 260,
+      hide: false,
+      editable: true,
+      sortable: false,
+      renderCell: (params) => {
+        return params.value?.Name || ""; // show only the name
+      },
+      renderEditCell: (params) => {
+        return <EditTeacherAutocomplete {...params} />;
+      },
+    },
+
+        {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            width: 165,
+            cellClassName: "actions",
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModelteach[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            material={{
+                                sx: {
+                                    color: "primary.main",
+                                },
+                            }}
+                            onClick={handleSaveClickTeach(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            className="textPrimary"
+                            onClick={handleCancelClickTeach(id)}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
+                return [
+                    // <GridActionsCellItem
+                    //   icon={<AddIcon style={{ color: "#00563B" }} />}
+                    //   label="Add"
+                    //   // onClick={() => handleInsertInrow(id)}
+                    //   color="inherit"
+                    // />,
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={handleEditClickTeach(id)}
+                        color="primary"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteClickTeach(id)}
+                        color="error"
+                    />,
+                ];
+            },
+        },
+    ];
+    const handleRowModesModelChangeTeach = (newRowModesModel) => {
+        setRowModesModelteach(newRowModesModel);
+    };
+
+const isHeaderDisabled = teachrows.length > 0;
+
+
+
+// State for selected subject/department
+// const [selectedSubject, setSelectedSubject] = useState(null);
+// const [staffList, setStaffList] = useState([]);
+
+// When subject changes, update staffList from Department data
+// const handleSubjectChange = (newValue) => {
+//   setSelectedSubject(newValue);
+  
+//   if (newValue) {
+//     // Find the selected department from Department array
+//     const selectedDept = Department.find(
+//       (dept) => dept.DeptrecID === newValue.DeptrecID
+//     );
+    
+//     // Map employees with checked state
+//     const employees = selectedDept?.Employee?.map((emp) => ({
+//       ...emp,
+//       checked: false,
+//     })) || [];
+    
+//     setStaffList(employees);
+//   } else {
+//     setStaffList([]);
+//   }
+// };
+
+
+
+
+
+
+
+
   useEffect(() => {
     if (!explorelistViewData) return;
 
@@ -197,15 +654,48 @@ const Editproject = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
+
+
   // useEffect(() => {
   //   dispatch(getFetchData({ accessID, get: "get", recID }));
   // }, [location.key]);
   useEffect(() => {
+    if (mode !== "A" && data?.Details) {
+      const formattedRows = data.Details.map((item) => ({
+        id: Number(item.ProjectTeamsID),
+        RecordID: Number(item.ProjectTeamsID),
+        Department: { RecordID: item.DepartmentID, Name: item.DeptName },
+        Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
+      
+        // Comments: item?.Comments,
+      }));
+
+
+      // setTeachrows([]);              // clear old buggy state
+      // setTimeout(() => {
+        setTeachrows(formattedRows); // set fresh
+      // }, 0);
+    }
+  }, [data]);
+
+  useEffect(() => {
     if (show == "0") {
       if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+        // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
+        {Subscriptionlastthree === "003" ? 
+         dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
+         : dispatch(getFetchData({ accessID, get: "get", recID }));
+
+        }
+
       } else {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+         {Subscriptionlastthree === "003" ? 
+          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
+         : dispatch(getFetchData({ accessID, get: "get", recID }));
+
+        }
+        // dispatch(getFetchData({ accessID, get: "get", recID }));
+        
       }
     }
   }, [show]);
@@ -226,6 +716,7 @@ const Editproject = () => {
   //     .nullable()
   //     .required("Owner is required"),
   // });
+  //================units section ==========================
   const [rowModesModel, setRowModesModel] = React.useState({});
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -388,6 +879,13 @@ const Editproject = () => {
 
     }
   };
+//   const subjectOptions = Department.map((dept) => ({
+//   RecordID: dept.DeptrecID,
+//   Code: dept.DeptCode,
+//   Name: dept.DeptName,
+//   Employee: dept.Employee,
+// }));
+
   const [UnitData, SetUnitData] = useState({
     recordID: "",
     description: "",
@@ -400,6 +898,7 @@ const Editproject = () => {
   });
 
 const is003 = SubscriptionCode?.endsWith("003");
+const formikRef = useRef();
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -447,7 +946,7 @@ const is003 = SubscriptionCode?.endsWith("003");
     TentativeStartDate: data.TentativeStartDate || "",
   };
 
-  const Fnsave = async (values, del) => {
+ const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
@@ -459,7 +958,7 @@ const is003 = SubscriptionCode?.endsWith("003");
     if (values.disable == true) {
       isCheck = "Y";
     }
-
+ 
     const idata = {
       RecordID: recID,
       Code: values.code,
@@ -492,7 +991,7 @@ const is003 = SubscriptionCode?.endsWith("003");
       // TentativeStartDate: values.TentativeStartDate || "",
       // TentativeEndDate: values.TentativeEndDate || ""
     };
-
+ 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
@@ -502,6 +1001,104 @@ const is003 = SubscriptionCode?.endsWith("003");
       toast.error(response.payload.Msg);
     }
   };
+
+  const FnsaveTech = async (values, del,payload, isNew) => {
+   
+   console.log(values,"--values find");
+   
+    // let action = mode === "A" ? "insert" : "update";
+    // let action =
+    //   mode === "A" && !del
+    //     ? "insert"
+    //     : mode === "E" && del
+    //       ? "softdelete"
+    //       : "update";
+      const action = isNew ? "insert" : "update";
+
+    var isCheck = "N";
+    if (values.disable == true) {
+      isCheck = "Y";
+    }
+    console.log(passrecid, "--find inside fnsave");
+    
+
+    const idata = {
+      RecordID: passrecid ? passrecid : recID,
+      Code: values.code,
+      Name: values.name,
+      ProjectIncharge: values.incharge?.RecordID || 0,
+      ProjectInchargeName: values.incharge?.Name || "",
+      ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
+      RoutineTasks: values.Routine === true ? "Y" : "N",
+      // RoutineTasks: "N",
+      SortOrder: values.sortorder || 0,
+      CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+      Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
+      //  ByProduct: values.ByProduct == true ? "Y" : "N",
+      //ByProduct: "N",
+      ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+      EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+      //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
+      ActualCost: values.actual || 0,
+      Price: values.price || 0,
+      Budget: values.budget || 0,
+      ScheduledCost: values.scheduled || 0,
+      Finyear,
+      CompanyID,
+      ProjectOwnerID: values.projectOwner?.RecordID || 0,
+      Longitude: values.longitude || 0,
+      Latitude: values.latitude || 0,
+      Radius: values.radius || 0,
+      AcademicYearID : params.filtertype || 0,
+      // TentativeStartDate: values.TentativeStartDate || "",
+      // TentativeEndDate: values.TentativeEndDate || ""
+       Detail: [
+        {
+          DeptID: payload.DeptID?.toString() || "0",
+          // SlotID: payload.SlotID?.toString() || "0",
+          EmpID: payload.EmpID?.toString() || "0",
+          // Day: payload.Day || "",
+          // Comments: payload.Comments || "",
+          // ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
+          ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID)
+          
+        },
+      ],
+    };
+
+    console.log(idata, "--idata in Overall fnSave");
+    // return;
+    // const response = await dispatch(
+    //   postData({ accessID, action, idata }));
+    const response = await dispatch(
+  Subscriptionlastthree === "003"
+    ? postData({ accessID: "TR389", action, idata })
+    : postData({ accessID, action, idata })
+);
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      console.log(response.payload.ProjectRecordID, "--find response.payload.ProjectRecordID");
+      
+      setPassrecid(response.payload.ProjectRecordID);
+      setDetailrecid(response.payload.ProjectTeamID);
+      //navigate("/Apps/TR133/Project");
+//  dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
+    // ✅ Only navigate away if this is a HEADER save (no payload = header-only save)
+    if (!payload) {
+      navigate(-1);
+    }
+
+     return response.payload.ProjectTeamID; // return the new ID for row update
+      // navigate(-1);
+    } else {
+      // toast.error(response.payload.Msg);
+       throw new Error(response.payload.Msg); // ✅ throw so processRowUpdate catches it
+    }
+  };
+
+
+
   const VISIBLE_FIELDS =
     show == "1"
       ? [
@@ -1045,13 +1642,82 @@ const is003 = SubscriptionCode?.endsWith("003");
   }
 
 
+//STUDENT-TEACHER MAPPING 
+function EditToolbarteach(props) {
+  const { setTeachrows, setRowModesModelteach } = props; // ✅ fix: was setRowModesModel
 
-
-
-
-
+  const handleClickteach = () => {
+    const id = nanoid();
+    setTeachrows((oldRows) => [
+      ...oldRows,
+      {
+        id: id,           // ✅ must match getRowId
+        RecordID: id,     // ✅ same value
+        Department: null,
+        Teacher: null,
+        isNew: true,
+      },
+    ]);
+    setRowModesModelteach((oldModel) => ({
+      ...oldModel,
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
+    }));
+  };
 
   return (
+    <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
+      <Button 
+      color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
+       sx={{ textTransform: "capitalize",fontSize: "14px" }}
+      >
+        Add Record
+      </Button>
+    </GridToolbarContainer>
+  );
+}
+// function EditToolbarteach(props) {
+//     const { setTeachrows, setRowModesModel } = props;
+
+//     const handleClickteach = () => {
+//       console.log("--calling handleClickteach");
+      
+//       const id = nanoid();
+//       const nextSLNO =
+//         teachrows.length > 0 ? Math.max(...teachrows.map((row) => row.SLNO || 0)) + 1 : 1;
+//     setTeachrows((oldRows) => [
+//   ...oldRows,
+//   {
+//     id: id,
+//     RecordID: id,
+//     Department: null,
+//     Teacher: null,
+//     isNew: true,
+//   },
+// ]);
+//       setRowModesModelteach((oldModel) => ({
+//         ...oldModel,
+//         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Comments" },
+//       }));
+//     };
+//     return (
+//       <GridToolbarContainer
+//         sx={{
+//           marginBottom: "10px",
+//           display: "flex",
+//           justifyContent: "flex-start",
+//         }}
+//       >
+//         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+//           Add Record
+//         </Button>
+//       </GridToolbarContainer>
+//     );
+//   }
+
+
+
+
+ return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -1147,12 +1813,25 @@ const is003 = SubscriptionCode?.endsWith("003");
       {show == "0" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
+            innerRef={formikRef}
             initialValues={InitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                Fnsave(values);
-              }, 100);
-            }}
+        
+          
+          onSubmit={(values, { resetForm }) => {
+             if (Subscriptionlastthree === "003") {
+    FnsaveTech(values, false, null, false);
+  } else {
+    setTimeout(() => {
+      Fnsave(values);
+    }, 100);
+  }
+  // Fnsave(values, false, null, false); // ✅ null payload = header save = will navigate(-1)
+}}
+            // onSubmit={(values, setSubmitting) => {
+            //   setTimeout(() => {
+            //     Fnsave(values);
+            //   }, 100);
+            // }}
             validationSchema={validationSchema}
             enableReinitialize={true}
           >
@@ -1181,7 +1860,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                 >
                   {CompanyAutoCode == "Y" ? (
                     <TextField
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       name="code"
                       type="text"
                       id="code"
@@ -1202,7 +1881,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                     />
                   ) : (
                     <TextField
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       name="code"
                       type="text"
                       id="code"
@@ -1227,7 +1906,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   )}
 
                   <TextField
-                    disabled={mode == "V"}
+                    disabled={isHeaderDisabled || mode == "V"}
                     name="name"
                     type="text"
                     id="name"
@@ -1253,7 +1932,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   />
 
                   <CheckinAutocomplete
-                    disabled={mode == "V"}
+                    disabled={isHeaderDisabled || mode == "V"}
                     name="incharge"
                     label={
                       <>
@@ -1285,7 +1964,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   />
                   {is003Subscription === false ? (
                     <CheckinAutocomplete
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       name="projectOwner"
                       // label="Project Owner"
                       label={getBusinessCaption("ProjectOwner", "Project Owner")}
@@ -1399,7 +2078,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   /> */}
 
                   <TextField
-                    disabled={mode == "V"}
+                    disabled={isHeaderDisabled || mode == "V"}
                     labelId="demo"
                     id="CurrentStatus"
                     name="CurrentStatus"
@@ -1438,7 +2117,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                   </TextField>
 
                   <TextField
-                    disabled={mode == "V"}
+                    disabled={isHeaderDisabled || mode == "V"}
                     name="sortorder"
                     type="number"
                     id="sortorder"
@@ -1469,7 +2148,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                     <Box display="flex" alignItems="center"> */}
                    
                     <Field
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="Routine"
                       id="Routine"
@@ -1501,7 +2180,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                      {!is003Subscription && (
                       <>
                     <Field
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="ByProduct"
                       id="ByProduct"
@@ -1519,7 +2198,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                    
                 
                     <Field
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="Onsiteactivities"
                       id="Onsiteactivities"
@@ -1533,7 +2212,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                       )}
                     <Field
                       //  size="small"
-                      disabled={mode == "V"}
+                     disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="delete"
                       id="delete"
@@ -1546,7 +2225,7 @@ const is003 = SubscriptionCode?.endsWith("003");
                     <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
-                      disabled={mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="disable"
                       id="disable"
@@ -1858,6 +2537,10 @@ const is003 = SubscriptionCode?.endsWith("003");
                     </Box>
                   </>
                 ) : null}
+
+
+    {Subscriptionlastthree != "003" ? (
+    <>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
@@ -1920,6 +2603,110 @@ const is003 = SubscriptionCode?.endsWith("003");
                     Cancel
                   </Button>
                 </Box>
+                    </>
+                ) : null}
+
+
+{Subscriptionlastthree === "003" && (
+  <>
+    <Box
+                                    // m="5px 0 0 0"
+                                    // height={dataGridHeightExplore}
+                                    height="60vh"
+                                    m={1}
+                                    sx={{
+                                        "& .MuiDataGrid-root": {
+                                            border: "none",
+                                        },
+                                        "& .MuiDataGrid-cell": {
+                                            borderBottom: "none",
+                                        },
+                                        "& .name-column--cell": {
+                                            color: colors.greenAccent[300],
+                                        },
+                                        "& .MuiDataGrid-columnHeaders": {
+                                            backgroundColor: colors.blueAccent[800],
+                                            borderBottom: "none",
+                                        },
+                                        "& .MuiDataGrid-virtualScroller": {
+                                            backgroundColor: colors.primary[400],
+                                        },
+                                        "& .MuiDataGrid-footerContainer": {
+                                            borderTop: "none",
+                                            backgroundColor: colors.blueAccent[800],
+                                        },
+                                        "& .MuiCheckbox-root": {
+                                            color: `${colors.greenAccent[200]} !important`,
+                                        },
+                                        "& .odd-row": {
+                                            backgroundColor: "",
+                                            color: "", // Color for odd rows
+                                        },
+                                        "& .even-row": {
+                                            backgroundColor: "#D3D3D3",
+                                            color: "", // Color for even rows
+                                        },
+                                    }}
+                                >
+                                    <DataGrid
+                                        sx={{
+                                            "& .MuiDataGrid-footerContainer": {
+                                                height: dataGridHeaderFooterHeight,
+                                                minHeight: dataGridHeaderFooterHeight,
+                                            },
+                                        }}
+                                        rowHeight={dataGridRowHeight}
+                                        headerHeight={dataGridHeaderFooterHeight}
+                                        rows={teachrows}
+                                        columns={Teachcolumns}
+                                        loading={exploreLoading}
+                                        editMode="row"
+                                        disableSelectionOnClick
+                                        rowModesModel={rowModesModelteach}
+                                        onRowModesModelChange={handleRowModesModelChangeTeach}
+                                        onRowEditStop={handleRowEditStopTeach}
+                                        processRowUpdate={processRowUpdateTeach}
+                                        getRowId={(row) => row.RecordID}
+                                        // getRowId={(row) => row.ProjectTeamRecordID}
+                                        //  getRowId={(row) => row.id}
+                                          disableRowSelectionOnClick
+                                        // isCellEditable={(params) => {
+                                        //     if (params.field === "SlotCode") return false;
+                                        //     return true;
+                                        // }}
+                                       
+                                        experimentalFeatures={{ newEditingApi: true }}
+                                        onProcessRowUpdateError={(error) => {
+                                            console.error(
+                                                "Row update validation failed:",
+                                                error.message,
+                                            );
+                                            toast.error(error.message);
+                                        }}
+                                        components={{
+                                            Toolbar: EditToolbarteach,
+                                        }}
+                                      componentsProps={{
+                                                toolbar: { setTeachrows, setRowModesModelteach }, // ✅ was setRowModesModel (wrong one)
+                                              }}
+                                        rowsPerPageOptions={[5, 10, 20]}
+                                        getRowClassName={(params) =>
+                                            params.indexRelativeToCurrentPage % 2 === 0
+                                                ? "odd-row"
+                                                : "even-row"
+                                        }
+                                        pagination
+                                        pageSize={pageSize}
+                                        page={page}
+                                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                        onPageChange={(newPage) => setPage(newPage)}
+                                    />
+                                </Box>
+  </>
+)}
+  
+
+
               </form>
             )}
           </Formik>
