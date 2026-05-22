@@ -133,6 +133,7 @@ import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
+import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
@@ -256,6 +257,26 @@ const getProjectMenu = (is00123Subscription) =>
       UGA_ACCESSIDS: "TR275",
     };
 
+
+// const getFeedbackMenu = (is00123Subscription) =>
+//   is00123Subscription    ?   {
+//             name: "Feedbacks/Complaints",
+//             url: "./TR390/Feedback Complaints",
+//             // id: 5594,
+//             icon: (
+//               <Tooltip title="Feedbacks/Complaints">
+//                 <FeedbackOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR390",
+//           }:{}
+        
 
 
 const Item = ({ title, to, icon, selected, setSelected, isChild, state, Tooltipname }) => {
@@ -1230,6 +1251,9 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR259",
           },
+
+        //  getFeedbackMenu(is003Subscription),
+
           {
             name: "Timesheet",
             url: "/Apps/TR261/EditTimeSheet",

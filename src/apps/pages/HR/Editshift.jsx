@@ -85,6 +85,9 @@ const Editshift = () => {
                     schemaFields.code = Yup.string().required(data.Shift.code);
                 }
 
+                if(Subscriptionlastthree === "003"){
+                    schemaFields.name = Yup.string().trim().required(data.Shift.shift);
+                }
                 const schema = Yup.object().shape(schemaFields);
                 setValidationSchema(schema);
             })

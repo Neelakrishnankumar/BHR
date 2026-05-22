@@ -177,6 +177,11 @@ const Editproject = () => {
           schemaFields.code = Yup.string().required(data.Project.code);
         }
 
+        if (Subscriptionlastthree === "003") {
+          schemaFields.name = Yup.string().trim().required(data.Project.StandardActivities);
+          schemaFields.incharge = Yup.object().required(data.Project.ClassTeacher).nullable();
+        }
+
         const schema = Yup.object().shape(schemaFields);
         let schemaFields2 = {
           Name: Yup.string().trim().required(data.ProjectUnit.Name),

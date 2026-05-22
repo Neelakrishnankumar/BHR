@@ -3,12 +3,14 @@
     "code": "Please enter the Code",
     "name": "Please enter the Name",
     "rank": "Please enter the Rank",
-    "InstiLevel": "Please enter the Level"
+    "InstiLevel": "Please enter the Level",
+    "Role": "Please enter the Role"
   },
   "Department": {
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
-    "Loc": "Please enter the Location"
+    "Loc": "Please enter the Location",
+    "Department": "Please enter the Department"
   },
   "Doccategory": {
     "Code": "Please enter the Code",
@@ -28,13 +30,15 @@
   },
   "Project": {
     "Code": "Please enter the Code",
-    "name": "Please enter the Description",
+    "name": "Please enter the Project",
     "incharge": "Please select the Accountable Incharge",
     "projectOwner": "Please enter the Project Owner",
     "CurrentStatus": "Please select the Status",
     "budget": "Please enter the Budget",
     "TentativeEndDate": "Please select the Tentative End Date",
-    "TentativeStartDate": "Please select the Tentative Start Date"
+    "TentativeStartDate": "Please select the Tentative Start Date",
+    "StandardActivities": "Please enter the Standard/Activities",
+    "ClassTeacher": "Please select the Class Teacher"
   },
   "ProjectUnit": {
     "Code": "Please enter the Code",
@@ -54,6 +58,7 @@
   "Shift": {
     "code": "Please enter the Code",
     "name": "Please enter the Description",
+    "shift":"Please enter the Shift",
     "starttime": "Please enter the Shift Start Time",
     "endtime": "Please enter the Shift End Time"
   },
@@ -67,7 +72,9 @@
     "name": "Please enter the Overhead",
     "frequency": "Please enter the Frequency",
     "OverheadType": "Please select the OverheadType",
-    "Overhead": "Please select the Overhead"
+    "Overhead": "Please select the Overhead",
+    "ExpenseName": "Please enter the Expense Name",
+    "ExpenseType": "Please select the Expense Type"
   },
   "Overheadtype": {
     "code": "Please enter the Code",
@@ -421,7 +428,10 @@
     "Type": "Please select the Type",
     "Name": "Please enter the Name",
     "Category": "Please select the Category",
-    "Policy": "Please enter the Policy"
+    "Policy": "Please enter the Policy",
+    "CompName": "Please enter the Component Name",
+    "CalculationType": "Please select the Calculation Type",
+    "ComponentCategory": "Please select the Component Category"
   },
   "Inventory": {
     "itemgroups": "Please select the Item Group",

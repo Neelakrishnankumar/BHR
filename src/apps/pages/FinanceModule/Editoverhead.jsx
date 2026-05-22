@@ -294,6 +294,11 @@ const Editoverhead = () => {
           schemaFields.code = Yup.string().required(data.Overhead.code);
         }
 
+        if (Subscriptionlastthree === "003") {
+          schemaFields.name = Yup.string().trim().required(data.Overhead.ExpenseName);
+          schemaFields.OverheadType = Yup.object().required(data.Overhead.ExpenseType).nullable();
+        }
+
         const schema = Yup.object().shape(schemaFields);
         const schema1 = Yup.object().shape({
           overhead: Yup.object().required(data.Overhead.Overhead).nullable(),

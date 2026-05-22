@@ -109,6 +109,10 @@ const Editdept = () => {
           schemaFields.Code = Yup.string().trim().required(data.Department.Code);
         }
 
+        if (Subscriptionlastthree === "003") {
+          schemaFields.Name = Yup.string().trim().required(data.Department.Department);
+        }
+
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
       })
