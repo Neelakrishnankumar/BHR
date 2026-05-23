@@ -241,10 +241,31 @@ const EditWorkshop = () => {
     };
 
     const getFileChange = async (event) => {
-        setWorkShopImage(event.target.files[0]);
+        // setWorkShopImage(event.target.files[0]);
 
-        console.log(event.target.files[0]);
+        // console.log(event.target.files[0]);
 
+         const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/webp",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error(
+                "Only Images, PDF and DOCX files are allowed"
+            );
+            return;
+        }
+
+        setWorkShopImage(file);
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
         formData.append("type", "images");
@@ -685,7 +706,7 @@ const EditWorkshop = () => {
                                                         color: "#6B7280",
                                                     }}
                                                 >
-                                                    Attach Syllabus (PDF)
+                                                    Attach file
                                                 </Typography>
 
                                                 <Box
@@ -708,7 +729,8 @@ const EditWorkshop = () => {
                                                     <input
                                                         hidden
                                                         type="file"
-                                                        accept=".pdf"
+                                                        // accept=".pdf"
+                                                        accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                         // onChange={(event) => {
                                                         //     const file = event.currentTarget.files[0];
                                                         //     setFieldValue("SyllabusFile", file);
@@ -720,7 +742,7 @@ const EditWorkshop = () => {
                                                         fontSize="14px"
                                                         color="#6B7280"
                                                     >
-                                                        Click to upload PDF
+                                                        Click to upload file
                                                     </Typography>
                                                 </Box>
 

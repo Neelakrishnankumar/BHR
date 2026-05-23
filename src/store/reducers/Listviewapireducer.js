@@ -8895,7 +8895,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {params.row.IsPublish === "Y" && (
+            {(params.row.IsPublish === "Y" && params.row.Events !== "0") &&(
 
               <Tooltip title="Publish Event Category">
                 <IconButton
@@ -8906,7 +8906,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <PublishedWithChangesOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            )}
+            )} 
           </>
         )}
         {accessID === "TR385" && (
