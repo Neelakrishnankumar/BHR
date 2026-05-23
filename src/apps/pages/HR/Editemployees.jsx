@@ -2572,6 +2572,7 @@ const Editemployee = () => {
     shift: "",
     shift2: "",
     project: "",
+    discount: "",
   });
   const [courseAttendenceData, setCourseAttendenceData] = useState({
     recordID: "",
@@ -2714,6 +2715,7 @@ const Editemployee = () => {
         shift2: "",
         project: "",
         Term:"",
+        discount: "",
       });
       setCourseAttendenceData({
         recordID: "",
@@ -2906,7 +2908,7 @@ const Editemployee = () => {
           Name: rowData.Components.split(",")[index]?.trim() || "",
         }))
       : [],
-          Discount: rowData.Discount || "",
+          discount: rowData.Discount || "",
           project: rowData.ProjectID
             ? {
               RecordID: rowData.ProjectID,
@@ -3674,7 +3676,7 @@ const Editemployee = () => {
       ComponentsAmnt: Array.isArray(values.Components)
         ? values.Components.map((d) => d.Amount).join(",")
         : "",
-        Discount: values.Discount || 0,
+        Discount: values.discount || 0,
       // Vendor:
       //   show == "8"
       //     ? vendorlookup
@@ -3864,6 +3866,7 @@ const Editemployee = () => {
       ComponentsAmnt: Array.isArray(values.Components)
         ? values.Components.map((d) => d.Amount).join(",")
         : "",
+        Discount: values.discount || 0,
       // Vendor:
       //   show == "8"
       //     ? vendorlookup

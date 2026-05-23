@@ -66,7 +66,7 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { tokens } from "../../../Theme";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight, menuHeight } from "../../../ui-components/utils";
 import { useTheme } from "@emotion/react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SaveIcon from "@mui/icons-material/Save";
@@ -408,8 +408,13 @@ const HeaderID = await FnsaveTech(
         value={Teachlookup}
         onChange={handleChange}
         // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-        url={`${listViewurl}?data={"Query":{"AccessID":"2175","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-
+        url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+// sx={{
+//         height: "100%",
+//         "& .MuiOutlinedInput-root": {
+//           height: "100%",
+//         },
+//       }}
       />
     );
   }
@@ -459,7 +464,7 @@ const HeaderID = await FnsaveTech(
         </span>
       ),
       headerAlign: "center",
-      width: 260,
+      width: 230,
       hide: false,
       editable: true,
       sortable: false,
@@ -479,13 +484,29 @@ const HeaderID = await FnsaveTech(
       ),
 
       headerAlign: "center",
-      width: 260,
+      width: 620,
       hide: false,
       editable: true,
       sortable: false,
-      renderCell: (params) => {
-        return params.value?.Name || ""; // show only the name
-      },
+      // renderCell: (params) => {
+      //   return params.value?.Name || ""; // show only the name
+      // },
+renderCell: (params) => (
+    <div
+      style={{
+        height: "100%",
+        maxHeight: "38px", // same as row height
+        overflowY: "auto",
+        overflowX: "hidden",
+        width: "100%",
+        whiteSpace: "normal",
+        wordBreak: "break-word",
+        lineHeight: "18px",
+      }}
+    >
+      {params.value?.Name || ""}
+    </div>
+  ),
       renderEditCell: (params) => {
         return <EditTeacherAutocomplete {...params} />;
       },
@@ -2646,6 +2667,8 @@ function EditToolbarteach(props) {
                                             backgroundColor: "#D3D3D3",
                                             color: "", // Color for even rows
                                         },
+
+                                        
                                     }}
                                 >
                                     <DataGrid
@@ -2654,8 +2677,16 @@ function EditToolbarteach(props) {
                                                 height: dataGridHeaderFooterHeight,
                                                 minHeight: dataGridHeaderFooterHeight,
                                             },
+                                             "& .MuiDataGrid-cell": {
+    alignItems: "start",
+  },
+
+  "& .MuiDataGrid-cell::-webkit-scrollbar": {
+    width: "4px",
+  },
                                         }}
-                                        rowHeight={dataGridRowHeight}
+                                        rowHeight={40}
+                                        // rowHeight={dataGridRowHeight}
                                         headerHeight={dataGridHeaderFooterHeight}
                                         rows={teachrows}
                                         columns={Teachcolumns}

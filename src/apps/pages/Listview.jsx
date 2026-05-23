@@ -5946,12 +5946,13 @@ const Listview = () => {
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
+             {is003Subscription && (
                <Chip
                 icon={<SensorOccupiedIcon color="primary" />}
                 label="Teacher Productivity"
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
-              />
+              />)}
             </Box>
           )
            : accessID == "TR378" ? (
