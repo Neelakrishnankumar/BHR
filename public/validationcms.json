@@ -123,8 +123,13 @@
   },
   "TermFees": {
     "Terms": "Please select the Term",
-    "Standard": "Please select the Standard",
+    "Standard": "Please select the Applicable Standard",
     "Structurename": "Please enter the Structure Name"
+  },
+  "AnnualFees": {
+    "Standard": "Please select the Applicable Standards",
+    "Structurename": "Please enter the Structure Name",
+    "DueDate": "Please enter the Due Date"
   },
   "Employee": {
     "Code": "Please enter the Code",

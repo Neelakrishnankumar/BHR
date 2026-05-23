@@ -144,7 +144,12 @@ const EditTermfeestructure = () => {
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
     const empName = sessionStorage.getItem("EmpName");
     const getRawData = sessionStorage.getItem("ClassificationData");
-
+   const AcademicYearID =
+  !/\d{4}-\d{2}/.test(params.id2 || "")
+    ? params.id2
+    : !/\d{4}-\d{2}/.test(params.id4 || "")
+    ? params.id4
+    : "";
     let ClassificationData = [];
     try {
         const parsed = JSON.parse(getRawData || "[]");
@@ -670,7 +675,7 @@ useEffect(() => {
             StandardID: Array.isArray(values.Standard)
                 ? values.Standard.map((d) => d.RecordID).join(",")
                 : "",                                                     // "4,5"
-            AcademicYearID: params.id2 ? Number(params.id2) : (rowData.AcademicYearID || 0),
+            AcademicYearID: AcademicYearID || 0,
             Term1DueDate: values.term1duedate || null,
             Term2DueDate: values.term2duedate || null,
             Term3DueDate: values.term3duedate || null,
@@ -873,7 +878,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                               {errors.Structurename}
                             </div>
                           )}
-</FormControl>
+                                </FormControl>
                                 {/* Terms → data.TermsList */}
                                 <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
                                 <MultiFormikOptimizedAutocomplete
@@ -893,7 +898,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                             AccessID: "2169",
                                             ScreenName: "Terms",
                                             VerticalLicense: Subscriptionlastthree,
-                                            Filter: `CompanyID='${compID}' AND AcademicYearID='${params.id2}'`,
+                                            Filter: `CompanyID='${compID}' AND AcademicYearID='${AcademicYearID}'`,
                                             Any: "",
                                         },
                                     })}`}
@@ -946,7 +951,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
             <TextField
                 name={fieldName}
                 type="date"
-                label={<>`Term ${termNumber} Due Date`<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                label={<>Term {termNumber} Due Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                 variant="standard"
                 focused
                 value={values[fieldName] || ""}
