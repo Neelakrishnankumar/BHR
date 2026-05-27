@@ -27,7 +27,7 @@ const OuterElementType = React.forwardRef((props, ref) => {
 
 // Custom Listbox component
 const ListboxComponent = React.forwardRef(
-  function ListboxComponent(props, ref) {},
+  function ListboxComponent(props, ref) { },
 );
 
 ListboxComponent.propTypes = {
@@ -115,6 +115,94 @@ export const Productautocomplete = ({
         />
       )}
       {...props}
+    />
+  );
+};
+
+export const EditAutoComplete = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedValue, setSelectedValue] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="medium"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={
+        options.find(
+          (item) => item.RecordID === value || item.EmployeeID === value
+        ) || null
+      }
+      isOptionEqualToValue={(option, val) =>
+        option?.RecordID === val?.RecordID ||
+        option?.EmployeeID === val?.EmployeeID
+      }
+      onChange={(event, newValue) => {
+        onChange?.(event, newValue);
+      }}
+      getOptionLabel={(option) => option?.Name || ""}
+
+      renderOption={(props, option) => (
+        <li {...props} key={option?.RecordID || option?.EmployeeID}>
+          {option?.Name || ""}
+        </li>
+      )}
+
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress
+                    color="inherit"
+                    size={20}
+                  />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
     />
   );
 };
@@ -272,7 +360,7 @@ export const CheckinAutocomplete_v12 = ({
       isOptionEqualToValue={externalIsOptionEqual || defaultIsOptionEqual}
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={externalGetOptionLabel || defaultGetOptionLabel}
-      
+
       // ADD THIS - fixes white text on white background
       // ListboxProps={{
       //   sx: {
@@ -1248,9 +1336,9 @@ export function MultiFormikTwoAutocomplete({
         setOptions(
           Array.isArray(data)
             ? data.map((item) => ({
-                ...item,
-                ProdCatgName: item.ProdCatgName.trim(),
-              }))
+              ...item,
+              ProdCatgName: item.ProdCatgName.trim(),
+            }))
             : [],
         );
       } catch (error) {
@@ -2129,16 +2217,16 @@ export function MultiSelectDropdown1({
             .join(", ");
         }}
 
-        // renderValue={(selected) => {
-        //   if (selected.length === 0) return null;
+      // renderValue={(selected) => {
+      //   if (selected.length === 0) return null;
 
-        //   return selected
-        //     .map((id) => {
-        //       const match = data.find((x) => x.ID === id);
-        //       return match ? match.Name : id;
-        //     })
-        //     .join(", ");
-        // }}
+      //   return selected
+      //     .map((id) => {
+      //       const match = data.find((x) => x.ID === id);
+      //       return match ? match.Name : id;
+      //     })
+      //     .join(", ");
+      // }}
       >
         {data?.map((item) => (
           // <MenuItem key={item.ID} value={item.ID}>
@@ -2443,7 +2531,7 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 
 export const SingleFormikOptimizedAutocomplete = ({
   value = null,
-  onChange = () => {},
+  onChange = () => { },
   url,
   height = 20,
   ...props
@@ -2521,7 +2609,7 @@ export const SingleFormikOptimizedAutocomplete = ({
 
 export const FormikProductautocomplete = ({
   value = null,
-  onChange = () => {},
+  onChange = () => { },
   url,
   height = 20,
   ...props
@@ -3679,16 +3767,16 @@ export function EventsmultiSelect({
       loading={loading}
       renderOption={(props, option, { selected }) => (
         <li {...props} style={{ display: "flex", gap: 2, height: 30 }}>
-          <Checkbox size="small" sx={{ marginLeft: -1 }} 
-          // checked={selected} 
-          checked={
-    option.RecordID === "ALL"
-      ? value.length ===
-        options.filter(
-          (item) => item.RecordID !== "ALL"
-        ).length
-      : selected
-  }
+          <Checkbox size="small" sx={{ marginLeft: -1 }}
+            // checked={selected} 
+            checked={
+              option.RecordID === "ALL"
+                ? value.length ===
+                options.filter(
+                  (item) => item.RecordID !== "ALL"
+                ).length
+                : selected
+            }
           />
           {/* {option.Name} */}
           {`${option.Code} || ${option.Name}`}
@@ -3703,7 +3791,7 @@ export function EventsmultiSelect({
           focused
           // helperText={helper}
           error={Boolean(error)}
-  helperText={helperText || ""}
+          helperText={helperText || ""}
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -3836,16 +3924,16 @@ export function EventsSportsmultiSelect({
       loading={loading}
       renderOption={(props, option, { selected }) => (
         <li {...props} style={{ display: "flex", gap: 2, height: 30 }}>
-          <Checkbox size="small" sx={{ marginLeft: -1 }} 
-          // checked={selected} 
-          checked={
-    option.RecordID === "ALL"
-      ? value.length ===
-        options.filter(
-          (item) => item.RecordID !== "ALL"
-        ).length
-      : selected
-  }
+          <Checkbox size="small" sx={{ marginLeft: -1 }}
+            // checked={selected} 
+            checked={
+              option.RecordID === "ALL"
+                ? value.length ===
+                options.filter(
+                  (item) => item.RecordID !== "ALL"
+                ).length
+                : selected
+            }
           />
           {/* {option.Name} */}
           {`${option.Code} || ${option.Name}`}
@@ -3860,7 +3948,7 @@ export function EventsSportsmultiSelect({
           focused
           // helperText={helper}
           error={Boolean(error)}
-  helperText={helperText || ""}
+          helperText={helperText || ""}
           InputProps={{
             ...params.InputProps,
             endAdornment: (

@@ -67,7 +67,7 @@ const LeaveType = () => {
   const theme = useTheme();
   var recID = params.id;
   var mode = params.Mode;
-   var accessID = params.accessID;
+  var accessID = params.accessID;
   // var accessID ="tr213AC";
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
@@ -526,7 +526,14 @@ const LeaveType = () => {
                     focused
                     value={values.name}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      // allow only letters and spaces
+                      if (/^[a-zA-Z\s]*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
                     // required
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
@@ -646,7 +653,7 @@ const LeaveType = () => {
                     >
                       Save
                     </Button>
-                  )}   
+                  )}
                   {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"

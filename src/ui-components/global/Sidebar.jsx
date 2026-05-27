@@ -258,25 +258,25 @@ const getProjectMenu = (is00123Subscription) =>
     };
 
 
-// const getFeedbackMenu = (is00123Subscription) =>
-//   is00123Subscription    ?   {
-//             name: "Feedbacks/Complaints",
-//             url: "./TR390/Feedback Complaints",
-//             // id: 5594,
-//             icon: (
-//               <Tooltip title="Feedbacks/Complaints">
-//                 <FeedbackOutlinedIcon color="info" />
-//               </Tooltip>
-//             ),
-//             UGA_ADD: true,
-//             UGA_DEL: true,
-//             UGA_MOD: true,
-//             UGA_PRINT: true,
-//             UGA_PROCESS: true,
-//             UGA_VIEW: true,
-//             UGA_ACCESSIDS: "TR390",
-//           }:{}
-        
+const getFeedbackMenu = (is00123Subscription) =>
+  is00123Subscription ? {
+    name: "Feedbacks/Complaints",
+    url: "./TR391/RaiseComplaints",
+    // id: 5594,
+    icon: (
+      <Tooltip title="Feedbacks/Complaints">
+        <FeedbackOutlinedIcon color="info" />
+      </Tooltip>
+    ),
+    UGA_ADD: true,
+    UGA_DEL: true,
+    UGA_MOD: true,
+    UGA_PRINT: true,
+    UGA_PROCESS: true,
+    UGA_VIEW: true,
+    UGA_ACCESSIDS: "TR391",
+  } : {}
+
 
 
 const Item = ({ title, to, icon, selected, setSelected, isChild, state, Tooltipname }) => {
@@ -577,7 +577,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
-           {
+          {
             name: "Slot",
             id: 474,
             url: "./TR376/Slot%20Group",
@@ -722,7 +722,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR265",
           },
-         
+
           {
             name: "Leave Type",
             id: 45680,
@@ -1000,23 +1000,23 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR313",
           },
-          {
-            name: "Enquiry (DME)",
-            id: 4346899,
-            url: "./TR370/DMEnquiry",
-            icon: (
-              <Tooltip title="Digital Marketing Enquiry">
-                <AppShortcutIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR370",
-          },
+          // {
+          //   name: "Enquiry (DME)",
+          //   id: 4346899,
+          //   url: "./TR370/DMEnquiry",
+          //   icon: (
+          //     <Tooltip title="Digital Marketing Enquiry">
+          //       <AppShortcutIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR370",
+          // },
           {
             name: "Lead Enquiry",
             id: 4346899,
@@ -1252,7 +1252,7 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR259",
           },
 
-        //  getFeedbackMenu(is003Subscription),
+          getFeedbackMenu(is003Subscription),
 
           {
             name: "Timesheet",
@@ -1271,23 +1271,23 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
           },
-          // {
-          //   name: "Events",
-          //   url: "/Apps/TR383/Academic Year",
-          //   id: 5595,
-          //   icon: (
-          //     <Tooltip title="Events">
-          //       <NotificationAddOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR383",
-          // },
+          {
+            name: "Events",
+            url: "/Apps/TR383/Academic Year",
+            id: 5595,
+            icon: (
+              <Tooltip title="Events">
+                <NotificationAddOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR383",
+          },
           {
             name: "Invoice",
             // url: "/Apps/TR250/Invoice",
@@ -1382,26 +1382,26 @@ const Sidebars = () => {
       //   ],
       // },
 
-      {
-        name: "Assessment",
-        id: 4579,
-        MenuID: "ST1609",
-        Tooltipname: "Assessment",
-        icon: (
-          <Tooltip title="Assessment">
-            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        url: "/Apps/TR299/List Of Assessment Type",
-        UGA_ADD: true,
-        UGA_DEL: true,
-        UGA_MOD: true,
-        UGA_PRINT: true,
-        UGA_PROCESS: true,
-        UGA_VIEW: true,
-        UGA_ACCESSIDS: "TR299",
+      // {
+      //   name: "Assessment",
+      //   id: 4579,
+      //   MenuID: "ST1609",
+      //   Tooltipname: "Assessment",
+      //   icon: (
+      //     <Tooltip title="Assessment">
+      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   url: "/Apps/TR299/List Of Assessment Type",
+      //   UGA_ADD: true,
+      //   UGA_DEL: true,
+      //   UGA_MOD: true,
+      //   UGA_PRINT: true,
+      //   UGA_PROCESS: true,
+      //   UGA_VIEW: true,
+      //   UGA_ACCESSIDS: "TR299",
 
-      },
+      // },
       {
         name: "Document",
         id: 43468,

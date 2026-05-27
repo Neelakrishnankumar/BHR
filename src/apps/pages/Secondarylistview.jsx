@@ -305,7 +305,7 @@ const ListviewSecondary = () => {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR391") {
-     filter = `CompanyID='${compID}' AND CategoryID='${leaderID}'`;
+     filter = `CompanyID='${compID}' `; //AND CategoryID='${leaderID}'
      console.log("🚀 ~ FeedbackListviewSecondary ~ filter:",  filter)
   }
   else if (accessID == "TR384") {
@@ -2320,7 +2320,7 @@ const ListviewSecondary = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      navigate("/Apps/TR390/Feedback Complaints");
+                      navigate("/Apps/TR391/Feedback Complaints");
                     }}
                   >
                     FeedBack/Complaints 

@@ -1367,11 +1367,11 @@ function App() {
                     element={<EditAttendance />}
                   />
 
-                  {/* <Route
+                  <Route
                     // path="/:accessID/RaiseComplaints"
-                    path="/Secondarylistview/:accessID/:screenName/:parentID/EditRaiseComplaints/:id/:Mode"
+                    path="/:accessID/RaiseComplaints/EditRaiseComplaints/:id/:Mode"
                     element={<RaiseComplaints />}
-                  />   */}
+                  />  
 
                   <Route
                     path="/Event Category"

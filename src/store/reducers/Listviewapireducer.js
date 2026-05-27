@@ -2262,7 +2262,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR390") {
+            else if (AccessID == "TR391") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2278,11 +2278,12 @@ export const fetchListview =
                     <Box>
                       <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-                        to={`/Apps/SecondarylistView/TR391/RaiseComplaints/${params.row.RecordID}`}
+                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+                         state={{ rowData: params.row }}
                       >
-                        <Tooltip title="View">
+                        <Tooltip title="Edit">
                           <IconButton color="info" size="small">
-                            <VisibilityIcon />
+                            <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
