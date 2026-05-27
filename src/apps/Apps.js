@@ -417,6 +417,11 @@ function App() {
                     element={<InvoiceAnalytics />}
                   />
                   {/* SKILL GLOW */}
+                   {/* Academictype */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:parentID2/:screenName/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
 
                   {/* SCHEDULE */}
                   <Route
@@ -435,7 +440,7 @@ function App() {
                     element={<ListviewSecondary />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID2/:screenName2/:parentID2/:screenName1/:accessID1/:parentID1/:screenName/:accessID/:parentID"
+                    path="/Secondarylistview/:accessID2/:screenName2/:parentID2/:Type1/:screenName1/:accessID1/:parentID1/:screenName/:accessID/:parentID"
                     element={<ListviewSecondary />}
                   />
                   {/* /Apps/SecondarylistView/TR275/Project/2/Academic%20Type/TR386/L/Termwise/TR387/1 */}
@@ -479,6 +484,9 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/:parentID1"
                     element={<ListviewSecondary />}
                   />
+
+                  
+                 
                   {/* EMERGENCY */}
                   <Route
                     path="/Secondarylistview/:accessID1/:screenName1/:parentID3/:screenName/:accessID/:parentID2/E/EditEvents/:id/:Mode"
@@ -837,10 +845,10 @@ function App() {
                     path="/:accessID/:screenName/EditLeave Type/:id/:Mode"
                     element={<LeaveType />}
                   />
-                  {/* <Route
+                  <Route
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
-                  /> */}
+                  />
                   {/* <Route
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     // element={<Circular />}
@@ -1321,7 +1329,7 @@ function App() {
                     element={<Editfixedasset />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditProject/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:filtertype1/EditProject/:id/:Mode"
                     element={<Editproject />}
                   />
                   <Route
@@ -1611,11 +1619,11 @@ function App() {
                   />
                    <Route
                   //  /Apps/SecondarylistView/TR275/Project/2/Academic%20Type/TR386/L/Fees%20Structure/TR387/2/EditFees%20Structure/-1/A
-                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditTerm Fees Structure/:id/:Mode"
+                  path="/Secondarylistview/:accessID2/Project/:id4/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditTerm Fees Structure/:id/:Mode"
                   element={<EditTermfeesstructure />}
                   />
                    <Route
-                  path="/Secondarylistview/:accessID2/Project/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditAnnual Fees Structure/:id/:Mode"
+                  path="/Secondarylistview/:accessID2/Project/:id4/:id2/:screenName1/:accessID2/L/:screenName/:accessID/:id1/EditAnnual Fees Structure/:id/:Mode"
                   element={<EditAnnualfeestructure />}
                   />
                   <Route

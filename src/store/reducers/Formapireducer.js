@@ -1295,6 +1295,37 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   },
 );
+export const getFetchFeeData = createAsyncThunk(
+  "Feestructure/Header",
+  async ({ accessID, get, recID, AcademicType }) => {
+    var url = store.getState().globalurl.apiUrl;
+
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+      AcademicType: AcademicType,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 
 export const getFetchData_v1 = createAsyncThunk(
   "allScreen_v1/Header_v1",
@@ -2975,6 +3006,28 @@ export const TimeTableDelete = createAsyncThunk(
     }
   }
 );
+export const FeesStructureDelete = createAsyncThunk(
+  "Standard/FeesStructureDelete",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.FeesStructureDelete;
+
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 
 
@@ -3424,31 +3477,28 @@ export const getApiSlice = createSlice({
         state.loading = false;
       })
 
-      // .addCase(getFetchData.pending, (state, action) => {
-      //   state.Status = "idle";
-      //   state.getLoading = true;
-      //   state.Data = {};
-      //   state.msg = "Loading...";
-      // })
-      // .addCase(getFetchData.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.getLoading = false;
-      //   state.Data = action.payload.Data ? action.payload.Data : {};
-      //   // state.msg =  action.payload.Msg
-      // })
-      // .addCase(getFetchData.rejected, (state, action) => {
-      //   state.Status = "Error";
-      //   state.getLoading = false;
-      //   state.Data = {};
-      //   toast.error("Something Went Wrong");
-      // })
-      
- .addCase(getFetchData_v1.pending, (state) => {
+      .addCase(getFetchFeeData.pending, (state, action) => {
         state.Status = "idle";
         state.getLoading = true;
         state.msg = "Loading...";
       })
-
+      .addCase(getFetchFeeData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(getFetchFeeData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        // toast.error("Something Went Wrong");
+      })
+      .addCase(getFetchData_v1.pending, (state) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.msg = "Loading...";
+      })
+ 
       .addCase(getFetchData_v1.fulfilled, (state, action) => {
         console.log("API SUCCESS", action.payload);
         state.Status = "success";
@@ -3456,17 +3506,14 @@ export const getApiSlice = createSlice({
         state.Data = action.payload?.Data || {};
         state.Department = action.payload || [];
         console.log(action.payload, "------getfetch department in formapi");
-        
+       
       })
-
+ 
       .addCase(getFetchData_v1.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
         toast.error("Something Went Wrong");
       })
-
-
-
       .addCase(getFetchData.pending, (state) => {
         state.Status = "idle";
         state.getLoading = true;

@@ -215,8 +215,8 @@ const getPersonnelMenu = (is00123Subscription) =>
       UGA_VIEW: true,
       UGA_ACCESSIDS: "TR027",
     };
-const getProjectMenu = (is00123Subscription) =>
-  is00123Subscription
+const getProjectMenu = (is003Subscription) =>
+  is003Subscription == true
     ? {
 
       name: "Project",
@@ -669,7 +669,7 @@ const Sidebars = () => {
           //   UGA_VIEW: true,
           //   UGA_ACCESSIDS: "TR275",
           // },
-          getProjectMenu(is00123Subscription),
+          getProjectMenu(is003Subscription),
 
           {
             name: "Functions",

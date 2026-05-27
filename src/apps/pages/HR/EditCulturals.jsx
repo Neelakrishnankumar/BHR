@@ -259,10 +259,31 @@ const EditCulturals = () => {
     };
 
     const getFileChange = async (event) => {
-        setCulturalImage(event.target.files[0]);
+        // setCulturalImage(event.target.files[0]);
 
-        console.log(event.target.files[0]);
+        // console.log(event.target.files[0]);
 
+         const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/webp",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error(
+                "Only Images, PDF and DOCX files are allowed"
+            );
+            return;
+        }
+
+        setCulturalImage(file);
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
         formData.append("type", "images");
@@ -393,7 +414,7 @@ const EditCulturals = () => {
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
                             >
-                                {mode === "E" ? "Add (Culturals)" : "Edit (Culturals)"}
+                                {mode === "E" ? "Add (Cultural)" : "Edit (Cultural)"}
                             </Typography>
                         </Breadcrumbs>
                     </Box>
@@ -748,7 +769,7 @@ const EditCulturals = () => {
                                                         color: "#6B7280",
                                                     }}
                                                 >
-                                                    Attach Syllabus (PDF)
+                                                    Attach File
                                                 </Typography>
 
                                                 <Box
@@ -771,7 +792,9 @@ const EditCulturals = () => {
                                                     <input
                                                         hidden
                                                         type="file"
-                                                        accept=".pdf"
+                                                        // accept=".pdf"
+                                                        accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
                                                         // onChange={(event) => {
                                                         //     const file = event.currentTarget.files[0];
                                                         //     setFieldValue("SyllabusFile", file);
@@ -783,7 +806,7 @@ const EditCulturals = () => {
                                                         fontSize="14px"
                                                         color="#6B7280"
                                                     >
-                                                        Click to upload PDF
+                                                        Click to upload file
                                                     </Typography>
                                                 </Box>
 

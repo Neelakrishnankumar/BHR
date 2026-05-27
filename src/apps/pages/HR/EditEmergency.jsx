@@ -62,7 +62,7 @@ const EditEmergency = () => {
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
-        const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+    const imageLoading = useSelector((state) => state.imageApi.imgLoading);
     const uploadLoading = useSelector((state) => state.imageApi.videoLoading);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
@@ -85,7 +85,7 @@ const EditEmergency = () => {
 
     useEffect(() => {
         dispatch(EventsgetData({ accessID: "TR385", get: "get", recID, Type: "E" }));
-        setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific ||"Y");
+        setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific || "Y");
         setEmergencyImage(mode === "A" ? "" : data?.Attachment || "");
     }, [location.key, mode]);
 
@@ -203,11 +203,11 @@ const EditEmergency = () => {
             NotifySms: values.SMS === true ? "Y" : "N",
             NotifyEmail: values.Email === true ? "Y" : "N",
             AcknowledgementRequired: values.Acknowledgement === true ? "Y" : "N",
-            Attachment:emergencyImage || "",
-            CreatedBy:LoginID,
+            Attachment: emergencyImage || "",
+            CreatedBy: LoginID,
         };
-        
-        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "E", idata,CompanyID }));
+
+        const response = await dispatch(EventspostData({ accessID: "TR385", action, Type: "E", idata, CompanyID }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
             navigate(-1);
@@ -251,9 +251,30 @@ const EditEmergency = () => {
     };
 
     const getFileChange = async (event) => {
-        setEmergencyImage(event.target.files[0]);
+        // setEmergencyImage(event.target.files[0]);
 
-        console.log(event.target.files[0]);
+        // console.log(event.target.files[0]);
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/webp",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            toast.error(
+                "Only Images, PDF and DOCX files are allowed"
+            );
+            return;
+        }
+
+        setEmergencyImage(file);
 
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
@@ -734,7 +755,7 @@ const EditEmergency = () => {
                                                         color: "#6B7280",
                                                     }}
                                                 >
-                                                    Attach Emergency (PDF)
+                                                    Attach Emergency
                                                 </Typography>
 
                                                 <Box
@@ -757,7 +778,8 @@ const EditEmergency = () => {
                                                     <input
                                                         hidden
                                                         type="file"
-                                                        accept=".pdf"
+                                                        // accept=".pdf"
+                                                        accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                         // onChange={(event) => {
                                                         //     const file = event.currentTarget.files[0];
                                                         //     setFieldValue("SyllabusFile", file);
@@ -769,7 +791,7 @@ const EditEmergency = () => {
                                                         fontSize="14px"
                                                         color="#6B7280"
                                                     >
-                                                        Click to upload PDF
+                                                        Click to upload file
                                                     </Typography>
                                                 </Box>
 

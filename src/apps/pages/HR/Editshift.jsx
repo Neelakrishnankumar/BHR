@@ -136,11 +136,33 @@ const Editshift = () => {
 
         return defaultCaption;
     };
+
+    const convertTo24Hour = (time12) => {
+    if (!time12) return "";
+    const [time, modifier] = time12.trim().split(" ");
+    if (!modifier) return time12; // already 24hr format, return as-is
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours, 10);
+    if (modifier === "AM" && hours === 12) hours = 0;
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    return `${String(hours).padStart(2, "0")}:${minutes}`;
+};
+        const convertTo12Hour = (time24) => {
+    if (!time24) return "";
+    const [hourStr, minute] = time24.split(":");
+    let hour = parseInt(hourStr, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12; // Convert 0 → 12, 13 → 1, etc.
+    return `${String(hour).padStart(2, "0")}:${minute} ${ampm}`;
+};
+
     const InitialValue = {
         code: data.Code,
         name: data.Description,
-        starttime: data.ShiftstartTime,
-        endtime: data.ShiftendTime,
+        // starttime: data.ShiftstartTime,
+        // endtime: data.ShiftendTime,
+          starttime: convertTo24Hour(data.ShiftstartTime),  // ✅ "08:18 AM" → "08:18"
+    endtime: convertTo24Hour(data.ShiftendTime),        // ✅ "09:18 AM" → "09:18"
         weekoff: data.WeekOff,
         sortorder: data.Sortorder,
         disable: data.Disable === "Y" ? true : false,
@@ -153,6 +175,7 @@ const Editshift = () => {
         sunday: data.Sunday === "Y" ? true : false,
         delete: data.DeleteFlag === "Y" ? true : false
     };
+
 
     const Fnsave = async (values, del) => {
         setLoading(true);
@@ -170,8 +193,10 @@ const Editshift = () => {
             RecordID: recID,
             Code: values.code,
             Name: values.name,
-            StartTime: values.starttime,
-            EndTime: values.endtime,
+            StartTime: convertTo12Hour(values.starttime),  // ✅ "07:00 AM"
+            EndTime: convertTo12Hour(values.endtime),        // ✅ "07:30 AM"
+            // StartTime: values.starttime,
+            // EndTime: values.endtime,
             SortOrder: values.sortorder || 0,
             //WeekOff: values.weekoff,
             Monday: values.monday === true ? "Y" : "N",
@@ -366,9 +391,15 @@ const Editshift = () => {
                                         name="name"
                                         type="text"
                                         id="name"
+                                        // label={
+                                        //     <>
+                                        //         {getBusinessCaption("Description", "Description")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        //     </>
+                                        // }
+
                                         label={
                                             <>
-                                                {getBusinessCaption("Description", "Description")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                {getBusinessCaption("Shift", "Shift")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                             </>
                                         }
                                         // label={getBusinessCaption("Description", "Description")}
@@ -412,11 +443,16 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             error={!!touched.starttime && !!errors.starttime}
                                             helperText={touched.starttime && errors.starttime}
-                                            label={
-                                                <>
-                                                    Shift Start Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                                </>
-                                            }
+                                               label={
+                                            <>
+                                                {getBusinessCaption("Shift Start Time", "Shift Start Time")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            </>
+                                        }
+                                            // label={
+                                            //     <>
+                                            //         Shift Start Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            //     </>
+                                            // }
                                             focused
                                         // required
                                         // inputProps={{ maxLength:20}}
@@ -443,11 +479,16 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             error={!!touched.endtime && !!errors.endtime}
                                             helperText={touched.endtime && errors.endtime}
-                                            label={
-                                                <>
-                                                    Shift End Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                                </>
-                                            }
+                                                label={
+                                            <>
+                                                {getBusinessCaption("Shift End Time", "Shift End Time")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            </>
+                                        }
+                                            // label={
+                                            //     <>
+                                            //         Shift End Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            //     </>
+                                            // }
                                             focused
                                         // required
                                         // inputProps={{ readOnly: true }}
