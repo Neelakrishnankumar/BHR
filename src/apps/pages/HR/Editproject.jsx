@@ -158,6 +158,9 @@ const [detailrecid, setDetailrecid] = useState(null);
 const [teachrows, setTeachrows] = useState([]);
  const [rowModesModelteach, setRowModesModelteach] = React.useState({});
 
+ const isRowEditing = Object.values(rowModesModelteach).some(
+  (row) => row.mode === GridRowModes.Edit
+);
    const validateRowTT = (row) => {
    
     if (!row.Department) {
@@ -488,25 +491,25 @@ const HeaderID = await FnsaveTech(
       hide: false,
       editable: true,
       sortable: false,
-      // renderCell: (params) => {
-      //   return params.value?.Name || ""; // show only the name
-      // },
-renderCell: (params) => (
-    <div
-      style={{
-        height: "100%",
-        maxHeight: "38px", // same as row height
-        overflowY: "auto",
-        overflowX: "hidden",
-        width: "100%",
-        whiteSpace: "normal",
-        wordBreak: "break-word",
-        lineHeight: "18px",
-      }}
-    >
-      {params.value?.Name || ""}
-    </div>
-  ),
+      renderCell: (params) => {
+        return params.value?.Name || ""; // show only the name
+      },
+// renderCell: (params) => (
+//     <div
+//       style={{
+//         height: "100%",
+//         maxHeight: "38px", // same as row height
+//         overflowY: "auto",
+//         overflowX: "hidden",
+//         width: "100%",
+//         whiteSpace: "normal",
+//         wordBreak: "break-word",
+//         lineHeight: "18px",
+//       }}
+//     >
+//       {params.value?.Name || ""}
+//     </div>
+//   ),
       renderEditCell: (params) => {
         return <EditTeacherAutocomplete {...params} />;
       },
@@ -1053,7 +1056,8 @@ const formikRef = useRef();
       RoutineTasks: values.Routine === true ? "Y" : "N",
       // RoutineTasks: "N",
       SortOrder: values.sortorder || 0,
-      CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+      // CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+      CurrentStatus: "",
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
       //  ByProduct: values.ByProduct == true ? "Y" : "N",
@@ -1665,7 +1669,7 @@ const formikRef = useRef();
 
 //STUDENT-TEACHER MAPPING 
 function EditToolbarteach(props) {
-  const { setTeachrows, setRowModesModelteach } = props; // ✅ fix: was setRowModesModel
+  const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
 
   const handleClickteach = () => {
     const id = nanoid();
@@ -1688,6 +1692,7 @@ function EditToolbarteach(props) {
   return (
     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
       <Button 
+       disabled={isRowEditing} 
       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
        sx={{ textTransform: "capitalize",fontSize: "14px" }}
       >
@@ -1897,7 +1902,9 @@ function EditToolbarteach(props) {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-
+                     InputLabelProps={{
+                      shrink: true,
+                    }}
                     // autoFocus
                     />
                   ) : (
@@ -1923,6 +1930,9 @@ function EditToolbarteach(props) {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       autoFocus
+                       InputLabelProps={{
+                      shrink: true,
+                    }}
                     />
                   )}
 
@@ -1950,6 +1960,9 @@ function EditToolbarteach(props) {
                     helperText={touched.name && errors.name}
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
 
                   <CheckinAutocomplete
@@ -2097,8 +2110,9 @@ function EditToolbarteach(props) {
                     onBlur={handleBlur}
                     onChange={handleChange}
                   /> */}
-
-                  <TextField
+{Subscriptionlastthree != "003" ? (
+  <>
+    <TextField
                     disabled={isHeaderDisabled || mode == "V"}
                     labelId="demo"
                     id="CurrentStatus"
@@ -2131,11 +2145,18 @@ function EditToolbarteach(props) {
                         setFieldValue("disable", true);
                       }
                     }}
+
+                                       InputLabelProps={{
+  shrink: true,
+}}
                   >
                     <MenuItem value="CU">Current</MenuItem>
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
+  </>
+): null}
+                
 
                   <TextField
                     disabled={isHeaderDisabled || mode == "V"}
@@ -2156,6 +2177,9 @@ function EditToolbarteach(props) {
                         style: { textAlign: "right" },
                       },
                     }}
+                    InputLabelProps={{
+  shrink: true,
+}}
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
                       e.target.value = Math.max(0, parseInt(e.target.value))
@@ -2627,6 +2651,30 @@ function EditToolbarteach(props) {
                     </>
                 ) : null}
 
+{Subscriptionlastthree === "003" && (
+  <>
+   <Box display="flex" justifyContent="end" padding={1} gap="20px">
+               
+                  <Button
+                   sx={{
+    backgroundColor: "#009688",
+    color: "#FFFFFF",
+    "&:hover": {
+      backgroundColor: "#009688", // same color on hover
+    },
+  }}
+                    // color="success"
+                    variant="contained"
+                    onClick={() => {
+                      // navigate("/Apps/TR133/Project");
+                      navigate(-1);
+                    }}
+                  >
+                    Back
+                  </Button>
+                </Box>
+                </>
+)}
 
 {Subscriptionlastthree === "003" && (
   <>
@@ -2641,7 +2689,9 @@ function EditToolbarteach(props) {
                                         },
                                         "& .MuiDataGrid-cell": {
                                             borderBottom: "none",
+                                            
                                         },
+    
                                         "& .name-column--cell": {
                                             color: colors.greenAccent[300],
                                         },
@@ -2677,15 +2727,9 @@ function EditToolbarteach(props) {
                                                 height: dataGridHeaderFooterHeight,
                                                 minHeight: dataGridHeaderFooterHeight,
                                             },
-                                             "& .MuiDataGrid-cell": {
-    alignItems: "start",
-  },
-
-  "& .MuiDataGrid-cell::-webkit-scrollbar": {
-    width: "4px",
-  },
+                                          
                                         }}
-                                        rowHeight={40}
+                                        rowHeight={35}
                                         // rowHeight={dataGridRowHeight}
                                         headerHeight={dataGridHeaderFooterHeight}
                                         rows={teachrows}
@@ -2718,7 +2762,7 @@ function EditToolbarteach(props) {
                                             Toolbar: EditToolbarteach,
                                         }}
                                       componentsProps={{
-                                                toolbar: { setTeachrows, setRowModesModelteach }, // ✅ was setRowModesModel (wrong one)
+                                                toolbar: { setTeachrows, setRowModesModelteach, isRowEditing }, // ✅ was setRowModesModel (wrong one)
                                               }}
                                         rowsPerPageOptions={[5, 10, 20]}
                                         getRowClassName={(params) =>

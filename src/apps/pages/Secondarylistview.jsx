@@ -411,7 +411,7 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR288") {
     filter = `EmployeeID ='${parentID1}'AND CompanyID = '${compID}'`;
   } else if (accessID == "TR294") {
-    filter = `AssessmentType ='${parentID1}'`;
+    filter = `AssessmentType ='${parentID1}' AND CompanyID = '${compID}'`;
   }
   // else if (accessID == "TR305") {
   //   filter = `CompanyID = '${compID}'`;

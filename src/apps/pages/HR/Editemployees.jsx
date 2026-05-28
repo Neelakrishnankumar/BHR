@@ -528,7 +528,6 @@ const Editemployee = () => {
         toast.success(response.payload.Msg);
         setLoading(false);
         setScreen("19");
-        dispatch(SOPConfigGet({ EmployeeID: recID, CompanyID: CompanyID }));
       } else {
         toast.error(response.payload.Msg);
       }
@@ -1533,6 +1532,7 @@ const Editemployee = () => {
 
   // **********ScreenChange Function*********
   const screenChange = (event) => {
+
     setScreen(event.target.value);
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
@@ -2561,6 +2561,8 @@ const Editemployee = () => {
     unitrate: "",
     alertdate: "",
     renewalperiod: "",
+    Components: "",
+    Term:"",
     vendor: "",
     hsnCode: "",
     cgst: "",
@@ -2570,6 +2572,7 @@ const Editemployee = () => {
     shift: "",
     shift2: "",
     project: "",
+    discount: "",
   });
   const [courseAttendenceData, setCourseAttendenceData] = useState({
     recordID: "",
@@ -2702,7 +2705,7 @@ const Editemployee = () => {
             Name: ParentgetData.Name,
           }
           : null,
-
+        Components: "",
         hsnCode: "",
         cgst: "",
         sgst: "",
@@ -2711,6 +2714,8 @@ const Editemployee = () => {
         shift: "",
         shift2: "",
         project: "",
+        Term:"",
+        discount: "",
       });
       setCourseAttendenceData({
         recordID: "",
@@ -2738,6 +2743,7 @@ const Editemployee = () => {
       console.log(rowData, "--rowData");
       console.log(rowData.Description, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
+
       if (field == "action") {
         setFunEmpRecID(rowData.RecordID);
         // SetFunctionLookup({
@@ -2880,6 +2886,29 @@ const Editemployee = () => {
               Name: rowData.VendorName,
             }
             : null,
+             Term: rowData.TermID
+            ? {
+              RecordID: rowData.TermID,
+              Code: rowData.TermCode,
+              Name: rowData.Term,
+            }
+            : null,
+          // Components: Array.isArray(rowData?.CompanentsList)
+          //   ? rowData.CompanentsList.map((d) => ({
+          //     RecordID: String(d.RecordID),
+          //     Code: d.Code || "",
+          //     Name: d.ComponentName || d.Code || String(d.RecordID),
+          //     // Amount: d.Amount || 0,
+          //   }))
+          //   : [],
+            Components:
+    rowData.FSDetailID && rowData.Components
+      ? rowData.FSDetailID.split(",").map((id, index) => ({
+          RecordID: id.trim(),
+          Name: rowData.Components.split(",")[index]?.trim() || "",
+        }))
+      : [],
+          discount: rowData.Discount || "",
           project: rowData.ProjectID
             ? {
               RecordID: rowData.ProjectID,
@@ -3576,6 +3605,9 @@ const Editemployee = () => {
   const ContractInitialValue = {
     Code: Data.Code,
     Name: Data.Name,
+    Discount: contractorData.Discount,
+    Term: contractorData.Term || null,
+    Components: contractorData.Components || [],
     FromPeriod: contractorData.fromperiod,
     ToPeriod: contractorData.toperiod,
     DueDate: contractorData.DueDate,
@@ -3633,6 +3665,18 @@ const Editemployee = () => {
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
+      HeaderID: values?.Term?.Header || 0,
+      DetailID: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.RecordID).join(",")
+        : "",
+      TermID: values?.Term?.RecordID || 0,
+      Components: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.Name).join(",")
+        : "",
+      ComponentsAmnt: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.Amount).join(",")
+        : "",
+        Discount: values.discount || 0,
       // Vendor:
       //   show == "8"
       //     ? vendorlookup
@@ -3811,6 +3855,18 @@ const Editemployee = () => {
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
+      HeaderID: values?.Term?.Header || 0,
+      DetailID: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.RecordID).join(",")
+        : "",
+      TermID: values?.Term?.RecordID || 0,
+      Components: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.Name).join(",")
+        : "",
+      ComponentsAmnt: Array.isArray(values.Components)
+        ? values.Components.map((d) => d.Amount).join(",")
+        : "",
+        Discount: values.discount || 0,
       // Vendor:
       //   show == "8"
       //     ? vendorlookup
@@ -6652,7 +6708,8 @@ const Editemployee = () => {
                       value={values.FatherName}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Father's Name"
+                      label={state.Classification != "Student" ? "Father's Name / Spouse Name" : "Father's Name" }
+                      // label="Father's Name"
                       sx={{
                         //gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -13412,86 +13469,306 @@ const Editemployee = () => {
                         <MenuItem value="MS">Month</MenuItem>
                         {is003Subscription && [
                           <MenuItem key="TF" value="TF">Term Fees</MenuItem>,
+                          <MenuItem key="AF" value="AF">Annual Fees</MenuItem>,
                           <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                         ]}
                       </TextField>
-                    
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        // type="number"
-                        type="text"
-                        inputMode="decimal"
-                        value={values.UnitRate}
-                        id="UnitRate"
-                        name="UnitRate"
-                        label={
-                          (values.BillingUnits === "OF" || values.BillingUnits === "TF") ?
-                            (<span>
-                              Amount
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </span>) : (
+                      {(values.BillingUnits == "TF" || contractorData.units == "Term Fees") && isStudentClassification ? (
+                        <>
+                          <CheckinAutocomplete
+                            id="Term"
+                            name="Term"
+                            label="Term"
+                            variant="outlined"
+                            value={values.Term}
+                            onChange={(newValue) => {
+                              setFieldValue("Term", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                                Header: newValue.HeaderID,
+                                Term1DueDate: newValue.Term1DueDate,
+                                Term2DueDate: newValue.Term2DueDate,
+                                Term3DueDate: newValue.Term3DueDate,
+                                Term4DueDate: newValue.Term4DueDate,
+                                FromDate: newValue.FromDate,
+                                ToDate: newValue.ToDate,
+                                TermsID: newValue.TermsID
 
-                              <span>
-                                Unit Rate
+                              });
+                              const dueDate =
+                                newValue?.Term1DueDate ||
+                                newValue?.Term2DueDate ||
+                                newValue?.Term3DueDate ||
+                                newValue?.Term4DueDate ||
+                                "";
+
+                              // Set DueDate separately
+                              setFieldValue("DueDate", dueDate);
+                              setFieldValue("FromPeriod", newValue.FromDate);
+                              setFieldValue("ToPeriod", newValue.ToDate);
+                            }}
+                            error={!!touched.Term && !!errors.Term}
+                            helperText={touched.Term && errors.Term}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2188",
+                                ScreenName: "Term",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `CategoryType = 'T' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{
+                              width: "100%",
+                              gridColumn: "span 2",
+                            }}
+                            multiple
+                            name="Components"
+                            label="Component"
+                            id="Components"
+                            value={values.Components || []}
+                            onChange={(e, newValue) => {
+                              // Store selected components
+                              setFieldValue("Components", newValue);
+
+                              // Calculate total amount
+                              const totalAmount = newValue.reduce(
+                                (sum, item) => sum + Number(item.Amount || 0),
+                                0
+                              );
+
+                              // Apply discount
+                              const discount = Number(values.discount || 0);
+
+                              const finalAmount =
+                                totalAmount - (totalAmount * discount) / 100;
+
+                              // Set amount field
+                              setFieldValue("UnitRate", finalAmount.toFixed(2));
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                              String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Components && !!errors.Components}
+                            helperText={touched.Components && errors.Components}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2189",
+                                ScreenName: "Components",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `HeaderID='${values?.Term?.Header}' AND TermID='${values?.Term?.TermsID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
+                          {/* <MultiFormikOptimizedAutocomplete
+                            sx={{
+                              width: "100%",
+                              gridColumn: "span 2",
+                            }}
+                            name="Components"
+                            label="Component"
+                            id="Components"
+                            value={values.Components}
+                            onChange={(e, newValue) => {
+                              setFieldValue("Components", newValue, true);
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                              String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Components && !!errors.Components}
+                            helperText={touched.Components && errors.Components}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2189",
+                                ScreenName: "Components",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `HeaderID=${values?.Term?.Header}`,
+                                Any: "",
+                              },
+                            })}`}
+                          /> */}
+                        </>
+                      ) : null}
+                      {(values.BillingUnits == "AF" || contractorData.units == "Annual Fees") && isStudentClassification ? (
+                        <MultiFormikOptimizedAutocomplete
+                          sx={{
+                            width: "100%",
+                            gridColumn: "span 2",
+                          }}
+                          name="Components"
+                          label="Component"
+                          id="Components"
+                          value={values.Components}
+                          onChange={(e, newValue) => {
+                            setFieldValue("Components", newValue, true);
+                          }}
+                          isOptionEqualToValue={(option, value) =>
+                            String(option.RecordID) === String(value.RecordID)
+                          }
+                          error={!!touched.Components && !!errors.Components}
+                          helperText={touched.Components && errors.Components}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2190",
+                              ScreenName: "Components",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                              Any: "",
+                            },
+                          })}`}
+                        />
+                      ) : null}
+
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            (values.BillingUnits === "AF" || values.BillingUnits === "TF") && isStudentClassification
+                              ? "1fr 1fr"
+                              : "1fr",
+                          gap: 2,
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          inputMode="decimal"
+                          value={values.UnitRate}
+                          id="UnitRate"
+                          name="UnitRate"
+                          label={
+                            (values.BillingUnits === "OF" || values.BillingUnits === "TF") ?
+                              (<span>
+                                Amount
                                 <span style={{ color: "red", fontSize: "20px" }}>
                                   *
                                 </span>
-                              </span>
-                            )
-                        }
-                        // required
-                        onChange={(e) => {
-                          const val = e.target.value;
+                              </span>) : (
 
-                          // Allow numbers with optional decimal (up to 2 digits)
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("UnitRate", val);
+                                <span>
+                                  Unit Rate
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </span>
+                              )
                           }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
+                          // required
+                          onChange={(e) => {
+                            const val = e.target.value;
 
-                          if (val === "" || val === ".") {
-                            setFieldValue("UnitRate", "0.00");
-                            return;
-                          }
+                            // Allow numbers with optional decimal (up to 2 digits)
+                            if (/^\d*\.?\d{0,2}$/.test(val)) {
+                              setFieldValue("UnitRate", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            handleBlur(e);
+                            let val = e.target.value;
 
-                          // Ensure decimal exists
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
+                            if (val === "" || val === ".") {
+                              setFieldValue("UnitRate", "0.00");
+                              return;
+                            }
 
-                          const num = Number(val);
+                            // Ensure decimal exists
+                            if (!val.includes(".")) {
+                              val = `${val}.00`;
+                            }
 
-                          // ✅ Force exactly 2 decimals
-                          setFieldValue("UnitRate", num.toFixed(2));
-                        }}
-                        error={!!touched.UnitRate && !!errors.UnitRate}
-                        helperText={touched.UnitRate && errors.UnitRate}
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        //   }
-                        // }}
-                        focused
-                        InputProps={{
-                          inputProps: {
-                            style: {
-                              textAlign: "right",
+                            const num = Number(val);
+
+                            setFieldValue("UnitRate", num.toFixed(2));
+                          }}
+                          error={!!touched.UnitRate && !!errors.UnitRate}
+                          helperText={touched.UnitRate && errors.UnitRate}
+                          focused
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                              },
                             },
-                          },
-                        }}
-                        // onWheel={(e) => e.target.blur()}
-                        // multiline
-                        inputProps={{ maxLength: 90 }}
-                      />
+                          }}
+                          inputProps={{ maxLength: 90 }}
+                        />
+                        {isStudentClassification && (
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="number"
+                            inputMode="decimal"
+                            value={values.discount}
+                            id="discount"
+                            name="discount"
+                            label="Discount in (%)"
+                            onChange={(e) => {
+                              const discount = Number(e.target.value || 0);
 
+                              setFieldValue("discount", e.target.value);
+
+                              // Recalculate from selected components
+                              const totalAmount = (values.Components || []).reduce(
+                                (sum, item) => sum + Number(item.Amount || 0),
+                                0
+                              );
+
+                              const finalAmount =
+                                totalAmount - (totalAmount * discount) / 100;
+
+                              setFieldValue("UnitRate", finalAmount.toFixed(2));
+                            }}
+                            onBlur={handleBlur}
+                            error={!!touched.discount && !!errors.discount}
+                            helperText={touched.discount && errors.discount}
+                            focused
+                            InputProps={{
+                              inputProps: {
+                                style: {
+                                  textAlign: "right",
+                                },
+                              },
+                            }}
+                            inputProps={{
+                              min: 0,
+                              max: 100,
+                              step: "0.01",
+                            }}
+                          />
+                          // <TextField
+                          //   fullWidth
+                          //   variant="standard"
+                          //   type="number"
+                          //   inputMode="decimal"
+                          //   value={values.discount}
+                          //   id="discount"
+                          //   name="discount"
+                          //   label="Discount in (%)"
+                          //   onChange={(e) => {
+                          //     const val = e.target.value;
+                          //   }}
+                          //   onBlur={(e) => {
+                          //     handleBlur(e);
+                          //   }}
+                          //   error={!!touched.discount && !!errors.discount}
+                          //   helperText={touched.discount && errors.discount}
+                          //   focused
+                          //   InputProps={{
+                          //     inputProps: {
+                          //       style: {
+                          //         textAlign: "right",
+                          //       },
+                          //     },
+                          //   }}
+                          //   inputProps={{ maxLength: 90 }}
+                          // />
+                        )}
+                      </Box>
 
                       <TextField
                         select
