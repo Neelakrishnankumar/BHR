@@ -330,7 +330,7 @@ const CreateSession = () => {
                             "List of Assessment"
                     }
                     {/* List of Assessment */}
-                     ({state.BreadCrumb3})
+                    ({state.BreadCrumb3})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -608,19 +608,46 @@ const CreateSession = () => {
                               hidden
                               accept="all/*"
                               type="file"
-                              onChange={(event) => {
-                                const formData = new FormData();
-                                formData.append("file", event.target.files[0]);
-                                formData.append("type", "attachments");
+                              // onChange={(event) => {
+                              //   const formData = new FormData();
+                              //   formData.append("file", event.target.files[0]);
+                              //   formData.append("type", "attachments");
 
-                                dispatch(
-                                  fnFileUpload(formData, recID, "TR031")
-                                ).then((res) => {
-                                  setFieldValue(
-                                    "AttachmentName",
-                                    res.payload.apiResponse
+                              //   dispatch(
+                              //     fnFileUpload(formData, recID, "TR031")
+                              //   ).then((res) => {
+                              //     setFieldValue(
+                              //       "AttachmentName",
+                              //       res.payload.apiResponse
+                              //     );
+                              //   });
+                              // }}
+                              onChange={async (event) => {
+                                try {
+                                  const formData = new FormData();
+
+                                  formData.append("file", event.target.files[0]);
+                                  formData.append("type", "attachments");
+
+                                  const res = await dispatch(
+                                    fnFileUpload(formData, recID, "TR031")
                                   );
-                                });
+
+                                  console.log(res);
+
+                                  const uploadedFile =
+                                    res?.payload?.apiResponse;
+
+                                  if (!uploadedFile) {
+                                    throw new Error("Upload response missing");
+                                  }
+
+                                  setFieldValue("AttachmentName", uploadedFile);
+
+                                } catch (err) {
+                                  console.error(err);
+                                  toast.error("Upload failed");
+                                }
                               }}
                             />
                             <CloudUpload fontSize="medium" />

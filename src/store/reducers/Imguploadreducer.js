@@ -100,11 +100,86 @@ export const getApiSlice = createSlice({
   //     };
   //   },
   // },
-  reducers: {},
+  // reducers: {},
+
+  // extraReducers: (builder) => {
+  //   // IMAGE
+  //   builder
+  //     .addCase(fileUpload.pending, (state) => {
+  //       state.imgLoading = true;
+  //       state.imgError = "";
+  //     })
+
+  //     .addCase(fileUpload.fulfilled, (state, action) => {
+  //       state.imgLoading = false;
+  //       state.uploadedImgName = action.payload.name;
+  //       state.imgStatus = action.payload.Status;
+  //       state.imgMsg = action.payload.Msg;
+  //     })
+
+  //     .addCase(fileUpload.rejected, (state, action) => {
+  //       state.imgLoading = false;
+  //       state.imgError = action.error.message;
+  //     })
+
+  //     // VIDEO
+  //     .addCase(videoUpload.pending, (state) => {
+  //       state.videoLoading = true;
+  //     })
+
+  //     .addCase(videoUpload.fulfilled, (state, action) => {
+  //       state.videoLoading = false;
+  //       state.videoStatus = action.payload.Status;
+  //       state.videoMsg = action.payload.Msg;
+  //     })
+
+  //     .addCase(videoUpload.rejected, (state, action) => {
+  //       state.videoLoading = false;
+  //       state.imgError = action.error.message;
+  //     });
+  // },
+  reducers: {
+    pending: () => {},
+
+    errored: (_, action) => action.payload,
+
+    Success: (_, action) => action.payload,
+  },
 
   extraReducers: (builder) => {
-    // IMAGE
     builder
+
+      // ========= OLD ACTIONS =========
+
+      .addCase(pending, (state) => {
+        state.imgLoading = true;
+        state.imgError = "";
+      })
+
+      .addCase(errored, (state, action) => {
+        state.imgLoading = false;
+
+        state.imgError =
+          action.payload || "Something went wrong";
+      })
+
+      .addCase(Success, (state, action) => {
+        state.imgLoading = false;
+
+        state.imgError = "";
+
+        state.uploadedImgName =
+          action.payload.apiResponse;
+
+        state.imgStatus =
+          action.payload.Status;
+
+        state.imgMsg =
+          action.payload.Msg;
+      })
+
+      // ========= FILE =========
+
       .addCase(fileUpload.pending, (state) => {
         state.imgLoading = true;
         state.imgError = "";
@@ -112,30 +187,74 @@ export const getApiSlice = createSlice({
 
       .addCase(fileUpload.fulfilled, (state, action) => {
         state.imgLoading = false;
-        state.uploadedImgName = action.payload.name;
-        state.imgStatus = action.payload.Status;
-        state.imgMsg = action.payload.Msg;
+
+        state.uploadedImgName =
+          action.payload.name;
+
+        state.imgStatus =
+          action.payload.Status;
+
+        state.imgMsg =
+          action.payload.Msg;
       })
 
       .addCase(fileUpload.rejected, (state, action) => {
         state.imgLoading = false;
-        state.imgError = action.error.message;
+
+        state.imgError =
+          action.error.message;
       })
 
-      // VIDEO
+      // ========= IMAGE =========
+
+      .addCase(imageUpload.pending, (state) => {
+        state.imgLoading = true;
+      })
+
+      .addCase(imageUpload.fulfilled, (state, action) => {
+        state.imgLoading = false;
+
+        state.uploadedImgName =
+          action.payload.name;
+
+        state.imgStatus =
+          action.payload.Status;
+
+        state.imgMsg =
+          action.payload.Msg;
+      })
+
+      .addCase(imageUpload.rejected, (state, action) => {
+        state.imgLoading = false;
+
+        state.imgError =
+          action.error.message;
+      })
+
+      // ========= VIDEO =========
+
       .addCase(videoUpload.pending, (state) => {
         state.videoLoading = true;
       })
 
       .addCase(videoUpload.fulfilled, (state, action) => {
         state.videoLoading = false;
-        state.videoStatus = action.payload.Status;
-        state.videoMsg = action.payload.Msg;
+
+        state.uploadedVideoName =
+          action.payload.name;
+
+        state.videoStatus =
+          action.payload.Status;
+
+        state.videoMsg =
+          action.payload.Msg;
       })
 
       .addCase(videoUpload.rejected, (state, action) => {
         state.videoLoading = false;
-        state.imgError = action.error.message;
+
+        state.imgError =
+          action.error.message;
       });
   },
 });
@@ -196,7 +315,8 @@ export const fnFetchImage = (AccessID, recID) => (dispatch, getState) => {
       }
     })
     .catch((error) => {
-      dispatch(errored);
+      // dispatch(errored);
+      dispatch(errored(error?.message));
       //dispatch(errored({"action":Action,"Status":apidata.Status,"apiResponse":apidata.Data,"Msg":""}))
     });
 };
@@ -248,11 +368,13 @@ export const fnImageUpload =
             console.log("--" + JSON.stringify(imgresponse));
           })
           .catch((error) => {
-            dispatch(errored);
+            // dispatch(errored);
+            dispatch(errored(error?.message));
           });
       })
       .catch((error) => {
-        dispatch(errored);
+        // dispatch(errored);
+        dispatch(errored(error?.message));
       });
   };
 
@@ -290,7 +412,8 @@ export function fnFileUpload(formData, id, accessid) {
           console.log("--" + JSON.stringify(imgresponse));
         })
         .catch((error) => {
-          dispatch(errored);
+          // dispatch(errored);
+          dispatch(errored(error?.message));
         });
       return datawait;
     }

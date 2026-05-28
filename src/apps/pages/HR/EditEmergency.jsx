@@ -57,6 +57,8 @@ const EditEmergency = () => {
     var recID = params.id;
     var mode = params.Mode;
     var accessID = params.accessID;
+    var Type = params.Type;
+    console.log("🚀 ~ EditEmergency ~ Type:", Type)
     const data = useSelector((state) => state.formApi.Data) || {};
     const Status = useSelector((state) => state.formApi.Status);
     const Msg = useSelector((state) => state.formApi.msg);
@@ -327,7 +329,7 @@ const EditEmergency = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`, {
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -338,14 +340,14 @@ const EditEmergency = () => {
                                 variant="h5"
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
-                                onClick={() => {
+                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/E`, {
+                                    navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`, {
                                         state: { ...state }
                                     })
                                 }}
                             >
-                                {mode === "E" ? `Event(${state.BreadCrumb2 || ""})` : "Events"}
+                                {mode === "E" || mode === "V" ? `Event(${state.BreadCrumb2 || ""})` : "Events"}
                             </Typography>
 
                             <Typography
@@ -353,7 +355,7 @@ const EditEmergency = () => {
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
                             >
-                                {mode === "E" ? "Add (Emergency Event)" : "Edit (Emergency Event)"}
+                                {mode === "E" ? "Edit Emergency Event" : mode === "V" ? "View Emergency Event" : "Add Emergency Event"}
                             </Typography>
                         </Breadcrumbs>
                     </Box>
@@ -903,7 +905,7 @@ const EditEmergency = () => {
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
                                                 variant="outlined"
                                                 color="warning"
-                                                onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/E`,
+                                                onClick={() => navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`,
                                                     { state: { ...state } }
                                                 )}
                                             >

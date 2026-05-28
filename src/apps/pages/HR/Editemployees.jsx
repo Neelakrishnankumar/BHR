@@ -13670,7 +13670,19 @@ const Editemployee = () => {
                           onBlur={(e) => {
                             handleBlur(e);
                             let val = e.target.value;
+                            // Allow numbers with optional decimal (up to 2 digits)
+                            if (/^\d*\.?\d{0,2}$/.test(val)) {
+                              setFieldValue("UnitRate", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            handleBlur(e);
+                            let val = e.target.value;
 
+                            if (val === "" || val === ".") {
+                              setFieldValue("UnitRate", "0.00");
+                              return;
+                            }
                             if (val === "" || val === ".") {
                               setFieldValue("UnitRate", "0.00");
                               return;

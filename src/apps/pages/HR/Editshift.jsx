@@ -176,6 +176,7 @@ const Editshift = () => {
         delete: data.DeleteFlag === "Y" ? true : false
     };
 
+
     const Fnsave = async (values, del) => {
         setLoading(true);
 
@@ -390,9 +391,15 @@ const Editshift = () => {
                                         name="name"
                                         type="text"
                                         id="name"
+                                        // label={
+                                        //     <>
+                                        //         {getBusinessCaption("Description", "Description")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        //     </>
+                                        // }
+
                                         label={
                                             <>
-                                                {getBusinessCaption("Description", "Description")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                {getBusinessCaption("Shift", "Shift")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                             </>
                                         }
                                         // label={getBusinessCaption("Description", "Description")}
@@ -436,11 +443,16 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             error={!!touched.starttime && !!errors.starttime}
                                             helperText={touched.starttime && errors.starttime}
-                                            label={
-                                                <>
-                                                    Shift Start Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                                </>
-                                            }
+                                               label={
+                                            <>
+                                                {getBusinessCaption("Shift Start Time", "Shift Start Time")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            </>
+                                        }
+                                            // label={
+                                            //     <>
+                                            //         Shift Start Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            //     </>
+                                            // }
                                             focused
                                         // required
                                         // inputProps={{ maxLength:20}}
@@ -467,11 +479,16 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             error={!!touched.endtime && !!errors.endtime}
                                             helperText={touched.endtime && errors.endtime}
-                                            label={
-                                                <>
-                                                    Shift End Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                                </>
-                                            }
+                                                label={
+                                            <>
+                                                {getBusinessCaption("Shift End Time", "Shift End Time")}<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            </>
+                                        }
+                                            // label={
+                                            //     <>
+                                            //         Shift End Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            //     </>
+                                            // }
                                             focused
                                         // required
                                         // inputProps={{ readOnly: true }}

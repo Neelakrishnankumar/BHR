@@ -609,42 +609,42 @@ export const fetchListview =
       const defaultFromDate = format(oneMonthBefore);
       const defaultToDate = format(today);
 
-  const handlestdDelete = async (values) => {
-    const payload = {
-      ProjectId: values.RecordID,
-      CompanyID: values.CompanyID,
-    }
-    console.log(payload, "-- GENERATE PAYLOAD");
-    const response = await dispatch(
-      standardDelete(payload)
-    );
-    console.log(response, "-- generate response");
+      const handlestdDelete = async (values) => {
+        const payload = {
+          ProjectId: values.RecordID,
+          CompanyID: values.CompanyID,
+        }
+        console.log(payload, "-- GENERATE PAYLOAD");
+        const response = await dispatch(
+          standardDelete(payload)
+        );
+        console.log(response, "-- generate response");
 
-    if (response?.payload?.Status === "Y") {
-      toast.success(response?.payload?.Msg);
-         dispatch(
-        fetchListview(
-          "TR275",
-          "003",
-          screenName,
-          `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
-          "",
-        
+        if (response?.payload?.Status === "Y") {
+          toast.success(response?.payload?.Msg);
+          dispatch(
+            fetchListview(
+              "TR275",
+              "003",
+              screenName,
+              `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+              "",
 
-        )
-      );
-      // dispatch(
-      //   getFetchData({
-      //     accessID: "TR368v1",
-      //     get: "get",
-      //     recID: headerid,
-      //   })
-      // );      
-    }
-    else if (response?.payload?.Status == "N") {
-      toast.error(response?.payload?.Msg);
-    }
-  };
+
+            )
+          );
+          // dispatch(
+          //   getFetchData({
+          //     accessID: "TR368v1",
+          //     get: "get",
+          //     recID: headerid,
+          //   })
+          // );      
+        }
+        else if (response?.payload?.Status == "N") {
+          toast.error(response?.payload?.Msg);
+        }
+      };
 
 
 
@@ -1852,7 +1852,7 @@ export const fetchListview =
                     <Box>
                       {isSeedEditable && (
                         <Link to={`./EditProject/${params.row.RecordID}/E`}
-                         state={{
+                          state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
                             projectID: params.row.RecordID,
@@ -1962,7 +1962,7 @@ export const fetchListview =
                         />
                       )}
 
-                       {is003Subscription && (
+                      {is003Subscription && (
                         // <Link
                         //   to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                         //   state={{
@@ -1974,13 +1974,13 @@ export const fetchListview =
                         //     BreadCrumb1: params.row.Project,
                         //   }}
                         // >
-                          <Tooltip title="Delete">
-                            <IconButton color="error" size="small">
-                              <DeleteIcon
+                        <Tooltip title="Delete">
+                          <IconButton color="error" size="small">
+                            <DeleteIcon
                               onClick={() => handlestdDelete(params.row)}
-                              />
-                            </IconButton>
-                          </Tooltip>
+                            />
+                          </IconButton>
+                        </Tooltip>
                         // </Link>
                       )}
                     </Box>
@@ -2280,7 +2280,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR390") {
+            else if (AccessID == "TR391") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2296,11 +2296,12 @@ export const fetchListview =
                     <Box>
                       <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-                        to={`/Apps/SecondarylistView/TR391/RaiseComplaints/${params.row.RecordID}`}
+                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+                         state={{ rowData: params.row }}
                       >
-                        <Tooltip title="View">
+                        <Tooltip title="Edit">
                           <IconButton color="info" size="small">
-                            <VisibilityIcon />
+                            <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
@@ -2308,8 +2309,8 @@ export const fetchListview =
                   );
                 },
               };
-            } 
-                      
+            }
+
             else if (AccessID == "TR378") {
               obj = {
                 field: "action",
@@ -2325,7 +2326,8 @@ export const fetchListview =
                   return (
                     <Box>
                       <Link
-                        to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
@@ -2395,7 +2397,7 @@ export const fetchListview =
                   );
                 },
               };
-            } 
+            }
             else if (AccessID == "TR207") {
               obj = {
                 field: "action",
@@ -8365,7 +8367,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
-      const is003Subscription = SubscriptionCode.endsWith("003");
+  const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const count = Number(params.row.MarketingCount || 0);
@@ -8377,7 +8379,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-    // — state (inside your component) — TR310
+  // — state (inside your component) — TR310
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
   const handleDeleteTermFees = async (values) => {
@@ -8431,7 +8433,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     }
   };
 
- 
+
 
   const handleTermsProcess = async (values) => {
 
@@ -8486,7 +8488,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     }
   }
 
-   const handlePublish = async (values) => {
+  const handlePublish = async (values) => {
 
     const result = await Swal.fire({
       title: "Do you want to publish this Event Category? Once published you will not able to edit the Events.",
@@ -8761,7 +8763,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       GroupID: params.row.SlotGroupID,
                       HeaderID: params.row.RecordID,
                       isprocess: params.row.IsProcess,
-                      AcademicYear: params.row.AcademicYear
+                      AcademicYear: params.row.AcademicYear,
                     }}
                 >
                   <Tooltip title="Delete">
@@ -8863,12 +8865,13 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
             <Link
-             state={{
+              state={{
                 AcademicYear: params.row.AcademicYear,
                 AcademicYearID: params.row.AcademicYearID,
-                AcadamicType: params.row.AcadamicType
-              }} 
-              >            
+                AcademicType: params.row.AcademicType,
+
+              }}
+            >
               <Tooltip title="Delete">
                 <IconButton color="error" size="small" onClick={() => handleDeleteTermFees(params.row)}>
                   <DeleteIcon />
@@ -8881,7 +8884,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
 
             <Link
-              to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              // to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              to={`/Apps/Secondarylistview/TR384/Event Category/${params.row.AcademicYearID}/Events/TR385/${params.row.RecordID}/${params.row.Type}`}
               state={{
                 AcademicYear: params.row.AcademicYear,
                 BreadCrumb1: params.row.Category,
@@ -8895,50 +8899,50 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
             {(params.row.IsPublish === "Y" && params.row.Events !== "0") &&(
 
-             <Tooltip title="Publish Event Category">
-                  <IconButton
-                    color="error"
-                    size="small"
-                    onClick={() => {handlePublish(params.row)}}
-                  >
-                    <PublishedWithChangesOutlinedIcon />
-                  </IconButton>
-                </Tooltip> 
-)} 
+              <Tooltip title="Publish Event Category">
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => { handlePublish(params.row) }}
+                >
+                  <PublishedWithChangesOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )} 
           </>
         )}
         {accessID === "TR385" && (
           <>
-          {params.row.IsPublish === "Y" ? (
-            <Link
-              to={`./EditEvents/${params.row.RecordID}/V`}
-              state={{
-                ...state,
-                // AcademicYear: params.row.AcademicYear,
-                // BreadCrumb1: params.row.Category,
-                BreadCrumb2: params.row.Title,
-              }}
-            >
-             <Tooltip title="View">
+            {params.row.IsPublish === "Y" ? (
+              <Link
+                to={`./EditEvent Category/${params.row.RecordID}/V`}
+                state={{
+                  ...state,
+                  // AcademicYear: params.row.AcademicYear,
+                  // BreadCrumb1: params.row.Category,
+                  BreadCrumb2: params.row.Title,
+                }}
+              >
+                <Tooltip title="View">
                   <IconButton color="info" size="small">
                     <VisibilityIcon />
                   </IconButton>
                 </Tooltip>
-            </Link>):(<Link
-              to={`./EditEvents/${params.row.RecordID}/E`}
-              state={{
-                ...state,
-                // AcademicYear: params.row.AcademicYear,
-                // BreadCrumb1: params.row.Category,
-                BreadCrumb2: params.row.Title,
-              }}
-            >
-             <Tooltip title="Edit">
+              </Link>) : (<Link
+                to={`./EditEvent Category/${params.row.RecordID}/E`}
+                state={{
+                  ...state,
+                  // AcademicYear: params.row.AcademicYear,
+                  // BreadCrumb1: params.row.Category,
+                  BreadCrumb2: params.row.Title,
+                }}
+              >
+                <Tooltip title="Edit">
                   <IconButton color="info" size="small">
                     <ModeEditOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-            </Link>)}
+              </Link>)}
           </>
         )}
       </div>

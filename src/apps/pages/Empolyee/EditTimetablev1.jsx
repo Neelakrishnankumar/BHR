@@ -358,6 +358,7 @@ const EditTimetablev1 = () => {
   );
   const [totalWeekSlots, setTotalWeekSlots] = useState(0);
   const [totalBalSlots, setTotalBalSlots] = useState(0);
+  console.log("🚀 ~ EditTimetablev1 ~ totalBalSlots:", totalBalSlots)
   const [formDescription, setFormDescription] = useState(
     data?.Description ? data?.Description : ""
   );
@@ -1751,7 +1752,7 @@ const EditTimetablev1 = () => {
                     variant="contained"
                     loading={isGenerating}
                     loadingPosition="start"
-                    disabled={mode =="V"}
+                    disabled={mode =="V" || totalBalSlots !== 0}
                     onClick={async () => {
                       const validationErrors = await validateForm();
                       setTouched({ Terms: true, Slotgroup: true });

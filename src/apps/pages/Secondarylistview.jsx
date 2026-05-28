@@ -181,9 +181,11 @@ const ListviewSecondary = () => {
   var accessID = params.secondaryAccessID
     ? params.secondaryAccessID
     : params.accessID;
+    
   var accessID1 = params.accessID1 ? params.accessID1 : "Error"
   var accessID2 = params.accessID2 ? params.accessID2 : "Error"
   var accessID3 = params.accessID3 ? params.accessID3 : "Error"
+  console.log("🚀 ~ ListviewSecondary ~ accessID:", accessID)
   console.log("🚀 ~ ListviewSecondary ~ accessID1:", accessID1)
   console.log("🚀 ~ ListviewSecondary ~ accessID2:", accessID2)
   console.log("🚀 ~ ListviewSecondary ~ accessID3:", accessID3)
@@ -201,10 +203,23 @@ const ListviewSecondary = () => {
   var CusID = params.CusID;
   var id = params.id;
   var leaderID = params.leaderID;
+  var leaderID = params.leaderID;
+
+console.log("EVENT ROUTE PARAMS", {
+ accessID1: params.accessID1,
+ screenName1: params.screenName1,
+ leaderID: params.leaderID,
+ Type: params.Type,
+ screenName: params.screenName,
+ accessID: params.accessID,
+ parentID2: params.parentID2,
+ parentID1: params.parentID1
+});
   var filtertype1 = params.filtertype1;
   //var partyID = params.partyID;
   const compID = sessionStorage.getItem("compID");
   var screenName = params.screenName;
+  console.log("🚀 ~ ListviewSecondary ~ screenName:", screenName)
   // /:parentID/:filtertype
   var Type = params.Type;
   console.log(Type, "type");
@@ -238,7 +253,7 @@ const ListviewSecondary = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
   let parentID1 = params.parentID1;
-  let parentID2 = params.parentID2;
+  let parentID2 = params.academicYear ||params.parentID2;
   let parentID3 = params.parentID3;
   console.log("🚀 ~ ListviewSecondary ~ parentID1:", parentID1)
   console.log("🚀 ~ ListviewSecondary ~ parentID2:", parentID2)
@@ -249,6 +264,7 @@ const ListviewSecondary = () => {
   var Description = params.Desc;
   var Number = params.Number;
   var filter;
+  console.log("🚀 ~ ListviewSecondary ~ filter:", filter)
   var invoiceFilter = `${parentID}' AND Invtype='${Number}'AND Finyear='${year}' AND CompID = '${compID}`;
   if (accessID == "TR087") {
     if (parentID == "A") {
@@ -305,17 +321,18 @@ const ListviewSecondary = () => {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR391") {
-     filter = `CompanyID='${compID}' AND CategoryID='${leaderID}'`;
+     filter = `CompanyID='${compID}' `; //AND CategoryID='${leaderID}'
      console.log("🚀 ~ FeedbackListviewSecondary ~ filter:",  filter)
   }
   else if (accessID == "TR384") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR386") {
-    filter = "";
+    // filter = "";
+    filter = `AcademicYearID = '${parentID2}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR387") {
-    filter = `AcademicYearID = '${parentID2}' AND AcadamicTypeID='${params.parentID}' AND CompanyID = '${compID}'`;
+    filter = `AcademicYearID = '${parentID3}' AND AcadamicTypeID='${params.parentID1}' AND CompanyID = '${compID}'`;
   }
   else if (accessID === "TR371") {
 
@@ -1317,7 +1334,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(`/Apps/SecondarylistView/TR275/Project/${params.parentID2}`, { state: { ...state } });
+                  navigate(`/Apps/SecondarylistView/TR275/Project/${params.parentID3}`, { state: { ...state } });
                 }}
               >
                 Standard/Activities
@@ -1330,7 +1347,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                  onClick={() => {
-                  navigate(`/Apps/SecondarylistView/TR275/Project/${params.parentID2}/Academic%20Type/TR386/L`, { state: { ...state } });
+                  navigate(`/Apps/SecondarylistView/TR275/Project/${params.parentID3}/Academic%20Type/TR386/L`, { state: { ...state } });
                 }}
               >
                 {`Academic Type(${state.AcademicType})`}
@@ -2410,7 +2427,7 @@ const ListviewSecondary = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      navigate("/Apps/TR390/Feedback Complaints");
+                      navigate("/Apps/TR391/Feedback Complaints");
                     }}
                   >
                     FeedBack/Complaints 
@@ -2506,7 +2523,7 @@ const ListviewSecondary = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`,
+                    onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
                       {
                         state: {
                           ...state,
@@ -4726,6 +4743,8 @@ const ListviewSecondary = () => {
                 false
               ) : accessID == "TR384" ? (
                 false
+              ) : accessID == "TR386" ? (
+                false
               ) : accessID == "TR288" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -6085,6 +6104,19 @@ const ListviewSecondary = () => {
               label="Delete"
               variant="outlined"
             /> */}
+                  </Box>
+                ): accessID == "TR387" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
                   </Box>
                 ) : accessID == "TR303" ? (
                   <Box display="flex" flexDirection="row" gap={2} padding="25px">

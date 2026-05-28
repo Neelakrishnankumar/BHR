@@ -70,7 +70,7 @@ const Editoverheadtype = () => {
 
                 let schemaFields = {
                     name: Yup.string().trim().required(data.Overheadtype.name),
-                   
+
                 };
 
                 if (CompanyAutoCode === "N") {
@@ -92,7 +92,7 @@ const Editoverheadtype = () => {
     const initialValue = {
         code: data.Code,
         name: data.Name,
-        sortorder: data.SortOrder,      
+        sortorder: data.SortOrder,
         disable: data.Disable === "Y" ? true : false,
         delete: data.DeleteFlag === "Y" ? true : false
 
@@ -307,7 +307,14 @@ const Editoverheadtype = () => {
                                         focused
                                         value={values.name}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+
+                                            // allow only letters and spaces
+                                            if (/^[a-zA-Z\s]*$/.test(value)) {
+                                                handleChange(e);
+                                            }
+                                        }}
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}
                                         autoFocus={CompanyAutoCode == "Y"}

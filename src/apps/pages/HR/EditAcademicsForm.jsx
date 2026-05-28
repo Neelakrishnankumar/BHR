@@ -58,6 +58,8 @@ const EditAcademicsForm = () => {
     var recID = params.id;
     var mode = params.Mode;
     var accessID = params.accessID;
+    const Type = params.Type;
+    console.log("🚀 ~ EditAcademicsForm ~ Type:", Type)
     const data = useSelector((state) => state.formApi.Data) || {};
     const Status = useSelector((state) => state.formApi.Status);
     const Msg = useSelector((state) => state.formApi.msg);
@@ -76,8 +78,6 @@ const EditAcademicsForm = () => {
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     const location = useLocation();
     const state = location.state || {};
-    const ViewStatus = state.ViewStatus;
-    console.log("🚀 ~ EditOrder ~ ViewStatus:", ViewStatus)
     const [validationSchema, setValidationSchema] = useState(null);
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [academyImage, setAcademyImage] = useState("");
@@ -403,7 +403,7 @@ const EditAcademicsForm = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`, {
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -414,14 +414,14 @@ const EditAcademicsForm = () => {
                                 variant="h5"
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
-                                onClick={() => {
+                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/A`, {
+                                    navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/A`, {
                                         state: { ...state }
                                     })
                                 }}
                             >
-                                {mode === "E" ? `Event(${state.BreadCrumb2 || ""})` : "Events"}
+                                {mode === "E" || mode === "V" ? `Event(${state.BreadCrumb2 || ""})` : "Events"}
                             </Typography>
 
                             <Typography
@@ -429,7 +429,7 @@ const EditAcademicsForm = () => {
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
                             >
-                                {mode === "E" ? "Add (Academic Event)" : "Edit (Academic Event)"}
+                                {mode === "E" ? "Edit Academic Event" : mode === "V" ? "View Academic Event" : "Add Academic Event"}
                             </Typography>
                         </Breadcrumbs>
                     </Box>
@@ -1118,7 +1118,7 @@ const EditAcademicsForm = () => {
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
                                                 variant="outlined"
                                                 color="warning"
-                                                onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/A`,
+                                               onClick={() => navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/A`,
                                                     { state: { ...state } }
                                                 )}
                                             >
