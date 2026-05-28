@@ -227,6 +227,8 @@ import EditPTA from "./pages/HR/EditPTAmeeting";
 import EditWorkshop from "./pages/HR/EditWorkshop";
 import EditTermfeesstructure from "./pages/Empolyee/EditTermfeestruct";
 import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
+import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
+
 function App() {
   //   useEffect(() => {
   //   const grace = sessionStorage.getItem("CompanyGraceTime");
@@ -1582,6 +1584,11 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"
                     element={<ProjectTimeTable />}
+                  />
+                  <Route
+                    // path="/:accessID/RaiseComplaints"
+                    path="/:accessID/RaiseComplaints/EditRaiseComplaints/:id/:Mode"
+                    element={<RaiseComplaints />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

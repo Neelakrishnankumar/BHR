@@ -218,8 +218,7 @@
     "Description": "Please enter the Description",
     "Hsn": "Please enter the HSN Code",
     "shift": "Please select the Shift 1",
-    "standardActivities": "Please select the Standard/Activities",
-    "Description": "Please enter the Description"
+    "standardActivities": "Please select the Standard/Activities"
   },
   "CourseAttendence": {
     "project": "Please select the Standard/Activities",

@@ -318,7 +318,13 @@ const EditSalaryComponent = () => {
                     focused
                     value={values.description}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // allow only letters and spaces
+                      if (/^[a-zA-Z\s]*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
                     error={!!touched.description && !!errors.description}
                     helperText={touched.description && errors.description}
                     sx={{

@@ -321,7 +321,7 @@ console.log("EVENT ROUTE PARAMS", {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR391") {
-     filter = `CompanyID='${compID}' AND CategoryID='${leaderID}'`;
+     filter = `CompanyID='${compID}' `; //AND CategoryID='${leaderID}'
      console.log("🚀 ~ FeedbackListviewSecondary ~ filter:",  filter)
   }
   else if (accessID == "TR384") {
@@ -2427,7 +2427,7 @@ console.log("EVENT ROUTE PARAMS", {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      navigate("/Apps/TR390/Feedback Complaints");
+                      navigate("/Apps/TR391/Feedback Complaints");
                     }}
                   >
                     FeedBack/Complaints 
@@ -6104,6 +6104,19 @@ console.log("EVENT ROUTE PARAMS", {
               label="Delete"
               variant="outlined"
             /> */}
+                  </Box>
+                ): accessID == "TR387" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
                   </Box>
                 ) : accessID == "TR303" ? (
                   <Box display="flex" flexDirection="row" gap={2} padding="25px">

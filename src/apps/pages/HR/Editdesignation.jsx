@@ -530,7 +530,7 @@ const Editdesignation = () => {
                     onChange={(e) => {
                       const value = e.target.value;
                       // allow only letters and spaces
-                      if (/^[a-zA-Z\s]*$/.test(value)) {
+                      if (/^[a-zA-Z\s/@/&/-]*$/.test(value)) {
                         handleChange(e);
                       }
                     }}
