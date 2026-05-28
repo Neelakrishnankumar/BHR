@@ -422,13 +422,14 @@ const EditemployeePayroll = () => {
   //   OHlookupDesc: "",
   // });
 
-  const [ADLookupData, setADLookupData] = React.useState(null);
-  //   {
-  //   adRecordID: "",
-  //   adType: "",
-  //   adDesc: "",
-  //   adCategory: "",
-  // });
+  // const [ADLookupData, setADLookupData] = React.useState(null);
+    
+const [ADLookupData,setADLookupData] = React.useState({
+ RecordID: "",
+          Type: "",
+          Name: "",
+          SalaryCategory: "",
+})
   const [selectLETLookupData, setselectLETLookupData] = React.useState(null);
   //   {
   //   letlookupRecordid: "",
@@ -1370,14 +1371,18 @@ const EditemployeePayroll = () => {
         Allowances:"",
       });
 
-      setADLookupData(null);
-      //   {
-      //   adType: '',
-      //   adRecordID: '',
-      //   adDesc: '',
-      //   adCategory: '',
+      setADLookupData(
+        {
+        // adType: '',
+        // adRecordID: '',
+        // adDesc: '',
+        // adCategory: '',
+         RecordID: "",
+          Type: "",
+          Name: "",
+          SalaryCategory: "",
 
-      // });
+      });
       setselectLETLookupData(null);
       //   {
       //   letlookupCode: "",
@@ -1428,7 +1433,10 @@ const EditemployeePayroll = () => {
         Comments: "",
       });
     } else {
+
       if (field == "action") {
+        console.log(rowData, "--find rowdata");
+        
         setItemCustodyData({
           recordID: rowData.RecordID,
           itemNO: rowData.ItemNumber,
@@ -1503,10 +1511,10 @@ const EditemployeePayroll = () => {
             }
             : null,
         });
-        setFieldValue("Allowances", {
-          RecordID: rowData.SalaryComponentID,
-          Name: rowData.Name,
-        });
+        // setFieldValue("Allowances", {
+        //   RecordID: rowData.SalaryComponentID,
+        //   Name: rowData.Name,
+        // });
         console.log(rowData.Sortorder, "--rowData.Sortorder in Allowances");
 
         setADLookupData({
@@ -1991,9 +1999,11 @@ const EditemployeePayroll = () => {
       RecordID: allDecData.recordID,
       // "SalaryComponentID": ADLookupData.adRecordID,
       // "SCName": ADLookupData.adDesc,
-      SalaryComponentID: values?.Allowances?.RecordID || 0,
+      SalaryComponentID: ADLookupData?.RecordID || 0, 
+      // SalaryComponentID: values?.Allowances?.RecordID || 0,
       // SCName: ADLookupData ? ADLookupData.Name : "",
-      SCName: values?.Allowances?.Name || "",
+      SCName: ADLookupData?.Name || "", 
+      // SCName: values?.Allowances?.Name || "",
       SCType: values.type,
       SCCategory: show == "1" ? "A" : "D",
       Value: values.value || 0,

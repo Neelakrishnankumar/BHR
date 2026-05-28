@@ -1182,6 +1182,7 @@ export function SprintEmpAutocomplete1({
       size="small"
       fullWidth
       limitTags={1}
+      // variant="standard"
       options={options}
       loading={loading}
       value={value || null}
@@ -1197,8 +1198,10 @@ export function SprintEmpAutocomplete1({
       renderInput={(params) => (
         <TextField
           focused
+          // variant="standard"
           {...params}
-          label={props.label || "Days"}
+          // label={props.label || "Days"}
+          label=""
           error={!!error}
           helperText={error}
           InputProps={{

@@ -137,7 +137,7 @@ const Editshift = () => {
         return defaultCaption;
     };
 
-    const convertTo24Hour = (time12) => {
+  const convertTo24Hour = (time12) => {
     if (!time12) return "";
     const [time, modifier] = time12.trim().split(" ");
     if (!modifier) return time12; // already 24hr format, return as-is
@@ -155,14 +155,14 @@ const Editshift = () => {
     hour = hour % 12 || 12; // Convert 0 → 12, 13 → 1, etc.
     return `${String(hour).padStart(2, "0")}:${minute} ${ampm}`;
 };
-
+    
     const InitialValue = {
         code: data.Code,
         name: data.Description,
         // starttime: data.ShiftstartTime,
         // endtime: data.ShiftendTime,
-          starttime: convertTo24Hour(data.ShiftstartTime),  // ✅ "08:18 AM" → "08:18"
-    endtime: convertTo24Hour(data.ShiftendTime),        // ✅ "09:18 AM" → "09:18"
+        starttime: convertTo24Hour(data.ShiftstartTime),  // ✅ "08:18 AM" → "08:18"
+        endtime: convertTo24Hour(data.ShiftendTime),        // ✅ "09:18 AM" → "09:18"
         weekoff: data.WeekOff,
         sortorder: data.Sortorder,
         disable: data.Disable === "Y" ? true : false,
@@ -193,10 +193,10 @@ const Editshift = () => {
             RecordID: recID,
             Code: values.code,
             Name: values.name,
-            StartTime: convertTo12Hour(values.starttime),  // ✅ "07:00 AM"
-            EndTime: convertTo12Hour(values.endtime),        // ✅ "07:30 AM"
             // StartTime: values.starttime,
             // EndTime: values.endtime,
+            StartTime: convertTo12Hour(values.starttime),  // ✅ "07:00 AM"
+            EndTime: convertTo12Hour(values.endtime),        // ✅ "07:30 AM"
             SortOrder: values.sortorder || 0,
             //WeekOff: values.weekoff,
             Monday: values.monday === true ? "Y" : "N",

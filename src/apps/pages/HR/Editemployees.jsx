@@ -6708,7 +6708,8 @@ const Editemployee = () => {
                       value={values.FatherName}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Father's Name"
+                      label={state.Classification != "Student" ? "Father's Name / Spouse Name" : "Father's Name" }
+                      // label="Father's Name"
                       sx={{
                         //gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -13491,7 +13492,8 @@ const Editemployee = () => {
                                 Term3DueDate: newValue.Term3DueDate,
                                 Term4DueDate: newValue.Term4DueDate,
                                 FromDate: newValue.FromDate,
-                                ToDate: newValue.ToDate
+                                ToDate: newValue.ToDate,
+                                TermsID: newValue.TermsID
 
                               });
                               const dueDate =
@@ -13557,7 +13559,7 @@ const Editemployee = () => {
                                 AccessID: "2189",
                                 ScreenName: "Components",
                                 VerticalLicense: Subscriptionlastthree,
-                                Filter: `HeaderID=${values?.Term?.Header}`,
+                                Filter: `HeaderID='${values?.Term?.Header}' AND TermID='${values?.Term?.TermsID}'`,
                                 Any: "",
                               },
                             })}`}
@@ -13668,7 +13670,19 @@ const Editemployee = () => {
                           onBlur={(e) => {
                             handleBlur(e);
                             let val = e.target.value;
+                            // Allow numbers with optional decimal (up to 2 digits)
+                            if (/^\d*\.?\d{0,2}$/.test(val)) {
+                              setFieldValue("UnitRate", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            handleBlur(e);
+                            let val = e.target.value;
 
+                            if (val === "" || val === ".") {
+                              setFieldValue("UnitRate", "0.00");
+                              return;
+                            }
                             if (val === "" || val === ".") {
                               setFieldValue("UnitRate", "0.00");
                               return;
