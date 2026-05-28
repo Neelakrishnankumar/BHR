@@ -2326,7 +2326,7 @@ export const fetchListview =
                     <Box>
                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}/${params.row.AcademicYear}`}
+                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
@@ -8883,7 +8883,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
 
             <Link
-              to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              // to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              to={`/Apps/Secondarylistview/TR384/Event Category/${params.row.AcademicYearID}/Events/TR385/${params.row.RecordID}/${params.row.Type}`}
               state={{
                 AcademicYear: params.row.AcademicYear,
                 BreadCrumb1: params.row.Category,
@@ -8913,7 +8914,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
             {params.row.IsPublish === "Y" ? (
               <Link
-                to={`./EditEvents/${params.row.RecordID}/V`}
+                to={`./EditEvent Category/${params.row.RecordID}/V`}
                 state={{
                   ...state,
                   // AcademicYear: params.row.AcademicYear,
@@ -8927,7 +8928,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>) : (<Link
-                to={`./EditEvents/${params.row.RecordID}/E`}
+                to={`./EditEvent Category/${params.row.RecordID}/E`}
                 state={{
                   ...state,
                   // AcademicYear: params.row.AcademicYear,

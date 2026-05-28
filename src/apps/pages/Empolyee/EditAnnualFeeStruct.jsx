@@ -105,12 +105,13 @@ const EditAnnualfeestructure = () => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-   const AcademicYearID =
-  !/\d{4}-\d{2}/.test(params.id2 || "")
-    ? params.id2
-    : !/\d{4}-\d{2}/.test(params.id4 || "")
-    ? params.id4
-    : "";
+//    const AcademicYearID =
+//   !/\d{4}-\d{2}/.test(params.id2 || "")
+//     ? params.id2
+//     : !/\d{4}-\d{2}/.test(params.id4 || "")
+//     ? params.id4
+//     : "";
+   const AcademicYearID = params.parentID3 || 0;
     // ── Local state ────────────────────────────────────────────────────────────
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
@@ -463,7 +464,7 @@ const EditAnnualfeestructure = () => {
             StructureName: values.Structurename,
             AcademicYearID: AcademicYearID || "",
             AcademicType: "A",
-            AcademicTypeID: params.id1,
+            AcademicTypeID: params.parentID1 || "",
             // TermsID: TermsIDValue,
             StandardID: StandardIDValue,
             AnnualDueDate: values.DueDate,

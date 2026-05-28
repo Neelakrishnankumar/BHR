@@ -144,12 +144,13 @@ const EditTermfeestructure = () => {
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
     const empName = sessionStorage.getItem("EmpName");
     const getRawData = sessionStorage.getItem("ClassificationData");
-   const AcademicYearID =
-  !/\d{4}-\d{2}/.test(params.id2 || "")
-    ? params.id2
-    : !/\d{4}-\d{2}/.test(params.id4 || "")
-    ? params.id4
-    : "";
+//    const AcademicYearID =
+//   !/\d{4}-\d{2}/.test(params.id2 || "")
+//     ? params.id2
+//     : !/\d{4}-\d{2}/.test(params.id4 || "")
+//     ? params.id4
+//     : "";
+   const AcademicYearID = params.parentID3 || 0;
     let ClassificationData = [];
     try {
         const parsed = JSON.parse(getRawData || "[]");
@@ -426,7 +427,7 @@ useEffect(() => {
             TermsID: activeTermKey || 0,
             StandardID: 0,
             AcademicType: AcademicType,
-            AcademicTypeID: params.id1,                                  // "T"
+            AcademicTypeID: params.parentID1 || 0,                                  // "T"
             Detail: [
                 {
                     Component: payload.Component || "",
@@ -667,7 +668,7 @@ useEffect(() => {
             // accessid: "TR387",
             // action: mode === "A" ? "insert" : "update",
             AcademicType: AcademicType,
-            AcademicTypeID: params.id1,                                  // "T"                                  // "T"
+            AcademicTypeID: params.parentID1 || 0,                                  // "T"                                  // "T"
             CompanyID: compID?.toString() || "1",
             HeaderID: recID ? Number(recID) : 0,                         // 0 for new
             StructureName: values.Structurename || "",
