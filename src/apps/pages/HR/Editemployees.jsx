@@ -2741,7 +2741,7 @@ const Editemployee = () => {
       });
     } else {
       console.log(rowData, "--rowData");
-      console.log(rowData.Description, "rowData.Description");
+      console.log(rowData.Discount, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
 
       if (field == "action") {
@@ -3605,7 +3605,7 @@ const Editemployee = () => {
   const ContractInitialValue = {
     Code: Data.Code,
     Name: Data.Name,
-    Discount: contractorData.Discount,
+    discount: contractorData.discount,
     Term: contractorData.Term || null,
     Components: contractorData.Components || [],
     FromPeriod: contractorData.fromperiod,
