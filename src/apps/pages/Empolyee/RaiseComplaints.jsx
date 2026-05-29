@@ -522,7 +522,7 @@ export default function RaiseComplaints() {
                 color="warning"
                 variant="contained"
                 onClick={() => {
-                  navigate("/Apps/TR391/Feedback Complaints");
+                  navigate("/Apps/TR391/RaiseComplaints");
                 }}
               >
                 Cancel
@@ -595,7 +595,7 @@ export default function RaiseComplaints() {
               color="warning"
               variant="contained"
               onClick={() => {
-                navigate("/Apps/TR391/Feedback Complaints");
+                navigate("/Apps/TR391/RaiseComplaints");
               }}
             >
               Cancel
