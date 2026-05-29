@@ -6708,7 +6708,7 @@ const Editemployee = () => {
                       value={values.FatherName}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label={state.Classification != "Student" ? "Father's Name / Spouse Name" : "Father's Name" }
+                      label={state.Classification != "Student" ? "Father's Name / Spouse Name" : "Father's Name / Guardian's Name" }
                       // label="Father's Name"
                       sx={{
                         //gridColumn: "span 2",
@@ -6728,12 +6728,21 @@ const Editemployee = () => {
                       name="phonenumber"
                       value={values.phonenumber}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onChange={handleChange}
+                        onChange={(e) => {
+                    // Allow only 10 digits
+                    if (e.target.value.length <= 10) {
+                      handleChange(e);
+                    }
+                  }}
                       label="Phone No"
                       focused
                       error={touched.phonenumber && Boolean(errors.phonenumber)}
                       helperText={touched.phonenumber && errors.phonenumber}
                       onWheel={(e) => e.target.blur()}
+                      inputProps={{
+                        maxLength: 10,
+                      }}
                       sx={
                         {
                           //gridColumn: "span 2", background: "#fff6c3"
