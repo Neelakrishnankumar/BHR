@@ -264,7 +264,7 @@ const Holidaylist = () => {
                     // required
                     value={values.Date}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{
@@ -274,6 +274,27 @@ const Holidaylist = () => {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }}
+
+                        onChange={(e) => {
+    let value = e.target.value;
+
+    // Split yyyy-mm-dd
+    const parts = value.split("-");
+
+    // Restrict year to 4 digits
+    if (parts[0] && parts[0].length > 4) {
+      parts[0] = parts[0].slice(0, 4);
+      value = parts.join("-");
+    }
+
+    e.target.value = value;
+    handleChange(e);
+  }}
+  inputProps={{
+    max: "9999-12-31",
+    pattern: "\\d{4}-\\d{2}-\\d{2}",
+  }}
+        
                     autoFocus
                   />
                   <TextField
