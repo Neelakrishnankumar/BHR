@@ -1586,6 +1586,7 @@ const Listview = () => {
                     Created: sessionStorage.getItem("TR313_Created") === "Y",
                     Process: sessionStorage.getItem("TR313_Process") === "Y",
                     Picked: sessionStorage.getItem("TR313_Picked") === "Y",
+                    PartiallyPaid: sessionStorage.getItem("TR313_PartiallyPaid") === "Y",
                     ReadyToDeliver:
                       sessionStorage.getItem("TR313_ReadyToDeliver") === "Y",
                     YetToDeliver:
@@ -1755,6 +1756,7 @@ const Listview = () => {
                       "Created",
                       "Process",
                       "ReadyToDeliver",
+                      "PartiallyPaid",
                       "YetToDeliver",
                       "Picked",
                       "Scheduled",
@@ -1775,7 +1777,7 @@ const Listview = () => {
 
                     if (selectedStatuses.length > 0) {
                       conditions.push(
-                        `Status IN (${selectedStatuses
+                        `OEStatus IN (${selectedStatuses
                           .map((s) => `'${s}'`)
                           .join(", ")})`
                       );
@@ -2190,6 +2192,23 @@ const Listview = () => {
                             }
                             label="Paid"
                           />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="PartiallyPaid"
+                                checked={values.PartiallyPaid}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setFieldValue("PartiallyPaid", checked);
+                                  sessionStorage.setItem(
+                                    "TR313_PartiallyPaid",
+                                    checked ? "Y" : "N"
+                                  );
+                                }}
+                              />
+                            }
+                            label="Partially Paid"
+                          />
                           {/* 
                         <Stack
                           direction="row"
@@ -2343,6 +2362,7 @@ const Listview = () => {
                                   "TR313_Process",
                                   "TR313_ReadyToDeliver",
                                   "TR313_YetToDeliver",
+                                  "TR313_PartiallyPaid",
                                   "TR313_Picked",
                                   "TR313_Scheduled",
                                   "TR313_Delivered",
