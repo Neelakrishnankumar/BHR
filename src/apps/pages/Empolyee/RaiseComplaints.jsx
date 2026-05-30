@@ -90,7 +90,7 @@ const RaiseComplaints = () => {
   // =========================================
 
   useEffect(() => {
-    if (mode === "E" && data) {
+    if ((mode === "E" || mode === "V") && data) {
       setPtaImage(data.Attachements || "");
     }
   }, [data, mode]);
@@ -159,6 +159,14 @@ const RaiseComplaints = () => {
         EmployeeID: data.StudentID,
         Name: data.StudentName,
         Code: data.StudentCode || "",
+      }
+      : null,
+       Teacher: data?.TeacherID
+      ? {
+        // RecordID: data.TeacherID,
+        EmployeeID: data.TeacherID,
+        Name: data.TeacherName,
+        Code: data.TeacherCode || "",
       }
       : null,
   };
@@ -329,7 +337,7 @@ const RaiseComplaints = () => {
                   navigate("/Apps/TR391/RaiseComplaints");
                 }}
               >
-                {mode === "E" ? `List Of Feedback/Complaints(${state.Breadcrumb1 || ""})` : `List Of Feedback/Complaints`}
+                {mode === "E" || mode === "V" ? `List Of Feedback/Complaints(${state.Breadcrumb1 || ""})` : `List Of Feedback/Complaints`}
               </Typography>
               <Typography
                 variant="h5"
@@ -420,6 +428,7 @@ const RaiseComplaints = () => {
                       onBlur={handleBlur}
                       error={!!touched.Title && !!errors.Title}
                       helperText={touched.Title && errors.Title}
+                      disabled={mode === "V"}
                     />
 
                     {/* PRIORITY */}
@@ -445,6 +454,7 @@ const RaiseComplaints = () => {
                       onBlur={handleBlur}
                        error={!!touched.Priority && !!errors.Priority}
                       helperText={touched.Priority && errors.Priority}
+                      disabled={mode === "V"}
                     >
                       <MenuItem value="Low">
                         Low
@@ -493,6 +503,7 @@ const RaiseComplaints = () => {
                           Any: "",
                         },
                       })}`}
+                      disabled={mode === "V"}
                     />
 
                     {/* STUDENT */}
@@ -529,7 +540,42 @@ const RaiseComplaints = () => {
                           Any: "",
                         },
                       })}`}
+                      disabled={mode === "V"}
                     />
+                     <PartySingleSelect
+                          id="Teacher"
+                          name="Teacher"
+                          label={
+                            <>
+                              Teacher
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="standard"
+                          focused
+                          value={values.Teacher}
+                          onChange={(newValue) => {
+                            setFieldValue("Teacher", newValue);
+                            // setFieldTouched("Teacher", true);
+                          }}
+                          error={!!touched.Teacher && !!errors.Teacher}
+                          helperText={touched.Teacher && errors.Teacher}
+                          InputLabelProps={{
+                            shrink: true, // ✅ prevents overlap
+                          }}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2194",
+                              ScreenName: "Teacher",
+                              VerticalLicense: "003",
+                              Filter: `CompanyID='${compID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
+                              Any: "",
+                            },
+                          })}`}
+                          disabled={mode === "V"}
+                        />
                   </Box>
 
                   {/* DESCRIPTION */}
@@ -537,7 +583,6 @@ const RaiseComplaints = () => {
                   <TextField
                     fullWidth
                     multiline
-                    rows={2}
                     variant="standard"
                     focused
                     name="Description"
@@ -556,6 +601,7 @@ const RaiseComplaints = () => {
                     onBlur={handleBlur}
                     error={!!touched.Description && !!errors.Description}
                     helperText={touched.Description && errors.Description}
+                    disabled={mode === "V"}
                   />
 
                   {/* FEEDBACK */}
@@ -564,7 +610,6 @@ const RaiseComplaints = () => {
                     <TextField
                       fullWidth
                       multiline
-                      rows={2}
                       variant="standard"
                       focused
                       name="FeedbacksResponse"
@@ -573,6 +618,7 @@ const RaiseComplaints = () => {
                         values.FeedbacksResponse
                       }
                       onChange={handleChange}
+                      disabled={mode === "V"}
                     />
                   )}
 
@@ -610,6 +656,7 @@ const RaiseComplaints = () => {
                         type="file"
                         accept="image/*,.pdf,.docx"
                         onChange={getFileChange}
+                        disabled={mode === "V"}
                       />
 
                       <Typography
@@ -662,6 +709,7 @@ const RaiseComplaints = () => {
                       variant="contained"
                       type="submit"
                       loading={isLoading}
+                      disabled={mode === "V"}
                     >
                       Save
                     </LoadingButton>

@@ -75,6 +75,7 @@ import {
   Delete,
   Download,
   Psychology,
+  VisibilityOff,
 } from "@mui/icons-material";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import { Visibility } from "@mui/icons-material";
@@ -2293,18 +2294,47 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   return (
+//                     <Box>
+//                       {params.row.Status === "Applied" ?
+//                       (
+//                       <Link
+//                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+//                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+//                          state={{ Breadcrumb1: params.row.Title }}
+//                       >
+//                         <Tooltip title="Edit">
+//                           <IconButton color="info" size="small">
+//                             <ModeEditOutlinedIcon />
+//                           </IconButton>
+//                         </Tooltip>
+//                       </Link>):(
+//  <Link
+//                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+//                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
+//                          state={{ Breadcrumb1: params.row.Title }}
+//                       >
+//                         <Tooltip title="View">
+//                           <IconButton color="info" size="small">
+//                             <VisibilityIcon />
+//                           </IconButton>
+//                         </Tooltip>
+//                       </Link>
+//                       )}
+//                     </Box>
                     <Box>
-                      <Link
+                     
+ <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
                          state={{ Breadcrumb1: params.row.Title }}
                       >
-                        <Tooltip title="Edit">
+                        <Tooltip title="View">
                           <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
+                            <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
+                     
                     </Box>
                   );
                 },

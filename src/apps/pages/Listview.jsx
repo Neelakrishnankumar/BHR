@@ -785,9 +785,9 @@ const Listview = () => {
                : accessID == "TR383" ? (
                 false
               )
-              //  : accessID == "TR391" ? (
-              //   false
-              // )
+               : accessID == "TR391" ? (
+                false
+              )
                 // : YearFlag == "true" ? (
                 : UGA_ADD ? (
 
@@ -5867,6 +5867,21 @@ const Listview = () => {
               label="Party Analytics"
               variant="outlined"
             />
+          </Box>
+        ): accessID == "TR391" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            {/* <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            /> */}
+            <Chip
+              icon={<Visibility color="primary" />}
+              label="View"
+              variant="outlined"
+            />
+
+           
           </Box>
         ) : accessID == "TR331" || accessID == "TR366" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
