@@ -168,10 +168,10 @@ const Editcheckin = () => {
         : mode === "E" && del
           ? "harddelete"
           : "update";
-    var isCheck = "N";
-    if (values.disable == false) {
-      isCheck = "Y";
-    }
+    // var isCheck = "N";
+    // if (values.disable == false) {
+    //   isCheck = "Y";
+    // }
 
     const idata = {
       RecordID: recID,
@@ -181,7 +181,8 @@ const Editcheckin = () => {
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
       EmployeeID: values.employee.RecordID || 0,
       EmployeeName: values.employee.Name || "",
-      WorkAtHome: isCheck,
+      WorkAtHome: values.disable == true ? "Y" : "N",
+      // WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,
@@ -626,7 +627,8 @@ const Editcheckin = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" && mode == "E" ? (
+                  )}
+                   {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -651,15 +653,9 @@ const Editcheckin = () => {
                       Delete
                     </Button>
                   ) : (
-                    // <Button
-                    //   color="error"
-                    //   variant="contained"
-                    //   disabled={true}
-                    // >
-                    //   Delete
-                    // </Button>
+                   
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

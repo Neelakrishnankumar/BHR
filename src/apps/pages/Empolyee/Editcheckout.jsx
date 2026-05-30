@@ -701,7 +701,7 @@ const Editcheckout = () => {
                       Save
                     </Button>
                   )}{" "}
-                  {YearFlag == "true" ? (
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -729,7 +729,7 @@ const Editcheckout = () => {
                     <Button color="error" variant="contained" disabled={true}>
                       Delete
                     </Button>
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

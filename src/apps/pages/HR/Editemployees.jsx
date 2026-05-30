@@ -2741,7 +2741,7 @@ const Editemployee = () => {
       });
     } else {
       console.log(rowData, "--rowData");
-      console.log(rowData.Description, "rowData.Description");
+      console.log(rowData.Discount, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
 
       if (field == "action") {
@@ -3680,54 +3680,54 @@ const empItemServicesFn = async (values, resetForm, del) => {
   }
 };
 
-//contract initialvalue
-const ContractInitialValue = {
-  Code: Data.Code,
-  Name: Data.Name,
-  Discount: contractorData.Discount,
-  Term: contractorData.Term || null,
-  Components: contractorData.Components || [],
-  FromPeriod: contractorData.fromperiod,
-  ToPeriod: contractorData.toperiod,
-  DueDate: contractorData.DueDate,
-  // BillingUnits: contractorData.units,
-  vendor: contractorData.vendor || null,
-  customer: contractorData.vendor || null,
-  BillingUnits:
-    contractorData.units === "Hours"
-      ? "HS"
-      : contractorData.units === "Days"
-        ? "DS"
-        : contractorData.units === "Weeks"
-          ? "WS"
-          : contractorData.units === "Months"
-            ? "MS"
-            : contractorData.units === "Other Fees"
-              ? "OF"
-              : contractorData.units === "Term Fees"
-                ? "TF"
-                : "",
-  BillingType:
-    contractorData.BillingType === "Cash Memo"
-      ? "CashMemo"
-      : contractorData.BillingType === "GST Invoice"
-        ? "GSTInvoice"
-        : "",
-  Hsn: funMode === "A" ? "000000" : contractorData.hsnCode,
-  Gst: contractorData.cgst,
-  Sgst: contractorData.sgst,
-  Igst: contractorData.igst,
-  TDS: contractorData.tds,
-  UnitRate: contractorData.unitrate || "0.00",
-  NotificationAlertDate: contractorData.alertdate,
-  RenewableNotification: contractorData.renewalperiod || "",
-  Description: contractorData.Description,
-  project: contractorData.project || null,
-  shift: contractorData.shift || null,
-  shift2: contractorData.shift2 || null,
-};
-// console.log(contractorData, "--get a contractorData");
-console.log(Data.DesignationName, "--contract idata");
+  //contract initialvalue
+  const ContractInitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    discount: contractorData.discount,
+    Term: contractorData.Term || null,
+    Components: contractorData.Components || [],
+    FromPeriod: contractorData.fromperiod,
+    ToPeriod: contractorData.toperiod,
+    DueDate: contractorData.DueDate,
+    // BillingUnits: contractorData.units,
+    vendor: contractorData.vendor || null,
+    customer: contractorData.vendor || null,
+    BillingUnits:
+      contractorData.units === "Hours"
+        ? "HS"
+        : contractorData.units === "Days"
+          ? "DS"
+          : contractorData.units === "Weeks"
+            ? "WS"
+            : contractorData.units === "Months"
+              ? "MS"
+              : contractorData.units === "Other Fees"
+                ? "OF"
+                : contractorData.units === "Term Fees"
+                  ? "TF"
+                  : "",
+    BillingType:
+      contractorData.BillingType === "Cash Memo"
+        ? "CashMemo"
+        : contractorData.BillingType === "GST Invoice"
+          ? "GSTInvoice"
+          : "",
+    Hsn: funMode === "A" ? "000000" : contractorData.hsnCode,
+    Gst: contractorData.cgst,
+    Sgst: contractorData.sgst,
+    Igst: contractorData.igst,
+    TDS: contractorData.tds,
+    UnitRate: contractorData.unitrate || "0.00",
+    NotificationAlertDate: contractorData.alertdate,
+    RenewableNotification: contractorData.renewalperiod || "",
+    Description: contractorData.Description,
+    project: contractorData.project || null,
+    shift: contractorData.shift || null,
+    shift2: contractorData.shift2 || null,
+  };
+  // console.log(contractorData, "--get a contractorData");
+  console.log(Data.DesignationName, "--contract idata");
 
 //Contractor Save Function
 const contractSavefn = async (values, resetForm, del) => {
