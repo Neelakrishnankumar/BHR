@@ -702,6 +702,7 @@ const isHeaderDisabled = teachrows.length > 0;
       // setTeachrows([]);              // clear old buggy state
       // setTimeout(() => {
         setTeachrows(formattedRows); // set fresh
+         setPage(0);
       // }, 0);
     }
   }, [data]);
@@ -1758,7 +1759,7 @@ function EditToolbarteach(props) {
 
   return (
     <Button
-      disabled={isRowEditing || isAdding} 
+      disabled={isRowEditing} 
     color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
       Add Record
     </Button>
