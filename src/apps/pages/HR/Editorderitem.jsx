@@ -69,7 +69,7 @@ const EditOrderitem = () => {
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
-     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
@@ -590,6 +590,21 @@ const EditOrderitem = () => {
                     }
                     break;
                   }
+
+                  case "netprice": {
+                    const newNet = parseFloat(newValue || 0);
+
+                    const newDisc =
+                      price > 0
+                        ? ((price - newNet) / price) * 100
+                        : 0;
+
+                    setFieldValue("netprice", newNet.toFixed(2));
+                    setFieldValue("discount", newDisc.toFixed(2));
+                    setFieldValue("amount", (newNet * qty).toFixed(2));
+
+                    break;
+                  }
                 }
               };
 
@@ -838,11 +853,12 @@ const EditOrderitem = () => {
                       focused
                       value={values.netprice}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onChange={handleChange}
+                      onChange={(e) => recalc("netprice", e.target.value)}
                       error={!!touched.netprice && !!errors.netprice}
                       helperText={touched.netprice && errors.netprice}
                       InputProps={{
-                        readOnly: true,
+                        // readOnly: true,
                         inputProps: {
                           style: { textAlign: "right" },
                         },
