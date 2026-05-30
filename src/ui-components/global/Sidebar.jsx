@@ -258,24 +258,24 @@ const getProjectMenu = (is003Subscription) =>
     };
 
 
-const getFeedbackMenu = (is00123Subscription) =>
-  is00123Subscription ? {
-    name: "Feedbacks/Complaints",
-    url: "./TR391/RaiseComplaints",
-    // id: 5594,
-    icon: (
-      <Tooltip title="Feedbacks/Complaints">
-        <FeedbackOutlinedIcon color="info" />
-      </Tooltip>
-    ),
-    UGA_ADD: true,
-    UGA_DEL: true,
-    UGA_MOD: true,
-    UGA_PRINT: true,
-    UGA_PROCESS: true,
-    UGA_VIEW: true,
-    UGA_ACCESSIDS: "TR391",
-  } : {}
+// const getFeedbackMenu = (is00123Subscription) =>
+//   is00123Subscription ? {
+//     name: "Feedbacks/Complaints",
+//     url: "./TR391/RaiseComplaints",
+//     // id: 5594,
+//     icon: (
+//       <Tooltip title="Feedbacks/Complaints">
+//         <FeedbackOutlinedIcon color="info" />
+//       </Tooltip>
+//     ),
+//     UGA_ADD: true,
+//     UGA_DEL: true,
+//     UGA_MOD: true,
+//     UGA_PRINT: true,
+//     UGA_PROCESS: true,
+//     UGA_VIEW: true,
+//     UGA_ACCESSIDS: "TR391",
+//   } : {}
 
 
 
@@ -1252,7 +1252,7 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR259",
           },
 
-          getFeedbackMenu(is003Subscription),
+          // getFeedbackMenu(is003Subscription),
 
           {
             name: "Timesheet",
