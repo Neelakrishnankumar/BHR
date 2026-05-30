@@ -36,6 +36,7 @@ import {
   dataGridRowHeight,
 } from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
@@ -684,6 +685,24 @@ const Listview = () => {
             ) : (
               false
             )}
+            {/* {accessID == "TR331" || accessID == "TR366" ? (
+              <Tooltip arrow title="Cash Management">
+                <IconButton>
+                  <AccountBalanceWalletIcon
+                    onClick={() => {
+                      navigate(`/Apps/Secondarylistview/TR398/Academic Year/T`, {
+                      // navigate(`/Apps/Secondarylistview/TR395/Cash Management Category/T`, {
+                        state: {
+                          ...rowData,
+                        },
+                      });
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              false
+            )} */}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">

@@ -31,6 +31,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility"
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
+import ForumIcon from '@mui/icons-material/Forum';
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -310,6 +311,15 @@ console.log("EVENT ROUTE PARAMS", {
   }
   else if (accessID == "TR375") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+   else if (accessID == "TR395") {
+    filter = `CompanyID = '${compID}' AND AcademicYearID = '${parentID1}'`;
+  }
+   else if (accessID == "TR396" || accessID == "TR397") {
+    filter = `CategoryID = '${leaderID}'`;
+  }
+  else if (accessID == "TR398") {
+    filter = `CompanyID = '${compID}'`;
   }
   else if (accessID == "TR368") {
     filter = `StandardID = '${Type}' AND CompanyID = '${compID}'`;
@@ -4747,6 +4757,10 @@ console.log("EVENT ROUTE PARAMS", {
                 false
               ) : accessID == "TR288" ? (
                 false
+                 ) : accessID == "TR395" ? (
+                false
+                ) : accessID == "TR398" ? (
+                false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
                 // false  
               ) : accessID == "TR003" ? (
@@ -5699,8 +5713,7 @@ console.log("EVENT ROUTE PARAMS", {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        )
-          : accessID == "TR304" ? (
+        ): accessID == "TR304" ? (
             <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
                 icon={<ModeEditOutlinedIcon color="primary" />}
@@ -5719,6 +5732,25 @@ console.log("EVENT ROUTE PARAMS", {
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
+            </Box>
+          )
+          : accessID == "TR395" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>             
+              <Chip
+                icon={<ForumIcon color='primary' />}
+                label="Cash Management"
+                variant="outlined"
+              />
+             
+            </Box>
+          ): accessID == "TR398" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>             
+              <Chip
+                icon={<ForumIcon color='primary' />}
+                label="Cash Management"
+                variant="outlined"
+              />
+             
             </Box>
           )
           : accessID == "TR385" ? (

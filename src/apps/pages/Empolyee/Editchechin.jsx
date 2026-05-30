@@ -168,10 +168,10 @@ const Editcheckin = () => {
         : mode === "E" && del
           ? "harddelete"
           : "update";
-    var isCheck = "N";
-    if (values.disable == false) {
-      isCheck = "Y";
-    }
+    // var isCheck = "N";
+    // if (values.disable == false) {
+    //   isCheck = "Y";
+    // }
 
     const idata = {
       RecordID: recID,
@@ -181,7 +181,7 @@ const Editcheckin = () => {
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
       EmployeeID: values.employee.RecordID || 0,
       EmployeeName: values.employee.Name || "",
-      WorkAtHome: isCheck,
+      WorkAtHome: values.disable == true ? "Y" : "N",
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,

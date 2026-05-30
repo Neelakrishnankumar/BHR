@@ -209,6 +209,8 @@ import EditPayment from "./pages/Empolyee/Editpayment";
 import InvoiceAnalytics from "./pages/Empolyee/InvoiceAnalytics";
 import TeacherOccupancy from "./pages/HR/EditTeachOccupancy";
 import EditAcademicyear from "./pages/HR/EditAcademicyear";
+import Editdebitcash from "./pages/FinanceModule/EditDebit";
+import Editdepositcash from "./pages/FinanceModule/EditDeposit";
 import EditTerms from "./pages/HR/EditTerms";
 import EditSlotgroup from "./pages/HR/EditSlotgroup";
 import EditSlots from "./pages/HR/EditSlots";
@@ -1590,6 +1592,17 @@ function App() {
                     path="/:accessID/RaiseComplaints/EditRaiseComplaints/:id/:Mode"
                     element={<RaiseComplaints />}
                   />
+                  {/* /Apps/Secondarylistview/TR396/Debit/5/EditDebit/-1/A */}
+                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:type/EditDebit/:id/:Mode"
+                    element={<Editdebitcash />}
+                  />
+                  {/* /Apps/Secondarylistview/TR395/Cash%20Management%20Category/T/Debit/8/DB/EditDebit/-1/A*/}
+                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:type/EditDeposit/:id/:Mode"
+                    element={<Editdepositcash />}
+                  /> 
+                  
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
