@@ -182,6 +182,7 @@ const Editcheckin = () => {
       EmployeeID: values.employee.RecordID || 0,
       EmployeeName: values.employee.Name || "",
       WorkAtHome: values.disable == true ? "Y" : "N",
+      // WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,
@@ -626,7 +627,8 @@ const Editcheckin = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" && mode == "E" ? (
+                  )}
+                   {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -651,15 +653,9 @@ const Editcheckin = () => {
                       Delete
                     </Button>
                   ) : (
-                    // <Button
-                    //   color="error"
-                    //   variant="contained"
-                    //   disabled={true}
-                    // >
-                    //   Delete
-                    // </Button>
+                   
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

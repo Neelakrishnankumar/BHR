@@ -563,5 +563,12 @@
     "AddressedTo": "Please select the Addressed To",
     "StartTime": "Please select the Start Time",
     "EndTime": "Please select the End Time"
+},
+  "RaiseComplaints": {
+    "Title": "Please enter the Working Title",
+    "Priority": "Please select the Priority",
+    "Description": "Please enter the Description",
+    "Standard": "Please select the Standard/Activities",
+    "Student": "Please select the Student"
 }
 }
