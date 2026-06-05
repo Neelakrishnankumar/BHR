@@ -1326,7 +1326,37 @@ export const getFetchFeeData = createAsyncThunk(
     return response.data;
   },
 );
+export const getFetchCashData = createAsyncThunk(
+  "CashManagement/Header",
+  async ({ accessID, get, recID, CompanyID }) => {
+    var url = store.getState().globalurl.apiUrl;
 
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 export const getFetchData_v1 = createAsyncThunk(
   "allScreen_v1/Header_v1",
   async ({ accessID, get, recID, CompanyID }) => {
@@ -3489,6 +3519,24 @@ export const getApiSlice = createSlice({
         // state.msg =  action.payload.Msg
       })
       .addCase(getFetchFeeData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        // toast.error("Something Went Wrong");
+      })
+      
+
+      .addCase(getFetchCashData.pending, (state, action) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.msg = "Loading...";
+      })
+      .addCase(getFetchCashData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(getFetchCashData.rejected, (state, action) => {
         state.Status = "Error";
         state.getLoading = false;
         // toast.error("Something Went Wrong");

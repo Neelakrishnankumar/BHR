@@ -666,6 +666,10 @@ const isHeaderDisabled = teachrows.length > 0;
           schemaFields.name = Yup.string().trim().required(data.Project.StandardActivities);
           schemaFields.incharge = Yup.object().required(data.Project.ClassTeacher).nullable();
         }
+        if (Subscriptionlastthree !== "003") {
+           schemaFields.TentativeStartDate= Yup.string().required(data.Project.TentativeStartDate);
+          schemaFields.TentativeEndDate= Yup.string().required(data.Project.TentativeEndDate);
+        }
 
         const schema = Yup.object().shape(schemaFields);
         let schemaFields2 = {
@@ -1017,8 +1021,8 @@ const formikRef = useRef();
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
       AcademicYearID : params.filtertype || 0,
-      // TentativeStartDate: values.TentativeStartDate || "",
-      // TentativeEndDate: values.TentativeEndDate || ""
+      TentativeStartDate: values.TentativeStartDate || "",
+      TentativeEndDate: values.TentativeEndDate || ""
     };
  
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -2126,7 +2130,9 @@ function EditToolbarteach(props) {
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
 
-                  {/* <TextField
+{is003Subscription === false ? (
+  <>
+                  <TextField
                     id="TentativeStartDate"
                     name="TentativeStartDate"
                     type="date"
@@ -2173,7 +2179,8 @@ function EditToolbarteach(props) {
                     // value={values.CurrentStatus}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                  /> */}
+                  />
+                  </> ) : null}
 {Subscriptionlastthree != "003" ? (
   <>
     <TextField

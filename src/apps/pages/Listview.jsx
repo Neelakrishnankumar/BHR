@@ -685,7 +685,7 @@ const Listview = () => {
             ) : (
               false
             )}
-            {/* {accessID == "TR331" || accessID == "TR366" ? (
+            {(accessID == "TR331" || accessID == "TR366") && is003Subscription ? (
               <Tooltip arrow title="Cash Management">
                 <IconButton>
                   <AccountBalanceWalletIcon
@@ -702,7 +702,7 @@ const Listview = () => {
               </Tooltip>
             ) : (
               false
-            )} */}
+            )}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">

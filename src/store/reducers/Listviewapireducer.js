@@ -41,6 +41,7 @@ import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import AssignmentReturnOutlinedIcon from "@mui/icons-material/AssignmentReturnOutlined";
 import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { toast } from "react-hot-toast";
 import { redirect } from "react-router-dom";
 import WysiwygIcon from "@mui/icons-material/Wysiwyg";
@@ -806,6 +807,7 @@ export const fetchListview =
           AccessID != "TR368" &&
           AccessID != "TR395" &&
           AccessID != "TR398" &&
+          AccessID != "TR399" &&
           AccessID != "TR396" &&
           AccessID != "TR397" &&
           AccessID != "TR380" &&
@@ -2192,7 +2194,7 @@ export const fetchListview =
                       <Link
                         // to={`./Fees Structure/TR387/${params.row.RecordID}`}
                         to={
-                          params.row.RecordID == 1
+                          params.row.Description == "Term"
                             ? `./Term Fees Structure/TR387/${params.row.RecordID}`
                             : `./Annual Fees Structure/TR387/${params.row.RecordID}`
                         }
@@ -2299,39 +2301,39 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   return (
-//                     <Box>
-//                       {params.row.Status === "Applied" ?
-//                       (
-//                       <Link
-//                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-//                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
-//                          state={{ Breadcrumb1: params.row.Title }}
-//                       >
-//                         <Tooltip title="Edit">
-//                           <IconButton color="info" size="small">
-//                             <ModeEditOutlinedIcon />
-//                           </IconButton>
-//                         </Tooltip>
-//                       </Link>):(
-//  <Link
-//                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-//                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
-//                          state={{ Breadcrumb1: params.row.Title }}
-//                       >
-//                         <Tooltip title="View">
-//                           <IconButton color="info" size="small">
-//                             <VisibilityIcon />
-//                           </IconButton>
-//                         </Tooltip>
-//                       </Link>
-//                       )}
-//                     </Box>
+                    //                     <Box>
+                    //                       {params.row.Status === "Applied" ?
+                    //                       (
+                    //                       <Link
+                    //                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+                    //                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+                    //                          state={{ Breadcrumb1: params.row.Title }}
+                    //                       >
+                    //                         <Tooltip title="Edit">
+                    //                           <IconButton color="info" size="small">
+                    //                             <ModeEditOutlinedIcon />
+                    //                           </IconButton>
+                    //                         </Tooltip>
+                    //                       </Link>):(
+                    //  <Link
+                    //                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+                    //                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
+                    //                          state={{ Breadcrumb1: params.row.Title }}
+                    //                       >
+                    //                         <Tooltip title="View">
+                    //                           <IconButton color="info" size="small">
+                    //                             <VisibilityIcon />
+                    //                           </IconButton>
+                    //                         </Tooltip>
+                    //                       </Link>
+                    //                       )}
+                    //                     </Box>
                     <Box>
-                     
- <Link
+
+                      <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
-                         state={{ Breadcrumb1: params.row.Title }}
+                        state={{ Breadcrumb1: params.row.Title }}
                       >
                         <Tooltip title="View">
                           <IconButton color="info" size="small">
@@ -2339,7 +2341,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                     
+
                     </Box>
                   );
                 },
@@ -2912,6 +2914,8 @@ export const fetchListview =
               AccessID == "TR387" ||
               AccessID == "TR395" ||
               AccessID == "TR398" ||
+              AccessID == "TR396" ||
+              AccessID == "TR397" ||
               AccessID == "TR368"
 
             ) {
@@ -3021,7 +3025,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373") {
+            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373" || AccessID == "TR399") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -5000,6 +5004,8 @@ export const fetchListview =
                         AccessID !== "TR374" &&
                         AccessID !== "TR376" &&
                         AccessID !== "TR368" &&
+                        AccessID !== "TR396" &&
+                        AccessID !== "TR397" &&
                         AccessID !== "TR387" &&
                         AccessID !== "TR052" ? (
                         <Link
@@ -8469,7 +8475,92 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       toast.error(response?.payload?.Msg);
     }
   };
+  const handledeleteDeposit = async (values) => {
+    try {
+      const action = "harddelete";
 
+      const idata = {
+        RecordID: values?.RecordID,
+        DepositDate: values?.CurrentDate,
+        TransactionID: values?.transactionID,
+        CategoryID: values?.CategoryID,
+        EmployeeID: values?.EmployeeID,
+        Amount: Number(values?.Amount || 0),
+        AccountNo: values?.AccountNo,
+        IFSCCode: values?.IfscCode,
+        HolderName: values?.HolderName,
+        Attachment: values?.Attachment || "",
+        BalanceAmount: Number(values?.BalanceAmnt || 0),
+        BranchName: values?.BranchName,
+      };
+
+      console.log(idata, "-- DELETE PAYLOAD");
+
+      const response = await dispatch(
+        postData({
+          accessID,
+          action,
+          idata,
+        })
+      );
+
+      console.log(response, "-- DELETE RESPONSE");
+
+      const result = response?.payload;
+
+      if (result?.Status === "Y") {
+        toast.success(result?.Msg);
+      } else if (result?.Status === "N") {
+        toast.error(result?.Msg);
+      } else {
+        toast.error("Unexpected response received.");
+      }
+    } catch (error) {
+      console.error("Delete Deposit Error:", error);
+      toast.error("Failed to delete deposit.");
+    }
+  };
+  const handledeleteDebit = async (values) => {
+    try {
+      const action = "harddelete";
+
+      const idata = {
+        RecordID: values?.RecordID,
+        DebitDate: values.CurrentDate,
+        TransactionID: values.transactionID,
+        CategoryID: values.CategoryID || 0,
+        EmployeeID: values.EmployeeID || 0,
+        Description: values.Description,
+        Amount: Number(values.Amount),
+        BalanceAmount: Number(values.BalanceAmnt),
+      };
+
+      console.log(idata, "-- DELETE PAYLOAD");
+
+      const response = await dispatch(
+        postData({
+          accessID,
+          action,
+          idata,
+        })
+      );
+
+      console.log(response, "-- DELETE RESPONSE");
+
+      const result = response?.payload;
+
+      if (result?.Status === "Y") {
+        toast.success(result?.Msg);
+      } else if (result?.Status === "N") {
+        toast.error(result?.Msg);
+      } else {
+        toast.error("Unexpected response received.");
+      }
+    } catch (error) {
+      console.error("Delete Deposit Error:", error);
+      toast.error("Failed to delete deposit.");
+    }
+  };
 
 
   const handleTermsProcess = async (values) => {
@@ -8900,10 +8991,10 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 onClick={() => {
                   const path =
                     params.row.Description === "Credit"
-                      ? `/Apps/Secondarylistview/TR396/Credit/${params.row.RecordID}`
+                      ? `/Apps/Secondarylistview/TR399/Credit/${params.row.RecordID}`
                       : params.row.Description === "Debit "
-                        ? `/Apps/Secondarylistview/TR396/Debit/${params.row.RecordID}`
-                        : `/Apps/Secondarylistview/TR397/Deposit/${params.row.RecordID}`;
+                        ? `/Apps/Secondarylistview/TR397/Debit/${params.row.RecordID}`
+                        : `/Apps/Secondarylistview/TR396/Deposit/${params.row.RecordID}`;
 
                   navigate(path, {
                     state: {
@@ -8913,7 +9004,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   });
                 }}
               >
-                <ForumIcon />
+                <LocalAtmIcon />
               </IconButton>
             </Tooltip>
             {/* </Link>*/}
@@ -8923,14 +9014,70 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
 
             <Link
-              to={`./Cash Management/TR395/${params.row.RecordID}`}
+              to={`./Cash Management Category/TR395/${params.row.RecordID}`}
               state={{
-                BreadCrumb1: params.row.Project,
+                AcademicYear: params.row.AcademicYear,
               }}
             >
-              <Tooltip title="Cash Management">
+              <Tooltip title="Cash Management Category">
                 <IconButton color="info" size="small">
                   <ForumIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR396" && (
+          <>
+
+            <Link
+              to={`./EditDeposit/${params.row.RecordID}/E`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Delete">
+                <IconButton color="error" size="small" onClick={() => handledeleteDeposit(params.row)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR397" && (
+          <>
+
+            <Link
+              to={`./EditDebit/${params.row.RecordID}/E`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Delete">
+                <IconButton color="error" size="small" onClick={() => handledeleteDebit(params.row)}>
+                  <DeleteIcon />
                 </IconButton>
               </Tooltip>
             </Link>

@@ -481,6 +481,9 @@
   "Allowance": {
     "Allowance": "Please select the Allowance"
 },
+  "Deduction": {
+    "Deduction": "Please select the Deduction"
+},
   "Settlement": {
     "Amount": "Please enter the Amount",
     "paymentmode": "Please select the Mode Of Payment",
@@ -570,5 +573,18 @@
     "Description": "Please enter the Description",
     "Standard": "Please select the Standard/Activities",
     "Student": "Please select the Student"
+},
+"DepositCash": {
+    "depositdate": "Please enter the Deposit Date",
+    "amount": "Please enter the Amount",
+    "branchName": "Please enter the Branch Name",
+    "AccountNumber": "Please enter the Account Number",
+    "IfscCode": "Please enter the IFSC Code",
+    "AccountHoldersName":"Please enter the Account Holder Name"
+},
+"DebitCash": {
+    "depositdate": "Please enter the Deposit Date",
+    "amount": "Please enter the Amount",
+    "description": "Please enter the Description"   
 }
 }

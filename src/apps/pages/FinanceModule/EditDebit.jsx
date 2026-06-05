@@ -30,6 +30,7 @@ import * as Yup from "yup";
 import {
     CustomisedCaptionGet,
     fetchApidata,
+    getFetchCashData,
     getFetchData,
     postApidata,
     postData,
@@ -48,7 +49,6 @@ import { formGap } from "../../../ui-components/global/utils";
 import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 
-// import CryptoJS from "crypto-js";
 const Editdebitcash = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
@@ -57,29 +57,20 @@ const Editdebitcash = () => {
     var recID = params.id;
     var mode = params.Mode;
     var accessID = params.accessID;
-    // var parentID = params.filtertype;
+    const UserName = sessionStorage.getItem("UserName");
     const data = useSelector((state) => state.formApi.Data);
-    const Status = useSelector((state) => state.formApi.Status);
-    const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
-    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-    const YearFlag = sessionStorage.getItem("YearFlag");
-    const Year = sessionStorage.getItem("year");
     const { toggleSidebar, broken, rtl } = useProSidebar();
-    const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
     const location = useLocation();
-    const state = location.state || {};
-    console.log(state, "checkin");
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [validationSchema, setValidationSchema] = useState(null);
     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
     const lastThree = SubscriptionCode?.slice(-3) || "";
-    const [logoimage, setlogoimage] = useState("");
-    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
-        ? lastThree
-        : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree) ? lastThree : "";
+    const UserRecordid = sessionStorage.getItem("loginrecordID");
+
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -89,149 +80,120 @@ const Editdebitcash = () => {
             .then((data) => {
                 setErrorMsgData(data);
                 const schema = Yup.object().shape({
-                    academicyear: Yup.string().required(data.ACYear.Academicyear).nullable(),
-                    fromdate: Yup.string().required(data.ACYear.Fromdate).nullable(),
-                    todate: Yup.string().nullable().required(data.ACYear.Todate),
+                    date: Yup.string().required(data.DebitCash.depositdate).nullable(),
+                    description: Yup.string().required(data.DebitCash.description).nullable(),
+                    amount: Yup.string().required(data.DebitCash.amount).nullable(),
                 });
-
                 setValidationSchema(schema);
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, []);
+
     useEffect(() => {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+        dispatch(getFetchCashData({ accessID, get: "get", recID, CompanyID }));
     }, [location.key]);
+
     useEffect(() => {
         if (Subscriptionlastthree && accessID) {
-            dispatch(
-                CustomisedCaptionGet({
-                    Vertical: Subscriptionlastthree,
-                    AccessID: accessID,
-                })
-            );
+            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
         }
     }, [Subscriptionlastthree, accessID, dispatch]);
-    const Customisedcaptiondata = useSelector(
-        (state) => state.formApi.CustomisedCaptionGetData
-    );
-    // Ensure it's always an array
-    const captionArray = Array.isArray(Customisedcaptiondata)
-        ? Customisedcaptiondata
-        : Customisedcaptiondata?.data || [];
-    console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
-    const getBusinessCaption = (CaptionID, defaultCaption) => {
-        const match = captionArray?.find(
-            (item) => item.CAPTIONID === CaptionID
+
+    // ── Summary Cards ──────────────────────────────────────────
+    const SummaryCards = ({ openingBalance, todaysCollection, inHandAmount }) => {
+        const cards = [
+            { label: "Opening Balance", value: openingBalance },
+            { label: "Today's Collection", value: todaysCollection },
+            { label: "In Hand Amount", value: inHandAmount },
+        ];
+        const formatAmount = (amount) =>
+            `₹ ${Number(amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+        const cardColors = [
+            "#E3F2FD", // light blue
+            "#E8F5E9", // light green
+            "#FFF3E0", // light orange          
+        ];
+        const borderColors = [
+            "#9dd4fb", // light blue
+            "#a2f5a9", // light green
+            "#fbdaa5", // light orange          
+        ];
+        return (
+            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap="12px" p={2} pb={0}>
+                {cards.map(({ label, value }, index) => (
+                    <Paper
+                        key={label}
+                        elevation={0}
+                        sx={{
+                            border: `2px solid ${borderColors[index % borderColors.length]}`,
+                            borderRadius: "12px",
+                            padding: "1rem 1.25rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "6px",
+                            backgroundColor: cardColors[index % cardColors.length],
+                        }}
+                    >
+                        <Box display="flex" alignItems="center" gap="6px">
+                            <Typography variant="h7" fontWeight={300}>
+                                {label}
+                            </Typography>
+                        </Box>
+                        <Typography variant="h5" fontWeight={500}>
+                            {formatAmount(value)}
+                        </Typography>
+                    </Paper>
+                ))}
+            </Box>
         );
-
-        return match?.CAPTION || defaultCaption;
-    };
-    const style = {
-        height: "55px",
-        border: "2px solid #1769aa ",
-        borderRadius: "5px",
-        backgroundColor: "#EDEDED",
     };
 
-    // const validationSchema = Yup.object().shape({
-    //   employee: Yup.object()
-    //     .nullable()
-    //     .required("Please fill the Employee"),
-    //   location: Yup.object()
-    //     .nullable()
-    //     .required("Please fill the Location"),
-    //   gate: Yup.object()
-    //     .nullable()
-    //     .required("Please fill the Gate"),
-
-    // });
-    // *************** INITIALVALUE  *************** //
-    const [academicYear, setAcademicYear] = useState("");
-    const currentDate = new Date().toISOString().split('T')[0];
+    // ── InitialValue mapped to GET response ────────────────────
     const InitialValue = {
-        fromdate: mode === "E" ? data.FromDate : "",
-        todate: mode === "E" ? data.ToDate : "",
-        academicyear: mode === "E" ? data.AcademicYear : "",
-        disable: data.Disable === "Y" ? true : false,
-        delete: data.DeleteFlag === "Y" ? true : false,
+        date: mode === "E" ? data.DebitDate : "",
+        employee: mode === "E" ? data.EmployeeName : UserName,
+        employeeID: mode === "E" ? data.EmployeeID : "",
+        transactionID: data.TransactionID || "",
+        description: mode === "E" ? data.Description : "",
+        amount: mode === "E" ? data.Amount : "",
+        balamount: data.BalanceAmount || "",
 
     };
 
+    // ── Save mapped to POST structure ─────────────────────────
     const Fnsave = async (values, del) => {
-        // let action = mode === "A" ? "insert" : "update";
         let action =
-            mode === "A" && !del
-                ? "insert"
-                : mode === "E" && del
-                    ? "harddelete"
-                    : "update";
-        var isCheck = "N";
-        if (values.disable == false) {
-            isCheck = "Y";
-        }
+            mode === "A" && !del ? "insert" :
+                mode === "E" && del ? "harddelete" :
+                    "update";
 
         const idata = {
-            RecordID: recID,
-            FromDate: values.fromdate,
-            ToDate: values.todate,
-            AcademicYear: values.academicyear,
-            SortOrder: values.sortorder || 0,
-            DeleteFlag: values.delete == true ? "Y" : "N",
-            YearFlag: "N",
-            Disable: values.disable == true ? "Y" : "N",
-            CompanyID,
+            RecordID: recID || "-1",
+            DebitDate: values.date,
+            TransactionID: values.transactionID,
+            CategoryID: params.type || 0,
+            EmployeeID: UserRecordid || 0,
+            Description: values.description,
+            Amount: Number(values.amount),
+            BalanceAmount: Number(values.balamount),
         };
 
         const response = await dispatch(postData({ accessID, action, idata }));
-        if (response.payload.Status == "Y") {
+        if (response.payload.Status === "Y") {
             toast.success(response.payload.Msg);
+            dispatch(getFetchCashData({ accessID, get: "get", recID, CompanyID }));
+
             navigate(-1);
-            //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
         } else {
             toast.error(response.payload.Msg);
+            dispatch(getFetchCashData({ accessID, get: "get", recID, CompanyID }));
+
         }
     };
-    const getFileChange = async (event) => {
-        setlogoimage(event.target.files[0]);
 
-        console.log(event.target.files[0]);
-
-        const formData = new FormData();
-        formData.append("file", event.target.files[0]);
-        formData.append("type", "images");
-
-        const fileData = await dispatch(fileUpload({ formData }));
-        setlogoimage(fileData.payload.name);
-        sessionStorage.setItem("logoimage", fileData.payload.name);
-        console.log(">>>", fileData.payload);
-        console.log(
-            "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-            fileData
-        );
-        if (fileData.payload.Status == "Y") {
-            // console.log("I am here");
-            toast.success(fileData.payload.Msg);
-        }
-    };
-    const getYearRange = () => {
-        if (!academicYear || academicYear.length !== 7) return {};
-
-        const [start, end] = academicYear.split("-");
-        const startYear = parseInt(start);
-        const endYear = parseInt("20" + end);
-
-        return {
-            minDate: `${startYear}-01-01`,
-            maxDate: `${endYear}-12-31`,
-        };
-    };
-
-    const { minDate, maxDate } = getYearRange();
     const fnLogOut = (props) => {
-
         Swal.fire({
-            title: errorMsgData.Warningmsg[props],
-            // text:data.payload.Msg,
+            title: errorMsgData?.Warningmsg?.[props] || `Are you sure you want to ${props}?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -239,21 +201,17 @@ const Editdebitcash = () => {
             confirmButtonText: props,
         }).then((result) => {
             if (result.isConfirmed) {
-                if (props === "Logout") {
-                    navigate("/");
-                }
-                if (props === "Close") {
-                    //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-                    navigate(-1);
-                }
-            } else {
-                return;
+                if (props === "Logout") navigate("/");
+                if (props === "Close") navigate(-1);
             }
         });
     };
+
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
+
+            {/* ── Header ── */}
             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -270,17 +228,13 @@ const Editdebitcash = () => {
                             <Typography
                                 variant="h5"
                                 color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                onClick={() => {
-                                    navigate(-1);
-                                }}
+                                sx={{ cursor: "pointer" }}
+                                onClick={() => navigate(-1)}
                             >
-                               Debit
+                                Debit Details
                             </Typography>
-
                         </Breadcrumbs>
                     </Box>
-
                     <Box display="flex">
                         <Tooltip title="Close">
                             <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -295,80 +249,71 @@ const Editdebitcash = () => {
                     </Box>
                 </Box>
             </Paper>
+
             {!getLoading ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
 
+                    {/* ── Summary Cards ── */}
+                    <SummaryCards
+                        openingBalance={data.OpeningBalance}
+                        todaysCollection={data.CollectedAmount}
+                        inHandAmount={data.InHandAmount}
+                    />
+
                     <Formik
                         initialValues={InitialValue}
-                        onSubmit={(values, setSubmitting) => {
-                            setTimeout(() => {
-                                Fnsave(values);
-                            }, 100);
+                        onSubmit={(values) => {
+                            setTimeout(() => Fnsave(values), 100);
                         }}
                         validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
-                        {({
-                            errors,
-                            touched,
-                            handleBlur,
-                            handleChange,
-                            isSubmitting,
-                            values,
-                            handleSubmit,
-                            setFieldValue
-                        }) => (
+                        {({ errors, touched, handleBlur, handleChange, values, handleSubmit, setFieldValue }) => (
                             <form onSubmit={handleSubmit}>
                                 <Box
                                     display="grid"
                                     gap={formGap}
-                                    padding={1}
-                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                    // gap="30px"
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 2",
-                                        },
-                                    }}
+                                    padding={2}
+                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
                                 >
-                                    
+                                    {/* Debit Date */}
                                     <TextField
-                                        name="fromdate"
+                                        name="date"
                                         type="date"
-                                        id="fromdate"
-                                        label={
-                                            <>
-                                                Date
-                                                <span style={{ color: "red", fontSize: "20px" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        inputFormat="YYYY-MM-DD"
+                                        id="date"
+                                        label={<>Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         variant="standard"
-                                        value={values.fromdate}
+                                        value={values.date}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         focused
-                                        // inputProps={{
-                                        //     min: minDate,
-                                        //     max: maxDate,
-                                        // }}
-                                        error={!!touched.fromdate && !!errors.fromdate}
-                                        helperText={touched.fromdate && errors.fromdate}
+                                        error={!!touched.date && !!errors.date}
+                                        helperText={touched.date && errors.date}
                                     />
+
+                                    {/* Employee (read-only) */}
+                                    <TextField
+                                        name="employee"
+                                        type="text"
+                                        id="employee"
+                                        label="Employee"
+                                        variant="standard"
+                                        focused
+                                        value={values.employee}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.employee && !!errors.employee}
+                                        helperText={touched.employee && errors.employee}
+                                        InputProps={{ readOnly: true }}
+                                    />
+
+                                    {/* Description */}
                                     <TextField
                                         name="description"
                                         type="text"
                                         id="description"
-                                        label={
-                                            <>
-                                                Description
-                                                <span style={{ color: "red", fontSize: "20px" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
+                                        label={<>Description <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         variant="standard"
                                         focused
                                         value={values.description}
@@ -376,139 +321,102 @@ const Editdebitcash = () => {
                                         onChange={handleChange}
                                         error={!!touched.description && !!errors.description}
                                         helperText={touched.description && errors.description}
-                                       
                                     />
+
+                                    {/* Amount */}
                                     <TextField
-                                    name="amount"
-                                    type="text"
-                                    id="amount"
-                                    label="Amount"
-                                    variant="standard"
-                                    focused
-                                    value={values.amount}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    error={!!touched.amount && !!errors.amount}
-                                    helperText={touched.amount && errors.amount}
-                                    autoFocus
-                                    />
-                                    <TextField
-                                        name="sortorder"
+                                        name="amount"
                                         type="number"
-                                        id="sortorder"
-                                        label="Sort Order"
+                                        id="amount"
+                                        label={<>Amount <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         variant="standard"
                                         focused
-                                        value={values.sortorder}
+                                        value={values.amount}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.sortorder && !!errors.sortorder}
-                                        helperText={touched.sortorder && errors.sortorder}
-                                        sx={{ background: "" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            // Auto-compute BalanceAmount = InHandAmount - Amount
+                                            const entered = parseFloat(e.target.value) || 0;
+                                            const inHand = parseFloat(data.InHandAmount) || 0;
+                                            setFieldValue("balamount", (inHand - entered).toFixed(2));
                                         }}
+                                        error={!!touched.amount && !!errors.amount}
+                                        helperText={touched.amount && errors.amount}
+                                        autoFocus
+                                        InputProps={{ inputProps: { min: 0 } }}
                                         onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
-                                        }}
                                     />
-                                    <Box>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="delete"
-                                            id="delete"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Delete"
-                                        />
 
-                                        <FormLabel focused={false}>Delete</FormLabel>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="disable"
-                                            id="disable"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Disable"
-                                        />
+                                    {/* Balance Amount (read-only, auto-computed) */}
+                                    <TextField
+                                        name="balamount"
+                                        type="text"
+                                        id="balamount"
+                                        label="Balance Amount"
+                                        variant="standard"
+                                        focused
+                                        value={values.balamount}
+                                        InputProps={{ readOnly: true }}
+                                    // sx={{
+                                    //     "& .MuiInputBase-input": {
+                                    //         color: "#0d6e3f",
+                                    //         fontWeight: 500,
+                                    //     }
+                                    // }}
+                                    />
 
-                                        <FormLabel focused={false}>Disable</FormLabel>
-                                    </Box>
+                                    {/* InHand at entry (read-only, from GET) */}
+                                    {/* <TextField
+                                        name="inhandentry"
+                                        type="text"
+                                        id="inhandentry"
+                                        label="InHand at entry"
+                                        variant="standard"
+                                        focused
+                                        value={data.InHandAmount ? `₹ ${Number(data.InHandAmount).toLocaleString("en-IN")}` : ""}
+                                        InputProps={{ readOnly: true }}
+                                        sx={{ "& .MuiInputBase-input": { color: "text.secondary" } }}
+                                    />
+
+                                    <TextField
+                                        name="balentry"
+                                        type="text"
+                                        id="balentry"
+                                        label="Balance at entry"
+                                        variant="standard"
+                                        focused
+                                        value={data.BalanceAmount ? `₹ ${Number(data.BalanceAmount).toLocaleString("en-IN")}` : ""}
+                                        InputProps={{ readOnly: true }}
+                                        sx={{ "& .MuiInputBase-input": { color: "text.secondary" } }}
+                                    /> */}
                                 </Box>
+
+                                {/* ── Action Buttons ── */}
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                                    <Tooltip title="Upload">
-                                        <IconButton
-                                            size="small"
-                                            color="warning"
-                                            aria-label="upload picture"
-                                            component="label"
-                                        >
-                                            <input
-                                                hidden
-                                                accept="all/*"
-                                                type="file"
-                                                onChange={getFileChange}
-                                            />
-                                            <PictureAsPdfOutlinedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        component={"a"}
-                                        onClick={() => {
-                                            data.logoimage || logoimage
-                                                ? window.open(
-                                                    logoimage
-                                                        ? store.getState().globalurl.attachmentUrl +
-                                                        logoimage
-                                                        : store.getState().globalurl.attachmentUrl +
-                                                        data.logoimage,
-                                                    "_blank"
-                                                )
-                                                : toast.error("Please Upload File");
-                                        }}
-                                    >
-                                        View
-                                    </Button>
                                     <LoadingButton
                                         color="secondary"
                                         variant="contained"
                                         type="submit"
                                         loading={isLoading}
                                     >
-                                        Save
+                                        Confirm Debit
                                     </LoadingButton>
-
                                     <Button
                                         color="warning"
                                         variant="contained"
-                                        onClick={() => {
-                                            navigate(-1);
-                                        }}
+                                        onClick={() => navigate(-1)}
                                     >
-                                        Cancel
+                                        Back
                                     </Button>
                                 </Box>
                             </form>
                         )}
                     </Formik>
-
                 </Paper>
-            ) : (
-                false
-            )}
+            ) : false}
         </React.Fragment>
     );
 };
 
 export default Editdebitcash;
+
