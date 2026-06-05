@@ -238,10 +238,12 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight }) => {
 
           >
             <Text style={styles.legendText}>{"P -> Present"}</Text>
-            <Text style={styles.legendText}>{"A -> Absent"}</Text>
+            <Text style={styles.legendText}>{"UL -> Unscheduled Leave"}</Text>
+            <Text style={styles.legendText}>{"SH -> Second Half"}</Text>
+            <Text style={styles.legendText}>{"M -> Medical Leave"}</Text>
             <Text style={styles.legendText}>{"HO -> Holiday"}</Text>
             <Text style={styles.legendText}>{"WO -> Week Off"}</Text>
-            <Text style={styles.legendText}>{"L -> Leave"}</Text>
+            <Text style={styles.legendText}>{"CL -> Casual Leave"}</Text>
             <Text style={styles.legendText}>{"IR -> IR Regular"}</Text>
           </View>
           <View style={styles.table}>
@@ -290,7 +292,7 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight }) => {
               <Text style={styles.headerCell2}>P</Text>
               {/* <Text style={styles.headerCell2}>L</Text> */}
               <Text style={styles.headerCell2}>UL</Text>
-              <Text style={styles.headerCell2}>AB</Text>
+              <Text style={styles.headerCell2}>SL</Text>
               {/* <Text style={styles.headerCell2}>IR</Text> */}
               <Text style={styles.headerCell2}>HOL</Text>
               <Text style={styles.headerCell2}>WO</Text>
@@ -335,8 +337,8 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight }) => {
                 <Text style={styles.cell1}>{row.Day31}</Text>
                 <Text style={styles.cell2}>{row.Present}</Text>
                 {/* <Text style={styles.cell2}>{row.Leave}</Text> */}
-                <Text style={styles.cell2}>{row.Unpaidleave}</Text>
-                <Text style={styles.cell2}>{row.Absent}</Text>
+                <Text style={styles.cell2}>{row.UnPaidLeave}</Text>
+                <Text style={styles.cell2}>{row.PaidLeave}</Text>
                 {/* <Text style={styles.cell2}>{row.IRREGULAR}</Text> */}
                 <Text style={styles.cell2}>{row.Holidays}</Text>
                 <Text style={styles.cell2}>{row.Weekoff}</Text>

@@ -1252,7 +1252,7 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR259",
           },
 
-          getFeedbackMenu(is003Subscription),
+           getFeedbackMenu(is003Subscription),
 
           {
             name: "Timesheet",

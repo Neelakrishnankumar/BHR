@@ -276,8 +276,8 @@ const EditAttendanceHistory = () => {
     { field: "Day31", headerName: "31", width: 5 },
     { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "Unpaidleave", headerName: "Unpaid Leave", headerAlign: "center", align: "right", },
-    { field: "Absent", headerName: "Absent", headerAlign: "center", align: "right", },
+    { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 130 },
+    { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
     // { field: "Irregular", headerName: "IRREGULAR" },
     { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
     { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
@@ -784,8 +784,8 @@ const EditAttendanceHistory = () => {
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />
                   <Chip
-                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
-                    label="Absent"
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>SH</Avatar>}
+                    label="Second Half"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />
@@ -805,8 +805,20 @@ const EditAttendanceHistory = () => {
                   />
 
                   <Chip
-                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
-                    label="Leave"
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>CL</Avatar>}
+                    label="CasualLeave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>M</Avatar>}
+                    label="Medical Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>UL</Avatar>}
+                    label="Unscheduled Leave"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />

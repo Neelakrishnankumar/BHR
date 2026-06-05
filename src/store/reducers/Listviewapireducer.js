@@ -23,6 +23,7 @@ import store from "../..";
 import BalanceIcon from "@mui/icons-material/Balance";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ForumIcon from '@mui/icons-material/Forum';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
@@ -803,6 +804,10 @@ export const fetchListview =
           AccessID != "TR371" &&
           AccessID != "TR375" &&
           AccessID != "TR368" &&
+          AccessID != "TR395" &&
+          AccessID != "TR398" &&
+          AccessID != "TR396" &&
+          AccessID != "TR397" &&
           AccessID != "TR380" &&
           AccessID != "TR385" &&
           AccessID != "TR377" &&
@@ -2357,7 +2362,7 @@ export const fetchListview =
                     <Box>
                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
@@ -2905,6 +2910,8 @@ export const fetchListview =
               AccessID == "TR384" ||
               AccessID == "TR385" ||
               AccessID == "TR387" ||
+              AccessID == "TR395" ||
+              AccessID == "TR398" ||
               AccessID == "TR368"
 
             ) {
@@ -8874,6 +8881,61 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
           </>
         )}
+        {accessID === "TR395" && (
+          <>
+            {/* <Link
+              to={
+                params.row.Description == "Credit"
+                  ? `./Credit/TR396/${params.row.RecordID}`
+                  : params.row.Description == "Debit "
+                  ? `./Debit/TR396/${params.row.RecordID}`
+                  : `./Deposit/TR397/${params.row.RecordID}`
+              }
+              state={{
+                BreadCrumb1: params.row.Project,
+              }}
+            > */}
+            <Tooltip title="Cash Management">
+              <IconButton color="info" size="small"
+                onClick={() => {
+                  const path =
+                    params.row.Description === "Credit"
+                      ? `/Apps/Secondarylistview/TR396/Credit/${params.row.RecordID}`
+                      : params.row.Description === "Debit "
+                        ? `/Apps/Secondarylistview/TR396/Debit/${params.row.RecordID}`
+                        : `/Apps/Secondarylistview/TR397/Deposit/${params.row.RecordID}`;
+
+                  navigate(path, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Code,
+                    },
+                  });
+                }}
+              >
+                <ForumIcon />
+              </IconButton>
+            </Tooltip>
+            {/* </Link>*/}
+          </>
+        )}
+        {accessID === "TR398" && (
+          <>
+
+            <Link
+              to={`./Cash Management/TR395/${params.row.RecordID}`}
+              state={{
+                BreadCrumb1: params.row.Project,
+              }}
+            >
+              <Tooltip title="Cash Management">
+                <IconButton color="info" size="small">
+                  <ForumIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
         {accessID === "TR387" && (
           <>
             <Link
@@ -8927,7 +8989,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {(params.row.IsPublish === "Y" && params.row.Events !== "0") &&(
+            {(params.row.IsPublish === "Y" && params.row.Events !== "0") && (
 
               <Tooltip title="Publish Event Category">
                 <IconButton
@@ -8938,7 +9000,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <PublishedWithChangesOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            )} 
+            )}
           </>
         )}
         {accessID === "TR385" && (

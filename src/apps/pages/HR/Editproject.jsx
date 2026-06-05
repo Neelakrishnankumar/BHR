@@ -132,7 +132,7 @@ console.log(Department, "---Department in Autocomplete");
   const [laomode, setLaoMode] = useState("A");
   const colors = tokens(theme.palette.mode);
   const [page, setPage] = React.useState(secondaryCurrentPage);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(7);
   const [rowCount, setRowCount] = useState(0);
   const [rowLoading, setRowLoading] = useState(false);
   const [deletedRows, setDeletedRows] = useState([]);
@@ -425,6 +425,8 @@ const HeaderID = await FnsaveTech(
         {
             field: "Slno",
             headerName: "SL#",
+            align: "right",
+            headerAlign: "center",
             width: 60,
             sortable: false,
             filterable: false,
@@ -491,25 +493,27 @@ const HeaderID = await FnsaveTech(
       hide: false,
       editable: true,
       sortable: false,
-      renderCell: (params) => {
-        return params.value?.Name || ""; // show only the name
-      },
-// renderCell: (params) => (
-//     <div
-//       style={{
-//         height: "100%",
-//         maxHeight: "38px", // same as row height
-//         overflowY: "auto",
-//         overflowX: "hidden",
-//         width: "100%",
-//         whiteSpace: "normal",
-//         wordBreak: "break-word",
-//         lineHeight: "18px",
-//       }}
-//     >
-//       {params.value?.Name || ""}
-//     </div>
-//   ),
+      // renderCell: (params) => {
+      //   return params.value?.Name || ""; // show only the name
+      // },
+renderCell: (params) => (
+    <div
+      style={{
+        height: "100%",
+        maxHeight: "38px", // same as row height
+        overflowY: "auto",
+        overflowX: "hidden",
+        width: "100%",
+        whiteSpace: "normal",
+        wordBreak: "break-word",
+        lineHeight: "18px",
+        // textAlign: "center",
+        paddingTop: "5px",
+      }}
+    >
+      {params.value?.Name || ""}
+    </div>
+  ),
       renderEditCell: (params) => {
         return <EditTeacherAutocomplete {...params} />;
       },
@@ -698,6 +702,7 @@ const isHeaderDisabled = teachrows.length > 0;
       // setTeachrows([]);              // clear old buggy state
       // setTimeout(() => {
         setTeachrows(formattedRows); // set fresh
+         setPage(0);
       // }, 0);
     }
   }, [data]);
@@ -1668,37 +1673,96 @@ const formikRef = useRef();
 
 
 //STUDENT-TEACHER MAPPING 
-function EditToolbarteach(props) {
-  const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
+// function EditToolbarteach(props) {
+//   const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
 
+//   const handleClickteach = () => {
+//     const id = nanoid();
+//     setTeachrows((oldRows) => [
+//       ...oldRows,
+//       {
+//         id: id,           // ✅ must match getRowId
+//         RecordID: id,     // ✅ same value
+//         Department: null,
+//         Teacher: null,
+//         isNew: true,
+//       },
+
+      
+//     ]);
+//     setRowModesModelteach((oldModel) => ({
+//       ...oldModel,
+//       [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
+//     }));
+//   };
+
+//   return (
+//     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
+//       <Button 
+//        disabled={isRowEditing} 
+//       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
+//        sx={{ textTransform: "capitalize",fontSize: "14px" }}
+//       >
+//         Add Record
+//       </Button>
+//     </GridToolbarContainer>
+//   );
+// }
+
+function EditToolbarteach(props) {
+  const {
+    setTeachrows,
+    setRowModesModelteach,
+   isRowEditing,
+    pageSize,
+    setPage,
+    
+  } = props;
+ const [isAdding, setIsAdding] = useState(false); // ← ADD THIS
   const handleClickteach = () => {
+     setIsAdding(true); // ← DISABLE BUTTON
     const id = nanoid();
-    setTeachrows((oldRows) => [
-      ...oldRows,
-      {
-        id: id,           // ✅ must match getRowId
-        RecordID: id,     // ✅ same value
-        Department: null,
-        Teacher: null,
-        isNew: true,
-      },
-    ]);
-    setRowModesModelteach((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
-    }));
+
+    const newRow = {
+      id,
+      RecordID: id,
+      Department: null,
+      Teacher: null,
+      isNew: true,
+    };
+
+    setTeachrows((oldRows) => {
+      const updatedRows = [...oldRows, newRow];
+
+      // Navigate to page containing new row
+      const newPage = Math.floor(
+        (updatedRows.length - 1) / pageSize
+      );
+
+      setPage(newPage);
+
+      return updatedRows;
+    });
+
+    // Wait for page change, then enter edit mode
+    setTimeout(() => {
+      setRowModesModelteach((oldModel) => ({
+        ...oldModel,
+        [id]: {
+          mode: GridRowModes.Edit,
+          fieldToFocus: "Department",
+        },
+      }));
+       setIsAdding(false); // ← ENABLE BUTTON BACK
+    }, 100);
   };
 
   return (
-    <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
-      <Button 
-       disabled={isRowEditing} 
-      color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
-       sx={{ textTransform: "capitalize",fontSize: "14px" }}
-      >
-        Add Record
-      </Button>
-    </GridToolbarContainer>
+    <Button
+      disabled={isRowEditing} 
+    color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+      Add Record
+    </Button>
   );
 }
 // function EditToolbarteach(props) {
@@ -2762,7 +2826,7 @@ function EditToolbarteach(props) {
                                             Toolbar: EditToolbarteach,
                                         }}
                                       componentsProps={{
-                                                toolbar: { setTeachrows, setRowModesModelteach, isRowEditing }, // ✅ was setRowModesModel (wrong one)
+                                                toolbar: { setTeachrows, setRowModesModelteach, isRowEditing, setPage,pageSize  } // ✅ was setRowModesModel (wrong one)
                                               }}
                                         rowsPerPageOptions={[5, 10, 20]}
                                         getRowClassName={(params) =>
