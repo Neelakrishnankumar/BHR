@@ -219,8 +219,9 @@ const EditemployeePayroll = () => {
   // const [show, setScreen] = React.useState(0);
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
-  const [validationSchema, setValidationSchema] =useState(Yup.object());
+  const [validationSchema, setValidationSchema] = useState(Yup.object());
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema1, setValidationSchema1] = useState(Yup.object());
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -244,6 +245,15 @@ const EditemployeePayroll = () => {
         }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
+         let schemaFields1 = {
+          Deduction: Yup.object()
+            .nullable()
+            .required(data.Deduction.Deduction),
+
+        };
+     
+        const schema1 = Yup.object().shape(schemaFields1);
+        setValidationSchema1(schema1);
 
         //Skills
 
@@ -342,13 +352,25 @@ const EditemployeePayroll = () => {
     SortOrder: Data.SortOrder || 0,
     Disable: Data.Disable,
     Password: Data.Password,
-    Department: Data.DeptRecordID
-      ? {
-        RecordID: Data.DeptRecordID,
-        Code: Data.DeptCode,
-        Name: Data.DeptName,
-      }
-      : null,
+    // Department: Data.DeptRecordID
+    //   ? {
+    //     RecordID: Data.DeptRecordID,
+    //     Code: Data.DeptCode,
+    //     Name: Data.DeptName,
+    //   }
+    //   : null,
+    Department: Array.isArray(Data.DeptRecordID)
+      ? Data.DeptRecordID
+        .filter(
+          (d) =>
+            d.DeptID !== "0" &&
+            d.DeptName?.trim()
+        )
+        .map((d) => ({
+          RecordID: String(d.DeptID),
+          Name: d.DeptName,
+        }))
+      : [],
   };
   //*******Assign Employee values from Database in  Yup initial value******* */
   const initialValues = {
@@ -423,13 +445,13 @@ const EditemployeePayroll = () => {
   // });
 
   // const [ADLookupData, setADLookupData] = React.useState(null);
-    
-const [ADLookupData,setADLookupData] = React.useState({
- RecordID: "",
-          Type: "",
-          Name: "",
-          SalaryCategory: "",
-})
+
+  const [ADLookupData, setADLookupData] = React.useState({
+    RecordID: "",
+    Type: "",
+    Name: "",
+    SalaryCategory: "",
+  })
   const [selectLETLookupData, setselectLETLookupData] = React.useState(null);
   //   {
   //   letlookupRecordid: "",
@@ -1317,13 +1339,15 @@ const [ADLookupData,setADLookupData] = React.useState({
     LeavePart: "",
     Status: "",
   });
-  
+
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
-    Allowances:"",
+    Allowances: "",
+    Deduction:"",
     effectivevalue: "",
     sortOrder: "",
+    Type:""
   });
   const [otdata, setOtdata] = useState({
     RecordID: "",
@@ -1353,7 +1377,7 @@ const [ADLookupData,setADLookupData] = React.useState({
     Amount: "",
     Comments: "",
   });
-  const selectCellRowData = ({ rowData, mode, field,setFieldValue }) => {
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
       rowData,
@@ -1368,21 +1392,23 @@ const [ADLookupData,setADLookupData] = React.useState({
         value: "",
         effectivevalue: "",
         sortOrder: "",
-        Allowances:"",
+        Allowances: "",
+        Deduction:"",
+        Type:""
       });
 
       setADLookupData(
         {
-        // adType: '',
-        // adRecordID: '',
-        // adDesc: '',
-        // adCategory: '',
-         RecordID: "",
+          // adType: '',
+          // adRecordID: '',
+          // adDesc: '',
+          // adCategory: '',
+          RecordID: "",
           Type: "",
           Name: "",
           SalaryCategory: "",
 
-      });
+        });
       setselectLETLookupData(null);
       //   {
       //   letlookupCode: "",
@@ -1436,7 +1462,7 @@ const [ADLookupData,setADLookupData] = React.useState({
 
       if (field == "action") {
         console.log(rowData, "--find rowdata");
-        
+
         setItemCustodyData({
           recordID: rowData.RecordID,
           itemNO: rowData.ItemNumber,
@@ -1504,7 +1530,15 @@ const [ADLookupData,setADLookupData] = React.useState({
           value: rowData.value,
           effectivevalue: rowData.EffectiveValue,
           sortOrder: rowData.Sortorder,
-          Allowances:rowData.SalaryComponentID
+          Type: rowData.Type,
+          Allowances: rowData.SalaryComponentID
+            ? {
+              RecordID: rowData.SalaryComponentID,
+              Name: rowData.Name,
+              
+            }
+            : null,
+            Deduction: rowData.SalaryComponentID
             ? {
               RecordID: rowData.SalaryComponentID,
               Name: rowData.Name,
@@ -1971,13 +2005,14 @@ const [ADLookupData,setADLookupData] = React.useState({
         ? "Allowances"
         : ADLookupData.SalaryCategory === "D"
           ? "Deductions"
-          : "N"
+          : ""
       : "",
 
     // salaryCategory: (ADLookupData.adCategory === 'A') ? "Allowances" : (ADLookupData.adCategory === 'D') ? "Deductions" : ADLookupData.adCategory,
-    type: ADLookupData ? ADLookupData.Type : "",
-     Allowances: allDecData?.Allowances || null,
-    // type: ADLookupData.adType,
+    // type: ADLookupData ? ADLookupData.Type : "",
+    Allowances: allDecData?.Allowances || null,
+    Deduction: allDecData?.Deduction || null,
+    type: allDecData.Type || "",
     value: allDecData.value,
     effectiveValue: allDecData.effectivevalue || 0.0,
     sortorder: allDecData.sortOrder || 0,
@@ -1999,11 +2034,11 @@ const [ADLookupData,setADLookupData] = React.useState({
       RecordID: allDecData.recordID,
       // "SalaryComponentID": ADLookupData.adRecordID,
       // "SCName": ADLookupData.adDesc,
-      SalaryComponentID: ADLookupData?.RecordID || 0, 
-      // SalaryComponentID: values?.Allowances?.RecordID || 0,
+      // SalaryComponentID: ADLookupData?.RecordID || 0,
+      SalaryComponentID: show == "1" ? values?.Allowances?.RecordID || 0 : values?.Deduction?.RecordID || 0,
       // SCName: ADLookupData ? ADLookupData.Name : "",
-      SCName: ADLookupData?.Name || "", 
-      // SCName: values?.Allowances?.Name || "",
+      // SCName: ADLookupData?.Name || "",
+       SCName: show == "1" ? values?.Allowances?.Name || "" : values?.Deduction?.Name || "",
       SCType: values.type,
       SCCategory: show == "1" ? "A" : "D",
       Value: values.value || 0,
@@ -2024,7 +2059,7 @@ const [ADLookupData,setADLookupData] = React.useState({
       const query =
         show == "1" ? `${recID} AND Category='A'` : `${recID} AND Category='D'`;
       dispatch(
-        fetchExplorelitview("TR206",Subscriptionlastthree, "AllowancesAndDeductions", query, ""),
+        fetchExplorelitview("TR206", Subscriptionlastthree, "AllowancesAndDeductions", query, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -2607,7 +2642,8 @@ const [ADLookupData,setADLookupData] = React.useState({
 
                     <FormControl sx={{ gap: formGap }}>
                       {/* <Productautocomplete */}
-                      <CheckinAutocomplete
+                      <MultiFormikOptimizedAutocomplete
+                        multiple
                         disabled={mode == "E"}
                         // sx={{ marginTop: "7px" }}
                         name="Department"
@@ -2615,11 +2651,14 @@ const [ADLookupData,setADLookupData] = React.useState({
                         variant="outlined"
                         id="Department"
                         value={values.Department}
-                        onChange={(newValue) => {
+                        onChange={(e, newValue) => {
                           setFieldValue("Department", newValue);
                           console.log(newValue, "--newValue");
                           console.log(newValue.RecordID, "////");
                         }}
+                        isOptionEqualToValue={(option, value) =>
+                          String(option.RecordID) === String(value.RecordID)
+                        }
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${compID}","Any":""}}`}
@@ -2671,7 +2710,7 @@ const [ADLookupData,setADLookupData] = React.useState({
                         }}
                         focused
                         inputProps={{ maxLength: 90 }}
-                        // multiline
+                      // multiline
                       />
                       <TextField
                         disabled={mode == "E"}
@@ -2691,7 +2730,7 @@ const [ADLookupData,setADLookupData] = React.useState({
                           "& .MuiFilledInput-root": {
                             backgroundColor: "", // Ensure the filled variant also has a white background
                           },
-                          marginTop:"3.5px"
+                          marginTop: "3.5px"
                         }}
                         focused
                       />
@@ -2762,7 +2801,7 @@ const [ADLookupData,setADLookupData] = React.useState({
                         // autoFocus
                         InputProps={{
                           inputProps: {
-                            style: { textAlign: "right", marginTop:"1px"},
+                            style: { textAlign: "right", marginTop: "1px" },
                             min: 0,
                             max: 24,
                           },
@@ -3645,10 +3684,10 @@ const [ADLookupData,setADLookupData] = React.useState({
                             }
                             variant="outlined"
                             id="Allowances"
-                            // value={ADLookupData}
-                            value={values.Allowances}
+                            //  value={ADLookupData}
+                             value={values.Allowances}
                             onChange={(newValue) => {
-                              setFieldValue("Allowances", newValue);
+                               setFieldValue("Allowances", newValue);
                               setFieldValue("type", newValue ? newValue.Type : "");
                               setFieldValue("salaryCategory", newValue ? newValue.Category : "");
                               console.log(
@@ -3661,12 +3700,12 @@ const [ADLookupData,setADLookupData] = React.useState({
                                 "Allowances RecordID",
                               );
 
-                              // setADLookupData({
-                              //   RecordID: newValue.RecordID,
-                              //   Type: newValue.Type,
-                              //   Name: newValue.Name,
-                              //   SalaryCategory: newValue.SalaryCategory,
-                              // });
+                            //   setADLookupData({
+                            //     RecordID: newValue.RecordID,
+                            //     Type: newValue.Type,
+                            //     Name: newValue.Name,
+                            //     SalaryCategory: newValue.SalaryCategory,
+                            //   });
                             }}
                             error={!!touched.Allowances && !!errors.Allowances}
                             helperText={touched.Allowances && errors.Allowances}
@@ -3916,6 +3955,7 @@ const [ADLookupData,setADLookupData] = React.useState({
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={AllDedInitialValues}
+              validationSchema={validationSchema1}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
@@ -4122,7 +4162,7 @@ const [ADLookupData,setADLookupData] = React.useState({
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
                         </IconButton> */}
-                          <Productautocomplete
+                          <CheckinAutocomplete
                             name="Deduction"
                             label={
                               <span>
@@ -4136,10 +4176,12 @@ const [ADLookupData,setADLookupData] = React.useState({
                             }
                             variant="outlined"
                             id="Deduction"
-                            value={ADLookupData}
-                            // value={values.Deduction}
+                            // value={ADLookupData}
+                             value={values.Deduction}
                             onChange={(newValue) => {
-                              // setFieldValue("Deduction", newValue);
+                              setFieldValue("Deduction", newValue);
+                              setFieldValue("type", newValue ? newValue.Type : "");
+                              setFieldValue("salaryCategory", newValue ? newValue.Category : "");
                               console.log(
                                 ADLookupData,
                                 "--ADLookupData Deduction",
@@ -4150,13 +4192,15 @@ const [ADLookupData,setADLookupData] = React.useState({
                                 "Deduction RecordID",
                               );
 
-                              setADLookupData({
-                                RecordID: newValue.RecordID,
-                                Type: newValue.Type,
-                                Name: newValue.Name,
-                                SalaryCategory: newValue.SalaryCategory,
-                              });
+                              // setADLookupData({
+                              //   RecordID: newValue.RecordID,
+                              //   Type: newValue.Type,
+                              //   Name: newValue.Name,
+                              //   SalaryCategory: newValue.SalaryCategory,
+                              // });
                             }}
+                             error={!!touched.Deduction && !!errors.Deduction}
+                            helperText={touched.Deduction && errors.Deduction}
                             url={`${listViewurl}?data=${JSON.stringify({
                               Query: {
                                 AccessID: "2082",

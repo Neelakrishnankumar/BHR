@@ -32,6 +32,7 @@ import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import ForumIcon from '@mui/icons-material/Forum';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -182,7 +183,7 @@ const ListviewSecondary = () => {
   var accessID = params.secondaryAccessID
     ? params.secondaryAccessID
     : params.accessID;
-    
+
   var accessID1 = params.accessID1 ? params.accessID1 : "Error"
   var accessID2 = params.accessID2 ? params.accessID2 : "Error"
   var accessID3 = params.accessID3 ? params.accessID3 : "Error"
@@ -206,16 +207,16 @@ const ListviewSecondary = () => {
   var leaderID = params.leaderID;
   var leaderID = params.leaderID;
 
-console.log("EVENT ROUTE PARAMS", {
- accessID1: params.accessID1,
- screenName1: params.screenName1,
- leaderID: params.leaderID,
- Type: params.Type,
- screenName: params.screenName,
- accessID: params.accessID,
- parentID2: params.parentID2,
- parentID1: params.parentID1
-});
+  console.log("EVENT ROUTE PARAMS", {
+    accessID1: params.accessID1,
+    screenName1: params.screenName1,
+    leaderID: params.leaderID,
+    Type: params.Type,
+    screenName: params.screenName,
+    accessID: params.accessID,
+    parentID2: params.parentID2,
+    parentID1: params.parentID1
+  });
   var filtertype1 = params.filtertype1;
   //var partyID = params.partyID;
   const compID = sessionStorage.getItem("compID");
@@ -254,7 +255,7 @@ console.log("EVENT ROUTE PARAMS", {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
   let parentID1 = params.parentID1;
-  let parentID2 = params.academicYear ||params.parentID2;
+  let parentID2 = params.academicYear || params.parentID2;
   let parentID3 = params.parentID3;
   console.log("🚀 ~ ListviewSecondary ~ parentID1:", parentID1)
   console.log("🚀 ~ ListviewSecondary ~ parentID2:", parentID2)
@@ -304,18 +305,23 @@ console.log("EVENT ROUTE PARAMS", {
     filter = `${parentID}`;
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
-  } else if (accessID == "TR332") {
+  } 
+  else if (accessID == "TR399") {
+    filter = `CompanyID = '${compID}'`;
+  } 
+  else if (accessID == "TR332") {
     filter = `EmployeeID = '${Type}' AND InvoiceHeaderID = '${leaderID}' AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR373") {
+  } 
+  else if (accessID == "TR373") {
     filter = `MobileNo = '${state.MobileNo}'`;
   }
   else if (accessID == "TR375") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
-   else if (accessID == "TR395") {
+  else if (accessID == "TR395") {
     filter = `CompanyID = '${compID}' AND AcademicYearID = '${parentID1}'`;
   }
-   else if (accessID == "TR396" || accessID == "TR397") {
+  else if (accessID == "TR396" || accessID == "TR397") {
     filter = `CategoryID = '${leaderID}'`;
   }
   else if (accessID == "TR398") {
@@ -331,8 +337,8 @@ console.log("EVENT ROUTE PARAMS", {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR391") {
-     filter = `CompanyID='${compID}' `; //AND CategoryID='${leaderID}'
-     console.log("🚀 ~ FeedbackListviewSecondary ~ filter:",  filter)
+    filter = `CompanyID='${compID}' `; //AND CategoryID='${leaderID}'
+    console.log("🚀 ~ FeedbackListviewSecondary ~ filter:", filter)
   }
   else if (accessID == "TR384") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
@@ -1243,6 +1249,109 @@ console.log("EVENT ROUTE PARAMS", {
                 {screenName}
               </Typography>
             </Breadcrumbs>
+          ) : accessID == "TR395" ? (
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                key={8646}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                {`Academic Year(${state.AcademicYear})`}
+              </Typography>
+
+              <Typography
+                key={63259}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                {screenName}
+              </Typography>
+            </Breadcrumbs>
+          ) : accessID == "TR397" ? (
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                key={8646}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/Secondarylistview/TR398/Academic Year/T");
+                }}
+              >
+                {`Academic Year(${state.AcademicYear})`}
+              </Typography>
+              <Typography
+                key={8646}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Cash Management Category
+              </Typography>
+
+              <Typography
+                key={63259}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                {screenName}
+              </Typography>
+            </Breadcrumbs>
+          ): accessID == "TR396" || accessID == "TR399" ? (
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                key={8646}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/Secondarylistview/TR398/Academic Year/T");
+                }}
+              >
+                {`Academic Year(${state.AcademicYear})`}
+              </Typography>
+              <Typography
+                key={8646}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Cash Management Category
+              </Typography>
+
+              <Typography
+                key={63259}
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                {screenName}
+              </Typography>
+            </Breadcrumbs>
           ) : accessID == "TR368" ? (
             <Breadcrumbs
               maxItems={2}
@@ -1356,7 +1465,7 @@ console.log("EVENT ROUTE PARAMS", {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                 onClick={() => {
+                onClick={() => {
                   navigate(`/Apps/SecondarylistView/TR275/Project/${params.parentID3}/Academic%20Type/TR386/L`, { state: { ...state } });
                 }}
               >
@@ -2424,658 +2533,614 @@ console.log("EVENT ROUTE PARAMS", {
                   </Typography>
                 </Breadcrumbs>
               </Box>
-            ):
+            ) :
               accessID == "TR391" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR391/Feedback Complaints");
-                    }}
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    FeedBack/Complaints 
-                  </Typography>
-                  {leaderID=='1' &&(
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Teacher Feedback To Parents
-                  </Typography>)}
-                   {leaderID !='1' &&(<Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Parents
-                  </Typography>)}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR391/Feedback Complaints");
+                      }}
+                    >
+                      FeedBack/Complaints
+                    </Typography>
+                    {leaderID == '1' && (
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        Teacher Feedback To Parents
+                      </Typography>)}
+                    {leaderID != '1' && (<Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Parents
+                    </Typography>)}
 
-                </Breadcrumbs>
-              </Box>
-            ): accessID == "TR384" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR383/Academic Year");
-                    }}
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR384" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Event Categories
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR384" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR383/Academic Year");
-                    }}
-                  >
-                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Event Categories
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR385" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR383/Academic Year");
-                    }}
-                  >
-                    Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
-                      {
-                        state: {
-                          ...state,
-                        }
-                      })}
-                  >
-                    Event Categories ({state.BreadCrumb1 || ""})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Events
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR319" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR315/Item%20Group");
-                    }}
-                  >
-                    List of Item Group ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`, {
-                        state: {
-                          ...state,
-                        }
-                      });
-                    }}
-                  >
-                    List of Item Category ({BreadCrumb2})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Items
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR324" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR323/Route", {
-                        state: {
-                          ...state,
-                          Screennameroute: state.Screenname,
-                        }
-                      });
-                    }}
-                  >
-                    {/* List of Route ({BreadCrumb1}) */}
-                    List of {state.Screenname} ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Route Area
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR335" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR336/List%20Of%20SOPs");
-                    }}
-                  >
-                    List Of SOPs ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}`, { state: { ...state } });
-                    }}
-                  >
-                    List of Documents ({BreadCrumb2})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}/Booklet/${params.accessID1}/${params.parentID2}`, { state: { ...state } });
-                    }}
-                  >
-                    List of Log Notes (Serial#{BreadCrumb3})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Batch Reconciliation Records
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR338" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR336/List%20Of%20SOPs");
-                    }}
-                  >
-                    List Of SOPs ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Documents
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR339" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR336/List%20Of%20SOPs");
-                    }}
-                  >
-                    List Of SOPs ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      // navigate(-1);
-                      navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, { state: { ...state } });
-                    }}
-                  >
-                    List of Documents ({BreadCrumb2})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Log Notes
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR351" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR336/List%20Of%20SOPs");
-                    }}
-                  >
-                    List Of SOPs ({BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                  >
-                    List of Documents ({BreadCrumb2})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List of Checklist
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR084" ? (
-              <Box display="flex" borderRadius="3px" alignItems="center">
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
-                  >
-                    {screen}
-                  </Typography>
-
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
-                  >
-                    {apprval}
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR011" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR043/Invoices");
-                    }}
-                  >
-                    {screen}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
-                  >
-                    {apprval}
-                  </Typography>
-
-                  {Number !== "IN" && params.filtertype != "L" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR383/Academic Year");
+                      }}
+                    >
+                      Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                    </Typography>
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      {invoice}
+                      Event Categories
                     </Typography>
-                  ) : (
-                    false
-                  )}
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR137" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR135/Fixed%20Asset%20Type");
-                    }}
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR384" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Fixed Asset Type
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR383/Academic Year");
+                      }}
+                    >
+                      Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Event Categories
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR385" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Fixed Asset Category
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR141" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR140/Customer-Product");
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR383/Academic Year");
+                      }}
+                    >
+                      Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
+                        {
+                          state: {
+                            ...state,
+                          }
+                        })}
+                    >
+                      Event Categories ({state.BreadCrumb1 || ""})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Events
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR319" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Customer-Product(${params.Number})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR315/Item%20Group");
+                      }}
+                    >
+                      List of Item Group ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`, {
+                          state: {
+                            ...state,
+                          }
+                        });
+                      }}
+                    >
+                      List of Item Category ({BreadCrumb2})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Items
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR324" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    List of BOM
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR091" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR140/Customer-Product");
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR323/Route", {
+                          state: {
+                            ...state,
+                            Screennameroute: state.Screenname,
+                          }
+                        });
+                      }}
+                    >
+                      {/* List of Route ({BreadCrumb1}) */}
+                      List of {state.Screenname} ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Route Area
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR335" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Customer-Product(${params.productDescription})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR336/List%20Of%20SOPs");
+                      }}
+                    >
+                      List Of SOPs ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}`, { state: { ...state } });
+                      }}
+                    >
+                      List of Documents ({BreadCrumb2})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}/Booklet/${params.accessID1}/${params.parentID2}`, { state: { ...state } });
+                      }}
+                    >
+                      List of Log Notes (Serial#{BreadCrumb3})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Batch Reconciliation Records
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR338" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`BOM(${params.bomVersion})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR336/List%20Of%20SOPs");
+                      }}
+                    >
+                      List Of SOPs ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Documents
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR339" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    List of costing
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR138" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR135/Fixed%20Asset%20Type");
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR336/List%20Of%20SOPs");
+                      }}
+                    >
+                      List Of SOPs ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        // navigate(-1);
+                        navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, { state: { ...state } });
+                      }}
+                    >
+                      List of Documents ({BreadCrumb2})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Log Notes
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR351" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Fixed Asset Type
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR137/Fixed%20Assets%20Category/${params.Number}`
-                      );
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR336/List%20Of%20SOPs");
+                      }}
+                    >
+                      List Of SOPs ({BreadCrumb1})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                    >
+                      List of Documents ({BreadCrumb2})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of Checklist
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR084" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Fixed Asset Category
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
-                  >
-                    Fixed Asset
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR086" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR136/Finance%20Category");
-                    }}
-                  >
-                    Finance Category
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(to);
-                    }}
-                  >
-                    Finance Entry
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR303" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      // navigate("/Apps/TR243/Party");
-                      navigate("/Apps/TR321/Party");
-                    }}
-                  >
-                    {/* Party */}
-                    {`Party(${state.PartyName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Leads
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            ) : accessID == "TR304" ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      // navigate("/Apps/TR243/Party");
-                      navigate("/Apps/TR321/Party");
-                    }}
-                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      {screen}
+                    </Typography>
 
-                    {/* {Type === "F"
-                  ? "Party" 
-                  : `Party(${state.PartyName})`} */}
-                    {`Party(${state.PartyName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      console.log(state.PartyID, "PartyID");
-                      navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      {apprval}
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR011" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {/* Leader */}
-                    {`Lead(${state.LeadTitle})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR043/Invoices");
+                      }}
+                    >
+                      {screen}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      {apprval}
+                    </Typography>
+
+                    {Number !== "IN" && params.filtertype != "L" ? (
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {invoice}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR137" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Marketing Activities
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            )
-              : accessID == "TR310" && Type === "Leader" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR135/Fixed%20Asset%20Type");
+                      }}
+                    >
+                      Fixed Asset Type
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      Fixed Asset Category
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR141" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR140/Customer-Product");
+                      }}
+                    >
+                      {`Customer-Product(${params.Number})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      List of BOM
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR091" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR140/Customer-Product");
+                      }}
+                    >
+                      {`Customer-Product(${params.productDescription})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      {`BOM(${params.bomVersion})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      List of costing
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR138" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR135/Fixed%20Asset%20Type");
+                      }}
+                    >
+                      Fixed Asset Type
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR137/Fixed%20Assets%20Category/${params.Number}`
+                        );
+                      }}
+                    >
+                      Fixed Asset Category
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      Fixed Asset
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR086" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR136/Finance%20Category");
+                      }}
+                    >
+                      Finance Category
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(to);
+                      }}
+                    >
+                      Finance Entry
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR303" ? (
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate("/Apps/TR321/Party");
+                      }}
+                    >
+                      {/* Party */}
+                      {`Party(${state.PartyName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Leads
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              ) : accessID == "TR304" ? (
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                   <Breadcrumbs
                     maxItems={2}
@@ -3109,70 +3174,38 @@ console.log("EVENT ROUTE PARAMS", {
                       {/* Leader */}
                       {`Lead(${state.LeadTitle})`}
                     </Typography>
-
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      {params.OrderType === "O" ? "Order" : "Quotation"}
+                      Marketing Activities
                     </Typography>
                   </Breadcrumbs>
                 </Box>
-              ) : accessID == "TR310" && Type === "Party" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        // navigate("/Apps/TR243/Party");
-                        navigate("/Apps/TR321/Party");
-                      }}
+              )
+                : accessID == "TR310" && Type === "Leader" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                     >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          // navigate("/Apps/TR243/Party");
+                          navigate("/Apps/TR321/Party");
+                        }}
+                      >
 
-                      {/* {Type === "F"
+                        {/* {Type === "F"
                   ? "Party" 
                   : `Party(${state.PartyName})`} */}
-                      {`Party(${state.PartyName})`}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      {params.OrderType === "O" ? "Order" : "Quotation"}
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR311" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        // navigate("/Apps/TR243/Party");
-                        navigate("/Apps/TR321/Party");
-                      }}
-                    >
-
-                      {/* {Type === "F"
-                  ? "Party" 
-                  : `Party(${state.PartyName})`} */}
-                      {`Party(${state.PartyName})`}
-                    </Typography>
-                    {params.Type === "Leader" ?
+                        {`Party(${state.PartyName})`}
+                      </Typography>
                       <Typography
                         variant="h5"
                         color="#0000D1"
@@ -3182,30 +3215,656 @@ console.log("EVENT ROUTE PARAMS", {
                           navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
                         }}
                       >
+                        {/* Leader */}
                         {`Lead(${state.LeadTitle})`}
-                      </Typography> : null}
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      //onClick={() => navigate(-1)}
-                      onClick={() => {
-                        navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`, { state: { ...state } });
-                      }}
+                      </Typography>
+
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {params.OrderType === "O" ? "Order" : "Quotation"}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR310" && Type === "Party" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                     >
-                      {params.OrderType === "O" ? "Order" : "Quotation"} ({state.Code || ""})
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          // navigate("/Apps/TR243/Party");
+                          navigate("/Apps/TR321/Party");
+                        }}
+                      >
+
+                        {/* {Type === "F"
+                  ? "Party" 
+                  : `Party(${state.PartyName})`} */}
+                        {`Party(${state.PartyName})`}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {params.OrderType === "O" ? "Order" : "Quotation"}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR311" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                     >
-                      {params.OrderType === "O" ? "Order" : "Quotation"}{" "}Item
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR314" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          // navigate("/Apps/TR243/Party");
+                          navigate("/Apps/TR321/Party");
+                        }}
+                      >
+
+                        {/* {Type === "F"
+                  ? "Party" 
+                  : `Party(${state.PartyName})`} */}
+                        {`Party(${state.PartyName})`}
+                      </Typography>
+                      {params.Type === "Leader" ?
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                          onClick={() => {
+                            console.log(state.PartyID, "PartyID");
+                            navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
+                          }}
+                        >
+                          {`Lead(${state.LeadTitle})`}
+                        </Typography> : null}
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        //onClick={() => navigate(-1)}
+                        onClick={() => {
+                          navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`, { state: { ...state } });
+                        }}
+                      >
+                        {params.OrderType === "O" ? "Order" : "Quotation"} ({state.Code || ""})
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {params.OrderType === "O" ? "Order" : "Quotation"}{" "}Item
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR314" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          // navigate("/Apps/TR243/Party");
+                          navigate("/Apps/TR321/Party");
+                        }}
+                      >
+                        {`Party(${state.PartyName})`}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Advance Payment
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR102" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/TR101/Order%20Enquiry");
+                        }}
+                      >
+                        Order Enquiry
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {invoice}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR103" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/TR101/Order%20Enquiry");
+                        }}
+                      >
+                        Order Enquiry
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        Customer Group
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR104" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/TR101/Order%20Enquiry");
+                        }}
+                      >
+                        Order Enquiry
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/Secondarylistview/TR103/Customergroup/5");
+                        }}
+                      >
+                        {parentID}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        Invoice Type
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR108" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/TR047/Production%20Card");
+                        }}
+                      >
+                        {hderName}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        Production Card Item
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {screenName}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR105" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/TR101/Order%20Enquiry");
+                        }}
+                      >
+                        Order Tracking
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/Secondarylistview/TR103/Customergroup/5");
+                        }}
+                      >
+                        Customer Group
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(
+                            `/Apps/Secondarylistview/TR104/Invoicegroup/007/${CusID}`
+                          );
+                        }}
+                      >
+                        Invoice Type
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {invoice}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR004" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        {materialsecondType}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(
+                            `/Apps/Secondarylistview/TR003/Material%20Category/${Number}`
+                          );
+                        }}
+                      >
+                        {apprval}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(
+                            `/Apps/Secondarylistview/TR003/Material%20Category/${Number}`
+                          );
+                        }}
+                      >
+                        {Description}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >{`List of ${apprval}`}</Typography>
+                      {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{invoice}</Typography>   */}
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR074" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        Batches
+                      </Typography>
+
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        {apprval}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR063" ? (
+                  // <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  //   <Typography variant="h3" color="#0000D1" sx={{cursor:'pointer'}}  onClick={() => { navigate( `/Apps/TR064/Opening Stock` ); }}>{openstackname}</Typography>
+                  //   <Typography variant="h3" color="#0000D1" >{screenName}</Typography>
+
+                  // </Box>
+                  <Box display="flex" borderRadius="3px" alignItems="center">
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR064/Opening Stock`);
+                        }}
+                      >
+                        {openstackname}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        {apprval}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        {screenName}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR032" ? (
+                  <Box display="flex" borderRadius="3px" alignItems="center">
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR083/Colors - Material type`);
+                        }}
+                      >
+                        Colors(MT)
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        {apprval}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR033" ? (
+                  <Box display="flex" borderRadius="3px" alignItems="center">
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR083/Colors - Material type`);
+                        }}
+                      >
+                        Colors(MT)
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/Secondarylistview/TR032/Colors/L");
+                        }}
+                      >{`Leather(${params.Number})`}</Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        Color shades
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR117" ? (
+                  <Box display="flex" borderRadius="3px" alignItems="center">
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR083/Colors - Material type`);
+                        }}
+                      >
+                        Colors(MT)
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate("/Apps/Secondarylistview/TR032/Colors/L");
+                        }}
+                      >{`Leather(${params.Number})`}</Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >{`Color Shades(${params.Desc})`}</Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR003" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(to);
+                        }}
+                      >
+                        {materialType}
+                      </Typography>
+                      {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={() => { navigate(to); }}>{apprval}</Typography> */}
+                      {parentID == "L" || parentID == "LS" ? (
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                        >
+                          {apprval}
+                        </Typography>
+                      ) : (
+                        ""
+                      )}
+                      {parentID == "M" || parentID == "S" ? (
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                        >{`${apprval} Categories`}</Typography>
+                      ) : (
+                        ""
+                      )}
+                      {parentID == "R" || parentID == "P" ? (
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                        >{`${apprval} Categories`}</Typography>
+                      ) : (
+                        ""
+                      )}
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR021" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR072/Process%20Stage`);
+                        }}
+                      >
+                        Process Stage
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR072/Process%20Stage`);
+                        }}
+                      >
+                        {Number}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        List Of Process
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR001" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR002/Categories`);
+                        }}
+                      >
+                        {`Categories (${Number})`}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        List of Products
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR148" ? (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                        onClick={() => {
+                          navigate(`/Apps/TR147/Jobwork Category`);
+                        }}
+                      >
+                        {`Categories (${Number})`}
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="#0000D1"
+                        sx={{ cursor: "default" }}
+                      >
+                        List of Jobwork
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                ) : accessID == "TR048" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3216,26 +3875,18 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        // navigate("/Apps/TR243/Party");
-                        navigate("/Apps/TR321/Party");
+                        navigate(`/Apps/TR047/Production%20Card`);
                       }}
                     >
-                      {`Party(${state.PartyName})`}
+                      {" "}
+                      {hderName}
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(-1);
-                      }}
-                    >
-                      Advance Payment
+
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
                     </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR102" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                ) : accessID == "TR056" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3246,117 +3897,28 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate("/Apps/TR101/Order%20Enquiry");
+                        navigate(`/Apps/TR047/Production%20Card`);
                       }}
                     >
-                      Order Enquiry
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      {invoice}
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR103" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/TR101/Order%20Enquiry");
-                      }}
-                    >
-                      Order Enquiry
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      Customer Group
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR104" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/TR101/Order%20Enquiry");
-                      }}
-                    >
-                      Order Enquiry
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/Secondarylistview/TR103/Customergroup/5");
-                      }}
-                    >
-                      {parentID}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      Invoice Type
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR108" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/TR047/Production%20Card");
-                      }}
-                    >
+                      {" "}
                       {hderName}
                     </Typography>
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("");
+                      }}
                     >
-                      Production Card Item
+                      Indent Items
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
+
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
                       {screenName}
                     </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR105" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                ) : accessID == "TR051" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3367,44 +3929,26 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate("/Apps/TR101/Order%20Enquiry");
+                        navigate(`/Apps/TR047/Production%20Card`);
                       }}
-                    >
-                      Order Tracking
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/Secondarylistview/TR103/Customergroup/5");
-                      }}
-                    >
-                      Customer Group
-                    </Typography>
+                    >{`Production Card(${params.prdNumber})`}</Typography>
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
                         navigate(
-                          `/Apps/Secondarylistview/TR104/Invoicegroup/007/${CusID}`
+                          `/Apps/Secondarylistview/TR118/Indent Type/${parentID}/${params.prdNumber}`
                         );
                       }}
                     >
-                      Invoice Type
+                      {params.remarkDec === "L" ? "Leather" : "Material"}
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      {invoice}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Indent Items
                     </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR004" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                ) : accessID == "TR118" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3415,10 +3959,58 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate(to);
+                        navigate(`/Apps/TR047/Production%20Card`);
                       }}
                     >
-                      {materialsecondType}
+                      {" "}
+                      {`Production Card(${params.Number})`}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Indent Type
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR119" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/TR047/Production%20Card`);
+                      }}
+                    >
+                      {" "}
+                      {`Production Card(${params.Number})`}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {params.Desc === "L" ? "Leather" : "Material"}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Indent Items
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      List of supplier
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR050" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR002/Categories");
+                      }}
+                    >
+                      {`Categories (${Number})`}
                     </Typography>
                     <Typography
                       variant="h5"
@@ -3426,105 +4018,17 @@ console.log("EVENT ROUTE PARAMS", {
                       sx={{ cursor: "default" }}
                       onClick={() => {
                         navigate(
-                          `/Apps/Secondarylistview/TR003/Material%20Category/${Number}`
-                        );
-                      }}
-                    >
-                      {apprval}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(
-                          `/Apps/Secondarylistview/TR003/Material%20Category/${Number}`
+                          `/Apps/Secondarylistview/TR001/Product%20Master/${params.bomproductid}/${Number}`
                         );
                       }}
                     >
                       {Description}
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >{`List of ${apprval}`}</Typography>
-                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{invoice}</Typography>   */}
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR074" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(to);
-                      }}
-                    >
-                      Batches
-                    </Typography>
-
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(to);
-                      }}
-                    >
-                      {apprval}
-                    </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR063" ? (
-                // <Box sx={{ display: "flex", flexDirection: "row" }}>
-                //   <Typography variant="h3" color="#0000D1" sx={{cursor:'pointer'}}  onClick={() => { navigate( `/Apps/TR064/Opening Stock` ); }}>{openstackname}</Typography>
-                //   <Typography variant="h3" color="#0000D1" >{screenName}</Typography>
-
-                // </Box>
-                <Box display="flex" borderRadius="3px" alignItems="center">
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(`/Apps/TR064/Opening Stock`);
-                      }}
-                    >
-                      {openstackname}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(to);
-                      }}
-                    >
-                      {apprval}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
                       {screenName}
                     </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR032" ? (
-                <Box display="flex" borderRadius="3px" alignItems="center">
+                ) : accessID == "TR079" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3535,25 +4039,18 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate(`/Apps/TR083/Colors - Material type`);
+                        navigate("/Apps/TR078/Stock%20Enquiry");
                       }}
                     >
-                      Colors(MT)
+                      Stock Enquiry
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(to);
-                      }}
-                    >
-                      {apprval}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {abbrevation} Category
                     </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+             */}
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR033" ? (
-                <Box display="flex" borderRadius="3px" alignItems="center">
+                ) : accessID == "TR080" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3564,147 +4061,29 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate(`/Apps/TR083/Colors - Material type`);
+                        navigate("/Apps/TR078/Stock%20Enquiry");
                       }}
                     >
-                      Colors(MT)
+                      Stock Enquiry
                     </Typography>
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate("/Apps/Secondarylistview/TR032/Colors/L");
+                        navigate(
+                          `/Apps/Secondarylistview/TR079/Material%20Category/${Description}`
+                        );
                       }}
-                    >{`Leather(${params.Number})`}</Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
                     >
-                      Color shades
+                      {abbrevation} Category{" "}
                     </Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR117" ? (
-                <Box display="flex" borderRadius="3px" alignItems="center">
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(`/Apps/TR083/Colors - Material type`);
-                      }}
-                    >
-                      Colors(MT)
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate("/Apps/Secondarylistview/TR032/Colors/L");
-                      }}
-                    >{`Leather(${params.Number})`}</Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >{`Color Shades(${params.Desc})`}</Typography>
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR003" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(to);
-                      }}
-                    >
-                      {materialType}
-                    </Typography>
-                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={() => { navigate(to); }}>{apprval}</Typography> */}
-                    {parentID == "L" || parentID == "LS" ? (
-                      <Typography
-                        variant="h5"
-                        color="#0000D1"
-                        sx={{ cursor: "default" }}
-                      >
-                        {apprval}
-                      </Typography>
-                    ) : (
-                      ""
-                    )}
-                    {parentID == "M" || parentID == "S" ? (
-                      <Typography
-                        variant="h5"
-                        color="#0000D1"
-                        sx={{ cursor: "default" }}
-                      >{`${apprval} Categories`}</Typography>
-                    ) : (
-                      ""
-                    )}
-                    {parentID == "R" || parentID == "P" ? (
-                      <Typography
-                        variant="h5"
-                        color="#0000D1"
-                        sx={{ cursor: "default" }}
-                      >{`${apprval} Categories`}</Typography>
-                    ) : (
-                      ""
-                    )}
-                  </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR021" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Breadcrumbs
-                    maxItems={2}
-                    aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                  >
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(`/Apps/TR072/Process%20Stage`);
-                      }}
-                    >
-                      Process Stage
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                      onClick={() => {
-                        navigate(`/Apps/TR072/Process%20Stage`);
-                      }}
-                    >
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography> */}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
                       {Number}
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      List Of Process
-                    </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR001" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                ) : accessID == "TR111" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3715,22 +4094,17 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate(`/Apps/TR002/Categories`);
+                        navigate("/Apps/TR078/Stock%20Enquiry");
                       }}
                     >
-                      {`Categories (${Number})`}
+                      Stock Enquiry
                     </Typography>
-                    <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
-                    >
-                      List of Products
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      List Of Supplier
                     </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography> */}
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR148" ? (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                ) : accessID == "TR112" ? (
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
@@ -3741,377 +4115,112 @@ console.log("EVENT ROUTE PARAMS", {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                       onClick={() => {
-                        navigate(`/Apps/TR147/Jobwork Category`);
+                        navigate("/Apps/TR078/Stock%20Enquiry");
                       }}
                     >
-                      {`Categories (${Number})`}
+                      Stock Enquiry
                     </Typography>
                     <Typography
                       variant="h5"
                       color="#0000D1"
                       sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          "/Apps/Secondarylistview/TR111/List%20of%20Supplier/S/Supplier"
+                        );
+                      }}
                     >
-                      List of Jobwork
+                      List Of Supplier
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >List Of Material</Typography> */}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {Number}
                     </Typography>
                   </Breadcrumbs>
-                </Box>
-              ) : accessID == "TR048" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR047/Production%20Card`);
-                    }}
+                ) : accessID == "TR113" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {" "}
-                    {hderName}
-                  </Typography>
-
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR056" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR047/Production%20Card`);
-                    }}
-                  >
-                    {" "}
-                    {hderName}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("");
-                    }}
-                  >
-                    Indent Items
-                  </Typography>
-
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR051" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR047/Production%20Card`);
-                    }}
-                  >{`Production Card(${params.prdNumber})`}</Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR118/Indent Type/${parentID}/${params.prdNumber}`
-                      );
-                    }}
-                  >
-                    {params.remarkDec === "L" ? "Leather" : "Material"}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Indent Items
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR118" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR047/Production%20Card`);
-                    }}
-                  >
-                    {" "}
-                    {`Production Card(${params.Number})`}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Indent Type
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR119" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR047/Production%20Card`);
-                    }}
-                  >
-                    {" "}
-                    {`Production Card(${params.Number})`}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {params.Desc === "L" ? "Leather" : "Material"}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Indent Items
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    List of supplier
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR050" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR002/Categories");
-                    }}
-                  >
-                    {`Categories (${Number})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR001/Product%20Master/${params.bomproductid}/${Number}`
-                      );
-                    }}
-                  >
-                    {Description}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR079" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
-                  >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {abbrevation} Category
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR078/Stock%20Enquiry");
+                      }}
+                    >
+                      Stock Enquiry
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      List Of Production Card
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
              */}
-                </Breadcrumbs>
-              ) : accessID == "TR080" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
+                  </Breadcrumbs>
+                ) : accessID == "TR115" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR079/Material%20Category/${Description}`
-                      );
-                    }}
-                  >
-                    {abbrevation} Category{" "}
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography> */}
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {Number}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR111" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
-                  >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    List Of Supplier
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography> */}
-                </Breadcrumbs>
-              ) : accessID == "TR112" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
-                  >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        "/Apps/Secondarylistview/TR111/List%20of%20Supplier/S/Supplier"
-                      );
-                    }}
-                  >
-                    List Of Supplier
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >List Of Material</Typography> */}
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {Number}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR113" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
-                  >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    List Of Production Card
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR078/Stock%20Enquiry");
+                      }}
+                    >
+                      Stock Enquiry
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      List Of Material{apprval}
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
              */}
-                </Breadcrumbs>
-              ) : accessID == "TR115" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
+                  </Breadcrumbs>
+                ) : accessID == "TR114" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    List Of Material{apprval}
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
-             */}
-                </Breadcrumbs>
-              ) : accessID == "TR114" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR078/Stock%20Enquiry");
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR078/Stock%20Enquiry");
+                      }}
+                    >
+                      Stock Enquiry
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          "/Apps/Secondarylistview/TR113/List%20of%20ProductionCard/PD"
+                        );
+                      }}
+                    >
+                      List Of Production Card
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Product Card Items
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{Number}</Typography> */}
+                  </Breadcrumbs>
+                ) : accessID == "TR128" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Stock Enquiry
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        "/Apps/Secondarylistview/TR113/List%20of%20ProductionCard/PD"
-                      );
-                    }}
-                  >
-                    List Of Production Card
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Product Card Items
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{Number}</Typography> */}
-                </Breadcrumbs>
-              ) : accessID == "TR128" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  {/* <Typography
+                    {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -4121,20 +4230,20 @@ console.log("EVENT ROUTE PARAMS", {
             >
               Company
             </Typography> */}
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Location
-                  </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Location
+                    </Typography>
 
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
              */}
-                </Breadcrumbs>
-              ) : accessID == "TR127" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  {/* <Typography
+                  </Breadcrumbs>
+                ) : accessID == "TR127" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -4144,295 +4253,295 @@ console.log("EVENT ROUTE PARAMS", {
             >
               Company
             </Typography> */}
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(`/Apps/TR128/Location`, {
-                        state:
-                        {
-                          ...state,
-                          Screenname: BreadCrumb2,
-                        }
-                      })
-                    }}
-                  >
-                    {/* Location */}
-                    {`Location(${state.Locationname})`}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Gate Entry
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/TR128/Location`, {
+                          state:
+                          {
+                            ...state,
+                            Screenname: BreadCrumb2,
+                          }
+                        })
+                      }}
+                    >
+                      {/* Location */}
+                      {`Location(${state.Locationname})`}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Gate Entry
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
              */}
-                </Breadcrumbs>
-              ) : accessID == "TR129" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR014/Company");
-                    }}
+                  </Breadcrumbs>
+                ) : accessID == "TR129" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Company
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR128/Location/${params.Number}`
-                      );
-                    }}
-                  >
-                    Location
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    Bin
-                  </Typography>
-                  {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR014/Company");
+                      }}
+                    >
+                      Company
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR128/Location/${params.Number}`
+                        );
+                      }}
+                    >
+                      Location
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      Bin
+                    </Typography>
+                    {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} >{screenName}</Typography>
              */}
-                </Breadcrumbs>
-              ) : accessID == "TR097" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR059/Delivery%20Type");
-                    }}
+                  </Breadcrumbs>
+                ) : accessID == "TR097" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    Delivery Type
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {apprval}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR233" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      //navigate("/Apps/TR133/Project");
-                      navigate(-1);
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR059/Delivery%20Type");
+                      }}
+                    >
+                      Delivery Type
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {apprval}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR233" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Project(${state.projectName})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        //navigate("/Apps/TR133/Project");
+                        navigate(-1);
+                      }}
+                    >
+                      {`Project(${state.projectName})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR236" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR133/Project");
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR236" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Project(${state.projectName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-                      navigate(-1);
-                    }}
-                  >
-                    {`Milestones(${state.MilestoneName})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR133/Project");
+                      }}
+                    >
+                      {`Project(${state.projectName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                        navigate(-1);
+                      }}
+                    >
+                      {`Milestones(${state.MilestoneName})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR234" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR133/Project");
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR234" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Project(${state.projectName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
-                        { state: { ...state } }
-                      );
-                    }}
-                  >
-                    {`Milestones(${state.MilestoneName})`}
-                    {/* Milestone */}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
-                      navigate(-1);
-                    }}
-                  >
-                    {`Stages(${state.stagesName})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR133/Project");
+                      }}
+                    >
+                      {`Project(${state.projectName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
+                          { state: { ...state } }
+                        );
+                      }}
+                    >
+                      {`Milestones(${state.MilestoneName})`}
+                      {/* Milestone */}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+                        navigate(-1);
+                      }}
+                    >
+                      {`Stages(${state.stagesName})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR235" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR133/Project");
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR235" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Project(${state.projectName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
-                        { state: { ...state } }
-                      );
-                    }}
-                  >
-                    {`Milestones(${state.MilestoneName})`}
-                    {/* Milestone             */}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,
-                        { state: { ...state } }
-                      );
-                    }}
-                  >
-                    {`stages(${state.stagesName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
-                      navigate(-1);
-                    }}
-                  >
-                    {`Activities(${state.Activityname})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR133/Project");
+                      }}
+                    >
+                      {`Project(${state.projectName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
+                          { state: { ...state } }
+                        );
+                      }}
+                    >
+                      {`Milestones(${state.MilestoneName})`}
+                      {/* Milestone             */}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,
+                          { state: { ...state } }
+                        );
+                      }}
+                    >
+                      {`stages(${state.stagesName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+                        navigate(-1);
+                      }}
+                    >
+                      {`Activities(${state.Activityname})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR124" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR027/Employees", { state: state });
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR124" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Employee(${state.EmpName})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR027/Employees", { state: state });
+                      }}
+                    >
+                      {`Employee(${state.EmpName})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR123" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR027/Employees", { state: state });
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR123" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {/* Employee */}
-                    {`Employee(${state.EmpName})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR027/Employees", { state: state });
+                      }}
+                    >
+                      {/* Employee */}
+                      {`Employee(${state.EmpName})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR132" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  {/* <Typography
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR132" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -4442,96 +4551,96 @@ console.log("EVENT ROUTE PARAMS", {
             >
                {`Employee(${state.EmpName})`}
             </Typography> */}
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      //navigate("/Apps/TR123/Check%20In");
-                      navigate(-1);
-                    }}
-                  >
-                    {`Check In(${state.Locname})`}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        //navigate("/Apps/TR123/Check%20In");
+                        navigate(-1);
+                      }}
+                    >
+                      {`Check In(${state.Locname})`}
+                    </Typography>
 
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR134" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR027/Employees");
-                    }}
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR134" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Employee(${state.EmpName})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`,
-                        { state: { ...state } }
-                      );
-                    }}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR027/Employees");
+                      }}
+                    >
+                      {`Employee(${state.EmpName})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(
+                          `/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`,
+                          { state: { ...state } }
+                        );
+                      }}
+                    >
+                      {`Check In(${state.Locname})`}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        // navigate(
+                        //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
+                        // );
+                        navigate(-1);
+                      }}
+                    >
+                      {/* {`DailyTask(${state.proName})`} */}
+                      {`DailyTask(${state.Date})`}
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      {screenName}
+                    </Typography>
+                  </Breadcrumbs>
+                ) : accessID == "TR095" ? (
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
-                    {`Check In(${state.Locname})`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      // navigate(
-                      //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
-                      // );
-                      navigate(-1);
-                    }}
-                  >
-                    {/* {`DailyTask(${state.proName})`} */}
-                    {`DailyTask(${state.Date})`}
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    {screenName}
-                  </Typography>
-                </Breadcrumbs>
-              ) : accessID == "TR095" ? (
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      navigate("/Apps/TR099/Companies");
-                    }}
-                  >
-                    Companies
-                  </Typography>
-                  <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                    User Groups
-                  </Typography>
-                </Breadcrumbs>
-              ) : (
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="h3" color="#0000D1">
-                    {screenName}
-                  </Typography>
-                </Box>
-              )}
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR099/Companies");
+                      }}
+                    >
+                      Companies
+                    </Typography>
+                    <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                      User Groups
+                    </Typography>
+                  </Breadcrumbs>
+                ) : (
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography variant="h3" color="#0000D1">
+                      {screenName}
+                    </Typography>
+                  </Box>
+                )}
           <Box justifyContent="end" display="flex">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
@@ -4757,9 +4866,11 @@ console.log("EVENT ROUTE PARAMS", {
                 false
               ) : accessID == "TR288" ? (
                 false
-                 ) : accessID == "TR395" ? (
+              ) : accessID == "TR395" ? (
                 false
-                ) : accessID == "TR398" ? (
+              ) : accessID == "TR398" ? (
+                false
+               ) : accessID == "TR399" ? (
                 false
                 //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
                 // false  
@@ -5679,7 +5790,7 @@ console.log("EVENT ROUTE PARAMS", {
 
           <Typography fontWeight={600} fontSize={15} lineHeight={1}
             mb={-2} >
-            {accessID === "TR371" || accessID === "TR373" ? null : "Actions Guide"}
+            {accessID === "TR371" || accessID === "TR373" || accessID === "TR399" ? null : "Actions Guide"}
           </Typography>
         </Box>
         {accessID == "TR001" ? (
@@ -5713,153 +5824,179 @@ console.log("EVENT ROUTE PARAMS", {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ): accessID == "TR304" ? (
+        ) : accessID == "TR304" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={< VisibilityIcon style={{ color: '#eb710dff' }} />}
+              label="View"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<AttachFileIcon color="primary" />}
+              label="Attachment"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ) : accessID == "TR396" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={< DeleteIcon color= 'error'/>}
+              label="Delete"
+              variant="outlined"
+            />          
+          </Box>
+        ) 
+         : accessID == "TR397" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={< DeleteIcon  color= 'error' />}
+              label="Delete"
+              variant="outlined"
+            />          
+          </Box>
+        ) : accessID == "TR395" ? (
             <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
-                variant="outlined"
-              />
-              <Chip
-                icon={< VisibilityIcon style={{ color: '#eb710dff' }} />}
-                label="View"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />
-              <Chip
-                icon={<AttachFileIcon color="primary" />}
-                label="Attachment"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />
-            </Box>
-          )
-          : accessID == "TR395" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>             
-              <Chip
-                icon={<ForumIcon color='primary' />}
+                icon={<LocalAtmIcon color='primary' />}
                 label="Cash Management"
                 variant="outlined"
               />
-             
+
             </Box>
-          ): accessID == "TR398" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>             
-              <Chip
-                icon={<ForumIcon color='primary' />}
-                label="Cash Management"
-                variant="outlined"
-              />
-             
-            </Box>
-          )
-          : accessID == "TR385" ? (
+          ) : accessID == "TR398" ? (
             <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
+                icon={<ForumIcon color='primary' />}
+                label="Cash Management Category"
                 variant="outlined"
               />
-              <Chip
-                icon={<VisibilityIcon color="primary" />}
-                label="View"
-                variant="outlined"
-              />
+
             </Box>
           )
-            : accessID == "TR027" ? (
+            : accessID == "TR385" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
                   icon={<ModeEditOutlinedIcon color="primary" />}
                   label="Edit"
                   variant="outlined"
                 />
-
                 <Chip
-                  icon={<AddPhotoAlternateIcon color="primary" />}
-                  label="Image Upload"
-                  variant="outlined"
-                // sx={{ marginLeft: "50px" }}
-                />
-                <Chip
-                  icon={<EventNoteIcon color="primary" />}
-                  label="Leave Enquiry"
-                  variant="outlined"
-                // sx={{ marginLeft: "50px" }}
-                />
-                <Chip
-                  icon={<PermContactCalendarOutlinedIcon color="primary" />}
-                  label="Staff Timetable"
+                  icon={<VisibilityIcon color="primary" />}
+                  label="View"
                   variant="outlined"
                 />
               </Box>
-
             )
-              : accessID == "TR310" ? (
+              : accessID == "TR027" ? (
                 <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                   <Chip
                     icon={<ModeEditOutlinedIcon color="primary" />}
                     label="Edit"
                     variant="outlined"
                   />
+
                   <Chip
-                    icon={<Visibility color="primary" />}
-                    label="View"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<CurrencyRupeeOutlinedIcon color="primary" />}
-                    label="Payment"
-                    variant="outlined"
-                  />
-                  {params.OrderType === "Q" &&
-                    <Chip
-                      icon={<CurrencyExchangeOutlinedIcon color="primary" />}
-                      label="Convert to Order"
-                      variant="outlined"
-                    // sx={{ marginLeft: "50px" }}
-                    />}
-                  <Chip
-                    icon={< GridViewIcon color="primary" />}
-                    label="Order Item"
+                    icon={<AddPhotoAlternateIcon color="primary" />}
+                    label="Image Upload"
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
-                  {params.OrderType === "O" &&
-                    <Chip
-                      icon={<PendingActionsOutlinedIcon color="primary" />}
-                      label="View Amount Adjustment"
-                      variant="outlined"
-                    // sx={{ marginLeft: "50px" }}
-                    />}
-
                   <Chip
-                    icon={< PictureAsPdfIcon color="error" />}
-                    label="Order Pdf"
+                    icon={<EventNoteIcon color="primary" />}
+                    label="Leave Enquiry"
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
-
+                  <Chip
+                    icon={<PermContactCalendarOutlinedIcon color="primary" />}
+                    label="Staff Timetable"
+                    variant="outlined"
+                  />
                 </Box>
+
               )
-                : (accessID == "TR294" && params.parentID1 === "AP") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                : accessID == "TR310" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}
                       label="Edit"
                       variant="outlined"
                     />
-                    {/* <Chip
+                    <Chip
+                      icon={<Visibility color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+                      label="Payment"
+                      variant="outlined"
+                    />
+                    {params.OrderType === "Q" &&
+                      <Chip
+                        icon={<CurrencyExchangeOutlinedIcon color="primary" />}
+                        label="Convert to Order"
+                        variant="outlined"
+                      // sx={{ marginLeft: "50px" }}
+                      />}
+                    <Chip
+                      icon={< GridViewIcon color="primary" />}
+                      label="Order Item"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />
+                    {params.OrderType === "O" &&
+                      <Chip
+                        icon={<PendingActionsOutlinedIcon color="primary" />}
+                        label="View Amount Adjustment"
+                        variant="outlined"
+                      // sx={{ marginLeft: "50px" }}
+                      />}
+
+                    <Chip
+                      icon={< PictureAsPdfIcon color="error" />}
+                      label="Order Pdf"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />
+
+                  </Box>
+                )
+                  : (accessID == "TR294" && params.parentID1 === "AP") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      {/* <Chip
                   icon={<Psychology color="primary" />}
                   label="Skill Assessment"
                   variant="outlined"
                 /> */}
-                    <Chip
-                      icon={<CategoryOutlinedIcon color="primary" />}
-                      label="Appraisal"
-                      variant="outlined"
-                    />
-                    {/* <Chip
+                      <Chip
+                        icon={<CategoryOutlinedIcon color="primary" />}
+                        label="Appraisal"
+                        variant="outlined"
+                      />
+                      {/* <Chip
                   icon={<GppMaybeOutlinedIcon color="primary" />}
                   label="Compliance"
                   variant="outlined"
@@ -5874,800 +6011,385 @@ console.log("EVENT ROUTE PARAMS", {
                   label="Feedback"
                   variant="outlined"
                 /> */}
-                  </Box>
-                ) : (accessID == "TR294" && params.parentID1 === "SK") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Psychology color="primary" />}
-                      label="Skill Assessment"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : (accessID == "TR386") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ArtTrackIcon color="primary" />}
-                      label="Fees Structure"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<QuestionAnswerOutlinedIcon color="primary" />}
-                      label="Survey"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : (accessID == "TR294" && params.parentID1 === "FB") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<FeedbackOutlinedIcon color="primary" />}
-                      label="Feedback"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : (accessID == "TR294" && params.parentID1 === "CL") ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<GppMaybeOutlinedIcon color="primary" />}
-                      label="Compliance"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR280" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR300" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                      label="Schedule History"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR295" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR305" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                      label="Appraisal Schedule"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                      label="Schedule History"
-                      variant="outlined"
-                    />
+                    </Box>
+                  ) : (accessID == "TR294" && params.parentID1 === "SK") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Psychology color="primary" />}
+                        label="Skill Assessment"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : (accessID == "TR386") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ArtTrackIcon color="primary" />}
+                        label="Fees Structure"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<QuestionAnswerOutlinedIcon color="primary" />}
+                        label="Survey"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : (accessID == "TR294" && params.parentID1 === "FB") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<FeedbackOutlinedIcon color="primary" />}
+                        label="Feedback"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : (accessID == "TR294" && params.parentID1 === "CL") ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<GppMaybeOutlinedIcon color="primary" />}
+                        label="Compliance"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR280" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR300" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                        label="Schedule History"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR295" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR305" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                        label="Appraisal Schedule"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                        label="Schedule History"
+                        variant="outlined"
+                      />
 
-                  </Box>
-                ) : accessID == "TR372" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<GppMaybeOutlinedIcon color="primary" />}
-                      label="Detail"
-                      variant="outlined"
-                    />
+                    </Box>
+                  ) : accessID == "TR372" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<GppMaybeOutlinedIcon color="primary" />}
+                        label="Detail"
+                        variant="outlined"
+                      />
 
-                  </Box>
-                ) : accessID == "TR296" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                      label="Schedule History"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR297" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                      label="Schedule History"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR298" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                      label="Schedule History"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR288" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<Psychology color="primary" />}
-                      label="Schedule"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR283" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    {/* <Chip
+                    </Box>
+                  ) : accessID == "TR296" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                        label="Schedule History"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR297" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                        label="Schedule History"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR298" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Category color="primary" />}
+                        label="Question Group"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AccessTimeIcon color="primary" />}
+                        label="Session"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                        label="Schedule History"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR288" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<Psychology color="primary" />}
+                        label="Schedule"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR283" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      {/* <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
             /> */}
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    {/* <Chip
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                  </Box>
-                ): accessID == "TR387" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-              icon={<Delete color="error" />}
-              label="Delete"
-              variant="outlined"
-            />
-                  </Box>
-                ) : accessID == "TR303" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<AssistantIcon color="primary" />}
-                      label="Marketing Activity"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR318" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<InventoryOutlinedIcon color="primary" />}
-                      label="Item"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR291" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    {/* <Chip
+                    </Box>
+                  ) : accessID == "TR387" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Delete color="error" />}
+                        label="Delete"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR303" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<AssistantIcon color="primary" />}
+                        label="Marketing Activity"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR318" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<InventoryOutlinedIcon color="primary" />}
+                        label="Item"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR291" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      {/* <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
             /> */}
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    {/* <Chip
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                  </Box>
-                ) : accessID == "TR281" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    {/* <Chip
+                    </Box>
+                  ) : accessID == "TR281" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                    <Chip
-                      icon={<QuizIcon color="primary" />}
-                      label="Question"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR282" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    {/* <Chip
+                      <Chip
+                        icon={<QuizIcon color="primary" />}
+                        label="Question"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR282" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                  </Box>
-                ) : accessID == "TR279" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<Download color="primary" />}
-                      label="Download"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<OpenInNewIcon color="primary" />}
-                      label="Open Link"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR032" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Color Shades"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR338" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<OpenInNewIcon color="primary" />}
-                      label="View File"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ChecklistOutlinedIcon color="primary" />}
-                      label="Checklist"
-                      variant="outlined"
-                    />
-
-                    <Chip
-                      icon={<AutoStoriesOutlinedIcon color="primary" />}
-                      label="Log Notes"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR339" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<LoopOutlinedIcon color="primary" />}
-                      label="Process"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<VisibilityIcon color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PictureAsPdfIcon color="error" />}
-                      label="Process Pdf"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<DoubleArrowOutlinedIcon color="primary" />}
-                      label="Batch Reconciliation Records"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR033" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Customer"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR050" ? (
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    padding="25px"
-                    sx={{ overflowY: "auto" }}
-                  >
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SettingsBackupRestoreIcon color="primary" />}
-                      label="Process"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="primary" />}
-                      label="Cutting Component"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="success" />}
-                      label="Production"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="error" />}
-                      label="Packing"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="" />}
-                      label="All BOM"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="" />}
-                      label="Internal Order"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<EmailIcon color="primary" />}
-                      label="Email"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR003" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Material"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<AddPhotoAlternateIcon color="primary" />}
-                      label="Image Upload"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR004" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Stock"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<AddPhotoAlternateIcon color="primary" />}
-                      label="Image Upload"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR097" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Delivery Challan"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR079" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Stock"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR111" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR113" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR048" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={3}>
-                    <Chip
-                      icon={<SummarizeOutlinedIcon color="primary" />}
-                      label="Issue"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<OpenInBrowserOutlinedIcon color="primary" />}
-                      label="Alternate Material"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<OpenInBrowserOutlinedIcon color="warning" />}
-                      label="Alternate Color"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR118" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR051" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR119" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Indent Order"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR074" ? (
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    padding="25px"
-                    sx={{ overflowY: "auto" }}
-                  >
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Issue"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="error" />}
-                      label="Completion"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<TaskAltOutlinedIcon color="success" />}
-                      label="Completed"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="primary" />}
-                      label="Print"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<EmailIcon color="primary" />}
-                      label="Email"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR087" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="primary" />}
-                      label="Print"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<EmailIcon color="primary" />}
-                      label="Email"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR073" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Invoice"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR103" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Stock"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR104" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Stock"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR011" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="primary" />}
-                      label="Print"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<EmailIcon color="primary" />}
-                      label="Email"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Post Shipment"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR084" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PrintOutlinedIcon color="primary" />}
-                      label="Print"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                    <Chip
-                      icon={<EmailIcon color="primary" />}
-                      label="Email"
-                      variant="outlined"
-                      sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR080" ? (
-                  false
-                ) : accessID == "TR112" ? (
-                  false
-                ) : accessID == "TR114" ? (
-                  false
-                ) : accessID == "TR115" ? (
-                  false
-                ) : accessID == "TR102" ? (
-                  false
-                ) : accessID == "TR233" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<BalanceIcon color="primary" />}
-                      label="Stage Weightage"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Stages"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR236" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<BalanceIcon color="primary" />}
-                      label="Activity Weightage"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Activities"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : //LIST OF APPRAISAL
-                  accessID == "TR368" ? (
+                    </Box>
+                  ) : accessID == "TR279" ? (
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                      <Chip
+                        icon={<Download color="primary" />}
+                        label="Download"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<OpenInNewIcon color="primary" />}
+                        label="Open Link"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR032" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Color Shades"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR338" ? (
                     <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                       <Chip
                         icon={<ModeEditOutlinedIcon color="primary" />}
@@ -6675,126 +6397,541 @@ console.log("EVENT ROUTE PARAMS", {
                         variant="outlined"
                       />
                       <Chip
-                        icon={<VisibilityIcon color="primary" />}
-                        label="View"
-                        variant="outlined"
-                      />
-                      {/* <Chip
-                        icon={<CalendarMonthOutlinedIcon color="primary" />}
-                        label="TimeTable"
-                        variant="outlined"
-                      /> */}
-                      <Chip
-                        icon={<DeleteIcon color="error" />}
-                        label="Delete"
+                        icon={<OpenInNewIcon color="primary" />}
+                        label="View File"
                         variant="outlined"
                       />
                       <Chip
-                        icon={<LockResetOutlinedIcon color="error" />}
+                        icon={<ChecklistOutlinedIcon color="primary" />}
+                        label="Checklist"
+                        variant="outlined"
+                      />
+
+                      <Chip
+                        icon={<AutoStoriesOutlinedIcon color="primary" />}
+                        label="Log Notes"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR339" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<LoopOutlinedIcon color="primary" />}
                         label="Process"
                         variant="outlined"
                       />
                       <Chip
-                        icon={<RestartAltOutlinedIcon color="error" />}
-                        label="Unprocess"
+                        icon={<VisibilityIcon color="primary" />}
+                        label="View"
                         variant="outlined"
                       />
-
+                      <Chip
+                        icon={<PictureAsPdfIcon color="error" />}
+                        label="Process Pdf"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<DoubleArrowOutlinedIcon color="primary" />}
+                        label="Batch Reconciliation Records"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR033" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Customer"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR050" ? (
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      padding="25px"
+                      sx={{ overflowY: "auto" }}
+                    >
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SettingsBackupRestoreIcon color="primary" />}
+                        label="Process"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="primary" />}
+                        label="Cutting Component"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="success" />}
+                        label="Production"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="error" />}
+                        label="Packing"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="" />}
+                        label="All BOM"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="" />}
+                        label="Internal Order"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<EmailIcon color="primary" />}
+                        label="Email"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR003" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Material"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<AddPhotoAlternateIcon color="primary" />}
+                        label="Image Upload"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR004" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Stock"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<AddPhotoAlternateIcon color="primary" />}
+                        label="Image Upload"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR097" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Delivery Challan"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR079" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Stock"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR111" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR113" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR048" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={3}>
+                      <Chip
+                        icon={<SummarizeOutlinedIcon color="primary" />}
+                        label="Issue"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<OpenInBrowserOutlinedIcon color="primary" />}
+                        label="Alternate Material"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<OpenInBrowserOutlinedIcon color="warning" />}
+                        label="Alternate Color"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR118" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR051" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR119" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Indent Order"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR074" ? (
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      padding="25px"
+                      sx={{ overflowY: "auto" }}
+                    >
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Issue"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="error" />}
+                        label="Completion"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<TaskAltOutlinedIcon color="success" />}
+                        label="Completed"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="primary" />}
+                        label="Print"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<EmailIcon color="primary" />}
+                        label="Email"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR087" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="primary" />}
+                        label="Print"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<EmailIcon color="primary" />}
+                        label="Email"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR073" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Invoice"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR103" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Stock"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR104" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Stock"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR011" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="primary" />}
+                        label="Print"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<EmailIcon color="primary" />}
+                        label="Email"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Post Shipment"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR084" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<PrintOutlinedIcon color="primary" />}
+                        label="Print"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                      <Chip
+                        icon={<EmailIcon color="primary" />}
+                        label="Email"
+                        variant="outlined"
+                        sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR080" ? (
+                    false
+                  ) : accessID == "TR112" ? (
+                    false
+                  ) : accessID == "TR114" ? (
+                    false
+                  ) : accessID == "TR115" ? (
+                    false
+                  ) : accessID == "TR102" ? (
+                    false
+                  ) : accessID == "TR233" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                      <Chip
+                        icon={<BalanceIcon color="primary" />}
+                        label="Stage Weightage"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Stages"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR236" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                      <Chip
+                        icon={<BalanceIcon color="primary" />}
+                        label="Activity Weightage"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Activities"
+                        variant="outlined"
+                      />
                     </Box>
                   ) : //LIST OF APPRAISAL
-                    accessID == "TR275" ? (
+                    accessID == "TR368" ? (
                       <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                        {/* <Chip
-                                  icon={<BalanceIcon color="primary" />}
-                                  label="Milestone Weightage"
-                                  variant="outlined"
-                                /> */}
                         <Chip
                           icon={<ModeEditOutlinedIcon color="primary" />}
                           label="Edit"
                           variant="outlined"
                         />
-                        <Chip
-                          icon={<Visibility color="primary" />}
-                          label="View"
-                          variant="outlined"
-                        />
-                        {/* <Chip
-                          icon={<PictureAsPdfIcon color="error" />}
-                          label="Download PDF"
-                          variant="outlined"
-                        /> */}
-                        <Chip
-                          icon={<DatasetLinkedIcon
-                            color="primary" />}
-                          label="Timetable"
-                          variant="outlined"
-                        />
-                         <Chip
-                          icon={<DeleteIcon
-                            color="error" />}
-                          label="Delete"
-                          variant="outlined"
-                        />
-                      </Box>
-                    ): 
-                    accessID == "TR384" ? (
-                      <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                        <Chip
-                          icon={<EventAvailableOutlinedIcon
-                            color="primary" />}
-                          label="Events"
-                          variant="outlined"
-                        />
-                          <Chip
-                icon={<PublishedWithChangesOutlinedIcon color="error" />}
-                label="Publish Event Category"
-                variant="outlined"
-              />
-                      </Box>
-                    ) : accessID == "TR234" ? (
-                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                        <Chip
-                          icon={<BalanceIcon color="primary" />}
-                          label="Task Weightage"
-                          variant="outlined"
-                        />
-                        <Chip
-                          icon={<ModeEditOutlinedIcon color="primary" />}
-                          label="Edit"
-                          variant="outlined"
-                        />
-                        <Chip
-                          icon={<ListAltOutlinedIcon color="primary" />}
-                          label="List of Tasks"
-                          variant="outlined"
-                        />
-                      </Box>
-                    ) : accessID == "TR335" ? (
-                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                        <Chip
-                          icon={<TimelineOutlinedIcon color="primary" />}
-                          label="Timeline"
-                          variant="outlined"
-                        />
-                      </Box>
-                    ) : accessID == "TR314" ? (
-                      <Box display="flex" flexDirection="row" padding="25px" gap="5px">
                         <Chip
                           icon={<VisibilityIcon color="primary" />}
                           label="View"
                           variant="outlined"
                         />
-                      </Box>
-                    ) : accessID != "TR373" && accessID != "TR371" ? (
-                      <Box display="flex" flexDirection="row" padding="25px">
+                        {/* <Chip
+                        icon={<CalendarMonthOutlinedIcon color="primary" />}
+                        label="TimeTable"
+                        variant="outlined"
+                      /> */}
                         <Chip
-                          icon={<ModeEditOutlinedIcon color="primary" />}
-                          label="Edit"
+                          icon={<DeleteIcon color="error" />}
+                          label="Delete"
                           variant="outlined"
                         />
+                        <Chip
+                          icon={<LockResetOutlinedIcon color="error" />}
+                          label="Process"
+                          variant="outlined"
+                        />
+                        <Chip
+                          icon={<RestartAltOutlinedIcon color="error" />}
+                          label="Unprocess"
+                          variant="outlined"
+                        />
+
                       </Box>
-                    ) : (null)}
+                    ) : //LIST OF APPRAISAL
+                      accessID == "TR275" ? (
+                        <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                          {/* <Chip
+                                  icon={<BalanceIcon color="primary" />}
+                                  label="Milestone Weightage"
+                                  variant="outlined"
+                                /> */}
+                          <Chip
+                            icon={<ModeEditOutlinedIcon color="primary" />}
+                            label="Edit"
+                            variant="outlined"
+                          />
+                          <Chip
+                            icon={<Visibility color="primary" />}
+                            label="View"
+                            variant="outlined"
+                          />
+                          {/* <Chip
+                          icon={<PictureAsPdfIcon color="error" />}
+                          label="Download PDF"
+                          variant="outlined"
+                        /> */}
+                          <Chip
+                            icon={<DatasetLinkedIcon
+                              color="primary" />}
+                            label="Timetable"
+                            variant="outlined"
+                          />
+                          <Chip
+                            icon={<DeleteIcon
+                              color="error" />}
+                            label="Delete"
+                            variant="outlined"
+                          />
+                        </Box>
+                      ) :
+                        accessID == "TR384" ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                            <Chip
+                              icon={<EventAvailableOutlinedIcon
+                                color="primary" />}
+                              label="Events"
+                              variant="outlined"
+                            />
+                            <Chip
+                              icon={<PublishedWithChangesOutlinedIcon color="error" />}
+                              label="Publish Event Category"
+                              variant="outlined"
+                            />
+                          </Box>
+                        ) : accessID == "TR234" ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                            <Chip
+                              icon={<BalanceIcon color="primary" />}
+                              label="Task Weightage"
+                              variant="outlined"
+                            />
+                            <Chip
+                              icon={<ModeEditOutlinedIcon color="primary" />}
+                              label="Edit"
+                              variant="outlined"
+                            />
+                            <Chip
+                              icon={<ListAltOutlinedIcon color="primary" />}
+                              label="List of Tasks"
+                              variant="outlined"
+                            />
+                          </Box>
+                        ) : accessID == "TR335" ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                            <Chip
+                              icon={<TimelineOutlinedIcon color="primary" />}
+                              label="Timeline"
+                              variant="outlined"
+                            />
+                          </Box>
+                        ) : accessID == "TR314" ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                            <Chip
+                              icon={<VisibilityIcon color="primary" />}
+                              label="View"
+                              variant="outlined"
+                            />
+                          </Box>
+                        ) : accessID != "TR373" && accessID != "TR371" && accessID != "TR399" ? (
+                          <Box display="flex" flexDirection="row" padding="25px">
+                            <Chip
+                              icon={<ModeEditOutlinedIcon color="primary" />}
+                              label="Edit"
+                              variant="outlined"
+                            />
+                          </Box>
+                        ) : (null)}
       </Box>
       <MatxCustomizer
         open={open}
