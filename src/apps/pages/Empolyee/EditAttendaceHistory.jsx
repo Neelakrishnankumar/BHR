@@ -283,6 +283,75 @@ const EditAttendanceHistory = () => {
     { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
     { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
   ];
+
+
+  function SummaryTool() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>Summary</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+
+
+  const SummaryColumn = [
+      {
+      field: "slno",
+      headerName: "SL#",
+      width: 40,
+      headerAlign: "center",
+      align: "right",
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    { field: "Name", headerName: "Personnel", width: 300 },
+   
+    { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
+    // { field: "Leave", headerName: "LEAVE" },
+    { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 200 },
+    { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
+    // { field: "Irregular", headerName: "IRREGULAR" },
+    { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
+    { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
+    { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
+  ];
+
+
+
+
+
+
+
   // const AttendanceData = [
   //   {
   //     id: 1,
@@ -434,7 +503,7 @@ const EditAttendanceHistory = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance Register</Typography>
+            <Typography variant="h3">Attendance History</Typography>
           </Box>
           <Box display="flex">
             {/* <Tooltip title="Attendance ">
@@ -687,7 +756,7 @@ const EditAttendanceHistory = () => {
 
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                  height="500px"
+                  height="400px"
                   padding={1}
                   // height={dataGridHeight}
                   marginTop={2}
@@ -768,6 +837,92 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+
+    <Box sx={{ gridColumn: "span 4" }}>
+                <Box
+                  height="400px"
+                  padding={1}
+                  // height={dataGridHeight}
+                  marginTop={2}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      // border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      // borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      // borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#d0edec",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      }
+                    }}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    rows={AttendanceData}
+                    columns={SummaryColumn}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.SLNO}
+                    pageSize={pageSize}
+                    page={page}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    onPageChange={(newPage) => setPage(newPage)}
+                    onCellClick={(params) => { }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: SummaryTool,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? 'odd-row'
+                        : 'even-row'
+                    }
+                  />
+                </Box>
+              </Box>
+
+
               <Stack
                 direction="row"
                 padding={1}

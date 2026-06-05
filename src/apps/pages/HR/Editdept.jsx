@@ -545,7 +545,11 @@ const Editdept = () => {
                         label="subjectskill"
                       />
 
-                      <FormLabel focused={false}>Subject / Skill</FormLabel>
+                      <FormLabel focused={false}>
+                          <span>
+                            {getBusinessCaption("Projects", "Projects")}
+                          </span>
+                        </FormLabel>
                     </Box>
                   </FormControl>
 

@@ -1544,6 +1544,7 @@ const Editemployee = () => {
       );
     }
     if (event.target.value == "1") {
+      
       dispatch(
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
@@ -5397,7 +5398,6 @@ return (
                   <MenuItem value={12}>{getBusinessCaption("Approvals", "Approvals")}</MenuItem>
                   {is003Subscription === false ? (<MenuItem value={2}>Functions</MenuItem>) : null}
                   <MenuItem value={3}>{getBusinessCaption("Managers", "Managers")}</MenuItem>
-
                   <MenuItem value={9}>{getBusinessCaption("Geolocation", "Geo Location")}</MenuItem>
                   <MenuItem value={10}>{getBusinessCaption("LeaveConfigurations", "Leave Configuration")}</MenuItem>
                   {is003Subscription === false ? (<MenuItem value={6}>List of Documents</MenuItem>) : null}
@@ -8754,7 +8754,12 @@ return (
                             onBlur={handleBlur}
                           />
                         }
-                        label="HR Manager"
+                        // label="HR Manager"
+                         label={
+                          <span>
+                            {getBusinessCaption("HR Manager", "HR Manager")}
+                          </span>
+                        }
                       />
                       <FormControlLabel
                         control={
@@ -8768,7 +8773,12 @@ return (
                             onBlur={handleBlur}
                           />
                         }
-                        label="Finance Manager"
+                        // label="Finance Manager"
+                          label={
+                          <span>
+                            {getBusinessCaption("Finance Manager", "Finance Manager")}
+                          </span>
+                        }
                       />
                       <FormControlLabel
                         control={
@@ -8782,7 +8792,12 @@ return (
                             onBlur={handleBlur}
                           />
                         }
-                        label="Project Manager"
+                        // label="Project Manager"
+                         label={
+                          <span>
+                            {getBusinessCaption("Project Manager", "Project Manager")}
+                          </span>
+                        }
                       />
                       <FormControlLabel
                         control={
@@ -8796,7 +8811,12 @@ return (
                             onBlur={handleBlur}
                           />
                         }
-                        label="Facility Manager"
+                        // label="Facility Manager"
+                         label={
+                          <span>
+                            {getBusinessCaption("Facility Manager", "Facility Manager")}
+                          </span>
+                        }
                       />
                     </Box>
                   </FormControl>
