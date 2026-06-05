@@ -45,8 +45,9 @@ export const AttendanceHistoryExcel = (data, filters, empData) => {
       [`Day${i + 1}`]: row[`Day${i + 1}`]
     })).reduce((a, b) => ({ ...a, ...b }), {}),
     Present: row.Present,
-    Absent: row.Absent,
-    Holidays: row.HOLIDAYS,
+    "Unscheduled Leave": row.UnPaidLeave,
+    "Scheduled Leave": row.PaidLeave,
+    Holidays: row.Holidays,
     Weekoff: row.Weekoff,
     Total: row.Total
   }));
@@ -107,12 +108,17 @@ export const AttendanceHistoryExcel = (data, filters, empData) => {
   }
 
   /* ================= COLUMN WIDTH ================= */
-  worksheet["!cols"] = [
-    { wch: 6 },   // SLNO
-    { wch: 20 },  // Employee
-    ...Array(31).fill({ wch: 5 }),
-    { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }
-  ];
+worksheet["!cols"] = [
+  { wch: 6 },   // SLNO
+  { wch: 20 },  // Employee
+  ...Array(31).fill({ wch: 5 }),
+  { wch: 10 },  // Present
+  { wch: 17 },  // Unscheduled Leave  ← wider
+  { wch: 15 },  // Scheduled Leave    ← wider
+  { wch: 10 },  // Holidays
+  { wch: 10 },  // Weekoff
+  { wch: 10 },  // Total
+];
 
   /* ================= WORKBOOK ================= */
   const workbook = XLSX.utils.book_new();

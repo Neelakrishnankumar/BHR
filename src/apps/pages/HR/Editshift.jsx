@@ -124,13 +124,19 @@ const Editshift = () => {
     const captionArray = Array.isArray(Customisedcaptiondata)
         ? Customisedcaptiondata
         : Customisedcaptiondata?.data || [];
+        console.log(captionArray, "--find captionArray");
+        
     // GRID VIEW SAVE 
 
     const getBusinessCaption = (CaptionID, defaultCaption) => {
-        if (Subscriptionlastthree === "003") {
+        console.log(CaptionID,defaultCaption, "-------defaultCaption in getBusinessCaption" );
+        
+        if (Subscriptionlastthree) {
             const match = captionArray.find(
                 (item) => item.CAPTIONID === CaptionID
             );
+            console.log(match, "--find match");
+            
             return match?.CAPTION || defaultCaption;
         }
 
