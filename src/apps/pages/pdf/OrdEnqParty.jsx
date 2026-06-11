@@ -777,11 +777,66 @@ const computeGrandSummary = (rows) => {
 
     return { upiTotal, codTotal, pendingTotal };
 };
+const resolvePaymentMode = mode => {
+    const value = (mode || "").trim().toUpperCase();
 
+    if (value === "COD") return "COD";
+    if (value === "UPI") return "UPI";
+
+    return "Others";
+};
+const buildSummary = rows => {
+    const seen = new Set();
+
+    let grandTotal = 0;
+    let grandQty = 0;
+
+    const pay = {
+        COD: 0,
+        UPI: 0,
+        Others: 0,
+        Pending: 0,
+    };
+
+    rows.forEach(row => {
+        if (seen.has(row.Code)) return;
+        seen.add(row.Code);
+
+        const qty = +row.Quantity || 0;
+        const basePrice = +row.TotalPrice || 0;
+        const delivery = +row.DeliveryCharges || 0;
+        const paidAmount = +row.PaidAmount || 0;
+
+        const full = basePrice + delivery;
+
+        const status = (row.Status || "").trim();
+        const mode = resolvePaymentMode(row.PaymentMode);
+
+        grandTotal += full;
+        grandQty += qty;
+
+        if (status === "Paid") {
+            pay[mode] += full;
+        } else if (status === "Partially Paid") {
+            pay[mode] += paidAmount;
+            pay.Pending += full - paidAmount;
+        } else {
+            pay.Pending += full;
+        }
+    });
+
+    return {
+        totals: {
+            totalAmount: grandTotal,
+            totalQty: grandQty,
+        },
+        paymentSummary: pay,
+    };
+};
 const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) => {
     const filteredData = data.filter(row => row.PurchaseCheckbox === "N");
     const partyGroups = groupByParty(filteredData);
-
+    const summary = buildSummary(data);
     const { upiTotal, codTotal, pendingTotal } = computeGrandSummary(filteredData);
 
     const statusDateMap = {
@@ -1066,9 +1121,38 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) =
 
                 {/* UPI Card */}
 
-                <View style={styles.summaryCardRowLast}>
+                {/* <View style={styles.summaryCardRowLast}>
                     <Text style={styles.summaryLabel}>Total Amount Collected via UPI</Text>
                     <Text style={styles.summaryValue}>{upiTotal.toFixed(2)}</Text>
+                </View> */}
+
+
+                {/* COD Card */}
+
+                {/* <View style={styles.summaryCardRowLast}>
+                    <Text style={styles.summaryLabel}>Total Amount Collected via COD</Text>
+                    <Text style={styles.summaryValue}>{codTotal.toFixed(2)}</Text>
+                </View> */}
+
+
+                {/* Grand Total Paid */}
+                {/* <View style={styles.grandTotalRow}>
+                    <Text style={styles.grandTotalLabel}>Grand Total (Paid)</Text>
+                    <Text style={styles.grandTotalValue}>{(upiTotal + codTotal).toFixed(2)}</Text>
+                </View> */}
+
+                {/* Pending */}
+                {/* <View style={styles.pendingRow}>
+                    <Text style={styles.pendingLabel}>Pending Amount</Text>
+                    <Text style={styles.pendingValue}>{pendingTotal.toFixed(2)}</Text>
+                </View> */}
+
+                {/* UPI Card */}
+
+                <View style={styles.summaryCardRowLast}>
+                    <Text style={styles.summaryLabel}>Total Amount Collected via UPI</Text>
+                    {/* <Text style={styles.summaryValue}>{upiTotal.toFixed(2)}</Text> */}
+                    <Text style={styles.summaryValue}>{summary?.paymentSummary?.UPI.toFixed(2)}</Text>
                 </View>
 
 
@@ -1076,22 +1160,30 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) =
 
                 <View style={styles.summaryCardRowLast}>
                     <Text style={styles.summaryLabel}>Total Amount Collected via COD</Text>
-                    <Text style={styles.summaryValue}>{codTotal.toFixed(2)}</Text>
+                    {/* <Text style={styles.summaryValue}>{codTotal.toFixed(2)}</Text> */}
+                    <Text style={styles.summaryValue}>{summary?.paymentSummary?.COD.toFixed(2)}</Text>
+                </View>
+                {/* COD Card */}
+
+                <View style={styles.summaryCardRowLast}>
+                    <Text style={styles.summaryLabel}>Total Amount Collected via Others</Text>
+                    {/* <Text style={styles.summaryValue}>{codTotal.toFixed(2)}</Text> */}
+                    <Text style={styles.summaryValue}>{summary.paymentSummary.Others.toFixed(2)}</Text>
                 </View>
 
 
-                {/* Grand Total Paid */}
+                {/* Grand Total */}
                 <View style={styles.grandTotalRow}>
                     <Text style={styles.grandTotalLabel}>Grand Total (Paid)</Text>
-                    <Text style={styles.grandTotalValue}>{(upiTotal + codTotal).toFixed(2)}</Text>
+                    {/* <Text style={styles.grandTotalValue}>{(upiTotal + codTotal).toFixed(2)}</Text> */}
+                    <Text style={styles.grandTotalValue}>{summary?.totals?.totalAmount.toFixed(2)}</Text>
                 </View>
 
                 {/* Pending */}
                 <View style={styles.pendingRow}>
-                    <Text style={styles.pendingLabel}>Pending Amount</Text>
-                    <Text style={styles.pendingValue}>{pendingTotal.toFixed(2)}</Text>
+                    <Text style={styles.pendingLabel}> Pending Amount</Text>
+                    <Text style={styles.pendingValue}>{summary?.paymentSummary?.Pending.toFixed(2)}</Text>
                 </View>
-
                 {/* FOOTER */}
                 <View fixed style={styles.footerWrapper}>
                     {filters.FooterImg && (

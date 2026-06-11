@@ -599,22 +599,22 @@ const Listview = () => {
             accessID == "TR376"
               ? `${screenName1}` :
               accessID == "TR378"
-                ? `${screenName1}`:
-                accessID == "TR383"
                 ? `${screenName1}` :
-                accessID == "TR323"
-                  ? screenName || rowData.Screennameroute :
-                  accessID == "TR315"
-                    ? screenName || rowData.Screenname
-                    : accessID == "TR128"
-                      ? screenName || rowData.LocationName
-                      : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                    ? screenName1
-                    : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                      ? screenName1
-                      // : screenName}</Typography>
-                      // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
-                      : screenName ?? screenName1}</Typography> 
+                accessID == "TR383"
+                  ? `${screenName1}` :
+                  accessID == "TR323"
+                    ? screenName || rowData.Screennameroute :
+                    accessID == "TR315"
+                      ? screenName || rowData.Screenname
+                      : accessID == "TR128"
+                        ? screenName || rowData.LocationName
+                        : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                          ? screenName1
+                          : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                            ? screenName1
+                            // : screenName}</Typography>
+                            // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
+                            : screenName ?? screenName1}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -691,7 +691,7 @@ const Listview = () => {
                   <AccountBalanceWalletIcon
                     onClick={() => {
                       navigate(`/Apps/Secondarylistview/TR398/Academic Year/T`, {
-                      // navigate(`/Apps/Secondarylistview/TR395/Cash Management Category/T`, {
+                        // navigate(`/Apps/Secondarylistview/TR395/Cash Management Category/T`, {
                         state: {
                           ...rowData,
                         },
@@ -795,49 +795,49 @@ const Listview = () => {
               : accessID == "TR337" ? (
                 false
               )
-              : accessID == "TR331" ? (
-                false
-              )
-               : accessID == "TR378" ? (
-                false
-              )
-               : accessID == "TR383" ? (
-                false
-              )
-               : accessID == "TR391" ? (
-                false
-              )
-                // : YearFlag == "true" ? (
-                : UGA_ADD ? (
-
-                  <Tooltip arrow title="Add">
-                    <IconButton>
-                      <AddOutlinedIcon
-                        onClick={() => {
-                          navigate(
-                            `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
-                            }`,
-                            {
-
-                              state: {
-                                ...rowData,
-                                Routescreen: screenName,
-                                CustomerID: "-1",
-                                ProductID: "-1",
-                                BomID: "-1",
-                              },
-                            }
-                          );
-                        }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                ) : (
-                  // ) : (
-                  //   false
-                  // )
+                : accessID == "TR331" ? (
                   false
-                )}
+                )
+                  : accessID == "TR378" ? (
+                    false
+                  )
+                    : accessID == "TR383" ? (
+                      false
+                    )
+                      : accessID == "TR391" ? (
+                        false
+                      )
+                        // : YearFlag == "true" ? (
+                        : UGA_ADD ? (
+
+                          <Tooltip arrow title="Add">
+                            <IconButton>
+                              <AddOutlinedIcon
+                                onClick={() => {
+                                  navigate(
+                                    `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
+                                    }`,
+                                    {
+
+                                      state: {
+                                        ...rowData,
+                                        Routescreen: screenName,
+                                        CustomerID: "-1",
+                                        ProductID: "-1",
+                                        BomID: "-1",
+                                      },
+                                    }
+                                  );
+                                }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          // ) : (
+                          //   false
+                          // )
+                          false
+                        )}
 
             {/* <Tooltip arrow title="Import Excel">
                 <IconButton
@@ -863,17 +863,17 @@ const Listview = () => {
             </Tooltip> */}
             {accessID === "TR321" && (
               <Tooltip arrow title="Party Analytics">
-                <IconButton 
-                onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                <IconButton
+                  onClick={() => navigate("/Apps/CRMPartyAnalytics")}
                 >
                   <AssessmentIcon />
                 </IconButton>
               </Tooltip>)}
 
-                   {accessID === "TR315" && (
+            {accessID === "TR315" && (
               <Tooltip arrow title="Item Analytics">
-                <IconButton 
-                onClick={() => navigate("/Apps/ItemStokAnalytics")}
+                <IconButton
+                  onClick={() => navigate("/Apps/ItemStokAnalytics")}
                 >
                   <AssessmentIcon />
                 </IconButton>
@@ -1748,25 +1748,37 @@ const Listview = () => {
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
 
+                    const statusDateMap = {
+                      Created: ["OROrderDate"],
+                      Process: ["OROrderDate"],
+                      ReadyToDeliver: ["OROrderDate"],
+                      Picked: ["OROrderDate"],
+                      YetToDeliver: ["OROrderDate"],
+                      Scheduled: ["OROrderDate"],
+
+                      Delivered: ["ORDeliveryDate"],
+                      Paid: ["ORPaidDate"],
+                      PartiallyPaid: ["ORPaidDate"],
+                    };
                     // --------------------------
                     // DATE VALUES (ALWAYS OROrderDate)
                     // --------------------------
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
+                    // const fromDate = values.fromdate || "";
+                    // const toDate = values.date || "";
 
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-                    sessionStorage.setItem("ordertype", values.ordertype || "");
+                    // sessionStorage.setItem("FromDate", fromDate);
+                    // sessionStorage.setItem("ToDate", toDate);
+                    // sessionStorage.setItem("ordertype", values.ordertype || "");
 
-                    if (fromDate && toDate) {
-                      conditions.push(
-                        `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
-                      );
-                    } else if (fromDate) {
-                      conditions.push(`(OROrderDate >= '${fromDate}')`);
-                    } else if (toDate) {
-                      conditions.push(`(OROrderDate <= '${toDate}')`);
-                    }
+                    // if (fromDate && toDate) {
+                    //   conditions.push(
+                    //     `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                    //   );
+                    // } else if (fromDate) {
+                    //   conditions.push(`(OROrderDate >= '${fromDate}')`);
+                    // } else if (toDate) {
+                    //   conditions.push(`(OROrderDate <= '${toDate}')`);
+                    // }
 
                     // --------------------------
                     // STATUS FILTER
@@ -1794,6 +1806,36 @@ const Listview = () => {
                       (status) => values[status]
                     );
 
+                    const fromDate = values.fromdate || "";
+                    const toDate = values.date || "";
+
+                    sessionStorage.setItem("FromDate", fromDate);
+                    sessionStorage.setItem("ToDate", toDate);
+                    sessionStorage.setItem("ordertype", values.ordertype || "");
+
+                    const dateConditions = [];
+
+                    if (fromDate || toDate) {
+                      // If no status selected, default to OrderDate
+                      const dateFields =
+                        selectedStatuses.length > 0
+                          ? [...new Set(selectedStatuses.flatMap(s => statusDateMap[s] || []))]
+                          : ["OROrderDate"];
+
+                      dateFields.forEach((field) => {
+                        if (fromDate && toDate) {
+                          dateConditions.push(
+                            `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                          );
+                        } else if (fromDate) {
+                          dateConditions.push(`(${field} >= '${fromDate}')`);
+                        } else if (toDate) {
+                          dateConditions.push(`(${field} <= '${toDate}')`);
+                        }
+                      });
+
+                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    }
                     if (selectedStatuses.length > 0) {
                       conditions.push(
                         `OEStatus IN (${selectedStatuses
@@ -5887,7 +5929,7 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR391" ? (
+        ) : accessID == "TR391" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             {/* <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -5900,7 +5942,7 @@ const Listview = () => {
               variant="outlined"
             />
 
-           
+
           </Box>
         ) : accessID == "TR331" || accessID == "TR366" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
@@ -5912,7 +5954,7 @@ const Listview = () => {
 
             />
             <Chip
-              icon={< AnalyticsIcon/>}
+              icon={< AnalyticsIcon />}
               label="Analytics"
               variant="outlined"
 
@@ -6000,131 +6042,131 @@ const Listview = () => {
                 variant="outlined"
               // sx={{ marginLeft: "50px" }}
               />
-             {is003Subscription && (
-               <Chip
-                icon={<SensorOccupiedIcon color="primary" />}
-                label="Teacher Productivity"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />)}
+              {is003Subscription && (
+                <Chip
+                  icon={<SensorOccupiedIcon color="primary" />}
+                  label="Teacher Productivity"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />)}
             </Box>
           )
-           : accessID == "TR378" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-              <Chip
-                icon={<SourceOutlinedIcon color="primary" />}
-                label="Standard/Activities"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />
-            </Box>
-          )
-           : accessID == "TR383" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-              <Chip
-                icon={<EventOutlinedIcon color="primary" />}
-                label="Event Category"
-                variant="outlined"
-              // sx={{ marginLeft: "50px" }}
-              />
-            </Box>
-          )
-            : accessID == "TR337" ? (
+            : accessID == "TR378" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
-                  // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
-                  icon={<DoubleArrowOutlinedIcon color="primary" />}
-                  label="SOP Documents"
+                  icon={<SourceOutlinedIcon color="primary" />}
+                  label="Standard/Activities"
                   variant="outlined"
                 // sx={{ marginLeft: "50px" }}
                 />
               </Box>
-            ) : accessID == "TR316" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<QrCodeScannerOutlinedIcon color="primary" />}
-                  label="HSN Master"
-                  variant="outlined"
-                // sx={{ marginLeft: "50px" }}
-                />
-              </Box>
-            ) : accessID == "TR099" ? (
-              <Box display="flex" flexDirection="row" padding="25px">
-                <Chip
-                  icon={<ListAltOutlinedIcon color="primary" />}
-                  label="List of Usergroups"
-                  variant="outlined"
-                />
-              </Box>
-            ) : accessID == "TR275" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                {/* <Chip
+            )
+              : accessID == "TR383" ? (
+                <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                  <Chip
+                    icon={<EventOutlinedIcon color="primary" />}
+                    label="Event Category"
+                    variant="outlined"
+                  // sx={{ marginLeft: "50px" }}
+                  />
+                </Box>
+              )
+                : accessID == "TR337" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+                      icon={<DoubleArrowOutlinedIcon color="primary" />}
+                      label="SOP Documents"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR316" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<QrCodeScannerOutlinedIcon color="primary" />}
+                      label="HSN Master"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR099" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Usergroups"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR275" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<Visibility color="primary" />}
-                  label="View"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<PictureAsPdfIcon color="error" />}
-                  label="Download PDF"
-                  variant="outlined"
-                />
-             
-              </Box>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Visibility color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<PictureAsPdfIcon color="error" />}
+                      label="Download PDF"
+                      variant="outlined"
+                    />
+
+                  </Box>
                 ) : accessID == "TR379" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-               
-                <Chip
-                  icon={<PictureAsPdfIcon color="error" />}
-                  label="AdmissionForm PDF"
-                  variant="outlined"
-                />
-             
-              </Box>
-            ) : accessID == "TR128" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
 
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<ListAltOutlinedIcon color="primary" />}
-                  label="Gate"
-                  variant="outlined"
-                />
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
 
-              </Box>
-            ) : (
-              <Box display="flex" flexDirection="row" padding="25px">
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-              </Box>
-            )}
+                    <Chip
+                      icon={<PictureAsPdfIcon color="error" />}
+                      label="AdmissionForm PDF"
+                      variant="outlined"
+                    />
+
+                  </Box>
+                ) : accessID == "TR128" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Gate"
+                      variant="outlined"
+                    />
+
+                  </Box>
+                ) : (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                )}
       </Box>
       <MatxCustomizer
         open={open}
