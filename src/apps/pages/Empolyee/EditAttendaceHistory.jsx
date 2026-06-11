@@ -16,6 +16,8 @@ import {
   InputLabel,
   Avatar,
   Chip,
+  FormControlLabel,
+  Checkbox
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -68,6 +70,8 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getConfig } from "../../../config";
 import { FaFileExcel } from "react-icons/fa";
 import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+import AttenHistrySummatyPDF from "../pdf/AttenHistrySummatyPDF";
+import AttendanceHistrySummaryExcel from "../pdf/AttendanceHistrySummaryExcel";
 
 
 
@@ -116,6 +120,9 @@ const EditAttendanceHistory = () => {
   const CompanyID = sessionStorage.getItem("compID")
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [summarycheck, setSummaryCheck] = useState(false);
+
+
   const colors = tokens(theme.palette.mode);
 
   const [errorMsgData, setErrorMsgData] = useState(null);
@@ -560,6 +567,7 @@ const EditAttendanceHistory = () => {
                 sessionStorage.removeItem("month");
                 sessionStorage.removeItem("year");
                 dispatch(resetTrackingData());
+                setSummaryCheck(false);
               }}
             >
               <Box
@@ -650,14 +658,31 @@ const EditAttendanceHistory = () => {
                                       /> */}
                 </Stack>
                 <Stack direction="row" spacing={2} display="flex" padding={1} justifyContent="end">
+   <FormControlLabel
+                  control={
+                    <Checkbox
+                    checked={summarycheck}
+                    onChange={(e) => setSummaryCheck(e.target.checked)}
+                      // checked={attuseCurrentEmp}
+                      // onChange={(e) => {
+                      //   const checked = e.target.checked;
+                      //   setattUseCurrentEmp(checked);
+                      //   setattempData(null);
+                      //   // sessionStorage.setItem("attuseCurrentEmp", checked);
 
+                      // }}
+                      color="primary"
+                    />
+                  }
+                  label="Summary"
+                />
                   <Button type="submit" variant="contained" color="secondary" >
                     APPLY
                   </Button>
                   <Button type="reset" variant="contained" color="error" size="small">
                     RESET
                   </Button>
-                  {AttendanceData?.length > 0 && (
+                  {!summarycheck && AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendanceHistoryPDF
@@ -688,7 +713,7 @@ const EditAttendanceHistory = () => {
 
 
                   )}
-                  {AttendanceData?.length > 0 && (
+                  {!summarycheck && AttendanceData?.length > 0 && (
 
                     <FaFileExcel
                       size={20}
@@ -696,6 +721,58 @@ const EditAttendanceHistory = () => {
                       style={{ cursor: "pointer", }}
                       onClick={() =>
                         AttendanceHistoryExcel(
+                          AttendanceData,
+                          {
+                            month: values.month,
+                            year: values.year
+                          },
+                          empData
+                        )
+                      }
+                    />
+
+                  )}
+                  
+
+
+ {summarycheck && AttendanceData?.length > 0 && (
+                    <PDFDownloadLink
+                      document={
+                        <AttenHistrySummatyPDF
+                          data={AttendanceData}
+                          filters={{
+                            Month: values.month,
+                            Year: values.year,
+                            EmployeeID: empData?.RecordID,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
+                          }}
+                          footerHeight={footerHeight}
+                        />
+                      }
+                      fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
+                    >
+
+                      {({ loading }) =>
+                        loading ? (
+                          <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                        ) : (
+                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                        )
+                      }
+                    </PDFDownloadLink>
+                  )}
+
+       {summarycheck && AttendanceData?.length > 0 && (
+
+                    <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer", }}
+                      onClick={() =>
+                        AttendanceHistrySummaryExcel(
                           AttendanceData,
                           {
                             month: values.month,
@@ -753,7 +830,7 @@ const EditAttendanceHistory = () => {
   </PDFDownloadLink>
 )}
                 </Box> */}
-
+{!summarycheck && (
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
                   height="400px"
@@ -837,6 +914,7 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+)}
 
     <Box sx={{ gridColumn: "span 4" }}>
                 <Box

@@ -814,6 +814,7 @@ export const fetchListview =
           AccessID != "TR385" &&
           AccessID != "TR377" &&
           AccessID != "TR387" &&
+          AccessID != "TR026" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -1473,7 +1474,11 @@ export const fetchListview =
         dispatch(
           fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
-      } else {
+      } 
+      else if (AccessID === "TR026") {
+          filter = `CompanyID='${CompId}' AND SubjectSkill='${is003Subscription ? 'Y' : 'N'}'`;
+        }
+      else {
         filter = `CompanyID=${CompId}`;
       }
       var idata = {
