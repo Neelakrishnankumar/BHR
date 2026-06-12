@@ -260,21 +260,37 @@ const EditEmergency = () => {
 
         if (!file) return;
 
-        const allowedTypes = [
-            "application/pdf",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "image/jpeg",
-            "image/png",
-            "image/jpg",
-            "image/webp",
-        ];
+        // const allowedTypes = [
+        //     "application/pdf",
+        //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        //     "image/jpeg",
+        //     "image/png",
+        //     "image/jpg",
+        //     "image/webp",
+        // ];
 
-        if (!allowedTypes.includes(file.type)) {
-            toast.error(
-                "Only Images, PDF and DOCX files are allowed"
-            );
-            return;
-        }
+        // if (!allowedTypes.includes(file.type)) {
+        //     toast.error(
+        //         "Only Images, PDF and DOCX files are allowed"
+        //     );
+        //     return;
+        // }
+
+         const fileType = file.type;
+
+    // Allow: images, videos, audio + specific docs
+    const isAllowed =
+        fileType.startsWith("image/") ||
+        fileType.startsWith("video/") ||
+        fileType.startsWith("audio/") ||
+        fileType === "application/pdf" ||
+        fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    if (!isAllowed) {
+        toast.error("Only Images, Videos, Audio, PDF and DOCX files are allowed");
+        return;
+    }
+
 
         setEmergencyImage(file);
 
@@ -780,8 +796,8 @@ const EditEmergency = () => {
                                                     <input
                                                         hidden
                                                         type="file"
-                                                        // accept=".pdf"
-                                                        accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                         accept="image/*,video/*,audio/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                        // accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                         // onChange={(event) => {
                                                         //     const file = event.currentTarget.files[0];
                                                         //     setFieldValue("SyllabusFile", file);
