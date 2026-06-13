@@ -436,8 +436,45 @@ const EditTimetablev1 = () => {
   }, [data?.RemainingSlot]);
 
   // ── Grid columns for timetable view ─────────────────────────────────────
-  const WEEKcolumns = (getrawColumns || rawColumns).map((col) => ({
+  // const WEEKcolumns = (getrawColumns || rawColumns).map((col) => ({
+  //   ...col,
+  //   renderCell: (params) =>
+  //     params.value ? (
+  //       <Box
+  //         sx={{
+  //           display: "inline-flex",
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //           backgroundColor: "#f0f2ff",
+  //           color: "#3a3a6e",
+  //           borderRadius: "6px",
+  //           px: 1.2,
+  //           py: 0.4,
+  //           fontSize: "11px",
+  //           fontWeight: 500,
+  //           whiteSpace: "normal",
+  //           textAlign: "center",
+  //           lineHeight: 1.4,
+  //         }}
+  //       >
+  //         {params.value}
+  //       </Box>
+  //     ) : null,
+  // }));
+  const WEEKcolumns = (getrawColumns || rawColumns).map((col, index) => ({
     ...col,
+
+    ...(index === 0
+      ? {
+        width: 140, // Fixed width for Day column
+        flex: undefined,
+      }
+      : {
+        width: undefined, // Remove any existing fixed width
+        flex: 1,          // Share remaining space equally
+        minWidth: 220,    // Optional
+      }),
+
     renderCell: (params) =>
       params.value ? (
         <Box
@@ -464,11 +501,33 @@ const EditTimetablev1 = () => {
         </Box>
       ) : null,
   }));
+  // const gridColumns = (WEEKcolumns || []).map((col, colIndex) => {
+  //   if (colIndex === 0) {
+  //     return {
+  //       ...col,
+  //       renderCell: (params) => (
+  //         <Box sx={{ fontWeight: 500, color: "#1e1e3a", fontSize: "12px" }}>
+  //           {params.value || ""}
+  //         </Box>
+  //       ),
+  //     };
+  //   }
+
+  //   return {
+  //     ...col,
+  //     renderCell: (params) => {
+  //       const key = cellKey(params.row.id, col.field);
+  //       const edit = detailIDMap[key];
+  //       const rawValue = params.value;
+  //       const dayField = WEEKcolumns[0]?.field;
+  //       const dayName = params.row[dayField] || "";
+  //       const period = col.field;
 
   const gridColumns = (WEEKcolumns || []).map((col, colIndex) => {
     if (colIndex === 0) {
       return {
         ...col,
+        width: 140, // fixed Day column
         renderCell: (params) => (
           <Box sx={{ fontWeight: 500, color: "#1e1e3a", fontSize: "12px" }}>
             {params.value || ""}
@@ -479,6 +538,10 @@ const EditTimetablev1 = () => {
 
     return {
       ...col,
+      width: undefined,
+      flex: 1,
+      minWidth: 220,
+
       renderCell: (params) => {
         const key = cellKey(params.row.id, col.field);
         const edit = detailIDMap[key];
@@ -495,6 +558,7 @@ const EditTimetablev1 = () => {
           typeof rawValue === "object"
             ? rawValue?.teacher
             : null;
+
 
         return (
           <Box
@@ -1901,6 +1965,7 @@ const EditTimetablev1 = () => {
                     <DataGrid
                       rows={getWCrows || WCrows}
                       columns={gridColumns || []}
+                      autosizeOnMount={false}
                       pageSizeOptions={[5]}
                       getRowId={(row) => row.id}
                       hideFooter

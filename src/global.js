@@ -179,6 +179,7 @@ const initialState = {
   //attachmentUrl:baseurl + 'uploads/images/',
   attachmentUrl: "",
   videoAttachmentUrl: "",
+  audioAttachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
   designationImportUrl: "",
@@ -379,6 +380,7 @@ export const getUrlSlice = createSlice({
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.videoAttachmentUrl = baseurl + "uploads/videos/";
+      state.audioAttachmentUrl = baseurl + "uploads/audios/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
@@ -516,7 +518,8 @@ export const getUrlSlice = createSlice({
       state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
       state.EmployeeVendorGetController = APIurl + "ParentGetController.php";
       state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
-      state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      // state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      state.ExcelFileDownload = APIurl + "Excel_Download.php";
       state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
       state.Setup_MenuExcel = APIurl + "SetupMenu.php";
       state.Parentposturl = APIurl + "ParentpostController.php";

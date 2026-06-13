@@ -188,11 +188,11 @@ const EditAnnualfeestructure = () => {
                 : [],
 
         SendReminderBefore:
-            isEditMode ? data?.SendReminderBefore === "Y" : true,
+            isEditMode ? data?.SendReminderBefore === "Y" : false,
         AutoApplyLateFine:
-            isEditMode ? data?.AutoApplyLateFine === "Y" : true,
+            isEditMode ? data?.AutoApplyLateFine === "Y" : false,
         AllowPartialPayment:
-            isEditMode ? data?.AllowPartialPayment === "Y" : false,
+            isEditMode ? data?.AllowPartialPayment === "Y" : true,
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -879,7 +879,7 @@ const EditAnnualfeestructure = () => {
                                                 Allow partial payment
                                             </Typography>
                                             <Typography variant="body2" sx={{ color: "#94a3b8" }}>
-                                                Students can pay in instalments
+                                                Students can pay in installments
                                             </Typography>
                                         </Box>
                                     </Box>
