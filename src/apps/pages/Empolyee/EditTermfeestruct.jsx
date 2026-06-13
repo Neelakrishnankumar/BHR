@@ -231,7 +231,7 @@ const EditTermfeestructure = () => {
 
     const [sendReminder, setSendReminder] = useState(false);
     const [autoLateFine, setAutoLateFine] = useState(false);
-    const [allowPartialPayment, setAllowPartialPayment] = useState(false);
+    const [allowPartialPayment, setAllowPartialPayment] = useState(true);
 
     useEffect(() => {
         dispatch(getFetchFeeData({ accessID: "TR387", get: "get", recID, AcademicType }));
@@ -1318,7 +1318,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                         <CreditCardIcon sx={{ color: "#94a3b8" }} />
                                         <Box>
                                             <Typography fontWeight={500} fontSize="14px">Allow partial payment</Typography>
-                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>Students can pay in instalments</Typography>
+                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>Students can pay in installments</Typography>
                                         </Box>
                                     </Box>
                                     <Switch
