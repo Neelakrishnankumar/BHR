@@ -179,6 +179,7 @@ const initialState = {
   //attachmentUrl:baseurl + 'uploads/images/',
   attachmentUrl: "",
   videoAttachmentUrl: "",
+  audioAttachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
   designationImportUrl: "",
@@ -356,6 +357,7 @@ export const getUrlSlice = createSlice({
 
       const APIurl = config.API_URL;
       const baseurl = config.BASE_URL;
+      const essurl = config.ESS_URL;
       const baseurlUAAM = config.UAAM_URL;
       //const uaturl = "https://essuat.beyondexs.com"
 
@@ -372,11 +374,13 @@ export const getUrlSlice = createSlice({
       state.compdetailPostUrl = APIurl + "CompanypostController.php";
       //imgUploadUrl=baseurl + 'imgup6.php';
       state.imageUrl = baseurl + "uploads/images/";
+      state.EssurlimageUrl = essurl + "uploads/images/";
       state.imageUrlUAAM = baseurlUAAM + "uploads/images/";
       state.imageNameUpdateUrl = APIurl + "CMController.php";
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.videoAttachmentUrl = baseurl + "uploads/videos/";
+      state.audioAttachmentUrl = baseurl + "uploads/audios/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
