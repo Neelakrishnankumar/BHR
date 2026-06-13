@@ -230,6 +230,7 @@ import EditWorkshop from "./pages/HR/EditWorkshop";
 import EditTermfeesstructure from "./pages/Empolyee/EditTermfeestruct";
 import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
+import Editproject_V1 from "./pages/HR/EditProject_V1";
 
 function App() {
   //   useEffect(() => {
@@ -901,6 +902,10 @@ function App() {
                     path="/:accessID/:screenName/EditDepartment/:id/:Mode"
                     element={<Editdept />}
                   />
+                   <Route
+                    path="/:accessID/:screenName/EditSubject/:id/:Mode"
+                    element={<Editdept />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditTax Master/:id/:Mode"
                     element={<Edittaxmaster />}
@@ -1315,7 +1320,7 @@ function App() {
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditProject/:id/:Mode"
-                    element={<Editproject />}
+                    element={<Editproject_V1 />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"

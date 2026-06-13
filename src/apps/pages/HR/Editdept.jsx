@@ -79,6 +79,8 @@ const Editdept = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
+  var screenName = params.screenName;
+  console.log(params, "params");
   const Data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -203,7 +205,7 @@ const Editdept = () => {
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
-      SubjectSkill: values.subjectskill === true ? "Y" : "N",
+      SubjectSkill: screenName === "Subject" ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -534,7 +536,7 @@ const Editdept = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
-                      <Field
+                      {/* <Field
                         //  size="small"
                         type="checkbox"
                         name="subjectskill"
@@ -549,7 +551,7 @@ const Editdept = () => {
                           <span>
                             {getBusinessCaption("Projects", "Projects")}
                           </span>
-                        </FormLabel>
+                        </FormLabel> */}
                     </Box>
                   </FormControl>
 

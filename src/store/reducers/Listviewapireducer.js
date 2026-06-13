@@ -683,6 +683,7 @@ export const fetchListview =
         AccessID !== "TR282" &&
         AccessID !== "TR291" &&
         AccessID !== "TR283" &&
+        AccessID !== "TR026" &&
         AccessID !== "TR148"
       ) {
         if (
@@ -1474,10 +1475,14 @@ export const fetchListview =
         dispatch(
           fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
-      } 
-      else if (AccessID === "TR026") {
-          filter = `CompanyID='${CompId}' AND SubjectSkill='${is003Subscription ? 'Y' : 'N'}'`;
-        }
+      }
+      else if (AccessID === "TR026" && screenName === "Subject") {
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
+      }
+      else if (AccessID === "TR026" && screenName === "Department") {
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'N'`;
+      }
+
       else {
         filter = `CompanyID=${CompId}`;
       }
