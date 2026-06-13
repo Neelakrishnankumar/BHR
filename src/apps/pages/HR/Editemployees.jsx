@@ -4732,6 +4732,7 @@ const Fnsaveresignation = async (values, resetForm, del) => {
 //Approvals
 const FndeploymentApprovals = async (values, resetForm, del) => {
   console.log(values, "--values");
+console.log(deploymentData, "-------deploymentData inside");
 
   const idata = {
     HeaderID: recID,
@@ -4739,18 +4740,19 @@ const FndeploymentApprovals = async (values, resetForm, del) => {
     CheckOutTime: deploymentData.ShiftEndTime || "",
     // CheckInTime: values.checkin || "",
     // CheckOutTime: values.checkout || "",
-    Monday: deploymentData.MondayShift === "Y" ? true : false,
-    Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
-    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
-    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
-    Friday: deploymentData.FridayShift === "Y" ? true : false,
-    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+    Monday: deploymentData.Monday == "Y" ? "Y" : "N",
+    Tuesday: deploymentData.Tuesday == "Y" ? "Y" : "N",
+    Wednesday: deploymentData.Wednesday == "Y" ? "Y" : "N",
+    Thursday: deploymentData.Thursday == "Y" ? "Y" : "N",
+    Friday: deploymentData.Friday == "Y" ? "Y" : "N",
+    Saturday: deploymentData.Saturday == "Y" ? "Y" : "N",
+    Sunday: deploymentData.Sunday == "Y" ? "Y" : "N",
     OnsiteDateFlag: deploymentData.Onsitedateflag === "Y" ? true : false,
     GenerateInvoice: deploymentData.GenerateInvoice === "Y" ? "Y" : "N",
     EssAccess: deploymentData.EssAccess === "Y" ? "Y" : "N",
     // OnsiteActivityRole: values.onsiterole,
     OnsiteActivityRole: deploymentData.OnsiteActivityRole || "Project",
-    Sunday: deploymentData.SundayShift === "Y" ? true : false,
+    
     CostOfBudget: values.costofemployee || 0,
     CostOfCompany: values.costofcompany || 0,
     CostOfCompanyHours: values.costofcompanyhour || 0,
@@ -4807,6 +4809,8 @@ const FndeploymentApprovals = async (values, resetForm, del) => {
   };
 
   const response = await dispatch(postDeployment({ data: idata }));
+  console.log(idata, "--Approvals idata");
+  
   // return;
   if (response.payload.Status == "Y") {
     dispatch(getDeployment({ HeaderID: recID }));

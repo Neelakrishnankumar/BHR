@@ -161,7 +161,7 @@ const RaiseComplaints = () => {
         Code: data.StudentCode || "",
       }
       : null,
-       Teacher: data?.TeacherID
+    Teacher: data?.TeacherID
       ? {
         // RecordID: data.TeacherID,
         EmployeeID: data.TeacherID,
@@ -303,7 +303,7 @@ const RaiseComplaints = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR391/RaiseComplaints");
+          navigate("/Apps/TR391/Escalation");
         }
       } else {
         return;
@@ -334,17 +334,20 @@ const RaiseComplaints = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   // navigate("/Apps/TR243/Party");
-                  navigate("/Apps/TR391/RaiseComplaints");
+                  navigate("/Apps/TR391/Escalation");
                 }}
               >
-                {mode === "E" || mode === "V" ? `List Of Feedback/Complaints(${state.Breadcrumb1 || ""})` : `List Of Feedback/Complaints`}
+                {/* {mode === "E" || mode === "V" ? `List Of Feedback/Complaints(${state.Breadcrumb1 || ""})` : `List Of Feedback/Complaints`} */}
+                {mode === "E" || mode === "V" ? `List Of Escalation(${state.Breadcrumb1 || ""})` : `List Of Escalation`}
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {mode === "E" ? "Edit Feedback/Complaint" : mode === "V" ? "View Feedback/Complaint" : "Add Feedback/Complaint"}
+                {/* {mode === "E" ? "Edit Feedback/Complaint" : mode === "V" ? "View Feedback/Complaint" : "Add Feedback/Complaint"} */}
+                {mode === "E" ? "Edit Escalation" : mode === "V" ? "View Escalation" : "Add Escalation"}
+
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -415,7 +418,7 @@ const RaiseComplaints = () => {
                       name="Title"
                       id="Title"
                       label="Title"
-                       label={
+                      label={
                         <>
                           Title
                           <span style={{ color: "red", fontSize: "20px" }}>
@@ -441,7 +444,7 @@ const RaiseComplaints = () => {
                       name="Priority"
                       id="Priority"
                       // label="Priority"
-                       label={
+                      label={
                         <>
                           Priority
                           <span style={{ color: "red", fontSize: "20px" }}>
@@ -452,7 +455,7 @@ const RaiseComplaints = () => {
                       value={values.Priority}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                       error={!!touched.Priority && !!errors.Priority}
+                      error={!!touched.Priority && !!errors.Priority}
                       helperText={touched.Priority && errors.Priority}
                       disabled={mode === "V"}
                     >
@@ -542,40 +545,40 @@ const RaiseComplaints = () => {
                       })}`}
                       disabled={mode === "V"}
                     />
-                     <PartySingleSelect
-                          id="Teacher"
-                          name="Teacher"
-                          label={
-                            <>
-                              Teacher
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          value={values.Teacher}
-                          onChange={(newValue) => {
-                            setFieldValue("Teacher", newValue);
-                            // setFieldTouched("Teacher", true);
-                          }}
-                          error={!!touched.Teacher && !!errors.Teacher}
-                          helperText={touched.Teacher && errors.Teacher}
-                          InputLabelProps={{
-                            shrink: true, // ✅ prevents overlap
-                          }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2194",
-                              ScreenName: "Teacher",
-                              VerticalLicense: "003",
-                              Filter: `CompanyID='${compID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
-                              Any: "",
-                            },
-                          })}`}
-                          disabled={mode === "V"}
-                        />
+                    <PartySingleSelect
+                      id="Teacher"
+                      name="Teacher"
+                      label={
+                        <>
+                          Teacher
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.Teacher}
+                      onChange={(newValue) => {
+                        setFieldValue("Teacher", newValue);
+                        // setFieldTouched("Teacher", true);
+                      }}
+                      error={!!touched.Teacher && !!errors.Teacher}
+                      helperText={touched.Teacher && errors.Teacher}
+                      InputLabelProps={{
+                        shrink: true, // ✅ prevents overlap
+                      }}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2194",
+                          ScreenName: "Teacher",
+                          VerticalLicense: "003",
+                          Filter: `CompanyID='${compID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
+                          Any: "",
+                        },
+                      })}`}
+                      disabled={mode === "V"}
+                    />
                   </Box>
 
                   {/* DESCRIPTION */}
@@ -589,13 +592,13 @@ const RaiseComplaints = () => {
                     id="Description"
                     // label="Description"
                     label={
-                        <>
-                          Description
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      <>
+                        Description
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     value={values.Description}
                     onChange={handleChange}
                     onBlur={handleBlur}
