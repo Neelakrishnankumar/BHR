@@ -682,7 +682,7 @@ const RaiseComplaints = () => {
                           window.open(
                             store.getState()
                               .globalurl
-                              .attachmentUrl + file,
+                              .EssurlimageUrl + file,
                             "_blank"
                           );
                         } else {
