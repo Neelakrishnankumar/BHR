@@ -295,6 +295,7 @@ const EditTimetablev1 = () => {
   const getWCrows = rawSchedule.map((dayObj, index) => {
     const row = { id: index, day: dayObj.day };
     rawTimeSlots.forEach((slot, i) => {
+      // row[`slot_${i}`] = dayObj.slots?.[slot] || "";
       row[`slot_${i}`] = dayObj.slots?.[slot] || "";
     });
     return row;
@@ -456,7 +457,10 @@ const EditTimetablev1 = () => {
             lineHeight: 1.4,
           }}
         >
-          {params.value}
+          {/* {params.value} */}
+          {typeof params.value === "object"
+            ? params.value?.subject
+            : params.value}
         </Box>
       ) : null,
   }));
@@ -478,10 +482,19 @@ const EditTimetablev1 = () => {
       renderCell: (params) => {
         const key = cellKey(params.row.id, col.field);
         const edit = detailIDMap[key];
-        const rawValue = params.value;
+        const rawValue = params.value || null;
         const dayField = WEEKcolumns[0]?.field;
         const dayName = params.row[dayField] || "";
         const period = col.field;
+        const subject =
+          typeof rawValue === "object"
+            ? rawValue?.subject
+            : rawValue;
+
+        const teacher =
+          typeof rawValue === "object"
+            ? rawValue?.teacher
+            : null;
 
         return (
           <Box
@@ -534,7 +547,7 @@ const EditTimetablev1 = () => {
               </span>
             </Tooltip>
 
-            {edit?.subject && (
+            {/* {edit?.subject && (
               <Box
                 sx={{
                   display: "flex",
@@ -559,9 +572,9 @@ const EditTimetablev1 = () => {
                   edit?.subject ||
                   ""}
               </Box>
-            )}
+            )} */}
 
-            {!edit?.subject && rawValue && (
+            {/* {!edit?.subject && rawValue && (
               <Box
                 sx={{
                   display: "inline-flex",
@@ -581,8 +594,45 @@ const EditTimetablev1 = () => {
               >
                 {rawValue}
               </Box>
-            )}
+            )} */}
+            {edit?.subject && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  backgroundColor: "#f0f2ff",
+                  color: "#3a3a6e",
+                  borderRadius: "6px",
+                  px: 1,
+                  py: 0.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {edit.subject?.label || edit.subject?.Name}
+                </Typography>
 
+                {edit.teacher && (
+                  <Typography
+                    sx={{
+                      fontSize: "10px",
+                      color: "#6b7280",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {edit.teacher?.label || edit.teacher?.Name}
+                  </Typography>
+                )}
+              </Box>
+            )}
             {!edit?.subject && !edit?.teacher && !rawValue && (
               <Typography
                 sx={{ fontSize: "10px", color: "#ccc", fontStyle: "italic" }}
@@ -818,7 +868,7 @@ const EditTimetablev1 = () => {
       field: "Department",
       headerName: (
         <span>
-          Subject <span style={{ color: "red" }}>*</span>
+          Subject/Activity <span style={{ color: "red" }}>*</span>
         </span>
       ),
       headerAlign: "center",
@@ -990,7 +1040,7 @@ const EditTimetablev1 = () => {
           startIcon={<AddIcon />}
           onClick={handleClick}
         >
-          Add Subject
+          Add Subject/Activity
         </Button>
         <Button color="primary" sx={{ textTransform: "none" }}>
           Total Slots : {totalWeekSlots || data?.TotalWeekSlots || 0}
@@ -1143,7 +1193,7 @@ const EditTimetablev1 = () => {
   const handleSave = async () => {
     if (!activeKey) return;
     if (!draft.subject) {
-      toast.error("Please select a Subject");
+      toast.error("Please select a Subject/Activity");
       return;
     }
     if (!draft.teacher) {
@@ -1194,7 +1244,7 @@ const EditTimetablev1 = () => {
   // ── processRowUpdate ─────────────────────────────────────────────────────
   const processRowUpdate = (newRow) => {
     if (!newRow.Department?.RecordID) {
-      toast.error("Please select a subject before saving.");
+      toast.error("Please select a Subject/Activity before saving.");
     }
 
     if (
@@ -1633,7 +1683,7 @@ const EditTimetablev1 = () => {
                             variant="body2"
                             sx={{ fontWeight: 600, color: "#2c3e50" }}
                           >
-                            No consecutive same subject
+                            No consecutive same subject/activity
                           </Typography>
                           <Typography
                             variant="caption"
@@ -1752,7 +1802,7 @@ const EditTimetablev1 = () => {
                     variant="contained"
                     loading={isGenerating}
                     loadingPosition="start"
-                    disabled={mode =="V" || totalBalSlots !== 0}
+                    disabled={mode == "V" || totalBalSlots !== 0}
                     onClick={async () => {
                       const validationErrors = await validateForm();
                       setTouched({ Terms: true, Slotgroup: true });
@@ -2018,7 +2068,7 @@ const EditTimetablev1 = () => {
 
         <CheckinAutocomplete
           name="Subject"
-          label="Subject"
+          label="Subject/Activity"
           id="Subject"
           value={draft.subject}
           onChange={handleSubjectChange}
