@@ -1288,14 +1288,19 @@ const Editproject_V1 = () => {
                     <Formik
                         innerRef={formikRef}
                         initialValues={InitialValue}
-                        onSubmit={(values) => {
+                        // onSubmit={(values) => {
+                        //     setTimeout(() => {
+                        //         if (Subscriptionlastthree === "003") {
+                        //             // Header save for 003: uses TR275, no Detail payload → navigates back on success
+                        //             FnsaveTech(values, false, null, mode === "A", "TR275");
+                        //         } else {
+                        //             Fnsave(values);
+                        //         }
+                        //     }, 100);
+                        // }}
+                        onSubmit={(values, setSubmitting) => {
                             setTimeout(() => {
-                                if (Subscriptionlastthree === "003") {
-                                    // Header save for 003: uses TR275, no Detail payload → navigates back on success
-                                    FnsaveTech(values, false, null, mode === "A", "TR275");
-                                } else {
-                                    Fnsave(values);
-                                }
+                                Fnsave(values);
                             }, 100);
                         }}
                         validationSchema={validationSchema}

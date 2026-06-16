@@ -176,6 +176,7 @@ const Editdebitcash = () => {
             Description: values.description,
             Amount: Number(values.amount),
             BalanceAmount: Number(values.balamount),
+            CompanyID: CompanyID,
         };
 
         const response = await dispatch(postData({ accessID, action, idata }));
