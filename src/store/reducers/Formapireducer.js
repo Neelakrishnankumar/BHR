@@ -12,6 +12,10 @@ const initialState = {
   msg: "",
   loading: false,
   getLoading: false,
+  UnitStatus: "",
+  Unitmsg: "",
+  UnitgetLoading: false,
+  UnitData: {},
   regularizationLoading: false,
   expgetLoading: false,
   error: "",
@@ -1367,6 +1371,36 @@ export const getFetchData_v1 = createAsyncThunk(
       action: get,
       recid: recID,
       CompanyID: CompanyID
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
+export const UnitFetchData = createAsyncThunk(
+  "Units/Division/get",
+  async ({ ProjectID, CompanyID,SubjectID }) => {
+    var url = store.getState().globalurl.UnitAreaConfigGet;
+
+    const data = {
+      ProjectID: ProjectID,
+      CompanyID: CompanyID,
+      SubjectID: SubjectID,
     };
 
     console.log(
@@ -3561,6 +3595,22 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.getLoading = false;
         toast.error("Something Went Wrong");
+      })
+      .addCase(UnitFetchData.pending, (state) => {
+        state.UnitStatus = "idle";
+        state.UnitgetLoading = true;
+        state.Unitmsg = "Loading...";
+      })
+ 
+      .addCase(UnitFetchData.fulfilled, (state, action) => {
+        state.UnitStatus = "success";
+        state.UnitgetLoading = false;
+        state.UnitData = action.payload || {};
+      })
+ 
+      .addCase(UnitFetchData.rejected, (state) => {
+        state.UnitStatus = "Error";
+        state.UnitgetLoading = false;
       })
       .addCase(getFetchData.pending, (state) => {
         state.Status = "idle";

@@ -10,7 +10,9 @@
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location",
-    "Department": "Please enter the Department"
+    "Department": "Please enter the Department",
+    "subjectskill": "Please select the Type",
+    "Subject": "Please enter the Subject"
   },
    "Timetable": {
     "Terms": "Please select the Term",

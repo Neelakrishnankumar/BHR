@@ -1187,7 +1187,6 @@ const Editproject_V1 = () => {
     function EditToolbarteach(props) {
         const { setTeachrows, setRowModesModelteach, isRowEditing, pageSize, setPage } = props;
         const [isAdding, setIsAdding] = useState(false);
-        const [termFilter, setTermFilter] = useState("all");
 
         const handleClickteach = () => {
             setIsAdding(true);
@@ -1211,74 +1210,9 @@ const Editproject_V1 = () => {
         };
 
         return (
-            // <Button disabled={isRowEditing || isAdding} color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
-            //     Add Record  ({data.Project})
-            // </Button>
-                 <Box
-            sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                px: 1.5,
-                py: 0.75,
-                // borderBottom: "2.5px solid #1D9E75",
-                backgroundColor: "#fff",
-                width: "100%",
-            }}
-        >
-            {/* Left: Add record button */}
-            <Button
-               disabled={isRowEditing || isAdding} color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
-                sx={{
-                    color: "#073391",
-                    textTransform: "none",
-                    fontWeight: 500,
-                    fontSize: "0.875rem",
-                    "&:hover": { backgroundColor: "#E1F5EE" },
-                    "&.Mui-disabled": { color: "#9FE1CB" },
-                }}
-            >
-                Add record
+            <Button disabled={isRowEditing || isAdding} color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+                Add Record  ({data.Project})
             </Button>
-
-            {/* Right: Show + term filter dropdown */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography
-                    variant="body2"
-                    sx={{ color: "text.secondary", fontSize: "0.8rem" }}
-                >
-                    Show
-                </Typography>
-                <Select
-                    size="small"
-                    value={termFilter}
-                    onChange={(e) => {
-                        setTermFilter(e.target.value);
-                        // wire up to your filter logic here, e.g.:
-                        // onTermFilterChange(e.target.value);
-                    }}
-                    sx={{
-                        fontSize: "0.8rem",
-                        height: 28,
-                        minWidth: 110,
-                        "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#1D9E75",
-                        },
-                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#0F6E56",
-                        },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#0F6E56",
-                        },
-                    }}
-                >
-                    <MenuItem value="all">All terms</MenuItem>
-                    <MenuItem value="1">Term 1</MenuItem>
-                    <MenuItem value="2">Term 2</MenuItem>
-                    <MenuItem value="3">Term 3</MenuItem>
-                </Select>
-            </Box>
-        </Box>
         );
     }
 
@@ -1818,14 +1752,11 @@ const Editproject_V1 = () => {
                                         sx={{
                                             "& .MuiDataGrid-root": { border: "none" },
                                             "& .MuiDataGrid-cell": { borderBottom: "none" },
-                                            "& .MuiDataGrid-columnHeaders": { 
-                                                // backgroundColor: colors.blueAccent[800], 
-                                                backgroundColor: colors.blueAccent[800], 
-                                                borderBottom: "none" },
+                                            "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[800], borderBottom: "none" },
                                             "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
                                             "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[800] },
                                             "& .odd-row": { backgroundColor: "" },
-                                            "& .even-row": { backgroundColor: "#ebe3e3" },
+                                            "& .even-row": { backgroundColor: "#D3D3D3" },
                                         }}
                                     >
                                         <DataGrid
