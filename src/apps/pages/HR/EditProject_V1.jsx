@@ -157,6 +157,7 @@ const Editproject_V1 = () => {
     const rowData = location.state || {};
     var screenName = rowData.name;
 
+    const DeptLookupCheck = data.RoutineTasks === "Y" ? "A" : "S";
     // STUDENT-TEACHER MAPPING
     const [teachrows, setTeachrows] = useState([]);
     const [rowModesModelteach, setRowModesModelteach] = React.useState({});
@@ -443,6 +444,9 @@ const Editproject_V1 = () => {
 
     //UNITS
     const handleUnitApply = async () => {
+        if(!selectedSubjectID){
+            toast.error("Select select a Subject/Activity")
+        }
         const payload = {
             ProjectID: recID,
             CompanyID,
@@ -461,7 +465,7 @@ const Editproject_V1 = () => {
             setunitrows(response?.payload?.details || []);
         } else {
             setunitrows([]);
-            toast.error(response.payload.Message || "No rows available.");
+            toast.error(response.payload.Message || "No rows available please add a Record.");
         }
     };
     const processRowUpdateUnit = async (newRow, oldRow) => {
@@ -1174,10 +1178,15 @@ const Editproject_V1 = () => {
         radius: data.Radius || 0,
         TentativeEndDate: data.TentativeEndDate || "",
         TentativeStartDate: data.TentativeStartDate || "",
-        Subject: selectedSubjectID? {
-            RecordID:selectedSubject.RecordID,
-            Name:selectedSubject.Name || "",
-            Code:selectedSubject.Code || "",
+        Subject: selectedSubjectID ? {
+            RecordID: selectedSubject.RecordID,
+            Name: selectedSubject.Name || "",
+            Code: selectedSubject.Code || "",
+        } : null,
+        slotGroup: data.SlotGroupID && data.SlotGroupID !== "0" ? {
+            RecordID: data.SlotGroupID,
+            Name: data.SlotGroupName,
+            Code: data.SlotGroupCode,
         } : null,
     };
 
@@ -1220,6 +1229,8 @@ const Editproject_V1 = () => {
             AcademicYearID: params.filtertype || 0,
             TentativeStartDate: values.TentativeStartDate || "",
             TentativeEndDate: values.TentativeEndDate || "",
+            SlotGroupID: values.slotGroup ? values.slotGroup.RecordID : 0 || 0,
+
         };
 
         const response = await dispatch(postData({ accessID, action, idata }));
@@ -1714,7 +1725,7 @@ const Editproject_V1 = () => {
 
             setIsAdding(true);
             if (!selectedSubjectID) {
-                toast.error("Please select a subject first");
+                toast.error("Please select a Subject/Activity");
                 return;
             }
             const id = nanoid();
@@ -2012,6 +2023,24 @@ const Editproject_V1 = () => {
                                         url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2111", ScreenName: "Project Incharge", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
                                     />
 
+                                    {is003Subscription ? (
+                                        <CheckinAutocomplete
+                                            disabled={mode == "V"}
+                                            name="slotGroup"
+                                            label={getBusinessCaption("SlotGroup", "Slot Group")}
+                                            variant="outlined"
+                                            id="slotGroup"
+                                            value={values.slotGroup}
+                                            onChange={(newValue) => {
+                                                setFieldValue("slotGroup", {
+                                                    RecordID: newValue.RecordID,
+                                                    Code: newValue.Code,
+                                                    Name: newValue.Name,
+                                                });
+                                            }}
+                                            url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2171", ScreenName: "Slot Group", VerticalLicense: Subscriptionlastthree, Filter: `CompanyID=${CompanyID}`, Any: "" } })}`}
+                                        />
+                                    ) : null}
                                     {is003Subscription === false ? (
                                         <CheckinAutocomplete
                                             disabled={mode == "V"}
@@ -2160,7 +2189,8 @@ const Editproject_V1 = () => {
                                             onBlur={handleBlur}
                                             as={Checkbox}
                                         />
-                                        <FormLabel focused={false}>Routine Tasks</FormLabel>
+                                        {/* <FormLabel focused={false}>Routine Tasks</FormLabel> */}
+                                        <FormLabel focused={false}>{is003Subscription ? "Activities" : "Routine Tasks"}</FormLabel>
 
                                         {!is003Subscription && (
                                             <>
@@ -2934,7 +2964,7 @@ const Editproject_V1 = () => {
                                                 sx={{ minWidth: "300px", maxWidth: "350px" }}
                                                 label={
                                                     <>
-                                                        Subject/Activities
+                                                        Subject/Activitiy
                                                         <span style={{ color: "red", fontSize: "20px" }}>
                                                             *
                                                         </span>
@@ -2955,10 +2985,10 @@ const Editproject_V1 = () => {
                                                 }}
                                                 url={`${listViewurl}?data=${JSON.stringify({
                                                     Query: {
-                                                        AccessID: "2183",
+                                                        AccessID: "2187",
                                                         ScreenName: "Subject",
                                                         VerticalLicense: "003",
-                                                        Filter: `CompanyID='${CompanyID}'`,
+                                                        Filter:`Suborskill='${DeptLookupCheck}' AND CompanyID='${CompanyID}'`,
                                                         Any: "",
                                                     },
                                                 })}`}
