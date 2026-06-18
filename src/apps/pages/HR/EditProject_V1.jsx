@@ -314,7 +314,7 @@ const Editproject_V1 = () => {
             //     }),
             // );
             // dispatch(getFetchData({ accessID, get: "get", recID }));
-             return response.payload; 
+            return response.payload;
         } else {
             throw new Error(response.payload.Msg);
         }
@@ -517,7 +517,6 @@ const Editproject_V1 = () => {
             setunitrows((prevRows) =>
                 prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
             );
-            return updatedRow;
             setScreen("5");
             dispatch(
                 UnitFetchData({
@@ -527,7 +526,9 @@ const Editproject_V1 = () => {
                 }),
             );
             dispatch(getFetchData({ accessID, get: "get", recID }));
-            
+            return updatedRow;
+
+
         } catch (err) {
             console.error("Row save failed:", err);
             throw err;
@@ -2924,7 +2925,7 @@ const Editproject_V1 = () => {
                                                 name="Subject"
                                                 label="Subject"
                                                 fullWidth
-                                                sx={{minWidth:"300px",maxWidth:"350px"}}
+                                                sx={{ minWidth: "300px", maxWidth: "350px" }}
                                                 // label={
                                                 //     <>
                                                 //         Subject/Activities
