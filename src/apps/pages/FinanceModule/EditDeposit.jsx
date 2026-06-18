@@ -209,6 +209,7 @@ const Editdepositcash = () => {
             Attachment: logoimage || "",
             BalanceAmount: Number(values.balamount),
             BranchName: values.branchName,
+            CompanyID: CompanyID
         };
 
         const response = await dispatch(postData({ accessID, action, idata }));

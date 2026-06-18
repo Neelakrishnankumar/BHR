@@ -118,7 +118,9 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
-
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";   // Credit - green
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"; // Debit - red
+import SavingsIcon from "@mui/icons-material/Savings";  
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -5874,8 +5876,18 @@ const ListviewSecondary = () => {
         ) : accessID == "TR395" ? (
             <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
-                icon={<LocalAtmIcon color='primary' />}
-                label="Cash Management"
+                icon={<AddCircleOutlineIcon color='primary' />}
+                label="Credit List"
+                variant="outlined"
+              />
+               <Chip
+                icon={<RemoveCircleOutlineIcon color='primary' />}
+                label="Debit List"
+                variant="outlined"
+              />
+               <Chip
+                icon={<SavingsIcon color='primary' />}
+                label="Deposit List"
                 variant="outlined"
               />
 

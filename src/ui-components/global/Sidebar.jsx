@@ -24,6 +24,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
 import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
+import SubjectIcon from '@mui/icons-material/Subject';
 import {
   Box,
   Avatar,
@@ -260,11 +261,12 @@ const getProjectMenu = (is003Subscription) =>
 
 const getFeedbackMenu = (is00123Subscription) =>
   is00123Subscription ? {
-    name: "Feedbacks/Complaints",
-    url: "./TR391/RaiseComplaints",
+    // name: "Feedbacks/Complaints",
+    name: "Escalation",
+    url: "./TR391/Escalation",
     // id: 5594,
     icon: (
-      <Tooltip title="Feedbacks/Complaints">
+      <Tooltip title="Escalation">
         <FeedbackOutlinedIcon color="info" />
       </Tooltip>
     ),
@@ -577,6 +579,27 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
+          ...(is003Subscription
+            ? [
+             {
+            name: "Subject",
+            id: 34566,
+            url: "./TR026/Subject",
+            icon: (
+              <Tooltip title="Subject">
+                <SubjectIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR401",
+          },
+          ]:[]),
+          
           {
             name: "Slot",
             id: 474,

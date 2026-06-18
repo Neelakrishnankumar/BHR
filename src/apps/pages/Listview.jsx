@@ -343,6 +343,15 @@ const Listview = () => {
   //   // dispatch(screenRightsData(accessID));
   // }, [location.key]);
   React.useEffect(() => {
+    if(screenName1 == "Subject"){dispatch(
+      fetchListview(
+        accessID,
+        Subscriptionlastthree,
+        screenName1,
+        compID
+      )
+    )}
+    else{
     dispatch(
       fetchListview(
         accessID,
@@ -365,7 +374,7 @@ const Listview = () => {
         "",
         compID
       )
-    );
+    )}
     // dispatch(screenRightsData(accessID));
   }, [location.key]);
 
@@ -598,6 +607,8 @@ const Listview = () => {
             ? `${screenName1}` :
             accessID == "TR376"
               ? `${screenName1}` :
+               accessID == "TR026"
+              ? `${screenName}` :
               accessID == "TR378"
                 ? `${screenName1}` :
                 accessID == "TR383"

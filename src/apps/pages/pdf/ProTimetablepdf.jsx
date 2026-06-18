@@ -867,11 +867,26 @@ const TableDataRow = ({ row, columns, rowIndex }) => {
       {periodCols.map((col, idx) => {
         const isLast = idx === periodCols.length - 1;
         const cellValue = row[col.field] ?? "";
+        const subject =
+          typeof cellValue === "object"
+            ? cellValue?.subject
+            : cellValue;
+
+        const teacher =
+          typeof cellValue === "object"
+            ? cellValue?.teacher
+            : "";
         return (
           <View key={col.field} style={isLast ? s.tableDataCellLast : s.tableDataCell}>
             {cellValue ? (
+              // <View style={s.cellChip}>
+              //   <Text style={s.cellChipText}>{cellValue}</Text>
+              // </View>
               <View style={s.cellChip}>
-                <Text style={s.cellChipText}>{cellValue}</Text>
+                <Text style={s.cellChipText}>
+                  {subject}
+                  {teacher ? `\n${teacher}` : ""}
+                </Text>
               </View>
             ) : (
               <Text style={{ fontSize: 7, color: "#cbd5e1" }}>—</Text>

@@ -49,6 +49,9 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";   // Credit - green
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"; // Debit - red
+import SavingsIcon from "@mui/icons-material/Savings";                     // Deposit - blue
 import {
   FeesStructureDelete,
   getFetchData,
@@ -683,6 +686,7 @@ export const fetchListview =
         AccessID !== "TR282" &&
         AccessID !== "TR291" &&
         AccessID !== "TR283" &&
+        AccessID !== "TR026" &&
         AccessID !== "TR148"
       ) {
         if (
@@ -1474,10 +1478,14 @@ export const fetchListview =
         dispatch(
           fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
-      } 
-      else if (AccessID === "TR026") {
-          filter = `CompanyID='${CompId}' AND SubjectSkill='${is003Subscription ? 'Y' : 'N'}'`;
-        }
+      }
+      else if (AccessID === "TR026" && screenName === "Subject") {
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
+      }
+      else if (AccessID === "TR026" && screenName === "Department") {
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'N'`;
+      }
+
       else {
         filter = `CompanyID=${CompId}`;
       }
@@ -2337,7 +2345,7 @@ export const fetchListview =
 
                       <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
+                        to={`/Apps/TR391/Escalation/EditEscalation/${params.row.RecordID}/V`}
                         state={{ Breadcrumb1: params.row.Title }}
                       >
                         <Tooltip title="View">
@@ -8979,40 +8987,44 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR395" && (
           <>
-            {/* <Link
-              to={
-                params.row.Description == "Credit"
-                  ? `./Credit/TR396/${params.row.RecordID}`
-                  : params.row.Description == "Debit "
-                  ? `./Debit/TR396/${params.row.RecordID}`
-                  : `./Deposit/TR397/${params.row.RecordID}`
-              }
-              state={{
-                BreadCrumb1: params.row.Project,
-              }}
-            > */}
-            <Tooltip title="Cash Management">
-              <IconButton color="info" size="small"
-                onClick={() => {
-                  const path =
-                    params.row.Description === "Credit"
-                      ? `/Apps/Secondarylistview/TR399/Credit/${params.row.RecordID}`
-                      : params.row.Description === "Debit "
-                        ? `/Apps/Secondarylistview/TR397/Debit/${params.row.RecordID}`
-                        : `/Apps/Secondarylistview/TR396/Deposit/${params.row.RecordID}`;
+            {params.row.Description === "Credit" && (
+              <Tooltip title="Credit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR399/Credit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <AddCircleOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            )}
 
-                  navigate(path, {
-                    state: {
-                      ...state,
-                      BreadCrumb1: params.row.Code,
-                    },
-                  });
-                }}
-              >
-                <LocalAtmIcon />
-              </IconButton>
-            </Tooltip>
-            {/* </Link>*/}
+            {params.row.Description === "Debit" && (
+              <Tooltip title="Debit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR397/Debit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {params.row.Description === "Deposit" && (
+              <Tooltip title="Deposit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR396/Deposit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <SavingsIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
         {accessID === "TR398" && (
@@ -9092,7 +9104,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
             <Link
               to={
-                params.row.AcadamicTypeID == 1
+                params.row.AcademicType == "Term"
                   ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
                   : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
               }

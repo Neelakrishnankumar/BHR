@@ -53,7 +53,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
 import {
-  
+
   CheckinAutocomplete,
   CheckinAutocomplete_v12,
   Employeeautocomplete,
@@ -92,9 +92,9 @@ const Editproject = () => {
   var accessID = params.accessID;
 
   const data = useSelector((state) => state.formApi.Data) || {};
-const Department = useSelector((state) => state.formApi.Department.Department) || [];
-console.log(Department, "---Department in Autocomplete");
-// const departmentEmp = useSelector((state) => state.formApi.Department.Department.Employee) || [];
+  const Department = useSelector((state) => state.formApi.Department.Department) || [];
+  console.log(Department, "---Department in Autocomplete");
+  // const departmentEmp = useSelector((state) => state.formApi.Department.Department.Employee) || [];
 
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -119,7 +119,7 @@ console.log(Department, "---Department in Autocomplete");
   );
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   console.log(SubscriptionCode, "--SubscriptionCode");
-  
+
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
@@ -137,8 +137,8 @@ console.log(Department, "---Department in Autocomplete");
   const [rowLoading, setRowLoading] = useState(false);
   const [deletedRows, setDeletedRows] = useState([]);
   const [editedRows, setEditedRows] = useState([]);
-const [passrecid, setPassrecid] = useState(null);
-const [detailrecid, setDetailrecid] = useState(null);
+  const [passrecid, setPassrecid] = useState(null);
+  const [detailrecid, setDetailrecid] = useState(null);
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
   );
@@ -153,16 +153,16 @@ const [detailrecid, setDetailrecid] = useState(null);
   // var screenName1 = params.screenName;
   var screenName = rowData.name
 
-//STUDENT-TEACHER MAPPING
+  //STUDENT-TEACHER MAPPING
 
-const [teachrows, setTeachrows] = useState([]);
- const [rowModesModelteach, setRowModesModelteach] = React.useState({});
+  const [teachrows, setTeachrows] = useState([]);
+  const [rowModesModelteach, setRowModesModelteach] = React.useState({});
 
- const isRowEditing = Object.values(rowModesModelteach).some(
-  (row) => row.mode === GridRowModes.Edit
-);
-   const validateRowTT = (row) => {
-   
+  const isRowEditing = Object.values(rowModesModelteach).some(
+    (row) => row.mode === GridRowModes.Edit
+  );
+  const validateRowTT = (row) => {
+
     if (!row.Department) {
       return "Please Select the Subject";
     }
@@ -173,89 +173,89 @@ const [teachrows, setTeachrows] = useState([]);
   };
 
   const processRowUpdateTeach = async (newRow, oldRow) => {
-  console.log(newRow,InitialValue, "--inside process");
+    console.log(newRow, InitialValue, "--inside process");
     const currentFormikValues = formikRef.current.values;
 
-  console.log(currentFormikValues,"currentFormikValues");
+    console.log(currentFormikValues, "currentFormikValues");
 
-  const error = validateRowTT(newRow);
+    const error = validateRowTT(newRow);
 
-  if (error) throw new Error(error);
+    if (error) throw new Error(error);
 
-  const isNew = isNaN(Number(newRow.RecordID));
+    const isNew = isNaN(Number(newRow.RecordID));
 
-  const payload = {
-    ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
-    EmpID: newRow.Teacher?.RecordID || 0,
-    DeptID: newRow.Department?.RecordID || 0,
-  };
-  try {
-    // const HeaderID = await Fnsave(payload, isNew);
-const HeaderID = await FnsaveTech(
-  currentFormikValues,   // values (header form data)
-  false,          // del
-  payload,        // payload
-  isNew           // isNew
-);
-    const updatedRow = {
-      ...newRow,
-      id: HeaderID,
-      RecordID: HeaderID,
-      isNew: false,
+    const payload = {
+      ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+      EmpID: newRow.Teacher?.RecordID || 0,
+      DeptID: newRow.Department?.RecordID || 0,
     };
+    try {
+      // const HeaderID = await Fnsave(payload, isNew);
+      const HeaderID = await FnsaveTech(
+        currentFormikValues,   // values (header form data)
+        false,          // del
+        payload,        // payload
+        isNew           // isNew
+      );
+      const updatedRow = {
+        ...newRow,
+        id: HeaderID,
+        RecordID: HeaderID,
+        isNew: false,
+      };
 
-    setTeachrows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === newRow.id ? updatedRow : row
-      )
-    );
+      setTeachrows((prevRows) =>
+        prevRows.map((row) =>
+          row.id === newRow.id ? updatedRow : row
+        )
+      );
 
-    return updatedRow;
-  } catch (err) {
-    console.error("Row save failed:", err);
-    throw err;
-  }
-};
-//    const processRowUpdateTeach = async (newRow, oldRow) => {
-//      console.log(rows, "--inside proceeess");
-//     const error = validateRowTT(newRow);
-//     if (error) throw new Error(error);
+      return updatedRow;
+    } catch (err) {
+      console.error("Row save failed:", err);
+      throw err;
+    }
+  };
+  //    const processRowUpdateTeach = async (newRow, oldRow) => {
+  //      console.log(rows, "--inside proceeess");
+  //     const error = validateRowTT(newRow);
+  //     if (error) throw new Error(error);
 
-//     const isNew = isNaN(Number(newRow.RecordID));
+  //     const isNew = isNaN(Number(newRow.RecordID));
 
-//     const payload = {
-//       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
-//       // ProjectID: newRow.Slots?.RecordID || 0,
-//       EmpID: newRow.Teacher?.RecordID || 0,
-//       DeptID: newRow.Department?.RecordID || 0,
-//      };
-//      console.log(payload, "--passing paYload for fnSave");
-     
-// // return;
+  //     const payload = {
+  //       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+  //       // ProjectID: newRow.Slots?.RecordID || 0,
+  //       EmpID: newRow.Teacher?.RecordID || 0,
+  //       DeptID: newRow.Department?.RecordID || 0,
+  //      };
+  //      console.log(payload, "--passing paYload for fnSave");
 
-//     try {
-//       // ✅ get new ID from API
-//       const HeaderID = await Fnsave(payload, isNew);
+  // // return;
 
-//       const updatedRow = {
-//         ...newRow,
-//         id: HeaderID,
-//         RecordID: HeaderID,
-//         isNew: false,
-//       };
+  //     try {
+  //       // ✅ get new ID from API
+  //       const HeaderID = await Fnsave(payload, isNew);
 
-//       setTeachrows((prevRows) =>
-//         prevRows.map((row) =>
-//           row.id === newRow.id ? updatedRow : row
-//         )
-//       );
+  //       const updatedRow = {
+  //         ...newRow,
+  //         id: HeaderID,
+  //         RecordID: HeaderID,
+  //         isNew: false,
+  //       };
 
-//       return updatedRow;
-//     } catch (err) {
-//       console.error("Row save failed:", err);
-//       throw err;
-//     }
-//   };
+  //       setTeachrows((prevRows) =>
+  //         prevRows.map((row) =>
+  //           row.id === newRow.id ? updatedRow : row
+  //         )
+  //       );
+
+  //       return updatedRow;
+  //     } catch (err) {
+  //       console.error("Row save failed:", err);
+  //       throw err;
+  //     }
+  //   };
 
   const handleRowEditStopTeach = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -290,21 +290,21 @@ const HeaderID = await FnsaveTech(
         toast.success("Deleted Successfully");
         return;
       }
-// return;
+      // return;
       const response = await dispatch(
         postData({
           accessID: "TR389",
           action: "harddelete",
           idata: {
             ProjectTeamRecordID: Number(RecordID),
-            
+
           }
         })
       );
 
       if (response?.payload?.Status === "Y") {
         toast.success(response.payload.Msg);
-        dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }));
+        dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }));
       } else {
         toast.error(response?.payload?.Msg || "Delete failed");
       }
@@ -386,7 +386,7 @@ const HeaderID = await FnsaveTech(
     );
   }
 
-      function EditTeacherAutocomplete(props) {
+  function EditTeacherAutocomplete(props) {
     const { id, value, field, api, row } = props;
 
     const handleChange = async (newValue) => {
@@ -412,56 +412,56 @@ const HeaderID = await FnsaveTech(
         onChange={handleChange}
         // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
         url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-// sx={{
-//         height: "100%",
-//         "& .MuiOutlinedInput-root": {
-//           height: "100%",
-//         },
-//       }}
+      // sx={{
+      //         height: "100%",
+      //         "& .MuiOutlinedInput-root": {
+      //           height: "100%",
+      //         },
+      //       }}
       />
     );
   }
   const Teachcolumns = [
-        {
-            field: "Slno",
-            headerName: "SL#",
-            align: "right",
-            headerAlign: "center",
-            width: 60,
-            sortable: false,
-            filterable: false,
-            disableColumnMenu: true,
-            valueGetter: (params) => {
-                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+    {
+      field: "Slno",
+      headerName: "SL#",
+      align: "right",
+      headerAlign: "center",
+      width: 60,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
 
-                const totalVisibleRows = params.api.getAllRowIds().length;
-                const totalAllRows = params.api.getRowsCount();
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
 
-                if (totalVisibleRows < totalAllRows) {
-                    return index + 1;
-                } else {
-                    return page * pageSize + index + 1;
-                }
-            },
-        },
-        {
-            headerName: "RecordID",
-            field: "RecordID",
-            width: 100,
-            align: "left",
-            headerAlign: "center",
-            hide: true,
-        },
-        {
-          
-           headerName: "ProjectTeamRecordID",
-            field: "ProjectTeamsID",
-            width: 100,
-            align: "left",
-            headerAlign: "center",
-            hide: true,
-        },
-          {
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    {
+      headerName: "RecordID",
+      field: "RecordID",
+      width: 100,
+      align: "left",
+      headerAlign: "center",
+      hide: true,
+    },
+    {
+
+      headerName: "ProjectTeamRecordID",
+      field: "ProjectTeamsID",
+      width: 100,
+      align: "left",
+      headerAlign: "center",
+      hide: true,
+    },
+    {
       field: "Department",
       headerName: (
         <span>
@@ -496,117 +496,117 @@ const HeaderID = await FnsaveTech(
       // renderCell: (params) => {
       //   return params.value?.Name || ""; // show only the name
       // },
-renderCell: (params) => (
-    <div
-      style={{
-        height: "100%",
-        maxHeight: "38px", // same as row height
-        overflowY: "auto",
-        overflowX: "hidden",
-        width: "100%",
-        whiteSpace: "normal",
-        wordBreak: "break-word",
-        lineHeight: "18px",
-        // textAlign: "center",
-        paddingTop: "5px",
-      }}
-    >
-      {params.value?.Name || ""}
-    </div>
-  ),
+      renderCell: (params) => (
+        <div
+          style={{
+            height: "100%",
+            maxHeight: "38px", // same as row height
+            overflowY: "auto",
+            overflowX: "hidden",
+            width: "100%",
+            whiteSpace: "normal",
+            wordBreak: "break-word",
+            lineHeight: "18px",
+            // textAlign: "center",
+            paddingTop: "5px",
+          }}
+        >
+          {params.value?.Name || ""}
+        </div>
+      ),
       renderEditCell: (params) => {
         return <EditTeacherAutocomplete {...params} />;
       },
     },
 
-        {
-            field: "actions",
-            type: "actions",
-            headerName: "Actions",
-            width: 165,
-            cellClassName: "actions",
-            getActions: ({ id }) => {
-                const isInEditMode = rowModesModelteach[id]?.mode === GridRowModes.Edit;
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 165,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModelteach[id]?.mode === GridRowModes.Edit;
 
-                if (isInEditMode) {
-                    return [
-                        <GridActionsCellItem
-                            icon={<SaveIcon />}
-                            label="Save"
-                            material={{
-                                sx: {
-                                    color: "primary.main",
-                                },
-                            }}
-                            onClick={handleSaveClickTeach(id)}
-                        />,
-                        <GridActionsCellItem
-                            icon={<CancelIcon />}
-                            label="Cancel"
-                            className="textPrimary"
-                            onClick={handleCancelClickTeach(id)}
-                            color="inherit"
-                        />,
-                    ];
-                }
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              material={{
+                sx: {
+                  color: "primary.main",
+                },
+              }}
+              onClick={handleSaveClickTeach(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClickTeach(id)}
+              color="inherit"
+            />,
+          ];
+        }
 
-                return [
-                    // <GridActionsCellItem
-                    //   icon={<AddIcon style={{ color: "#00563B" }} />}
-                    //   label="Add"
-                    //   // onClick={() => handleInsertInrow(id)}
-                    //   color="inherit"
-                    // />,
-                    <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit"
-                        className="textPrimary"
-                        onClick={handleEditClickTeach(id)}
-                        color="primary"
-                    />,
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={handleDeleteClickTeach(id)}
-                        color="error"
-                    />,
-                ];
-            },
-        },
-    ];
-    const handleRowModesModelChangeTeach = (newRowModesModel) => {
-        setRowModesModelteach(newRowModesModel);
-    };
+        return [
+          // <GridActionsCellItem
+          //   icon={<AddIcon style={{ color: "#00563B" }} />}
+          //   label="Add"
+          //   // onClick={() => handleInsertInrow(id)}
+          //   color="inherit"
+          // />,
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClickTeach(id)}
+            color="primary"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClickTeach(id)}
+            color="error"
+          />,
+        ];
+      },
+    },
+  ];
+  const handleRowModesModelChangeTeach = (newRowModesModel) => {
+    setRowModesModelteach(newRowModesModel);
+  };
 
-const isHeaderDisabled = teachrows.length > 0;
+  const isHeaderDisabled = teachrows.length > 0;
 
 
 
-// State for selected subject/department
-// const [selectedSubject, setSelectedSubject] = useState(null);
-// const [staffList, setStaffList] = useState([]);
+  // State for selected subject/department
+  // const [selectedSubject, setSelectedSubject] = useState(null);
+  // const [staffList, setStaffList] = useState([]);
 
-// When subject changes, update staffList from Department data
-// const handleSubjectChange = (newValue) => {
-//   setSelectedSubject(newValue);
-  
-//   if (newValue) {
-//     // Find the selected department from Department array
-//     const selectedDept = Department.find(
-//       (dept) => dept.DeptrecID === newValue.DeptrecID
-//     );
-    
-//     // Map employees with checked state
-//     const employees = selectedDept?.Employee?.map((emp) => ({
-//       ...emp,
-//       checked: false,
-//     })) || [];
-    
-//     setStaffList(employees);
-//   } else {
-//     setStaffList([]);
-//   }
-// };
+  // When subject changes, update staffList from Department data
+  // const handleSubjectChange = (newValue) => {
+  //   setSelectedSubject(newValue);
+
+  //   if (newValue) {
+  //     // Find the selected department from Department array
+  //     const selectedDept = Department.find(
+  //       (dept) => dept.DeptrecID === newValue.DeptrecID
+  //     );
+
+  //     // Map employees with checked state
+  //     const employees = selectedDept?.Employee?.map((emp) => ({
+  //       ...emp,
+  //       checked: false,
+  //     })) || [];
+
+  //     setStaffList(employees);
+  //   } else {
+  //     setStaffList([]);
+  //   }
+  // };
 
 
 
@@ -667,8 +667,8 @@ const isHeaderDisabled = teachrows.length > 0;
           schemaFields.incharge = Yup.object().required(data.Project.ClassTeacher).nullable();
         }
         if (Subscriptionlastthree !== "003") {
-           schemaFields.TentativeStartDate= Yup.string().required(data.Project.TentativeStartDate);
-          schemaFields.TentativeEndDate= Yup.string().required(data.Project.TentativeEndDate);
+          schemaFields.TentativeStartDate = Yup.string().required(data.Project.TentativeStartDate);
+          schemaFields.TentativeEndDate = Yup.string().required(data.Project.TentativeEndDate);
         }
 
         const schema = Yup.object().shape(schemaFields);
@@ -698,15 +698,15 @@ const isHeaderDisabled = teachrows.length > 0;
         RecordID: Number(item.ProjectTeamsID),
         Department: { RecordID: item.DepartmentID, Name: item.DeptName },
         Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
-      
+
         // Comments: item?.Comments,
       }));
 
 
       // setTeachrows([]);              // clear old buggy state
       // setTimeout(() => {
-        setTeachrows(formattedRows); // set fresh
-         setPage(0);
+      setTeachrows(formattedRows); // set fresh
+      setPage(0);
       // }, 0);
     }
   }, [data]);
@@ -715,20 +715,22 @@ const isHeaderDisabled = teachrows.length > 0;
     if (show == "0") {
       if (recID && mode === "E") {
         // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
-        {Subscriptionlastthree === "003" ? 
-         dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
-         : dispatch(getFetchData({ accessID, get: "get", recID }));
+        {
+          Subscriptionlastthree === "003" ?
+          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+          : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
 
       } else {
-         {Subscriptionlastthree === "003" ? 
-          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
-         : dispatch(getFetchData({ accessID, get: "get", recID }));
+        {
+          Subscriptionlastthree === "003" ?
+          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+          : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
         // dispatch(getFetchData({ accessID, get: "get", recID }));
-        
+
       }
     }
   }, [show]);
@@ -912,12 +914,12 @@ const isHeaderDisabled = teachrows.length > 0;
 
     }
   };
-//   const subjectOptions = Department.map((dept) => ({
-//   RecordID: dept.DeptrecID,
-//   Code: dept.DeptCode,
-//   Name: dept.DeptName,
-//   Employee: dept.Employee,
-// }));
+  //   const subjectOptions = Department.map((dept) => ({
+  //   RecordID: dept.DeptrecID,
+  //   Code: dept.DeptCode,
+  //   Name: dept.DeptName,
+  //   Employee: dept.Employee,
+  // }));
 
   const [UnitData, SetUnitData] = useState({
     recordID: "",
@@ -930,8 +932,8 @@ const isHeaderDisabled = teachrows.length > 0;
     Name: "",
   });
 
-const is003 = SubscriptionCode?.endsWith("003");
-const formikRef = useRef();
+  const is003 = SubscriptionCode?.endsWith("003");
+  const formikRef = useRef();
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -979,7 +981,7 @@ const formikRef = useRef();
     TentativeStartDate: data.TentativeStartDate || "",
   };
 
- const Fnsave = async (values, del) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
@@ -991,7 +993,7 @@ const formikRef = useRef();
     if (values.disable == true) {
       isCheck = "Y";
     }
- 
+
     const idata = {
       RecordID: recID,
       Code: values.code,
@@ -1020,11 +1022,11 @@ const formikRef = useRef();
       Longitude: values.longitude || 0,
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
-      AcademicYearID : params.filtertype || 0,
+      AcademicYearID: params.filtertype || 0,
       TentativeStartDate: values.TentativeStartDate || "",
       TentativeEndDate: values.TentativeEndDate || ""
     };
- 
+
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
@@ -1035,10 +1037,10 @@ const formikRef = useRef();
     }
   };
 
-  const FnsaveTech = async (values, del,payload, isNew) => {
-   
-   console.log(values,"--values find");
-   
+  const FnsaveTech = async (values, del, payload, isNew) => {
+
+    console.log(values, "--values find");
+
     // let action = mode === "A" ? "insert" : "update";
     // let action =
     //   mode === "A" && !del
@@ -1046,14 +1048,14 @@ const formikRef = useRef();
     //     : mode === "E" && del
     //       ? "softdelete"
     //       : "update";
-      const action = isNew ? "insert" : "update";
+    const action = isNew ? "insert" : "update";
 
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
     }
     console.log(passrecid, "--find inside fnsave");
-    
+
 
     const idata = {
       RecordID: passrecid ? passrecid : recID,
@@ -1084,10 +1086,10 @@ const formikRef = useRef();
       Longitude: values.longitude || 0,
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
-      AcademicYearID : params.filtertype || 0,
+      AcademicYearID: params.filtertype || 0,
       // TentativeStartDate: values.TentativeStartDate || "",
       // TentativeEndDate: values.TentativeEndDate || ""
-       Detail: [
+      Detail: [
         {
           DeptID: payload.DeptID?.toString() || "0",
           // SlotID: payload.SlotID?.toString() || "0",
@@ -1096,7 +1098,7 @@ const formikRef = useRef();
           // Comments: payload.Comments || "",
           // ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
           ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID)
-          
+
         },
       ],
     };
@@ -1106,28 +1108,28 @@ const formikRef = useRef();
     // const response = await dispatch(
     //   postData({ accessID, action, idata }));
     const response = await dispatch(
-  Subscriptionlastthree === "003"
-    ? postData({ accessID: "TR389", action, idata })
-    : postData({ accessID, action, idata })
-);
+      Subscriptionlastthree === "003"
+        ? postData({ accessID: "TR389", action, idata })
+        : postData({ accessID, action, idata })
+    );
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       console.log(response.payload.ProjectRecordID, "--find response.payload.ProjectRecordID");
-      
+
       setPassrecid(response.payload.ProjectRecordID);
       setDetailrecid(response.payload.ProjectTeamID);
       //navigate("/Apps/TR133/Project");
-//  dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
-    // ✅ Only navigate away if this is a HEADER save (no payload = header-only save)
-    if (!payload) {
-      navigate(-1);
-    }
+      //  dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
+      // ✅ Only navigate away if this is a HEADER save (no payload = header-only save)
+      if (!payload) {
+        navigate(-1);
+      }
 
-     return response.payload.ProjectTeamID; // return the new ID for row update
+      return response.payload.ProjectTeamID; // return the new ID for row update
       // navigate(-1);
     } else {
       // toast.error(response.payload.Msg);
-       throw new Error(response.payload.Msg); // ✅ throw so processRowUpdate catches it
+      throw new Error(response.payload.Msg); // ✅ throw so processRowUpdate catches it
     }
   };
 
@@ -1676,142 +1678,142 @@ const formikRef = useRef();
   }
 
 
-//STUDENT-TEACHER MAPPING 
-// function EditToolbarteach(props) {
-//   const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
+  //STUDENT-TEACHER MAPPING 
+  // function EditToolbarteach(props) {
+  //   const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
 
-//   const handleClickteach = () => {
-//     const id = nanoid();
-//     setTeachrows((oldRows) => [
-//       ...oldRows,
-//       {
-//         id: id,           // ✅ must match getRowId
-//         RecordID: id,     // ✅ same value
-//         Department: null,
-//         Teacher: null,
-//         isNew: true,
-//       },
+  //   const handleClickteach = () => {
+  //     const id = nanoid();
+  //     setTeachrows((oldRows) => [
+  //       ...oldRows,
+  //       {
+  //         id: id,           // ✅ must match getRowId
+  //         RecordID: id,     // ✅ same value
+  //         Department: null,
+  //         Teacher: null,
+  //         isNew: true,
+  //       },
 
-      
-//     ]);
-//     setRowModesModelteach((oldModel) => ({
-//       ...oldModel,
-//       [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
-//     }));
-//   };
 
-//   return (
-//     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
-//       <Button 
-//        disabled={isRowEditing} 
-//       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
-//        sx={{ textTransform: "capitalize",fontSize: "14px" }}
-//       >
-//         Add Record
-//       </Button>
-//     </GridToolbarContainer>
-//   );
-// }
+  //     ]);
+  //     setRowModesModelteach((oldModel) => ({
+  //       ...oldModel,
+  //       [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
+  //     }));
+  //   };
 
-function EditToolbarteach(props) {
-  const {
-    setTeachrows,
-    setRowModesModelteach,
-   isRowEditing,
-    pageSize,
-    setPage,
-    
-  } = props;
- const [isAdding, setIsAdding] = useState(false); // ← ADD THIS
-  const handleClickteach = () => {
-     setIsAdding(true); // ← DISABLE BUTTON
-    const id = nanoid();
+  //   return (
+  //     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
+  //       <Button 
+  //        disabled={isRowEditing} 
+  //       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
+  //        sx={{ textTransform: "capitalize",fontSize: "14px" }}
+  //       >
+  //         Add Record
+  //       </Button>
+  //     </GridToolbarContainer>
+  //   );
+  // }
 
-    const newRow = {
-      id,
-      RecordID: id,
-      Department: null,
-      Teacher: null,
-      isNew: true,
+  function EditToolbarteach(props) {
+    const {
+      setTeachrows,
+      setRowModesModelteach,
+      isRowEditing,
+      pageSize,
+      setPage,
+
+    } = props;
+    const [isAdding, setIsAdding] = useState(false); // ← ADD THIS
+    const handleClickteach = () => {
+      setIsAdding(true); // ← DISABLE BUTTON
+      const id = nanoid();
+
+      const newRow = {
+        id,
+        RecordID: id,
+        Department: null,
+        Teacher: null,
+        isNew: true,
+      };
+
+      setTeachrows((oldRows) => {
+        const updatedRows = [...oldRows, newRow];
+
+        // Navigate to page containing new row
+        const newPage = Math.floor(
+          (updatedRows.length - 1) / pageSize
+        );
+
+        setPage(newPage);
+
+        return updatedRows;
+      });
+
+      // Wait for page change, then enter edit mode
+      setTimeout(() => {
+        setRowModesModelteach((oldModel) => ({
+          ...oldModel,
+          [id]: {
+            mode: GridRowModes.Edit,
+            fieldToFocus: "Department",
+          },
+        }));
+        setIsAdding(false); // ← ENABLE BUTTON BACK
+      }, 100);
     };
 
-    setTeachrows((oldRows) => {
-      const updatedRows = [...oldRows, newRow];
+    return (
+      <Button
+        disabled={isRowEditing}
+        color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+        Add Record
+      </Button>
+    );
+  }
+  // function EditToolbarteach(props) {
+  //     const { setTeachrows, setRowModesModel } = props;
 
-      // Navigate to page containing new row
-      const newPage = Math.floor(
-        (updatedRows.length - 1) / pageSize
-      );
+  //     const handleClickteach = () => {
+  //       console.log("--calling handleClickteach");
 
-      setPage(newPage);
+  //       const id = nanoid();
+  //       const nextSLNO =
+  //         teachrows.length > 0 ? Math.max(...teachrows.map((row) => row.SLNO || 0)) + 1 : 1;
+  //     setTeachrows((oldRows) => [
+  //   ...oldRows,
+  //   {
+  //     id: id,
+  //     RecordID: id,
+  //     Department: null,
+  //     Teacher: null,
+  //     isNew: true,
+  //   },
+  // ]);
+  //       setRowModesModelteach((oldModel) => ({
+  //         ...oldModel,
+  //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Comments" },
+  //       }));
+  //     };
+  //     return (
+  //       <GridToolbarContainer
+  //         sx={{
+  //           marginBottom: "10px",
+  //           display: "flex",
+  //           justifyContent: "flex-start",
+  //         }}
+  //       >
+  //         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+  //           Add Record
+  //         </Button>
+  //       </GridToolbarContainer>
+  //     );
+  //   }
 
-      return updatedRows;
-    });
 
-    // Wait for page change, then enter edit mode
-    setTimeout(() => {
-      setRowModesModelteach((oldModel) => ({
-        ...oldModel,
-        [id]: {
-          mode: GridRowModes.Edit,
-          fieldToFocus: "Department",
-        },
-      }));
-       setIsAdding(false); // ← ENABLE BUTTON BACK
-    }, 100);
-  };
+
 
   return (
-    <Button
-      disabled={isRowEditing} 
-    color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
-      Add Record
-    </Button>
-  );
-}
-// function EditToolbarteach(props) {
-//     const { setTeachrows, setRowModesModel } = props;
-
-//     const handleClickteach = () => {
-//       console.log("--calling handleClickteach");
-      
-//       const id = nanoid();
-//       const nextSLNO =
-//         teachrows.length > 0 ? Math.max(...teachrows.map((row) => row.SLNO || 0)) + 1 : 1;
-//     setTeachrows((oldRows) => [
-//   ...oldRows,
-//   {
-//     id: id,
-//     RecordID: id,
-//     Department: null,
-//     Teacher: null,
-//     isNew: true,
-//   },
-// ]);
-//       setRowModesModelteach((oldModel) => ({
-//         ...oldModel,
-//         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Comments" },
-//       }));
-//     };
-//     return (
-//       <GridToolbarContainer
-//         sx={{
-//           marginBottom: "10px",
-//           display: "flex",
-//           justifyContent: "flex-start",
-//         }}
-//       >
-//         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
-//           Add Record
-//         </Button>
-//       </GridToolbarContainer>
-//     );
-//   }
-
-
-
-
- return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -1909,18 +1911,18 @@ function EditToolbarteach(props) {
           <Formik
             innerRef={formikRef}
             initialValues={InitialValue}
-        
-          
-          onSubmit={(values, { resetForm }) => {
-             if (Subscriptionlastthree === "003") {
-    FnsaveTech(values, false, null, false);
-  } else {
-    setTimeout(() => {
-      Fnsave(values);
-    }, 100);
-  }
-  // Fnsave(values, false, null, false); // ✅ null payload = header save = will navigate(-1)
-}}
+
+
+            onSubmit={(values, { resetForm }) => {
+              if (Subscriptionlastthree === "003") {
+                FnsaveTech(values, false, null, false);
+              } else {
+                setTimeout(() => {
+                  Fnsave(values);
+                }, 100);
+              }
+              // Fnsave(values, false, null, false); // ✅ null payload = header save = will navigate(-1)
+            }}
             // onSubmit={(values, setSubmitting) => {
             //   setTimeout(() => {
             //     Fnsave(values);
@@ -1970,9 +1972,9 @@ function EditToolbarteach(props) {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-                     InputLabelProps={{
-                      shrink: true,
-                    }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     // autoFocus
                     />
                   ) : (
@@ -1998,9 +2000,9 @@ function EditToolbarteach(props) {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       autoFocus
-                       InputLabelProps={{
-                      shrink: true,
-                    }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   )}
 
@@ -2130,104 +2132,104 @@ function EditToolbarteach(props) {
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
 
-{is003Subscription === false ? (
-  <>
-                  <TextField
-                    id="TentativeStartDate"
-                    name="TentativeStartDate"
-                    type="date"
-                    // label="Tentative Start Date"
-                    label={
-                      <>
-                        {getBusinessCaption("TentativeStartDate", "Tentative Start Date")}
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          {" "}
-                          *{" "}
-                        </span>
-                      </>
-                    }
-                    // required
-                    focused
-                    variant="standard"
-                    error={!!touched.TentativeStartDate && !!errors.TentativeStartDate}
-                    helperText={touched.TentativeStartDate && errors.TentativeStartDate}
-                    value={values.TentativeStartDate}
-                    // value={values.CurrentStatus}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    id="TentativeEndDate"
-                    name="TentativeEndDate"
-                    type="date"
-                    // label="Tentative End Date"
-                    label={
-                      <>
-                        {getBusinessCaption("TentativeEndDate", "Tentative End Date")}
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          {" "}
-                          *{" "}
-                        </span>
-                      </>
-                    }
-                    // required
-                    focused
-                    variant="standard"
-                    error={!!touched.TentativeEndDate && !!errors.TentativeEndDate}
-                    helperText={touched.TentativeEndDate && errors.TentativeEndDate}
-                    value={values.TentativeEndDate}
-                    // value={values.CurrentStatus}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  </> ) : null}
-{Subscriptionlastthree != "003" ? (
-  <>
-    <TextField
-                    disabled={isHeaderDisabled || mode == "V"}
-                    labelId="demo"
-                    id="CurrentStatus"
-                    name="CurrentStatus"
-                    type="text"
-                    label="Status"
-                    // label={
-                    //   <>
-                    //     Status
-                    //     <span style={{ color: "red", fontSize: "20px" }}>
-                    //       {" "}
-                    //       *{" "}
-                    //     </span>
-                    //   </>
-                    // }
-                    // required
-                    focused
-                    select
-                    variant="standard"
-                    error={!!touched.CurrentStatus && !!errors.CurrentStatus}
-                    helperText={touched.CurrentStatus && errors.CurrentStatus}
-                    value={mode == "A" ? "CU" : values.CurrentStatus}
-                    // value={values.CurrentStatus}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      setFieldValue("CurrentStatus", e.target.value);
-                      if (e.target.value == "CU") {
-                        setFieldValue("disable", false);
-                      } else {
-                        setFieldValue("disable", true);
-                      }
-                    }}
+                  {is003Subscription === false ? (
+                    <>
+                      <TextField
+                        id="TentativeStartDate"
+                        name="TentativeStartDate"
+                        type="date"
+                        // label="Tentative Start Date"
+                        label={
+                          <>
+                            {getBusinessCaption("TentativeStartDate", "Tentative Start Date")}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        // required
+                        focused
+                        variant="standard"
+                        error={!!touched.TentativeStartDate && !!errors.TentativeStartDate}
+                        helperText={touched.TentativeStartDate && errors.TentativeStartDate}
+                        value={values.TentativeStartDate}
+                        // value={values.CurrentStatus}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        id="TentativeEndDate"
+                        name="TentativeEndDate"
+                        type="date"
+                        // label="Tentative End Date"
+                        label={
+                          <>
+                            {getBusinessCaption("TentativeEndDate", "Tentative End Date")}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        // required
+                        focused
+                        variant="standard"
+                        error={!!touched.TentativeEndDate && !!errors.TentativeEndDate}
+                        helperText={touched.TentativeEndDate && errors.TentativeEndDate}
+                        value={values.TentativeEndDate}
+                        // value={values.CurrentStatus}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      />
+                    </>) : null}
+                  {Subscriptionlastthree != "003" ? (
+                    <>
+                      <TextField
+                        disabled={isHeaderDisabled || mode == "V"}
+                        labelId="demo"
+                        id="CurrentStatus"
+                        name="CurrentStatus"
+                        type="text"
+                        label="Status"
+                        // label={
+                        //   <>
+                        //     Status
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       {" "}
+                        //       *{" "}
+                        //     </span>
+                        //   </>
+                        // }
+                        // required
+                        focused
+                        select
+                        variant="standard"
+                        error={!!touched.CurrentStatus && !!errors.CurrentStatus}
+                        helperText={touched.CurrentStatus && errors.CurrentStatus}
+                        value={mode == "A" ? "CU" : values.CurrentStatus}
+                        // value={values.CurrentStatus}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          setFieldValue("CurrentStatus", e.target.value);
+                          if (e.target.value == "CU") {
+                            setFieldValue("disable", false);
+                          } else {
+                            setFieldValue("disable", true);
+                          }
+                        }}
 
-                                       InputLabelProps={{
-  shrink: true,
-}}
-                  >
-                    <MenuItem value="CU">Current</MenuItem>
-                    <MenuItem value="CO">Completed</MenuItem>
-                    <MenuItem value="H">Hold</MenuItem>
-                  </TextField>
-  </>
-): null}
-                
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      >
+                        <MenuItem value="CU">Current</MenuItem>
+                        <MenuItem value="CO">Completed</MenuItem>
+                        <MenuItem value="H">Hold</MenuItem>
+                      </TextField>
+                    </>
+                  ) : null}
+
 
                   <TextField
                     disabled={isHeaderDisabled || mode == "V"}
@@ -2249,8 +2251,8 @@ function EditToolbarteach(props) {
                       },
                     }}
                     InputLabelProps={{
-  shrink: true,
-}}
+                      shrink: true,
+                    }}
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
                       e.target.value = Math.max(0, parseInt(e.target.value))
@@ -2262,7 +2264,7 @@ function EditToolbarteach(props) {
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
-                   
+
                     <Field
                       disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
@@ -2293,42 +2295,42 @@ function EditToolbarteach(props) {
                     >
                       Service & Maintenance
                     </FormLabel> */}
-                     {!is003Subscription && (
+                    {!is003Subscription && (
                       <>
-                    <Field
-                      disabled={isHeaderDisabled || mode == "V"}
-                      type="checkbox"
-                      name="ByProduct"
-                      id="ByProduct"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel
-                      focused={false}
-                    // htmlFor="ServiceMaintenance"
-                    // sx={{ ml: 1,marginLeft:0}}
-                    >
-                      Product
-                    </FormLabel>
-                   
-                
-                    <Field
-                      disabled={isHeaderDisabled || mode == "V"}
-                      type="checkbox"
-                      name="Onsiteactivities"
-                      id="Onsiteactivities"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel
-                      focused={false}>Enable Onsite Activities</FormLabel>
-                         </>
-                      )}
+                        <Field
+                          disabled={isHeaderDisabled || mode == "V"}
+                          type="checkbox"
+                          name="ByProduct"
+                          id="ByProduct"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel
+                          focused={false}
+                        // htmlFor="ServiceMaintenance"
+                        // sx={{ ml: 1,marginLeft:0}}
+                        >
+                          Product
+                        </FormLabel>
+
+
+                        <Field
+                          disabled={isHeaderDisabled || mode == "V"}
+                          type="checkbox"
+                          name="Onsiteactivities"
+                          id="Onsiteactivities"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel
+                          focused={false}>Enable Onsite Activities</FormLabel>
+                      </>
+                    )}
                     <Field
                       //  size="small"
-                     disabled={isHeaderDisabled || mode == "V"}
+                      disabled={isHeaderDisabled || mode == "V"}
                       type="checkbox"
                       name="delete"
                       id="delete"
@@ -2655,28 +2657,28 @@ function EditToolbarteach(props) {
                 ) : null}
 
 
-    {Subscriptionlastthree != "003" ? (
-    <>
-                <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )}
-                  {/* {YearFlag == "true" && mode == "E" ? (
+                {Subscriptionlastthree != "003" ? (
+                  <>
+                    <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                      {YearFlag == "true" ? (
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                        >
+                          Save
+                        </LoadingButton>
+                      ) : (
+                        <Button
+                          color="secondary"
+                          variant="contained"
+                          disabled={true}
+                        >
+                          Save
+                        </Button>
+                      )}
+                      {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -2708,149 +2710,149 @@ function EditToolbarteach(props) {
                     //   Delete
                     // </Button>
                     null} */}
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      // navigate("/Apps/TR133/Project");
-                      navigate(-1);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-                    </>
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          // navigate("/Apps/TR133/Project");
+                          navigate(-1);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </>
                 ) : null}
 
-{Subscriptionlastthree === "003" && (
-  <>
-   <Box display="flex" justifyContent="end" padding={1} gap="20px">
-               
-                  <Button
-                   sx={{
-    backgroundColor: "#009688",
-    color: "#FFFFFF",
-    "&:hover": {
-      backgroundColor: "#009688", // same color on hover
-    },
-  }}
-                    // color="success"
-                    variant="contained"
-                    onClick={() => {
-                      // navigate("/Apps/TR133/Project");
-                      navigate(-1);
-                    }}
-                  >
-                    Back
-                  </Button>
-                </Box>
-                </>
-)}
+                {Subscriptionlastthree === "003" && (
+                  <>
+                    <Box display="flex" justifyContent="end" padding={1} gap="20px">
 
-{Subscriptionlastthree === "003" && (
-  <>
-    <Box
-                                    // m="5px 0 0 0"
-                                    // height={dataGridHeightExplore}
-                                    height="60vh"
-                                    m={1}
-                                    sx={{
-                                        "& .MuiDataGrid-root": {
-                                            border: "none",
-                                        },
-                                        "& .MuiDataGrid-cell": {
-                                            borderBottom: "none",
-                                            
-                                        },
-    
-                                        "& .name-column--cell": {
-                                            color: colors.greenAccent[300],
-                                        },
-                                        "& .MuiDataGrid-columnHeaders": {
-                                            backgroundColor: colors.blueAccent[800],
-                                            borderBottom: "none",
-                                        },
-                                        "& .MuiDataGrid-virtualScroller": {
-                                            backgroundColor: colors.primary[400],
-                                        },
-                                        "& .MuiDataGrid-footerContainer": {
-                                            borderTop: "none",
-                                            backgroundColor: colors.blueAccent[800],
-                                        },
-                                        "& .MuiCheckbox-root": {
-                                            color: `${colors.greenAccent[200]} !important`,
-                                        },
-                                        "& .odd-row": {
-                                            backgroundColor: "",
-                                            color: "", // Color for odd rows
-                                        },
-                                        "& .even-row": {
-                                            backgroundColor: "#D3D3D3",
-                                            color: "", // Color for even rows
-                                        },
+                      <Button
+                        sx={{
+                          backgroundColor: "#009688",
+                          color: "#FFFFFF",
+                          "&:hover": {
+                            backgroundColor: "#009688", // same color on hover
+                          },
+                        }}
+                        // color="success"
+                        variant="contained"
+                        onClick={() => {
+                          // navigate("/Apps/TR133/Project");
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    </Box>
+                  </>
+                )}
 
-                                        
-                                    }}
-                                >
-                                    <DataGrid
-                                        sx={{
-                                            "& .MuiDataGrid-footerContainer": {
-                                                height: dataGridHeaderFooterHeight,
-                                                minHeight: dataGridHeaderFooterHeight,
-                                            },
-                                          
-                                        }}
-                                        rowHeight={35}
-                                        // rowHeight={dataGridRowHeight}
-                                        headerHeight={dataGridHeaderFooterHeight}
-                                        rows={teachrows}
-                                        columns={Teachcolumns}
-                                        loading={exploreLoading}
-                                        editMode="row"
-                                        disableSelectionOnClick
-                                        rowModesModel={rowModesModelteach}
-                                        onRowModesModelChange={handleRowModesModelChangeTeach}
-                                        onRowEditStop={handleRowEditStopTeach}
-                                        processRowUpdate={processRowUpdateTeach}
-                                        getRowId={(row) => row.RecordID}
-                                        // getRowId={(row) => row.ProjectTeamRecordID}
-                                        //  getRowId={(row) => row.id}
-                                          disableRowSelectionOnClick
-                                        // isCellEditable={(params) => {
-                                        //     if (params.field === "SlotCode") return false;
-                                        //     return true;
-                                        // }}
-                                       
-                                        experimentalFeatures={{ newEditingApi: true }}
-                                        onProcessRowUpdateError={(error) => {
-                                            console.error(
-                                                "Row update validation failed:",
-                                                error.message,
-                                            );
-                                            toast.error(error.message);
-                                        }}
-                                        components={{
-                                            Toolbar: EditToolbarteach,
-                                        }}
-                                      componentsProps={{
-                                                toolbar: { setTeachrows, setRowModesModelteach, isRowEditing, setPage,pageSize  } // ✅ was setRowModesModel (wrong one)
-                                              }}
-                                        rowsPerPageOptions={[5, 10, 20]}
-                                        getRowClassName={(params) =>
-                                            params.indexRelativeToCurrentPage % 2 === 0
-                                                ? "odd-row"
-                                                : "even-row"
-                                        }
-                                        pagination
-                                        pageSize={pageSize}
-                                        page={page}
-                                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                        onPageChange={(newPage) => setPage(newPage)}
-                                    />
-                                </Box>
-  </>
-)}
-  
+                {Subscriptionlastthree === "003" && (
+                  <>
+                    <Box
+                      // m="5px 0 0 0"
+                      // height={dataGridHeightExplore}
+                      height="60vh"
+                      m={1}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+
+                        },
+
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+
+
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+
+                        }}
+                        rowHeight={35}
+                        // rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        rows={teachrows}
+                        columns={Teachcolumns}
+                        loading={exploreLoading}
+                        editMode="row"
+                        disableSelectionOnClick
+                        rowModesModel={rowModesModelteach}
+                        onRowModesModelChange={handleRowModesModelChangeTeach}
+                        onRowEditStop={handleRowEditStopTeach}
+                        processRowUpdate={processRowUpdateTeach}
+                        getRowId={(row) => row.RecordID}
+                        // getRowId={(row) => row.ProjectTeamRecordID}
+                        //  getRowId={(row) => row.id}
+                        disableRowSelectionOnClick
+                        // isCellEditable={(params) => {
+                        //     if (params.field === "SlotCode") return false;
+                        //     return true;
+                        // }}
+
+                        experimentalFeatures={{ newEditingApi: true }}
+                        onProcessRowUpdateError={(error) => {
+                          console.error(
+                            "Row update validation failed:",
+                            error.message,
+                          );
+                          toast.error(error.message);
+                        }}
+                        components={{
+                          Toolbar: EditToolbarteach,
+                        }}
+                        componentsProps={{
+                          toolbar: { setTeachrows, setRowModesModelteach, isRowEditing, setPage, pageSize } // ✅ was setRowModesModel (wrong one)
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        pagination
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        onPageChange={(newPage) => setPage(newPage)}
+                      />
+                    </Box>
+                  </>
+                )}
+
 
 
               </form>
