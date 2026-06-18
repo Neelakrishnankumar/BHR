@@ -517,7 +517,7 @@ const Editproject_V1 = () => {
             setunitrows((prevRows) =>
                 prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
             );
-            setScreen("5");
+            // setScreen("5");
             dispatch(
                 UnitFetchData({
                     ProjectID: recID,
@@ -1122,6 +1122,8 @@ const Editproject_V1 = () => {
         if (event.target.value == "5") {
             // dispatch(UnitFetchData({ ProjectID: recID, CompanyID }));
             dispatch(getFetchData({ accessID, get: "get", recID }));
+            setSelectedSubjectID(0);
+            setunitrows([]);
         }
     };
 
@@ -1172,7 +1174,11 @@ const Editproject_V1 = () => {
         radius: data.Radius || 0,
         TentativeEndDate: data.TentativeEndDate || "",
         TentativeStartDate: data.TentativeStartDate || "",
-        Subject: null,
+        Subject: selectedSubjectID? {
+            RecordID:selectedSubject.RecordID,
+            Name:selectedSubject.Name || "",
+            Code:selectedSubject.Code || "",
+        } : null,
     };
 
     // ─── Fnsave (non-003 header save) ────────────────────────────────────────────
@@ -2923,17 +2929,17 @@ const Editproject_V1 = () => {
                                             <PartySingleSelect
                                                 id="Subject"
                                                 name="Subject"
-                                                label="Subject"
+                                                // label="Subject"
                                                 fullWidth
                                                 sx={{ minWidth: "300px", maxWidth: "350px" }}
-                                                // label={
-                                                //     <>
-                                                //         Subject/Activities
-                                                //         <span style={{ color: "red", fontSize: "20px" }}>
-                                                //             *
-                                                //         </span>
-                                                //     </>
-                                                // }
+                                                label={
+                                                    <>
+                                                        Subject/Activities
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                                 variant="standard"
                                                 value={values.Subject}
                                                 onChange={(newValue) => {
