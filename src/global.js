@@ -562,6 +562,7 @@ export const getUrlSlice = createSlice({
       state.TimeTableDelete = APIurl + "TimetableDelete.php";
        state.FeesStructureDelete = APIurl + "FeesStructureDeleteController.php";
       state.standardDeleteUrl = APIurl + "ProjectDeleteController.php"
+      state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
     },
 
   },

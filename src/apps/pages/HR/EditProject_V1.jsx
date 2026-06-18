@@ -20,7 +20,7 @@ import {
     InputAdornment,
     List,
     ListItemButton,
-    ListItemText
+    ListItemText,
 } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -44,6 +44,7 @@ import {
     getFetchData_v1,
     postApidata,
     postData,
+    UnitFetchData,
 } from "../../../store/reducers/Formapireducer";
 import * as Yup from "yup";
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -56,16 +57,30 @@ import {
     CheckinAutocomplete,
     CheckinAutocomplete_v12,
     Employeeautocomplete,
+    EventsSingleSelect,
+    PartySingleSelect,
     Productautocomplete,
     ProjectVendor,
+    SprintEmpAutocomplete,
     SprintEmpAutocomplete1,
 } from "../../../ui-components/global/Autocomplete";
-import { DataGrid, GridActionsCellItem, GridRowModes, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridRowModes,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { tokens } from "../../../Theme";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight, menuHeight } from "../../../ui-components/utils";
+import {
+    dataGridHeaderFooterHeight,
+    dataGridHeight,
+    dataGridHeightExplore,
+    dataGridRowHeight,
+    menuHeight,
+} from "../../../ui-components/utils";
 import { useTheme } from "@emotion/react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SaveIcon from "@mui/icons-material/Save";
@@ -88,7 +103,8 @@ const Editproject_V1 = () => {
     var accessID = params.accessID;
 
     const data = useSelector((state) => state.formApi.Data) || {};
-    const Department = useSelector((state) => state.formApi.Department.Department) || [];
+    const Department =
+        useSelector((state) => state.formApi.Department.Department) || [];
     const Status = useSelector((state) => state.formApi.Status);
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -106,11 +122,15 @@ const Editproject_V1 = () => {
     const [errorMsgData, setErrorMsgData] = useState(null);
     const [validationSchema, setValidationSchema] = useState(null);
     const [validationSchema2, setValidationSchema2] = useState(null);
-    let secondaryCurrentPage = parseInt(sessionStorage.getItem("secondaryCurrentPage"));
+    let secondaryCurrentPage = parseInt(
+        sessionStorage.getItem("secondaryCurrentPage"),
+    );
     const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 
     const lastThree = SubscriptionCode?.slice(-3) || "";
-    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree) ? lastThree : "";
+    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+        ? lastThree
+        : "";
     const is003Subscription = SubscriptionCode.endsWith("003");
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
     const [show, setScreen] = React.useState("0");
@@ -126,8 +146,12 @@ const Editproject_V1 = () => {
     const [passrecid, setPassrecid] = useState(null);
     const [detailrecid, setDetailrecid] = useState(null);
 
-    const explorelistViewData = useSelector((state) => state.exploreApi.explorerowData);
-    const explorelistViewcolumn = useSelector((state) => state.exploreApi.explorecolumnData);
+    const explorelistViewData = useSelector(
+        (state) => state.exploreApi.explorerowData,
+    );
+    const explorelistViewcolumn = useSelector(
+        (state) => state.exploreApi.explorecolumnData,
+    );
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const [rows, setRows] = useState([]);
     const rowData = location.state || {};
@@ -137,8 +161,17 @@ const Editproject_V1 = () => {
     const [teachrows, setTeachrows] = useState([]);
     const [rowModesModelteach, setRowModesModelteach] = React.useState({});
 
+    //UNIT AREA MAPPING
+    const [unitrows, setunitrows] = useState([]);
+    const [selectedSubjectID, setSelectedSubjectID] = useState(0);
+    const [selectedSubject, setSelectedSubject] = useState(null);
+    const [rowModesModelunit, setRowModesModelunit] = React.useState({});
+
     const isRowEditing = Object.values(rowModesModelteach).some(
-        (row) => row.mode === GridRowModes.Edit
+        (row) => row.mode === GridRowModes.Edit,
+    );
+    const isRowEditingUnit = Object.values(rowModesModelunit).some(
+        (row) => row.mode === GridRowModes.Edit,
     );
 
     const validateRowTT = (row) => {
@@ -154,7 +187,13 @@ const Editproject_V1 = () => {
     //
     // payload = null  → header-only save (navigates back on success)
     // payload = {...} → detail row save  (returns ProjectTeamID for DataGrid row update)
-    const FnsaveTech = async (values, del, payload, isNew, saveAccessID = "TR389") => {
+    const FnsaveTech = async (
+        values,
+        del,
+        payload,
+        isNew,
+        saveAccessID = "TR389",
+    ) => {
         console.log(values, "--values find | accessID:", saveAccessID);
         const action = isNew ? "insert" : "update";
 
@@ -177,14 +216,15 @@ const Editproject_V1 = () => {
             Name: data.Name,
             ProjectIncharge: data.ProjectIncharge || 0,
             ProjectInchargeName: data.ProjectInchargeName || "",
-            ServiceMaintenanceProject: data.ServiceMaintenanceProject === true ? "Y" : "N",
+            ServiceMaintenanceProject:
+                data.ServiceMaintenanceProject === true ? "Y" : "N",
             RoutineTasks: data.RoutineTasks === true ? "Y" : "N",
             SortOrder: data.SortOrder || 0,
             CurrentStatus: data.CurrentStatus,
             Disable: data.Disable === true ? "Y" : "N",
             DeleteFlag: data.DeleteFlag === true ? "Y" : "N",
-            ByProduct: data.ByProduct,                  // always N for 003
-            EnableOnsiteactivities: data.EnableOnsiteactivities,     // always N for 003
+            ByProduct: data.ByProduct, // always N for 003
+            EnableOnsiteactivities: data.EnableOnsiteactivities, // always N for 003
             ActualCost: data.ActualCost || 0,
             Price: data.Price || 0,
             Budget: data.Budget || 0,
@@ -203,26 +243,78 @@ const Editproject_V1 = () => {
                     {
                         DeptID: payload.DeptID?.toString() || "0",
                         EmpID: payload.EmpID?.toString() || "0",
-                        ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
+                        ProjectTeamRecordID: isNew
+                            ? -1
+                            : Number(payload.ProjectTeamRecordID),
                     },
                 ]
                 : [],
-
-        }
+        };
 
         console.log(idata, "--idata in FnsaveTech | accessID:", saveAccessID);
 
-        const response = await dispatch(postData({ accessID: saveAccessID, action, idata }));
+        const response = await dispatch(
+            postData({ accessID: saveAccessID, action, idata }),
+        );
 
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            console.log(response.payload.ProjectRecordID, "--response.payload.ProjectRecordID");
-            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            console.log(
+                response.payload.ProjectRecordID,
+                "--response.payload.ProjectRecordID",
+            );
+            dispatch(
+                getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
+            );
             setPassrecid(response.payload.ProjectRecordID);
             setDetailrecid(response.payload.ProjectTeamID);
 
             // Detail row save → return new ID so DataGrid can update the row
             return response.payload.ProjectTeamID;
+        } else {
+            throw new Error(response.payload.Msg);
+        }
+    };
+    const FnsaveUnit = async (
+        values,
+        del,
+        payload,
+        isNew,
+        saveAccessID = "TR402",
+    ) => {
+        const action = isNew ? "insert" : "update";
+
+        var isCheck = "N";
+        if (values?.disable == true) isCheck = "Y";
+        let idata;
+
+        idata = {
+            RecordID: isNew ? "-1" : String(payload.data.RecordID),
+
+            CompanyID,
+            ProjectID: recID,
+            DeptID: selectedSubjectID || payload.SubjectID,
+
+            Description: payload.data.Description || "",
+            SortOrder: 1
+        };
+
+        const response = await dispatch(
+            postData({ accessID: "TR402", action, idata }),
+        );
+
+        if (response.payload.Status == "Y") {
+            toast.success(response.payload.Msg);
+            // setScreen("5");
+            // dispatch(
+            //     UnitFetchData({
+            //         ProjectID: recID,
+            //         CompanyID,
+            //         SubjectID: selectedSubjectID,
+            //     }),
+            // );
+            // dispatch(getFetchData({ accessID, get: "get", recID }));
+             return response.payload; 
         } else {
             throw new Error(response.payload.Msg);
         }
@@ -253,10 +345,10 @@ const Editproject_V1 = () => {
         try {
             const HeaderID = await FnsaveTech(
                 currentFormikValues, // {} when show=4 — TR389 branch ignores values
-                false,               // del = false
-                payload,             // detail payload
-                isNew,               // isNew flag
-                "TR389"              // detail rows always use TR389
+                false, // del = false
+                payload, // detail payload
+                isNew, // isNew flag
+                "TR389", // detail rows always use TR389
             );
 
             const updatedRow = {
@@ -267,7 +359,7 @@ const Editproject_V1 = () => {
             };
 
             setTeachrows((prevRows) =>
-                prevRows.map((row) => (row.id === newRow.id ? updatedRow : row))
+                prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
             );
 
             return updatedRow;
@@ -282,15 +374,26 @@ const Editproject_V1 = () => {
             event.defaultMuiPrevented = true;
         }
     };
+    const handleRowEditStopUnit = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
 
     const handleEditClickTeach = (RecordID) => () => {
-        setRowModesModelteach({ ...rowModesModelteach, [RecordID]: { mode: GridRowModes.Edit } });
+        setRowModesModelteach({
+            ...rowModesModelteach,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
     };
 
     // ✅ This is all handleSaveClickTeach needs to do — switch to View mode.
     //    DataGrid will call processRowUpdateTeach automatically after this.
     const handleSaveClickTeach = (RecordID) => () => {
-        setRowModesModelteach({ ...rowModesModelteach, [RecordID]: { mode: GridRowModes.View } });
+        setRowModesModelteach({
+            ...rowModesModelteach,
+            [RecordID]: { mode: GridRowModes.View },
+        });
     };
 
     const handleDeleteClickTeach = (id) => async () => {
@@ -310,12 +413,14 @@ const Editproject_V1 = () => {
                     accessID: "TR389",
                     action: "harddelete",
                     idata: { ProjectTeamRecordID: Number(RecordID) },
-                })
+                }),
             );
 
             if (response?.payload?.Status === "Y") {
                 toast.success(response.payload.Msg);
-                dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }));
+                dispatch(
+                    getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
+                );
             } else {
                 toast.error(response?.payload?.Msg || "Delete failed");
             }
@@ -336,11 +441,174 @@ const Editproject_V1 = () => {
         }
     };
 
+    //UNITS
+    const handleUnitApply = async () => {
+        const payload = {
+            ProjectID: recID,
+            CompanyID,
+            SubjectID: selectedSubjectID || 0,
+        };
+
+        const response = await dispatch(
+            UnitFetchData({
+                ProjectID: recID,
+                CompanyID,
+                SubjectID: selectedSubjectID || 0,
+            }),
+        );
+        if (response?.payload.Status === "Y") {
+            toast.success(response?.payload?.Message || "Fetched Successfully");
+            setunitrows(response?.payload?.details || []);
+        } else {
+            setunitrows([]);
+            toast.error(response.payload.Message || "No rows available.");
+        }
+    };
+    const processRowUpdateUnit = async (newRow, oldRow) => {
+        const currentFormikValues = formikRef.current?.values ?? {};
+
+        const isNew = isNaN(Number(newRow.RecordID));
+
+        const payload = {
+            data: {
+                RecordID: isNew ? "-1" : String(newRow.RecordID),
+                CompanyID,
+                ProjectID: recID,
+                SubjectID: oldRow.SubjectID || newRow.SubjectID || "",
+                Description: newRow.Description || "",
+            },
+        };
+        try {
+            const HeaderID = await FnsaveUnit(
+                currentFormikValues, // {} when show=4 — TR389 branch ignores values
+                false, // del = false
+                payload, // detail payload
+                isNew, // isNew flag
+                "TR402",
+            );
+
+            // if (saved) {
+
+            //     const response = await dispatch(
+            //         UnitFetchData({
+            //             ProjectID: recID,
+            //             CompanyID,
+            //             SubjectID: selectedSubjectID,
+            //         })
+            //     );
+
+            //     if (response?.payload?.Status === "Y") {
+            //         setunitrows(response.payload.details);
+            //     }
+
+            //     return {
+            //         ...newRow,
+            //         id: newRow.RecordID,
+            //     };
+            // }
+
+            const updatedRow = {
+                ...newRow,
+                id: HeaderID.RecordID,
+                RecordID: HeaderID.RecordID,
+                isNew: false,
+            };
+
+            setunitrows((prevRows) =>
+                prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
+            );
+            return updatedRow;
+            setScreen("5");
+            dispatch(
+                UnitFetchData({
+                    ProjectID: recID,
+                    CompanyID,
+                    SubjectID: selectedSubjectID,
+                }),
+            );
+            dispatch(getFetchData({ accessID, get: "get", recID }));
+            
+        } catch (err) {
+            console.error("Row save failed:", err);
+            throw err;
+        }
+    };
+
+    const handleEditClickUnit = (RecordID) => () => {
+        setRowModesModelunit({
+            ...rowModesModelunit,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
+    };
+
+    // ✅ This is all handleSaveClickTeach needs to do — switch to View mode.
+    //    DataGrid will call processRowUpdateTeach automatically after this.
+    const handleSaveClickUnit = (RecordID) => () => {
+        setRowModesModelunit({
+            ...rowModesModelunit,
+            [RecordID]: { mode: GridRowModes.View },
+        });
+    };
+
+    const handleDeleteClickUnit = (id) => async () => {
+        try {
+            const targetRow = unitrows.find((row) => row.RecordID === id);
+            const RecordID = targetRow?.RecordID;
+            const SubjectID = targetRow?.RecordID;
+
+            setunitrows((prevRows) => prevRows.filter((row) => row.RecordID !== id));
+
+            if (!RecordID || isNaN(Number(RecordID))) {
+                toast.success("Deleted Successfully");
+                return;
+            }
+
+            const response = await dispatch(
+                postData({
+                    accessID: "TR402",
+                    action: "harddelete",
+                    idata: { RecordID: Number(RecordID) },
+                }),
+            );
+
+            if (response?.payload?.Status === "Y") {
+                toast.success(response.payload.Msg);
+                setScreen("5");
+                dispatch(
+                    UnitFetchData({
+                        ProjectID: recID,
+                        CompanyID,
+                        SubjectID: selectedSubjectID,
+                    }),
+                );
+                dispatch(getFetchData({ accessID, get: "get", recID }));
+            } else {
+                toast.error(response?.payload?.Msg || "Delete failed");
+            }
+        } catch (error) {
+            console.error("Delete Error:", error);
+            toast.error("Error occurred while deleting.");
+        }
+    };
+
+    const handleCancelClickUnit = (RecordID) => () => {
+        setRowModesModelunit({
+            ...rowModesModelunit,
+            [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+        const editedRow = unitrows.find((row) => row.RecordID === RecordID);
+        if (editedRow.isNew) {
+            setunitrows(unitrows.filter((row) => row.RecordID !== RecordID));
+        }
+    };
+
     const [subjectid, setSubjectid] = useState(null);
 
     function EditdeptAutocompleteCell(props) {
         const { id, value, field, api, row } = props;
-        const [deptlookup, setDeptlookup] = useState(row.Department ? row.Department : null);
+        const [deptlookup, setDeptlookup] = useState(
+            row.Department ? row.Department : null,
+        );
 
         const handleChange = async (newValue) => {
             if (!newValue) return;
@@ -364,7 +632,9 @@ const Editproject_V1 = () => {
 
     function EditTeacherAutocomplete(props) {
         const { id, value, field, api, row } = props;
-        const [Teachlookup, setTeachlookup] = useState(row.Teacher ? row.Teacher : null);
+        const [Teachlookup, setTeachlookup] = useState(
+            row.Teacher ? row.Teacher : null,
+        );
 
         const handleChange = async (newValue) => {
             if (!newValue) return;
@@ -515,9 +785,61 @@ const Editproject_V1 = () => {
             },
         },
     ];
+    const unitColumns = [
+        {
+            field: "SubjectName",
+            headerName: "Subject",
+            flex: 1,
+            editable: false,
+        },
+        {
+            field: "Description",
+            headerName: "Units",
+            flex: 2,
+            editable: true,
+        },
+        {
+            field: "actions",
+            type: "actions",
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModelunit[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            onClick={handleSaveClickUnit(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            onClick={handleCancelClickUnit(id)}
+                        />,
+                    ];
+                }
+
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        onClick={handleEditClickUnit(id)}
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteClickUnit(id)}
+                    />,
+                ];
+            },
+        },
+    ];
 
     const handleRowModesModelChangeTeach = (newRowModesModel) => {
         setRowModesModelteach(newRowModesModel);
+    };
+    const handleRowModesModelChangeUnit = (newRowModesModel) => {
+        setRowModesModelunit(newRowModesModel);
     };
 
     const isHeaderDisabled = teachrows.length > 0;
@@ -528,7 +850,11 @@ const Editproject_V1 = () => {
         const formattedRows = explorelistViewData.map((row) => ({
             ...row,
             OwnedBy: row.OwnedByRecordID
-                ? { RecordID: row.OwnedByRecordID, Code: row.OwnedByCode, Name: row.OwnedByName }
+                ? {
+                    RecordID: row.OwnedByRecordID,
+                    Code: row.OwnedByCode,
+                    Name: row.OwnedByName,
+                }
                 : null,
         }));
 
@@ -556,12 +882,20 @@ const Editproject_V1 = () => {
                 }
 
                 if (Subscriptionlastthree === "003") {
-                    schemaFields.name = Yup.string().trim().required(data.Project.StandardActivities);
-                    schemaFields.incharge = Yup.object().required(data.Project.ClassTeacher).nullable();
+                    schemaFields.name = Yup.string()
+                        .trim()
+                        .required(data.Project.StandardActivities);
+                    schemaFields.incharge = Yup.object()
+                        .required(data.Project.ClassTeacher)
+                        .nullable();
                 }
                 if (Subscriptionlastthree !== "003") {
-                    schemaFields.TentativeStartDate = Yup.string().required(data.Project.TentativeStartDate);
-                    schemaFields.TentativeEndDate = Yup.string().required(data.Project.TentativeEndDate);
+                    schemaFields.TentativeStartDate = Yup.string().required(
+                        data.Project.TentativeStartDate,
+                    );
+                    schemaFields.TentativeEndDate = Yup.string().required(
+                        data.Project.TentativeEndDate,
+                    );
                 }
 
                 const schema = Yup.object().shape(schemaFields);
@@ -597,7 +931,7 @@ const Editproject_V1 = () => {
 
     useEffect(() => {
         if (show == "0") {
-            dispatch(getFetchData({ accessID, get: "get", recID }))
+            dispatch(getFetchData({ accessID, get: "get", recID }));
         }
         // if (show == "0") {
         //     if (recID && mode === "E") {
@@ -614,7 +948,12 @@ const Editproject_V1 = () => {
 
     useEffect(() => {
         if (Subscriptionlastthree && accessID) {
-            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                }),
+            );
         }
     }, [Subscriptionlastthree, accessID, dispatch]);
 
@@ -628,11 +967,17 @@ const Editproject_V1 = () => {
     };
 
     const handleEditClick = (RecordID) => () => {
-        setRowModesModel({ ...rowModesModel, [RecordID]: { mode: GridRowModes.Edit } });
+        setRowModesModel({
+            ...rowModesModel,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
     };
 
     const handleSaveClick = (RecordID) => () => {
-        setRowModesModel({ ...rowModesModel, [RecordID]: { mode: GridRowModes.View } });
+        setRowModesModel({
+            ...rowModesModel,
+            [RecordID]: { mode: GridRowModes.View },
+        });
     };
 
     const handleDeleteClick = (RecordID) => async () => {
@@ -683,13 +1028,17 @@ const Editproject_V1 = () => {
             setEditedRows((prev) => {
                 const exists = prev.find((r) => r.RecordID === newRow.RecordID);
                 if (exists) {
-                    return prev.map((r) => (r.RecordID === newRow.RecordID ? updatedRow : r));
+                    return prev.map((r) =>
+                        r.RecordID === newRow.RecordID ? updatedRow : r,
+                    );
                 }
                 return [...prev, updatedRow];
             });
         }
 
-        setDeletedRows((prev) => prev.filter((d) => d.RecordID !== Number(newRow.RecordID)));
+        setDeletedRows((prev) =>
+            prev.filter((d) => d.RecordID !== Number(newRow.RecordID)),
+        );
         return updatedRow;
     };
 
@@ -705,27 +1054,73 @@ const Editproject_V1 = () => {
             } else {
                 dispatch(getFetchData({ accessID, get: "", recID }));
             }
-            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
-
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                }),
+            );
         }
         if (event.target.value == "1") {
-            dispatch(fetchExplorelitview("TR363", Subscriptionlastthree, "Project Unit", `ProjectID='${recID}' AND CompanyID='${CompanyID}'`, ""));
+            dispatch(
+                fetchExplorelitview(
+                    "TR363",
+                    Subscriptionlastthree,
+                    "Project Unit",
+                    `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+                    "",
+                ),
+            );
             selectCellRowData({ rowData: {}, mode: "A", field: "" });
-            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
-
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                }),
+            );
         }
         if (event.target.value == "3") {
-            dispatch(fetchExplorelitview("TR363", Subscriptionlastthree, "Project Unit", `ProjectID='${recID}' AND CompanyID='${CompanyID}'`, ""));
-            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
-
+            dispatch(
+                fetchExplorelitview(
+                    "TR363",
+                    Subscriptionlastthree,
+                    "Project Unit",
+                    `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+                    "",
+                ),
+            );
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                }),
+            );
         }
         if (event.target.value == "2") {
-            dispatch(fetchExplorelitview("TR364", Subscriptionlastthree, "Project Documents", `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`, ""));
-            dispatch(CustomisedCaptionGet({ Vertical: Subscriptionlastthree, AccessID: accessID }));
-
+            dispatch(
+                fetchExplorelitview(
+                    "TR364",
+                    Subscriptionlastthree,
+                    "Project Documents",
+                    `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`,
+                    "",
+                ),
+            );
+            dispatch(
+                CustomisedCaptionGet({
+                    Vertical: Subscriptionlastthree,
+                    AccessID: accessID,
+                }),
+            );
         }
         if (event.target.value == "4") {
-            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            dispatch(
+                getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
+            );
+        }
+        if (event.target.value == "5") {
+            // dispatch(UnitFetchData({ ProjectID: recID, CompanyID }));
+            dispatch(getFetchData({ accessID, get: "get", recID }));
         }
     };
 
@@ -765,13 +1160,18 @@ const Editproject_V1 = () => {
         OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
         projectOwner:
             data.ProjectOwnerID && data.ProjectOwnerID !== "0"
-                ? { RecordID: data.ProjectOwnerID, Code: data.ProjectOwnerCode, Name: data.ProjectOwnerName }
+                ? {
+                    RecordID: data.ProjectOwnerID,
+                    Code: data.ProjectOwnerCode,
+                    Name: data.ProjectOwnerName,
+                }
                 : null,
         longitude: data.Longitude || 0,
         latitude: data.Latitude || 0,
         radius: data.Radius || 0,
         TentativeEndDate: data.TentativeEndDate || "",
         TentativeStartDate: data.TentativeStartDate || "",
+        Subject: null,
     };
 
     // ─── Fnsave (non-003 header save) ────────────────────────────────────────────
@@ -865,7 +1265,8 @@ const Editproject_V1 = () => {
             align: "right",
             sortable: false,
             filterable: false,
-            valueGetter: (params) => params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
+            valueGetter: (params) =>
+                params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
         },
         {
             headerName: "Code",
@@ -875,7 +1276,8 @@ const Editproject_V1 = () => {
             editable: true,
             headerAlign: "center",
             renderCell: (params) => {
-                if (YearFlag == "true" && (!params.value || params.row.isNew)) return "Auto Code";
+                if (YearFlag == "true" && (!params.value || params.row.isNew))
+                    return "Auto Code";
                 return params.value;
             },
         },
@@ -904,7 +1306,9 @@ const Editproject_V1 = () => {
             headerAlign: "center",
             sortable: false,
             renderCell: (params) =>
-                params.value ? `${params.value.Code || ""} || ${params.value.Name || ""}` : null,
+                params.value
+                    ? `${params.value.Code || ""} || ${params.value.Name || ""}`
+                    : null,
             renderEditCell: (params) => <EditOwnedByAutocomplete {...params} />,
         },
         {
@@ -961,7 +1365,7 @@ const Editproject_V1 = () => {
 
     const columns = React.useMemo(() => {
         let visibleColumns = explorelistViewcolumn.filter((column) =>
-            VISIBLE_FIELDS.includes(column.field)
+            VISIBLE_FIELDS.includes(column.field),
         );
         if (VISIBLE_FIELDS.includes("slno")) {
             const slnoColumn = {
@@ -971,7 +1375,9 @@ const Editproject_V1 = () => {
                 sortable: false,
                 filterable: false,
                 valueGetter: (params) =>
-                    page * pageSize + params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
+                    page * pageSize +
+                    params.api.getRowIndexRelativeToVisibleRows(params.id) +
+                    1,
             };
             visibleColumns = [slnoColumn, ...visibleColumns];
         }
@@ -982,14 +1388,27 @@ const Editproject_V1 = () => {
         setFunMode(mode);
         setLaoMode(mode);
         if (mode == "A") {
-            SetUnitData({ recordID: "", description: "", OwnedBy: null, Comments: "", Code: "", Name: "", sortOrder: 0, disable: false });
+            SetUnitData({
+                recordID: "",
+                description: "",
+                OwnedBy: null,
+                Comments: "",
+                Code: "",
+                Name: "",
+                sortOrder: 0,
+                disable: false,
+            });
         } else {
             if (field == "action") {
                 SetUnitData({
                     recordID: rowData.RecordID,
                     description: rowData.description,
                     OwnedBy: rowData.OwnedByRecordID
-                        ? { RecordID: rowData.OwnedByRecordID, Code: rowData.OwnedByCode, Name: rowData.OwnedByName }
+                        ? {
+                            RecordID: rowData.OwnedByRecordID,
+                            Code: rowData.OwnedByCode,
+                            Name: rowData.OwnedByName,
+                        }
                         : null,
                     sortOrder: rowData.SortOrder,
                     Comments: rowData.Comments,
@@ -1003,7 +1422,13 @@ const Editproject_V1 = () => {
 
     function Employee() {
         return (
-            <GridToolbarContainer sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <GridToolbarContainer
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                }}
+            >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                     <Typography>
                         {show == "1" ? "List of Units" : ""}
@@ -1012,7 +1437,13 @@ const Editproject_V1 = () => {
                     </Typography>
                     <Typography variant="h5">{`(${rowCount})`}</Typography>
                 </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
                     <GridToolbarQuickFilter />
                     {show != "2" && (
                         <Tooltip title="ADD">
@@ -1063,10 +1494,20 @@ const Editproject_V1 = () => {
             DeleteFlag: "N",
         };
 
-        const response = await dispatch(explorePostData({ accessID: "TR363", action, idata }));
+        const response = await dispatch(
+            explorePostData({ accessID: "TR363", action, idata }),
+        );
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            dispatch(fetchExplorelitview("TR363", Subscriptionlastthree, "Project Unit", `ProjectID='${recID}' AND CompanyID='${CompanyID}'`, ""));
+            dispatch(
+                fetchExplorelitview(
+                    "TR363",
+                    Subscriptionlastthree,
+                    "Project Unit",
+                    `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+                    "",
+                ),
+            );
             resetForm();
             selectCellRowData({ rowData: {}, mode: "A", field: "" });
         } else {
@@ -1092,7 +1533,9 @@ const Editproject_V1 = () => {
         });
     };
 
-    const Customisedcaptiondata = useSelector((state) => state.formApi.CustomisedCaptionGetData);
+    const Customisedcaptiondata = useSelector(
+        (state) => state.formApi.CustomisedCaptionGetData,
+    );
     const captionArray = Array.isArray(Customisedcaptiondata)
         ? Customisedcaptiondata
         : Customisedcaptiondata?.data || [];
@@ -1129,7 +1572,7 @@ const Editproject_V1 = () => {
                 (row) =>
                     !row.isNew &&
                     !isNaN(Number(row.RecordID)) &&
-                    !deletedRows.some((d) => d.RecordID === Number(row.RecordID))
+                    !deletedRows.some((d) => d.RecordID === Number(row.RecordID)),
             )
             .map((row) => ({
                 RecordID: row.RecordID,
@@ -1150,10 +1593,20 @@ const Editproject_V1 = () => {
         };
 
         try {
-            const response = await dispatch(postData({ accessID: "TR363", action: "batchsave", idata: payload }));
+            const response = await dispatch(
+                postData({ accessID: "TR363", action: "batchsave", idata: payload }),
+            );
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                dispatch(fetchExplorelitview("TR363", Subscriptionlastthree, "Project Unit", `ProjectID='${recID}' AND CompanyID='${CompanyID}'`, ""));
+                dispatch(
+                    fetchExplorelitview(
+                        "TR363",
+                        Subscriptionlastthree,
+                        "Project Unit",
+                        `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+                        "",
+                    ),
+                );
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -1176,7 +1629,13 @@ const Editproject_V1 = () => {
             }));
         };
         return (
-            <GridToolbarContainer sx={{ marginBottom: "10px", display: "flex", justifyContent: "flex-start" }}>
+            <GridToolbarContainer
+                sx={{
+                    marginBottom: "10px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                }}
+            >
                 <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
                     Add Record
                 </Button>
@@ -1185,13 +1644,25 @@ const Editproject_V1 = () => {
     }
 
     function EditToolbarteach(props) {
-        const { setTeachrows, setRowModesModelteach, isRowEditing, pageSize, setPage } = props;
+        const {
+            setTeachrows,
+            setRowModesModelteach,
+            isRowEditing,
+            pageSize,
+            setPage,
+        } = props;
         const [isAdding, setIsAdding] = useState(false);
 
         const handleClickteach = () => {
             setIsAdding(true);
             const id = nanoid();
-            const newRow = { id, RecordID: id, Department: null, Teacher: null, isNew: true };
+            const newRow = {
+                id,
+                RecordID: id,
+                Department: null,
+                Teacher: null,
+                isNew: true,
+            };
 
             setTeachrows((oldRows) => {
                 const updatedRows = [...oldRows, newRow];
@@ -1210,8 +1681,70 @@ const Editproject_V1 = () => {
         };
 
         return (
-            <Button disabled={isRowEditing || isAdding} color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
-                Add Record  ({data.Project})
+            <Button
+                disabled={isRowEditing || isAdding}
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClickteach}
+            >
+                Add Record ({data.Project})
+            </Button>
+        );
+    }
+    function EditToolbarunit(props) {
+        const {
+            setunitrows,
+            setRowModesModelunit,
+            isRowEditing,
+            pageSize,
+            setPage,
+            selectedSubject,
+            selectedSubjectID,
+        } = props;
+        const [isAdding, setIsAdding] = useState(false);
+
+        const handleClickunit = () => {
+
+            setIsAdding(true);
+            if (!selectedSubjectID) {
+                toast.error("Please select a subject first");
+                return;
+            }
+            const id = nanoid();
+            const newRow = {
+                id,
+                RecordID: id,
+                SubjectID: selectedSubjectID,
+                // SubjectName: selectedSubject?.Name || "",
+                SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
+                Description: "",
+                isNew: true
+            };
+
+            setunitrows((oldRows) => {
+                const updatedRows = [...oldRows, newRow];
+                const newPage = Math.floor((updatedRows.length - 1) / pageSize);
+                setPage(newPage);
+                return updatedRows;
+            });
+
+            setTimeout(() => {
+                setRowModesModelunit((oldModel) => ({
+                    ...oldModel,
+                    [id]: { mode: GridRowModes.Edit, fieldToFocus: "Description" },
+                }));
+                setIsAdding(false);
+            }, 100);
+        };
+
+        return (
+            <Button
+                disabled={isRowEditing || isAdding}
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClickunit}
+            >
+                Add Record ({data.Project})
             </Button>
         );
     }
@@ -1232,13 +1765,59 @@ const Editproject_V1 = () => {
                             aria-label="breadcrumb"
                             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                         >
-                            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }} onClick={() => setScreen(0)}>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => setScreen(0)}
+                            >
                                 {getBusinessCaption("ProjectTitle", "Project")}
                             </Typography>
-                            {show == "1" && <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>Units</Typography>}
-                            {show == "3" && <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>Units</Typography>}
-                            {show == "2" && <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>List Of Documents</Typography>}
-                            {show == "4" && <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>Staff Mapping ({data.Project})</Typography>}
+                            {show == "1" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Units
+                                </Typography>
+                            )}
+                            {show == "3" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Units
+                                </Typography>
+                            )}
+                            {show == "2" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    List Of Documents
+                                </Typography>
+                            )}
+                            {show == "4" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Staff Mapping ({data.Project})
+                                </Typography>
+                            )}
+                            {show == "5" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Units/Area ({data.Project})
+                                </Typography>
+                            )}
                         </Breadcrumbs>
                     </Box>
 
@@ -1253,11 +1832,16 @@ const Editproject_V1 = () => {
                                     label="Explore"
                                     onChange={screenChange}
                                 >
-                                    <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
+                                    <MenuItem value="0">
+                                        {getBusinessCaption("ProjectTitle", "Project")}
+                                    </MenuItem>
+                                    <MenuItem value="5">Units/Area</MenuItem>
                                     {is003Subscription === true && data.RoutineTasks == "N" ? (
                                         <MenuItem value="4">Staff Mapping</MenuItem>
                                     ) : null}
-                                    {is003Subscription === false ? <MenuItem value="3">Units</MenuItem> : null}
+                                    {is003Subscription === false ? (
+                                        <MenuItem value="3">Units</MenuItem>
+                                    ) : null}
                                     <MenuItem value="2">List Of Documents</MenuItem>
                                 </Select>
                             </FormControl>
@@ -1306,14 +1890,27 @@ const Editproject_V1 = () => {
                         validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
-                        {({ errors, touched, handleBlur, handleChange, isSubmitting, values, handleSubmit, setFieldValue }) => (
+                        {({
+                            errors,
+                            touched,
+                            handleBlur,
+                            handleChange,
+                            isSubmitting,
+                            values,
+                            handleSubmit,
+                            setFieldValue,
+                        }) => (
                             <form onSubmit={handleSubmit}>
                                 <Box
                                     display="grid"
                                     gap={formGap}
                                     padding={1}
                                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
                                 >
                                     {CompanyAutoCode == "Y" ? (
                                         <TextField
@@ -1341,7 +1938,10 @@ const Editproject_V1 = () => {
                                             id="code"
                                             label={
                                                 <>
-                                                    Code <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                    Code{" "}
+                                                    <span style={{ color: "red", fontSize: "20px" }}>
+                                                        *
+                                                    </span>
                                                 </>
                                             }
                                             variant="standard"
@@ -1364,7 +1964,9 @@ const Editproject_V1 = () => {
                                         label={
                                             <>
                                                 {getBusinessCaption("ProjectTitle", "Project")}
-                                                <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                <span style={{ color: "red", fontSize: "20px" }}>
+                                                    *
+                                                </span>
                                             </>
                                         }
                                         variant="standard"
@@ -1383,13 +1985,21 @@ const Editproject_V1 = () => {
                                         name="incharge"
                                         label={
                                             <>
-                                                {getBusinessCaption("AccountableIncharge", "Accountable Incharge")}
-                                                <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                                                {getBusinessCaption(
+                                                    "AccountableIncharge",
+                                                    "Accountable Incharge",
+                                                )}
+                                                <span style={{ color: "red", fontSize: "20px" }}>
+                                                    {" "}
+                                                    *{" "}
+                                                </span>
                                             </>
                                         }
                                         id="incharge"
                                         value={values.incharge}
-                                        onChange={async (newValue) => setFieldValue("incharge", newValue)}
+                                        onChange={async (newValue) =>
+                                            setFieldValue("incharge", newValue)
+                                        }
                                         error={!!touched.incharge && !!errors.incharge}
                                         helperText={touched.incharge && errors.incharge}
                                         url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2111", ScreenName: "Project Incharge", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
@@ -1399,7 +2009,10 @@ const Editproject_V1 = () => {
                                         <CheckinAutocomplete
                                             disabled={mode == "V"}
                                             name="projectOwner"
-                                            label={getBusinessCaption("ProjectOwner", "Project Owner")}
+                                            label={getBusinessCaption(
+                                                "ProjectOwner",
+                                                "Project Owner",
+                                            )}
                                             variant="outlined"
                                             id="projectOwner"
                                             value={values.projectOwner}
@@ -1422,14 +2035,26 @@ const Editproject_V1 = () => {
                                                 type="date"
                                                 label={
                                                     <>
-                                                        {getBusinessCaption("TentativeStartDate", "Tentative Start Date")}
-                                                        <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                                                        {getBusinessCaption(
+                                                            "TentativeStartDate",
+                                                            "Tentative Start Date",
+                                                        )}
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            {" "}
+                                                            *{" "}
+                                                        </span>
                                                     </>
                                                 }
                                                 focused
                                                 variant="standard"
-                                                error={!!touched.TentativeStartDate && !!errors.TentativeStartDate}
-                                                helperText={touched.TentativeStartDate && errors.TentativeStartDate}
+                                                error={
+                                                    !!touched.TentativeStartDate &&
+                                                    !!errors.TentativeStartDate
+                                                }
+                                                helperText={
+                                                    touched.TentativeStartDate &&
+                                                    errors.TentativeStartDate
+                                                }
                                                 value={values.TentativeStartDate}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
@@ -1440,14 +2065,25 @@ const Editproject_V1 = () => {
                                                 type="date"
                                                 label={
                                                     <>
-                                                        {getBusinessCaption("TentativeEndDate", "Tentative End Date")}
-                                                        <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                                                        {getBusinessCaption(
+                                                            "TentativeEndDate",
+                                                            "Tentative End Date",
+                                                        )}
+                                                        <span style={{ color: "red", fontSize: "20px" }}>
+                                                            {" "}
+                                                            *{" "}
+                                                        </span>
                                                     </>
                                                 }
                                                 focused
                                                 variant="standard"
-                                                error={!!touched.TentativeEndDate && !!errors.TentativeEndDate}
-                                                helperText={touched.TentativeEndDate && errors.TentativeEndDate}
+                                                error={
+                                                    !!touched.TentativeEndDate &&
+                                                    !!errors.TentativeEndDate
+                                                }
+                                                helperText={
+                                                    touched.TentativeEndDate && errors.TentativeEndDate
+                                                }
                                                 value={values.TentativeEndDate}
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
@@ -1495,39 +2131,99 @@ const Editproject_V1 = () => {
                                         onChange={handleChange}
                                         error={!!touched.sortorder && !!errors.sortorder}
                                         helperText={touched.sortorder && errors.sortorder}
-                                        InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                        InputProps={{
+                                            inputProps: { style: { textAlign: "right" } },
+                                        }}
                                         InputLabelProps={{ shrink: true }}
                                         onWheel={(e) => e.target.blur()}
                                         onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 8);
+                                            e.target.value = Math.max(0, parseInt(e.target.value))
+                                                .toString()
+                                                .slice(0, 8);
                                         }}
                                     />
 
                                     <Box>
-                                        <Field disabled={mode == "V"} type="checkbox" name="Routine" id="Routine" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />
+                                        <Field
+                                            disabled={mode == "V"}
+                                            type="checkbox"
+                                            name="Routine"
+                                            id="Routine"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                        />
                                         <FormLabel focused={false}>Routine Tasks</FormLabel>
 
                                         {!is003Subscription && (
                                             <>
-                                                <Field disabled={mode == "V"} type="checkbox" name="ByProduct" id="ByProduct" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />
+                                                <Field
+                                                    disabled={mode == "V"}
+                                                    type="checkbox"
+                                                    name="ByProduct"
+                                                    id="ByProduct"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    as={Checkbox}
+                                                />
                                                 <FormLabel focused={false}>Product</FormLabel>
-                                                <Field disabled={mode == "V"} type="checkbox" name="Onsiteactivities" id="Onsiteactivities" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />
-                                                <FormLabel focused={false}>Enable Onsite Activities</FormLabel>
+                                                <Field
+                                                    disabled={mode == "V"}
+                                                    type="checkbox"
+                                                    name="Onsiteactivities"
+                                                    id="Onsiteactivities"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    as={Checkbox}
+                                                />
+                                                <FormLabel focused={false}>
+                                                    Enable Onsite Activities
+                                                </FormLabel>
                                             </>
                                         )}
 
-                                        <Field disabled={mode == "V"} type="checkbox" name="delete" id="delete" onChange={handleChange} onBlur={handleBlur} as={Checkbox} label="Delete" />
+                                        <Field
+                                            disabled={mode == "V"}
+                                            type="checkbox"
+                                            name="delete"
+                                            id="delete"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Delete"
+                                        />
                                         <FormLabel focused={false}>Delete</FormLabel>
-                                        <Field disabled={mode == "V"} type="checkbox" name="disable" id="disable" onChange={handleChange} onBlur={handleBlur} as={Checkbox} label="Disable" />
+                                        <Field
+                                            disabled={mode == "V"}
+                                            type="checkbox"
+                                            name="disable"
+                                            id="disable"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Disable"
+                                        />
                                         <FormLabel focused={false}>Disable</FormLabel>
                                     </Box>
                                 </Box>
 
                                 {Subscriptionlastthree != "003" ? (
                                     <>
-                                        <Typography variant="h5" padding={1}>Costing:</Typography>
+                                        <Typography variant="h5" padding={1}>
+                                            Costing:
+                                        </Typography>
                                         {values.ByProduct === true ? (
-                                            <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(2 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}>
+                                            <Box
+                                                display="grid"
+                                                gap={formGap}
+                                                padding={1}
+                                                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                                sx={{
+                                                    "& > div": {
+                                                        gridColumn: isNonMobile ? undefined : "span 2",
+                                                    },
+                                                }}
+                                            >
                                                 <TextField
                                                     disabled={mode == "V"}
                                                     variant="standard"
@@ -1538,40 +2234,212 @@ const Editproject_V1 = () => {
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
                                                     label="Price (If it is a product)"
-                                                    sx={{ gridColumn: "span 1", backgroundColor: "#ffffff" }}
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
                                                     focused
-                                                    InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                                    InputProps={{
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
                                                 />
                                             </Box>
                                         ) : (
-                                            <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(2 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}>
-                                                <TextField disabled={mode == "V"} fullWidth variant="standard" type="number" id="budget" name="budget" value={values.budget} onBlur={handleBlur} onChange={handleChange} label="Budget" sx={{ gridColumn: "span 1", backgroundColor: "#ffffff" }} error={!!touched.budget && !!errors.budget} helperText={touched.budget && errors.budget} focused InputProps={{ inputProps: { style: { textAlign: "right" } } }} />
-                                                <TextField fullWidth disabled={mode == "V"} variant="standard" type="number" id="scheduled" name="scheduled" value={values.scheduled} onBlur={handleBlur} onChange={handleChange} label="Scheduled Cost" sx={{ gridColumn: "span 1", backgroundColor: "#ffffff" }} focused InputProps={{ readOnly: true, inputProps: { style: { textAlign: "right" } } }} />
-                                                <TextField disabled={mode == "V"} fullWidth variant="standard" type="number" id="actual" name="actual" value={values.actual} onBlur={handleBlur} onChange={handleChange} label="Actual Cost" sx={{ gridColumn: "span 1", backgroundColor: "#ffffff" }} focused InputProps={{ readOnly: true, inputProps: { style: { textAlign: "right" } } }} />
-                                                <TextField disabled={mode == "V"} fullWidth variant="standard" type="number" id="OtherExpenses" name="OtherExpenses" value={values.OtherExpenses} onBlur={handleBlur} onChange={handleChange} label="Other Expenses" sx={{ gridColumn: "span 1", backgroundColor: "#ffffff" }} focused InputProps={{ readOnly: true, inputProps: { style: { textAlign: "right" } } }} />
+                                            <Box
+                                                display="grid"
+                                                gap={formGap}
+                                                padding={1}
+                                                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                                sx={{
+                                                    "& > div": {
+                                                        gridColumn: isNonMobile ? undefined : "span 2",
+                                                    },
+                                                }}
+                                            >
+                                                <TextField
+                                                    disabled={mode == "V"}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    type="number"
+                                                    id="budget"
+                                                    name="budget"
+                                                    value={values.budget}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    label="Budget"
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
+                                                    error={!!touched.budget && !!errors.budget}
+                                                    helperText={touched.budget && errors.budget}
+                                                    focused
+                                                    InputProps={{
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    disabled={mode == "V"}
+                                                    variant="standard"
+                                                    type="number"
+                                                    id="scheduled"
+                                                    name="scheduled"
+                                                    value={values.scheduled}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    label="Scheduled Cost"
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
+                                                    focused
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
+                                                />
+                                                <TextField
+                                                    disabled={mode == "V"}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    type="number"
+                                                    id="actual"
+                                                    name="actual"
+                                                    value={values.actual}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    label="Actual Cost"
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
+                                                    focused
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
+                                                />
+                                                <TextField
+                                                    disabled={mode == "V"}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    type="number"
+                                                    id="OtherExpenses"
+                                                    name="OtherExpenses"
+                                                    value={values.OtherExpenses}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    label="Other Expenses"
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
+                                                    focused
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
+                                                />
                                             </Box>
                                         )}
 
-                                        <Typography variant="h5" padding={1}>Location:</Typography>
-                                        <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(2 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}>
-                                            <TextField fullWidth variant="standard" label="Latitude" name="latitude" focused type="text" value={values.latitude} onBlur={handleBlur} onChange={(e) => { if (/^-?\d*\.?\d*$/.test(e.target.value)) handleChange(e); }} inputProps={{ inputMode: "decimal", style: { textAlign: "right" } }} />
-                                            <TextField fullWidth variant="standard" label="Longitude" name="longitude" focused type="text" value={values.longitude} onBlur={handleBlur} onChange={(e) => { if (/^-?\d*\.?\d*$/.test(e.target.value)) handleChange(e); }} inputProps={{ inputMode: "decimal", style: { textAlign: "right" } }} />
-                                            <TextField fullWidth variant="standard" focused label="Radius (m)" name="radius" type="text" value={values.radius} onBlur={handleBlur} onChange={(e) => { if (/^\d*\.?\d*$/.test(e.target.value)) handleChange(e); }} inputProps={{ inputMode: "decimal", style: { textAlign: "right" } }} />
+                                        <Typography variant="h5" padding={1}>
+                                            Location:
+                                        </Typography>
+                                        <Box
+                                            display="grid"
+                                            gap={formGap}
+                                            padding={1}
+                                            gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                            sx={{
+                                                "& > div": {
+                                                    gridColumn: isNonMobile ? undefined : "span 2",
+                                                },
+                                            }}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                variant="standard"
+                                                label="Latitude"
+                                                name="latitude"
+                                                focused
+                                                type="text"
+                                                value={values.latitude}
+                                                onBlur={handleBlur}
+                                                onChange={(e) => {
+                                                    if (/^-?\d*\.?\d*$/.test(e.target.value))
+                                                        handleChange(e);
+                                                }}
+                                                inputProps={{
+                                                    inputMode: "decimal",
+                                                    style: { textAlign: "right" },
+                                                }}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                variant="standard"
+                                                label="Longitude"
+                                                name="longitude"
+                                                focused
+                                                type="text"
+                                                value={values.longitude}
+                                                onBlur={handleBlur}
+                                                onChange={(e) => {
+                                                    if (/^-?\d*\.?\d*$/.test(e.target.value))
+                                                        handleChange(e);
+                                                }}
+                                                inputProps={{
+                                                    inputMode: "decimal",
+                                                    style: { textAlign: "right" },
+                                                }}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                variant="standard"
+                                                focused
+                                                label="Radius (m)"
+                                                name="radius"
+                                                type="text"
+                                                value={values.radius}
+                                                onBlur={handleBlur}
+                                                onChange={(e) => {
+                                                    if (/^\d*\.?\d*$/.test(e.target.value))
+                                                        handleChange(e);
+                                                }}
+                                                inputProps={{
+                                                    inputMode: "decimal",
+                                                    style: { textAlign: "right" },
+                                                }}
+                                            />
                                         </Box>
                                     </>
                                 ) : null}
 
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                                     {YearFlag == "true" ? (
-                                        <LoadingButton color="secondary" variant="contained" type="submit" loading={isLoading}>
+                                        <LoadingButton
+                                            color="secondary"
+                                            variant="contained"
+                                            type="submit"
+                                            loading={isLoading}
+                                        >
                                             Save
                                         </LoadingButton>
                                     ) : (
-                                        <Button color="secondary" variant="contained" disabled={true}>
+                                        <Button
+                                            color="secondary"
+                                            variant="contained"
+                                            disabled={true}
+                                        >
                                             Save
                                         </Button>
                                     )}
-                                    <Button color="warning" variant="contained" onClick={() => navigate(-1)}>
+                                    <Button
+                                        color="warning"
+                                        variant="contained"
+                                        onClick={() => navigate(-1)}
+                                    >
                                         Cancel
                                     </Button>
                                 </Box>
@@ -1587,13 +2455,58 @@ const Editproject_V1 = () => {
                     <Formik
                         initialValues={UnitInitialValues}
                         enableReinitialize={true}
-                        onSubmit={(values, { resetForm }) => handleSaveButtonClick(values, resetForm)}
+                        onSubmit={(values, { resetForm }) =>
+                            handleSaveButtonClick(values, resetForm)
+                        }
                     >
-                        {({ values, errors, touched, handleBlur, handleSubmit, handleChange, setFieldValue, resetForm }) => (
+                        {({
+                            values,
+                            errors,
+                            touched,
+                            handleBlur,
+                            handleSubmit,
+                            handleChange,
+                            setFieldValue,
+                            resetForm,
+                        }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(2 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}>
-                                    <TextField fullWidth variant="standard" type="text" id="code" name="code" value={values.code} onBlur={handleBlur} onChange={handleChange} label="Code" focused InputProps={{ readOnly: true }} />
-                                    <TextField fullWidth variant="standard" type="text" id="description" name="description" value={values.description} onBlur={handleBlur} onChange={handleChange} label="Description" focused InputProps={{ readOnly: true }} />
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        id="code"
+                                        name="code"
+                                        value={values.code}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        label="Code"
+                                        focused
+                                        InputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        id="description"
+                                        name="description"
+                                        value={values.description}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        label="Description"
+                                        focused
+                                        InputProps={{ readOnly: true }}
+                                    />
                                 </Box>
 
                                 <Box
@@ -1601,15 +2514,26 @@ const Editproject_V1 = () => {
                                     height={dataGridHeightExplore}
                                     marginTop={2}
                                     sx={{
-                                        "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[800] },
-                                        "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
-                                        "& .MuiDataGrid-footerContainer": { backgroundColor: colors.blueAccent[800] },
+                                        "& .MuiDataGrid-columnHeaders": {
+                                            backgroundColor: colors.blueAccent[800],
+                                        },
+                                        "& .MuiDataGrid-virtualScroller": {
+                                            backgroundColor: colors.primary[400],
+                                        },
+                                        "& .MuiDataGrid-footerContainer": {
+                                            backgroundColor: colors.blueAccent[800],
+                                        },
                                         "& .odd-row": { backgroundColor: "" },
                                         "& .even-row": { backgroundColor: "#d0edec" },
                                     }}
                                 >
                                     <DataGrid
-                                        sx={{ "& .MuiDataGrid-footerContainer": { height: dataGridHeaderFooterHeight, minHeight: dataGridHeaderFooterHeight } }}
+                                        sx={{
+                                            "& .MuiDataGrid-footerContainer": {
+                                                height: dataGridHeaderFooterHeight,
+                                                minHeight: dataGridHeaderFooterHeight,
+                                            },
+                                        }}
                                         rowHeight={dataGridRowHeight}
                                         headerHeight={dataGridHeaderFooterHeight}
                                         rows={rows}
@@ -1624,20 +2548,26 @@ const Editproject_V1 = () => {
                                         getRowId={(row) => row.RecordID}
                                         isCellEditable={(params) => {
                                             if (params.field === "SLNO") return false;
-                                            if (params.field === "Code" && YearFlag == "true") return false;
+                                            if (params.field === "Code" && YearFlag == "true")
+                                                return false;
                                             return true;
                                         }}
                                         disableRowSelectionOnClick
                                         experimentalFeatures={{ newEditingApi: true }}
                                         onProcessRowUpdateError={(error) => {
-                                            console.error("Row update validation failed:", error.message);
+                                            console.error(
+                                                "Row update validation failed:",
+                                                error.message,
+                                            );
                                             toast.error(error.message);
                                         }}
                                         components={{ Toolbar: EditToolbar }}
                                         componentsProps={{ toolbar: { setRows, setRowModesModel } }}
                                         rowsPerPageOptions={[5, 10, 20]}
                                         getRowClassName={(params) =>
-                                            params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                            params.indexRelativeToCurrentPage % 2 === 0
+                                                ? "odd-row"
+                                                : "even-row"
                                         }
                                         pagination
                                         pageSize={pageSize}
@@ -1649,17 +2579,58 @@ const Editproject_V1 = () => {
 
                                 <Box display="flex" justifyContent="space-between" padding={1}>
                                     <Box>
-                                        <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>Actions Guide</Typography>
+                                        <Typography
+                                            fontWeight={600}
+                                            fontSize={15}
+                                            lineHeight={1}
+                                            mb={1}
+                                            ml={0.5}
+                                        >
+                                            Actions Guide
+                                        </Typography>
                                         <Box display="flex" flexDirection="row" gap="15px">
-                                            <Chip icon={<EditIcon color="inherit" />} label="Edit" variant="outlined" />
-                                            <Chip icon={<DeleteIcon color="inherit" />} label="Delete" variant="outlined" />
-                                            <Chip icon={<SaveIcon color="inherit" />} label="Save" variant="outlined" />
-                                            <Chip icon={<CancelIcon color="inherit" />} label="Cancel" variant="outlined" />
+                                            <Chip
+                                                icon={<EditIcon color="inherit" />}
+                                                label="Edit"
+                                                variant="outlined"
+                                            />
+                                            <Chip
+                                                icon={<DeleteIcon color="inherit" />}
+                                                label="Delete"
+                                                variant="outlined"
+                                            />
+                                            <Chip
+                                                icon={<SaveIcon color="inherit" />}
+                                                label="Save"
+                                                variant="outlined"
+                                            />
+                                            <Chip
+                                                icon={<CancelIcon color="inherit" />}
+                                                label="Cancel"
+                                                variant="outlined"
+                                            />
                                         </Box>
                                     </Box>
-                                    <Box display="flex" justifyContent="space-between" padding={1} gap="20px">
-                                        <LoadingButton color="secondary" variant="contained" type="submit">Save</LoadingButton>
-                                        <Button color="warning" variant="contained" onClick={() => setScreen(0)}>Cancel</Button>
+                                    <Box
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        padding={1}
+                                        gap="20px"
+                                    >
+                                        <LoadingButton
+                                            color="secondary"
+                                            variant="contained"
+                                            type="submit"
+                                        >
+                                            Save
+                                        </LoadingButton>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen(0)}
+                                        >
+                                            Cancel
+                                        </Button>
                                     </Box>
                                 </Box>
                             </form>
@@ -1674,9 +2645,43 @@ const Editproject_V1 = () => {
                     <Formik initialValues={DocInitialValues} enableReinitialize={true}>
                         {({ values, handleBlur, handleSubmit, handleChange }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(2 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}>
-                                    <TextField fullWidth variant="standard" type="text" id="code" name="code" value={values.code} onBlur={handleBlur} onChange={handleChange} label="Code" focused InputProps={{ readOnly: true }} />
-                                    <TextField fullWidth variant="standard" type="text" id="description" name="description" value={values.description} onBlur={handleBlur} onChange={handleChange} label="Description" focused InputProps={{ readOnly: true }} />
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        id="code"
+                                        name="code"
+                                        value={values.code}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        label="Code"
+                                        focused
+                                        InputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        id="description"
+                                        name="description"
+                                        value={values.description}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        label="Description"
+                                        focused
+                                        InputProps={{ readOnly: true }}
+                                    />
                                 </Box>
 
                                 <Box
@@ -1686,15 +2691,28 @@ const Editproject_V1 = () => {
                                     sx={{
                                         "& .MuiDataGrid-root": { border: "none" },
                                         "& .MuiDataGrid-cell": { borderBottom: "none" },
-                                        "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[800], borderBottom: "none" },
-                                        "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
-                                        "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[800] },
+                                        "& .MuiDataGrid-columnHeaders": {
+                                            backgroundColor: colors.blueAccent[800],
+                                            borderBottom: "none",
+                                        },
+                                        "& .MuiDataGrid-virtualScroller": {
+                                            backgroundColor: colors.primary[400],
+                                        },
+                                        "& .MuiDataGrid-footerContainer": {
+                                            borderTop: "none",
+                                            backgroundColor: colors.blueAccent[800],
+                                        },
                                         "& .odd-row": { backgroundColor: "" },
                                         "& .even-row": { backgroundColor: "#D3D3D3" },
                                     }}
                                 >
                                     <DataGrid
-                                        sx={{ "& .MuiDataGrid-footerContainer": { height: dataGridHeaderFooterHeight, minHeight: dataGridHeaderFooterHeight } }}
+                                        sx={{
+                                            "& .MuiDataGrid-footerContainer": {
+                                                height: dataGridHeaderFooterHeight,
+                                                minHeight: dataGridHeaderFooterHeight,
+                                            },
+                                        }}
                                         rows={explorelistViewData}
                                         columns={columns}
                                         disableSelectionOnClick
@@ -1703,15 +2721,25 @@ const Editproject_V1 = () => {
                                         headerHeight={dataGridHeaderFooterHeight}
                                         pageSize={pageSize}
                                         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                        onCellClick={(params) => selectCellRowData({ rowData: params.row, mode: "E", field: params.field })}
+                                        onCellClick={(params) =>
+                                            selectCellRowData({
+                                                rowData: params.row,
+                                                mode: "E",
+                                                field: params.field,
+                                            })
+                                        }
                                         rowsPerPageOptions={[5, 10, 20]}
                                         pagination
                                         components={{ Toolbar: Employee }}
-                                        onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                                        onStateChange={(stateParams) =>
+                                            setRowCount(stateParams.pagination.rowCount)
+                                        }
                                         componentsProps={{ toolbar: { setRows, setRowModesModel } }}
                                         loading={exploreLoading}
                                         getRowClassName={(params) =>
-                                            params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                            params.indexRelativeToCurrentPage % 2 === 0
+                                                ? "odd-row"
+                                                : "even-row"
                                         }
                                     />
                                 </Box>
@@ -1721,13 +2749,31 @@ const Editproject_V1 = () => {
 
                     <Box display="flex" justifyContent="space-between" padding={1}>
                         <Box>
-                            <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>Actions Guide</Typography>
+                            <Typography
+                                fontWeight={600}
+                                fontSize={15}
+                                lineHeight={1}
+                                mb={1}
+                                ml={0.5}
+                            >
+                                Actions Guide
+                            </Typography>
                             <Box display="flex" flexDirection="row" gap="15px">
-                                <Chip icon={<VisibilityIcon color="primary" />} label="Open Document" variant="outlined" />
+                                <Chip
+                                    icon={<VisibilityIcon color="primary" />}
+                                    label="Open Document"
+                                    variant="outlined"
+                                />
                             </Box>
                         </Box>
                         <Box display="flex" justifyContent="space-between" padding={1}>
-                            <Button color="warning" variant="contained" onClick={() => setScreen("0")}>Cancel</Button>
+                            <Button
+                                color="warning"
+                                variant="contained"
+                                onClick={() => setScreen("0")}
+                            >
+                                Cancel
+                            </Button>
                         </Box>
                     </Box>
                 </Paper>
@@ -1745,22 +2791,45 @@ const Editproject_V1 = () => {
                     <Formik initialValues={DocInitialValues} enableReinitialize={true}>
                         {({ values, handleBlur, handleSubmit, handleChange }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box display="grid" gap={formGap} padding={1} gridTemplateColumns="repeat(1 , minMax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 1" } }}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 1",
+                                        },
+                                    }}
+                                >
                                     <Box
                                         height="60vh"
                                         m={1}
                                         sx={{
                                             "& .MuiDataGrid-root": { border: "none" },
                                             "& .MuiDataGrid-cell": { borderBottom: "none" },
-                                            "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[800], borderBottom: "none" },
-                                            "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
-                                            "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[800] },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
                                             "& .odd-row": { backgroundColor: "" },
                                             "& .even-row": { backgroundColor: "#D3D3D3" },
                                         }}
                                     >
                                         <DataGrid
-                                            sx={{ "& .MuiDataGrid-footerContainer": { height: dataGridHeaderFooterHeight, minHeight: dataGridHeaderFooterHeight } }}
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                },
+                                            }}
                                             rowHeight={35}
                                             headerHeight={dataGridHeaderFooterHeight}
                                             rows={teachrows}
@@ -1778,26 +2847,211 @@ const Editproject_V1 = () => {
                                             disableRowSelectionOnClick
                                             experimentalFeatures={{ newEditingApi: true }}
                                             onProcessRowUpdateError={(error) => {
-                                                console.error("Row update validation failed:", error.message);
+                                                console.error(
+                                                    "Row update validation failed:",
+                                                    error.message,
+                                                );
                                                 toast.error(error.message);
                                             }}
                                             components={{ Toolbar: EditToolbarteach }}
                                             componentsProps={{
-                                                toolbar: { setTeachrows, setRowModesModelteach, isRowEditing, setPage, pageSize },
+                                                toolbar: {
+                                                    setTeachrows,
+                                                    setRowModesModelteach,
+                                                    isRowEditing,
+                                                    setPage,
+                                                    pageSize,
+                                                },
                                             }}
                                             rowsPerPageOptions={[5, 10, 20]}
                                             getRowClassName={(params) =>
-                                                params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
                                             }
                                             pagination
                                             pageSize={pageSize}
                                             page={page}
-                                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                            onPageSizeChange={(newPageSize) =>
+                                                setPageSize(newPageSize)
+                                            }
                                             onPageChange={(newPage) => setPage(newPage)}
                                         />
                                     </Box>
                                     <Box display="flex" justifyContent="flex-end" padding={1}>
-                                        <Button color="warning" variant="contained" onClick={() => setScreen("0")}>Cancel</Button>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen("0")}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : null}
+            {show == "5" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik initialValues={InitialValue} enableReinitialize={true}>
+                        {({
+                            values,
+                            handleBlur,
+                            handleSubmit,
+                            handleChange,
+                            setFieldValue,
+                            touched,
+                            errors,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 1",
+                                        },
+                                    }}
+                                >
+                                    <Box display="flex" justifyContent="space-between">
+                                        <Box>
+                                            <PartySingleSelect
+                                                id="Subject"
+                                                name="Subject"
+                                                label="Subject"
+                                                fullWidth
+                                                sx={{minWidth:"300px",maxWidth:"350px"}}
+                                                // label={
+                                                //     <>
+                                                //         Subject/Activities
+                                                //         <span style={{ color: "red", fontSize: "20px" }}>
+                                                //             *
+                                                //         </span>
+                                                //     </>
+                                                // }
+                                                variant="standard"
+                                                value={values.Subject}
+                                                onChange={(newValue) => {
+                                                    setFieldValue("Subject", newValue);
+                                                    setSelectedSubjectID(newValue?.RecordID || 0);
+                                                    setSelectedSubject(newValue);
+                                                }}
+                                                error={!!touched.Subject && !!errors.Subject}
+                                                helperText={touched.Subject && errors.Subject}
+                                                focused
+                                                InputLabelProps={{
+                                                    shrink: true, // ✅ prevents overlap
+                                                }}
+                                                url={`${listViewurl}?data=${JSON.stringify({
+                                                    Query: {
+                                                        AccessID: "2183",
+                                                        ScreenName: "Subject",
+                                                        VerticalLicense: "003",
+                                                        Filter: `CompanyID='${CompanyID}'`,
+                                                        Any: "",
+                                                    },
+                                                })}`}
+                                            />
+                                        </Box>
+                                        <Box>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={handleUnitApply}
+                                            >
+                                                Apply
+                                            </Button>
+                                        </Box>
+                                    </Box>
+
+                                    <Box
+                                        height="60vh"
+                                        m={1}
+                                        sx={{
+                                            "& .MuiDataGrid-root": { border: "none" },
+                                            "& .MuiDataGrid-cell": { borderBottom: "none" },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
+                                            "& .odd-row": { backgroundColor: "" },
+                                            "& .even-row": { backgroundColor: "#D3D3D3" },
+                                        }}
+                                    >
+                                        <DataGrid
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                },
+                                            }}
+                                            rowHeight={35}
+                                            headerHeight={dataGridHeaderFooterHeight}
+                                            getRowId={(row) => row.RecordID}
+                                            rows={unitrows || []}
+                                            columns={unitColumns}
+                                            loading={exploreLoading}
+                                            editMode="row"
+                                            disableSelectionOnClick
+                                            rowModesModel={rowModesModelunit}
+                                            onRowModesModelChange={handleRowModesModelChangeUnit}
+                                            onRowEditStop={handleRowEditStopUnit}
+                                            processRowUpdate={processRowUpdateUnit}
+                                            disableRowSelectionOnClick
+                                            experimentalFeatures={{ newEditingApi: true }}
+                                            onProcessRowUpdateError={(error) => {
+                                                console.error(
+                                                    "Row update validation failed:",
+                                                    error.message,
+                                                );
+                                                toast.error(error.message);
+                                            }}
+                                            components={{ Toolbar: EditToolbarunit }}
+                                            componentsProps={{
+                                                toolbar: {
+                                                    setunitrows,
+                                                    setRowModesModelunit,
+                                                    isRowEditing,
+                                                    setPage,
+                                                    pageSize,
+                                                    selectedSubject,
+                                                    selectedSubjectID,
+                                                },
+                                            }}
+                                            rowsPerPageOptions={[5, 10, 20]}
+                                            getRowClassName={(params) =>
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
+                                            }
+                                            pagination
+                                            pageSize={pageSize}
+                                            page={page}
+                                            onPageSizeChange={(newPageSize) =>
+                                                setPageSize(newPageSize)
+                                            }
+                                            onPageChange={(newPage) => setPage(newPage)}
+                                        />
+                                    </Box>
+                                    <Box display="flex" justifyContent="flex-end" padding={1}>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen("0")}
+                                        >
+                                            Cancel
+                                        </Button>
                                     </Box>
                                 </Box>
                             </form>

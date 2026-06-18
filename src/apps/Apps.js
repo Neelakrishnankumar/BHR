@@ -231,6 +231,7 @@ import EditTermfeesstructure from "./pages/Empolyee/EditTermfeestruct";
 import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
+import EditOtherEvents from "./pages/HR/EditOtherEvents";
 
 function App() {
   //   useEffect(() => {
@@ -1052,6 +1053,12 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/W/EditEvent Category/:id/:Mode"
                     element={<EditWorkshop />}
+                  />
+                  {/* OTHER EVENTS */}
+                  <Route
+                    // path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/O/EditEvent Category/:id/:Mode"
+                    path="/otherEvents"
+                    element={<EditOtherEvents />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditRemarks/:id/:Mode"
