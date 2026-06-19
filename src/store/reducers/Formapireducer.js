@@ -282,6 +282,9 @@ Itemstockstatus: "",
   slotLoading: false,
   slotStatus: "",
   slotgetData: [],
+  staffmappingGetData: {},
+  staffmappingGetDataloading: false,
+  staffmappingStatus: ""
 
 };
 
@@ -3048,6 +3051,37 @@ export const TimeTableGenerateget = createAsyncThunk(
     }
   }
 );
+
+export const staffmappingTeacherget = createAsyncThunk(
+  "Standard/staffmappingTeacher",
+  async ({ ProjectID, CompanyID }, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.StandardstaffmapingGET;
+
+      const response = await axios.post(
+        url,
+        {
+          ProjectID,
+          CompanyID,
+        },
+        {
+          headers: {
+            Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+
+          },
+        }
+      );
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const TimeTableDelete = createAsyncThunk(
   "Standard/TimeTableDelete",
   async (payload, { rejectWithValue, getState }) => {
@@ -4859,6 +4893,24 @@ export const getApiSlice = createSlice({
       .addCase(TimeTableGenerateget.rejected, (state) => {
         state.Status = "error";
         state.loading = false;
+      })
+
+      //staffmappingTeacherget
+        
+      .addCase(staffmappingTeacherget.pending, (state) => {
+        state.staffmappingGetData = {};
+        state.staffmappingGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(staffmappingTeacherget.fulfilled, (state, action) => {
+        state.staffmappingGetData = action.payload.Data || {};
+        state.staffmappingGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(staffmappingTeacherget.rejected, (state, action) => {
+        state.staffmappingGetData = {};
+        state.staffmappingGetDataloading = false;
+        state.error = action.error.message;
       })
       //LEADER GET
       .addCase(LeadEnquiryFilterGet.pending, (state) => {
