@@ -167,6 +167,7 @@ const YearID = params.filtertype;
   const rowData = location.state || {};
   var screenName = rowData.name;
 
+    const DeptLookupCheck = data.RoutineTasks === "Y" ? "A" : "S";
   // STUDENT-TEACHER MAPPING
   const [teachrows, setTeachrows] = useState([]);
   const [rowModesModelteach, setRowModesModelteach] = React.useState({});
@@ -768,31 +769,34 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
 
   //-----------------------------------STAFF_MAPPING END--------------------------------------------
 
-  //UNITS
-  const handleUnitApply = async () => {
-    const payload = {
-      ProjectID: recID,
-      CompanyID,
-      SubjectID: selectedSubjectID || 0,
-    };
+    //UNITS
+    const handleUnitApply = async () => {
+        if(!selectedSubjectID){
+            toast.error("Select select a Subject/Activity")
+        }
+        const payload = {
+            ProjectID: recID,
+            CompanyID,
+            SubjectID: selectedSubjectID || 0,
+        };
 
-    const response = await dispatch(
-      UnitFetchData({
-        ProjectID: recID,
-        CompanyID,
-        SubjectID: selectedSubjectID || 0,
-      }),
-    );
-    if (response?.payload.Status === "Y") {
-      toast.success(response?.payload?.Message || "Fetched Successfully");
-      setunitrows(response?.payload?.details || []);
-    } else {
-      setunitrows([]);
-      toast.error(response.payload.Message || "No rows available.");
-    }
-  };
-  const processRowUpdateUnit = async (newRow, oldRow) => {
-    const currentFormikValues = formikRef.current?.values ?? {};
+        const response = await dispatch(
+            UnitFetchData({
+                ProjectID: recID,
+                CompanyID,
+                SubjectID: selectedSubjectID || 0,
+            }),
+        );
+        if (response?.payload.Status === "Y") {
+            toast.success(response?.payload?.Message || "Fetched Successfully");
+            setunitrows(response?.payload?.details || []);
+        } else {
+            setunitrows([]);
+            toast.error(response.payload.Message || "No rows available please add a Record.");
+        }
+    };
+    const processRowUpdateUnit = async (newRow, oldRow) => {
+        const currentFormikValues = formikRef.current?.values ?? {};
 
     const isNew = isNaN(Number(newRow.RecordID));
 
@@ -1887,47 +1891,50 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
   const is003 = SubscriptionCode?.endsWith("003");
   const formikRef = useRef();
 
-  const InitialValue = {
-    code: data.Code,
-    name: data.Name,
-    sortorder: data.SortOrder,
-    disable: data.Disable === "Y" ? true : false,
-    incharge:
-      data.ProjectIncharge && data.ProjectIncharge !== "0"
-        ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
-        : null,
-    ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
-    ByProduct: is003 ? false : data.ByProduct === "Y",
-    Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
-    Routine: data.RoutineTasks === "Y" ? true : false,
-    CurrentStatus: data.CurrentStatus,
-    delete: data.DeleteFlag === "Y" ? true : false,
-    budget: data.Budget === "" ? "0.00" : data.Budget,
-    scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
-    actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
-    price: data.Price === "" ? "0.00" : data.Price,
-    OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
-    projectOwner:
-      data.ProjectOwnerID && data.ProjectOwnerID !== "0"
-        ? {
-            RecordID: data.ProjectOwnerID,
-            Code: data.ProjectOwnerCode,
-            Name: data.ProjectOwnerName,
-          }
-        : null,
-    longitude: data.Longitude || 0,
-    latitude: data.Latitude || 0,
-    radius: data.Radius || 0,
-    TentativeEndDate: data.TentativeEndDate || "",
-    TentativeStartDate: data.TentativeStartDate || "",
-    Subject: selectedSubjectID
-      ? {
-          RecordID: selectedSubject.RecordID,
-          Name: selectedSubject.Name || "",
-          Code: selectedSubject.Code || "",
-        }
-      : null,
-  };
+    const InitialValue = {
+        code: data.Code,
+        name: data.Name,
+        sortorder: data.SortOrder,
+        disable: data.Disable === "Y" ? true : false,
+        incharge:
+            data.ProjectIncharge && data.ProjectIncharge !== "0"
+                ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
+                : null,
+        ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
+        ByProduct: is003 ? false : data.ByProduct === "Y",
+        Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
+        Routine: data.RoutineTasks === "Y" ? true : false,
+        CurrentStatus: data.CurrentStatus,
+        delete: data.DeleteFlag === "Y" ? true : false,
+        budget: data.Budget === "" ? "0.00" : data.Budget,
+        scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+        actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
+        price: data.Price === "" ? "0.00" : data.Price,
+        OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
+        projectOwner:
+            data.ProjectOwnerID && data.ProjectOwnerID !== "0"
+                ? {
+                    RecordID: data.ProjectOwnerID,
+                    Code: data.ProjectOwnerCode,
+                    Name: data.ProjectOwnerName,
+                }
+                : null,
+        longitude: data.Longitude || 0,
+        latitude: data.Latitude || 0,
+        radius: data.Radius || 0,
+        TentativeEndDate: data.TentativeEndDate || "",
+        TentativeStartDate: data.TentativeStartDate || "",
+        Subject: selectedSubjectID ? {
+            RecordID: selectedSubject.RecordID,
+            Name: selectedSubject.Name || "",
+            Code: selectedSubject.Code || "",
+        } : null,
+        slotGroup: data.SlotGroupID && data.SlotGroupID !== "0" ? {
+            RecordID: data.SlotGroupID,
+            Name: data.SlotGroupName,
+            Code: data.SlotGroupCode,
+        } : null,
+    };
 
   // ─── Fnsave (non-003 header save) ────────────────────────────────────────────
   const Fnsave = async (values, del) => {
@@ -1941,34 +1948,36 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
     var isCheck = "N";
     if (values.disable == true) isCheck = "Y";
 
-    const idata = {
-      RecordID: recID,
-      Code: values.code,
-      Name: values.name,
-      ProjectIncharge: values.incharge.RecordID || 0,
-      ProjectInchargeName: values.incharge.Name || "",
-      ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
-      RoutineTasks: values.Routine === true ? "Y" : "N",
-      SortOrder: values.sortorder || 0,
-      CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
-      Disable: isCheck,
-      DeleteFlag: values.delete == true ? "Y" : "N",
-      ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
-      EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
-      ActualCost: values.actual || 0,
-      Price: values.price || 0,
-      Budget: values.budget || 0,
-      ScheduledCost: values.scheduled || 0,
-      Finyear,
-      CompanyID,
-      ProjectOwnerID: values.projectOwner?.RecordID || 0,
-      Longitude: values.longitude || 0,
-      Latitude: values.latitude || 0,
-      Radius: values.radius || 0,
-      AcademicYearID: params.filtertype || 0,
-      TentativeStartDate: values.TentativeStartDate || "",
-      TentativeEndDate: values.TentativeEndDate || "",
-    };
+        const idata = {
+            RecordID: recID,
+            Code: values.code,
+            Name: values.name,
+            ProjectIncharge: values.incharge.RecordID || 0,
+            ProjectInchargeName: values.incharge.Name || "",
+            ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
+            RoutineTasks: values.Routine === true ? "Y" : "N",
+            SortOrder: values.sortorder || 0,
+            CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+            Disable: isCheck,
+            DeleteFlag: values.delete == true ? "Y" : "N",
+            ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+            EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+            ActualCost: values.actual || 0,
+            Price: values.price || 0,
+            Budget: values.budget || 0,
+            ScheduledCost: values.scheduled || 0,
+            Finyear,
+            CompanyID,
+            ProjectOwnerID: values.projectOwner?.RecordID || 0,
+            Longitude: values.longitude || 0,
+            Latitude: values.latitude || 0,
+            Radius: values.radius || 0,
+            AcademicYearID: params.filtertype || 0,
+            TentativeStartDate: values.TentativeStartDate || "",
+            TentativeEndDate: values.TentativeEndDate || "",
+            SlotGroupID: values.slotGroup ? values.slotGroup.RecordID : 0 || 0,
+
+        };
 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
@@ -2515,22 +2524,23 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
     } = props;
     const [isAdding, setIsAdding] = useState(false);
 
-    const handleClickunit = () => {
-      setIsAdding(true);
-      if (!selectedSubjectID) {
-        toast.error("Please select a subject first");
-        return;
-      }
-      const id = nanoid();
-      const newRow = {
-        id,
-        RecordID: id,
-        SubjectID: selectedSubjectID,
-        // SubjectName: selectedSubject?.Name || "",
-        SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
-        Description: "",
-        isNew: true,
-      };
+        const handleClickunit = () => {
+
+            setIsAdding(true);
+            if (!selectedSubjectID) {
+                toast.error("Please select a Subject/Activity");
+                return;
+            }
+            const id = nanoid();
+            const newRow = {
+                id,
+                RecordID: id,
+                SubjectID: selectedSubjectID,
+                // SubjectName: selectedSubject?.Name || "",
+                SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
+                Description: "",
+                isNew: true
+            };
 
       setunitrows((oldRows) => {
         const updatedRows = [...oldRows, newRow];
@@ -2830,27 +2840,45 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
                     url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2111", ScreenName: "Project Incharge", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
                   />
 
-                  {is003Subscription === false ? (
-                    <CheckinAutocomplete
-                      disabled={mode == "V"}
-                      name="projectOwner"
-                      label={getBusinessCaption(
-                        "ProjectOwner",
-                        "Project Owner",
-                      )}
-                      variant="outlined"
-                      id="projectOwner"
-                      value={values.projectOwner}
-                      onChange={(newValue) => {
-                        setFieldValue("projectOwner", {
-                          RecordID: newValue.RecordID,
-                          Code: newValue.Code,
-                          Name: newValue.Name,
-                        });
-                      }}
-                      url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2102", ScreenName: "Customer", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
-                    />
-                  ) : null}
+                                    {is003Subscription ? (
+                                        <CheckinAutocomplete
+                                            disabled={mode == "V"}
+                                            name="slotGroup"
+                                            label={getBusinessCaption("SlotGroup", "Slot Group")}
+                                            variant="outlined"
+                                            id="slotGroup"
+                                            value={values.slotGroup}
+                                            onChange={(newValue) => {
+                                                setFieldValue("slotGroup", {
+                                                    RecordID: newValue.RecordID,
+                                                    Code: newValue.Code,
+                                                    Name: newValue.Name,
+                                                });
+                                            }}
+                                            url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2171", ScreenName: "Slot Group", VerticalLicense: Subscriptionlastthree, Filter: `CompanyID=${CompanyID}`, Any: "" } })}`}
+                                        />
+                                    ) : null}
+                                    {is003Subscription === false ? (
+                                        <CheckinAutocomplete
+                                            disabled={mode == "V"}
+                                            name="projectOwner"
+                                            label={getBusinessCaption(
+                                                "ProjectOwner",
+                                                "Project Owner",
+                                            )}
+                                            variant="outlined"
+                                            id="projectOwner"
+                                            value={values.projectOwner}
+                                            onChange={(newValue) => {
+                                                setFieldValue("projectOwner", {
+                                                    RecordID: newValue.RecordID,
+                                                    Code: newValue.Code,
+                                                    Name: newValue.Name,
+                                                });
+                                            }}
+                                            url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2102", ScreenName: "Customer", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
+                                        />
+                                    ) : null}
 
                   {is003Subscription === false ? (
                     <>
@@ -2968,17 +2996,18 @@ const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
                     }}
                   />
 
-                  <Box>
-                    <Field
-                      disabled={mode == "V"}
-                      type="checkbox"
-                      name="Routine"
-                      id="Routine"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel focused={false}>Routine Tasks</FormLabel>
+                                    <Box>
+                                        <Field
+                                            disabled={mode == "V"}
+                                            type="checkbox"
+                                            name="Routine"
+                                            id="Routine"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                        />
+                                        {/* <FormLabel focused={false}>Routine Tasks</FormLabel> */}
+                                        <FormLabel focused={false}>{is003Subscription ? "Activities" : "Routine Tasks"}</FormLabel>
 
                     {!is003Subscription && (
                       <>
