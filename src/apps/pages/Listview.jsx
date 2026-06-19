@@ -842,6 +842,9 @@ const Listview = () => {
             <FileUploadIcon />
           </IconButton>
             </Tooltip> */}
+          
+          
+
             {accessID === "TR321" && (
               <Tooltip arrow title="Party Analytics">
                 <IconButton 
@@ -850,6 +853,7 @@ const Listview = () => {
                   <AssessmentIcon />
                 </IconButton>
               </Tooltip>)}
+             
 
                    {accessID === "TR315" && (
               <Tooltip arrow title="Item Analytics">
