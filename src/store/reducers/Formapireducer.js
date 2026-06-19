@@ -1394,13 +1394,13 @@ export const getFetchData_v1 = createAsyncThunk(
 );
 export const UnitFetchData = createAsyncThunk(
   "Units/Division/get",
-  async ({ ProjectID, CompanyID,SubjectID }) => {
+  async ({ ProjectID, CompanyID }) => {
     var url = store.getState().globalurl.UnitAreaConfigGet;
 
     const data = {
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-      SubjectID: SubjectID,
+      // SubjectID: SubjectID,
     };
 
     console.log(

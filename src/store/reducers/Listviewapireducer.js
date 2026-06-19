@@ -1481,10 +1481,10 @@ export const fetchListview =
       }
       else if (AccessID === "TR026" && screenName === "Subject") {
         // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
-        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('N')`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
       }
       else if (AccessID === "TR026" && screenName === "Department") {
-        filter = `CompanyID='${CompId}' AND SubjectSkill= 'N'`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'D'`;
       }
 
       else {

@@ -63,6 +63,7 @@ import {
     ProjectVendor,
     SprintEmpAutocomplete,
     SprintEmpAutocomplete1,
+    SubjectAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
 import {
     DataGrid,
@@ -175,6 +176,32 @@ const Editproject_V1 = () => {
         (row) => row.mode === GridRowModes.Edit,
     );
 
+    useEffect(() => {
+        if (show === "5") {
+            dispatch(
+                UnitFetchData({
+                    ProjectID: recID,
+                    CompanyID,
+                })
+            ).then((response) => {
+                if (response?.payload?.Status === "Y") {
+
+                    setRowModesModelunit({}); // <- IMPORTANT
+
+                    setunitrows(
+                        response.payload.details.map((row) => ({
+                            ...row,
+                            id: row.RecordID,
+                            Subject: {
+                                RecordID: row.SubjectID,
+                                Name: row.SubjectName,
+                            },
+                        }))
+                    );
+                }
+            });
+        }
+    }, [show]);
     const validateRowTT = (row) => {
         if (!row.Department) return "Please Select the Subject";
         if (!row.Teacher) return "Please Select the Teacher";
@@ -294,9 +321,9 @@ const Editproject_V1 = () => {
 
             CompanyID,
             ProjectID: recID,
-            DeptID: selectedSubjectID || payload.SubjectID,
+            DeptID: payload?.data?.SubjectID,
 
-            Description: payload.data.Description || "",
+            Description: payload?.data?.Description || "",
             SortOrder: 1
         };
 
@@ -443,31 +470,31 @@ const Editproject_V1 = () => {
     };
 
     //UNITS
-    const handleUnitApply = async () => {
-        if(!selectedSubjectID){
-            toast.error("Select select a Subject/Activity")
-        }
-        const payload = {
-            ProjectID: recID,
-            CompanyID,
-            SubjectID: selectedSubjectID || 0,
-        };
+    // const handleUnitApply = async () => {
+    //     if (!selectedSubjectID) {
+    //         toast.error("Select select a Subject/Activity")
+    //     }
+    //     const payload = {
+    //         ProjectID: recID,
+    //         CompanyID,
+    //         SubjectID: selectedSubjectID || 0,
+    //     };
 
-        const response = await dispatch(
-            UnitFetchData({
-                ProjectID: recID,
-                CompanyID,
-                SubjectID: selectedSubjectID || 0,
-            }),
-        );
-        if (response?.payload.Status === "Y") {
-            toast.success(response?.payload?.Message || "Fetched Successfully");
-            setunitrows(response?.payload?.details || []);
-        } else {
-            setunitrows([]);
-            toast.error(response.payload.Message || "No rows available please add a Record.");
-        }
-    };
+    //     const response = await dispatch(
+    //         UnitFetchData({
+    //             ProjectID: recID,
+    //             CompanyID,
+    //             SubjectID: selectedSubjectID || 0,
+    //         }),
+    //     );
+    //     if (response?.payload.Status === "Y") {
+    //         toast.success(response?.payload?.Message || "Fetched Successfully");
+    //         setunitrows(response?.payload?.details || []);
+    //     } else {
+    //         setunitrows([]);
+    //         toast.error(response.payload.Message || "No rows available please add a Record.");
+    //     }
+    // };
     const processRowUpdateUnit = async (newRow, oldRow) => {
         const currentFormikValues = formikRef.current?.values ?? {};
 
@@ -478,7 +505,11 @@ const Editproject_V1 = () => {
                 RecordID: isNew ? "-1" : String(newRow.RecordID),
                 CompanyID,
                 ProjectID: recID,
-                SubjectID: oldRow.SubjectID || newRow.SubjectID || "",
+                // SubjectID: oldRow.SubjectID || newRow.SubjectID || "",
+                SubjectID:
+                    newRow.Subject?.RecordID ||
+                    oldRow.Subject?.RecordID ||
+                    "",
                 Description: newRow.Description || "",
             },
         };
@@ -518,15 +549,15 @@ const Editproject_V1 = () => {
                 isNew: false,
             };
 
+            
             setunitrows((prevRows) =>
                 prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
             );
-            // setScreen("5");
+            setScreen("5");
             dispatch(
                 UnitFetchData({
                     ProjectID: recID,
                     CompanyID,
-                    SubjectID: selectedSubjectID,
                 }),
             );
             dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -583,7 +614,6 @@ const Editproject_V1 = () => {
                     UnitFetchData({
                         ProjectID: recID,
                         CompanyID,
-                        SubjectID: selectedSubjectID,
                     }),
                 );
                 dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -635,6 +665,46 @@ const Editproject_V1 = () => {
         );
     }
 
+    function EditSubjectAutocomplete(props) {
+        const { id, field, api, row } = props;
+
+        const [subjectLookup, setSubjectLookup] = useState(
+            row.Subject || null
+        );
+
+        const handleChange = async (newValue) => {
+            if (!newValue) return;
+
+            setSubjectLookup(newValue);
+
+            await api.setEditCellValue({
+                id,
+                field,
+                value: newValue,
+            });
+
+            api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <SprintEmpAutocomplete1
+                name="Subject"
+                // label="Subject"
+                id="Subject"
+                value={subjectLookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                        AccessID: "2187",
+                        ScreenName: "Subject",
+                        VerticalLicense: "003",
+                        Filter: `Suborskill='${DeptLookupCheck}' AND CompanyID='${CompanyID}'`,
+                        Any: "",
+                    },
+                })}`}
+            />
+        );
+    }
     function EditTeacherAutocomplete(props) {
         const { id, value, field, api, row } = props;
         const [Teachlookup, setTeachlookup] = useState(
@@ -792,14 +862,41 @@ const Editproject_V1 = () => {
     ];
     const unitColumns = [
         {
-            field: "SubjectName",
+            field: "Slno",
+            headerName: "SL#",
+            align: "right",
+            headerAlign: "center",
+            width: 60,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            valueGetter: (params) => {
+                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+                const totalVisibleRows = params.api.getAllRowIds().length;
+                const totalAllRows = params.api.getRowsCount();
+                if (totalVisibleRows < totalAllRows) {
+                    return index + 1;
+                } else {
+                    return page * pageSize + index + 1;
+                }
+            },
+        },
+        {
+            field: "Subject",
             headerName: "Subject",
             flex: 1,
-            editable: false,
+            editable: true,
+            renderCell: (params) =>
+                params.value
+                    ? `${params.value.Name}`
+                    : "",
+            renderEditCell: (params) => (
+                <EditSubjectAutocomplete {...params} />
+            ),
         },
         {
             field: "Description",
-            headerName: "Units",
+            headerName: "Units/Area",
             flex: 2,
             editable: true,
         },
@@ -832,6 +929,7 @@ const Editproject_V1 = () => {
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
+                        color="error"
                         label="Delete"
                         onClick={handleDeleteClickUnit(id)}
                     />,
@@ -1126,8 +1224,9 @@ const Editproject_V1 = () => {
         if (event.target.value == "5") {
             // dispatch(UnitFetchData({ ProjectID: recID, CompanyID }));
             dispatch(getFetchData({ accessID, get: "get", recID }));
-            setSelectedSubjectID(0);
+            // setSelectedSubjectID(0);
             setunitrows([]);
+            setRowModesModelunit({});
         }
     };
 
@@ -1716,25 +1815,19 @@ const Editproject_V1 = () => {
             isRowEditing,
             pageSize,
             setPage,
-            selectedSubject,
-            selectedSubjectID,
         } = props;
         const [isAdding, setIsAdding] = useState(false);
 
         const handleClickunit = () => {
 
             setIsAdding(true);
-            if (!selectedSubjectID) {
-                toast.error("Please select a Subject/Activity");
-                return;
-            }
             const id = nanoid();
             const newRow = {
                 id,
                 RecordID: id,
-                SubjectID: selectedSubjectID,
+                Subject: null,
                 // SubjectName: selectedSubject?.Name || "",
-                SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
+                // SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
                 Description: "",
                 isNew: true
             };
@@ -1746,13 +1839,13 @@ const Editproject_V1 = () => {
                 return updatedRows;
             });
 
-            setTimeout(() => {
-                setRowModesModelunit((oldModel) => ({
-                    ...oldModel,
-                    [id]: { mode: GridRowModes.Edit, fieldToFocus: "Description" },
-                }));
-                setIsAdding(false);
-            }, 100);
+            // setTimeout(() => {
+            //     setRowModesModelunit((oldModel) => ({
+            //         ...oldModel,
+            //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Description" },
+            //     }));
+            //     setIsAdding(false);
+            // }, 100);
         };
 
         return (
@@ -2954,57 +3047,6 @@ const Editproject_V1 = () => {
                                         },
                                     }}
                                 >
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Box>
-                                            <PartySingleSelect
-                                                id="Subject"
-                                                name="Subject"
-                                                // label="Subject"
-                                                fullWidth
-                                                sx={{ minWidth: "300px", maxWidth: "350px" }}
-                                                label={
-                                                    <>
-                                                        Subject/Activitiy
-                                                        <span style={{ color: "red", fontSize: "20px" }}>
-                                                            *
-                                                        </span>
-                                                    </>
-                                                }
-                                                variant="standard"
-                                                value={values.Subject}
-                                                onChange={(newValue) => {
-                                                    setFieldValue("Subject", newValue);
-                                                    setSelectedSubjectID(newValue?.RecordID || 0);
-                                                    setSelectedSubject(newValue);
-                                                }}
-                                                error={!!touched.Subject && !!errors.Subject}
-                                                helperText={touched.Subject && errors.Subject}
-                                                focused
-                                                InputLabelProps={{
-                                                    shrink: true, // ✅ prevents overlap
-                                                }}
-                                                url={`${listViewurl}?data=${JSON.stringify({
-                                                    Query: {
-                                                        AccessID: "2187",
-                                                        ScreenName: "Subject",
-                                                        VerticalLicense: "003",
-                                                        Filter:`Suborskill='${DeptLookupCheck}' AND CompanyID='${CompanyID}'`,
-                                                        Any: "",
-                                                    },
-                                                })}`}
-                                            />
-                                        </Box>
-                                        <Box>
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={handleUnitApply}
-                                            >
-                                                Apply
-                                            </Button>
-                                        </Box>
-                                    </Box>
-
                                     <Box
                                         height="60vh"
                                         m={1}
@@ -3062,8 +3104,6 @@ const Editproject_V1 = () => {
                                                     isRowEditing,
                                                     setPage,
                                                     pageSize,
-                                                    selectedSubject,
-                                                    selectedSubjectID,
                                                 },
                                             }}
                                             rowsPerPageOptions={[5, 10, 20]}
