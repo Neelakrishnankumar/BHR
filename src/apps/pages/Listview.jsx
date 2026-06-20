@@ -82,6 +82,7 @@ import {
   Setup_MenuExcel,
   VendorFilterController,
 } from "../../store/reducers/Formapireducer";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { Delete, Psychology, Category, PeopleAlt, TextSnippet } from "@mui/icons-material";
@@ -95,6 +96,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import {
   CheckinAutocomplete,
   Employeeautocomplete,
@@ -343,38 +345,41 @@ const Listview = () => {
   //   // dispatch(screenRightsData(accessID));
   // }, [location.key]);
   React.useEffect(() => {
-    if(screenName1 == "Subject"){dispatch(
-      fetchListview(
-        accessID,
-        Subscriptionlastthree,
-        screenName1,
-        compID
+    if (screenName1 == "Subject") {
+      dispatch(
+        fetchListview(
+          accessID,
+          Subscriptionlastthree,
+          screenName1,
+          compID
+        )
       )
-    )}
-    else{
-    dispatch(
-      fetchListview(
-        accessID,
-        Subscriptionlastthree,
-        screenName,
-        accessID == "TR010" ||
-          accessID == "TR140" ||
-          accessID == "TR047" ||
-          accessID == "TR152" ||
-          accessID == "TR155" ||
-          // accessID == "TR321" ||
-          accessID == "TR022"
-          ? `compID=${compID}`
-          : accessID == "TR027" ||
-            accessID == "TR321" ?
-            `CompanyID=${compID}` :
-            (accessID == "TR331" || accessID == "TR366") ?
-              `CompanyID=${compID}`
-              : "",
-        "",
-        compID
+    }
+    else {
+      dispatch(
+        fetchListview(
+          accessID,
+          Subscriptionlastthree,
+          screenName,
+          accessID == "TR010" ||
+            accessID == "TR140" ||
+            accessID == "TR047" ||
+            accessID == "TR152" ||
+            accessID == "TR155" ||
+            // accessID == "TR321" ||
+            accessID == "TR022"
+            ? `compID=${compID}`
+            : accessID == "TR027" ||
+              accessID == "TR321" ?
+              `CompanyID=${compID}` :
+              (accessID == "TR331" || accessID == "TR366") ?
+                `CompanyID=${compID}`
+                : "",
+          "",
+          compID
+        )
       )
-    )}
+    }
     // dispatch(screenRightsData(accessID));
   }, [location.key]);
 
@@ -607,25 +612,25 @@ const Listview = () => {
             ? `${screenName1}` :
             accessID == "TR376"
               ? `${screenName1}` :
-               accessID == "TR026"
-              ? `${screenName}` :
-              accessID == "TR378"
-                ? `${screenName1}` :
-                accessID == "TR383"
+              accessID == "TR026"
+                ? `${screenName}` :
+                accessID == "TR378"
                   ? `${screenName1}` :
-                  accessID == "TR323"
-                    ? screenName || rowData.Screennameroute :
-                    accessID == "TR315"
-                      ? screenName || rowData.Screenname
-                      : accessID == "TR128"
-                        ? screenName || rowData.LocationName
-                        : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                          ? screenName1
-                          : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                  accessID == "TR383"
+                    ? `${screenName1}` :
+                    accessID == "TR323"
+                      ? screenName || rowData.Screennameroute :
+                      accessID == "TR315"
+                        ? screenName || rowData.Screenname
+                        : accessID == "TR128"
+                          ? screenName || rowData.LocationName
+                          : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
                             ? screenName1
-                            // : screenName}</Typography>
-                            // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
-                            : screenName ?? screenName1}</Typography>
+                            : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                              ? screenName1
+                              // : screenName}</Typography>
+                              // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
+                              : screenName ?? screenName1}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -714,6 +719,7 @@ const Listview = () => {
             ) : (
               false
             )}
+           
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -929,6 +935,11 @@ const Listview = () => {
                 fileName: `${screenName}`,
               }}
             />
+             <Tooltip title="Configuration">
+                <InfoRoundedIcon color="info" size="small" 
+                onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}/>          
+            </Tooltip>
+            
             {/* {accessID == "TR122" && (
               <Box display="flex" alignItems="center" gap={2} >
                 <TextField
