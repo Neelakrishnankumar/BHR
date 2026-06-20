@@ -1018,6 +1018,7 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/E/EditEvent Category/:id/:Mode"
                     element={<EditEmergency />}
+                    // element={<EditOtherEvents />}
                   />
                   {/* ACADEMMICS */}
                   <Route
