@@ -346,7 +346,9 @@ const initialState = {
   TimeTableDelete:"",
   FeesStructureDelete:"",
   standardDeleteUrl: "",
-  EventPublishedPost:""
+  EventPublishedPost:"",
+  StandardstaffmapingGET: "",
+
 };
 
 export const getUrlSlice = createSlice({
@@ -564,6 +566,8 @@ export const getUrlSlice = createSlice({
        state.FeesStructureDelete = APIurl + "FeesStructureDeleteController.php";
       state.standardDeleteUrl = APIurl + "ProjectDeleteController.php";
       state.EventPublishedPost = APIurl + "EventPublishedPost.php"
+      state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
+      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php"
     },
 
   },
