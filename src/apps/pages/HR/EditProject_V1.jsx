@@ -44,6 +44,7 @@ import {
     getFetchData_v1,
     postApidata,
     postData,
+    staffmappingTeacherget,
     UnitFetchData,
 } from "../../../store/reducers/Formapireducer";
 import * as Yup from "yup";
@@ -58,6 +59,8 @@ import {
     CheckinAutocomplete_v12,
     Employeeautocomplete,
     EventsSingleSelect,
+    MultiFormikOptimizedAutocomplete,
+    MultiFormikOptimizedAutocompletestaff,
     PartySingleSelect,
     Productautocomplete,
     ProjectVendor,
@@ -102,7 +105,7 @@ const Editproject_V1 = () => {
     var recID = params.id;
     var mode = params.Mode;
     var accessID = params.accessID;
-
+    const YearID = params.filtertype;
     const data = useSelector((state) => state.formApi.Data) || {};
     const Department =
         useSelector((state) => state.formApi.Department.Department) || [];
@@ -111,6 +114,14 @@ const Editproject_V1 = () => {
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const getLoading = useSelector((state) => state.formApi.getLoading);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+
+    const staffmappingGetData = useSelector(
+        (state) => state.formApi.staffmappingGetData,
+    );
+    console.log("🚀 ~ Editproject_V1 ~ staffmappingGetData:", staffmappingGetData)
+    const staffmappingGetDataloading = useSelector(
+        (state) => state.formApi.staffmappingGetDataloading,
+    );
 
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
@@ -162,12 +173,21 @@ const Editproject_V1 = () => {
     // STUDENT-TEACHER MAPPING
     const [teachrows, setTeachrows] = useState([]);
     const [rowModesModelteach, setRowModesModelteach] = React.useState({});
+    // STUDENT-TEACHER - STAFF MAPPING
+    const [staffrows, setStaffrows] = useState([]);
+    const [rowModesModelstaff, setRowModesModelStaff] = React.useState({});
 
     //UNIT AREA MAPPING
     const [unitrows, setunitrows] = useState([]);
     const [selectedSubjectID, setSelectedSubjectID] = useState(0);
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [rowModesModelunit, setRowModesModelunit] = React.useState({});
+    //UNIT AREA MAPPING
+    const [TimeTablerows, setTimeTablerows] = useState([]);
+    console.log("🚀 ~ Editproject_V1 ~ TimeTablerows:", TimeTablerows)
+    const [rowModesModelTimeTable, setRowModesModelTimeTable] = React.useState(
+        {},
+    );
 
     const isRowEditing = Object.values(rowModesModelteach).some(
         (row) => row.mode === GridRowModes.Edit,
@@ -202,6 +222,33 @@ const Editproject_V1 = () => {
             });
         }
     }, [show]);
+
+    //Timetable
+    useEffect(() => {
+        if (show === "6" && staffmappingGetData?.entries) {
+
+            setRowModesModelTimeTable({});
+
+            const formattedRows = staffmappingGetData.entries.map((entry) => ({
+                id: Number(entry.id),
+                RecordID: Number(entry.id),
+
+                term: entry.term || null,
+                department: entry.department || null,
+                assignedTo: entry.assignedTo || null,
+
+                area: entry.area || [],
+                day: entry.day || [],
+                slot: entry.slot || [],
+
+                isNew: false,
+            }));
+
+            console.log("formattedRows", formattedRows);
+
+            setTimeTablerows(formattedRows);
+        }
+    }, [show, staffmappingGetData]);
     const validateRowTT = (row) => {
         if (!row.Department) return "Please Select the Subject";
         if (!row.Teacher) return "Please Select the Teacher";
@@ -303,6 +350,87 @@ const Editproject_V1 = () => {
             throw new Error(response.payload.Msg);
         }
     };
+    //STAFF_MAPPING_V1
+    const FnsaveTech_V1 = async (
+        values,
+        del,
+        payload,
+        isNew,
+        saveAccessID = "TR389v1",
+    ) => {
+        const action = isNew ? "insert" : "update";
+
+        // Header RecordID: prefer passrecid (set after first insert), fall back to route param
+        const headerRecordID = passrecid ? passrecid : recID ? recID : -1;
+
+        // ── Build idata based on which endpoint we're calling ─────────────────
+        let idata;
+
+        idata = {
+            RecordID: headerRecordID,
+            Code: data.Code,
+            Name: data.Name,
+            ProjectIncharge: data.ProjectIncharge || 0,
+            ProjectInchargeName: data.ProjectInchargeName || "",
+            ServiceMaintenanceProject:
+                data.ServiceMaintenanceProject === true ? "Y" : "N",
+            RoutineTasks: data.RoutineTasks === true ? "Y" : "N",
+            SortOrder: data.SortOrder || 0,
+            CurrentStatus: data.CurrentStatus,
+            Disable: data.Disable === true ? "Y" : "N",
+            DeleteFlag: data.DeleteFlag === true ? "Y" : "N",
+            ByProduct: data.ByProduct, // always N for 003
+            EnableOnsiteactivities: data.EnableOnsiteactivities, // always N for 003
+            ActualCost: data.ActualCost || 0,
+            Price: data.Price || 0,
+            Budget: data.Budget || 0,
+            ScheduledCost: data.ScheduledCost || 0,
+            Finyear,
+            CompanyID,
+            ProjectOwnerID: data.ProjectOwnerID || 0,
+            Longitude: data.Longitude || 0,
+            Latitude: data.Latitude || 0,
+            Radius: data.Radius || 0,
+            AcademicYearID: params.filtertype || 0,
+            TentativeStartDate: data.TentativeStartDate || "",
+            TentativeEndDate: data.TentativeEndDate || "",
+            Detail: payload
+                ? [
+                    {
+                        DeptID: payload.DeptID?.toString() || "0",
+                        EmpID: payload.EmpID?.toString() || "0",
+                        ProjectTeamRecordID: isNew
+                            ? -1
+                            : Number(payload.ProjectTeamRecordID),
+                        UnitAreaID: payload.UnitAreaID?.toString() || "0",
+                        SlotID: payload.SlotID?.toString() || "0",
+                        TermID: payload.TermID?.toString() || "0",
+                    },
+                ]
+                : [],
+        };
+
+
+        const response = await dispatch(
+            postData({ accessID: saveAccessID, action, idata }),
+        );
+
+        if (response.payload.Status == "Y") {
+            toast.success(response.payload.Msg);
+            dispatch(getFetchData({ accessID, get: "get", recID }))
+            dispatch(
+                staffmappingTeacherget({ ProjectID: recID, CompanyID: CompanyID }),
+            );
+            setPassrecid(response.payload.ProjectRecordID);
+            setDetailrecid(response.payload.ProjectTeamID);
+
+            // Detail row save → return new ID so DataGrid can update the row
+            return response.payload.ProjectTeamID;
+        } else {
+            throw new Error(response.payload.Msg);
+        }
+    };
+
     const FnsaveUnit = async (
         values,
         del,
@@ -407,6 +535,11 @@ const Editproject_V1 = () => {
             event.defaultMuiPrevented = true;
         }
     };
+    const handleRowEditStopTimeTable = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
 
     const handleEditClickTeach = (RecordID) => () => {
         setRowModesModelteach({
@@ -468,6 +601,264 @@ const Editproject_V1 = () => {
             setTeachrows(teachrows.filter((row) => row.RecordID !== RecordID));
         }
     };
+
+    //TIMETABLE
+    const handleEditClickTimeTable = (RecordID) => () => {
+        setRowModesModelTimeTable({
+            ...rowModesModelTimeTable,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
+    };
+    const handleSaveClickTimeTable = (RecordID) => () => {
+        setRowModesModelTimeTable({
+            ...rowModesModelTimeTable,
+            [RecordID]: { mode: GridRowModes.View },
+        });
+    };
+
+    const handleDeleteClickTimeTable = (id) => async () => {
+        try {
+            const values = formikRef.current?.values ?? {};
+            const row = TimeTablerows.find((r) => r.id === id);
+
+            if (!row) return;
+
+            const isNew = isNaN(Number(row.RecordID));
+
+            // 🔹 If not saved yet → just remove locally
+            if (isNew) {
+                setTimeTablerows((prev) => prev.filter((r) => r.id !== id));
+                toast.success("Deleted locally");
+                return;
+            }
+
+            // 🔹 DETAIL for delete
+            const detailPayload = {
+                ProjectTeamRecordID: row.RecordID,
+
+                DeptID: row.department?.RecordID || "0",
+
+                EmpID: row.assignedTo?.RecordID || "0",
+
+                TermID: row.term?.RecordID || "0",
+
+                Day: Array.isArray(row.day)
+                    ? row.day.map((d) => d.Name).join(",")
+                    : "",
+
+                SlotID: Array.isArray(row.slot)
+                    ? row.slot.map((s) => s.RecordID).join(",")
+                    : "",
+
+                UnitAreaID: Array.isArray(row.area)
+                    ? row.area.map((a) => a.RecordID).join(",")
+                    : "",
+            };
+
+            const idata = {
+                RecordID: recID || "0",
+                Code: data?.Code || "",
+                Name: data?.Name || "",
+                SortOrder: "1",
+                Disable: "N",
+                ProjectIncharge: data?.ProjectIncharge || 0,
+                ServiceMaintenanceProject: "N",
+                RoutineTasks: data?.RoutineTask || "N",
+                CurrentStatus: "Active",
+                DeleteFlag: "N",
+                Budget: "0",
+                Price: "0",
+                ByProduct: "N",
+                ProjectOwnerID: values?.ProjectOwnerID || 0,
+                Radius: values?.Radius || "0",
+                Latitude: values?.Latitude || "",
+                Longitude: values?.Longitude || "",
+                EnableOnsiteactivities: "Y",
+                AcademicYearID: YearID,
+                CompanyID,
+
+                Detail: [detailPayload],
+            };
+
+            const response = await dispatch(postData({ accessID: "tr389v1", action: "harddelete", idata }));
+
+            if (response?.payload?.Status === "Y") {
+                setTimeTablerows((prev) => prev.filter((r) => r.id !== id));
+                toast.success("Deleted successfully");
+                dispatch(getFetchData({ accessID, get: "get", recID }));
+                dispatch(
+                    staffmappingTeacherget({ ProjectID: recID, CompanyID: CompanyID }),
+                );
+            } else {
+                toast.error(response?.payload?.Msg || "Delete failed");
+            }
+        } catch (error) {
+            console.error("Delete Error:", error);
+            toast.error("Error deleting row");
+        }
+    };
+
+    const handleCancelClickTimeTable = (RecordID) => () => {
+        setRowModesModelTimeTable({
+            ...rowModesModelTimeTable,
+            [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+        const editedRow = TimeTablerows.find((row) => row.RecordID === RecordID);
+        if (editedRow.isNew) {
+            setTimeTablerows(
+                TimeTablerows.filter((row) => row.RecordID !== RecordID),
+            );
+        }
+    };
+
+    //STAFF_MAPPIMNG_V1
+    const processRowUpdateTeach_V1 = async (newRow, oldRow) => {
+        const values = formikRef.current?.values ?? {};
+        const isNew = isNaN(Number(newRow.RecordID));
+
+        if (!newRow.term?.RecordID) {
+            throw new Error("Please select a Term");
+        }
+        if (!newRow.department?.RecordID) {
+            throw new Error("Please select a Task");
+        }
+        if (!Array.isArray(newRow.area) || newRow.area.length === 0) {
+            throw new Error("Please select an Area");
+        }
+
+        if (!Array.isArray(newRow.day) || newRow.day.length === 0) {
+            throw new Error("Please select a Day");
+        }
+
+        if (!Array.isArray(newRow.slot) || newRow.slot.length === 0) {
+            throw new Error("Please select a Slot");
+        }
+        if (!newRow.assignedTo?.RecordID) {
+            throw new Error("Please select Assigned To");
+        }
+        let action = isNew ? "insert" : "update";
+        // 🔹 DETAIL (row)
+        const detailPayload = {
+            ProjectTeamRecordID: isNew ? "-1" : newRow.RecordID,
+
+            DeptID: newRow.department?.RecordID || "0",
+
+            EmpID: newRow.assignedTo?.RecordID || "0",
+            TermID: newRow.term?.RecordID || "0",
+
+            Day: Array.isArray(newRow.day)
+                ? newRow.day.map((d) => d.Name).join(",")
+                : "",
+
+            SlotID: Array.isArray(newRow.slot)
+                ? newRow.slot.map((s) => s.RecordID).join(",")
+                : "",
+
+            UnitAreaID: Array.isArray(newRow.area)
+                ? newRow.area.map((a) => a.RecordID).join(",")
+                : "",
+        };
+        const idata = {
+            RecordID: recID,
+            Code: data.Code,
+            Name: data.Name,
+            ProjectIncharge: data.ProjectIncharge || 0,
+            ProjectInchargeName: data.ProjectInchargeName || "",
+            ServiceMaintenanceProject:
+                data.ServiceMaintenanceProject,
+            RoutineTasks: data.RoutineTasks || "N",
+            SortOrder: data.SortOrder || 0,
+            CurrentStatus: data.CurrentStatus,
+            Disable: data.Disable,
+            DeleteFlag: data.DeleteFlag,
+            ByProduct: data.ByProduct, // always N for 003
+            EnableOnsiteactivities: data.EnableOnsiteactivities, // always N for 003
+            ActualCost: data.ActualCost || 0,
+            Price: data.Price || 0,
+            Budget: data.Budget || 0,
+            ScheduledCost: data.ScheduledCost || 0,
+            Finyear,
+            CompanyID,
+            ProjectOwnerID: data.ProjectOwnerID || 0,
+            Longitude: data.Longitude || 0,
+            Latitude: data.Latitude || 0,
+            Radius: data.Radius || 0,
+            AcademicYearID: params.filtertype || 0,
+            TentativeStartDate: data.TentativeStartDate || "",
+            TentativeEndDate: data.TentativeEndDate || "",
+
+            // 🔥 IMPORTANT
+            Detail: [detailPayload],
+        };
+
+        try {
+            const response = await dispatch(postData({ accessID: "tr389v1", action, idata }));
+
+            if (response?.payload?.Status === "Y") {
+                const updatedRow = {
+                    ...newRow,
+                    isNew: false,
+                };
+
+                setTimeTablerows((prev) =>
+                    prev.map((r) => (r.id === newRow.id ? updatedRow : r)),
+                );
+
+
+                dispatch(
+                    getFetchData({ accessID: "TR275", get: "get", recID }),
+                );
+                dispatch(
+                    staffmappingTeacherget({ ProjectID: recID, CompanyID: CompanyID }),
+                );
+                toast.success("Saved successfully");
+                return updatedRow;
+            } else {
+                throw new Error(response?.payload?.Msg || "Save failed");
+            }
+        } catch (err) {
+            toast.error(err.message);
+            return oldRow; // restore original values
+        }
+    };
+    const handleRowEditStopTeach_V1 = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+    const handleRowEditStopUnit_V1 = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+
+    const handleEditClickTeach_V1 = (RecordID) => () => {
+        setRowModesModelStaff({
+            ...rowModesModelstaff,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
+    };
+
+    // ✅ This is all handleSaveClickTeach needs to do — switch to View mode.
+    //    DataGrid will call processRowUpdateTeach automatically after this.
+    const handleSaveClickTeach_V1 = (RecordID) => () => {
+        setRowModesModelStaff({
+            ...rowModesModelstaff,
+            [RecordID]: { mode: GridRowModes.View },
+        });
+    };
+    const handleCancelClickTeach_V1 = (RecordID) => () => {
+        setRowModesModelStaff({
+            ...rowModesModelstaff,
+            [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+        const editedRow = staffrows.find((row) => row.RecordID === RecordID);
+        if (editedRow.isNew) {
+            setStaffrows(staffrows.filter((row) => row.RecordID !== RecordID));
+        }
+    };
+
+    //-----------------------------------STAFF_MAPPING END--------------------------------------------
 
     //UNITS
     // const handleUnitApply = async () => {
@@ -549,7 +940,7 @@ const Editproject_V1 = () => {
                 isNew: false,
             };
 
-            
+
             setunitrows((prevRows) =>
                 prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
             );
@@ -729,6 +1120,32 @@ const Editproject_V1 = () => {
             />
         );
     }
+    function EditAssignedAutocomplete(props) {
+        const { id, value, field, api, row } = props;
+        const [Assignedlookup, setAssignedookup] = useState(
+            row.assignedTo ? row.assignedTo : null,
+        );
+
+        const departmentId =
+            row?.department?.RecordID || 0;
+        const handleChange = async (newValue) => {
+            if (!newValue) return;
+            setAssignedookup(newValue);
+            await api.setEditCellValue({ id, field: "assignedTo", value: newValue });
+            api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <SprintEmpAutocomplete1
+                name="assignedTo"
+                label="assignedTo"
+                id="assignedTo"
+                value={Assignedlookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"assignedTo","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${departmentId}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
 
     const Teachcolumns = [
         {
@@ -860,6 +1277,412 @@ const Editproject_V1 = () => {
             },
         },
     ];
+
+    function EditdeptAutocompleteCellStaff(props) {
+        const { id, value, field, api, row } = props;
+        const [deptlookup, setDeptlookup] = useState(
+            row.department ? row.department : null,
+        );
+
+        const handleChange = async (newValue) => {
+            if (!newValue) return;
+            setDeptlookup(newValue);
+            setSubjectid(newValue.RecordID);
+            await api.setEditCellValue({ id, field: "department", value: newValue });
+            api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <SprintEmpAutocomplete1
+                name="department"
+                label="department"
+                id="department"
+                value={deptlookup}
+                onChange={handleChange}
+                // url={`${listViewurl}?data={"Query":{"AccessID":"2187","ScreenName":"Department","Filter":"Suborskill='A' AND CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2200","ScreenName":"Department","Filter":"ProjectID=${recID} AND CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
+
+    //Area
+    function EditareaAutocomplete(props) {
+        const { id, field, api, row } = props;
+
+        // const [arealookup, setArealookup] = useState(row.area ? row.area : []);
+        const [arealookup, setArealookup] = useState(
+            Array.isArray(row.area) ? row.area : [],
+        );
+
+        // const handleChange = async (newValue) => {
+        //   if (!newValue) return;
+
+        //   setArealookup(newValue || []);
+
+        //   await api.setEditCellValue({
+        //     id,
+        //     field: "area",
+        //     value: newValue,
+        //   });
+
+        // //   api.stopCellEditMode({ id, field });
+        // };
+        const handleChange = async (event, newValue) => {
+            if (!Array.isArray(newValue)) {
+                newValue = [];
+            }
+
+            setArealookup(newValue);
+
+            await api.setEditCellValue({
+                id,
+                field: "area",
+                value: newValue,
+            });
+
+            // ❗ Optional (see Fix 3)
+            // api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <MultiFormikOptimizedAutocompletestaff
+                name="area"
+                label="area"
+                id="area"
+                value={arealookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2199","ScreenName":"Area","Filter":"CompanyID='${CompanyID}' AND ProjectID='${recID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
+
+    //Day
+    function EditareaAutocompleteday(props) {
+        const { id, field, api, row } = props;
+
+        const [daylookup, setDaylookup] = useState(
+            Array.isArray(row.day) ? row.day : [],
+        );
+
+        // const handleChange = async (newValue) => {
+        //   if (!newValue) return;
+
+        //   setDaylookup(newValue || []);
+
+        //   await api.setEditCellValue({
+        //     id,
+        //     field: "day",
+        //     value: newValue,
+        //   });
+
+        //   api.stopCellEditMode({ id, field });
+        // };
+        const handleChange = async (event, newValue) => {
+            if (!Array.isArray(newValue)) {
+                newValue = [];
+            }
+
+            setDaylookup(newValue);
+
+            await api.setEditCellValue({
+                id,
+                field: "day",
+                value: newValue,
+            });
+
+            // ❗ Optional (see Fix 3)
+            // api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <MultiFormikOptimizedAutocompletestaff
+                name="day"
+                label="day"
+                id="day"
+                value={daylookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2147","ScreenName":"Day","Filter":"","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
+
+    //slot
+    function EditareaAutocompleteSlot(props) {
+        const { id, field, api, row } = props;
+        const [slotlookup, setSlotlookup] = useState(
+            Array.isArray(row.slot) ? row.slot : [],
+        );
+
+        // const handleChange = async (newValue) => {
+        //   if (!newValue) return;
+
+        //   setSlotlookup(newValue || []);
+
+        //   await api.setEditCellValue({
+        //     id,
+        //     field: "slot",
+        //     value: newValue,
+        //   });
+
+        //   api.stopCellEditMode({ id, field });
+        // };
+        const handleChange = async (event, newValue) => {
+            if (!Array.isArray(newValue)) {
+                newValue = [];
+            }
+
+            setSlotlookup(newValue);
+
+            await api.setEditCellValue({
+                id,
+                field: "slot",
+                value: newValue,
+            });
+
+            // ❗ Optional (see Fix 3)
+            // api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <MultiFormikOptimizedAutocompletestaff
+                name="slot"
+                label="slot"
+                id="slot"
+                value={slotlookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2201","ScreenName":"Slot","Filter":"SlotGroupID=${data?.SlotGroupID || 0}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
+
+    //Terms
+    function EditdeptAutocompleteCellTerm(props) {
+        const { id, value, field, api, row } = props;
+        const [termlookup, setTermlookup] = useState(
+            row.term ? row.term : null,
+        );
+
+        const handleChange = async (newValue) => {
+            if (!newValue) return;
+            setTermlookup(newValue);
+            await api.setEditCellValue({ id, field: "term", value: newValue });
+            api.stopCellEditMode({ id, field });
+        };
+
+        return (
+            <SprintEmpAutocomplete1
+                name="term"
+                label="term"
+                id="term"
+                value={termlookup}
+                onChange={handleChange}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2169","ScreenName":"Department","Filter":"AcademicYearID='${YearID}' AND CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+            />
+        );
+    }
+    const Teachcolumns_v1 = [
+        {
+            field: "SlNo",
+            headerName: "SL#",
+            align: "right",
+            headerAlign: "center",
+            width: 60,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            valueGetter: (params) => {
+                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+                const totalVisibleRows = params.api.getAllRowIds().length;
+                const totalAllRows = params.api.getRowsCount();
+                if (totalVisibleRows < totalAllRows) {
+                    return index + 1;
+                } else {
+                    return page * pageSize + index + 1;
+                }
+            },
+        },
+        // {
+        //     headerName: "RecordID",
+        //     field: "RecordID",
+        //     width: 100,
+        //     align: "left",
+        //     headerAlign: "center",
+        //     hide: true,
+        // },
+        // {
+        //     headerName: "ProjectTeamRecordID",
+        //     field: "ProjectTeamsID",
+        //     width: 100,
+        //     align: "left",
+        //     headerAlign: "center",
+        //     hide: true,
+        // },
+        {
+            field: "term",
+            headerName: (
+                <span>
+                    Term <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 230,
+            hide: false,
+            editable: true,
+            sortable: false,
+            renderCell: (params) => params.value?.Name || "",
+            renderEditCell: (params) => <EditdeptAutocompleteCellTerm {...params} />,
+        },
+        {
+            field: "department",
+            headerName: (
+                <span>
+                    Task <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 230,
+            hide: false,
+            editable: true,
+            sortable: false,
+            renderCell: (params) => params.value?.Name || "",
+            renderEditCell: (params) => <EditdeptAutocompleteCellStaff {...params} />,
+        },
+        {
+            field: "area",
+            headerName: (
+                <span>
+                    Area <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 400,
+            // flex: 1,
+            hide: false,
+            editable: true,
+            sortable: false,
+            //   renderCell: (params) => params.value?.Name || "",
+            renderCell: (params) =>
+                Array.isArray(params.value)
+                    ? params.value.map((v) => v.Name).join(", ")
+                    : "",
+            // renderCell: (params) => params.value || "",
+            renderEditCell: (params) => <EditareaAutocomplete {...params} />,
+        },
+        {
+            field: "day",
+            headerName: (
+                <span>
+                    Day <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 230,
+            hide: false,
+            editable: true,
+            sortable: false,
+            renderCell: (params) =>
+                Array.isArray(params.value)
+                    ? params.value.map(x => x.Name).join(", ")
+                    : "",
+            // renderCell: (params) => params.value || "",
+            renderEditCell: (params) => <EditareaAutocompleteday {...params} />,
+        },
+        {
+            field: "slot",
+            headerName: (
+                <span>
+                    Slot <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 300,
+            hide: false,
+            editable: true,
+            sortable: false,
+            renderCell: (params) =>
+                Array.isArray(params.value)
+                    ? params.value.map(x => x.Name).join(", ")
+                    : "",
+            // renderCell: (params) => params.value || "",
+            renderEditCell: (params) => <EditareaAutocompleteSlot {...params} />,
+        },
+        {
+            field: "assignedTo",
+            headerName: (
+                <span>
+                    Assigned To <span style={{ color: "red" }}>*</span>
+                </span>
+            ),
+            headerAlign: "center",
+            width: 620,
+            hide: false,
+            editable: true,
+            sortable: false,
+            renderCell: (params) => (
+                <div
+                    style={{
+                        height: "100%",
+                        maxHeight: "38px",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                        width: "100%",
+                        whiteSpace: "normal",
+                        wordBreak: "break-word",
+                        lineHeight: "18px",
+                        paddingTop: "5px",
+                    }}
+                >
+                    {params.value?.Name || ""}
+                </div>
+            ),
+            renderEditCell: (params) => <EditAssignedAutocomplete {...params} />,
+        },
+        {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            width: 165,
+            cellClassName: "actions",
+            getActions: ({ id }) => {
+                const isInEditMode =
+                    rowModesModelTimeTable[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            material={{ sx: { color: "primary.main" } }}
+                            onClick={handleSaveClickTimeTable(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            className="textPrimary"
+                            onClick={handleCancelClickTimeTable(id)}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={handleEditClickTimeTable(id)}
+                        color="primary"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteClickTimeTable(id)}
+                        color="error"
+                    />,
+                ];
+            },
+        },
+    ];
     const unitColumns = [
         {
             field: "Slno",
@@ -884,6 +1707,7 @@ const Editproject_V1 = () => {
         {
             field: "Subject",
             headerName: "Subject",
+            headerAlign: "center",
             flex: 1,
             editable: true,
             renderCell: (params) =>
@@ -897,12 +1721,14 @@ const Editproject_V1 = () => {
         {
             field: "Description",
             headerName: "Units/Area",
+            headerAlign: "center",
             flex: 2,
             editable: true,
         },
         {
             field: "actions",
             type: "actions",
+            headerAlign: "center",
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModelunit[id]?.mode === GridRowModes.Edit;
 
@@ -943,6 +1769,9 @@ const Editproject_V1 = () => {
     };
     const handleRowModesModelChangeUnit = (newRowModesModel) => {
         setRowModesModelunit(newRowModesModel);
+    };
+    const handleRowModesModelChangeTimeTable = (newRowModesModel) => {
+        setRowModesModelTimeTable(newRowModesModel);
     };
 
     const isHeaderDisabled = teachrows.length > 0;
@@ -1031,6 +1860,21 @@ const Editproject_V1 = () => {
             setPage(0);
         }
     }, [data]);
+
+    // useEffect(() => {
+    //     if (mode !== "A" && staffmappingGetData?.Terms) {
+    //         const formattedRows = staffmappingGetData.Terms.map((item) => ({
+    //             id: Number(item.id),
+    //             id: Number(item.id),
+    //             department: { RecordID: item.DepartmentID, Name: item.DeptName },
+    //             // Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
+    //         }));
+
+    //         setTeachrows(formattedRows);
+    //         setRowModesModelStaff({});
+    //         setPage(0);
+    //     }
+    // }, [data]);
 
     useEffect(() => {
         if (show == "0") {
@@ -1221,6 +2065,16 @@ const Editproject_V1 = () => {
                 getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
             );
         }
+        if (event.target.value == "6") {
+            dispatch(
+                getFetchData({ accessID: "TR275", get: "get", recID }),
+            );
+            dispatch(
+                staffmappingTeacherget({ ProjectID: recID, CompanyID: CompanyID }),
+            )
+            setRowModesModelTimeTable({});
+        }
+
         if (event.target.value == "5") {
             // dispatch(UnitFetchData({ ProjectID: recID, CompanyID }));
             dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -1760,6 +2614,67 @@ const Editproject_V1 = () => {
         );
     }
 
+    function EditToolbarteachstaff(props) {
+        const {
+            setTimeTablerows,
+            setRowModesModelTimeTable,
+            isRowEditing,
+            pageSize,
+            setPage,
+        } = props;
+        const [isAdding, setIsAdding] = useState(false);
+
+        const handleClickstaff = () => {
+            setIsAdding(true);
+            const id = nanoid();
+            const newRow = {
+                id,
+                id: id,
+                term: null,
+                department: null,
+                area: [],
+                day: [],
+                slot: [],
+                assignedTo: null,
+                isNew: true,
+            };
+
+            setTimeTablerows((oldRows) => {
+                const updatedRows = [...oldRows, newRow];
+                const newPage = Math.floor((updatedRows.length - 1) / pageSize);
+                setPage(newPage);
+                return updatedRows;
+            });
+
+            setTimeout(() => {
+                setRowModesModelTimeTable((oldModel) => ({
+                    ...oldModel,
+                    [id]: { mode: GridRowModes.Edit, fieldToFocus: "term" },
+                }));
+                setIsAdding(false);
+            }, 100);
+        };
+
+        return (
+            <Button
+                disabled={isRowEditing || isAdding}
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClickstaff}
+                sx={{
+                    color: "#1a0ce2",
+                    textTransform: "none",
+                    fontWeight: 400,
+                    fontSize: "0.875rem",
+                    "&:hover": { backgroundColor: "#E1F5EE" },
+                    "&.Mui-disabled": { color: "#9FE1CB" },
+                }}
+            >
+                Add Record ({data.Project})
+            </Button>
+        );
+    }
+
     function EditToolbarteach(props) {
         const {
             setTeachrows,
@@ -1920,6 +2835,15 @@ const Editproject_V1 = () => {
                                     Staff Mapping ({data.Project})
                                 </Typography>
                             )}
+                            {show == "6" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Staff Mapping Activities({data.Project})
+                                </Typography>
+                            )}
                             {show == "5" && (
                                 <Typography
                                     variant="h5"
@@ -1946,9 +2870,14 @@ const Editproject_V1 = () => {
                                     <MenuItem value="0">
                                         {getBusinessCaption("ProjectTitle", "Project")}
                                     </MenuItem>
-                                    <MenuItem value="5">Units/Area</MenuItem>
-                                    {is003Subscription === true && data.RoutineTasks == "N" ? (
+                                    {is003Subscription === true ? (
+                                        <MenuItem value="5">Units/Area</MenuItem>
+                                    ) : null}
+                                    {is003Subscription === true && data.RoutineTasks === "N" ? (
                                         <MenuItem value="4">Staff Mapping</MenuItem>
+                                    ) : null}
+                                    {is003Subscription === true && data.RoutineTasks === "Y" ? (
+                                        <MenuItem value="6">Time Table</MenuItem>
                                     ) : null}
                                     {is003Subscription === false ? (
                                         <MenuItem value="3">Units</MenuItem>
@@ -2988,6 +3917,111 @@ const Editproject_V1 = () => {
                                                 toolbar: {
                                                     setTeachrows,
                                                     setRowModesModelteach,
+                                                    isRowEditing,
+                                                    setPage,
+                                                    pageSize,
+                                                },
+                                            }}
+                                            rowsPerPageOptions={[5, 10, 20]}
+                                            getRowClassName={(params) =>
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
+                                            }
+                                            pagination
+                                            pageSize={pageSize}
+                                            page={page}
+                                            onPageSizeChange={(newPageSize) =>
+                                                setPageSize(newPageSize)
+                                            }
+                                            onPageChange={(newPage) => setPage(newPage)}
+                                        />
+                                    </Box>
+                                    <Box display="flex" justifyContent="flex-end" padding={1}>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen("0")}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : null}
+            {show == "6" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik initialValues={InitialValue} enableReinitialize={true}>
+                        {({ values, handleBlur, handleSubmit, handleChange }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 1",
+                                        },
+                                    }}
+                                >
+                                    <Box
+                                        height="60vh"
+                                        m={1}
+                                        sx={{
+                                            "& .MuiDataGrid-root": { border: "none" },
+                                            "& .MuiDataGrid-cell": { borderBottom: "none" },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
+                                            "& .odd-row": { backgroundColor: "" },
+                                            "& .even-row": { backgroundColor: "#D3D3D3" },
+                                        }}
+                                    >
+                                        <DataGrid
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                },
+                                            }}
+                                            rowHeight={35}
+                                            headerHeight={dataGridHeaderFooterHeight}
+                                            rows={TimeTablerows}
+                                            columns={Teachcolumns_v1}
+                                            loading={staffmappingGetDataloading}
+                                            editMode="row"
+                                            disableSelectionOnClick
+                                            rowModesModel={rowModesModelTimeTable}
+                                            onRowModesModelChange={handleRowModesModelChangeTimeTable}
+                                            onRowEditStop={handleRowEditStopTimeTable}
+                                            processRowUpdate={processRowUpdateTeach_V1}
+                                            getRowId={(row) => row.id}
+                                            disableRowSelectionOnClick
+                                            experimentalFeatures={{ newEditingApi: true }}
+                                            onProcessRowUpdateError={(error) => {
+                                                console.error(
+                                                    "Row update validation failed:",
+                                                    error.message,
+                                                );
+                                                toast.error(error.message);
+                                            }}
+                                            components={{ Toolbar: EditToolbarteachstaff }}
+                                            componentsProps={{
+                                                toolbar: {
+                                                    setTimeTablerows,
+                                                    setRowModesModelTimeTable,
                                                     isRowEditing,
                                                     setPage,
                                                     pageSize,

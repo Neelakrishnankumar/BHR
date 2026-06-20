@@ -7740,12 +7740,33 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             {(params.row.Description === "Teaching Staff" ||
               params.row.Description === "Staff") && (
-                <Tooltip title="Teacher Productivity">
+                // <Tooltip title="Teacher Productivity">
+                <Tooltip title="Productivity Report">
                   <IconButton
                     color="info"
                     size="small"
                     onClick={() =>
                       navigate(`/Apps/TeacherOccupancy/${params.row.RecordID}`, {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Description,
+                          Classification: params.row.Description,
+                          CompanyID: params.row.CompanyID,
+                        },
+                      })
+                    }
+                  >
+                    <SensorOccupiedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            {(params.row.Description === "Non Teaching Staff") && (
+                <Tooltip title="Productivity Report">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
                         state: {
                           ...state,
                           BreadCrumb1: params.row.Description,
