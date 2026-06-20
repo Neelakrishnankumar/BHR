@@ -215,6 +215,8 @@ export function fetchApidata(emailID, password, license, company, year) {
           SubscriptionID: success.data.SubscriptionID,
           Expiryin: success.data.Expiryin,
           CompanyAutoCode: success.data.CompanyAutoCode,
+          companygroupflag: success.data.companygroupflag,
+          companygroup: success.data.companygroup,
           CompanyGraceTime: success.data.CompanyGraceTime,
           CompanySessionTimeOut: success.data.CompanySessionTimeOut,
           ClassificationData: success.data.ClassificationData,

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const initialState = {
   Data: {},
-  Department:[],
+  Department: [],
   Status: "",
   msg: "",
   loading: false,
@@ -186,10 +186,10 @@ const initialState = {
   paySlipdata: [],
   paySlipstatus: "",
   paySliploading: false,
-//CRM_ITEM_STOCK_ANALYTICS
-Itemstockstatus: "",
- itemstockDataAnalyticsLoading: false,
-  itemstockDataAnalytics:[],
+  //CRM_ITEM_STOCK_ANALYTICS
+  Itemstockstatus: "",
+  itemstockDataAnalyticsLoading: false,
+  itemstockDataAnalytics: [],
 
   //ORDER ITEM --> REPLACEMENT QTY
   replacementQtyGetdata: {},
@@ -1434,7 +1434,7 @@ export const EventsgetData = createAsyncThunk(
       accessid: accessID,
       action: get,
       recid: recID,
-      Type:Type
+      Type: Type
     };
 
     console.log(
@@ -2216,15 +2216,15 @@ export const postData = createAsyncThunk(
 );
 export const EventspostData = createAsyncThunk(
   "EventspostData/post",
-  async ({ accessID, action, idata, Type,CompanyID }) => {
+  async ({ accessID, action, idata, Type, CompanyID }) => {
     const url = store.getState().globalurl.apiUrl;
 
     const data = {
       accessid: accessID,
       action: action,
       data: idata,
-      Type:Type,
-      CompanyID:CompanyID
+      Type: Type,
+      CompanyID: CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -3051,6 +3051,26 @@ export const PublishEvent = createAsyncThunk(
     return response.data;
   }
 );
+export const PublishEventCompanies = createAsyncThunk(
+  "PublishEventComp/Post",
+  async ({ data }) => {
+    const url = store.getState().globalurl.EventPublishedPost;
+
+    const payload = {
+      CompanyID: data.CompanyID,
+      EventCategoryID: data.EventCategoryID,
+    };
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
 export const TimeTableGenerateget = createAsyncThunk(
   "Standard/TimeTableGenerateget",
   async (payload, { rejectWithValue, getState }) => {
@@ -3613,7 +3633,7 @@ export const getApiSlice = createSlice({
         state.getLoading = false;
         // toast.error("Something Went Wrong");
       })
-      
+
 
       .addCase(getFetchCashData.pending, (state, action) => {
         state.Status = "idle";
@@ -3636,7 +3656,7 @@ export const getApiSlice = createSlice({
         state.getLoading = true;
         state.msg = "Loading...";
       })
- 
+
       .addCase(getFetchData_v1.fulfilled, (state, action) => {
         console.log("API SUCCESS", action.payload);
         state.Status = "success";
@@ -3644,9 +3664,9 @@ export const getApiSlice = createSlice({
         state.Data = action.payload?.Data || {};
         state.Department = action.payload || [];
         console.log(action.payload, "------getfetch department in formapi");
-       
+
       })
- 
+
       .addCase(getFetchData_v1.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;

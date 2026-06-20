@@ -156,7 +156,7 @@ const Editdebitcash = () => {
         transactionID: data.TransactionID || "",
         description: mode === "E" ? data.Description : "",
         amount: mode === "E" ? data.Amount : "",
-        balamount: data.BalanceAmount || "",
+        balamount: data.BalanceAmount || data.InHandAmount || "",
 
     };
 
