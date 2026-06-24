@@ -493,7 +493,7 @@ const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
       <View style={styles.overviewCard}>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{apiData?.Staff?.length}</Text>
-          <Text style={styles.statLabel}>Total Non Teachers</Text>
+          <Text style={styles.statLabel}>Total Non Teaching Staffs</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={[styles.statValue, styles.statValueOccupied]}>{toHM(totalOccupied)}</Text>
@@ -505,10 +505,10 @@ const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
         </View>
       </View>
 
-      <Text style={styles.sectionLabel}>Non Teacher-wise Breakdown</Text>
+      <Text style={styles.sectionLabel}>Non Teaching Staff-wise Breakdown</Text>
       <View style={styles.overallSummaryTable}>
         <View style={styles.overallSummaryHeaderRow}>
-          <View style={styles.colTeacher}><Text style={styles.overallHeaderText}>Non Teacher</Text></View>
+          <View style={styles.colTeacher}><Text style={styles.overallHeaderText}>Non Teaching Staff</Text></View>
           <View style={styles.colSubjects}><Text style={styles.overallHeaderText}>Activities</Text></View>
           <View style={styles.colTotal}><Text style={styles.overallHeaderText}>Total Hrs</Text></View>
           <View style={styles.colOccupied}><Text style={styles.overallHeaderText}>Occupied</Text></View>
@@ -538,7 +538,7 @@ const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
 
         <View style={styles.grandTotalRow}>
           <View style={styles.colTeacher}><Text style={styles.grandTotalText}>Grand Total</Text></View>
-          <View style={styles.colSubjects}><Text style={styles.grandTotalText}>{summaries.length} Non Teachers</Text></View>
+          <View style={styles.colSubjects}><Text style={styles.grandTotalText}>{summaries.length} Non Teaching Staffs</Text></View>
           <View style={styles.colTotal}><Text style={styles.grandTotalText}>—</Text></View>
           <View style={styles.colOccupied}><Text style={styles.grandTotalOccupied}>{toHM(totalOccupied)}</Text></View>
           <View style={styles.colFree}><Text style={styles.grandTotalFree}>{toHM(totalFree)}</Text></View>
@@ -551,7 +551,7 @@ const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
           marginTop: 20,
         }}
       >
-        <Text style={styles.subjectBreakdownTitle}>Activity Details per Non Teacher</Text>
+        <Text style={styles.subjectBreakdownTitle}>Activity Details per Non Teaching Staff</Text>
         {summaries.map((s) => (
           <View key={s.EmployeeID}
             // style={styles.teacherSubjectBlock}

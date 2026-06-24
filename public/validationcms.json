@@ -588,5 +588,10 @@
     "depositdate": "Please enter the Deposit Date",
     "amount": "Please enter the Amount",
     "description": "Please enter the Description"   
+},
+"NonTeachingOccupancy": {
+    "Teacher": "Please select Non Teaching Staff",
+    "terms": "Please select Term",
+    "Slotgroup": "Please select Slot Group"   
 }
 }

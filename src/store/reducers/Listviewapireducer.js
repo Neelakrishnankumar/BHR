@@ -1814,7 +1814,8 @@ export const fetchListview =
                 sortable: false,
                 filterable: false,
                 headerAlign: "center",
-                align: "center",
+                // align: "center",
+                align: "left",
                 disableColumnMenu: true,
                 disableExport: true,
                 renderCell: (params) => {
@@ -1892,7 +1893,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {is003Subscription && (
+                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
                         <Link
                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                           state={{
@@ -1910,6 +1911,15 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                      )}
+                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
+                          <Tooltip title="Time Table">
+                             <span style={{ cursor: "pointer" }}>
+    <IconButton color="info" size="small" disabled>
+      <DatasetLinkedIcon />
+    </IconButton>
+  </span>
+                          </Tooltip>
                       )}
 
                       {!isSeedEditable && (

@@ -23,7 +23,7 @@ import TeacherOccupancyPDF from "../pdf/TeacherOccupancyPDF";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { getConfig } from "../../../config";
 import NonTeacherOccupancyPDF from "../pdf/NonTeacherOccupancyReport";
-
+import * as Yup from "yup";
 // ─── COLOUR PALETTE ───────────────────────────────────────────────────────────
 const SUBJECT_COLORS = [
   { bg: "#FFFBEB", border: "#F59E0B", text: "#92400E" },
@@ -340,12 +340,36 @@ const NonTeacherOccupancy = () => {
   const [apiData, setApiData] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
   const [footerHeight, setFooterHeight] = useState(60);
+  const [validationSchema, setValidationSchema] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [errorMsgData, setErrorMsgData] = useState(null);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   console.log("HeaderImg:", HeaderImg);
   const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+         Teacher: Yup.array()
+  .min(1, data.NonTeachingOccupancy.Teacher)
+  .required(data.NonTeachingOccupancy.Teacher),
+          terms: Yup.object().nullable().required(data.NonTeachingOccupancy.terms),
+          Slotgroup: Yup.object().nullable().required(data.NonTeachingOccupancy.Slotgroup),
+        };
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     if (!FooterImg) return;
 
@@ -432,7 +456,7 @@ const NonTeacherOccupancy = () => {
                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
                 <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }} onClick={() => navigate(-1)}>
-                  Non Teacher Productivity
+                  Non Teaching Staff Productivity
                 </Typography>
               </Breadcrumbs>
             )}
@@ -454,11 +478,13 @@ const NonTeacherOccupancy = () => {
 
       <Paper elevation={3} sx={{ margin: "10px", p: 0 }}>
         <Formik
-          initialValues={{ terms: null, Teacher: [] }}
+          initialValues={{ terms: null, Teacher: [], Slotgroup: null }}
           onSubmit={(values) => { setTimeout(() => handleApply(values), 100); }}
+          validationSchema={validationSchema}
           enableReinitialize
         >
-          {({ values, handleSubmit, setFieldValue, resetForm }) => (
+          {({ values, handleSubmit, setFieldValue, resetForm, errors,
+            touched, }) => (
             <form onSubmit={handleSubmit}>
               {/* ── FILTERS ── */}
               <Box
@@ -477,7 +503,7 @@ const NonTeacherOccupancy = () => {
                   name="Teacher"
                   label={
                     <>
-                      Non Teachers
+                      Non Teaching Staffs
                       <span style={{ color: "red", fontSize: "20px" }}>
                         *
                       </span>
@@ -497,6 +523,8 @@ const NonTeacherOccupancy = () => {
                       Any: "", VerticalLicense: is003Subscription ? (sliceSubcriptionCode || "") : "",
                     },
                   })}`}
+                  error={!!touched.Teacher && !!errors.Teacher}
+                  helperText={touched.Teacher && errors.Teacher}
                 />
 
                 <CheckinAutocomplete
@@ -509,7 +537,7 @@ const NonTeacherOccupancy = () => {
                       </span>
                     </>
                   }
-                  id="terms"
+                  id=""
                   value={values.terms}
                   onChange={(newValue) => {
                     if (newValue) {
@@ -536,6 +564,8 @@ const NonTeacherOccupancy = () => {
                       VerticalLicense: sliceSubcriptionCode || "",
                     },
                   })}`}
+                  error={!!touched.terms && !!errors.terms}
+                  helperText={touched.terms && errors.terms}
                 />
 
                 <CheckinAutocomplete
@@ -550,13 +580,17 @@ const NonTeacherOccupancy = () => {
                   }
                   id="Slotgroup"
                   value={values.Slotgroup}
-                  onChange={(newValue) =>
-                    setFieldValue("Slotgroup", {
-                      RecordID: newValue.RecordID,
-                      Code: newValue.Code,
-                      Name: newValue.Name,
-                    })
-                  }
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      setFieldValue("Slotgroup", {
+                        RecordID: newValue.RecordID,
+                        Code: newValue.Code,
+                        Name: newValue.Name,
+                      });
+                    } else {
+                      setFieldValue("Slotgroup", null);
+                    }
+                  }}
                   url={`${listViewurl}?data=${JSON.stringify({
                     Query: {
                       AccessID: "2203",
@@ -572,6 +606,8 @@ const NonTeacherOccupancy = () => {
                       VerticalLicense: sliceSubcriptionCode || "",
                     },
                   })}`}
+                  error={!!touched.Slotgroup && !!errors.Slotgroup}
+                  helperText={touched.Slotgroup && errors.Slotgroup}
                 />
               </Box>
 
@@ -603,13 +639,13 @@ const NonTeacherOccupancy = () => {
                           Imageurl: baseurlUAAM,
                           HeaderImg: HeaderImg,
                           FooterImg: FooterImg,
-                          TitleName: "Non Teacher Productivity Report"
+                          TitleName: "Non Teaching Staff Productivity Report"
                         }}
                         footerHeight={footerHeight}
-                        reportTitle="Non Teacher Productivity Report"
+                        reportTitle="Non Teaching Staff Productivity Report"
                       />
                     }
-                    fileName={`Non_Teacher_Productivity_Report_${getFormattedDate()}.pdf`}
+                    fileName={`NonTeaching Staff_Productivity_Report_${getFormattedDate()}.pdf`}
                     style={{ color: "#d32f2f", cursor: "pointer" }}
                   >
                     {({ loading }) =>

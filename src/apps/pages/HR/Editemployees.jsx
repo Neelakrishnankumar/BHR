@@ -5410,7 +5410,8 @@ return (
                   <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
                   {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
                   {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
-                  {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
+                  {/* {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null} */}
+                  <MenuItem value={19}>SOP Configuration</MenuItem>
                   {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                   <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
                   {!isStudentClassification && (<MenuItem value={22}>Resignation</MenuItem>)}
@@ -9349,9 +9350,12 @@ return (
                 </Box>
 
                 <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                {is003Subscription === false ? (
                 <Typography variant="h5" padding={1}>
                   {is003Subscription === false ? "Project Details" : "Default Standard/Acivities Details"}
-                </Typography>
+                </Typography>):(<Typography variant="h5" padding={1}>
+                  Details
+                </Typography>)}
                 <Box
                   display="grid"
                   gap={formGap}
@@ -9364,6 +9368,8 @@ return (
                     },
                   }}
                 >
+                  {!is003Subscription && (
+                      <>
                   <FormControl
                     sx={{
                       //gridColumn: "span 2",
@@ -9372,6 +9378,7 @@ return (
                       alignItems: "center",
                     }}
                   >
+                    
                     <CheckinAutocomplete
                       id="project"
                       name="project"
@@ -9413,6 +9420,7 @@ return (
                     <MenuItem value="Project">{getBusinessCaption("Project", "Project")}</MenuItem>
                     <MenuItem value="Marketing">Marketing</MenuItem>
                   </TextField>
+                </>)}
                   <Box>
                     <Field
                       //  size="small"

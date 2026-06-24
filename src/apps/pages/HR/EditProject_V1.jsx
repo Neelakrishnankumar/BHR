@@ -45,6 +45,7 @@ import {
     postApidata,
     postData,
     staffmappingTeacherget,
+    TaskProcess,
     UnitFetchData,
 } from "../../../store/reducers/Formapireducer";
 import * as Yup from "yup";
@@ -95,7 +96,11 @@ import AddIcon from "@mui/icons-material/Add";
 import { GridRowEditStopReasons } from "@mui/x-data-grid";
 import { nanoid } from "@reduxjs/toolkit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 const Editproject_V1 = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
@@ -182,13 +187,17 @@ const Editproject_V1 = () => {
     const [selectedSubjectID, setSelectedSubjectID] = useState(0);
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [rowModesModelunit, setRowModesModelunit] = React.useState({});
-    //UNIT AREA MAPPING
+    //TIME TABLE MAPPING
     const [TimeTablerows, setTimeTablerows] = useState([]);
     console.log("🚀 ~ Editproject_V1 ~ TimeTablerows:", TimeTablerows)
     const [rowModesModelTimeTable, setRowModesModelTimeTable] = React.useState(
         {},
     );
+    const [searchText, setSearchText] = useState("");
 
+    //TIME TABLE - MODAL POP UP
+    const [openProcessModal, setOpenProcessModal] = useState(false);
+    const [selectedTerm, setSelectedTerm] = useState(null);
     const isRowEditing = Object.values(rowModesModelteach).some(
         (row) => row.mode === GridRowModes.Edit,
     );
@@ -249,6 +258,32 @@ const Editproject_V1 = () => {
             setTimeTablerows(formattedRows);
         }
     }, [show, staffmappingGetData]);
+
+    const filteredRows = useMemo(() => {
+        if (!searchText.trim()) return TimeTablerows;
+
+        const search = searchText.toLowerCase();
+
+        return TimeTablerows.filter((row) => {
+            return (
+                row.term?.Name?.toLowerCase().includes(search) ||
+                row.department?.Name?.toLowerCase().includes(search) ||
+                row.assignedTo?.Name?.toLowerCase().includes(search) ||
+
+                row.area?.some((x) =>
+                    x.Name?.toLowerCase().includes(search)
+                ) ||
+
+                row.day?.some((x) =>
+                    x.Name?.toLowerCase().includes(search)
+                ) ||
+
+                row.slot?.some((x) =>
+                    x.Name?.toLowerCase().includes(search)
+                )
+            );
+        });
+    }, [TimeTablerows, searchText]);
     const validateRowTT = (row) => {
         if (!row.Department) return "Please Select the Subject";
         if (!row.Teacher) return "Please Select the Teacher";
@@ -635,6 +670,7 @@ const Editproject_V1 = () => {
             // 🔹 DETAIL for delete
             const detailPayload = {
                 ProjectTeamRecordID: row.RecordID,
+                RecordID: row.id,
 
                 DeptID: row.department?.RecordID || "0",
 
@@ -740,6 +776,7 @@ const Editproject_V1 = () => {
         // 🔹 DETAIL (row)
         const detailPayload = {
             ProjectTeamRecordID: isNew ? "-1" : newRow.RecordID,
+            RecordID: isNew ? "-1" : newRow.id,
 
             DeptID: newRow.department?.RecordID || "0",
 
@@ -1051,7 +1088,7 @@ const Editproject_V1 = () => {
                 id="Department"
                 value={deptlookup}
                 onChange={handleChange}
-                url={`${listViewurl}?data={"Query":{"AccessID":"2187","ScreenName":"Department","Filter":"CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+                url={`${listViewurl}?data={"Query":{"AccessID":"2187","ScreenName":"Department","Filter":"Suborskill='S' AND CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
             />
         );
     }
@@ -1490,15 +1527,22 @@ const Editproject_V1 = () => {
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            valueGetter: (params) => {
-                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-                const totalVisibleRows = params.api.getAllRowIds().length;
-                const totalAllRows = params.api.getRowsCount();
-                if (totalVisibleRows < totalAllRows) {
-                    return index + 1;
-                } else {
-                    return page * pageSize + index + 1;
-                }
+            // valueGetter: (params) => {
+            //     const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+            //     const totalVisibleRows = params.api.getAllRowIds().length;
+            //     const totalAllRows = params.api.getRowsCount();
+            //     if (totalVisibleRows < totalAllRows) {
+            //         return index + 1;
+            //     } else {
+            //         return page * pageSize + index + 1;
+            //     }
+            // },
+            renderCell: (params) => {
+                const index = TimeTablerows.findIndex(
+                    (row) => row.id === params.row.id
+                );
+
+                return page * pageSize + index + 1;
             },
         },
         // {
@@ -1529,6 +1573,7 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
+            // valueGetter: (params) => params.row.term?.Name || "",
             renderCell: (params) => params.value?.Name || "",
             renderEditCell: (params) => <EditdeptAutocompleteCellTerm {...params} />,
         },
@@ -1544,6 +1589,7 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
+            // valueGetter: (params) => params.value?.Name || "",
             renderCell: (params) => params.value?.Name || "",
             renderEditCell: (params) => <EditdeptAutocompleteCellStaff {...params} />,
         },
@@ -1560,7 +1606,10 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
-            //   renderCell: (params) => params.value?.Name || "",
+            // valueGetter:(params) =>
+            //     Array.isArray(params.value)
+            //         ? params.value.map((v) => v.Name).join(", ")
+            //         : "",
             renderCell: (params) =>
                 Array.isArray(params.value)
                     ? params.value.map((v) => v.Name).join(", ")
@@ -1580,6 +1629,10 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
+            // valueGetter: (params) =>
+            //     Array.isArray(params.value)
+            //         ? params.value.map(x => x.Name).join(", ")
+            //         : "",
             renderCell: (params) =>
                 Array.isArray(params.value)
                     ? params.value.map(x => x.Name).join(", ")
@@ -1599,6 +1652,10 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
+            // valueGetter:  (params) =>
+            //     Array.isArray(params.value)
+            //         ? params.value.map(x => x.Name).join(", ")
+            //         : "",
             renderCell: (params) =>
                 Array.isArray(params.value)
                     ? params.value.map(x => x.Name).join(", ")
@@ -1618,6 +1675,7 @@ const Editproject_V1 = () => {
             hide: false,
             editable: true,
             sortable: false,
+            // valueGetter: (params) => params.value?.Name || "",
             renderCell: (params) => (
                 <div
                     style={{
@@ -2061,6 +2119,7 @@ const Editproject_V1 = () => {
             );
         }
         if (event.target.value == "4") {
+            setRowModesModelteach({});
             dispatch(
                 getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
             );
@@ -2081,6 +2140,7 @@ const Editproject_V1 = () => {
             // setSelectedSubjectID(0);
             setunitrows([]);
             setRowModesModelunit({});
+            setRowModesModelteach({});
         }
     };
 
@@ -2621,6 +2681,7 @@ const Editproject_V1 = () => {
             isRowEditing,
             pageSize,
             setPage,
+            showQuickFilter,
         } = props;
         const [isAdding, setIsAdding] = useState(false);
 
@@ -2656,22 +2717,26 @@ const Editproject_V1 = () => {
         };
 
         return (
-            <Button
-                disabled={isRowEditing || isAdding}
-                color="primary"
-                startIcon={<AddIcon />}
-                onClick={handleClickstaff}
-                sx={{
-                    color: "#1a0ce2",
-                    textTransform: "none",
-                    fontWeight: 400,
-                    fontSize: "0.875rem",
-                    "&:hover": { backgroundColor: "#E1F5EE" },
-                    "&.Mui-disabled": { color: "#9FE1CB" },
-                }}
-            >
-                Add Record ({data.Project})
-            </Button>
+            <>
+                <Box display="flex" justifyContent="space-between">
+                    <Button
+                        disabled={isRowEditing || isAdding}
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        onClick={handleClickstaff}
+                        sx={{
+                            color: "#1a0ce2",
+                            textTransform: "none",
+                            fontWeight: 400,
+                            fontSize: "0.875rem",
+                            "&:hover": { backgroundColor: "#E1F5EE" },
+                            "&.Mui-disabled": { color: "#9FE1CB" },
+                        }}
+                    >
+                        Add Record ({data.Project})
+                    </Button>
+                </Box>
+            </>
         );
     }
 
@@ -2775,6 +2840,39 @@ const Editproject_V1 = () => {
         );
     }
 
+    //TIMETABLE MODAL POP UP
+    const handleProcessSave = async () => {
+
+        if (!selectedTerm?.RecordID) {
+            toast.error("Please select a Term");
+            return;
+        }
+
+        const data = {
+            ProjectID: recID,
+            CompanyID,
+            TermID: selectedTerm.RecordID
+        };
+        const response = await dispatch(
+            TaskProcess({ data })
+        );
+        if (response?.payload?.Status === "Y") {
+
+            toast.success(
+                response?.payload?.Msg ||
+                "Processed Successfully"
+            );
+
+            setOpenProcessModal(false);
+
+        } else {
+
+            toast.error(
+                response?.payload?.Msg ||
+                "Processing Failed"
+            );
+        }
+    };
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
@@ -2841,7 +2939,7 @@ const Editproject_V1 = () => {
                                     color="#0000D1"
                                     sx={{ cursor: "default" }}
                                 >
-                                    Staff Mapping Activities({data.Project})
+                                    Time Table({data.Project})
                                 </Typography>
                             )}
                             {show == "5" && (
@@ -2870,7 +2968,19 @@ const Editproject_V1 = () => {
                                     <MenuItem value="0">
                                         {getBusinessCaption("ProjectTitle", "Project")}
                                     </MenuItem>
-                                    {is003Subscription === true ? (
+                                    {data.RoutineTasks === "Y" && is003Subscription ? (
+                                        [
+                                            <MenuItem value="5">Units/Area</MenuItem>,
+                                            <MenuItem value="6">Time Table</MenuItem>
+                                        ]
+                                    ) :
+                                        (
+                                            [
+                                                <MenuItem value="4">Staff Mapping</MenuItem>,
+                                                <MenuItem value="5">Units/Area</MenuItem>
+                                            ]
+                                        )}
+                                    {/* {is003Subscription === true ? (
                                         <MenuItem value="5">Units/Area</MenuItem>
                                     ) : null}
                                     {is003Subscription === true && data.RoutineTasks === "N" ? (
@@ -2878,7 +2988,7 @@ const Editproject_V1 = () => {
                                     ) : null}
                                     {is003Subscription === true && data.RoutineTasks === "Y" ? (
                                         <MenuItem value="6">Time Table</MenuItem>
-                                    ) : null}
+                                    ) : null} */}
                                     {is003Subscription === false ? (
                                         <MenuItem value="3">Units</MenuItem>
                                     ) : null}
@@ -3953,109 +4063,201 @@ const Editproject_V1 = () => {
                 </Paper>
             ) : null}
             {show == "6" ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-                    <Formik initialValues={InitialValue} enableReinitialize={true}>
-                        {({ values, handleBlur, handleSubmit, handleChange }) => (
-                            <form onSubmit={handleSubmit}>
-                                <Box
-                                    display="grid"
-                                    gap={formGap}
-                                    padding={1}
-                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 1",
-                                        },
-                                    }}
-                                >
+                <>
+                    <Paper elevation={3} sx={{ margin: "10px" }}>
+                        <Formik initialValues={InitialValue} enableReinitialize={true}>
+                            {({ values, handleBlur, handleSubmit, handleChange }) => (
+                                <form onSubmit={handleSubmit}>
                                     <Box
-                                        height="60vh"
-                                        m={1}
+                                        display="grid"
+                                        gap={formGap}
+                                        padding={1}
+                                        gridTemplateColumns="repeat(1 , minMax(0,1fr))"
                                         sx={{
-                                            "& .MuiDataGrid-root": { border: "none" },
-                                            "& .MuiDataGrid-cell": { borderBottom: "none" },
-                                            "& .MuiDataGrid-columnHeaders": {
-                                                backgroundColor: colors.blueAccent[800],
-                                                borderBottom: "none",
+                                            "& > div": {
+                                                gridColumn: isNonMobile ? undefined : "span 1",
                                             },
-                                            "& .MuiDataGrid-virtualScroller": {
-                                                backgroundColor: colors.primary[400],
-                                            },
-                                            "& .MuiDataGrid-footerContainer": {
-                                                borderTop: "none",
-                                                backgroundColor: colors.blueAccent[800],
-                                            },
-                                            "& .odd-row": { backgroundColor: "" },
-                                            "& .even-row": { backgroundColor: "#D3D3D3" },
                                         }}
                                     >
-                                        <DataGrid
+                                        <Box
+                                            height="60vh"
+                                            m={1}
                                             sx={{
+                                                "& .MuiDataGrid-root": { border: "none" },
+                                                "& .MuiDataGrid-cell": { borderBottom: "none" },
+                                                "& .MuiDataGrid-columnHeaders": {
+                                                    backgroundColor: colors.blueAccent[800],
+                                                    borderBottom: "none",
+                                                },
+                                                "& .MuiDataGrid-virtualScroller": {
+                                                    backgroundColor: colors.primary[400],
+                                                },
                                                 "& .MuiDataGrid-footerContainer": {
-                                                    height: dataGridHeaderFooterHeight,
-                                                    minHeight: dataGridHeaderFooterHeight,
+                                                    borderTop: "none",
+                                                    backgroundColor: colors.blueAccent[800],
                                                 },
+                                                "& .odd-row": { backgroundColor: "" },
+                                                "& .even-row": { backgroundColor: "#D3D3D3" },
                                             }}
-                                            rowHeight={35}
-                                            headerHeight={dataGridHeaderFooterHeight}
-                                            rows={TimeTablerows}
-                                            columns={Teachcolumns_v1}
-                                            loading={staffmappingGetDataloading}
-                                            editMode="row"
-                                            disableSelectionOnClick
-                                            rowModesModel={rowModesModelTimeTable}
-                                            onRowModesModelChange={handleRowModesModelChangeTimeTable}
-                                            onRowEditStop={handleRowEditStopTimeTable}
-                                            processRowUpdate={processRowUpdateTeach_V1}
-                                            getRowId={(row) => row.id}
-                                            disableRowSelectionOnClick
-                                            experimentalFeatures={{ newEditingApi: true }}
-                                            onProcessRowUpdateError={(error) => {
-                                                console.error(
-                                                    "Row update validation failed:",
-                                                    error.message,
-                                                );
-                                                toast.error(error.message);
-                                            }}
-                                            components={{ Toolbar: EditToolbarteachstaff }}
-                                            componentsProps={{
-                                                toolbar: {
-                                                    setTimeTablerows,
-                                                    setRowModesModelTimeTable,
-                                                    isRowEditing,
-                                                    setPage,
-                                                    pageSize,
-                                                },
-                                            }}
-                                            rowsPerPageOptions={[5, 10, 20]}
-                                            getRowClassName={(params) =>
-                                                params.indexRelativeToCurrentPage % 2 === 0
-                                                    ? "odd-row"
-                                                    : "even-row"
-                                            }
-                                            pagination
-                                            pageSize={pageSize}
-                                            page={page}
-                                            onPageSizeChange={(newPageSize) =>
-                                                setPageSize(newPageSize)
-                                            }
-                                            onPageChange={(newPage) => setPage(newPage)}
-                                        />
-                                    </Box>
-                                    <Box display="flex" justifyContent="flex-end" padding={1}>
-                                        <Button
-                                            color="warning"
-                                            variant="contained"
-                                            onClick={() => setScreen("0")}
                                         >
-                                            Cancel
-                                        </Button>
+                                            <Box display="flex" justifyContent="flex-end">
+                                                <TextField
+                                                    fullWidth
+                                                    size="small"
+                                                    placeholder="Search..."
+                                                    value={searchText}
+                                                    onChange={(e) => setSearchText(e.target.value)}
+                                                    InputProps={{
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <SearchIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                    sx={{ mb: 1, maxWidth: "250px" }}
+                                                />
+                                                <Box
+                                                    display="flex"
+                                                    justifyContent="space-between"
+                                                    alignItems="center"
+                                                    mb={1}
+                                                >
+
+                                                    <Tooltip title="Process Timetable">
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => setOpenProcessModal(true)}
+                                                        >
+                                                            <SettingsSuggestIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Box>
+                                            </Box>
+                                            <DataGrid
+                                                sx={{
+                                                    "& .MuiDataGrid-footerContainer": {
+                                                        height: dataGridHeaderFooterHeight,
+                                                        minHeight: dataGridHeaderFooterHeight,
+                                                    },
+                                                }}
+                                                rowHeight={35}
+                                                headerHeight={dataGridHeaderFooterHeight}
+                                                // rows={TimeTablerows}
+                                                rows={filteredRows}
+                                                columns={Teachcolumns_v1}
+                                                loading={staffmappingGetDataloading}
+                                                editMode="row"
+                                                disableSelectionOnClick
+                                                rowModesModel={rowModesModelTimeTable}
+                                                onRowModesModelChange={handleRowModesModelChangeTimeTable}
+                                                onRowEditStop={handleRowEditStopTimeTable}
+                                                processRowUpdate={processRowUpdateTeach_V1}
+                                                getRowId={(row) => row.id}
+                                                disableRowSelectionOnClick
+                                                experimentalFeatures={{ newEditingApi: true }}
+                                                onProcessRowUpdateError={(error) => {
+                                                    console.error(
+                                                        "Row update validation failed:",
+                                                        error.message,
+                                                    );
+                                                    toast.error(error.message);
+                                                }}
+                                                components={{ Toolbar: EditToolbarteachstaff }}
+                                                componentsProps={{
+                                                    toolbar: {
+                                                        setTimeTablerows,
+                                                        setRowModesModelTimeTable,
+                                                        isRowEditing,
+                                                        setPage,
+                                                        pageSize,
+                                                        showQuickFilter: true,
+                                                    },
+                                                }}
+                                                rowsPerPageOptions={[5, 10, 20]}
+                                                getRowClassName={(params) =>
+                                                    params.indexRelativeToCurrentPage % 2 === 0
+                                                        ? "odd-row"
+                                                        : "even-row"
+                                                }
+                                                pagination
+                                                pageSize={pageSize}
+                                                page={page}
+                                                onPageSizeChange={(newPageSize) =>
+                                                    setPageSize(newPageSize)
+                                                }
+                                                onPageChange={(newPage) => setPage(newPage)}
+                                            />
+                                        </Box>
+
                                     </Box>
-                                </Box>
-                            </form>
-                        )}
-                    </Formik>
-                </Paper>
+
+                                </form>
+                            )}
+                        </Formik>
+                        <Box display="flex" justifyContent="flex-end" padding={1} marginTop="36px">
+                            <Button
+                                color="warning"
+                                variant="contained"
+                                onClick={() => setScreen("0")}
+                            >
+                                Cancel
+                            </Button>
+                        </Box>
+                    </Paper>
+                    <Dialog
+                        open={openProcessModal}
+                        onClose={() => setOpenProcessModal(false)}
+                        maxWidth="sm"
+                        fullWidth
+                    >
+                        <DialogTitle sx={{ fontWeight: "500", fontSize: "15px" }}>
+                            Process Timetable({data.Project})
+                        </DialogTitle>
+
+                        <DialogContent sx={{ mt: 1 }}>
+                            <PartySingleSelect
+                                id="ProcessTerm"
+                                name="ProcessTerm"
+                                label="Term"
+                                focused
+                                fullWidth
+                                value={selectedTerm}
+                                onChange={(newValue) =>
+                                    setSelectedTerm(newValue)
+                                }
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                        // AccessID: "2024", // Term Lookup AccessID
+                                        AccessID: "2204", // Term Lookup AccessID
+                                        ScreenName: "Term",
+                                        VerticalLicense: "003",
+                                        Filter: `CompanyID='${CompanyID}' AND ProjectID='${recID}'`,
+                                        Any: "",
+                                    },
+                                })}`}
+                            />
+                        </DialogContent>
+
+                        <DialogActions>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleProcessSave}
+                            >
+                                Process
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="warning"
+                                onClick={() => setOpenProcessModal(false)}
+                            >
+                                Back
+                            </Button>
+
+
+                        </DialogActions>
+                    </Dialog>
+                </>
             ) : null}
             {show == "5" ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
