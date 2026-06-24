@@ -234,6 +234,7 @@ import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
 import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
 import Editpromotion from "./pages/HR/Editpromotion";
+import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 
 function App() {
   //   useEffect(() => {
@@ -1592,6 +1593,10 @@ function App() {
                   <Route
                     path="/TeacherOccupancy/:id"
                     element={<TeacherOccupancy />}
+                  />
+                  <Route
+                    path="/NonTeacherOccupancy/:id"
+                    element={<NonTeacherOccupancy />}
                   />
                   {/* EDIT ANNEXURE FORM 2 */}
                   <Route

@@ -61,6 +61,7 @@ import {
   paySlipGet,
   postData,
   PublishEvent,
+  PublishEventCompanies,
   SOPProcessPost,
   standardDelete,
   StockProcessApi,
@@ -142,6 +143,7 @@ import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
+import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1482,10 +1484,10 @@ export const fetchListview =
       }
       else if (AccessID === "TR026" && screenName === "Subject") {
         // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
-        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('N')`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
       }
       else if (AccessID === "TR026" && screenName === "Department") {
-        filter = `CompanyID='${CompId}' AND SubjectSkill= 'N'`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'D'`;
       }
 
       else {
@@ -1813,7 +1815,8 @@ export const fetchListview =
                 sortable: false,
                 filterable: false,
                 headerAlign: "center",
-                align: "center",
+                // align: "center",
+                align: "left",
                 disableColumnMenu: true,
                 disableExport: true,
                 renderCell: (params) => {
@@ -1891,7 +1894,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {is003Subscription && (
+                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
                         <Link
                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                           state={{
@@ -1909,6 +1912,15 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                      )}
+                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
+                          <Tooltip title="Time Table">
+                             <span style={{ cursor: "pointer" }}>
+    <IconButton color="info" size="small" disabled>
+      <DatasetLinkedIcon />
+    </IconButton>
+  </span>
+                          </Tooltip>
                       )}
 
                       {!isSeedEditable && (
@@ -7751,12 +7763,33 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             {(params.row.Description === "Teaching Staff" ||
               params.row.Description === "Staff") && (
-                <Tooltip title="Teacher Productivity">
+                // <Tooltip title="Teacher Productivity">
+                <Tooltip title="Productivity Report">
                   <IconButton
                     color="info"
                     size="small"
                     onClick={() =>
                       navigate(`/Apps/TeacherOccupancy/${params.row.RecordID}`, {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Description,
+                          Classification: params.row.Description,
+                          CompanyID: params.row.CompanyID,
+                        },
+                      })
+                    }
+                  >
+                    <SensorOccupiedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            {(params.row.Description === "Non Teaching Staff") && (
+                <Tooltip title="Productivity Report">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
                         state: {
                           ...state,
                           BreadCrumb1: params.row.Description,
@@ -8431,6 +8464,10 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const UserName = sessionStorage.getItem("UserName");
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const companygroupflag = sessionStorage.getItem("companygroupflag");
+  const companygroup =
+    JSON.parse(sessionStorage.getItem("companygroup") || "[]"); 
+    console.log(companygroup, companygroupflag, "companygroupflag.....");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
@@ -8446,7 +8483,6 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-
   // — state (inside your component) — TR310
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
@@ -8640,7 +8676,94 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       );
     }
   }
+  const [publishDialog, setPublishDialog] = useState({ open: false, row: null });
+  const handlePublish1 = (row) => {
+    console.log("Publish clicked", row);
+    setPublishDialog({ open: true, row });
+  };
 
+  // const handleConfirmPublish = async (selectedCompanyIds) => {
+  //   const results = await Promise.all(
+  //     selectedCompanyIds.map((CompID) =>
+  //       dispatch(PublishEvent({
+  //         data: { CompanyID: CompID, EventCategoryID: publishDialog.row.RecordID },
+  //       }))
+  //     )
+  //   );
+
+  //   const failedCount = results.filter((r) => r.payload.Status !== "Y").length;
+  //   setPublishDialog({ open: false, row: null });
+
+  //   await Swal.fire({
+  //     title: failedCount === 0
+  //       ? "Published successfully"
+  //       : `${results.length - failedCount} of ${results.length} companies published`,
+  //     icon: failedCount === 0 ? "success" : "warning",
+  //     confirmButtonText: "OK",
+  //     confirmButtonColor: "#3085d6",
+  //   });
+
+  //   dispatch(
+  //     fetchListview(
+  //       "TR384",
+  //       "003",
+  //       screenName ?? "Event%20Category",
+  //       `AcademicYearID = '${publishDialog.row.AcademicYearID}' AND CompanyID = '${CompanyID}'`,
+  //       ""
+  //     )
+  //   );
+  // };
+  const handleConfirmPublish = async (selectedCompanyIds) => {
+    try {
+      const payload = {
+        CompanyID: companygroup.map((company) => ({
+          compid: company.comid,
+          ischeck: selectedCompanyIds.includes(company.comid) ? "Y" : "N",
+        })),
+        EventCategoryID: publishDialog.row.RecordID,
+      };
+
+      const result = await dispatch(
+        PublishEventCompanies({
+          data: payload,
+        })
+      );
+
+      const isSuccess = result?.payload?.Status === "Y";
+
+      setPublishDialog({ open: false, row: null });
+
+      await Swal.fire({
+        title: isSuccess
+          ? "Published successfully"
+          : result?.payload?.Msg || "Publish failed",
+        icon: isSuccess ? "success" : "warning",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+
+      if (isSuccess) {
+        dispatch(
+          fetchListview(
+            "TR384",
+            "003",
+            screenName ?? "Event%20Category",
+            `AcademicYearID = '${publishDialog.row.AcademicYearID}' AND CompanyID = '${CompanyID}'`,
+            ""
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Publish Error:", error);
+
+      await Swal.fire({
+        title: "Error",
+        text: "Something went wrong while publishing.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
   const handlePublish = async (values) => {
 
     const result = await Swal.fire({
@@ -8821,6 +8944,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               EmployeeID={EmployeeID}
               CompanyID={CompanyID}
             />
+
           </Box>
         )}
 
@@ -9012,7 +9136,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             )}
 
-            {params.row.Description === "Debit" && (
+            {(params.row.Description === "Debit" || params.row.Description === "Debit ") && (
               <Tooltip title="Debit List">
                 <IconButton color="info" size="small"
                   onClick={() => navigate(
@@ -9165,18 +9289,25 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {(params.row.IsPublish === "Y" && params.row.Events !== "0") && (
+            {/* {(params.row.IsPublish === "Y" && params.row.Events !== "0") && ( */}
 
-              <Tooltip title="Publish Event Category">
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={() => { handlePublish(params.row) }}
-                >
-                  <PublishedWithChangesOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+            <Tooltip title="Publish Event Category">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
+              >
+                <PublishedWithChangesOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <PublishEventCategoryDialog
+              open={publishDialog.open}
+              onClose={() => setPublishDialog({ open: false, row: null })}
+              eventCategory={publishDialog.row}
+              companies={companygroup}
+              onConfirm={handleConfirmPublish}
+            />
+            {/* )} */}
           </>
         )}
         {accessID === "TR385" && (
@@ -9662,6 +9793,7 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </>
         )}
       </div>
+
     </Fragment>
   );
 };

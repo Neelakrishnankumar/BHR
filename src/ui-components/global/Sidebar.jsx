@@ -92,7 +92,6 @@ import AirlinesIcon from "@mui/icons-material/Airlines";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import GradeIcon from "@mui/icons-material/Grade";
 import InventoryIcon from "@mui/icons-material/Inventory";
@@ -155,7 +154,7 @@ import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
-
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
@@ -581,25 +580,25 @@ const Sidebars = () => {
           },
           ...(is003Subscription
             ? [
-             {
-            name: "Subject",
-            id: 34566,
-            url: "./TR026/Subject",
-            icon: (
-              <Tooltip title="Subject">
-                <SubjectIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR401",
-          },
-          ]:[]),
-          
+              {
+                name: "Subject",
+                id: 34566,
+                url: "./TR026/Subject",
+                icon: (
+                  <Tooltip title="Subject">
+                    <SubjectIcon color="info" />
+                  </Tooltip>
+                ),
+                UGA_ADD: true,
+                UGA_DEL: true,
+                UGA_MOD: true,
+                UGA_PRINT: true,
+                UGA_PROCESS: true,
+                UGA_VIEW: true,
+                UGA_ACCESSIDS: "TR401",
+              },
+            ] : []),
+
           {
             name: "Slot",
             id: 474,
@@ -1275,7 +1274,7 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR259",
           },
 
-           getFeedbackMenu(is003Subscription),
+          getFeedbackMenu(is003Subscription),
 
           {
             name: "Timesheet",
@@ -1853,11 +1852,21 @@ const Sidebars = () => {
               borderRadius="4px"
               boxShadow="0px 3px 5px -1px rgba(0, 0, 0, 0.06),0px 5px 8px 0px rgba(0, 0, 0, 0.042),0px 1px 14px 0px rgba(0, 0, 0, 0.036)"
             >
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" alignItems="center">
                 <Typography variant="subtitle2">{company}</Typography>
               </Box>
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" justifyContent="space-between"
+                alignItems="center">
                 <Typography variant="subtitle2">{year}</Typography>
+                <Tooltip title="Configuration">
+                  <ListItemButton
+                    onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}
+                  >
+                    <ListItemIcon>
+                      <InfoRoundedIcon color="info" size="small"/>
+                    </ListItemIcon>
+                  </ListItemButton>
+                </Tooltip>
               </Box>
             </Box>
           )}
@@ -1881,6 +1890,7 @@ const Sidebars = () => {
                 {!collapsed && <ListItemText primary="Logout" />}
               </ListItemButton>
             </Tooltip>
+
 
             <Divider sx={{ mt: 1 }} variant="middle" />
 

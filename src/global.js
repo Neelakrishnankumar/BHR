@@ -346,7 +346,10 @@ const initialState = {
   TimeTableDelete:"",
   FeesStructureDelete:"",
   standardDeleteUrl: "",
+  EventPublishedPost:"",
   StandardstaffmapingGET: "",
+  ActivityOccupancy:"",
+  TaskProcessController:"",
 
 };
 
@@ -563,9 +566,12 @@ export const getUrlSlice = createSlice({
       state.TimeTableGenerateget = APIurl + "AutoTimetableGenerateController.php";
       state.TimeTableDelete = APIurl + "TimetableDelete.php";
        state.FeesStructureDelete = APIurl + "FeesStructureDeleteController.php";
-      state.standardDeleteUrl = APIurl + "ProjectDeleteController.php"
+      state.standardDeleteUrl = APIurl + "ProjectDeleteController.php";
+      state.EventPublishedPost = APIurl + "EventPublishedPost.php"
       state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
-      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php"
+      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
+      state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
+      state.TaskProcessController = APIurl + "TaskProcessController.php";
     },
 
   },
