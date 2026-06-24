@@ -5410,7 +5410,9 @@ return (
                   <MenuItem value={17}>{getBusinessCaption("ItemCustody", "Item Custody")}</MenuItem>
                   {isStudentClassification ? null : (<MenuItem value={14}>{getBusinessCaption("ItemServices", "Item Services")}</MenuItem>)}
                   {is003Subscription === false ? (<MenuItem value={13}>Locality</MenuItem>) : null}
-                  {is003Subscription === false ? (<MenuItem value={19}>SOP Configuration</MenuItem>) : null}
+                  {/* {is003Subscription === false ? ( */}
+                    <MenuItem value={19}>SOP Configuration</MenuItem>
+                    {/* // ) : null} */}
                   {is003Subscription === false ? (<MenuItem value={18}>Specimen Sign</MenuItem>) : null}
                   <MenuItem value={21}>{getBusinessCaption("Documents", "Documents")}</MenuItem>
                   {!isStudentClassification && (<MenuItem value={22}>Resignation</MenuItem>)}

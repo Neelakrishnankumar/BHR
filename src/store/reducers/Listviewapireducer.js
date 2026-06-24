@@ -13,6 +13,7 @@ import {
   Icon,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -1983,6 +1984,16 @@ export const fetchListview =
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
+                      
+                      {is003Subscription && (
+                        <Link to={`./EditPromotion/${params.row.RecordID}/E`}>
+                          <Tooltip title="Promotion">
+                            <IconButton color="info" size="small">
+                              <NextWeekIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
 
                       {is003Subscription && (
                         // <Link
@@ -2024,7 +2035,7 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   const dispatch = store.dispatch;
-                  // const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
+                  const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
                   // const PDFButton = ({ ProjectID, EmployeeID }) => {
                   //   const dispatch = store.dispatch;
                   //   const [loading, setLoading] = React.useState(false);
@@ -2136,13 +2147,13 @@ export const fetchListview =
 
                   return (
                     <Box>
-                      <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
+                      {/* <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       <PDFButton
                         recordID={params.row.RecordID}
                         UserName={params.row.UserName}

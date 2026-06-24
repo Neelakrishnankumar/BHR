@@ -232,6 +232,8 @@ import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
+import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
+import Editpromotion from "./pages/HR/Editpromotion";
 
 function App() {
   //   useEffect(() => {
@@ -903,10 +905,7 @@ function App() {
                     path="/:accessID/:screenName/EditDepartment/:id/:Mode"
                     element={<Editdept />}
                   />
-                   <Route
-                    path="/:accessID/:screenName/EditSubject/:id/:Mode"
-                    element={<Editdept />}
-                  />
+                 
                   <Route
                     path="/:accessID/:screenName/EditTax Master/:id/:Mode"
                     element={<Edittaxmaster />}
@@ -1265,6 +1264,10 @@ function App() {
                     path="/:accessID/:screenName/EditDesignation/:id/:Mode"
                     element={<Editdesignation />}
                   />
+                   <Route
+                    path="/:accessID/Admission/EditAdmission/:id/:Mode"
+                    element={<EditadmissionForm_v1 />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditCheck In/:id/:Mode"
                     element={<Editcheckin />}
@@ -1328,6 +1331,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditProject/:id/:Mode"
                     element={<Editproject_V1 />}
+                  />
+                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditPromotion/:id/:Mode"
+                    element={<Editpromotion />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
