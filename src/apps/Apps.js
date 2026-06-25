@@ -232,6 +232,7 @@ import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
+import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 
 function App() {
   //   useEffect(() => {
@@ -1586,6 +1587,10 @@ function App() {
                   <Route
                     path="/TeacherOccupancy/:id"
                     element={<TeacherOccupancy />}
+                  />
+                  <Route
+                    path="/NonTeacherOccupancy/:id"
+                    element={<NonTeacherOccupancy />}
                   />
                   {/* EDIT ANNEXURE FORM 2 */}
                   <Route

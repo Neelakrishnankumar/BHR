@@ -717,16 +717,16 @@ const Editproject = () => {
         // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
         {
           Subscriptionlastthree === "003" ?
-          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
-          : dispatch(getFetchData({ accessID, get: "get", recID }));
+            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
 
       } else {
         {
           Subscriptionlastthree === "003" ?
-          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
-          : dispatch(getFetchData({ accessID, get: "get", recID }));
+            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
         // dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -960,6 +960,8 @@ const Editproject = () => {
     budget: data.Budget === "" ? "0.00" : data.Budget,
     scheduled:
       data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+    // Planned:
+    //   data.PlannedCost === "" ? "0.00" : data.PlannedCost,
     actual:
       data.ActualCost === "" ? "0.00" : data.ActualCost,
     price:
@@ -1016,6 +1018,7 @@ const Editproject = () => {
       Price: values.price || 0,
       Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
+      // Planned: values.Planned || 0,
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -1080,6 +1083,7 @@ const Editproject = () => {
       Price: values.price || 0,
       Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
+      // Planned: values.Planned || 0,
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -2457,6 +2461,7 @@ const Editproject = () => {
                             },
                           }}
                         />
+                       
                         <TextField
                           fullWidth
                           disabled={mode == "V"}

@@ -1397,13 +1397,13 @@ export const getFetchData_v1 = createAsyncThunk(
 );
 export const UnitFetchData = createAsyncThunk(
   "Units/Division/get",
-  async ({ ProjectID, CompanyID,SubjectID }) => {
+  async ({ ProjectID, CompanyID }) => {
     var url = store.getState().globalurl.UnitAreaConfigGet;
 
     const data = {
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-      SubjectID: SubjectID,
+      // SubjectID: SubjectID,
     };
 
     console.log(
@@ -2964,6 +2964,28 @@ export const TeacherOccupancyget = createAsyncThunk(
   async (payload, { rejectWithValue, getState }) => {
     try {
       const url = getState().globalurl.TeacherOccupancy;
+
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const NonTeacherOccupancyget = createAsyncThunk(
+  "NonTeacherOccupancyget/get",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.ActivityOccupancy;
 
       const response = await axios.post(url, payload, {
         headers: {
@@ -4923,7 +4945,7 @@ export const getApiSlice = createSlice({
         state.error = null;
       })
       .addCase(staffmappingTeacherget.fulfilled, (state, action) => {
-        state.staffmappingGetData = action.payload.Data || {};
+        state.staffmappingGetData = action.payload || {};
         state.staffmappingGetDataloading = false;
         state.error = null;
       })

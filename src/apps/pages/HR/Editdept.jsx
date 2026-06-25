@@ -119,9 +119,9 @@ const Editdept = () => {
         if (Subscriptionlastthree === "003" && screenName === "Subject") {
           schemaFields.Name = Yup.string().trim().required(data.Department.Subject);
         }
-        if (Subscriptionlastthree === "003") {
-          schemaFields.subjectskill = Yup.string().trim().required(data.Department.subjectskill);
-        }
+        // if (Subscriptionlastthree === "003") {
+        //   schemaFields.subjectskill = Yup.string().trim().required(data.Department.subjectskill);
+        // }
 
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
@@ -175,7 +175,7 @@ const Editdept = () => {
     SortOrder: apiData.SortOrder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
     delete: Data.DeleteFlag === "Y" ? true : false,
-    subjectskill: Data.SubjectSkill || "",
+    subjectskill: Data.SubjectSkill === "A" ? true : false,
   };
   // **********Save Function*****************
   const fnSave = async (values, del) => {
@@ -213,7 +213,7 @@ const Editdept = () => {
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
-      SubjectSkill: values.subjectskill || "N",
+      SubjectSkill:values.subjectskill == true ? "A" : screenName === "Subject" ? "S" : "D",
       Finyear,
       CompanyID,
     };
@@ -465,7 +465,7 @@ const Editdept = () => {
                       e.target.setCustomValidity("");
                     }}
                   />
-                  <TextField
+                  {/* <TextField
                     fullWidth
                     variant="standard"
                     type="text"
@@ -494,7 +494,7 @@ const Editdept = () => {
                   >
                     <MenuItem value="S">Standard</MenuItem>
                     <MenuItem value="A">Activities</MenuItem>
-                  </TextField>
+                  </TextField> */}
                   <TextField
                     fullWidth
                     variant="standard"
@@ -550,6 +550,21 @@ const Editdept = () => {
                   />
                   <FormControl>
                     <Box>
+                      {screenName === "Subject" && (
+                        <>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="subjectskill"
+                        id="subjectskill"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="subjectskill"
+                      />
+
+                      <FormLabel focused={false}>Activities</FormLabel>
+                      </>)}
                       <Field
                         //  size="small"
                         type="checkbox"

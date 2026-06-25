@@ -348,6 +348,7 @@ const initialState = {
   standardDeleteUrl: "",
   EventPublishedPost:"",
   StandardstaffmapingGET: "",
+  ActivityOccupancy:"",
 
 };
 
@@ -567,7 +568,8 @@ export const getUrlSlice = createSlice({
       state.standardDeleteUrl = APIurl + "ProjectDeleteController.php";
       state.EventPublishedPost = APIurl + "EventPublishedPost.php"
       state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
-      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php"
+      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
+      state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
     },
 
   },
