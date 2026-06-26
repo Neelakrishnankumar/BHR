@@ -569,3 +569,31 @@ export const getUrlSlice = createSlice({
 export const { initGlobalUrl } = getUrlSlice.actions;
 export default getUrlSlice.reducer;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
