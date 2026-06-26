@@ -24,6 +24,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
 import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
+import SubjectIcon from '@mui/icons-material/Subject';
 import {
   Box,
   Avatar,
@@ -91,7 +92,6 @@ import AirlinesIcon from "@mui/icons-material/Airlines";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import GradeIcon from "@mui/icons-material/Grade";
 import InventoryIcon from "@mui/icons-material/Inventory";
@@ -154,7 +154,7 @@ import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
-
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
@@ -260,11 +260,12 @@ const getProjectMenu = (is003Subscription) =>
 
 const getFeedbackMenu = (is00123Subscription) =>
   is00123Subscription ? {
-    name: "Feedbacks/Complaints",
-    url: "./TR391/RaiseComplaints",
+    // name: "Feedbacks/Complaints",
+    name: "Escalation",
+    url: "./TR391/Escalation",
     // id: 5594,
     icon: (
-      <Tooltip title="Feedbacks/Complaints">
+      <Tooltip title="Escalation">
         <FeedbackOutlinedIcon color="info" />
       </Tooltip>
     ),
@@ -577,6 +578,27 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
+          ...(is003Subscription
+            ? [
+              {
+                name: "Subject",
+                id: 34566,
+                url: "./TR026/Subject",
+                icon: (
+                  <Tooltip title="Subject">
+                    <SubjectIcon color="info" />
+                  </Tooltip>
+                ),
+                UGA_ADD: true,
+                UGA_DEL: true,
+                UGA_MOD: true,
+                UGA_PRINT: true,
+                UGA_PROCESS: true,
+                UGA_VIEW: true,
+                UGA_ACCESSIDS: "TR401",
+              },
+            ] : []),
+
           {
             name: "Slot",
             id: 474,
@@ -1182,23 +1204,23 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
-          //   {
-          //   name: "Admission",
-          //   url: "./TR379/Admission",
-          //   id: 5596,
-          //   icon: (
-          //     <Tooltip title="Admission">
-          //       <ContactsIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR379",
-          // },
+            {
+            name: "Admission",
+            url: "./TR379/Admission",
+            id: 5596,
+            icon: (
+              <Tooltip title="Admission">
+                <ContactsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR379",
+          },
           {
             name: "Attendance(D)",
             url: "/Apps/TR260/Editdailyattendance",
@@ -1271,23 +1293,44 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
           },
-          {
-            name: "Events",
-            url: "/Apps/TR383/Academic Year",
-            id: 5595,
-            icon: (
-              <Tooltip title="Events">
-                <NotificationAddOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR383",
-          },
+          // {
+          //   name: "Events",
+          //   url: "/Apps/TR383/Academic Year",
+          //   id: 5595,
+          //   icon: (
+          //     <Tooltip title="Events">
+          //       <NotificationAddOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR383",
+          // },
+          ...(is003Subscription
+            ? [
+              {
+                name: "Events",
+                url: "/Apps/TR383/Academic Year",
+                id: 5595,
+                icon: (
+                  <Tooltip title="Events">
+                    <NotificationAddOutlinedIcon color="info" />
+                  </Tooltip>
+                ),
+                UGA_ADD: true,
+                UGA_DEL: true,
+                UGA_MOD: true,
+                UGA_PRINT: true,
+                UGA_PROCESS: true,
+                UGA_VIEW: true,
+                UGA_ACCESSIDS: "TR383",
+              },
+            ]
+            : []),
           {
             name: "Invoice",
             // url: "/Apps/TR250/Invoice",
@@ -1382,26 +1425,26 @@ const Sidebars = () => {
       //   ],
       // },
 
-      // {
-      //   name: "Assessment",
-      //   id: 4579,
-      //   MenuID: "ST1609",
-      //   Tooltipname: "Assessment",
-      //   icon: (
-      //     <Tooltip title="Assessment">
-      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-      //     </Tooltip>
-      //   ),
-      //   url: "/Apps/TR299/List Of Assessment Type",
-      //   UGA_ADD: true,
-      //   UGA_DEL: true,
-      //   UGA_MOD: true,
-      //   UGA_PRINT: true,
-      //   UGA_PROCESS: true,
-      //   UGA_VIEW: true,
-      //   UGA_ACCESSIDS: "TR299",
+      {
+        name: "Assessment",
+        id: 4579,
+        MenuID: "ST1609",
+        Tooltipname: "Assessment",
+        icon: (
+          <Tooltip title="Assessment">
+            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        url: "/Apps/TR299/List Of Assessment Type",
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR299",
 
-      // },
+      },
       {
         name: "Document",
         id: 43468,
@@ -1809,11 +1852,21 @@ const Sidebars = () => {
               borderRadius="4px"
               boxShadow="0px 3px 5px -1px rgba(0, 0, 0, 0.06),0px 5px 8px 0px rgba(0, 0, 0, 0.042),0px 1px 14px 0px rgba(0, 0, 0, 0.036)"
             >
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" alignItems="center">
                 <Typography variant="subtitle2">{company}</Typography>
               </Box>
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" justifyContent="space-between"
+                alignItems="center">
                 <Typography variant="subtitle2">{year}</Typography>
+                <Tooltip title="Configuration">
+                  <ListItemButton
+                    onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}
+                  >
+                    <ListItemIcon>
+                      <InfoRoundedIcon color="info" size="small"/>
+                    </ListItemIcon>
+                  </ListItemButton>
+                </Tooltip>
               </Box>
             </Box>
           )}
@@ -1837,6 +1890,7 @@ const Sidebars = () => {
                 {!collapsed && <ListItemText primary="Logout" />}
               </ListItemButton>
             </Tooltip>
+
 
             <Divider sx={{ mt: 1 }} variant="middle" />
 

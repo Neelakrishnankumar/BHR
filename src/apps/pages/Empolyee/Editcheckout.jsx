@@ -421,7 +421,7 @@ const Editcheckout = () => {
                         }}
                         error={!!touched.Employee && !!errors.Employee}
                         helperText={touched.Employee && errors.Employee}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","VerticalLicense": "${Subscriptionlastthree}","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
                         id="outlined-basic"
@@ -524,7 +524,7 @@ const Editcheckout = () => {
                       }}
                       error={!!touched.Location && !!errors.Location}
                       helperText={touched.Location && errors.Location}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","VerticalLicense": "${Subscriptionlastthree}","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                   </FormControl>
                   <FormControl
@@ -592,7 +592,7 @@ const Editcheckout = () => {
                       }}
                       error={!!touched.Gate && !!errors.Gate}
                       helperText={touched.Gate && errors.Gate}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","VerticalLicense": "${Subscriptionlastthree}","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
                     />
 
 
@@ -701,7 +701,7 @@ const Editcheckout = () => {
                       Save
                     </Button>
                   )}{" "}
-                  {YearFlag == "true" ? (
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -729,7 +729,7 @@ const Editcheckout = () => {
                     <Button color="error" variant="contained" disabled={true}>
                       Delete
                     </Button>
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

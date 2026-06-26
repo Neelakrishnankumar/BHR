@@ -718,6 +718,8 @@ const Login = () => {
       var SubscriptionID = data.payload.SubscriptionID
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
+      var companygroupflag = data.payload.companygroupflag
+      var companygroup = data.payload.companygroup
       var CompanyGraceTime = data.payload.CompanyGraceTime
       var CompanySessionTimeOut = data.payload.CompanySessionTimeOut
       var ClassificationData = data.payload.ClassificationData
@@ -728,7 +730,7 @@ const Login = () => {
       var firstLogin = data.payload.firstLogin
       var CompanySignature = data.payload.CompanySignature
       //  var firstLogin = "Y";
-      console.log(ClassificationData, "--login screen ClassificationData");
+      console.log(ClassificationData,companygroup, "--login screen ClassificationData");
 
 
       sessionStorage.setItem("Expiryin", Expiryin);
@@ -751,6 +753,8 @@ const Login = () => {
       sessionStorage.setItem("Fob", Fob)
       sessionStorage.setItem("firstLogin", firstLogin)
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
+      sessionStorage.setItem("companygroupflag", companygroupflag)
+      sessionStorage.setItem("companygroup", JSON.stringify(data.payload.companygroup));
       sessionStorage.setItem("CompanyGraceTime", CompanyGraceTime)
       sessionStorage.setItem("CompanySessionTimeOut", CompanySessionTimeOut)
       sessionStorage.setItem("ClassificationData", JSON.stringify(data.payload.ClassificationData));

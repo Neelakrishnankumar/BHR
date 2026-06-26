@@ -321,9 +321,12 @@ const EditSalaryComponent = () => {
                     onChange={(e) => {
                       const value = e.target.value;
                       // allow only letters and spaces
-                      if (/^[a-zA-Z\s]*$/.test(value)) {
-                        handleChange(e);
-                      }
+                      // if (/^[a-zA-Z\s]*$/.test(value)) {
+                      //   handleChange(e);
+                      // }
+                       if (/^[^0-9]*$/.test(value)) {
+    handleChange(e);
+  }
                     }}
                     error={!!touched.description && !!errors.description}
                     helperText={touched.description && errors.description}

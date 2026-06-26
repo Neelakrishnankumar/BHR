@@ -73,12 +73,15 @@ const Editdept = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   console.log(CompanyAutoCode, "CompanyAutoCode");
+
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
+  const screenName = params.screenName;
+  console.log(params, "params");
   const Data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -90,6 +93,7 @@ const Editdept = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const Subscriptionlastthree = SubscriptionCode.slice(-3);
+  const is003Subscription = SubscriptionCode.endsWith("003");
   console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -109,9 +113,15 @@ const Editdept = () => {
           schemaFields.Code = Yup.string().trim().required(data.Department.Code);
         }
 
-        if (Subscriptionlastthree === "003") {
+        if (Subscriptionlastthree === "003" && screenName === "Department") {
           schemaFields.Name = Yup.string().trim().required(data.Department.Department);
         }
+        if (Subscriptionlastthree === "003" && screenName === "Subject") {
+          schemaFields.Name = Yup.string().trim().required(data.Department.Subject);
+        }
+        // if (Subscriptionlastthree === "003") {
+        //   schemaFields.subjectskill = Yup.string().trim().required(data.Department.subjectskill);
+        // }
 
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
@@ -165,7 +175,7 @@ const Editdept = () => {
     SortOrder: apiData.SortOrder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
     delete: Data.DeleteFlag === "Y" ? true : false,
-    subjectskill: Data.SubjectSkill === "Y" ? true : false
+    subjectskill: Data.SubjectSkill === "A" ? true : false,
   };
   // **********Save Function*****************
   const fnSave = async (values, del) => {
@@ -203,7 +213,7 @@ const Editdept = () => {
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
-      SubjectSkill: values.subjectskill === true ? "Y" : "N",
+      SubjectSkill:values.subjectskill == true ? "A" : screenName === "Subject" ? "S" : "D",
       Finyear,
       CompanyID,
     };
@@ -288,7 +298,7 @@ const Editdept = () => {
                   sx={{ cursor: "default" }}
 
                 >
-                  Department
+                  {screenName === "Department" ? "Department" : "Subject"}
                 </Typography>
 
               </Breadcrumbs>
@@ -455,6 +465,36 @@ const Editdept = () => {
                       e.target.setCustomValidity("");
                     }}
                   />
+                  {/* <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    label={
+                      <>
+                        Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    value={values.subjectskill}
+                    id="subjectskill"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="subjectskill"
+                    // required
+                    error={!!touched.subjectskill && !!errors.subjectskill}
+                    helperText={touched.subjectskill && errors.subjectskill}
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    focused
+                    select
+                  >
+                    <MenuItem value="S">Standard</MenuItem>
+                    <MenuItem value="A">Activities</MenuItem>
+                  </TextField> */}
                   <TextField
                     fullWidth
                     variant="standard"
@@ -510,6 +550,21 @@ const Editdept = () => {
                   />
                   <FormControl>
                     <Box>
+                      {screenName === "Subject" && (
+                        <>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="subjectskill"
+                        id="subjectskill"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="subjectskill"
+                      />
+
+                      <FormLabel focused={false}>Activities</FormLabel>
+                      </>)}
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -534,7 +589,7 @@ const Editdept = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
-                      <Field
+                      {/* <Field
                         //  size="small"
                         type="checkbox"
                         name="subjectskill"
@@ -545,7 +600,11 @@ const Editdept = () => {
                         label="subjectskill"
                       />
 
-                      <FormLabel focused={false}>Subject / Skill</FormLabel>
+                      <FormLabel focused={false}>
+                          <span>
+                            {getBusinessCaption("Projects", "Projects")}
+                          </span>
+                        </FormLabel> */}
                     </Box>
                   </FormControl>
 

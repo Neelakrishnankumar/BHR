@@ -311,9 +311,13 @@ const Editoverheadtype = () => {
                                             const value = e.target.value;
 
                                             // allow only letters and spaces
-                                            if (/^[a-zA-Z\s]*$/.test(value)) {
-                                                handleChange(e);
-                                            }
+                                            // if (/^[a-zA-Z\s]*$/.test(value)) {
+                                            //     handleChange(e);
+                                            // }
+                                             // block numbers only, allow everything else
+  if (/^[^0-9]*$/.test(value)) {
+    handleChange(e);
+  }
                                         }}
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}

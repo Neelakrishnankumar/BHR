@@ -295,6 +295,7 @@ const EditTimetablev1 = () => {
   const getWCrows = rawSchedule.map((dayObj, index) => {
     const row = { id: index, day: dayObj.day };
     rawTimeSlots.forEach((slot, i) => {
+      // row[`slot_${i}`] = dayObj.slots?.[slot] || "";
       row[`slot_${i}`] = dayObj.slots?.[slot] || "";
     });
     return row;
@@ -358,6 +359,7 @@ const EditTimetablev1 = () => {
   );
   const [totalWeekSlots, setTotalWeekSlots] = useState(0);
   const [totalBalSlots, setTotalBalSlots] = useState(0);
+  console.log("🚀 ~ EditTimetablev1 ~ totalBalSlots:", totalBalSlots)
   const [formDescription, setFormDescription] = useState(
     data?.Description ? data?.Description : ""
   );
@@ -434,8 +436,45 @@ const EditTimetablev1 = () => {
   }, [data?.RemainingSlot]);
 
   // ── Grid columns for timetable view ─────────────────────────────────────
-  const WEEKcolumns = (getrawColumns || rawColumns).map((col) => ({
+  // const WEEKcolumns = (getrawColumns || rawColumns).map((col) => ({
+  //   ...col,
+  //   renderCell: (params) =>
+  //     params.value ? (
+  //       <Box
+  //         sx={{
+  //           display: "inline-flex",
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //           backgroundColor: "#f0f2ff",
+  //           color: "#3a3a6e",
+  //           borderRadius: "6px",
+  //           px: 1.2,
+  //           py: 0.4,
+  //           fontSize: "11px",
+  //           fontWeight: 500,
+  //           whiteSpace: "normal",
+  //           textAlign: "center",
+  //           lineHeight: 1.4,
+  //         }}
+  //       >
+  //         {params.value}
+  //       </Box>
+  //     ) : null,
+  // }));
+  const WEEKcolumns = (getrawColumns || rawColumns).map((col, index) => ({
     ...col,
+
+    ...(index === 0
+      ? {
+        width: 140, // Fixed width for Day column
+        flex: undefined,
+      }
+      : {
+        width: undefined, // Remove any existing fixed width
+        flex: 1,          // Share remaining space equally
+        minWidth: 220,    // Optional
+      }),
+
     renderCell: (params) =>
       params.value ? (
         <Box
@@ -455,15 +494,40 @@ const EditTimetablev1 = () => {
             lineHeight: 1.4,
           }}
         >
-          {params.value}
+          {/* {params.value} */}
+          {typeof params.value === "object"
+            ? params.value?.subject
+            : params.value}
         </Box>
       ) : null,
   }));
+  // const gridColumns = (WEEKcolumns || []).map((col, colIndex) => {
+  //   if (colIndex === 0) {
+  //     return {
+  //       ...col,
+  //       renderCell: (params) => (
+  //         <Box sx={{ fontWeight: 500, color: "#1e1e3a", fontSize: "12px" }}>
+  //           {params.value || ""}
+  //         </Box>
+  //       ),
+  //     };
+  //   }
+
+  //   return {
+  //     ...col,
+  //     renderCell: (params) => {
+  //       const key = cellKey(params.row.id, col.field);
+  //       const edit = detailIDMap[key];
+  //       const rawValue = params.value;
+  //       const dayField = WEEKcolumns[0]?.field;
+  //       const dayName = params.row[dayField] || "";
+  //       const period = col.field;
 
   const gridColumns = (WEEKcolumns || []).map((col, colIndex) => {
     if (colIndex === 0) {
       return {
         ...col,
+        width: 140, // fixed Day column
         renderCell: (params) => (
           <Box sx={{ fontWeight: 500, color: "#1e1e3a", fontSize: "12px" }}>
             {params.value || ""}
@@ -474,13 +538,27 @@ const EditTimetablev1 = () => {
 
     return {
       ...col,
+      width: undefined,
+      flex: 1,
+      minWidth: 220,
+
       renderCell: (params) => {
         const key = cellKey(params.row.id, col.field);
         const edit = detailIDMap[key];
-        const rawValue = params.value;
+        const rawValue = params.value || null;
         const dayField = WEEKcolumns[0]?.field;
         const dayName = params.row[dayField] || "";
         const period = col.field;
+        const subject =
+          typeof rawValue === "object"
+            ? rawValue?.subject
+            : rawValue;
+
+        const teacher =
+          typeof rawValue === "object"
+            ? rawValue?.teacher
+            : null;
+
 
         return (
           <Box
@@ -533,7 +611,7 @@ const EditTimetablev1 = () => {
               </span>
             </Tooltip>
 
-            {edit?.subject && (
+            {/* {edit?.subject && (
               <Box
                 sx={{
                   display: "flex",
@@ -558,9 +636,9 @@ const EditTimetablev1 = () => {
                   edit?.subject ||
                   ""}
               </Box>
-            )}
+            )} */}
 
-            {!edit?.subject && rawValue && (
+            {/* {!edit?.subject && rawValue && (
               <Box
                 sx={{
                   display: "inline-flex",
@@ -580,8 +658,45 @@ const EditTimetablev1 = () => {
               >
                 {rawValue}
               </Box>
-            )}
+            )} */}
+            {edit?.subject && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  backgroundColor: "#f0f2ff",
+                  color: "#3a3a6e",
+                  borderRadius: "6px",
+                  px: 1,
+                  py: 0.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {edit.subject?.label || edit.subject?.Name}
+                </Typography>
 
+                {edit.teacher && (
+                  <Typography
+                    sx={{
+                      fontSize: "10px",
+                      color: "#6b7280",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {edit.teacher?.label || edit.teacher?.Name}
+                  </Typography>
+                )}
+              </Box>
+            )}
             {!edit?.subject && !edit?.teacher && !rawValue && (
               <Typography
                 sx={{ fontSize: "10px", color: "#ccc", fontStyle: "italic" }}
@@ -817,7 +932,7 @@ const EditTimetablev1 = () => {
       field: "Department",
       headerName: (
         <span>
-          Subject <span style={{ color: "red" }}>*</span>
+          Subject/Activity <span style={{ color: "red" }}>*</span>
         </span>
       ),
       headerAlign: "center",
@@ -989,7 +1104,7 @@ const EditTimetablev1 = () => {
           startIcon={<AddIcon />}
           onClick={handleClick}
         >
-          Add Subject
+          Add Subject/Activity
         </Button>
         <Button color="primary" sx={{ textTransform: "none" }}>
           Total Slots : {totalWeekSlots || data?.TotalWeekSlots || 0}
@@ -1142,7 +1257,7 @@ const EditTimetablev1 = () => {
   const handleSave = async () => {
     if (!activeKey) return;
     if (!draft.subject) {
-      toast.error("Please select a Subject");
+      toast.error("Please select a Subject/Activity");
       return;
     }
     if (!draft.teacher) {
@@ -1193,7 +1308,7 @@ const EditTimetablev1 = () => {
   // ── processRowUpdate ─────────────────────────────────────────────────────
   const processRowUpdate = (newRow) => {
     if (!newRow.Department?.RecordID) {
-      toast.error("Please select a subject before saving.");
+      toast.error("Please select a Subject/Activity before saving.");
     }
 
     if (
@@ -1632,7 +1747,7 @@ const EditTimetablev1 = () => {
                             variant="body2"
                             sx={{ fontWeight: 600, color: "#2c3e50" }}
                           >
-                            No consecutive same subject
+                            No consecutive same subject/activity
                           </Typography>
                           <Typography
                             variant="caption"
@@ -1751,7 +1866,7 @@ const EditTimetablev1 = () => {
                     variant="contained"
                     loading={isGenerating}
                     loadingPosition="start"
-                    disabled={mode =="V"}
+                    disabled={mode == "V" || totalBalSlots !== 0}
                     onClick={async () => {
                       const validationErrors = await validateForm();
                       setTouched({ Terms: true, Slotgroup: true });
@@ -1850,6 +1965,7 @@ const EditTimetablev1 = () => {
                     <DataGrid
                       rows={getWCrows || WCrows}
                       columns={gridColumns || []}
+                      autosizeOnMount={false}
                       pageSizeOptions={[5]}
                       getRowId={(row) => row.id}
                       hideFooter
@@ -2017,7 +2133,7 @@ const EditTimetablev1 = () => {
 
         <CheckinAutocomplete
           name="Subject"
-          label="Subject"
+          label="Subject/Activity"
           id="Subject"
           value={draft.subject}
           onChange={handleSubjectChange}

@@ -317,7 +317,7 @@ const EditWorkshop = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`, {
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -328,9 +328,9 @@ const EditWorkshop = () => {
                                 variant="h5"
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
-                                onClick={() => {
+                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/W`, {
+                                    navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/W`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -343,7 +343,7 @@ const EditWorkshop = () => {
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
                             >
-                                {mode === "E" ? "Add Workshop" : "Edit Workshop"}
+                                {mode === "E" ? "Edit Workshop": mode === "V" ? "View Workshop" : "Add Workshop"}
                             </Typography>
                         </Breadcrumbs>
                     </Box>
@@ -855,7 +855,7 @@ const EditWorkshop = () => {
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
                                                 variant="outlined"
                                                 color="warning"
-                                                onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/W`,
+                                                onClick={() => navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/W`,
                                                     { state: { ...state } }
                                                 )}
                                             >

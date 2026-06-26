@@ -179,6 +179,7 @@ const initialState = {
   //attachmentUrl:baseurl + 'uploads/images/',
   attachmentUrl: "",
   videoAttachmentUrl: "",
+  audioAttachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
   designationImportUrl: "",
@@ -345,7 +346,12 @@ const initialState = {
   TimeTableDelete:"",
   FeesStructureDelete:"",
   standardDeleteUrl: "",
+  EventPublishedPost:"",
+  StandardstaffmapingGET: "",
+  ActivityOccupancy:"",
+  TaskProcessController:"",
   TermUrl: "",
+
 };
 
 export const getUrlSlice = createSlice({
@@ -357,6 +363,7 @@ export const getUrlSlice = createSlice({
 
       const APIurl = config.API_URL;
       const baseurl = config.BASE_URL;
+      const essurl = config.ESS_URL;
       const baseurlUAAM = config.UAAM_URL;
       //const uaturl = "https://essuat.beyondexs.com"
 
@@ -373,11 +380,13 @@ export const getUrlSlice = createSlice({
       state.compdetailPostUrl = APIurl + "CompanypostController.php";
       //imgUploadUrl=baseurl + 'imgup6.php';
       state.imageUrl = baseurl + "uploads/images/";
+      state.EssurlimageUrl = essurl + "uploads/images/";
       state.imageUrlUAAM = baseurlUAAM + "uploads/images/";
       state.imageNameUpdateUrl = APIurl + "CMController.php";
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.videoAttachmentUrl = baseurl + "uploads/videos/";
+      state.audioAttachmentUrl = baseurl + "uploads/audios/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
@@ -515,7 +524,8 @@ export const getUrlSlice = createSlice({
       state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
       state.EmployeeVendorGetController = APIurl + "ParentGetController.php";
       state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
-      state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      // state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      state.ExcelFileDownload = APIurl + "Excel_Download.php";
       state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
       state.Setup_MenuExcel = APIurl + "SetupMenu.php";
       state.Parentposturl = APIurl + "ParentpostController.php";
@@ -558,9 +568,12 @@ export const getUrlSlice = createSlice({
       state.TimeTableDelete = APIurl + "TimetableDelete.php";
        state.FeesStructureDelete = APIurl + "FeesStructureDeleteController.php";
       state.standardDeleteUrl = APIurl + "ProjectDeleteController.php";
+      state.EventPublishedPost = APIurl + "EventPublishedPost.php"
+      state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
+      state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
+      state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
+      state.TaskProcessController = APIurl + "TaskProcessController.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
-
-      
     },
 
   },

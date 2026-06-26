@@ -144,12 +144,13 @@ const EditTermfeestructure = () => {
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
     const empName = sessionStorage.getItem("EmpName");
     const getRawData = sessionStorage.getItem("ClassificationData");
-   const AcademicYearID =
-  !/\d{4}-\d{2}/.test(params.id2 || "")
-    ? params.id2
-    : !/\d{4}-\d{2}/.test(params.id4 || "")
-    ? params.id4
-    : "";
+//    const AcademicYearID =
+//   !/\d{4}-\d{2}/.test(params.id2 || "")
+//     ? params.id2
+//     : !/\d{4}-\d{2}/.test(params.id4 || "")
+//     ? params.id4
+//     : "";
+   const AcademicYearID = params.parentID3 || 0;
     let ClassificationData = [];
     try {
         const parsed = JSON.parse(getRawData || "[]");
@@ -230,7 +231,7 @@ const EditTermfeestructure = () => {
 
     const [sendReminder, setSendReminder] = useState(false);
     const [autoLateFine, setAutoLateFine] = useState(false);
-    const [allowPartialPayment, setAllowPartialPayment] = useState(false);
+    const [allowPartialPayment, setAllowPartialPayment] = useState(true);
 
     useEffect(() => {
         dispatch(getFetchFeeData({ accessID: "TR387", get: "get", recID, AcademicType }));
@@ -426,7 +427,7 @@ useEffect(() => {
             TermsID: activeTermKey || 0,
             StandardID: 0,
             AcademicType: AcademicType,
-            AcademicTypeID: params.id1,                                  // "T"
+            AcademicTypeID: params.parentID1 || 0,                                  // "T"
             Detail: [
                 {
                     Component: payload.Component || "",
@@ -667,7 +668,7 @@ useEffect(() => {
             // accessid: "TR387",
             // action: mode === "A" ? "insert" : "update",
             AcademicType: AcademicType,
-            AcademicTypeID: params.id1,                                  // "T"                                  // "T"
+            AcademicTypeID: params.parentID1 || 0,                                  // "T"                                  // "T"
             CompanyID: compID?.toString() || "1",
             HeaderID: recID ? Number(recID) : 0,                         // 0 for new
             StructureName: values.Structurename || "",
@@ -1317,7 +1318,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                         <CreditCardIcon sx={{ color: "#94a3b8" }} />
                                         <Box>
                                             <Typography fontWeight={500} fontSize="14px">Allow partial payment</Typography>
-                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>Students can pay in instalments</Typography>
+                                            <Typography variant="body2" sx={{ color: "#94a3b8" }}>Students can pay in installments</Typography>
                                         </Box>
                                     </Box>
                                     <Switch

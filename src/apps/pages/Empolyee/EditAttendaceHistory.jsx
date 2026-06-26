@@ -16,6 +16,8 @@ import {
   InputLabel,
   Avatar,
   Chip,
+  FormControlLabel,
+  Checkbox
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -68,6 +70,8 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getConfig } from "../../../config";
 import { FaFileExcel } from "react-icons/fa";
 import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+import AttenHistrySummatyPDF from "../pdf/AttenHistrySummatyPDF";
+import AttendanceHistrySummaryExcel from "../pdf/AttendanceHistrySummaryExcel";
 
 
 
@@ -116,6 +120,9 @@ const EditAttendanceHistory = () => {
   const CompanyID = sessionStorage.getItem("compID")
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [summarycheck, setSummaryCheck] = useState(false);
+
+
   const colors = tokens(theme.palette.mode);
 
   const [errorMsgData, setErrorMsgData] = useState(null);
@@ -276,13 +283,82 @@ const EditAttendanceHistory = () => {
     { field: "Day31", headerName: "31", width: 5 },
     { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "Unpaidleave", headerName: "Unpaid Leave", headerAlign: "center", align: "right", },
-    { field: "Absent", headerName: "Absent", headerAlign: "center", align: "right", },
+    { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 130 },
+    { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
     // { field: "Irregular", headerName: "IRREGULAR" },
     { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
     { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
     { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
   ];
+
+
+  function SummaryTool() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>Summary</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+
+
+  const SummaryColumn = [
+      {
+      field: "slno",
+      headerName: "SL#",
+      width: 40,
+      headerAlign: "center",
+      align: "right",
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    { field: "Name", headerName: "Personnel", width: 300 },
+   
+    { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
+    // { field: "Leave", headerName: "LEAVE" },
+    { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 200 },
+    { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
+    // { field: "Irregular", headerName: "IRREGULAR" },
+    { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
+    { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
+    { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
+  ];
+
+
+
+
+
+
+
   // const AttendanceData = [
   //   {
   //     id: 1,
@@ -434,7 +510,7 @@ const EditAttendanceHistory = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance Register</Typography>
+            <Typography variant="h3">Attendance History</Typography>
           </Box>
           <Box display="flex">
             {/* <Tooltip title="Attendance ">
@@ -491,6 +567,7 @@ const EditAttendanceHistory = () => {
                 sessionStorage.removeItem("month");
                 sessionStorage.removeItem("year");
                 dispatch(resetTrackingData());
+                setSummaryCheck(false);
               }}
             >
               <Box
@@ -581,14 +658,31 @@ const EditAttendanceHistory = () => {
                                       /> */}
                 </Stack>
                 <Stack direction="row" spacing={2} display="flex" padding={1} justifyContent="end">
+   <FormControlLabel
+                  control={
+                    <Checkbox
+                    checked={summarycheck}
+                    onChange={(e) => setSummaryCheck(e.target.checked)}
+                      // checked={attuseCurrentEmp}
+                      // onChange={(e) => {
+                      //   const checked = e.target.checked;
+                      //   setattUseCurrentEmp(checked);
+                      //   setattempData(null);
+                      //   // sessionStorage.setItem("attuseCurrentEmp", checked);
 
+                      // }}
+                      color="primary"
+                    />
+                  }
+                  label="Summary"
+                />
                   <Button type="submit" variant="contained" color="secondary" >
                     APPLY
                   </Button>
                   <Button type="reset" variant="contained" color="error" size="small">
                     RESET
                   </Button>
-                  {AttendanceData?.length > 0 && (
+                  {!summarycheck && AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendanceHistoryPDF
@@ -619,7 +713,7 @@ const EditAttendanceHistory = () => {
 
 
                   )}
-                  {AttendanceData?.length > 0 && (
+                  {!summarycheck && AttendanceData?.length > 0 && (
 
                     <FaFileExcel
                       size={20}
@@ -627,6 +721,58 @@ const EditAttendanceHistory = () => {
                       style={{ cursor: "pointer", }}
                       onClick={() =>
                         AttendanceHistoryExcel(
+                          AttendanceData,
+                          {
+                            month: values.month,
+                            year: values.year
+                          },
+                          empData
+                        )
+                      }
+                    />
+
+                  )}
+                  
+
+
+ {summarycheck && AttendanceData?.length > 0 && (
+                    <PDFDownloadLink
+                      document={
+                        <AttenHistrySummatyPDF
+                          data={AttendanceData}
+                          filters={{
+                            Month: values.month,
+                            Year: values.year,
+                            EmployeeID: empData?.RecordID,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
+                          }}
+                          footerHeight={footerHeight}
+                        />
+                      }
+                      fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
+                    >
+
+                      {({ loading }) =>
+                        loading ? (
+                          <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                        ) : (
+                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                        )
+                      }
+                    </PDFDownloadLink>
+                  )}
+
+       {summarycheck && AttendanceData?.length > 0 && (
+
+                    <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer", }}
+                      onClick={() =>
+                        AttendanceHistrySummaryExcel(
                           AttendanceData,
                           {
                             month: values.month,
@@ -684,10 +830,10 @@ const EditAttendanceHistory = () => {
   </PDFDownloadLink>
 )}
                 </Box> */}
-
+{!summarycheck && (
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                  height="500px"
+                  height="400px"
                   padding={1}
                   // height={dataGridHeight}
                   marginTop={2}
@@ -768,6 +914,93 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+)}
+
+    <Box sx={{ gridColumn: "span 4" }}>
+                <Box
+                  height="400px"
+                  padding={1}
+                  // height={dataGridHeight}
+                  marginTop={2}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      // border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      // borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      // borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#d0edec",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      }
+                    }}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    rows={AttendanceData}
+                    columns={SummaryColumn}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.SLNO}
+                    pageSize={pageSize}
+                    page={page}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    onPageChange={(newPage) => setPage(newPage)}
+                    onCellClick={(params) => { }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: SummaryTool,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? 'odd-row'
+                        : 'even-row'
+                    }
+                  />
+                </Box>
+              </Box>
+
+
               <Stack
                 direction="row"
                 padding={1}
@@ -784,8 +1017,8 @@ const EditAttendanceHistory = () => {
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />
                   <Chip
-                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
-                    label="Absent"
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>SH</Avatar>}
+                    label="Second Half"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />
@@ -805,8 +1038,20 @@ const EditAttendanceHistory = () => {
                   />
 
                   <Chip
-                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
-                    label="Leave"
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>CL</Avatar>}
+                    label="CasualLeave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>M</Avatar>}
+                    label="Medical Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>UL</Avatar>}
+                    label="Unscheduled Leave"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />

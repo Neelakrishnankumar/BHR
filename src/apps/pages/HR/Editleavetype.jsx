@@ -530,9 +530,12 @@ const LeaveType = () => {
                       const value = e.target.value;
 
                       // allow only letters and spaces
-                      if (/^[a-zA-Z\s]*$/.test(value)) {
-                        handleChange(e);
-                      }
+                      // if (/^[a-zA-Z\s]*$/.test(value)) {
+                      //   handleChange(e);
+                      // }
+                        if (/^[^0-9]*$/.test(value)) {
+    handleChange(e);
+  }
                     }}
                     // required
                     error={!!touched.name && !!errors.name}

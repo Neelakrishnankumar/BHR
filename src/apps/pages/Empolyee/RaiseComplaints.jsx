@@ -1,608 +1,742 @@
-// import React from "react";
-// import {
-//   Box,
-//   Typography,
-//   Grid,
-//   Paper,
-//   Button,
-//   TextField,
-//   Select,
-//   MenuItem,
-// } from "@mui/material";
-
-// import { postData } from "../../../store/reducers/Formapireducer";
-// import { useDispatch, useSelector } from "react-redux";
-// import { toast } from "react-hot-toast";
-// import { useLocation, useNavigate, useParams, } from "react-router-dom";
-// import { EditAutoComplete, MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
-// import Autocomplete from "@mui/material/Autocomplete";
-// import { LoadingButton } from "@mui/lab";
-
-// export default function RaiseComplaints() {
-//   const dispatch = useDispatch();
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const { id, accessID } = useParams();
-//   let params = useParams();
-//   console.log("URL Params:", params);
-//   var mode = params.Mode;
-//   var recID = params.id;
-//   const rowData = location.state || {};
-//   const isLoading = useSelector((state) => state.formApi.postLoading);
-
-//   const compID = sessionStorage.getItem("compID");
-
-//   const Subscriptionlastthree =
-//     sessionStorage.getItem("SubscriptionCode")?.slice(-3) || "";
-
-//   const listViewurl = useSelector(
-//     (state) => state.globalurl.listViewurl
-//   );
-
-//   const [selectedStandard, setSelectedStandard] = React.useState(null);
-
-//   const [selectedStudent, setSelectedStudent] = React.useState(null);
-
-//   React.useEffect(() => {
-//     if (rowData?.rowData) {
-//       const data = rowData.rowData;
-
-//       setFormData({
-//         Title: data.Title || "",
-//         Priority: data.Priority || "Low",
-//         Description: data.Description || "",
-//         Attachment: data.Attachments || "",
-//         FeedbacksResponse: data.FeedbacksResponse || "",
-//       });
-
-//       setSelectedStandard(data.StandardID ?? null);
-//       setSelectedStudent(data.StudentID ?? null);
-//     }
-//   }, [rowData]);
-
-
-
-//   const [formData, setFormData] = React.useState({
-//     Title: "",
-//     Priority: "Low",
-//     StudentName: "",
-//     Description: "",
-//     Attachment: "",
-//     FeedbacksResponse: "",
-//   });
-
-//   // HANDLE INPUT CHANGE
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   // HANDLE FILE CHANGE
-//   const handleFileChange = (e) => {
-//     setFormData((prev) => ({
-//       ...prev,
-//       Attachment: e.target.files[0]?.name || "",
-//     }));
-//   };
-
-//   // SUBMIT
-//   const handleSubmit = async () => {
-//     let action =
-//       mode === "A"
-//         ? "insert"
-//         : mode === "E"
-//           ? "update"
-//           : "insert";
-//     const idata = {
-//       RecordID: recID,
-//       CompanyID: compID,
-//       CategoryID: "1",
-//       StandardID: selectedStandard?.RecordID || selectedStandard || 0,
-//       StudentID: selectedStudent?.RecordID || selectedStudent || 0,
-//       Title: formData.Title,
-//       Priority: formData.Priority,
-//       Attachments: "feedback_attachment.pdf",
-//       Description: formData.Description,
-//       StudentName: formData.StudentName,
-//       SortOrder: "1",
-//       Disable: "N",
-//       DeleteFlag: "N",
-
-//       GivenBy: "412",
-//       FeedbacksResponse: formData.FeedbacksResponse,
-//       Status: "Applied",
-//       Type: "T",
-//     };
-
-//     console.log("INSERT DATA", idata);
-
-//     const response = await dispatch(
-//       postData({
-//         accessID: 'TR391',
-//         action: action,
-//         idata,
-//       })
-//     );
-
-//     if (response.payload.Status == "Y") {
-//       toast.success(response.payload.Msg);
-
-//       // RESET FORM
-//       setFormData({
-//         Title: "",
-//         Priority: "Low",
-//         StudentName: "",
-//         Description: "",
-//         Attachment: "",
-//       });
-
-//       setSelectedStandard(null);
-//       setSelectedStudent(null);
-//     } else {
-//       toast.error(response?.payload?.Msg || "Something went wrong");
-//     }
-//   };
-
-//   return (
-//     <Box sx={{ background: "#F4F7FB", minHeight: "100vh" }}>
-//       <Box sx={{ display: "flex" }}>
-//         <Box sx={{ flex: 1, p: 4 }}>
-//           <Paper
-//             elevation={0}
-//             sx={{
-//               p: 4,
-//               borderRadius: "20px",
-//               background: "#fff",
-//               mb: 4,
-//               boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
-//             }}
-//           >
-//             <Typography
-//               fontSize={34}
-//               fontWeight={700}
-//               color="#1F3C88"
-//               mb={4}
-//             >
-//               Raise New Complaint
-//             </Typography>
-
-//             <Grid container spacing={3}>
-
-//               {/* TITLE */}
-//               <Grid item xs={12} md={6}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Complaint Title
-//                 </Typography>
-
-//                 <TextField
-//                   fullWidth
-//                   name="Title"
-//                   value={formData.Title}
-//                   onChange={handleChange}
-//                   placeholder="Enter complaint title"
-//                 />
-//               </Grid>
-
-//               {/* PRIORITY */}
-//               <Grid item xs={12} md={6}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Priority
-//                 </Typography>
-
-//                 <Select
-//                   fullWidth
-//                   name="Priority"
-//                   value={formData.Priority}
-//                   onChange={handleChange}
-//                 >
-//                   <MenuItem value="Low">Low</MenuItem>
-//                   <MenuItem value="Medium">Medium</MenuItem>
-//                   <MenuItem value="High">High</MenuItem>
-//                 </Select>
-//               </Grid>
-
-//               {/* STANDARD */}
-//               <Grid item xs={12} md={4}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Standard
-//                 </Typography>
-
-//                 <Box
-//                   sx={{
-//                     position: "relative",
-//                     border: "1px solid rgba(0,0,0,0.23)",
-//                     borderRadius: "4px",
-//                     minHeight: "56px",
-//                     width: "100%",
-//                     backgroundColor: "#fff",
-//                     display: "flex",
-//                     alignItems: "center",
-//                     px: 1.5,
-
-//                     "&:hover": {
-//                       borderColor: "rgba(0,0,0,0.87)",
-//                     },
-
-//                     "& .MuiAutocomplete-root": {
-//                       width: "100%",
-//                     },
-
-//                     "& .MuiInputBase-root": {
-//                       width: "100%",
-//                       border: "none !important",
-//                       boxShadow: "none !important",
-//                       background: "transparent !important",
-//                       padding: "0 !important",
-//                       minHeight: "40px",
-//                       display: "flex",
-//                       alignItems: "center",
-//                     },
-
-//                     "& .MuiInput-root:before": {
-//                       borderBottom: "none !important",
-//                     },
-
-//                     "& .MuiInput-root:after": {
-//                       borderBottom: "none !important",
-//                     },
-
-//                     "& .MuiOutlinedInput-notchedOutline": {
-//                       border: "none !important",
-//                     },
-
-//                     "& input": {
-//                       padding: "0 !important",
-//                       fontSize: "14px",
-//                     },
-
-//                     "& .MuiAutocomplete-input": {
-//                       padding: "0 !important",
-//                     },
-
-//                     "& .MuiAutocomplete-endAdornment": {
-//                       top: "50%",
-//                       transform: "translateY(-50%)",
-//                       right: "0px",
-//                     },
-
-//                     "& .MuiChip-root": {
-//                       display: "none !important",
-//                     },
-//                   }}
-//                 >
-
-//                   {/* CUSTOM PLACEHOLDER */}
-//                   {!selectedStandard && (
-//                     <Typography
-//                       sx={{
-//                         position: "absolute",
-//                         color: "#9e9e9e",
-//                         fontSize: "14px",
-//                         pointerEvents: "none",
-//                         zIndex: 1,
-//                         left: "14px",
-//                       }}
-//                     >
-//                       Select Standard
-//                     </Typography>
-//                   )}
-
-//                   {/* <MultiFormikOptimizedAutocomplete
-//                     id="standard"
-//                     name="standard"
-//                     label=""
-//                     multiple={false}
-//                     value={selectedStandard}
-//                     onChange={(e, newValue) => {
-
-//                       // SET STANDARD
-//                       setSelectedStandard(newValue || null);
-
-//                       // CLEAR STUDENT FIELD
-//                       setSelectedStudent(null);
-//                     }}
-//                     textFieldProps={{
-//                       fullWidth: true,
-//                       variant: "standard",
-
-//                       InputProps: {
-//                         disableUnderline: true,
-//                       },
-//                     }}
-//                     url={`${listViewurl}?data=${JSON.stringify({
-//                       Query: {
-//                         AccessID: "2183",
-//                         ScreenName: "Standard",
-//                         VerticalLicense: Subscriptionlastthree,
-//                         Filter: `CompanyID='${compID}'`,
-//                         Any: "",
-//                       },
-//                     })}`}
-//                   /> */}
-//                   <EditAutoComplete
-//                     sx={{ width: "100%", mt: 2 }}
-//                     name="standard"
-//                     id="standard"
-//                     value={selectedStandard}
-//                     onChange={(e, newValue) => {
-//                       console.log("Selected Standard:", newValue);
-//                       console.log("Standard RecordID:", newValue?.RecordID);
-
-//                       setSelectedStandard(newValue?.RecordID || null);
-//                     }}
-//                     url={`${listViewurl}?data={"Query":{"AccessID":"2183","ScreenName":"Standard","VerticalLicense":"${Subscriptionlastthree}","Filter":"CompanyID='${compID}'","Any":"","CompId":${compID}}}`}
-//                   />
-//                 </Box>
-//               </Grid>
-
-//               {/* STUDENT NAME */}
-//               <Grid item xs={12} md={4}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Student Name
-//                 </Typography>
-
-//                 <Box
-//                   sx={{
-//                     position: "relative",
-//                     border: "1px solid rgba(0,0,0,0.23)",
-//                     borderRadius: "4px",
-//                     minHeight: "56px",
-//                     width: "100%",
-//                     backgroundColor: "#fff",
-//                     display: "flex",
-//                     alignItems: "center",
-//                     px: 1.5,
-
-//                     "&:hover": {
-//                       borderColor: "rgba(0,0,0,0.87)",
-//                     },
-
-//                     "& .MuiAutocomplete-root": {
-//                       width: "100%",
-//                     },
-
-//                     "& .MuiInputBase-root": {
-//                       width: "100% !important",
-//                       minWidth: "100% !important",
-//                       border: "none !important",
-//                       boxShadow: "none !important",
-//                       background: "transparent !important",
-//                       padding: "0 !important",
-//                       minHeight: "40px",
-//                       display: "flex",
-//                       alignItems: "center",
-//                     },
-
-//                     "& .MuiAutocomplete-inputRoot": {
-//                       width: "100% !important",
-//                       flexWrap: "nowrap !important",
-//                     },
-
-//                     "& .MuiAutocomplete-input": {
-//                       width: "100% !important",
-//                       minWidth: "0 !important",
-//                       padding: "0 !important",
-//                       fontSize: "14px",
-//                     },
-
-//                     "& .MuiInput-root:before": {
-//                       borderBottom: "none !important",
-//                     },
-
-//                     "& .MuiInput-root:after": {
-//                       borderBottom: "none !important",
-//                     },
-
-//                     "& .MuiOutlinedInput-notchedOutline": {
-//                       border: "none !important",
-//                     },
-
-//                     "& .MuiAutocomplete-endAdornment": {
-//                       right: "0px",
-//                     },
-
-//                     "& .MuiChip-root": {
-//                       display: "none !important",
-//                     },
-//                   }}
-//                 >
-//                   {/* CUSTOM PLACEHOLDER */}
-//                   {!selectedStudent && (
-//                     <Typography
-//                       sx={{
-//                         position: "absolute",
-//                         color: "#9e9e9e",
-//                         fontSize: "14px",
-//                         pointerEvents: "none",
-//                         zIndex: 1,
-//                         left: "14px",
-//                       }}
-//                     >
-//                       Select Student
-//                     </Typography>
-//                   )}
-//                   {/* <MultiFormikOptimizedAutocomplete
-//                     id="student"
-//                     name="student"
-//                     label=""
-//                     multiple={false}
-//                     value={selectedStudent}
-//                     onChange={(e, newValue) => {
-//                       setSelectedStudent(newValue || null);
-//                     }}
-//                     textFieldProps={{
-//                       fullWidth: true,
-//                       variant: "standard",
-//                       InputProps: {
-//                         disableUnderline: true,
-//                       },
-//                     }}
-//                     url={`${listViewurl}?data=${JSON.stringify({
-//                       Query: {
-//                         AccessID: "2182",
-//                         ScreenName: "Student",
-//                         VerticalLicense: Subscriptionlastthree,
-
-//                         // DYNAMIC STANDARD ID
-//                         Filter: `CompanyID='${compID}' AND ProjectID='${selectedStandard?.RecordID || ""}'`,
-//                         Any: "",
-//                       },
-//                     })}`}
-//                   /> */}
-//                   <EditAutoComplete
-//                     sx={{ width: "100%", mt: 2 }}
-//                     name="student"
-//                     id="student"
-//                     value={selectedStudent}
-//                     onChange={(e, newValue) => {
-//                       console.log("Selected Student:", newValue);
-//                       console.log("Student RecordID:", newValue?.RecordID);
-
-//                       // STORE FULL OBJECT
-//                       setSelectedStudent(newValue?.EmployeeID || null);
-//                     }}
-//                     url={`${listViewurl}?data={"Query":{"AccessID":"2182","ScreenName":"Student","VerticalLicense":"${Subscriptionlastthree}","Filter":"CompanyID='${compID}' AND ProjectID='${selectedStandard?.EmployeeID || selectedStandard}'","Any":"","CompId":${compID}}}`}
-//                   />
-//                 </Box>
-//               </Grid>
-
-//               {/* FILE */}
-//               <Grid item xs={12} md={4}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Upload Attachment
-//                 </Typography>
-
-//                 <TextField
-//                   fullWidth
-//                   type="file"
-//                   onChange={handleFileChange}
-//                 />
-//               </Grid>
-
-//               {/* DESCRIPTION */}
-//               <Grid item xs={12}>
-//                 <Typography mb={1} fontWeight={600}>
-//                   Description
-//                 </Typography>
-
-//                 <TextField
-//                   fullWidth
-//                   multiline
-//                   rows={5}
-//                   name="Description"
-//                   value={formData.Description}
-//                   onChange={handleChange}
-//                   placeholder="Enter complaint description..."
-//                 />
-//               </Grid>
-//             </Grid>
-
-//             <Box
-//               display="flex"
-//               justifyContent="start"
-//               mt="20px"
-//               gap="20px"
-//               padding={1}
-//             >
-//               <LoadingButton
-//                 color="secondary"
-//                 variant="contained"
-//                 type="submit"
-//                 loading={isLoading}
-//                 onClick={handleSubmit}
-//               >
-//                 Save
-//               </LoadingButton>
-
-//               <Button
-//                 color="warning"
-//                 variant="contained"
-//                 onClick={() => {
-//                   navigate("/Apps/TR391/Feedback Complaints");
-//                 }}
-//               >
-//                 Cancel
-//               </Button>
-//             </Box>
-//           </Paper>
-//         </Box>
-//       </Box>
-
-//       <Box sx={{ flex: 1, p: 4, mb: 2 }}>
-//         <Paper
-//           elevation={0}
-//           sx={{
-//             p: 4,
-//             borderRadius: "20px",
-//             background: "#fff",
-//             mb: 4,
-//             boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
-//           }}
-//         >
-//           <Typography
-//             fontSize={34}
-//             fontWeight={700}
-//             color="#1F3C88"
-//             mb={4}
-//           >
-//             Reply Comment
-//           </Typography>
-
-//           <Grid container spacing={3}>
-
-//             {/* TITLE */}
-//             <Grid item xs={12}>
-//               <Typography mb={1} fontWeight={600}>
-//                 Feedback Response
-//               </Typography>
-
-//               <TextField
-//                 fullWidth
-//                 multiline
-//                 rows={5}
-//                 name="FeedbacksResponse"
-//                 value={formData.FeedbacksResponse}
-//                 onChange={handleChange}
-//                 placeholder="Enter Feedback Response Here..."
-//               />
-//             </Grid>
-
-
-//           </Grid>
-
-//           <Box
-//             display="flex"
-//             justifyContent="start"
-//             mt="20px"
-//             gap="20px"
-//             padding={1}
-//           >
-//             <LoadingButton
-//               color="secondary"
-//               variant="contained"
-//               type="submit"
-//               loading={isLoading}
-//               onClick={handleSubmit}
-//             >
-//               Save
-//             </LoadingButton>
-
-//             <Button
-//               color="warning"
-//               variant="contained"
-//               onClick={() => {
-//                 navigate("/Apps/TR391/Feedback Complaints");
-//               }}
-//             >
-//               Cancel
-//             </Button>
-//           </Box>
-//         </Paper>
-//       </Box>
-//     </Box>
-//   );
-// }
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  Button,
+  TextField,
+  MenuItem,
+  LinearProgress,
+  IconButton,
+  Breadcrumbs,
+  Tooltip,
+} from "@mui/material";
+
+import { Formik } from "formik";
+import { LoadingButton } from "@mui/lab";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+import {
+  getFetchData,
+  postData,
+} from "../../../store/reducers/Formapireducer";
+
+import { fileUpload } from "../../../store/reducers/Imguploadreducer";
+
+import { EditAutoComplete, PartySingleSelect } from "../../../ui-components/global/Autocomplete";
+import store from "../../..";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Swal from "sweetalert2";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useProSidebar } from "react-pro-sidebar";
+import * as Yup from "yup";
+const RaiseComplaints = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const params = useParams();
+
+  const mode = params.Mode;
+  const recID = params.id;
+
+  const location = useLocation();
+  const state = location.state || {};
+  const data = useSelector((state) => state.formApi.Data || {});
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+  const imageLoading = useSelector((state) => state.imageApi.imgLoading);
+
+  const listViewurl = useSelector(
+    (state) => state.globalurl.listViewurl
+  );
+
+  const compID = sessionStorage.getItem("compID");
+
+  const loginrecordID =
+    sessionStorage.getItem("loginrecordID");
+
+  const Subscriptionlastthree =
+    sessionStorage.getItem("SubscriptionCode")?.slice(-3) || "";
+
+
+  const { toggleSidebar, broken, rtl } = useProSidebar();
+
+  const [ptaImage, setPtaImage] = useState("");
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  // =========================================
+  // FETCH
+  // =========================================
+
+  useEffect(() => {
+
+    dispatch(
+      getFetchData({
+        accessID: "TR391",
+        get: "get",
+        recID,
+      })
+    );
+
+  }, [dispatch, recID, mode]);
+
+  // =========================================
+  // EDIT IMAGE
+  // =========================================
+
+  useEffect(() => {
+    if ((mode === "E" || mode === "V") && data) {
+      setPtaImage(data.Attachements || "");
+    }
+  }, [data, mode]);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        let schemaFields = {
+          Title: Yup.string()
+            .typeError(data.RaiseComplaints.EventTitle)
+            .required(data.RaiseComplaints.EventTitle),
+
+          Priority: Yup.string()
+            .typeError(data.RaiseComplaints.Priority)
+            .required(data.RaiseComplaints.Priority),
+
+          Description: Yup.string()
+            .typeError(data.RaiseComplaints.Description)
+            .required(data.RaiseComplaints.Description),
+          Standard: Yup.object()
+            .typeError(data.RaiseComplaints.Standard)
+            .required(data.RaiseComplaints.Standard)
+            .nullable(),
+
+          Student: Yup.object()
+            .typeError(data.RaiseComplaints.Student)
+            .required(data.RaiseComplaints.Student)
+            .nullable(),
+
+        };
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
+  // =========================================
+  // INITIAL VALUES
+  // =========================================
+
+  const InitialValues = {
+    Title: data?.Title || "",
+
+    Priority: data?.Priority || "",
+
+    Description: data?.Description || "",
+
+    FeedbacksResponse:
+      data?.FeedbackResponse || "",
+
+    Standard: data?.StandardID
+      ? {
+        RecordID: data.StandardID,
+        Name: data.StandardName,
+        Code: data.StandardCode,
+      }
+      : null,
+
+    Student: data?.StudentID
+      ? {
+        // RecordID: data.StudentID,
+        EmployeeID: data.StudentID,
+        Name: data.StudentName,
+        Code: data.StudentCode || "",
+      }
+      : null,
+    Teacher: data?.TeacherID
+      ? {
+        // RecordID: data.TeacherID,
+        EmployeeID: data.TeacherID,
+        Name: data.TeacherName,
+        Code: data.TeacherCode || "",
+      }
+      : null,
+  };
+
+  // =========================================
+  // FILE UPLOAD
+  // =========================================
+
+  const getFileChange = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        "Only Images, PDF and DOCX files are allowed"
+      );
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("type", "images");
+
+    const fileData = await dispatch(
+      fileUpload({ formData })
+    );
+
+    if (fileData.payload.Status === "Y") {
+      setPtaImage(fileData.payload.name);
+
+      toast.success(fileData.payload.Msg);
+    } else {
+      toast.error(fileData.payload.Msg);
+    }
+  };
+
+  // =========================================
+  // SAVE
+  // =========================================
+
+  const Fnsave = async (values) => {
+    const action =
+      mode === "A"
+        ? "insert"
+        : mode === "E"
+          ? "update"
+          : "insert";
+
+    const idata = {
+      RecordID: recID,
+
+      CompanyID: compID,
+
+      CategoryID: "1",
+
+      StandardID:
+        values.Standard?.RecordID || 0,
+
+      StudentID:
+        values.Student?.EmployeeID || 0,
+
+      // StudentName:values.Student?.Name || "",
+
+      Title: values.Title || "",
+
+      Priority: values.Priority || "Low",
+
+      Description:
+        values.Description || "",
+
+      FeedbacksResponse:
+        values.FeedbacksResponse || "",
+
+      Attachments: ptaImage,
+
+      SortOrder: "1",
+
+      Disable: "N",
+
+      DeleteFlag: "N",
+
+      GivenBy: loginrecordID,
+
+      Status: "Applied",
+
+      Type: "T",
+    };
+
+    console.log("SUBMIT DATA", idata);
+
+    const response = await dispatch(
+      postData({
+        accessID: "TR391",
+        action,
+        idata,
+      })
+    );
+
+    if (response.payload.Status === "Y") {
+      toast.success(response.payload.Msg);
+
+      navigate(-1);
+    } else {
+      toast.error(
+        response?.payload?.Msg ||
+        "Something went wrong"
+      );
+    }
+  };
+
+  const fnLogOut = (props) => {
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          navigate("/Apps/TR391/Escalation");
+        }
+      } else {
+        return;
+      }
+    });
+  };
+  return (
+    <>
+      {getLoading && <LinearProgress />}
+      {imageLoading && <LinearProgress />}
+
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  // navigate("/Apps/TR243/Party");
+                  navigate("/Apps/TR391/Escalation");
+                }}
+              >
+                {/* {mode === "E" || mode === "V" ? `List Of Feedback/Complaints(${state.Breadcrumb1 || ""})` : `List Of Feedback/Complaints`} */}
+                {mode === "E" || mode === "V" ? `List Of Escalation(${state.Breadcrumb1 || ""})` : `List Of Escalation`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                {/* {mode === "E" ? "Edit Feedback/Complaint" : mode === "V" ? "View Feedback/Complaint" : "Add Feedback/Complaint"} */}
+                {mode === "E" ? "Edit Escalation" : mode === "V" ? "View Escalation" : "Add Escalation"}
+
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
+      {!getLoading ? (
+        <Paper
+          elevation={3}
+          sx={{
+            margin: "10px",
+            p: 3,
+            background: "#fff",
+          }}
+        >
+          <Formik
+            initialValues={InitialValues}
+            enableReinitialize={true}
+            onSubmit={(values) => {
+              Fnsave(values);
+            }}
+            validationSchema={validationSchema}
+          >
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              errors,
+              touched,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={3}
+                >
+
+                  {/* FORM */}
+
+                  <Box
+                    display="grid"
+                    gridTemplateColumns={{
+                      xs: "1fr",
+                      md: "1fr 1fr",
+                    }}
+                    gap={3}
+                  >
+                    {/* TITLE */}
+
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      focused
+                      name="Title"
+                      id="Title"
+                      label="Title"
+                      label={
+                        <>
+                          Title
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      value={values.Title}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.Title && !!errors.Title}
+                      helperText={touched.Title && errors.Title}
+                      disabled={mode === "V"}
+                    />
+
+                    {/* PRIORITY */}
+
+                    <TextField
+                      fullWidth
+                      select
+                      variant="standard"
+                      focused
+                      name="Priority"
+                      id="Priority"
+                      // label="Priority"
+                      label={
+                        <>
+                          Priority
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      value={values.Priority}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.Priority && !!errors.Priority}
+                      helperText={touched.Priority && errors.Priority}
+                      disabled={mode === "V"}
+                    >
+                      <MenuItem value="Low">
+                        Low
+                      </MenuItem>
+
+                      <MenuItem value="Medium">
+                        Medium
+                      </MenuItem>
+
+                      <MenuItem value="High">
+                        High
+                      </MenuItem>
+                    </TextField>
+
+                    {/* STANDARD */}
+
+                    <PartySingleSelect
+                      id="Standard"
+                      name="Standard"
+                      label={
+                        <>
+                          Standard/Activities
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      value={values.Standard}
+                      onChange={(newValue) => {
+                        setFieldValue("Standard", newValue);
+                        setFieldValue("Student", null);
+                      }}
+                      error={!!touched.Standard && !!errors.Standard}
+                      helperText={touched.Standard && errors.Standard}
+                      focused
+                      InputLabelProps={{
+                        shrink: true, // ✅ prevents overlap
+                      }}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2183",
+                          ScreenName: "Standard",
+                          VerticalLicense: "003",
+                          Filter: `CompanyID='${compID}'`,
+                          Any: "",
+                        },
+                      })}`}
+                      disabled={mode === "V"}
+                    />
+
+                    {/* STUDENT */}
+
+                    <PartySingleSelect
+                      id="Student"
+                      name="Student"
+                      label={
+                        <>
+                          Student
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.Student}
+                      onChange={(newValue) => {
+                        setFieldValue("Student", newValue);
+                        // setFieldTouched("Student", true);
+                      }}
+                      error={!!touched.Student && !!errors.Student}
+                      helperText={touched.Student && errors.Student}
+                      InputLabelProps={{
+                        shrink: true, // ✅ prevents overlap
+                      }}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2182",
+                          ScreenName: "Student",
+                          VerticalLicense: "003",
+                          Filter: `CompanyID='${compID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
+                          Any: "",
+                        },
+                      })}`}
+                      disabled={mode === "V"}
+                    />
+                    <PartySingleSelect
+                      id="Teacher"
+                      name="Teacher"
+                      label={
+                        <>
+                          Teacher
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.Teacher}
+                      onChange={(newValue) => {
+                        setFieldValue("Teacher", newValue);
+                        // setFieldTouched("Teacher", true);
+                      }}
+                      error={!!touched.Teacher && !!errors.Teacher}
+                      helperText={touched.Teacher && errors.Teacher}
+                      InputLabelProps={{
+                        shrink: true, // ✅ prevents overlap
+                      }}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2194",
+                          ScreenName: "Teacher",
+                          VerticalLicense: "003",
+                          Filter: `CompanyID='${compID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
+                          Any: "",
+                        },
+                      })}`}
+                      disabled={mode === "V"}
+                    />
+                  </Box>
+
+                  {/* DESCRIPTION */}
+
+                  <TextField
+                    fullWidth
+                    multiline
+                    variant="standard"
+                    focused
+                    name="Description"
+                    id="Description"
+                    // label="Description"
+                    label={
+                      <>
+                        Description
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    value={values.Description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={!!touched.Description && !!errors.Description}
+                    helperText={touched.Description && errors.Description}
+                    disabled={mode === "V"}
+                  />
+
+                  {/* FEEDBACK */}
+
+                  {mode !== "A" && (
+                    <TextField
+                      fullWidth
+                      multiline
+                      variant="standard"
+                      focused
+                      name="FeedbacksResponse"
+                      label="Feedback Response"
+                      value={
+                        values.FeedbacksResponse
+                      }
+                      onChange={handleChange}
+                      disabled={mode === "V"}
+                    />
+                  )}
+
+                  {/* FILE */}
+
+                  <Box>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mb: 1,
+                        fontWeight: 600,
+                        color: "#6B7280",
+                      }}
+                    >
+                      Upload Attachment
+                    </Typography>
+
+                    <Box
+                      component="label"
+                      sx={{
+                        border:
+                          "1px dashed #D1D5DB",
+                        borderRadius: "10px",
+                        backgroundColor:
+                          "#F9FAFB",
+                        height: "56px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        hidden
+                        type="file"
+                        accept="image/*,.pdf,.docx"
+                        onChange={getFileChange}
+                        disabled={mode === "V"}
+                      />
+
+                      <Typography
+                        fontSize="14px"
+                        color="#6B7280"
+                      >
+                        Click to upload file
+                      </Typography>
+                    </Box>
+
+                    <Button
+                      variant="contained"
+                      sx={{
+                        mt: 2,
+                        width: "100%",
+                      }}
+                      onClick={() => {
+                        const file =
+                          ptaImage ||
+                          data?.Attachements;
+
+                        if (file) {
+                          window.open(
+                            store.getState()
+                              .globalurl
+                              .EssurlimageUrl + file,
+                            "_blank"
+                          );
+                        } else {
+                          toast.error(
+                            "Please Upload File"
+                          );
+                        }
+                      }}
+                    >
+                      View Uploaded File
+                    </Button>
+                  </Box>
+
+                  {/* BUTTONS */}
+
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    gap={2}
+                    mt={2}
+                  >
+                    <LoadingButton
+                      color="primary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                      disabled={mode === "V"}
+                    >
+                      Save
+                    </LoadingButton>
+
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() =>
+                        navigate(-1)
+                      }
+                    >
+                      Back To List View
+                    </Button>
+                  </Box>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+    </>
+  );
+};
+
+export default RaiseComplaints;

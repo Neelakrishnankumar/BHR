@@ -388,7 +388,7 @@ const EditCulturals = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}`, {
+                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -399,9 +399,15 @@ const EditCulturals = () => {
                                 variant="h5"
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
-                                onClick={() => {
+                                // onClick={() => {
+                                //     // navigate("/Apps/TR243/Party");
+                                //     navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/C`, {
+                                //         state: { ...state }
+                                //     })
+                                // }}
+                                 onClick={() => {
                                     // navigate("/Apps/TR243/Party");
-                                    navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/C`, {
+                                    navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/C`, {
                                         state: { ...state }
                                     })
                                 }}
@@ -414,7 +420,7 @@ const EditCulturals = () => {
                                 color="#0000D1"
                                 sx={{ cursor: "default" }}
                             >
-                                {mode === "E" ? "Add (Cultural)" : "Edit (Cultural)"}
+                                {mode === "E" ? "Edit Cultural" : mode === "V" ? "View Cultural" : "Add Cultural"}
                             </Typography>
                         </Breadcrumbs>
                     </Box>
@@ -991,7 +997,7 @@ const EditCulturals = () => {
                                                 startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
                                                 variant="outlined"
                                                 color="warning"
-                                                onClick={() => navigate(`/Apps/SecondarylistView/TR384/Event%20Category/${params.parentID3}/Events/TR385/${params.parentID2}/C`,
+                                               onClick={() => navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/C`,
                                                     { state: { ...state } }
                                                 )}
                                             >

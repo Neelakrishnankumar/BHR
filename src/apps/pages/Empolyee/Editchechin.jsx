@@ -168,10 +168,10 @@ const Editcheckin = () => {
         : mode === "E" && del
           ? "harddelete"
           : "update";
-    var isCheck = "N";
-    if (values.disable == false) {
-      isCheck = "Y";
-    }
+    // var isCheck = "N";
+    // if (values.disable == false) {
+    //   isCheck = "Y";
+    // }
 
     const idata = {
       RecordID: recID,
@@ -181,7 +181,8 @@ const Editcheckin = () => {
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
       EmployeeID: values.employee.RecordID || 0,
       EmployeeName: values.employee.Name || "",
-      WorkAtHome: isCheck,
+      WorkAtHome: values.disable == true ? "Y" : "N",
+      // WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,
@@ -444,7 +445,7 @@ const Editcheckin = () => {
                       }}
                       error={!!touched.employee && !!errors.employee}
                       helperText={touched.employee && errors.employee}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Location","VerticalLicense": "${Subscriptionlastthree}","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
 
@@ -474,7 +475,7 @@ const Editcheckin = () => {
                       }}
                       error={!!touched.location && !!errors.location}
                       helperText={touched.location && errors.location}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","VerticalLicense": "${Subscriptionlastthree}","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
 
                   </FormControl>
@@ -511,7 +512,7 @@ const Editcheckin = () => {
                       helperText={touched.gate && errors.gate}
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","VerticalLicense": "${Subscriptionlastthree}","Filter":"parentID=${locgate}","Any":""}}`}
                     //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
 
                     />
@@ -626,7 +627,8 @@ const Editcheckin = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" && mode == "E" ? (
+                  )}
+                   {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -651,15 +653,9 @@ const Editcheckin = () => {
                       Delete
                     </Button>
                   ) : (
-                    // <Button
-                    //   color="error"
-                    //   variant="contained"
-                    //   disabled={true}
-                    // >
-                    //   Delete
-                    // </Button>
+                   
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

@@ -52,7 +52,7 @@ import * as Yup from "yup";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
 // import CryptoJS from "crypto-js";
-const EditEmergency = () => {
+const EditOtherEvents = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -61,7 +61,7 @@ const EditEmergency = () => {
   var mode = params.Mode;
   var accessID = params.accessID;
   var Type = params.Type;
-  console.log("🚀 ~ EditEmergency ~ Type:", Type);
+  console.log("🚀 ~ Editothers ~ Type:", Type);
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -81,25 +81,25 @@ const EditEmergency = () => {
   const state = location.state || {};
 
   const [buttonValue, setButtonValue] = useState("");
-  console.log("🚀 ~ EditEmergency ~ buttonValue:", buttonValue);
+  console.log("🚀 ~ Editothers ~ buttonValue:", buttonValue);
   const [validationSchema, setValidationSchema] = useState(null);
   const [errorMsgData, setErrorMsgData] = useState(null);
-  const [emergencyImage, setEmergencyImage] = useState("");
-  const [emergencyvideo, setEmergencyvideo] = useState("");
-    const [emergencyaudio, setEmergencyaudio] = useState("");
+  const [othersImage, setothersImage] = useState("");
+  const [othersvideo, setothersvideo] = useState("");
+    const [othersaudio, setothersaudio] = useState("");
 
-  console.log("🚀 ~ EditEmergency ~ emergencyImage:", emergencyImage);
-  console.log("🚀 ~ EditEmergency ~ emergencyvideo:", emergencyvideo);
-  console.log("🚀 ~ EditEmergency ~ emergencyaudio:", emergencyaudio);
+  console.log("🚀 ~ Editothers ~ othersImage:", othersImage);
+  console.log("🚀 ~ Editothers ~ othersvideo:", othersvideo);
+  console.log("🚀 ~ Editothers ~ othersaudio:", othersaudio);
 
   useEffect(() => {
     dispatch(
-      EventsgetData({ accessID: "TR385", get: "get", recID, Type: "E" }),
+      EventsgetData({ accessID: "TR385", get: "get", recID, Type: "O" }),
     );
     setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific || "Y");
-    setEmergencyImage(mode === "A" ? "" : data?.Attachment || "");
-    setEmergencyvideo(mode === "A" ? "" : data?.Video || "");
-    setEmergencyaudio (mode === "A" ? "" : data?.Audio || "");
+    setothersImage(mode === "A" ? "" : data?.Attachment || "");
+    setothersvideo(mode === "A" ? "" : data?.Video || "");
+    setothersaudio (mode === "A" ? "" : data?.Audio || "");
   }, [location.key, mode]);
 
   useEffect(() => {
@@ -111,38 +111,38 @@ const EditEmergency = () => {
       .then((data) => {
         setErrorMsgData(data);
         let schemaFields = {
-          EmergencyTitle: Yup.string()
-            .typeError(data.EventEmergency.EmergencyTitle)
-            .required(data.EventEmergency.EmergencyTitle),
+          othersTitle: Yup.string()
+            .typeError(data.Eventothers.othersTitle)
+            .required(data.Eventothers.othersTitle),
 
           Priority: Yup.string()
-            .typeError(data.EventEmergency.Priority)
-            .required(data.EventEmergency.Priority),
+            .typeError(data.Eventothers.Priority)
+            .required(data.Eventothers.Priority),
 
           Message: Yup.string()
-            .typeError(data.EventEmergency.Message)
-            .required(data.EventEmergency.Message),
+            .typeError(data.Eventothers.Message)
+            .required(data.Eventothers.Message),
 
           ContactPersonAndNumber: Yup.string()
-            .typeError(data.EventEmergency.ContactPersonAndNumber)
-            .required(data.EventEmergency.ContactPersonAndNumber),
+            .typeError(data.Eventothers.ContactPersonAndNumber)
+            .required(data.Eventothers.ContactPersonAndNumber),
         };
 
         if (buttonValue === "Y") {
           schemaFields.Standard1 = Yup.array()
-            .min(1, data.EventEmergency.Standard1)
-            .required(data.EventEmergency.Standard1);
+            .min(1, data.Eventothers.Standard1)
+            .required(data.Eventothers.Standard1);
         }
 
         if (buttonValue === "N") {
           schemaFields.Standard = Yup.object()
-            .typeError(data.EventEmergency.Standard)
-            .required(data.EventEmergency.Standard)
+            .typeError(data.Eventothers.Standard)
+            .required(data.Eventothers.Standard)
             .nullable();
 
           schemaFields.Student = Yup.object()
-            .typeError(data.EventEmergency.Student)
-            .required(data.EventEmergency.Student)
+            .typeError(data.Eventothers.Student)
+            .required(data.Eventothers.Student)
             .nullable();
         }
 
@@ -155,7 +155,7 @@ const EditEmergency = () => {
   const currentDate = new Date().toISOString().split("T")[0];
 
   const InitialValue = {
-    EmergencyTitle: data?.Title || "",
+    othersTitle: data?.Title || "",
     Priority: data?.Priority || "",
     NotifyClasses: [],
     Standard1: Array.isArray(data?.StandardID)
@@ -206,7 +206,7 @@ const EditEmergency = () => {
     const idata = {
       RecordID: recID,
       EventCategoryID: params.parentID2,
-      Title: values.EmergencyTitle || "",
+      Title: values.othersTitle || "",
       CreatedDate: currentDate,
       StdActivitiesID:
         buttonValue === "Y"
@@ -224,13 +224,13 @@ const EditEmergency = () => {
       NotifySms: values.SMS === true ? "Y" : "N",
       NotifyEmail: values.Email === true ? "Y" : "N",
       AcknowledgementRequired: values.Acknowledgement === true ? "Y" : "N",
-      // Attachment: emergencyImage || "",
+      // Attachment: othersImage || "",
       Attachment:
         fileCategory === "images" || fileCategory === "document"
-          ? emergencyImage
+          ? othersImage
           : "",
-      Video: fileCategory === "videos" ? emergencyvideo : "",
-      Audio: fileCategory === "audios" ? emergencyaudio : "",
+      Video: fileCategory === "videos" ? othersvideo : "",
+      Audio: fileCategory === "audios" ? othersaudio : "",
       CreatedBy: LoginID,
     };
 
@@ -238,7 +238,7 @@ const EditEmergency = () => {
       EventspostData({
         accessID: "TR385",
         action,
-        Type: "E",
+        Type: "O",
         idata,
         CompanyID,
       }),
@@ -319,70 +319,12 @@ const EditEmergency = () => {
     const fileData = await dispatch(fileUpload({ formData }));
 
     if (fileData.payload.Status === "Y") {
-      setEmergencyImage(fileData.payload.name); // store file name
-      setEmergencyvideo(fileData.payload.name);
-      setEmergencyaudio(fileData.payload.name);
+      setothersImage(fileData.payload.name); // store file name
+      setothersvideo(fileData.payload.name);
+      setothersaudio(fileData.payload.name);
       toast.success(fileData.payload.Msg);
     }
   };
-  // const getFileChange = async (event) => {
-  //     // setEmergencyImage(event.target.files[0]);
-
-  //     // console.log(event.target.files[0]);
-  //     const file = event.target.files[0];
-
-  //     if (!file) return;
-
-  //     // const allowedTypes = [
-  //     //     "application/pdf",
-  //     //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  //     //     "image/jpeg",
-  //     //     "image/png",
-  //     //     "image/jpg",
-  //     //     "image/webp",
-  //     // ];
-
-  //     // if (!allowedTypes.includes(file.type)) {
-  //     //     toast.error(
-  //     //         "Only Images, PDF and DOCX files are allowed"
-  //     //     );
-  //     //     return;
-  //     // }
-
-  //      const fileType = file.type;
-
-  // // Allow: images, videos, audio + specific docs
-  // const isAllowed =
-  //     fileType.startsWith("image/") ||
-  //     fileType.startsWith("video/") ||
-  //     fileType.startsWith("audio/") ||
-  //     fileType === "application/pdf" ||
-  //     fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-
-  // if (!isAllowed) {
-  //     toast.error("Only Images, Videos, Audio, PDF and DOCX files are allowed");
-  //     return;
-  // }
-
-  //     setEmergencyImage(file);
-
-  //     const formData = new FormData();
-  //     formData.append("file", event.target.files[0]);
-  //     formData.append("type", "images");
-
-  //     const fileData = await dispatch(fileUpload({ formData }));
-  //     setEmergencyImage(fileData.payload.name);
-  //     // sessionStorage.setItem("emergencyImage", fileData.payload.name);
-  //     console.log(">>>", fileData.payload);
-  //     console.log(
-  //         "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-  //         fileData
-  //     );
-  //     if (fileData.payload.Status == "Y") {
-  //         // console.log("I am here");
-  //         toast.success(fileData.payload.Msg);
-  //     }
-  // };
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -452,10 +394,10 @@ const EditEmergency = () => {
                 sx={{ cursor: "default" }}
               >
                 {mode === "E"
-                  ? "Edit Emergency Event"
+                  ? "Edit Other Event"
                   : mode === "V"
-                    ? "View Emergency Event"
-                    : "Add Emergency Event"}
+                    ? "View Other Event"
+                    : "Add Other Event"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -528,24 +470,24 @@ const EditEmergency = () => {
                         fullWidth
                         variant="standard"
                         focused
-                        name="EmergencyTitle"
-                        // label="Emergency Type"
+                        name="othersTitle"
+                        // label="others Type"
                         label={
                           <>
-                            Emergency Type
+                            Other Event Title
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
                           </>
                         }
-                        value={values.EmergencyTitle}
+                        value={values.othersTitle}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={
-                          !!touched.EmergencyTitle && !!errors.EmergencyTitle
+                          !!touched.othersTitle && !!errors.othersTitle
                         }
                         helperText={
-                          touched.EmergencyTitle && errors.EmergencyTitle
+                          touched.othersTitle && errors.othersTitle
                         }
                       />
 
@@ -602,14 +544,14 @@ const EditEmergency = () => {
                         }}
                       >
                         <Button
-                          color={buttonValue === "Y" ? "error" : "inherit"}
+                          color={buttonValue === "Y" ? "primary" : "inherit"}
                           onClick={() => handleButtonClick("Y")}
                         >
                           Whole School / Class
                         </Button>
 
                         <Button
-                          color={buttonValue === "N" ? "error" : "inherit"}
+                          color={buttonValue === "N" ? "primary" : "inherit"}
                           onClick={() => handleButtonClick("N")}
                         >
                           Specific Student
@@ -620,56 +562,6 @@ const EditEmergency = () => {
                     {/* CLASS CHIPS */}
                     {buttonValue === "Y" ? (
                       <Box>
-                        {/* <Typography
-                                                    variant="subtitle2"
-                                                    sx={{
-                                                        mb: 1,
-                                                        fontWeight: 600,
-                                                        color: "#6B7280",
-                                                    }}
-                                                >
-                                                    Notify Classes
-                                                </Typography> */}
-
-                        {/* <Box
-                                                    display="flex"
-                                                    flexWrap="wrap"
-                                                    gap={1}
-                                                >
-                                                    {[
-                                                        "All School",
-                                                        "Std 1",
-                                                        "Std 2",
-                                                        "Std 3",
-                                                        "Std 4",
-                                                        "Std 5",
-                                                        "Std 6",
-                                                        "Std 7",
-                                                        "Std 8",
-                                                        "Std 9",
-                                                        "Std 10",
-                                                        "Std 11",
-                                                        "Std 12",
-                                                        "Staff",
-                                                    ].map((item) => {
-                                                        const isSelected = values.NotifyClasses.includes(item);
-                                                        return (
-                                                            <Chip
-                                                                key={item}
-                                                                label={item}
-                                                                clickable
-                                                                onClick={() => handleChipClick(item)}
-                                                                color={isSelected ? "error" : "default"}
-                                                                variant={isSelected ? "filled" : "outlined"}
-                                                                sx={{
-                                                                    borderRadius: "20px",
-                                                                    fontWeight: 500,
-                                                                    transition: "0.2s",
-                                                                }}
-                                                            />
-                                                        );
-                                                    })}
-                                                </Box> */}
                         <EventsmultiSelect
                           id="Standard1"
                           name="Standard1"
@@ -797,7 +689,7 @@ const EditEmergency = () => {
                           </span>
                         </>
                       }
-                      placeholder="Describe the emergency clearly"
+                      placeholder="Describe the others clearly"
                       value={values.Message}
                       onChange={handleChange}
                       error={!!touched.Message && !!errors.Message}
@@ -863,7 +755,7 @@ const EditEmergency = () => {
                             color: "#6B7280",
                           }}
                         >
-                          Attach Emergency
+                          Attach others
                         </Typography>
 
                         <Box
@@ -909,29 +801,29 @@ const EditEmergency = () => {
                             width: "100%",
                           }}
                           onClick={() => {
-                            data?.Attachment || emergencyImage
+                            data?.Attachment || othersImage
                               ? window.open(
-                                  emergencyImage
+                                  othersImage
                                     ? store.getState().globalurl.attachmentUrl +
-                                        emergencyImage
+                                        othersImage
                                     : store.getState().globalurl.attachmentUrl +
                                         data?.Attachment,
                                   "_blank",
                                 )
-                              : data?.Video || emergencyvideo
+                              : data?.Video || othersvideo
                                 ? window.open(
-                                    emergencyvideo
+                                    othersvideo
                                       ? store.getState().globalurl
-                                          .videoAttachmentUrl + emergencyvideo
+                                          .videoAttachmentUrl + othersvideo
                                       : store.getState().globalurl
                                           .videoAttachmentUrl + data?.Video,
                                     "_blank",
                                   )
-                                : data?.Audio || emergencyaudio
+                                : data?.Audio || othersaudio
                                   ? window.open(
-                                      emergencyaudio
+                                      othersaudio
                                         ? store.getState().globalurl
-                                            .audioAttachmentUrl + emergencyaudio
+                                            .audioAttachmentUrl + othersaudio
                                         : store.getState().globalurl
                                             .audioAttachmentUrl + data?.Audio,
                                       "_blank",
@@ -1044,4 +936,4 @@ const EditEmergency = () => {
   );
 };
 
-export default EditEmergency;
+export default EditOtherEvents;

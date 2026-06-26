@@ -1303,6 +1303,7 @@ export function SprintEmpAutocomplete1({
       size="small"
       fullWidth
       limitTags={1}
+      // variant="standard"
       options={options}
       loading={loading}
       value={value || null}
@@ -1318,8 +1319,92 @@ export function SprintEmpAutocomplete1({
       renderInput={(params) => (
         <TextField
           focused
+          // variant="standard"
           {...params}
-          label={props.label || "Days"}
+          // label={props.label || "Days"}
+          label=""
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {/* {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null} */}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+export function SubjectAutocomplete({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data?.Data?.rows || [];
+        setOptions(data);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setOptions([]);
+        setError("Failed to load options");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      // variant="standard"
+      options={options}
+      loading={loading}
+      value={value || null}
+      isOptionEqualToValue={(option, val) => option?.Name === val?.Name}
+      onChange={(event, newValue) => {
+        onChange(newValue);
+      }}
+      // getOptionLabel={(option) => {
+      //   if (typeof option === "string") return option;
+      //   if (!option || typeof option !== "object") return "";
+      //   return option.Name || "";
+      // }}
+      getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      renderInput={(params) => (
+        <TextField
+          focused
+          // variant="standard"
+          {...params}
+          // label={props.label || "Days"}
+          label=""
           error={!!error}
           helperText={error}
           InputProps={{
@@ -1598,6 +1683,107 @@ export function MultiFormikOptimizedAutocomplete({
           helperText={helper}
           InputProps={{
             ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+export function MultiFormikOptimizedAutocompletestaff({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        console.log("API Response:", response.data);
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
+        setOptions(Array.isArray(data) ? data : []);
+        //setOptions(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); // Fallback to an empty array
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      sx={{
+    width: "100%",
+    minWidth: "250px",   // 👈 increase this value as needed
+    "& .MuiInputBase-root": {
+      height: "40px",
+       alignItems: "flex-start",
+    },
+  }}
+      size="small"
+      multiple={multiple}
+      // limitTags={1}
+      limitTags={2}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      // value={value}
+      value={Array.isArray(value) ? value : []}
+      onChange={onChange}
+      options={options}
+      variant="standard" // Set variant to "standard"
+      focused
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === String(value?.RecordID)
+      }
+      getOptionLabel={(option) => option?.Name || ""}
+      // getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      disableCloseOnSelect
+      loading={loading}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", gap: 2, height: 20 }}>
+          <Checkbox size="small" sx={{ marginLeft: -1 }} checked={selected} />
+          {option.Name}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          error={errors}
+          variant="standard"
+          focused
+          fullWidth
+          helperText={helper}
+          InputProps={{
+            ...params.InputProps,
+             style: { width: "100%" },
             endAdornment: (
               <>
                 {loading && <CircularProgress color="inherit" size={20} />}

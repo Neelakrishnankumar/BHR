@@ -7,11 +7,15 @@ import { useState } from "react";
 
 const initialState = {
   Data: {},
-  Department:[],
+  Department: [],
   Status: "",
   msg: "",
   loading: false,
   getLoading: false,
+  UnitStatus: "",
+  Unitmsg: "",
+  UnitgetLoading: false,
+  UnitData: {},
   regularizationLoading: false,
   expgetLoading: false,
   error: "",
@@ -182,10 +186,10 @@ const initialState = {
   paySlipdata: [],
   paySlipstatus: "",
   paySliploading: false,
-//CRM_ITEM_STOCK_ANALYTICS
-Itemstockstatus: "",
- itemstockDataAnalyticsLoading: false,
-  itemstockDataAnalytics:[],
+  //CRM_ITEM_STOCK_ANALYTICS
+  Itemstockstatus: "",
+  itemstockDataAnalyticsLoading: false,
+  itemstockDataAnalytics: [],
 
   //ORDER ITEM --> REPLACEMENT QTY
   replacementQtyGetdata: {},
@@ -259,6 +263,11 @@ Itemstockstatus: "",
   PublishEventloading: false,
   PublishEventdata: {},
 
+  //TIMETABLE - TASK PROCESS
+  TaskProcessstatus: "",
+  TaskProcessloading: false,
+  TaskProcessdata: {},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -278,6 +287,9 @@ Itemstockstatus: "",
   slotLoading: false,
   slotStatus: "",
   slotgetData: [],
+  staffmappingGetData: {},
+  staffmappingGetDataloading: false,
+  staffmappingStatus: ""
 
 };
 
@@ -1326,7 +1338,37 @@ export const getFetchFeeData = createAsyncThunk(
     return response.data;
   },
 );
+export const getFetchCashData = createAsyncThunk(
+  "CashManagement/Header",
+  async ({ accessID, get, recID, CompanyID }) => {
+    var url = store.getState().globalurl.apiUrl;
 
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 export const getFetchData_v1 = createAsyncThunk(
   "allScreen_v1/Header_v1",
   async ({ accessID, get, recID, CompanyID }) => {
@@ -1358,6 +1400,36 @@ export const getFetchData_v1 = createAsyncThunk(
     return response.data;
   },
 );
+export const UnitFetchData = createAsyncThunk(
+  "Units/Division/get",
+  async ({ ProjectID, CompanyID }) => {
+    var url = store.getState().globalurl.UnitAreaConfigGet;
+
+    const data = {
+      ProjectID: ProjectID,
+      CompanyID: CompanyID,
+      // SubjectID: SubjectID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 export const EventsgetData = createAsyncThunk(
   "EventsgetData/get",
   async ({ accessID, get, recID, Type }) => {
@@ -1367,7 +1439,7 @@ export const EventsgetData = createAsyncThunk(
       accessid: accessID,
       action: get,
       recid: recID,
-      Type:Type
+      Type: Type
     };
 
     console.log(
@@ -2176,15 +2248,15 @@ export const TimeTablePostData = createAsyncThunk(
 
 export const EventspostData = createAsyncThunk(
   "EventspostData/post",
-  async ({ accessID, action, idata, Type,CompanyID }) => {
+  async ({ accessID, action, idata, Type, CompanyID }) => {
     const url = store.getState().globalurl.apiUrl;
 
     const data = {
       accessid: accessID,
       action: action,
       data: idata,
-      Type:Type,
-      CompanyID:CompanyID
+      Type: Type,
+      CompanyID: CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -2943,6 +3015,28 @@ export const TeacherOccupancyget = createAsyncThunk(
     }
   }
 );
+export const NonTeacherOccupancyget = createAsyncThunk(
+  "NonTeacherOccupancyget/get",
+  async (payload, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.ActivityOccupancy;
+
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const TimetableProcessController = createAsyncThunk(
   "TimetableProcess/Get",
   async ({ data }) => {
@@ -2991,6 +3085,50 @@ export const PublishEvent = createAsyncThunk(
     return response.data;
   }
 );
+export const TaskProcess = createAsyncThunk(
+  "TaskProcess/Post",
+  async ({ data }) => {
+    var url = store.getState().globalurl.TaskProcessController;
+
+    const payload =
+    {
+      CompanyID: data.CompanyID,
+      ProjectID: data.ProjectID,
+      TermID: data.TermID,
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const PublishEventCompanies = createAsyncThunk(
+  "PublishEventComp/Post",
+  async ({ data }) => {
+    const url = store.getState().globalurl.EventPublishedPost;
+
+    const payload = {
+      CompanyID: data.CompanyID,
+      EventCategoryID: data.EventCategoryID,
+    };
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
 export const TimeTableGenerateget = createAsyncThunk(
   "Standard/TimeTableGenerateget",
   async (payload, { rejectWithValue, getState }) => {
@@ -3003,6 +3141,37 @@ export const TimeTableGenerateget = createAsyncThunk(
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
       });
+
+      console.log("API RESPONSE:", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("API ERROR:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const staffmappingTeacherget = createAsyncThunk(
+  "Standard/staffmappingTeacher",
+  async ({ ProjectID, CompanyID }, { rejectWithValue, getState }) => {
+    try {
+      const url = getState().globalurl.StandardstaffmapingGET;
+
+      const response = await axios.post(
+        url,
+        {
+          ProjectID,
+          CompanyID,
+        },
+        {
+          headers: {
+            Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+
+          },
+        }
+      );
 
       console.log("API RESPONSE:", response.data);
 
@@ -3522,12 +3691,30 @@ export const getApiSlice = createSlice({
         state.getLoading = false;
         // toast.error("Something Went Wrong");
       })
+
+
+      .addCase(getFetchCashData.pending, (state, action) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.msg = "Loading...";
+      })
+      .addCase(getFetchCashData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(getFetchCashData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        // toast.error("Something Went Wrong");
+      })
       .addCase(getFetchData_v1.pending, (state) => {
         state.Status = "idle";
         state.getLoading = true;
         state.msg = "Loading...";
       })
- 
+
       .addCase(getFetchData_v1.fulfilled, (state, action) => {
         console.log("API SUCCESS", action.payload);
         state.Status = "success";
@@ -3535,13 +3722,29 @@ export const getApiSlice = createSlice({
         state.Data = action.payload?.Data || {};
         state.Department = action.payload || [];
         console.log(action.payload, "------getfetch department in formapi");
-       
+
       })
- 
+
       .addCase(getFetchData_v1.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
         toast.error("Something Went Wrong");
+      })
+      .addCase(UnitFetchData.pending, (state) => {
+        state.UnitStatus = "idle";
+        state.UnitgetLoading = true;
+        state.Unitmsg = "Loading...";
+      })
+ 
+      .addCase(UnitFetchData.fulfilled, (state, action) => {
+        state.UnitStatus = "success";
+        state.UnitgetLoading = false;
+        state.UnitData = action.payload || {};
+      })
+ 
+      .addCase(UnitFetchData.rejected, (state) => {
+        state.UnitStatus = "Error";
+        state.UnitgetLoading = false;
       })
       .addCase(getFetchData.pending, (state) => {
         state.Status = "idle";
@@ -4806,6 +5009,24 @@ export const getApiSlice = createSlice({
         state.Status = "error";
         state.loading = false;
       })
+
+      //staffmappingTeacherget
+        
+      .addCase(staffmappingTeacherget.pending, (state) => {
+        state.staffmappingGetData = {};
+        state.staffmappingGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(staffmappingTeacherget.fulfilled, (state, action) => {
+        state.staffmappingGetData = action.payload || {};
+        state.staffmappingGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(staffmappingTeacherget.rejected, (state, action) => {
+        state.staffmappingGetData = {};
+        state.staffmappingGetDataloading = false;
+        state.error = action.error.message;
+      })
       //LEADER GET
       .addCase(LeadEnquiryFilterGet.pending, (state) => {
         state.leaderEnquiryGetData = {};
@@ -5147,6 +5368,22 @@ export const getApiSlice = createSlice({
       .addCase(PublishEvent.rejected, (state, action) => {
         state.PublishEventstatus = "Error";
         state.PublishEventloading = false;
+      })
+      //TIMETABLE TASK PROCESS
+      .addCase(TaskProcess.pending, (state, action) => {
+        state.TaskProcessstatus = "idle";
+        state.TaskProcessloading = true;
+      })
+      .addCase(TaskProcess.fulfilled, (state, action) => {
+        state.TaskProcessstatus = "success";
+        state.TaskProcessloading = false;
+        state.TaskProcessdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TaskProcess.rejected, (state, action) => {
+        state.TaskProcessstatus = "Error";
+        state.TaskProcessloading = false;
       })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {

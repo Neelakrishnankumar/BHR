@@ -105,12 +105,13 @@ const EditAnnualfeestructure = () => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-   const AcademicYearID =
-  !/\d{4}-\d{2}/.test(params.id2 || "")
-    ? params.id2
-    : !/\d{4}-\d{2}/.test(params.id4 || "")
-    ? params.id4
-    : "";
+//    const AcademicYearID =
+//   !/\d{4}-\d{2}/.test(params.id2 || "")
+//     ? params.id2
+//     : !/\d{4}-\d{2}/.test(params.id4 || "")
+//     ? params.id4
+//     : "";
+   const AcademicYearID = params.parentID3 || 0;
     // ── Local state ────────────────────────────────────────────────────────────
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
@@ -187,11 +188,11 @@ const EditAnnualfeestructure = () => {
                 : [],
 
         SendReminderBefore:
-            isEditMode ? data?.SendReminderBefore === "Y" : true,
+            isEditMode ? data?.SendReminderBefore === "Y" : false,
         AutoApplyLateFine:
-            isEditMode ? data?.AutoApplyLateFine === "Y" : true,
+            isEditMode ? data?.AutoApplyLateFine === "Y" : false,
         AllowPartialPayment:
-            isEditMode ? data?.AllowPartialPayment === "Y" : false,
+            isEditMode ? data?.AllowPartialPayment === "Y" : true,
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -463,7 +464,7 @@ const EditAnnualfeestructure = () => {
             StructureName: values.Structurename,
             AcademicYearID: AcademicYearID || "",
             AcademicType: "A",
-            AcademicTypeID: params.id1,
+            AcademicTypeID: params.parentID1 || "",
             // TermsID: TermsIDValue,
             StandardID: StandardIDValue,
             AnnualDueDate: values.DueDate,
@@ -878,7 +879,7 @@ const EditAnnualfeestructure = () => {
                                                 Allow partial payment
                                             </Typography>
                                             <Typography variant="body2" sx={{ color: "#94a3b8" }}>
-                                                Students can pay in instalments
+                                                Students can pay in installments
                                             </Typography>
                                         </Box>
                                     </Box>

@@ -13,6 +13,7 @@ import {
   Icon,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,6 +24,7 @@ import store from "../..";
 import BalanceIcon from "@mui/icons-material/Balance";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ForumIcon from '@mui/icons-material/Forum';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
@@ -40,6 +42,7 @@ import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import AssignmentReturnOutlinedIcon from "@mui/icons-material/AssignmentReturnOutlined";
 import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { toast } from "react-hot-toast";
 import { redirect } from "react-router-dom";
 import WysiwygIcon from "@mui/icons-material/Wysiwyg";
@@ -47,6 +50,9 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";   // Credit - green
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"; // Debit - red
+import SavingsIcon from "@mui/icons-material/Savings";                     // Deposit - blue
 import {
   FeesStructureDelete,
   getFetchData,
@@ -55,6 +61,7 @@ import {
   paySlipGet,
   postData,
   PublishEvent,
+  PublishEventCompanies,
   SOPProcessPost,
   standardDelete,
   StockProcessApi,
@@ -75,6 +82,7 @@ import {
   Delete,
   Download,
   Psychology,
+  VisibilityOff,
 } from "@mui/icons-material";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import { Visibility } from "@mui/icons-material";
@@ -135,6 +143,7 @@ import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
+import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -680,6 +689,7 @@ export const fetchListview =
         AccessID !== "TR282" &&
         AccessID !== "TR291" &&
         AccessID !== "TR283" &&
+        AccessID !== "TR026" &&
         AccessID !== "TR148"
       ) {
         if (
@@ -802,10 +812,16 @@ export const fetchListview =
           AccessID != "TR371" &&
           AccessID != "TR375" &&
           AccessID != "TR368" &&
+          AccessID != "TR395" &&
+          AccessID != "TR398" &&
+          AccessID != "TR399" &&
+          AccessID != "TR396" &&
+          AccessID != "TR397" &&
           AccessID != "TR380" &&
           AccessID != "TR385" &&
           AccessID != "TR377" &&
           AccessID != "TR387" &&
+          AccessID != "TR026" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -1465,7 +1481,16 @@ export const fetchListview =
         dispatch(
           fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
-      } else {
+      }
+      else if (AccessID === "TR026" && screenName === "Subject") {
+        // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
+      }
+      else if (AccessID === "TR026" && screenName === "Department") {
+        filter = `CompanyID='${CompId}' AND SubjectSkill= 'D'`;
+      }
+
+      else {
         filter = `CompanyID=${CompId}`;
       }
       var idata = {
@@ -1790,7 +1815,8 @@ export const fetchListview =
                 sortable: false,
                 filterable: false,
                 headerAlign: "center",
-                align: "center",
+                // align: "center",
+                align: "left",
                 disableColumnMenu: true,
                 disableExport: true,
                 renderCell: (params) => {
@@ -1868,7 +1894,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {is003Subscription && (
+                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
                         <Link
                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                           state={{
@@ -1886,6 +1912,15 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                      )}
+                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
+                          <Tooltip title="Time Table">
+                             <span style={{ cursor: "pointer" }}>
+    <IconButton color="info" size="small" disabled>
+      <DatasetLinkedIcon />
+    </IconButton>
+  </span>
+                          </Tooltip>
                       )}
 
                       {!isSeedEditable && (
@@ -1961,6 +1996,16 @@ export const fetchListview =
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
+                      
+                      {is003Subscription && (
+                        <Link to={`./EditPromotion/${params.row.RecordID}/E`}>
+                          <Tooltip title="Promotion">
+                            <IconButton color="info" size="small">
+                              <NextWeekIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
 
                       {is003Subscription && (
                         // <Link
@@ -2002,7 +2047,7 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   const dispatch = store.dispatch;
-                  // const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
+                  const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
                   // const PDFButton = ({ ProjectID, EmployeeID }) => {
                   //   const dispatch = store.dispatch;
                   //   const [loading, setLoading] = React.useState(false);
@@ -2114,13 +2159,13 @@ export const fetchListview =
 
                   return (
                     <Box>
-                      <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
+                      {/* <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       <PDFButton
                         recordID={params.row.RecordID}
                         UserName={params.row.UserName}
@@ -2186,7 +2231,7 @@ export const fetchListview =
                       <Link
                         // to={`./Fees Structure/TR387/${params.row.RecordID}`}
                         to={
-                          params.row.RecordID == 1
+                          params.row.Description == "Term"
                             ? `./Term Fees Structure/TR387/${params.row.RecordID}`
                             : `./Annual Fees Structure/TR387/${params.row.RecordID}`
                         }
@@ -2293,18 +2338,47 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   return (
+                    //                     <Box>
+                    //                       {params.row.Status === "Applied" ?
+                    //                       (
+                    //                       <Link
+                    //                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+                    //                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
+                    //                          state={{ Breadcrumb1: params.row.Title }}
+                    //                       >
+                    //                         <Tooltip title="Edit">
+                    //                           <IconButton color="info" size="small">
+                    //                             <ModeEditOutlinedIcon />
+                    //                           </IconButton>
+                    //                         </Tooltip>
+                    //                       </Link>):(
+                    //  <Link
+                    //                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
+                    //                         to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/V`}
+                    //                          state={{ Breadcrumb1: params.row.Title }}
+                    //                       >
+                    //                         <Tooltip title="View">
+                    //                           <IconButton color="info" size="small">
+                    //                             <VisibilityIcon />
+                    //                           </IconButton>
+                    //                         </Tooltip>
+                    //                       </Link>
+                    //                       )}
+                    //                     </Box>
                     <Box>
+
                       <Link
                         // to={`/Apps/SecondarylistView/TR391/Feedback Complaints/${params.row.RecordID}`}
-                        to={`/Apps/TR391/RaiseComplaints/EditRaiseComplaints/${params.row.RecordID}/E`}
-                         state={{ rowData: params.row }}
+                        to={`/Apps/TR391/Escalation/EditEscalation/${params.row.RecordID}/V`}
+                        state={{ Breadcrumb1: params.row.Title }}
                       >
-                        <Tooltip title="Edit">
+                        <Tooltip title="View">
                           <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
+                            <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
+
                     </Box>
                   );
                 },
@@ -2327,7 +2401,7 @@ export const fetchListview =
                     <Box>
                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                         to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}/${params.row.AcademicYear}`}
+                        to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
@@ -2875,6 +2949,10 @@ export const fetchListview =
               AccessID == "TR384" ||
               AccessID == "TR385" ||
               AccessID == "TR387" ||
+              AccessID == "TR395" ||
+              AccessID == "TR398" ||
+              AccessID == "TR396" ||
+              AccessID == "TR397" ||
               AccessID == "TR368"
 
             ) {
@@ -2984,7 +3062,7 @@ export const fetchListview =
                 },
               };
             }
-            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373") {
+            else if (AccessID == "TR371" || AccessID == "TR372" || AccessID == "TR373" || AccessID == "TR399") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -4963,6 +5041,8 @@ export const fetchListview =
                         AccessID !== "TR374" &&
                         AccessID !== "TR376" &&
                         AccessID !== "TR368" &&
+                        AccessID !== "TR396" &&
+                        AccessID !== "TR397" &&
                         AccessID !== "TR387" &&
                         AccessID !== "TR052" ? (
                         <Link
@@ -7683,12 +7763,33 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             {(params.row.Description === "Teaching Staff" ||
               params.row.Description === "Staff") && (
-                <Tooltip title="Teacher Productivity">
+                // <Tooltip title="Teacher Productivity">
+                <Tooltip title="Productivity Report">
                   <IconButton
                     color="info"
                     size="small"
                     onClick={() =>
                       navigate(`/Apps/TeacherOccupancy/${params.row.RecordID}`, {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Description,
+                          Classification: params.row.Description,
+                          CompanyID: params.row.CompanyID,
+                        },
+                      })
+                    }
+                  >
+                    <SensorOccupiedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            {(params.row.Description === "Non Teaching Staff") && (
+                <Tooltip title="Productivity Report">
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() =>
+                      navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
                         state: {
                           ...state,
                           BreadCrumb1: params.row.Description,
@@ -8363,6 +8464,10 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const UserName = sessionStorage.getItem("UserName");
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const companygroupflag = sessionStorage.getItem("companygroupflag");
+  const companygroup =
+    JSON.parse(sessionStorage.getItem("companygroup") || "[]"); 
+    console.log(companygroup, companygroupflag, "companygroupflag.....");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
@@ -8378,7 +8483,6 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   // — state (inside your component) — TR310
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-
   // — state (inside your component) — TR310
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
@@ -8432,7 +8536,92 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       toast.error(response?.payload?.Msg);
     }
   };
+  const handledeleteDeposit = async (values) => {
+    try {
+      const action = "harddelete";
 
+      const idata = {
+        RecordID: values?.RecordID,
+        DepositDate: values?.CurrentDate,
+        TransactionID: values?.transactionID,
+        CategoryID: values?.CategoryID,
+        EmployeeID: values?.EmployeeID,
+        Amount: Number(values?.Amount || 0),
+        AccountNo: values?.AccountNo,
+        IFSCCode: values?.IfscCode,
+        HolderName: values?.HolderName,
+        Attachment: values?.Attachment || "",
+        BalanceAmount: Number(values?.BalanceAmnt || 0),
+        BranchName: values?.BranchName,
+      };
+
+      console.log(idata, "-- DELETE PAYLOAD");
+
+      const response = await dispatch(
+        postData({
+          accessID,
+          action,
+          idata,
+        })
+      );
+
+      console.log(response, "-- DELETE RESPONSE");
+
+      const result = response?.payload;
+
+      if (result?.Status === "Y") {
+        toast.success(result?.Msg);
+      } else if (result?.Status === "N") {
+        toast.error(result?.Msg);
+      } else {
+        toast.error("Unexpected response received.");
+      }
+    } catch (error) {
+      console.error("Delete Deposit Error:", error);
+      toast.error("Failed to delete deposit.");
+    }
+  };
+  const handledeleteDebit = async (values) => {
+    try {
+      const action = "harddelete";
+
+      const idata = {
+        RecordID: values?.RecordID,
+        DebitDate: values.CurrentDate,
+        TransactionID: values.transactionID,
+        CategoryID: values.CategoryID || 0,
+        EmployeeID: values.EmployeeID || 0,
+        Description: values.Description,
+        Amount: Number(values.Amount),
+        BalanceAmount: Number(values.BalanceAmnt),
+      };
+
+      console.log(idata, "-- DELETE PAYLOAD");
+
+      const response = await dispatch(
+        postData({
+          accessID,
+          action,
+          idata,
+        })
+      );
+
+      console.log(response, "-- DELETE RESPONSE");
+
+      const result = response?.payload;
+
+      if (result?.Status === "Y") {
+        toast.success(result?.Msg);
+      } else if (result?.Status === "N") {
+        toast.error(result?.Msg);
+      } else {
+        toast.error("Unexpected response received.");
+      }
+    } catch (error) {
+      console.error("Delete Deposit Error:", error);
+      toast.error("Failed to delete deposit.");
+    }
+  };
 
 
   const handleTermsProcess = async (values) => {
@@ -8487,7 +8676,94 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       );
     }
   }
+  const [publishDialog, setPublishDialog] = useState({ open: false, row: null });
+  const handlePublish1 = (row) => {
+    console.log("Publish clicked", row);
+    setPublishDialog({ open: true, row });
+  };
 
+  // const handleConfirmPublish = async (selectedCompanyIds) => {
+  //   const results = await Promise.all(
+  //     selectedCompanyIds.map((CompID) =>
+  //       dispatch(PublishEvent({
+  //         data: { CompanyID: CompID, EventCategoryID: publishDialog.row.RecordID },
+  //       }))
+  //     )
+  //   );
+
+  //   const failedCount = results.filter((r) => r.payload.Status !== "Y").length;
+  //   setPublishDialog({ open: false, row: null });
+
+  //   await Swal.fire({
+  //     title: failedCount === 0
+  //       ? "Published successfully"
+  //       : `${results.length - failedCount} of ${results.length} companies published`,
+  //     icon: failedCount === 0 ? "success" : "warning",
+  //     confirmButtonText: "OK",
+  //     confirmButtonColor: "#3085d6",
+  //   });
+
+  //   dispatch(
+  //     fetchListview(
+  //       "TR384",
+  //       "003",
+  //       screenName ?? "Event%20Category",
+  //       `AcademicYearID = '${publishDialog.row.AcademicYearID}' AND CompanyID = '${CompanyID}'`,
+  //       ""
+  //     )
+  //   );
+  // };
+  const handleConfirmPublish = async (selectedCompanyIds) => {
+    try {
+      const payload = {
+        CompanyID: companygroup.map((company) => ({
+          compid: company.comid,
+          ischeck: selectedCompanyIds.includes(company.comid) ? "Y" : "N",
+        })),
+        EventCategoryID: publishDialog.row.RecordID,
+      };
+
+      const result = await dispatch(
+        PublishEventCompanies({
+          data: payload,
+        })
+      );
+
+      const isSuccess = result?.payload?.Status === "Y";
+
+      setPublishDialog({ open: false, row: null });
+
+      await Swal.fire({
+        title: isSuccess
+          ? "Published successfully"
+          : result?.payload?.Msg || "Publish failed",
+        icon: isSuccess ? "success" : "warning",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+
+      if (isSuccess) {
+        dispatch(
+          fetchListview(
+            "TR384",
+            "003",
+            screenName ?? "Event%20Category",
+            `AcademicYearID = '${publishDialog.row.AcademicYearID}' AND CompanyID = '${CompanyID}'`,
+            ""
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Publish Error:", error);
+
+      await Swal.fire({
+        title: "Error",
+        text: "Something went wrong while publishing.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
   const handlePublish = async (values) => {
 
     const result = await Swal.fire({
@@ -8668,6 +8944,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               EmployeeID={EmployeeID}
               CompanyID={CompanyID}
             />
+
           </Box>
         )}
 
@@ -8844,11 +9121,126 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
           </>
         )}
+        {accessID === "TR395" && (
+          <>
+            {params.row.Description === "Credit" && (
+              <Tooltip title="Credit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR399/Credit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <AddCircleOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {(params.row.Description === "Debit" || params.row.Description === "Debit ") && (
+              <Tooltip title="Debit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR397/Debit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {params.row.Description === "Deposit" && (
+              <Tooltip title="Deposit List">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR396/Deposit/${params.row.RecordID}`,
+                    { state: { ...state, BreadCrumb1: params.row.Code } }
+                  )}
+                >
+                  <SavingsIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        )}
+        {accessID === "TR398" && (
+          <>
+
+            <Link
+              to={`./Cash Management Category/TR395/${params.row.RecordID}`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Cash Management Category">
+                <IconButton color="info" size="small">
+                  <ForumIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR396" && (
+          <>
+
+            <Link
+              to={`./EditDeposit/${params.row.RecordID}/E`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Delete">
+                <IconButton color="error" size="small" onClick={() => handledeleteDeposit(params.row)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
+        {accessID === "TR397" && (
+          <>
+
+            <Link
+              to={`./EditDebit/${params.row.RecordID}/E`}
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link
+              state={{
+                AcademicYear: params.row.AcademicYear,
+              }}
+            >
+              <Tooltip title="Delete">
+                <IconButton color="error" size="small" onClick={() => handledeleteDebit(params.row)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+          </>
+        )}
         {accessID === "TR387" && (
           <>
             <Link
               to={
-                params.row.AcadamicTypeID == 1
+                params.row.AcademicType == "Term"
                   ? `./EditTerm Fees Structure/${params.row.RecordID}/E`
                   : `./EditAnnual Fees Structure/${params.row.RecordID}/E`
               }
@@ -8884,7 +9276,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <>
 
             <Link
-              to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              // to={`./Events/TR385/${params.row.RecordID}/${params.row.Type}`}
+              to={`/Apps/Secondarylistview/TR384/Event Category/${params.row.AcademicYearID}/Events/TR385/${params.row.RecordID}/${params.row.Type}`}
               state={{
                 AcademicYear: params.row.AcademicYear,
                 BreadCrumb1: params.row.Category,
@@ -8896,25 +9289,32 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {(params.row.IsPublish === "Y" && params.row.Events !== "0") &&(
+            {/* {(params.row.IsPublish === "Y" && params.row.Events !== "0") && ( */}
 
-              <Tooltip title="Publish Event Category">
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={() => { handlePublish(params.row) }}
-                >
-                  <PublishedWithChangesOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            )} 
+            <Tooltip title="Publish Event Category">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
+              >
+                <PublishedWithChangesOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <PublishEventCategoryDialog
+              open={publishDialog.open}
+              onClose={() => setPublishDialog({ open: false, row: null })}
+              eventCategory={publishDialog.row}
+              companies={companygroup}
+              onConfirm={handleConfirmPublish}
+            />
+            {/* )} */}
           </>
         )}
         {accessID === "TR385" && (
           <>
             {params.row.IsPublish === "Y" ? (
               <Link
-                to={`./EditEvents/${params.row.RecordID}/V`}
+                to={`./EditEvent Category/${params.row.RecordID}/V`}
                 state={{
                   ...state,
                   // AcademicYear: params.row.AcademicYear,
@@ -8928,7 +9328,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>) : (<Link
-                to={`./EditEvents/${params.row.RecordID}/E`}
+                to={`./EditEvent Category/${params.row.RecordID}/E`}
                 state={{
                   ...state,
                   // AcademicYear: params.row.AcademicYear,
@@ -9393,6 +9793,7 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </>
         )}
       </div>
+
     </Fragment>
   );
 };
