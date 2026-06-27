@@ -233,6 +233,7 @@ import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
+import EditStandardSessions from "./pages/HR/EditStandardSessions";
 
 function App() {
   //   useEffect(() => {
@@ -1599,6 +1600,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                     element={<EditTimetablev1 />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditStandardSessions/:id/:Mode"
+                    element={<EditStandardSessions />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"

@@ -268,6 +268,15 @@ const initialState = {
   TaskProcessloading: false,
   TaskProcessdata: {},
 
+  //TaskSessionGet
+  TaskSessionGetstatus: "",
+  TaskSessionGetloading: false,
+  TaskSessionGetdata: {},
+  //TaskSessionUpdate
+  TaskSessionUpdatestatus: "",
+  TaskSessionUpdateloading: false,
+  TaskSessionUpdatedata: {},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -3056,6 +3065,53 @@ export const PublishEvent = createAsyncThunk(
     return response.data;
   }
 );
+export const TaskSessionGet = createAsyncThunk(
+  "TaskSessionGet/GET",
+  async ({ ProjectID, TermID, HeaderID }) => {
+    var url = store.getState().globalurl.TaskSessionGet;
+
+    const payload =
+    {
+      TermID: TermID,
+      ProjectID: ProjectID,
+      HeaderID: HeaderID,
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const TaskSessionUpdate = createAsyncThunk(
+  "TaskSessionUpdate/POST",
+  async ({ RecordID, sessionDescription }) => {
+    var url = store.getState().globalurl.TaskSessionUpdate;
+
+    const payload =
+    {
+      RecordID: RecordID,
+      Comments: sessionDescription,
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const TaskProcess = createAsyncThunk(
   "TaskProcess/Post",
   async ({ data }) => {
@@ -5340,6 +5396,38 @@ export const getApiSlice = createSlice({
       .addCase(TaskProcess.rejected, (state, action) => {
         state.TaskProcessstatus = "Error";
         state.TaskProcessloading = false;
+      })
+      //TaskSessionGet
+      .addCase(TaskSessionGet.pending, (state, action) => {
+        state.TaskSessionGetstatus = "idle";
+        state.TaskSessionGetloading = true;
+      })
+      .addCase(TaskSessionGet.fulfilled, (state, action) => {
+        state.TaskSessionGetstatus = "success";
+        state.TaskSessionGetloading = false;
+        state.TaskSessionGetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TaskSessionGet.rejected, (state, action) => {
+        state.TaskSessionGetstatus = "Error";
+        state.TaskSessionGetloading = false;
+      })
+      //TaskSessionUpdate
+      .addCase(TaskSessionUpdate.pending, (state, action) => {
+        state.TaskSessionUpdatestatus = "idle";
+        state.TaskSessionUpdateloading = true;
+      })
+      .addCase(TaskSessionUpdate.fulfilled, (state, action) => {
+        state.TaskSessionUpdatestatus = "success";
+        state.TaskSessionUpdateloading = false;
+        state.TaskSessionUpdatedata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TaskSessionUpdate.rejected, (state, action) => {
+        state.TaskSessionUpdatestatus = "Error";
+        state.TaskSessionUpdateloading = false;
       })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {

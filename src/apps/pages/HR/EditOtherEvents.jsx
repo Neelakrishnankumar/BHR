@@ -49,7 +49,7 @@ import {
   PartySingleSelect,
 } from "../../../ui-components/global/Autocomplete";
 import * as Yup from "yup";
-import { fileUpload } from "../../../store/reducers/Imguploadreducer";
+import { fileUpload, videoUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
 // import CryptoJS from "crypto-js";
 const EditOtherEvents = () => {
@@ -86,7 +86,7 @@ const EditOtherEvents = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [othersImage, setothersImage] = useState("");
   const [othersvideo, setothersvideo] = useState("");
-    const [othersaudio, setothersaudio] = useState("");
+  const [othersaudio, setothersaudio] = useState("");
 
   console.log("🚀 ~ Editothers ~ othersImage:", othersImage);
   console.log("🚀 ~ Editothers ~ othersvideo:", othersvideo);
@@ -99,7 +99,7 @@ const EditOtherEvents = () => {
     setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific || "Y");
     setothersImage(mode === "A" ? "" : data?.Attachment || "");
     setothersvideo(mode === "A" ? "" : data?.Video || "");
-    setothersaudio (mode === "A" ? "" : data?.Audio || "");
+    setothersaudio(mode === "A" ? "" : data?.Audio || "");
   }, [location.key, mode]);
 
   useEffect(() => {
@@ -160,25 +160,25 @@ const EditOtherEvents = () => {
     NotifyClasses: [],
     Standard1: Array.isArray(data?.StandardID)
       ? data?.StandardID.map((d) => ({
-          RecordID: String(d.StandardID),
-          Name: d.StandardCode,
-          Code: d.StandardName,
-        }))
+        RecordID: String(d.StandardID),
+        Name: d.StandardCode,
+        Code: d.StandardName,
+      }))
       : [],
     Standard: data?.SpecificStdActID
       ? {
-          RecordID: data?.SpecificStdActID,
-          Code: data?.SpecificStdActCode,
-          Name: data?.SpecificStdActName,
-        }
+        RecordID: data?.SpecificStdActID,
+        Code: data?.SpecificStdActCode,
+        Name: data?.SpecificStdActName,
+      }
       : null,
     Student: data?.StudentID
       ? {
-          // RecordID: data?.StudentID,
-          EmployeeID: data?.StudentID,
-          Code: data?.StudentCode,
-          Name: data?.StudentName,
-        }
+        // RecordID: data?.StudentID,
+        EmployeeID: data?.StudentID,
+        Code: data?.StudentCode,
+        Name: data?.StudentName,
+      }
       : null,
     Message: data?.Description || "",
     ActionRequired: data?.ActionRequired || "",
@@ -284,44 +284,109 @@ const EditOtherEvents = () => {
     });
   };
   const [fileCategory, setFileCategory] = useState(""); // image | video | audio | document
-
   const getFileChange = async (event) => {
     const file = event.target.files[0];
+
+    if (!file) return;
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        "Only Images, PDF and DOCX files are allowed"
+      );
+      return;
+    }
+    setothersImage(file);
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("type", "images");
+
+    const fileData = await dispatch(fileUpload({ formData }));
+    setothersImage(fileData.payload.name);
+    if (fileData.payload.Status == "Y") {
+      toast.success(fileData.payload.Msg);
+    }
+  };
+  const getVideoChange = async (event) => {
+    // setAcademyVideo(event.target.files[0]);
+    const file = event.target.files[0];
+
     if (!file) return;
 
-    const fileType = file.type;
+    // Allowed formats
+    const allowedTypes = [
+      "video/mp4",
+      "video/webm",
+      "video/ogg",
+    ];
 
-    let category = "";
-
- if (
-  fileType.startsWith("image/") || // covers jpeg, png, jpg, webp
-  fileType === "application/pdf" ||
-  fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-) {
-      category = "images";
-    } else if (fileType.startsWith("video/")) {
-      category = "videos";
-    } else if (fileType.startsWith("audio/")) {
-      category = "audios";
-    }
-
-    if (!category) {
-      toast.error("Unsupported file type");
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only MP4/WebM/Ogg videos allowed");
       return;
     }
 
-    setFileCategory(category); // ✅ store type
+    // 100MB limit
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("Video size should be below 100MB");
+      return;
+    }
 
     const formData = new FormData();
+
     formData.append("file", file);
-    formData.append("type", category); // ✅ dynamic
+    formData.append("type", "videos");
+
+    try {
+
+      const fileData = await dispatch(
+        videoUpload({ formData })
+      );
+
+      if (fileData.payload.Status === "Y") {
+
+        setothersvideo(fileData.payload.name);
+
+        toast.success(fileData.payload.Msg);
+
+      } else {
+
+        toast.error(fileData.payload.Msg);
+      }
+
+    } catch (err) {
+
+      toast.error("Upload failed");
+    }
+  };
+  const getAudioChange = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+    const allowedTypes = [
+      "audio/",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        "Only Audio files are allowed"
+      );
+      return;
+    }
+    setothersaudio(file);
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("type", "images");
 
     const fileData = await dispatch(fileUpload({ formData }));
-
-    if (fileData.payload.Status === "Y") {
-      setothersImage(fileData.payload.name); // store file name
-      setothersvideo(fileData.payload.name);
-      setothersaudio(fileData.payload.name);
+    setothersaudio(fileData.payload.name);
+    if (fileData.payload.Status == "Y") {
       toast.success(fileData.payload.Msg);
     }
   };
@@ -743,7 +808,7 @@ const EditOtherEvents = () => {
 
                     <Box
                       display="grid"
-                      gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
+                      gridTemplateColumns={isNonMobile ? "1fr 1fr 1fr" : "1fr"}
                       gap={2}
                     >
                       <Box>
@@ -755,7 +820,7 @@ const EditOtherEvents = () => {
                             color: "#6B7280",
                           }}
                         >
-                          Attach others
+                          Attach Files
                         </Typography>
 
                         <Box
@@ -803,32 +868,154 @@ const EditOtherEvents = () => {
                           onClick={() => {
                             data?.Attachment || othersImage
                               ? window.open(
+                                othersImage
+                                  ? store.getState().globalurl.attachmentUrl +
                                   othersImage
-                                    ? store.getState().globalurl.attachmentUrl +
-                                        othersImage
-                                    : store.getState().globalurl.attachmentUrl +
-                                        data?.Attachment,
-                                  "_blank",
-                                )
-                              : data?.Video || othersvideo
-                                ? window.open(
-                                    othersvideo
-                                      ? store.getState().globalurl
-                                          .videoAttachmentUrl + othersvideo
-                                      : store.getState().globalurl
-                                          .videoAttachmentUrl + data?.Video,
-                                    "_blank",
-                                  )
-                                : data?.Audio || othersaudio
-                                  ? window.open(
-                                      othersaudio
-                                        ? store.getState().globalurl
-                                            .audioAttachmentUrl + othersaudio
-                                        : store.getState().globalurl
-                                            .audioAttachmentUrl + data?.Audio,
-                                      "_blank",
-                                    )
-                                  : toast.error("Please Upload File");
+                                  : store.getState().globalurl.attachmentUrl +
+                                  data?.Attachment,
+                                "_blank",
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          View Uploaded File
+                        </Button>
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mb: 1,
+                            fontWeight: 600,
+                            color: "#6B7280",
+                          }}
+                        >
+                          Attach Videos
+                        </Typography>
+
+                        <Box
+                          component="label"
+                          sx={{
+                            border: "1px dashed #D1D5DB",
+                            borderRadius: "10px",
+                            backgroundColor: "#F9FAFB",
+                            height: "56px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            transition: "0.2s",
+                            "&:hover": {
+                              backgroundColor: "#F3F4F6",
+                            },
+                          }}
+                        >
+                          <input
+                            hidden
+                            type="file"
+                            accept="video/*"
+                            // accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            // onChange={(event) => {
+                            //     const file = event.currentTarget.files[0];
+                            //     setFieldValue("SyllabusFile", file);
+                            // }}
+                            onChange={getVideoChange}
+                          />
+
+                          <Typography fontSize="14px" color="#6B7280">
+                            Click to upload file
+                          </Typography>
+                        </Box>
+
+                        <Button
+                          // size="small"
+                          variant="contained"
+                          component={"a"}
+                          sx={{
+                            marginTop: "10px",
+                            width: "100%",
+                          }}
+                          onClick={() => {
+                            data?.Video || othersvideo
+                              ? window.open(
+                                othersvideo
+                                  ? store.getState().globalurl.videoAttachmentUrl +
+                                  othersvideo
+                                  : store.getState().globalurl.videoAttachmentUrl +
+                                  data?.Video,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          View Uploaded File
+                        </Button>
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mb: 1,
+                            fontWeight: 600,
+                            color: "#6B7280",
+                          }}
+                        >
+                          Attach Audio
+                        </Typography>
+
+                        <Box
+                          component="label"
+                          sx={{
+                            border: "1px dashed #D1D5DB",
+                            borderRadius: "10px",
+                            backgroundColor: "#F9FAFB",
+                            height: "56px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            transition: "0.2s",
+                            "&:hover": {
+                              backgroundColor: "#F3F4F6",
+                            },
+                          }}
+                        >
+                          <input
+                            hidden
+                            type="file"
+                            accept="audio/*"
+                            // accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            // onChange={(event) => {
+                            //     const file = event.currentTarget.files[0];
+                            //     setFieldValue("SyllabusFile", file);
+                            // }}
+                            onChange={getAudioChange}
+                          />
+
+                          <Typography fontSize="14px" color="#6B7280">
+                            Click to upload file
+                          </Typography>
+                        </Box>
+
+                        <Button
+                          // size="small"
+                          variant="contained"
+                          component={"a"}
+                          sx={{
+                            marginTop: "10px",
+                            width: "100%",
+                          }}
+                          onClick={() => {
+                            data?.Audio || othersaudio
+                              ? window.open(
+                                othersaudio
+                                  ? store.getState().globalurl
+                                    .audioAttachmentUrl + othersaudio
+                                  : store.getState().globalurl
+                                    .audioAttachmentUrl + data?.Audio,
+                                "_blank",
+                              )
+                              : toast.error("Please Upload File");
                           }}
                         >
                           View Uploaded File

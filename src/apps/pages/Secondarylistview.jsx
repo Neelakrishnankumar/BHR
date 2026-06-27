@@ -120,7 +120,10 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";   // Credit - green
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"; // Debit - red
-import SavingsIcon from "@mui/icons-material/Savings";  
+import SavingsIcon from "@mui/icons-material/Savings"; 
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined'; 
+import LockResetIcon from "@mui/icons-material/LockReset";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -6839,12 +6842,20 @@ const ListviewSecondary = () => {
                           variant="outlined"
                         />
                         <Chip
-                          icon={<LockResetOutlinedIcon color="error" />}
+                          // icon={<LockResetOutlinedIcon 
+                          icon={<LockResetIcon 
+                            color="success" />}
                           label="Process"
                           variant="outlined"
                         />
                         <Chip
-                          icon={<RestartAltOutlinedIcon color="error" />}
+                          icon={<BadgeOutlinedIcon color="primary" />}
+                          label="Session"
+                          variant="outlined"
+                        />
+                        <Chip
+                          // icon={<RestartAltOutlinedIcon color="error" />}
+                          icon={<LockOpenIcon color="error" />}
                           label="Unprocess"
                           variant="outlined"
                         />

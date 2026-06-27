@@ -143,6 +143,9 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import LockResetIcon from "@mui/icons-material/LockReset";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -9040,11 +9043,12 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Link>
                 <Tooltip title="Process">
                   <IconButton
-                    color="error"
+                    color="success"
                     size="small"
                     onClick={() => handleTermsProcess(params.row)}
                   >
                     <LockResetOutlinedIcon />
+                    {/* <LockOpenIcon /> */}
                   </IconButton>
                 </Tooltip>
               </>
@@ -9063,8 +9067,37 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               //   </IconButton>
               // </Tooltip>
               <>
+                <Tooltip title="Session">
+                  <IconButton
+                    color="primary"
+                    size="small"
+                    onClick={() =>
+                navigate(`./EditStandardSessions/${params.row.RecordID}/E`, {
+                  state: {
+                    ...state,
+                    MilestoneID: params.row.Section,
+                  MilestoneName: params.row.MilestoneDesc,
+                  ProjectID: params.row.StandardID,
+                  projectName: params.row.ProjectDesc,
+                  BreadCrumb1: params.row.Project,
+                  BreadCrumb2: params.row.Term,
+                  BreadCrumb3: params.row.Description,
+                  TermName: params.row.TermName,
+                  TermID: params.row.TermID,
+                  SlotGroupID: params.row.SlotGroupID,
+                  GroupID: params.row.SlotGroupID,
+                  HeaderID: params.row.RecordID,
+                  isprocess: params.row.IsProcess
+                  },
+                })
+              }
+                  >
+                    <BadgeOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Unprocess">
                   <IconButton
+                    // color="error"
                     color="error"
                     size="small"
                     onClick={() => {
@@ -9072,7 +9105,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       setModalOpen(true);
                     }}
                   >
-                    <RestartAltOutlinedIcon />
+                    {/* <RestartAltOutlinedIcon /> */}
+                    <LockOpenIcon />
                   </IconButton>
                 </Tooltip>
 

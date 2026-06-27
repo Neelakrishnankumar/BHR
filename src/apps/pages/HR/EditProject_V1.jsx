@@ -184,9 +184,11 @@ const Editproject_V1 = () => {
 
     //UNIT AREA MAPPING
     const [unitrows, setunitrows] = useState([]);
+    const [unitrows2, setunitrows2] = useState([]);
     const [selectedSubjectID, setSelectedSubjectID] = useState(0);
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [rowModesModelunit, setRowModesModelunit] = React.useState({});
+    const [rowModesModelunit2, setRowModesModelunit2] = React.useState({});
     //TIME TABLE MAPPING
     const [TimeTablerows, setTimeTablerows] = useState([]);
     console.log("🚀 ~ Editproject_V1 ~ TimeTablerows:", TimeTablerows)
@@ -204,6 +206,9 @@ const Editproject_V1 = () => {
     const isRowEditingUnit = Object.values(rowModesModelunit).some(
         (row) => row.mode === GridRowModes.Edit,
     );
+    const isRowEditingUnit2 = Object.values(rowModesModelunit2).some(
+        (row) => row.mode === GridRowModes.Edit,
+    );
 
     useEffect(() => {
         if (show === "5") {
@@ -218,6 +223,32 @@ const Editproject_V1 = () => {
                     setRowModesModelunit({}); // <- IMPORTANT
 
                     setunitrows(
+                        response.payload.details.map((row) => ({
+                            ...row,
+                            id: row.RecordID,
+                            Subject: {
+                                RecordID: row.SubjectID,
+                                Name: row.SubjectName,
+                            },
+                        }))
+                    );
+                }
+            });
+        }
+    }, [show]);
+    useEffect(() => {
+        if (show === "7") {
+            dispatch(
+                UnitFetchData({
+                    ProjectID: recID,
+                    CompanyID,
+                })
+            ).then((response) => {
+                if (response?.payload?.Status === "Y") {
+
+                    setRowModesModelunit2({}); // <- IMPORTANT
+
+                    setunitrows2(
                         response.payload.details.map((row) => ({
                             ...row,
                             id: row.RecordID,
@@ -566,6 +597,11 @@ const Editproject_V1 = () => {
         }
     };
     const handleRowEditStopUnit = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+    const handleRowEditStopUnit2 = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
         }
@@ -1005,8 +1041,6 @@ const Editproject_V1 = () => {
         });
     };
 
-    // ✅ This is all handleSaveClickTeach needs to do — switch to View mode.
-    //    DataGrid will call processRowUpdateTeach automatically after this.
     const handleSaveClickUnit = (RecordID) => () => {
         setRowModesModelunit({
             ...rowModesModelunit,
@@ -1062,6 +1096,147 @@ const Editproject_V1 = () => {
         const editedRow = unitrows.find((row) => row.RecordID === RecordID);
         if (editedRow.isNew) {
             setunitrows(unitrows.filter((row) => row.RecordID !== RecordID));
+        }
+    };
+
+
+    const processRowUpdateUnit2 = async (newRow, oldRow) => {
+        const currentFormikValues = formikRef.current?.values ?? {};
+
+        const isNew = isNaN(Number(newRow.RecordID));
+
+        const payload = {
+            data: {
+                RecordID: isNew ? "-1" : String(newRow.RecordID),
+                CompanyID,
+                ProjectID: recID,
+                // SubjectID: oldRow.SubjectID || newRow.SubjectID || "",
+                SubjectID:
+                    newRow.Subject?.RecordID ||
+                    oldRow.Subject?.RecordID ||
+                    "",
+                Description: newRow.Description || "",
+            },
+        };
+        try {
+            const HeaderID = await FnsaveUnit(
+                currentFormikValues, // {} when show=4 — TR389 branch ignores values
+                false, // del = false
+                payload, // detail payload
+                isNew, // isNew flag
+                "TR402",
+            );
+
+            // if (saved) {
+
+            //     const response = await dispatch(
+            //         UnitFetchData({
+            //             ProjectID: recID,
+            //             CompanyID,
+            //             SubjectID: selectedSubjectID,
+            //         })
+            //     );
+
+            //     if (response?.payload?.Status === "Y") {
+            //         setunitrows(response.payload.details);
+            //     }
+
+            //     return {
+            //         ...newRow,
+            //         id: newRow.RecordID,
+            //     };
+            // }
+
+            const updatedRow = {
+                ...newRow,
+                id: HeaderID.RecordID,
+                RecordID: HeaderID.RecordID,
+                isNew: false,
+            };
+
+
+            setunitrows2((prevRows) =>
+                prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
+            );
+            setScreen("7");
+            dispatch(
+                UnitFetchData({
+                    ProjectID: recID,
+                    CompanyID,
+                }),
+            );
+            dispatch(getFetchData({ accessID, get: "get", recID }));
+            return updatedRow;
+
+
+        } catch (err) {
+            console.error("Row save failed:", err);
+            throw err;
+        }
+    };
+
+    const handleEditClickUnit2 = (RecordID) => () => {
+        setRowModesModelunit2({
+            ...rowModesModelunit2,
+            [RecordID]: { mode: GridRowModes.Edit },
+        });
+    };
+
+    const handleSaveClickUnit2 = (RecordID) => () => {
+        setRowModesModelunit2({
+            ...rowModesModelunit2,
+            [RecordID]: { mode: GridRowModes.View },
+        });
+    };
+
+    const handleDeleteClickUnit2 = (id) => async () => {
+        try {
+            const targetRow = unitrows2.find((row) => row.RecordID === id);
+            const RecordID = targetRow?.RecordID;
+            const SubjectID = targetRow?.RecordID;
+
+            setunitrows2((prevRows) => prevRows.filter((row) => row.RecordID !== id));
+
+            if (!RecordID || isNaN(Number(RecordID))) {
+                toast.success("Deleted Successfully");
+                return;
+            }
+
+            const response = await dispatch(
+                postData({
+                    accessID: "TR402",
+                    action: "harddelete",
+                    idata: { RecordID: Number(RecordID) },
+                }),
+            );
+
+            if (response?.payload?.Status === "Y") {
+                toast.success(response.payload.Msg);
+                setScreen("7");
+                dispatch(
+                    UnitFetchData({
+                        ProjectID: recID,
+                        CompanyID,
+                    }),
+                );
+                dispatch(getFetchData({ accessID, get: "get", recID }));
+            } else {
+                toast.error(response?.payload?.Msg || "Delete failed");
+            }
+        } catch (error) {
+            console.error("Delete Error:", error);
+            toast.error("Error occurred while deleting.");
+        }
+    };
+
+    const handleCancelClickUnit2 = (RecordID) => () => {
+        setRowModesModelunit2({
+            ...rowModesModelunit2,
+            [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+        const editedRow = unitrows2.find((row) => row.RecordID === RecordID);
+        if (editedRow.isNew) {
+            setunitrows2(unitrows2.filter((row) => row.RecordID !== RecordID));
         }
     };
 
@@ -1821,12 +1996,95 @@ const Editproject_V1 = () => {
             },
         },
     ];
+    const unitColumns2 = [
+        {
+            field: "Slno",
+            headerName: "SL#",
+            align: "right",
+            headerAlign: "center",
+            width: 60,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            valueGetter: (params) => {
+                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+                const totalVisibleRows = params.api.getAllRowIds().length;
+                const totalAllRows = params.api.getRowsCount();
+                if (totalVisibleRows < totalAllRows) {
+                    return index + 1;
+                } else {
+                    return page * pageSize + index + 1;
+                }
+            },
+        },
+        {
+            field: "Subject",
+            headerName: "Subject",
+            headerAlign: "center",
+            flex: 1,
+            editable: true,
+            renderCell: (params) =>
+                params.value
+                    ? `${params.value.Name}`
+                    : "",
+            renderEditCell: (params) => (
+                <EditSubjectAutocomplete {...params} />
+            ),
+        },
+        {
+            field: "Description",
+            headerName: "Units/Area",
+            headerAlign: "center",
+            flex: 2,
+            editable: true,
+        },
+        {
+            field: "actions",
+            type: "actions",
+            headerAlign: "center",
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModelunit2[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            onClick={handleSaveClickUnit2(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            onClick={handleCancelClickUnit2(id)}
+                        />,
+                    ];
+                }
+
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        onClick={handleEditClickUnit2(id)}
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        color="error"
+                        label="Delete"
+                        onClick={handleDeleteClickUnit2(id)}
+                    />,
+                ];
+            },
+        },
+    ];
 
     const handleRowModesModelChangeTeach = (newRowModesModel) => {
         setRowModesModelteach(newRowModesModel);
     };
     const handleRowModesModelChangeUnit = (newRowModesModel) => {
         setRowModesModelunit(newRowModesModel);
+    };
+    const handleRowModesModelChangeUnit2 = (newRowModesModel) => {
+        setRowModesModelunit2(newRowModesModel);
     };
     const handleRowModesModelChangeTimeTable = (newRowModesModel) => {
         setRowModesModelTimeTable(newRowModesModel);
@@ -2140,6 +2398,14 @@ const Editproject_V1 = () => {
             // setSelectedSubjectID(0);
             setunitrows([]);
             setRowModesModelunit({});
+            setRowModesModelteach({});
+        }
+        if (event.target.value == "7") {
+            // dispatch(UnitFetchData({ ProjectID: recID, CompanyID }));
+            dispatch(getFetchData({ accessID, get: "get", recID }));
+            // setSelectedSubjectID(0);
+            setunitrows2([]);
+            setRowModesModelunit2({});
             setRowModesModelteach({});
         }
     };
@@ -2839,6 +3105,57 @@ const Editproject_V1 = () => {
             </Button>
         );
     }
+    function EditToolbarunit2(props) {
+        const {
+            setunitrows2,
+            setRowModesModelunit2,
+            isRowEditing,
+            pageSize,
+            setPage,
+        } = props;
+        const [isAdding, setIsAdding] = useState(false);
+
+        const handleClickunit = () => {
+
+            setIsAdding(true);
+            const id = nanoid();
+            const newRow = {
+                id,
+                RecordID: id,
+                Subject: null,
+                // SubjectName: selectedSubject?.Name || "",
+                // SubjectName: `${selectedSubject?.Code || ""} || ${selectedSubject?.Name || ""}`,
+                Description: "",
+                isNew: true
+            };
+
+            setunitrows2((oldRows) => {
+                const updatedRows = [...oldRows, newRow];
+                const newPage = Math.floor((updatedRows.length - 1) / pageSize);
+                setPage(newPage);
+                return updatedRows;
+            });
+
+            // setTimeout(() => {
+            //     setRowModesModelunit((oldModel) => ({
+            //         ...oldModel,
+            //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Description" },
+            //     }));
+            //     setIsAdding(false);
+            // }, 100);
+        };
+
+        return (
+            <Button
+                disabled={isRowEditing || isAdding}
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClickunit}
+            >
+                Add Record ({data.Project})
+            </Button>
+        );
+    }
 
     //TIMETABLE MODAL POP UP
     const handleProcessSave = async () => {
@@ -2951,6 +3268,15 @@ const Editproject_V1 = () => {
                                     Units/Area ({data.Project})
                                 </Typography>
                             )}
+                            {show == "7" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Units/Area ({data.Project})
+                                </Typography>
+                            )}
                         </Breadcrumbs>
                     </Box>
 
@@ -2977,7 +3303,7 @@ const Editproject_V1 = () => {
                                         (
                                             [
                                                 <MenuItem value="4">Staff Mapping</MenuItem>,
-                                                <MenuItem value="5">Units/Area</MenuItem>
+                                                // <MenuItem value="7">Units/Area</MenuItem>
                                             ]
                                         )}
                                     {/* {is003Subscription === true ? (
@@ -4337,6 +4663,119 @@ const Editproject_V1 = () => {
                                                 toolbar: {
                                                     setunitrows,
                                                     setRowModesModelunit,
+                                                    isRowEditing,
+                                                    setPage,
+                                                    pageSize,
+                                                },
+                                            }}
+                                            rowsPerPageOptions={[5, 10, 20]}
+                                            getRowClassName={(params) =>
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
+                                            }
+                                            pagination
+                                            pageSize={pageSize}
+                                            page={page}
+                                            onPageSizeChange={(newPageSize) =>
+                                                setPageSize(newPageSize)
+                                            }
+                                            onPageChange={(newPage) => setPage(newPage)}
+                                        />
+                                    </Box>
+                                    <Box display="flex" justifyContent="flex-end" padding={1}>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen("0")}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : null}
+            {show == "7" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik initialValues={InitialValue} enableReinitialize={true}>
+                        {({
+                            values,
+                            handleBlur,
+                            handleSubmit,
+                            handleChange,
+                            setFieldValue,
+                            touched,
+                            errors,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 1",
+                                        },
+                                    }}
+                                >
+                                    <Box
+                                        height="60vh"
+                                        m={1}
+                                        sx={{
+                                            "& .MuiDataGrid-root": { border: "none" },
+                                            "& .MuiDataGrid-cell": { borderBottom: "none" },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
+                                            "& .odd-row": { backgroundColor: "" },
+                                            "& .even-row": { backgroundColor: "#D3D3D3" },
+                                        }}
+                                    >
+                                        <DataGrid
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                },
+                                            }}
+                                            rowHeight={35}
+                                            headerHeight={dataGridHeaderFooterHeight}
+                                            getRowId={(row) => row.RecordID}
+                                            rows={unitrows2 || []}
+                                            columns={unitColumns2}
+                                            loading={exploreLoading}
+                                            editMode="row"
+                                            disableSelectionOnClick
+                                            rowModesModel={rowModesModelunit2}
+                                            onRowModesModelChange={handleRowModesModelChangeUnit2}
+                                            onRowEditStop={handleRowEditStopUnit2}
+                                            processRowUpdate={processRowUpdateUnit2}
+                                            disableRowSelectionOnClick
+                                            experimentalFeatures={{ newEditingApi: true }}
+                                            onProcessRowUpdateError={(error) => {
+                                                console.error(
+                                                    "Row update validation failed:",
+                                                    error.message,
+                                                );
+                                                toast.error(error.message);
+                                            }}
+                                            // components={{ Toolbar: EditToolbarunit2 }}
+                                            componentsProps={{
+                                                toolbar: {
+                                                    setunitrows2,
+                                                    setRowModesModelunit2,
                                                     isRowEditing,
                                                     setPage,
                                                     pageSize,
