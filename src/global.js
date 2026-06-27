@@ -350,6 +350,7 @@ const initialState = {
   StandardstaffmapingGET: "",
   ActivityOccupancy:"",
   TaskProcessController:"",
+  TermUrl: "",
 
 };
 
@@ -572,6 +573,7 @@ export const getUrlSlice = createSlice({
       state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
       state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
       state.TaskProcessController = APIurl + "TaskProcessController.php";
+      state.TermUrl = APIurl + "TermVersioningPost.php";
     },
 
   },
@@ -579,3 +581,32 @@ export const getUrlSlice = createSlice({
 
 export const { initGlobalUrl } = getUrlSlice.actions;
 export default getUrlSlice.reducer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
