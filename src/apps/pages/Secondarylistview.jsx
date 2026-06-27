@@ -111,6 +111,7 @@ import { getConfig } from "../../config";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
 import { TimeTableExcelGet, TimeTableExcelPost } from "../../store/reducers/Formapireducer";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
@@ -6879,6 +6880,13 @@ const ListviewSecondary = () => {
                             label="Timetable"
                             variant="outlined"
                           />
+                            <Chip
+                            icon={<NextWeekIcon
+                              color="primary" />}
+                            label="Promotion"
+                            variant="outlined"
+                          />
+
                           <Chip
                             icon={<DeleteIcon
                               color="error" />}

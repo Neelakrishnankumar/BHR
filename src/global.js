@@ -349,6 +349,7 @@ const initialState = {
   EventPublishedPost:"",
   StandardstaffmapingGET: "",
   ActivityOccupancy:"",
+  TaskProcessController:"",
 
 };
 
@@ -570,6 +571,7 @@ export const getUrlSlice = createSlice({
       state.UnitAreaConfigGet = APIurl + "UnitAreaConfigGet.php"
       state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
       state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
+      state.TaskProcessController = APIurl + "TaskProcessController.php";
     },
 
   },

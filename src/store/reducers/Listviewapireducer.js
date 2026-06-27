@@ -13,6 +13,7 @@ import {
   Icon,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -1814,7 +1815,8 @@ export const fetchListview =
                 sortable: false,
                 filterable: false,
                 headerAlign: "center",
-                align: "center",
+                // align: "center",
+                align: "left",
                 disableColumnMenu: true,
                 disableExport: true,
                 renderCell: (params) => {
@@ -1892,7 +1894,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {is003Subscription && (
+                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
                         <Link
                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                           state={{
@@ -1910,6 +1912,15 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
+                      )}
+                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
+                          <Tooltip title="Time Table">
+                             <span style={{ cursor: "pointer" }}>
+    <IconButton color="info" size="small" disabled>
+      <DatasetLinkedIcon />
+    </IconButton>
+  </span>
+                          </Tooltip>
                       )}
 
                       {!isSeedEditable && (
@@ -1985,6 +1996,16 @@ export const fetchListview =
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
+                      
+                      {is003Subscription && (
+                        <Link to={`./EditPromotion/${params.row.RecordID}/E`}>
+                          <Tooltip title="Promotion">
+                            <IconButton color="info" size="small">
+                              <NextWeekIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
 
                       {is003Subscription && (
                         // <Link
@@ -2026,7 +2047,7 @@ export const fetchListview =
                 disableExport: true,
                 renderCell: (params) => {
                   const dispatch = store.dispatch;
-                  // const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
+                  const isSeedEditable = params.row.Seed?.toUpperCase() === "N";
                   // const PDFButton = ({ ProjectID, EmployeeID }) => {
                   //   const dispatch = store.dispatch;
                   //   const [loading, setLoading] = React.useState(false);
@@ -2138,13 +2159,13 @@ export const fetchListview =
 
                   return (
                     <Box>
-                      <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
+                      {/* <Link to={`./EditAdmission/${params.row.RecordID}/E`}>
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       <PDFButton
                         recordID={params.row.RecordID}
                         UserName={params.row.UserName}

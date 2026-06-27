@@ -263,6 +263,11 @@ const initialState = {
   PublishEventloading: false,
   PublishEventdata: {},
 
+  //TIMETABLE - TASK PROCESS
+  TaskProcessstatus: "",
+  TaskProcessloading: false,
+  TaskProcessdata: {},
+
 
   //PartyAnalytics POST
   PartyAnalyticsdata: {},
@@ -3051,6 +3056,30 @@ export const PublishEvent = createAsyncThunk(
     return response.data;
   }
 );
+export const TaskProcess = createAsyncThunk(
+  "TaskProcess/Post",
+  async ({ data }) => {
+    var url = store.getState().globalurl.TaskProcessController;
+
+    const payload =
+    {
+      CompanyID: data.CompanyID,
+      ProjectID: data.ProjectID,
+      TermID: data.TermID,
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const PublishEventCompanies = createAsyncThunk(
   "PublishEventComp/Post",
   async ({ data }) => {
@@ -5295,6 +5324,22 @@ export const getApiSlice = createSlice({
       .addCase(PublishEvent.rejected, (state, action) => {
         state.PublishEventstatus = "Error";
         state.PublishEventloading = false;
+      })
+      //TIMETABLE TASK PROCESS
+      .addCase(TaskProcess.pending, (state, action) => {
+        state.TaskProcessstatus = "idle";
+        state.TaskProcessloading = true;
+      })
+      .addCase(TaskProcess.fulfilled, (state, action) => {
+        state.TaskProcessstatus = "success";
+        state.TaskProcessloading = false;
+        state.TaskProcessdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(TaskProcess.rejected, (state, action) => {
+        state.TaskProcessstatus = "Error";
+        state.TaskProcessloading = false;
       })
       //PartyAnalytics - GET
       .addCase(PartyAnalytics.pending, (state, action) => {
