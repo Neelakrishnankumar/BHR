@@ -10,7 +10,13 @@ import {
   Button,
   Stack,
   RadioGroup,
-  Radio
+  Radio,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Grid,
+  MenuItem,
 } from "@mui/material";
 import { Formik } from "formik";
 import { BlobProvider, pdf, PDFDownloadLink } from "@react-pdf/renderer";
@@ -105,12 +111,15 @@ import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlin
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { MultiFormikOptimizedAutocomplete } from "../../ui-components/global/Autocomplete";
+import { TimeTablePostData } from "../../store/reducers/Formapireducer";
+
+import { MultiFormikOptimizedAutocomplete, CheckinAutocomplete } from "../../ui-components/global/Autocomplete";
 import EnquiryPDF from "./pdf/Enquirypdf";
 import { getConfig } from "../../config";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
 import { TimeTableExcelGet, TimeTableExcelPost } from "../../store/reducers/Formapireducer";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
@@ -121,6 +130,12 @@ import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithC
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";   // Credit - green
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"; // Debit - red
 import SavingsIcon from "@mui/icons-material/Savings"; 
+import DifferenceIcon from "@mui/icons-material/Difference";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import LoadingButton from "@mui/lab/LoadingButton";
+
+
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined'; 
 import LockResetIcon from "@mui/icons-material/LockReset";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -170,6 +185,60 @@ const ListviewSecondary = () => {
   let BreadCrumb3 = state.BreadCrumb3 || "";
   let BreadCrumb4 = state.BreadCrumb4 || "";
   let Answertype = state.AnswerType || "";
+
+  //For Timetable Versioning
+  const [openTimetableModal, setOpenTimetableModal] = useState(false);
+  const [fromTerm, setFromTerm] = useState(null);
+  const [toTerm, setToTerm] = useState([]);
+  const [standardID, setStandardID] = useState(null);
+  const [transferLoading, setTransferLoading] = useState(false);
+
+  const handleTransfer = () => {
+    setTransferLoading(true);
+
+    const idata = {
+      CompanyID: compID, //586
+      StandardID: Type,  //773
+      FromTermID: fromTerm?.RecordID,
+      ToTermID: toTerm.map((item) => item.RecordID),
+    };
+
+    console.log("🚀 ~ handleTransfer ~ idata:", idata);
+
+    dispatch(TimeTablePostData(idata))
+      .then((response) => {
+        console.log("Response:", response);
+
+        if (response.payload?.Status === "Y") {
+          toast.success(response.payload?.Msg);
+          setFromTerm(null);
+          setToTerm([]);
+          setOpenTimetableModal(false);
+          dispatch(
+            fetchListview(
+                "TR368",
+                "003",
+                screenName,
+                `CompanyID='${compID}' AND StandardID='${Type || 0}'`,
+                  "",
+                compID,
+                "003"
+              )
+            );
+        } else {
+          toast.error(response.payload?.Msg || "Transfer failed");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setTransferLoading(false);
+      });
+  };
+  
+  
 
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
@@ -4808,9 +4877,159 @@ const ListviewSecondary = () => {
               </Formik>
             )} */}
             <GridToolbarQuickFilter />
+
+            {/* Modal pop up for Timetable Versioning */}
+            <Dialog
+                open={openTimetableModal}
+                onClose={() => setOpenTimetableModal(false)}
+                fullWidth
+                maxWidth="md"
+                
+              >
+                <DialogTitle>
+                  Transfer Timetable between Terms
+                  <IconButton
+                    onClick={() => setOpenTimetableModal(false)}
+                    sx={{ position: "absolute", right: 8, top: 8 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+
+                <DialogContent>
+                  <Grid container spacing={2} alignItems="center">
+
+                    {/* Source Term */}
+                    <Grid item xs={5}>
+                      <Typography
+                          variant="body2"
+                        >
+                          Transfer From Term 
+                        </Typography>
+                       <CheckinAutocomplete
+                          name="fromTerm"
+                          variant="outlined"
+                          value={fromTerm}
+                          onChange={(newValue) => setFromTerm(newValue)}
+                         // url={`${listViewurl}?data={"Query":{"AccessID":"2196","ScreenName":"From Term","VerticalLicense":"003","Filter":"AcademicYearID='2' AND CompanyID='502' AND StandardID='551'","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2196","ScreenName":"From Term","VerticalLicense":"003","Filter":"AcademicYearID='${leaderID}' AND CompanyID='${compID}' AND StandardID='${Type}'","Any":""}}`}
+                      />
+                    </Grid>
+
+                    {/* Arrow */}
+                    <Grid item xs={2} textAlign="center">
+                      <ArrowForwardIcon />
+                    </Grid>
+
+                    {/* Target Term */}
+                    <Grid item xs={5}>
+                      <Typography variant="body2">Transfer To Term </Typography>
+                     <CheckinAutocomplete
+                       multiple
+                        name="toTerm"
+                        value={toTerm}
+                        disabled={!fromTerm}
+                        onChange={(newValue) => {
+                          setToTerm(newValue);
+                          console.log("To Terms:", newValue);
+                        }}
+                        url={
+                          fromTerm
+                          ? `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+                          Query: {
+                            AccessID: "2197",
+                            ScreenName: "To Term",
+                            VerticalLicense: "003",
+                            Filter: `AcademicYearID='${leaderID}'`,
+                            Any: ""
+                          }
+                        }))}` : ""}
+                      />
+                    </Grid>
+
+                  </Grid>
+
+                  <Box mt={2} p={2} bgcolor="#f5f5f5" borderRadius={2}>
+                    This action will copy timetable from source term to target term.
+                  </Box>
+                </DialogContent>
+
+               {/* ── ACTIONS ── */}
+                <DialogActions
+                  sx={{
+                    px: 3,
+                    py: 2,
+                    borderTop: "1px solid rgba(0,0,0,0.08)",
+                    background: "#fff",
+                    gap: 1,
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setOpenTimetableModal(false);
+                      setFromTerm(null);
+                      setToTerm([]);
+                    }}
+                    sx={{
+                      color: "#64748b",
+                      fontWeight: 600,
+                      fontSize: 12,
+                      px: 2.5,
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      "&:hover": { background: "#f1f5f9" },
+                    }}
+                  >
+                    Cancel
+                  </Button>
+
+                  <LoadingButton
+                    loading={transferLoading}
+                    onClick={handleTransfer}
+                    disabled={!fromTerm || !toTerm}
+                    variant="contained"
+                    startIcon={
+                      !transferLoading && (
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                          <path d="M7 16V4m0 0L3 8m4-4l4 4" />
+                          <path d="M17 8v12m0 0l4-4m-4 4l-4-4" />
+                        </svg>
+                      )
+                    }
+                    sx={{
+                      background: "linear-gradient(135deg,#1976d2,#1565c0)",
+                      fontWeight: 700,
+                      fontSize: 12,
+                      px: 3,
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      boxShadow: "0 2px 8px rgba(25,118,210,0.3)",
+                      "&:hover": {
+                        background: "linear-gradient(135deg,#1565c0,#0d47a1)",
+                        boxShadow: "0 4px 16px rgba(25,118,210,0.4)",
+                      },
+                      "&.Mui-disabled": {
+                        background: "#e2e8f0",
+                        color: "#94a3b8",
+                      },
+                    }}
+                  >
+                    Transfer
+                  </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
+             {accessID === "TR368" && is003Subscription && (
+              <Tooltip title="Timetable Versioning">
+                <IconButton onClick={() => setOpenTimetableModal(true)}>
+                  <DifferenceIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            
             {accessID === "TR275" && is003Subscription && (
               <IconButton>
-                <Tooltip title="Fees Structure">
+                <Tooltip title="Fees Structures">
                   <PaymentIcon
                     onClick={() => {
                       // navigate(`./Academic Type/TR386/L`)
@@ -6890,6 +7109,13 @@ const ListviewSecondary = () => {
                             label="Timetable"
                             variant="outlined"
                           />
+                            <Chip
+                            icon={<NextWeekIcon
+                              color="primary" />}
+                            label="Promotion"
+                            variant="outlined"
+                          />
+
                           <Chip
                             icon={<DeleteIcon
                               color="error" />}

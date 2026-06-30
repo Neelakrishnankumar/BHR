@@ -232,6 +232,8 @@ import EditAnnualfeestructure from "./pages/Empolyee/EditAnnualFeeStruct";
 import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
+import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
+import Editpromotion from "./pages/HR/Editpromotion";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
 
@@ -905,10 +907,7 @@ function App() {
                     path="/:accessID/:screenName/EditDepartment/:id/:Mode"
                     element={<Editdept />}
                   />
-                   <Route
-                    path="/:accessID/:screenName/EditSubject/:id/:Mode"
-                    element={<Editdept />}
-                  />
+                 
                   <Route
                     path="/:accessID/:screenName/EditTax Master/:id/:Mode"
                     element={<Edittaxmaster />}
@@ -1020,6 +1019,7 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/E/EditEvent Category/:id/:Mode"
                     element={<EditEmergency />}
+                    // element={<EditOtherEvents />}
                   />
                   {/* ACADEMMICS */}
                   <Route
@@ -1267,6 +1267,10 @@ function App() {
                     path="/:accessID/:screenName/EditDesignation/:id/:Mode"
                     element={<Editdesignation />}
                   />
+                   <Route
+                    path="/:accessID/Admission/EditAdmission/:id/:Mode"
+                    element={<EditadmissionForm_v1 />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditCheck In/:id/:Mode"
                     element={<Editcheckin />}
@@ -1330,6 +1334,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditProject/:id/:Mode"
                     element={<Editproject_V1 />}
+                  />
+                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditPromotion/:id/:Mode"
+                    element={<Editpromotion />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"

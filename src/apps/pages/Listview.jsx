@@ -6153,11 +6153,11 @@ const Listview = () => {
                 ) : accessID == "TR379" ? (
                   <Box display="flex" flexDirection="row" padding="25px" gap={2}>
 
-                    <Chip
+                    {/* <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}
                       label="Edit"
                       variant="outlined"
-                    />
+                    /> */}
 
                     <Chip
                       icon={<PictureAsPdfIcon color="error" />}

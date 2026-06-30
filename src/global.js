@@ -352,6 +352,7 @@ const initialState = {
   TaskProcessController:"",
   TaskSessionGet:"",
   TaskSessionUpdate:"",
+  TermUrl: "",
 
 };
 
@@ -576,6 +577,7 @@ export const getUrlSlice = createSlice({
       state.TaskProcessController = APIurl + "TaskProcessController.php";
       state.TaskSessionGet = APIurl + "SessionGet.php";
       state.TaskSessionUpdate = APIurl + "SessionUpdate.php";
+      state.TermUrl = APIurl + "TermVersioningPost.php";
     },
 
   },
@@ -583,3 +585,32 @@ export const getUrlSlice = createSlice({
 
 export const { initGlobalUrl } = getUrlSlice.actions;
 export default getUrlSlice.reducer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

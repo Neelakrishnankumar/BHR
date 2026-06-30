@@ -2228,6 +2228,33 @@ export const postData = createAsyncThunk(
     return response.data;
   },
 );
+
+export const TimeTablePostData = createAsyncThunk(
+  "TimeTablePostData/post",
+  async ({ CompanyID, StandardID, FromTermID, ToTermID }) => {
+    const url = store.getState().globalurl.TermUrl;
+
+    const data = {
+       CompanyID:CompanyID,
+       StandardID:StandardID,
+       FromTermID:FromTermID,
+       ToTermID:ToTermID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
 export const EventspostData = createAsyncThunk(
   "EventspostData/post",
   async ({ accessID, action, idata, Type, CompanyID }) => {
@@ -2254,6 +2281,8 @@ export const EventspostData = createAsyncThunk(
     return response.data;
   },
 );
+
+
 export const ItemMainpostData = createAsyncThunk(
   "ItemMainpostData/post",
   async ({ action, idata }) => {
@@ -4322,6 +4351,21 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.postLoading = false;
       })
+
+      //Timetable versioning
+        .addCase(TimeTablePostData.pending, (state, action) => {
+          state.Status = "loading";
+          state.postLoading = true;
+        })
+        .addCase(TimeTablePostData.fulfilled, (state, action) => {
+          state.Status = "success";
+          state.postLoading = false;
+          state.Data = action.payload;
+        })
+        .addCase(TimeTablePostData.rejected, (state, action) => {
+          state.Status = "Error";
+          state.postLoading = false;
+        })
 
       //settingspost
 

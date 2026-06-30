@@ -717,16 +717,16 @@ const Editproject = () => {
         // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
         {
           Subscriptionlastthree === "003" ?
-          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
-          : dispatch(getFetchData({ accessID, get: "get", recID }));
+            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
 
       } else {
         {
           Subscriptionlastthree === "003" ?
-          dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
-          : dispatch(getFetchData({ accessID, get: "get", recID }));
+            dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }))
+            : dispatch(getFetchData({ accessID, get: "get", recID }));
 
         }
         // dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -960,6 +960,8 @@ const Editproject = () => {
     budget: data.Budget === "" ? "0.00" : data.Budget,
     scheduled:
       data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+    Planned:
+      data.PlannedCost === "" ? "0.00" : data.PlannedCost,
     actual:
       data.ActualCost === "" ? "0.00" : data.ActualCost,
     price:
@@ -1016,6 +1018,7 @@ const Editproject = () => {
       Price: values.price || 0,
       Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
+      // Planned: values.Planned || 0,
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -1024,7 +1027,8 @@ const Editproject = () => {
       Radius: values.radius || 0,
       AcademicYearID: params.filtertype || 0,
       TentativeStartDate: values.TentativeStartDate || "",
-      TentativeEndDate: values.TentativeEndDate || ""
+      TentativeEndDate: values.TentativeEndDate || "",
+      SlotGroupID:0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -1080,6 +1084,7 @@ const Editproject = () => {
       Price: values.price || 0,
       Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
+      Planned: values.Planned || 0,
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -2455,6 +2460,27 @@ const Editproject = () => {
                                 textAlign: "right",
                               },
                             },
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          disabled={mode == "V"}
+                          variant="standard"
+                          type="number"
+                          id="Planned"
+                          name="Planned"
+                          value={values.Planned}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Planned Cost"
+                          sx={{
+                            gridColumn: "span 1",
+                            backgroundColor: "#ffffff",
+                          }}
+                          focused
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: { style: { textAlign: "right" } },
                           }}
                         />
                         <TextField

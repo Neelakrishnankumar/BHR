@@ -123,27 +123,24 @@ export const EditAutoComplete = ({
   value = null,
   onChange,
   url,
-  height = 20,
-  defaultValue,
   ...props
 }) => {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedValue, setSelectedValue] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!url) return;
+
       setLoading(true);
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+            Authorization: "YOUR_TOKEN",
           },
         });
-        const data = response.data.Data.rows || [];
+
+        const data = response?.data?.Data?.rows || [];
         setOptions(data);
       } catch (err) {
         setOptions([]);
@@ -159,44 +156,49 @@ export const EditAutoComplete = ({
     <Autocomplete
       size="medium"
       fullWidth
-      limitTags={1}
       options={options}
       loading={loading}
-      value={
-        options.find(
-          (item) => item.RecordID === value || item.EmployeeID === value
-        ) || null
-      }
+      value={value}
       isOptionEqualToValue={(option, val) =>
-        option?.RecordID === val?.RecordID ||
-        option?.EmployeeID === val?.EmployeeID
+        option?.RecordID === val?.RecordID
       }
       onChange={(event, newValue) => {
-        onChange?.(event, newValue);
+        onChange?.(newValue);
       }}
-      getOptionLabel={(option) => option?.Name || ""}
-
+      getOptionLabel={(option) =>
+        option
+          ? `${option.TermCode} || ${option.TermName} (${option.TermPeriod})`
+          : ""
+      }
       renderOption={(props, option) => (
-        <li {...props} key={option?.RecordID || option?.EmployeeID}>
+        <li {...props} key={option?.RecordID}>
           {option?.Name || ""}
         </li>
       )}
-
       renderInput={(params) => (
         <TextField
           {...params}
-          variant="standard"
-          focused
+          variant="outlined"
+          size="small"
+          fullWidth
+
+          // 🔥 THIS IS THE IMPORTANT FIX
+          InputLabelProps={{
+            shrink: true,
+          }}
+
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              backgroundColor: "#fff",
+            },
+          }}
+
           InputProps={{
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading ? (
-                  <CircularProgress
-                    color="inherit"
-                    size={20}
-                  />
-                ) : null}
+                {loading && <CircularProgress size={18} />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -206,6 +208,94 @@ export const EditAutoComplete = ({
     />
   );
 };
+
+// export const EditAutoComplete = ({
+//   value = null,
+//   onChange,
+//   url,
+//   height = 20,
+//   defaultValue,
+//   ...props
+// }) => {
+//   const [options, setOptions] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+//   const [selectedValue, setSelectedValue] = useState(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (!url) return;
+//       setLoading(true);
+//       try {
+//         const response = await axios.get(url, {
+//           headers: {
+//             Authorization:
+//               "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//           },
+//         });
+//         const data = response.data.Data.rows || [];
+//         setOptions(data);
+//       } catch (err) {
+//         setOptions([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [url]);
+
+//   return (
+//     <Autocomplete
+//       size="medium"
+//       fullWidth
+//       limitTags={1}
+//       options={options}
+//       loading={loading}
+//       value={
+//         options.find(
+//           (item) => item.RecordID === value || item.EmployeeID === value
+//         ) || null
+//       }
+//       isOptionEqualToValue={(option, val) =>
+//         option?.RecordID === val?.RecordID ||
+//         option?.EmployeeID === val?.EmployeeID
+//       }
+//       onChange={(event, newValue) => {
+//         onChange?.(event, newValue);
+//       }}
+//       getOptionLabel={(option) => option?.Name || ""}
+
+//       renderOption={(props, option) => (
+//         <li {...props} key={option?.RecordID || option?.EmployeeID}>
+//           {option?.Name || ""}
+//         </li>
+//       )}
+
+//       renderInput={(params) => (
+//         <TextField
+//           {...params}
+//           variant="standard"
+//           focused
+//           InputProps={{
+//             ...params.InputProps,
+//             endAdornment: (
+//               <>
+//                 {loading ? (
+//                   <CircularProgress
+//                     color="inherit"
+//                     size={20}
+//                   />
+//                 ) : null}
+//                 {params.InputProps.endAdornment}
+//               </>
+//             ),
+//           }}
+//         />
+//       )}
+//     />
+//   );
+// };
 
 export const AcademicAutocomplete = ({
   value = null,
@@ -469,6 +559,38 @@ export const CheckinAutocomplete = ({
       )}
       {...props}
     />
+    // <Autocomplete
+    //   multiple={props.multiple || false}
+    //   size="small"
+    //   fullWidth
+    //   limitTags={1}
+    //   options={options}
+    //   loading={loading}
+    //   value={value}
+    //   isOptionEqualToValue={(option, value) =>
+    //     option?.RecordID === value?.RecordID
+    //   }
+    //   onChange={(event, newValue) => onChange(newValue)}
+    //   getOptionLabel={(option) => option?.Name || ""}
+    //   renderInput={(params) => (
+    //     <TextField
+    //       {...params}
+    //       {...props}
+    //       // variant="outlined"
+    //       variant="standard"
+    //       size="small"
+    //       InputProps={{
+    //         ...params.InputProps,
+    //         endAdornment: (
+    //           <>
+    //             {loading && <CircularProgress size={20} />}
+    //             {params.InputProps.endAdornment}
+    //           </>
+    //         ),
+    //       }}
+    //     />
+    //   )}
+    // />
   );
 };
 //ITEM - HSN CATEGORY

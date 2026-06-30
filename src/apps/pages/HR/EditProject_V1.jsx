@@ -148,6 +148,7 @@ const Editproject_V1 = () => {
     const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
         ? lastThree
         : "";
+    console.log("Subscriptionlastthree", Subscriptionlastthree)
     const is003Subscription = SubscriptionCode.endsWith("003");
     const sliceSubscriptionCode = SubscriptionCode.slice(-3);
     const [show, setScreen] = React.useState("0");
@@ -2441,6 +2442,7 @@ const Editproject_V1 = () => {
         delete: data.DeleteFlag === "Y" ? true : false,
         budget: data.Budget === "" ? "0.00" : data.Budget,
         scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+        Planned: data.PlannedCost === "" ? "0.00" : data.PlannedCost,
         actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
         price: data.Price === "" ? "0.00" : data.Price,
         OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
@@ -2499,6 +2501,7 @@ const Editproject_V1 = () => {
             Price: values.price || 0,
             Budget: values.budget || 0,
             ScheduledCost: values.scheduled || 0,
+            PlannedCost: values.Planned || 0,
             Finyear,
             CompanyID,
             ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -3459,6 +3462,7 @@ const Editproject_V1 = () => {
                                     <CheckinAutocomplete
                                         disabled={mode == "V"}
                                         name="incharge"
+                                        focused
                                         label={
                                             <>
                                                 {getBusinessCaption(
@@ -3473,8 +3477,10 @@ const Editproject_V1 = () => {
                                         }
                                         id="incharge"
                                         value={values.incharge}
-                                        onChange={async (newValue) =>
-                                            setFieldValue("incharge", newValue)
+                                        onChange={async (newValue) => {
+                                            setFieldValue("incharge", newValue);
+                                            setFieldValue("projectOwner", null);
+                                        }
                                         }
                                         error={!!touched.incharge && !!errors.incharge}
                                         helperText={touched.incharge && errors.incharge}
@@ -3486,8 +3492,9 @@ const Editproject_V1 = () => {
                                             disabled={mode == "V"}
                                             name="slotGroup"
                                             label={getBusinessCaption("SlotGroup", "Slot Group")}
-                                            variant="outlined"
+                                            variant="standard"
                                             id="slotGroup"
+                                            focused
                                             value={values.slotGroup}
                                             onChange={(newValue) => {
                                                 setFieldValue("slotGroup", {
@@ -3507,8 +3514,9 @@ const Editproject_V1 = () => {
                                                 "ProjectOwner",
                                                 "Project Owner",
                                             )}
-                                            variant="outlined"
+                                            variant="standard"
                                             id="projectOwner"
+                                            focused
                                             value={values.projectOwner}
                                             onChange={(newValue) => {
                                                 setFieldValue("projectOwner", {
@@ -3518,6 +3526,25 @@ const Editproject_V1 = () => {
                                                 });
                                             }}
                                             url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2102", ScreenName: "Customer", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
+                                        />
+                                    ) : null}
+                                    {is003Subscription ? (
+                                        <CheckinAutocomplete
+                                            disabled={mode == "V"}
+                                            name="projectOwner"
+                                            label={"HOD"}
+                                            variant="standard"
+                                            focused
+                                            id="projectOwner"
+                                            value={values.projectOwner}
+                                            onChange={(newValue) => {
+                                                setFieldValue("projectOwner", {
+                                                    RecordID: newValue.RecordID,
+                                                    Code: newValue.Code,
+                                                    Name: newValue.Name,
+                                                });
+                                            }}
+                                            url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2206", ScreenName: "HOD", VerticalLicense: Subscriptionlastthree, Filter: `parentID = '${CompanyID}' AND DesignationRank < '${values?.incharge?.DesignationRank || 0}'`, Any: "" } })}`}
                                         />
                                     ) : null}
 
@@ -3773,6 +3800,29 @@ const Editproject_V1 = () => {
                                                         inputProps: { style: { textAlign: "right" } },
                                                     }}
                                                 />
+                                                {/* {Subscriptionlastthree == "002" && ( */}
+                                                <TextField
+                                                    fullWidth
+                                                    disabled={mode == "V"}
+                                                    variant="standard"
+                                                    type="number"
+                                                    id="Planned"
+                                                    name="Planned"
+                                                    value={values.Planned}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    label="Planned Cost"
+                                                    sx={{
+                                                        gridColumn: "span 1",
+                                                        backgroundColor: "#ffffff",
+                                                    }}
+                                                    focused
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        inputProps: { style: { textAlign: "right" } },
+                                                    }}
+                                                />
+                                                {/* )} */}
                                                 <TextField
                                                     fullWidth
                                                     disabled={mode == "V"}
