@@ -407,11 +407,14 @@ const Editemployee = () => {
   const [sign3, setsign3Image] = useState("");
 
   const [open, setOpen] = useState(false);
-  const [openSkillModal, setOpenSkillModal] = useState(false);
+  const [openSkillModal, setOpenSkillModal] = useState(false); //Skill
   const [openLeaveModal, setOpenLeaveModal] = useState(false); // Leave configuration
   const [openDocModal, setOpenDocModal] = useState(false); //Lis of document
   const [openItemServiceModal, setOpenItemServiceModal] = useState(false); //Item service
-  const [openLocalityModal, setOpenLocalityModal] = useState(false); //Locality 
+  const [openLocalityModal, setOpenLocalityModal] = useState(false); //Locality
+  const [openFunctionModal, setOpenFunctionModal] = useState(false); //Function 
+  const [openManagerModal, setOpenManagerModal] = useState(false); //Managers
+  const [openItemCustodyModal, setOpenItemCustodyModal] = useState(false); // Itemcustody
 
   //IMAGE PREVIEW
   const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
@@ -3387,6 +3390,7 @@ const Editemployee = () => {
       );
 
       toast.success(response.payload.Msg);
+      setOpenFunctionModal(false);
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
@@ -4601,7 +4605,7 @@ const Editemployee = () => {
       );
 
       toast.success(response.payload.Msg);
-
+      setOpenManagerModal(false);
       selectCellRowDataMGR({
         rowData: {},
         mode: "A",
@@ -5207,7 +5211,7 @@ const Editemployee = () => {
       );
 
       toast.success(response.payload.Msg);
-
+      
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
     } else {
@@ -7505,6 +7509,7 @@ const Editemployee = () => {
                                 field: params.field,
                                 setFieldValue,
                               });
+                              setOpenFunctionModal(true);
                             }}
                             loading={exploreLoading}
                             components={{ Toolbar: Employee }}
@@ -7512,35 +7517,93 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ===== FUNCTION LOOKUP (same logic, clean UI) ===== */}
-                        <Box mt={2}>
-                          <CheckinAutocomplete
-                            name="functionLookup"
-                            label={
-                              <span>
-                                Function <span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            value={values.functionLookup}
-                            onChange={(newValue) => {
-                              setFieldValue("functionLookup", {
-                                RecordID: newValue.RecordID,
-                                Code: newValue.Code,
-                                Name: newValue.Name,
-                              });
+                        <Dialog
+                          open={openFunctionModal}
+                          onClose={() => setOpenFunctionModal(false)}
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle>
+                            Function Details
+                          </DialogTitle>
+
+                          <DialogContent
+                            dividers
+                            sx={{
+                              pt: 3,
+                              pb: 2,
                             }}
-                            error={!!touched.functionLookup && !!errors.functionLookup}
-                            helperText={touched.functionLookup && errors.functionLookup}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2048",
-                                ScreenName: "Functions",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID=${CompanyID}`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-                        </Box>
+                          >
+
+                            <CheckinAutocomplete
+                              name="functionLookup"
+                              label={
+                                <span>
+                                  Function <span style={{ color: "red" }}>*</span>
+                                </span>
+                              }
+                              value={values.functionLookup}
+                              onChange={(newValue) => {
+                                setFieldValue("functionLookup", {
+                                  RecordID: newValue.RecordID,
+                                  Code: newValue.Code,
+                                  Name: newValue.Name,
+                                });
+                              }}
+                              error={!!touched.functionLookup && !!errors.functionLookup}
+                              helperText={touched.functionLookup && errors.functionLookup}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2048",
+                                  ScreenName: "Functions",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `CompanyID=${CompanyID}`,
+                                  Any: "",
+                                },
+                              })}`}
+                            />
+
+                          </DialogContent>
+
+                          <DialogActions>
+
+                            <LoadingButton
+                              onClick={handleSubmit}
+                              variant="contained"
+                              loading={isLoading}
+                            >
+                              Save
+                            </LoadingButton>
+
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    empFunctionFn(values, resetForm, "harddelete");
+                                  }
+                                });
+                              }}
+                            >
+                              Delete
+                            </Button>
+
+                            <Button
+                              variant="contained"
+                              color="warning"
+                              onClick={() => setOpenFunctionModal(false)}
+                            >
+                              Cancel
+                            </Button>
+
+                          </DialogActions>
+                        </Dialog>
 
                         {/* ===== ACTION BUTTONS ===== */}
                         <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
@@ -7604,10 +7667,9 @@ const Editemployee = () => {
 
               </Box>
 
-
-
             </Box>
           ) : false}
+
 
           {/* Managers */}
           {show == "3" ? (
@@ -7744,6 +7806,7 @@ const Editemployee = () => {
                                   field: params.field,
                                   setFieldValue: () => { }
                                 });
+                                setOpenManagerModal(true);
                               }}
                               pagination
                               components={{ Toolbar: Employee }}
@@ -7798,35 +7861,50 @@ const Editemployee = () => {
                         resetForm();
                       }}>
 
-                        <Box display="flex" gap={3} flexWrap="wrap">
+                        <Dialog
+                          open={openManagerModal}
+                          onClose={() => setOpenManagerModal(false)}
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle>
+                            Manager Details
+                          </DialogTitle>
 
-                          {/* LEFT FORM */}
-                          <Box flex={1} minWidth={280} display="flex" flexDirection="column" gap={2}>
+                          <DialogContent
+                            dividers
+                            sx={{
+                              pt: "20px !important",
+                            }}
+                          >
+                            <Box display="flex" flexDirection="column" gap={2}>
 
-                            {/* LEVEL */}
-                            <TextField
-                              select
-                              fullWidth
-                              size="small"
-                              label="Level"
-                              value={values.Level}
-                              name="Level"
-                              onChange={handleChange}
-                            >
-                              {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-                              {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-                              {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
-                            </TextField>
+                              <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                label="Level"
+                                value={values.Level}
+                                name="Level"
+                                onChange={handleChange}
+                              >
+                                {Data.VerticalMimNo >= 1 && (
+                                  <MenuItem value="1">Level 1</MenuItem>
+                                )}
+                                {Data.VerticalMimNo >= 2 && (
+                                  <MenuItem value="2">Level 2</MenuItem>
+                                )}
+                                {Data.VerticalMimNo >= 3 && (
+                                  <MenuItem value="3">Level 3</MenuItem>
+                                )}
+                              </TextField>
 
-                            {/* MANAGER FIELD (FIXED LOOK + SEARCH + ADD STYLE SUPPORT) */}
-                            <Box sx={{ position: "relative" }}>
                               <ProductautocompleteLevel
                                 name="manager"
                                 label={
-                                  <span>
-                                    Manager
-                                    <span style={{ color: "red" }}>*</span>
-                                  </span>
+                                  <>
+                                    Manager <span style={{ color: "red" }}>*</span>
+                                  </>
                                 }
                                 value={values.manager}
                                 onChange={(newValue) => {
@@ -7841,22 +7919,97 @@ const Editemployee = () => {
                                 payload={{
                                   EmployeeID: recID,
                                   Level: values.Level || 1,
-                                  CompanyID: CompanyID,
+                                  CompanyID,
                                 }}
                                 error={!!touched.manager && !!errors.manager}
                                 helperText={touched.manager && errors.manager}
                               />
-                            </Box>
 
-                            {/* CHECKBOX SECTION */}
-                            <Box display="flex" flexDirection="column" gap={1}>
-                              <FormControlLabel control={<Checkbox name="hrmanager" checked={values.hrmanager} onChange={handleChange} />} label="HR Manager" />
-                              <FormControlLabel control={<Checkbox name="financemanager" checked={values.financemanager} onChange={handleChange} />} label="Finance Manager" />
-                              <FormControlLabel control={<Checkbox name="projectmanager" checked={values.projectmanager} onChange={handleChange} />} label="Project Manager" />
-                              <FormControlLabel control={<Checkbox name="facilitymanager" checked={values.facilitymanager} onChange={handleChange} />} label="Facility Manager" />
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    name="hrmanager"
+                                    checked={values.hrmanager}
+                                    onChange={handleChange}
+                                  />
+                                }
+                                label="HR Manager"
+                              />
+
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    name="financemanager"
+                                    checked={values.financemanager}
+                                    onChange={handleChange}
+                                  />
+                                }
+                                label="Finance Manager"
+                              />
+
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    name="projectmanager"
+                                    checked={values.projectmanager}
+                                    onChange={handleChange}
+                                  />
+                                }
+                                label="Project Manager"
+                              />
+
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    name="facilitymanager"
+                                    checked={values.facilitymanager}
+                                    onChange={handleChange}
+                                  />
+                                }
+                                label="Facility Manager"
+                              />
+
                             </Box>
-                          </Box>
-                        </Box>
+                          </DialogContent>
+
+                          <DialogActions>
+
+                            <LoadingButton
+                              onClick={handleSubmit}
+                              variant="contained"
+                              loading={isLoading}
+                            >
+                              Save
+                            </LoadingButton>
+
+                            <Button
+                              color="error"
+                              variant="contained"
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    mgrFunctionFn(values, resetForm, "harddelete");
+                                  }
+                                });
+                              }}
+                            >
+                              Delete
+                            </Button>
+
+                            <Button
+                              color="warning"
+                              variant="contained"
+                              onClick={() => setOpenManagerModal(false)}
+                            >
+                              Cancel
+                            </Button>
+
+                          </DialogActions>
+                        </Dialog>
 
                         {/* ACTIONS */}
                         <Box display="flex" justifyContent="flex-end" mt={3} gap={2}>
@@ -14284,6 +14437,7 @@ const Editemployee = () => {
                       handleSubmit,
                       handleChange,
                       resetForm,
+                      setFieldValue
                     }) => (
                       <form
                         onSubmit={handleSubmit}
@@ -14367,12 +14521,13 @@ const Editemployee = () => {
                             pageSize={pageSize}
                             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                             onCellClick={(params) => {
-                              console.log("CLICKED"); 
                               selectCellRowData({
                                 rowData: params.row,
                                 mode: "E",
                                 field: params.field,
+                                setFieldValue,
                               });
+                              console.log("Before:", openLocalityModal);
                               setOpenLocalityModal(true);
                             }}
                             rowsPerPageOptions={[5, 10, 20]}
@@ -14401,127 +14556,144 @@ const Editemployee = () => {
                           open={openLocalityModal}
                           onClose={() => setOpenLocalityModal(false)}
                           fullWidth
-                          maxWidth="sm"
+                          maxWidth="md"
+                          PaperProps={{
+                            sx: {
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            },
+                          }}
                         >
                           {/* HEADER */}
-                          <DialogTitle>
+                          <DialogTitle
+                            sx={{
+                              borderBottom: "1px solid #E5E7EB",
+                              fontWeight: 600,
+                            }}
+                          >
                             Locality Details
                           </DialogTitle>
 
-                          <form onSubmit={handleSubmit}>
-                            <DialogContent>
+                          {/* BODY */}
+                          <DialogContent
+                            sx={{
+                              pt: 2,
+                              pb: 2,
+                              maxHeight: "70vh",
+                              overflowY: "auto",
+                            }}
+                          >
+                            <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
+                              <TextField
+                                fullWidth
+                                size="small"
+                                id="localitycode"
+                                name="localitycode"
+                                label={
+                                  <>
+                                    Locality Code
+                                    {CompanyAutoCode !== "Y" && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </>
+                                }
+                                value={values.localitycode}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.localitycode && !!errors.localitycode}
+                                helperText={touched.localitycode && errors.localitycode}
+                                InputProps={{
+                                  readOnly: CompanyAutoCode === "Y",
+                                }}
+                              />
 
-                              {/* ================= Additional Fields ================= */}
-                              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
+                              <TextField
+                                fullWidth
+                                size="small"
+                                id="localityname"
+                                name="localityname"
+                                label={
+                                  <>
+                                    Name <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.localityname}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.localityname && !!errors.localityname}
+                                helperText={touched.localityname && errors.localityname}
+                              />
 
-                                <TextField
-                                  fullWidth
-                                  size="small"
-                                  variant="outlined"
-                                  type="text"
-                                  id="localitycode"
-                                  name="localitycode"
-                                  label={
-                                    <span>
-                                      Locality Code
-                                      {CompanyAutoCode !== "Y" && <span style={{ color: "red" }}>*</span>}
-                                    </span>
+                              <TextField
+                                fullWidth
+                                size="small"
+                                type="number"
+                                id="LCpincode"
+                                name="LCpincode"
+                                label="Pincode"
+                                value={values.LCpincode}
+                                onBlur={handleBlur}
+                                onChange={(e) => {
+                                  if (e.target.value.length <= 6) {
+                                    handleChange(e);
                                   }
-                                  value={values.localitycode}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.localitycode && !!errors.localitycode}
-                                  helperText={touched.localitycode && errors.localitycode}
-                                  InputProps={{ readOnly: CompanyAutoCode === "Y" }}
-                                />
+                                }}
+                                error={!!touched.LCpincode && !!errors.LCpincode}
+                                helperText={touched.LCpincode && errors.LCpincode}
+                                inputProps={{ maxLength: 6 }}
+                              />
+                            </Box>
+                          </DialogContent>
 
-                                <TextField
-                                  fullWidth
-                                  size="small"
-                                  variant="outlined"
-                                  type="text"
-                                  id="localityname"
-                                  name="localityname"
-                                  label={
-                                    <span>
-                                      Name <span style={{ color: "red" }}>*</span>
-                                    </span>
-                                  }
-                                  value={values.localityname}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.localityname && !!errors.localityname}
-                                  helperText={touched.localityname && errors.localityname}
-                                />
+                          {/* FOOTER */}
+                          <DialogActions
+                            sx={{
+                              px: 3,
+                              py: 2,
+                              borderTop: "1px solid #E5E7EB",
+                              justifyContent: "flex-end",
+                              gap: 2,
+                            }}
+                          >
+                            <LoadingButton
+                              variant="contained"
+                              onClick={() => {
+                                console.log("Save Clicked");
+                                handleSubmit();
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
 
-                                <TextField
-                                  fullWidth
-                                  size="small"
-                                  variant="outlined"
-                                  type="number"
-                                  id="LCpincode"
-                                  name="LCpincode"
-                                  label="Pincode"
-                                  value={values.LCpincode}
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    const inputValue = e.target.value;
-                                    if (inputValue.length <= 6) {
-                                      handleChange(e);
-                                    }
-                                  }}
-                                  error={!!touched.LCpincode && !!errors.LCpincode}
-                                  helperText={touched.LCpincode && errors.LCpincode}
-                                  inputProps={{ maxLength: 6 }}
-                                />
-
-                              </Box>
-
-                            </DialogContent>
-
-                            {/* ================= ACTION BUTTONS ================= */}
-                            <DialogActions>
-
-                              <LoadingButton
-                                type="submit"
-                                color="secondary"
-                                variant="contained"
-                                loading={isLoading}
-                              >
-                                Save
-                              </LoadingButton>
-
-                              {YearFlag === "true" && funMode !== "A" && (
-                                <Button
-                                  color="error"
-                                  variant="outlined"
-                                  onClick={() => {
-                                    Swal.fire({
-                                      title: errorMsgData.Warningmsg.Delete,
-                                      icon: "warning",
-                                      showCancelButton: true,
-                                      confirmButtonText: "Confirm",
-                                    }).then((result) => {
-                                      if (result.isConfirmed) {
-                                        FnLocalilty(values, resetForm, "harddelete");
-                                      }
-                                    });
-                                  }}
-                                >
-                                  Delete
-                                </Button>
-                              )}
-
+                            {YearFlag === "true" && funMode !== "A" && (
                               <Button
-                                color="warning"
-                                variant="outlined"
-                                onClick={() => setOpenLocalityModal(false)}
+                                color="error"
+                                variant="contained"
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: errorMsgData.Warningmsg.Delete,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      FnLocalilty(values, resetForm, "harddelete");
+                                    }
+                                  });
+                                }}
                               >
-                                Cancel
+                                Delete
                               </Button>
+                            )}
 
-                            </DialogActions>
-                          </form>
+                            <Button
+                              color="warning"
+                              variant="contained"
+                              onClick={() => setOpenLocalityModal(false)}
+                            >
+                              Cancel
+                            </Button>
+                          </DialogActions>
                         </Dialog>
 
                         {/* Action Buttons */}
@@ -14667,6 +14839,7 @@ const Editemployee = () => {
                           <TextField
                             fullWidth
                             size="small"
+                            variant="outlined"
                             label="Code"
                             value={values.code}
                             InputProps={{ readOnly: true }}
@@ -14675,6 +14848,7 @@ const Editemployee = () => {
                           <TextField
                             fullWidth
                             size="small"
+                            variant="outlined"
                             label="Name"
                             value={values.description}
                             InputProps={{ readOnly: true }}
@@ -14682,7 +14856,7 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ================= TABLE (STYLED) ================= */}
-                        <Box sx={{ height: "45vh", mb: 3 }}>
+                        <Box sx={{ height: "45vh", mb: 3, border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
                           <DataGrid
                             sx={{
                               "& .MuiDataGrid-root": { border: "none" },
@@ -14703,7 +14877,6 @@ const Editemployee = () => {
                               },
                               "& .MuiTablePagination-root": { color: "#fff" },
                               "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
                               "& .even-row": { backgroundColor: "#F3F4F6" },
                               "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
                             }}
@@ -14724,121 +14897,238 @@ const Editemployee = () => {
                                 field: params.field,
                                 setFieldValue,
                               });
+                              setOpenItemCustodyModal(true);
                             }}
                           />
                         </Box>
 
                         {/* ================= FORM FIELDS (MODERN STYLE) ================= */}
-                        <Box display="flex" flexDirection="column" gap={2}>
+                        <Dialog
+                          open={openItemCustodyModal}
+                          onClose={() => setOpenItemCustodyModal(false)}
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle>
+                            Item Custody Details
+                          </DialogTitle>
 
-                          <ItemGroupLookup
-                            name="itemGroup"
-                            label={<>Item Group <span style={{ color: "red" }}>*</span></>}
-                            value={values.itemGroup}
-                            onChange={(newValue) => {
-                              setFieldValue("itemGroup", newValue);
-                              setFieldValue("itemGroupID", newValue?.RecordID);
-                              setFieldValue("items", null);
+                          <DialogContent
+                            dividers
+                            sx={{
+                              pt: "20px !important",
                             }}
-                            error={!!touched.itemGroup && !!errors.itemGroup}
-                            helperText={touched.itemGroup && errors.itemGroup}
-                          />
+                          >
+                            <Box display="flex" flexDirection="column" gap={2}>
 
-                          <ItemsLookup
-                            name="items"
-                            label={<>Items <span style={{ color: "red" }}>*</span></>}
-                            value={values.items}
-                            onChange={(newValue) => {
-                              setFieldValue("items", newValue);
-                            }}
-                            error={!!touched.items && !!errors.items}
-                            helperText={touched.items && errors.items}
-                          />
+                              <ItemGroupLookup
+                                name="itemGroup"
+                                label={
+                                  <>
+                                    Item Group <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                value={values.itemGroup}
+                                onChange={(newValue) => {
+                                  setFieldValue("itemGroup", newValue);
+                                  setFieldValue("itemGroupID", newValue?.RecordID);
+                                  setFieldValue("items", null);
+                                }}
+                                error={!!touched.itemGroup && !!errors.itemGroup}
+                                helperText={touched.itemGroup && errors.itemGroup}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2144",
+                                    ScreenName: "ItemGroup",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
 
-                          <TextField
-                            fullWidth
-                            size="small"
-                            label={<>Item Value <span style={{ color: "red" }}>*</span></>}
-                            value={values.ItemValue}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (/^\d*\.?\d*$/.test(val)) {
-                                setFieldValue("ItemValue", val);
-                              }
-                            }}
-                            onBlur={(e) => {
-                              let val = e.target.value;
-                              const num = parseFloat(val || 0);
-                              setFieldValue("ItemValue", num.toFixed(2));
-                            }}
-                            InputProps={{
-                              inputProps: { style: { textAlign: "right" } }
-                            }}
-                          />
+                              <ItemsLookup
+                                name="items"
+                                label={
+                                  <>
+                                    Items <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                value={values.items}
+                                onChange={(newValue) => {
+                                  setFieldValue("items", newValue);
+                                }}
+                                error={!!touched.items && !!errors.items}
+                                helperText={touched.items && errors.items}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2145",
+                                    ScreenName: "Items",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `ItemGroupID='${values.itemGroup ? values.itemGroup.RecordID : ""}' AND CompanyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
 
-                          <TextField
-                            fullWidth
-                            size="small"
-                            label={<>Asset ID <span style={{ color: "red" }}>*</span></>}
-                            value={values.AssestID}
-                            onChange={handleChange}
-                            error={!!touched.AssestID && !!errors.AssestID}
-                            helperText={touched.AssestID && errors.AssestID}
-                            InputProps={{
-                              inputProps: { style: { textAlign: "right" } }
-                            }}
-                          />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                label={
+                                  <>
+                                    Item Value <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.ItemValue}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (/^\d*\.?\d*$/.test(val)) {
+                                    setFieldValue("ItemValue", val);
+                                  }
+                                }}
+                                onBlur={(e) => {
+                                  const num = parseFloat(e.target.value || 0);
+                                  setFieldValue("ItemValue", num.toFixed(2));
+                                }}
+                                error={!!touched.ItemValue && !!errors.ItemValue}
+                                helperText={touched.ItemValue && errors.ItemValue}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
 
-                          <TextField
-                            fullWidth
-                            size="small"
-                            label={<>Purchase Reference <span style={{ color: "red" }}>*</span></>}
-                            value={values.PurchaseReference}
-                            onChange={handleChange}
-                            error={!!touched.PurchaseReference && !!errors.PurchaseReference}
-                            helperText={touched.PurchaseReference && errors.PurchaseReference}
-                          />
-                        </Box>
+                              <TextField
+                                fullWidth
+                                size="small"
+                                name="AssestID"
+                                label={
+                                  <>
+                                    Asset ID <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.AssestID}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.AssestID && !!errors.AssestID}
+                                helperText={touched.AssestID && errors.AssestID}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                name="PurchaseReference"
+                                label={
+                                  <>
+                                    Purchase Reference <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.PurchaseReference}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.PurchaseReference && !!errors.PurchaseReference}
+                                helperText={touched.PurchaseReference && errors.PurchaseReference}
+                              />
+
+                            </Box>
+                          </DialogContent>
+
+                          <DialogActions>
+
+                            <Button
+                              variant="outlined"
+                              color="warning"
+                              onClick={() => setOpenItemCustodyModal(false)}
+                            >
+                              Cancel
+                            </Button>
+
+                            {funMode === "E" && (
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: errorMsgData.Warningmsg.Delete,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      empItemCustody1Fn(values, resetForm, "harddelete");
+                                    }
+                                  });
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            )}
+
+                            <LoadingButton
+                              type="submit"
+                              variant="contained"
+                              loading={isLoading}
+                              onClick={(handleSubmit)}
+                            >
+                              Save
+                            </LoadingButton>
+
+                          </DialogActions>
+                        </Dialog>
 
                         {/* ================= BUTTONS ================= */}
                         <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
-                          <LoadingButton
-                            color="secondary"
-                            variant="contained"
-                            type="submit"
-                            loading={isLoading}
-                          >
-                            Save
-                          </LoadingButton>
-
                           <Button
-                            color="error"
-                            variant="contained"
-                            disabled={funMode == "A"}
-                            onClick={() => {
-                              Swal.fire({
-                                title: errorMsgData.Warningmsg.Delete,
-                                icon: "warning",
-                                showCancelButton: true,
-                                confirmButtonText: "Confirm",
-                              }).then((result) => {
-                                if (result.isConfirmed) {
-                                  empItemCustody1Fn(values, resetForm, "harddelete");
-                                }
-                              });
-                            }}
-                          >
-                            Delete
-                          </Button>
-
-                          <Button
+                            variant="outlined"
                             color="warning"
-                            variant="contained"
                             onClick={() => setScreen(0)}
+                            sx={{ textTransform: "none", borderRadius: 2 }}
                           >
                             Cancel
                           </Button>
+
+                          {funMode === "E" && (
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    empItemCustody1Fn(values, resetForm, "harddelete");
+                                  }
+                                });
+                              }}
+                              sx={{ textTransform: "none", borderRadius: 2 }}
+                            >
+                              Delete
+                            </Button>
+                          )}
+
+                          <LoadingButton
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            loading={isLoading}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              backgroundColor: "#0D9488",
+                              "&:hover": { backgroundColor: "#0D9488" },
+                            }}
+                          >
+                            Save
+                          </LoadingButton>
 
                         </Box>
 
