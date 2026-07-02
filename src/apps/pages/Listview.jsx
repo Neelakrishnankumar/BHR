@@ -32,8 +32,11 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
 import {
   dataGridHeaderFooterHeight,
+  dataGridHeaderHeight_v1,
   dataGridHeight,
   dataGridRowHeight,
+  dataGridRowHeight_v1,
+  dataGridFooterHeight
 } from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -247,6 +250,11 @@ const Listview = () => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [loadingPdf, setLoadingPdf] = useState(false);
 
+  // For table pagination
+  const [personnelPage, setPersonnelPage] = useState(1);
+  const [personnelPageSize, setPersonnelPageSize] = useState(10);
+  const [personnelSearch, setPersonnelSearch] = useState("");
+  const [selectedRowForAction, setSelectedRowForAction] = useState(null);
 
 
   //BULK UPLOAD
@@ -468,6 +476,40 @@ const Listview = () => {
           },
         };
       }
+
+        // 👇 NEW: avatar for Personnel column, only on TR027
+  if (col.field === "Personnel" && accessID === "TR027") {
+    return {
+      ...col,
+      renderCell: (params) => {
+        const { name } = splitCodeName(params.value);
+        return (
+          <Box display="flex" alignItems="center" gap={1.5}>
+            <Box
+              sx={{
+                width: 28,
+                height: 28,
+                borderRadius: "50%",
+                backgroundColor: getAvatarColor(name),
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Typography variant="caption" fontWeight={700} color="#fff" fontSize={11}>
+                {getInitials(name)}
+              </Typography>
+            </Box>
+            <Typography variant="body2" noWrap>
+              {name || "-"}
+            </Typography>
+          </Box>
+        );
+      },
+    };
+  }
+  
       return col;
     });
 
@@ -500,6 +542,25 @@ const Listview = () => {
     return listViewData;
   }, [listViewData]);
 
+
+
+   //Grid Search
+const [search, setSearch] = React.useState("");
+
+ const visibleColumns = React.useMemo(
+  () => columns.filter((c) => c.field !== "slno" && c.field !== "action"),
+  [columns]
+);
+
+const filteredRows = React.useMemo(() => {
+  if (!search) return rows;
+  const s = search.toLowerCase();
+  return rows.filter((row) =>
+    visibleColumns.some((col) =>
+      String(row[col.field] ?? "").toLowerCase().includes(s)
+    )
+  );
+}, [rows, search, visibleColumns]);
   /*****************File upload************ */
   const changeHandler = async (event) => {
     setSelectedFile(event.target.files[0]);
@@ -570,418 +631,469 @@ const Listview = () => {
       }
     });
   };
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer
-        key={location.key}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* {broken && !rtl && (
-          <IconButton
-            sx={{ margin: "0 6 0 2" }}
-            onClick={() => toggleSidebar()}
-          >
-            <MenuOutlinedIcon />
-          </IconButton>
-        )}
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <Typography variant="h3">{screenName}</Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap", // allow wrapping on very small screens
-            gap: 2,
-            width: "100%",
-            alignItems: "center",
-          }}
-        > */}
-        {broken && !rtl && (
-          <IconButton onClick={toggleSidebar}>
-            <MenuOutlinedIcon />
-          </IconButton>
-        )}
-
-        <Typography variant="h3" noWrap>
-          {accessID == "TR330"
-            ? `${screenName1}` :
-            accessID == "TR376"
-              ? `${screenName1}` :
-              accessID == "TR026"
-                ? `${screenName}` :
-                accessID == "TR378"
-                  ? `${screenName1}` :
-                  accessID == "TR383"
-                    ? `${screenName1}` :
-                    accessID == "TR323"
-                      ? screenName || rowData.Screennameroute :
-                      accessID == "TR315"
-                        ? screenName || rowData.Screenname
-                        : accessID == "TR128"
-                          ? screenName || rowData.LocationName
-                          : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                            ? screenName1
-                            : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                              ? screenName1
-                              // : screenName}</Typography>
-                              // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
-                              : screenName ?? screenName1}</Typography>
-
-        {/* RIGHT SIDE */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            marginLeft: "auto",
-            flexWrap: "nowrap",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              alignItems: "center",
-              flexShrink: 0, // prevent shrinking
-              marginLeft: "auto", // push to right
-            }}
-          >
-            {accessID === "TR313" ||
-              accessID === "TR243" ||
-              accessID === "TR328" ||
-              accessID === "TR331" ||
-              accessID === "TR366" ||
-              accessID === "TR321" ? (
-              <IconButton onClick={() => setShowMore((prev) => !prev)}>
-                {showMore ? (
-                  <Tooltip title="Close">
-                    {/* <MoreHorizIcon /> */}
-                    <FilterAltOutlinedIcon />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Open">
-                    {/* <MoreVertIcon /> */}
-                    <FilterAltOutlinedIcon />
-                  </Tooltip>
-                )}
-              </IconButton>
-            ) : (
-              false
-            )}
-
-            {accessID == "TR122" || accessID == "TR026" ? (
-              <Tooltip title="Bulk Upload">
-                <IconButton sx={{ cursor: "pointer" }}>
-                  <FaFileExcel size={20}
-                    color="#1D6F42"
-                    onClick={() => setShowBulkUpload((prev) => !prev)}
-                  />
-                </IconButton>
-              </Tooltip>
-            ) : null}
-            {accessID == "TR331" || accessID == "TR366" ? (
-              <Tooltip arrow title="Analytics">
-                <IconButton>
-                  <AnalyticsIcon
-                    onClick={() => {
-                      navigate(`./Invoice/Analytics`, {
-                        state: {
-                          ...rowData,
-                        },
-                      });
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              false
-            )}
-            {(accessID == "TR331" || accessID == "TR366") && is003Subscription ? (
-              <Tooltip arrow title="Cash Management">
-                <IconButton>
-                  <AccountBalanceWalletIcon
-                    onClick={() => {
-                      navigate(`/Apps/Secondarylistview/TR398/Academic Year/T`, {
-                        // navigate(`/Apps/Secondarylistview/TR395/Cash Management Category/T`, {
-                        state: {
-                          ...rowData,
-                        },
-                      });
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              false
-            )}
-           
-            <GridToolbarQuickFilter key={accessID} />
-            {accessID == "TR002" ? (
-              <Tooltip arrow title="Product Tracking">
-                <AssessmentIcon
-                  sx={{ marginTop: "10px" }}
-                  color="primary"
-                  onClick={() => {
-                    navigate(
-                      "/Apps/TR200/Editproducttracking/EditProduct Tracking/1/A"
-                    );
-                  }}
-                />
-              </Tooltip>
-            ) : (
-              false
-            )}
-
-            {accessID == "TR043" ? (
-              <Tooltip arrow title="Product Line Chart">
-                <AssessmentIcon
-                  sx={{ marginTop: "10px" }}
-                  color="primary"
-                  onClick={() => {
-                    navigate(`/Apps/product-analysis/1/E`);
-                  }}
-                />
-              </Tooltip>
-            ) : (
-              false
-            )}
-
-            {screenName == "UOM Type" ? (
-              false
-            ) : screenName == "Invoice Category" ? (
-              false
-            ) : screenName == "Materials Type" ? (
-              false
-            ) : accessID == "TR059" ? (
-              false
-            ) : accessID == "TR286" ? (
-              false
-            ) : accessID == "TR299" ? (
-              false
-            ) : accessID == "TR072" ? (
-              false
-            ) : accessID == "TR058" ? (
-              false
-            ) : accessID == "TR047" ? (
-              false
-            ) : accessID == "TR076" ? (
-              false
-            ) : accessID == "TR064" ? (
-              false
-            ) : accessID == "TR099" ? (
-              false
-            ) : accessID == "TR043" ? (
-              false
-            ) : accessID == "TR101" ? (
-              false
-            ) : accessID == "TR078" ? (
-              false
-            ) : accessID == "TR116" ? (
-              false
-            ) : accessID == "TR124" ? (
-              false
-            ) : accessID == "TR083" ? (
-              false
-            ) : accessID == "TR136" ? (
-              false
-            ) : accessID == "TR135" ? (
-              false
-            ) : accessID == "TR257" ? (
-              false
-            ) : accessID == "TR313" ? (
-              false
-            ) : accessID == "TR328" ? (
-              false
-            ) : accessID == "TR315" ? (
-              false
-            ) : accessID == "TR370" ? (
-              false
-            ) : accessID == "TR379" ? (
-              false
-            ) : accessID == "TR330" ? (
-              false
-            )
-              // : accessID == "TR336" ? (
-              //false
-              //)
-              : accessID == "TR337" ? (
-                false
-              )
-                : accessID == "TR331" ? (
-                  false
-                )
-                  : accessID == "TR378" ? (
-                    false
-                  )
-                    : accessID == "TR383" ? (
-                      false
-                    )
-                      : accessID == "TR391" ? (
-                        false
-                      )
-                        // : YearFlag == "true" ? (
-                        : UGA_ADD ? (
-
-                          <Tooltip arrow title="Add">
-                            <IconButton>
-                              <AddOutlinedIcon
-                                onClick={() => {
-                                  navigate(
-                                    `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""
-                                    }`,
-                                    {
-
-                                      state: {
-                                        ...rowData,
-                                        Routescreen: screenName,
-                                        CustomerID: "-1",
-                                        ProductID: "-1",
-                                        BomID: "-1",
-                                      },
-                                    }
-                                  );
-                                }}
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (
-                          // ) : (
-                          //   false
-                          // )
-                          false
-                        )}
-
-            {/* <Tooltip arrow title="Import Excel">
-                <IconButton
-                  size="large"
-                  color="primary"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept=".xlsx,.xls"
-                    type="file"
-                    onChange={handleDesignationImport}
-                  />
-
-                  <FileUploadIcon />
-                </IconButton>
-              </Tooltip> */}
-            {/* <Tooltip arrow title="Excel">
-            <IconButton  color="primary">
-            <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
-            <FileUploadIcon />
-          </IconButton>
-            </Tooltip> */}
-            {accessID === "TR321" && (
-              <Tooltip arrow title="Party Analytics">
-                <IconButton
-                  onClick={() => navigate("/Apps/CRMPartyAnalytics")}
-                >
-                  <AssessmentIcon />
-                </IconButton>
-              </Tooltip>)}
-
-            {accessID === "TR315" && (
-              <Tooltip arrow title="Item Analytics">
-                <IconButton
-                  onClick={() => navigate("/Apps/ItemStokAnalytics")}
-                >
-                  <AssessmentIcon />
-                </IconButton>
-              </Tooltip>)}
-            {accessID == "TR064" ? (
-              <Tooltip arrow title="Excel">
-                <IconButton
-                  size="large"
-                  color="primary"
-                  aria-label="upload picture"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept="all/*"
-                    type="file"
-                    onChange={changeHandler}
-                  />
-                  <FileUploadIcon />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              false
-            )}
-            {accessID == "TR059" ? (
-              <Tooltip arrow title="Report">
-                <AssessmentIcon
-                  sx={{ marginTop: "10px" }}
-                  color="primary"
-                  onClick={() => {
-                    navigate("/Apps/TR100/Editreport/EditReport/1/A");
-                  }}
-                />
-              </Tooltip>
-            ) : (
-              false
-            )}
-
-            <GridToolbarExport
-              printOptions={{ disableToolbarButton: true }}
-              csvOptions={{
-                fileName: `${screenName}`,
-              }}
-            />
+ function CustomToolbar() {
+     return (
+       <Box
+         key={location.key}
+         sx={{
+           display: "flex",
+           flexDirection: "row",
+           justifyContent: "space-between",
+           alignItems: "center",
+           backgroundColor: "#fff",
+           border: "1px solid #E5E7EB",
+           borderRadius: 3,
+           p: 2,
+           mb: 2,
+         }}
+       >
+         {/* {broken && !rtl && (
+           <IconButton
+             sx={{ margin: "0 6 0 2" }}
+             onClick={() => toggleSidebar()}
+           >
+             <MenuOutlinedIcon />
+           </IconButton>
+         )}
+         <Box sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
+           <Typography variant="h3">{screenName}</Typography>
+         </Box>
+ 
+         <Box
+           sx={{
+             display: "flex",
+             flexWrap: "wrap", // allow wrapping on very small screens
+             gap: 2,
+             width: "100%",
+             alignItems: "center",
+           }}
+         > */}
+         {broken && !rtl && (
+           <IconButton onClick={toggleSidebar}>
+             <MenuOutlinedIcon />
+           </IconButton>
+         )}
+ 
+         <Typography variant="h4" fontWeight={700} noWrap>
+           {accessID == "TR330"
+             ? `${screenName1}` :
+             accessID == "TR376"
+               ? `${screenName1}` :
+               accessID == "TR378"
+                 ? `${screenName1}` :
+                 accessID == "TR383"
+                   ? `${screenName1}` :
+                   accessID == "TR323"
+                     ? screenName || rowData.Screennameroute :
+                     accessID == "TR315"
+                       ? screenName || rowData.Screenname
+                       : accessID == "TR128"
+                         ? screenName || rowData.LocationName
+                         : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                           ? screenName1
+                           : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                             ? screenName1
+                             // : screenName}</Typography>
+                             // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
+                             : screenName ?? screenName1}</Typography>
+ 
+         {/* RIGHT SIDE */}
+         <Box
+           sx={{
+             display: "flex",
+             alignItems: "center",
+             gap: 1,
+             marginLeft: "auto",
+             flexWrap: "nowrap",
+           }}
+         >
+           <Box
+             sx={{
+               display: "flex",
+               gap: 2,
+               alignItems: "center",
+               flexShrink: 0, // prevent shrinking
+               marginLeft: "auto", // push to right
+             }}
+           >
+             {accessID === "TR313" ||
+               accessID === "TR243" ||
+               accessID === "TR328" ||
+               accessID === "TR331" ||
+               accessID === "TR366" ||
+               accessID === "TR321" ? (
+               <IconButton onClick={() => setShowMore((prev) => !prev)}>
+                 {showMore ? (
+                   <Tooltip title="Close">
+                     {/* <MoreHorizIcon /> */}
+                     <FilterAltOutlinedIcon />
+                   </Tooltip>
+                 ) : (
+                   <Tooltip title="Open">
+                     {/* <MoreVertIcon /> */}
+                     <FilterAltOutlinedIcon />
+                   </Tooltip>
+                 )}
+               </IconButton>
+             ) : (
+               false
+             )}
+ 
+             {accessID == "TR122" || accessID == "TR026" ? (
+               <Tooltip title="Bulk Upload">
+                 <IconButton sx={{ cursor: "pointer" }}>
+                   <FaFileExcel size={20}
+                     color="#1D6F42"
+                     onClick={() => setShowBulkUpload((prev) => !prev)}
+                   />
+                 </IconButton>
+               </Tooltip>
+             ) : null}
+             {accessID == "TR331" || accessID == "TR366" ? (
+               <Tooltip arrow title="Analytics">
+                 <IconButton>
+                   <AnalyticsIcon
+                     onClick={() => {
+                       navigate(`./Invoice/Analytics`, {
+                         state: {
+                           ...rowData,
+                         },
+                       });
+                     }}
+                   />
+                 </IconButton>
+               </Tooltip>
+             ) : (
+               false
+             )}
+             {/* <TextField
+               size="small"
+               placeholder="Search..."
+               key={accessID}
+ 
+             /> */}
+             {/* <GridToolbarQuickFilter key={accessID} /> */}
+             {accessID == "TR002" ? (
+               <Tooltip arrow title="Product Tracking">
+                 <AssessmentIcon
+                   sx={{ marginTop: "10px" }}
+                   color="primary"
+                   onClick={() => {
+                     navigate(
+                       "/Apps/TR200/Editproducttracking/EditProduct Tracking/1/A"
+                     );
+                   }}
+                 />
+               </Tooltip>
+             ) : (
+               false
+             )}
+ 
+             {accessID == "TR043" ? (
+               <Tooltip arrow title="Product Line Chart">
+                 <AssessmentIcon
+                   sx={{ marginTop: "10px" }}
+                   color="primary"
+                   onClick={() => {
+                     navigate(`/Apps/product-analysis/1/E`);
+                   }}
+                 />
+               </Tooltip>
+             ) : (
+               false
+             )}
+ 
+             {screenName == "UOM Type" ? (
+               false
+             ) : screenName == "Invoice Category" ? (
+               false
+             ) : screenName == "Materials Type" ? (
+               false
+             ) : accessID == "TR059" ? (
+               false
+             ) : accessID == "TR286" ? (
+               false
+             ) : accessID == "TR299" ? (
+               false
+             ) : accessID == "TR072" ? (
+               false
+             ) : accessID == "TR058" ? (
+               false
+             ) : accessID == "TR047" ? (
+               false
+             ) : accessID == "TR076" ? (
+               false
+             ) : accessID == "TR064" ? (
+               false
+             ) : accessID == "TR099" ? (
+               false
+             ) : accessID == "TR043" ? (
+               false
+             ) : accessID == "TR101" ? (
+               false
+             ) : accessID == "TR078" ? (
+               false
+             ) : accessID == "TR116" ? (
+               false
+             ) : accessID == "TR124" ? (
+               false
+             ) : accessID == "TR083" ? (
+               false
+             ) : accessID == "TR136" ? (
+               false
+             ) : accessID == "TR135" ? (
+               false
+             ) : accessID == "TR257" ? (
+               false
+             ) : accessID == "TR313" ? (
+               false
+             ) : accessID == "TR328" ? (
+               false
+             ) : accessID == "TR315" ? (
+               false
+             ) : accessID == "TR370" ? (
+               false
+             ) : accessID == "TR379" ? (
+               false
+             ) : accessID == "TR330" ? (
+               false
+             )
+               // : accessID == "TR336" ? (
+               //false
+               //)
+               : accessID == "TR337" ? (
+                 false
+               )
+                 : accessID == "TR331" ? (
+                   false
+                 )
+                   : accessID == "TR378" ? (
+                     false
+                   )
+                     : accessID == "TR383" ? (
+                       false
+                     )
+                       //  : accessID == "TR391" ? (
+                       //   false
+                       // )
+                       // : YearFlag == "true" ? (
+                       : UGA_ADD ? (
+ 
+                         <Tooltip arrow title="Add">
+                           <IconButton
+                             sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
+                           >
+                             <AddOutlinedIcon
+                               fontSize="small"
+                               onClick={() => {
+                                 navigate(
+                                   `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""}`,
+                                   {
+                                     state: {
+                                       ...rowData,
+                                       Routescreen: screenName,
+                                       CustomerID: "-1",
+                                       ProductID: "-1",
+                                       BomID: "-1",
+                                     },
+                                   }
+                                 );
+                               }}
+                             />
+                           </IconButton>
+                         </Tooltip>
+                       ) : (
+                         // ) : (
+                         //   false
+                         // )
+                         false
+                       )}
+ 
+             {/* <Tooltip arrow title="Import Excel">
+                 <IconButton
+                   size="large"
+                   color="primary"
+                   component="label"
+                 >
+                   <input
+                     hidden
+                     accept=".xlsx,.xls"
+                     type="file"
+                     onChange={handleDesignationImport}
+                   />
+ 
+                   <FileUploadIcon />
+                 </IconButton>
+               </Tooltip> */}
+             {/* <Tooltip arrow title="Excel">
+             <IconButton  color="primary">
+             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
+             <FileUploadIcon />
+           </IconButton>
+             </Tooltip> */}
+ 
+ 
+ 
+             {accessID === "TR321" && (
+               <Tooltip arrow title="Party Analytics">
+                 <IconButton
+                   onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                 >
+                   <AssessmentIcon />
+                 </IconButton>
+               </Tooltip>)}
+ 
+ 
+             {accessID === "TR315" && (
+               <Tooltip arrow title="Item Analytics">
+                 <IconButton
+                   onClick={() => navigate("/Apps/ItemStokAnalytics")}
+                 >
+                   <AssessmentIcon />
+                 </IconButton>
+               </Tooltip>)}
+             {accessID == "TR064" ? (
+               <Tooltip arrow title="Excel">
+                 <IconButton
+                   size="large"
+                   color="primary"
+                   aria-label="upload picture"
+                   component="label"
+                 >
+                   <input
+                     hidden
+                     accept="all/*"
+                     type="file"
+                     onChange={changeHandler}
+                   />
+                   <FileUploadIcon />
+                 </IconButton>
+               </Tooltip>
+             ) : (
+               false
+             )}
+             {accessID == "TR059" ? (
+               <Tooltip arrow title="Report">
+                 <AssessmentIcon
+                   sx={{ marginTop: "10px" }}
+                   color="primary"
+                   onClick={() => {
+                     navigate("/Apps/TR100/Editreport/EditReport/1/A");
+                   }}
+                 />
+               </Tooltip>
+             ) : (
+               false
+             )}
+ 
+             <Tooltip arrow title="Export">
+               <IconButton
+                 sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
+               >
+                 <SaveAltIcon fontSize="small" />
+               </IconButton>
+             </Tooltip>
              <Tooltip title="Configuration">
-                <InfoRoundedIcon color="info" size="small" 
+                <InfoRoundedIcon color="info" size="small"
                 onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}/>          
             </Tooltip>
-            
-            {/* {accessID == "TR122" && (
-              <Box display="flex" alignItems="center" gap={2} >
-                <TextField
-                  value={ImageName?.name || ""}
-                  size="small"
-                  sx={{ width: "200px", borderRadius: "10px" }}
-                />
-                <input
-                  type="file"
-                  name="csv"
-                  id="file-input"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                  // disabled={!saveSuccess}
-                />
 
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // disabled={!saveSuccess}
-                  onClick={() => document.getElementById("file-input").click()}
-                >
-                  Upload
-                </Button>
-              </Box>)} */}
-            <Tooltip arrow title="Logout">
-              <IconButton onClick={() => fnLogOut("Logout")} color="error">
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      </GridToolbarContainer>
-    );
-  }
 
+             {/* {accessID == "TR122" && (
+               <Box display="flex" alignItems="center" gap={2} >
+                 <TextField
+                   value={ImageName?.name || ""}
+                   size="small"
+                   sx={{ width: "200px", borderRadius: "10px" }}
+                 />
+                 <input
+                   type="file"
+                   name="csv"
+                   id="file-input"
+                   style={{ display: "none" }}
+                   onChange={handleFileChange}
+                   // disabled={!saveSuccess}
+                 />
+ 
+                 <Button
+                   variant="contained"
+                   color="primary"
+                   // disabled={!saveSuccess}
+                   onClick={() => document.getElementById("file-input").click()}
+                 >
+                   Upload
+                 </Button>
+               </Box>)} */}
+             <Tooltip arrow title="Logout">
+               <IconButton
+                 onClick={() => fnLogOut("Logout")}
+                 sx={{ backgroundColor: "#FEF2F2", color: "#DC2626", "&:hover": { backgroundColor: "#FEE2E2" } }}
+               >
+                 <LogoutOutlinedIcon fontSize="small" />
+               </IconButton>
+             </Tooltip>
+           </Box>
+           
+         </Box>
+         
+
+       </Box>
+
+       
+     );
+   }
+
+   
   // var filter
   // if(accessID == "TR047"){
   //   filter =`Finyear='${year}'`
   // }else {
   //   filter =""
   // }
+
+  //Start For table
+  const avatarColors = ["#4F46E5", "#7C3AED", "#DB2777", "#DC2626", "#D97706", "#059669", "#0891B2", "#2563EB"];
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.toString().trim().split(" ");
+    return parts.length >= 2
+      ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+      : parts[0][0].toUpperCase();
+  };
+
+  const getAvatarColor = (name) => {
+    if (!name) return avatarColors[0];
+    return avatarColors[name.toString().charCodeAt(0) % avatarColors.length];
+  };
+
+  // Split "EMP00071 || aksa" into crgb(123, 104, 155)ame
+  const splitCodeName = (text) => {
+    if (!text) return { code: "", name: "" };
+    const parts = text.split("||").map((p) => p.trim());
+    return { code: parts[0] || "", name: parts[1] || parts[0] || "" };
+  };
+
+  const personnelFiltered = React.useMemo(() => {
+    if (!personnelSearch) return listViewData;
+    const s = personnelSearch.toLowerCase();
+    return listViewData.filter((row) => {
+      const { name } = splitCodeName(row.Personnel);
+      return (
+        name.toLowerCase().includes(s) ||
+        row.Department?.toLowerCase().includes(s) ||
+        row.Classification?.toLowerCase().includes(s)
+      );
+    });
+  }, [listViewData, personnelSearch]);
+
+  // const personnelTotalPages = Math.ceil(personnelFiltered.length / personnelPageSize) || 1;
+  // const personnelPaged = personnelFiltered.slice(
+  //   (personnelPage - 1) * personnelPageSize,
+  //   personnelPage * personnelPageSize
+  // );
+
+  //End for table new design
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -1000,9 +1112,376 @@ const Listview = () => {
   const [selectedFileExcel, setSelectedFileExcel] = React.useState(null);
 
   const [selectedFileName, setSelectedFileName] = useState("");
+  
 
   const fileInputRef = React.useRef(null);
+ 
+  //New Styled Table Component
+//   const NewStyledTable = ({
+//   columns = [],
+//   rows = [],
+//   loading = false,
+//   actions,
+//   avatarField,
+//   pageSize = 10,
+// }) => {
+//       const [search, setSearch] = React.useState("");
+//       const [page, setPage] = React.useState(1);
+//       const [rowsPerPage, setRowsPerPage] = React.useState(pageSize);
 
+//       const visibleColumns = columns.filter(
+//         (c) => c.field !== "slno" && c.field !== "action"
+//       );
+
+//       const filtered = React.useMemo(() => {
+//         if (!search) return rows;
+
+//         const s = search.toLowerCase();
+
+//         return rows.filter((row) =>
+//           visibleColumns.some((col) =>
+//             String(row[col.field] ?? "").toLowerCase().includes(s)
+//           )
+//         );
+//       }, [rows, search, visibleColumns]);
+
+//      const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
+
+//       const paged = filtered.slice(
+//         (page - 1) * rowsPerPage,
+//         page * rowsPerPage
+//       );
+
+
+//   // grid template: SL# + each visible column + actions
+//   const gridTemplate = `60px ${visibleColumns.map((c) => {
+//     // narrow columns for icon-only columns
+//     if (c.field === "Type" || c.field === "emp") return "50px";
+//     return "1fr";
+//   }).join(" ")} ${actions ? "160px" : ""}`;
+
+//   return (
+//     <Box sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, overflow: "hidden" }}>
+//       {/* Search */}
+//       <Box p={2} borderBottom="1px solid #F3F4F6">
+//         <TextField
+//           placeholder="Search..."
+//           size="small"
+//           value={search}
+//           onChange={(e) => {
+//             setSearch(e.target.value);
+//             setPage(1);
+//           }}
+//           InputProps={{
+//             startAdornment: <SearchIcon sx={{ mr: 1, color: "#9CA3AF", fontSize: 20 }} />,
+//           }}
+//           sx={{ width: 280, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+//         />
+//       </Box>
+
+//       {/* Header */}
+//       <Box
+//         display="grid"
+//         gridTemplateColumns={gridTemplate}
+//         px={2} py={1.5}
+//         sx={{ backgroundColor: "#0E9F9A", borderBottom: "1px solid #E5E7EB" }}
+//       >
+//         <Typography variant="caption" fontWeight={600} sx={{fontSize:'12px'}} color="text.secondary">SL#</Typography>
+//         {visibleColumns.map((col) => (
+//           <Typography key={col.field} variant="caption" sx={{fontSize:'12px'}} fontWeight={600} color="text.secondary">
+//             {col.headerName}
+//           </Typography>
+//         ))}
+//         {actions && (
+//           <Typography variant="caption" sx={{fontSize:'12px'}} fontWeight={600} color="text.secondary">Actions</Typography>
+//         )}
+//       </Box>
+
+//       {loading && <LinearProgress />}
+
+//       {/* Rows */}
+//       {!loading &&
+//         paged.map((row, index) => (
+//           <Box
+//             key={row.RecordID ?? index}
+//             display="grid"
+//             gridTemplateColumns={gridTemplate}
+//             px={2} py={1.5}
+//             alignItems="center"
+//             sx={{ borderBottom: "1px solid #F3F4F6", "&:hover": { backgroundColor: "#F9FAFB" } }}
+//           >
+//             <Typography variant="body2" color="text.secondary">
+//               {(page - 1) * pageSize + index + 1}
+//             </Typography>
+
+//             {visibleColumns.map((col) => {
+//               const value = row[col.field];
+
+//               // ✅ FIX: respect renderCell if the column defines one (Type/emp icon columns, custom cells)
+//               if (typeof col.renderCell === "function") {
+//                 // Build a minimal params object matching what DataGrid would pass
+//                 const params = {
+//                   row,
+//                   value,
+//                   field: col.field,
+//                   id: row.RecordID,
+//                   api: {
+//                     getRowIndexRelativeToVisibleRows: () => index,
+//                     getAllRowIds: () => paged.map((r) => r.RecordID),
+//                     getRowsCount: () => filtered.length,
+//                   },
+//                 };
+//                 return (
+//                   <Box key={col.field} display="flex" alignItems="center">
+//                     {col.renderCell(params)}
+//                   </Box>
+//                 );
+//               }
+
+//               if (col.field === avatarField) {
+//                 const text = String(value ?? "");
+//                 const name = text.includes("||") ? text.split("||")[1]?.trim() : text;
+//                 return (
+//                   <Box key={col.field} display="flex" alignItems="center" gap={1.5}>
+//                     <Box
+//                       sx={{
+//                         width: 32, height: 32, borderRadius: "50%",
+//                         backgroundColor: getAvatarColor(name),
+//                         display: "flex", alignItems: "center", justifyContent: "center",
+//                         flexShrink: 0,
+//                       }}
+//                     >
+//                       <Typography variant="caption" fontWeight={700} color="#fff">
+//                         {getInitials(name)}
+//                       </Typography>
+//                     </Box>
+//                     <Typography variant="body2" fontWeight={500}>{name || "-"}</Typography>
+//                   </Box>
+//                 );
+//               }
+
+//               // generic rendering for normal columns
+//               const display =
+//                 value === null || value === undefined || value === "" ? "-" : String(value);
+
+//               return (
+//                 <Typography key={col.field} variant="body2" color="text.secondary" noWrap>
+//                   {display}
+//                 </Typography>
+//               );
+//             })}
+
+//             {actions && <Box display="flex" gap={0.5}>{actions(row)}</Box>}
+//           </Box>
+//         ))}
+
+//       {!loading && paged.length === 0 && (
+//         <Box p={4} textAlign="center">
+//           <Typography color="text.secondary">No rows</Typography>
+//         </Box>
+//       )}
+
+//       {/* Pagination */}
+//        <Box
+//           display="flex"
+//           justifyContent="space-between"
+//           alignItems="center"
+//           px={2}
+//           py={2}
+//           sx={{ borderTop: "1px solid #E5E7EB", flexWrap: "wrap", gap: 2 }}
+//         >
+
+//           {/* Left */}
+//           <Box display="flex" alignItems="center" gap={1}>
+//             <Typography variant="body2">
+//               Rows per page
+//             </Typography>
+
+//             <TextField
+//               select
+//               size="small"
+//               value={rowsPerPage}
+//               onChange={(e) => {
+//                 setRowsPerPage(Number(e.target.value));
+//                 setPage(1);
+//               }}
+//               sx={{ width: 80 }}
+//             >
+//               <MenuItem value={5}>5</MenuItem>
+//               <MenuItem value={10}>10</MenuItem>
+//               <MenuItem value={20}>20</MenuItem>
+//               <MenuItem value={50}>50</MenuItem>
+//             </TextField>
+
+//             <Typography variant="body2" color="text.secondary">
+//               {(page - 1) * rowsPerPage + 1}-
+//               {Math.min(page * rowsPerPage, filtered.length)}
+//               {" "}of {filtered.length}
+//             </Typography>
+//           </Box>
+
+//           {/* Right */}
+//           <Box display="flex" alignItems="center" gap={0.5}>
+
+//             <Button
+//               variant="outlined"
+//               size="small"
+//               disabled={page === 1}
+//               onClick={() => setPage(page - 1)}
+//               sx={{ minWidth: 38 }}
+//             >
+//               {"<"}
+//             </Button>
+
+//             {Array.from({ length: totalPages }, (_, i) => i + 1)
+//               .filter((p) => {
+//                 if (totalPages <= 6) return true;
+
+//                 if (page <= 5)
+//                   return p <= 5 || p === totalPages;
+
+//                 if (page >= totalPages - 4)
+//                   return p === 1 || p >= totalPages - 4;
+
+//                 return (
+//                   p === 1 ||
+//                   p === totalPages ||
+//                   (p >= page - 1 && p <= page + 1)
+//                 );
+//               })
+//               .map((p, index, arr) => (
+//                 <React.Fragment key={p}>
+//                   {index > 0 && p - arr[index - 1] > 1 && (
+//                     <Typography sx={{ px: 1 }}>...</Typography>
+//                   )}
+
+//                   <Button
+//                     variant={page === p ? "contained" : "outlined"}
+//                     size="small"
+//                     onClick={() => setPage(p)}
+//                     sx={{
+//                       minWidth: 38,
+//                       height: 38,
+//                     }}
+//                   >
+//                     {p}
+//                   </Button>
+//                 </React.Fragment>
+//               ))}
+
+//             <Button
+//               variant="outlined"
+//               size="small"
+//               disabled={page === totalPages}
+//               onClick={() => setPage(page + 1)}
+//               sx={{ minWidth: 38 }}
+//             >
+//               {">"}
+//             </Button>
+
+//           </Box>
+
+//         </Box>
+
+//     </Box>
+//   );
+// };
+
+
+
+function CustomFooter({
+  page,
+  pageSize,
+  totalRows,
+  onPageChange,
+  onPageSizeChange,
+  rowsPerPageOptions = [5, 10, 15, 20],
+}) {
+  const totalPages = Math.ceil(totalRows / pageSize) || 1;
+  const currentPage = page + 1; // DataGrid page is 0-based
+
+  const getPageNumbers = () => {
+    if (totalPages <= 6) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (currentPage <= 5) return [...Array.from({ length: 5 }, (_, i) => i + 1), totalPages];
+    if (currentPage >= totalPages - 4)
+      return [1, ...Array.from({ length: 5 }, (_, i) => totalPages - 4 + i)];
+    return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
+  };
+
+  const pageNumbers = getPageNumbers();
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      px={2}
+      py={1}
+      flexWrap="wrap"
+      gap={2}
+      sx={{ backgroundColor: "#fff", borderTop: "1px solid #E5E7EB" }}
+    >
+      {/* Left: rows per page */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography variant="body2" color="text.secondary">Rows per page</Typography>
+        <TextField
+          select
+          size="small"
+          value={pageSize}
+          onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          sx={{ width: 80 }}
+        >
+          {rowsPerPageOptions.map((opt) => (
+            <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+          ))}
+        </TextField>
+        <Typography variant="body2" color="text.secondary">
+          {totalRows === 0 ? 0 : Math.min(page * pageSize + 1, totalRows)}-
+          {Math.min((page + 1) * pageSize, totalRows)} of {totalRows}
+        </Typography>
+      </Box>
+
+      {/* Right: numbered pagination */}
+      <Box display="flex" alignItems="center" gap={0.5}>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(page - 1)}
+          sx={{ minWidth: 32 }}
+        >
+          {"<"}
+        </Button>
+
+        {pageNumbers.map((p, idx, arr) => (
+          <React.Fragment key={p}>
+            {idx > 0 && p - arr[idx - 1] > 1 && (
+              <Typography sx={{ px: 0.5 }}>...</Typography>
+            )}
+            <Button
+              variant={currentPage === p ? "contained" : "outlined"}
+              size="small"
+              onClick={() => onPageChange(p - 1)}
+              sx={{ minWidth: 32 }}
+            >
+              {p}
+            </Button>
+          </React.Fragment>
+        ))}
+
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(page + 1)}
+          sx={{ minWidth: 32 }}
+        >
+          {">"}
+        </Button>
+      </Box>
+    </Box>
+  );
+}
   return (
     <React.Fragment>
       <input
@@ -1048,7 +1527,9 @@ const Listview = () => {
         }}
       />
       <Box m="5px">
-        {accessID == "TR002" || accessID == "TR044" ? (
+       
+        
+        {(accessID == "TR002" || accessID == "TR044" ? (
           <Paper
             component="form"
             sx={{
@@ -1083,11 +1564,48 @@ const Listview = () => {
           </Paper>
         ) : (
           false
-        )}
-        <Box m="5px">
+        ))}
+
+   {/* Summary card — only Total, since we don't have Active/Leave/Inactive fields yet */}
+                    
+        
+         <Box m="5px">
+            <CustomToolbar />
+             <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={3}>
+                       <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: "#fff", border: "1px solid #E5E7EB" }}>
+                         <Typography variant="body2" color="text.secondary">Total</Typography>
+                         <Typography variant="h4" fontWeight={700} color="#4F46E5">{listViewData.length}</Typography>
+                       </Box>
+                     </Box>
+{/* ONE card wraps search + grid + footer, like Image 1 */}
+<Box
+  sx={{
+    backgroundColor: "#fff",
+    border: "1px solid #E5E7EB",
+    borderRadius: 3,
+    overflow: "hidden",   // <-- this is what rounds the header/footer corners
+  }}
+>
+  {/* Search row, bordered off from the grid below it */}
+  <Box p={2} borderBottom="1px solid #F3F4F6">
+ <TextField
+    placeholder="Search..."
+    size="small"
+    value={search}
+    onChange={(e) => {
+      setSearch(e.target.value);
+      setPage(0); // reset to first page on new search
+    }}
+    InputProps={{
+      startAdornment: <SearchIcon sx={{ mr: 1, color: "#9CA3AF", fontSize: 20 }} />,
+    }}
+    sx={{ width: 280, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+  />
+  </Box>
+                     
           <Box
             m="5px 0 0 0"
-            padding={2}
+            // padding={2}
             height={dataGridHeight}
             sx={{
               display: "flex",
@@ -1109,16 +1627,18 @@ const Listview = () => {
               "& .name-column--cell": {
                 color: colors.greenAccent[300],
               },
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: colors.blueAccent[800],
-                // borderBottom: "none",
-              },
+                "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
               "& .MuiDataGrid-virtualScroller": {
                 backgroundColor: colors.primary[400],
               },
               "& .MuiDataGrid-footerContainer": {
                 borderTop: "none",
-                backgroundColor: colors.blueAccent[800],
+                // backgroundColor: colors.blueAccent[800],
+                // borderColor: "#d0edec",
+                backgroundColor: "",
               },
               "& .MuiCheckbox-root": {
                 color: `${colors.greenAccent[200]} !important`,
@@ -1129,25 +1649,32 @@ const Listview = () => {
               },
               "& .even-row": {
                 backgroundColor: "#d0edec",
+                  backgroundColor: "",
                 color: "", // Color for even rows
               },
             }}
           >
+            
             <DataGrid
               sx={{
                 "& .MuiDataGrid-footerContainer": {
-                  height: dataGridHeaderFooterHeight,
-                  minHeight: dataGridHeaderFooterHeight,
+                  // height: dataGridHeaderFooterHeight,
+                  // minHeight: dataGridHeaderFooterHeight,
+                  height: dataGridFooterHeight,
+                  minHeight: dataGridFooterHeight,
+                  //  borderColor: "#d0edec",
                 },
               }}
               key={accessID}
-              rows={rows}
+              // rows={rows}
+               rows={filteredRows} 
               columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
               // columns={columns}
               loading={loading}
               disableSelectionOnClick
-              rowHeight={dataGridRowHeight}
-              headerHeight={dataGridHeaderFooterHeight}
+              rowHeight={dataGridRowHeight_v1}
+              headerHeight={dataGridHeaderHeight_v1}
+              
               getRowId={(row) => row.RecordID}
               pageSize={pageSize}
               page={page}
@@ -1159,4368 +1686,3388 @@ const Listview = () => {
                   ? "odd-row"
                   : "even-row"
               }
-              components={{
-                Toolbar: CustomToolbar,
-              }}
+              components={{ Footer: CustomFooter }}          // 👈 add this
+  componentsProps={{                              // 👈 and this
+    footer: {
+      page,
+      pageSize,
+      totalRows: filteredRows.length,
+      onPageChange: handlePagechange,
+      onPageSizeChange: setPageSize,
+      rowsPerPageOptions: [5, 10, 15, 20],
+    },
+  }}
+              // components={{
+              //   Toolbar: CustomToolbar,
+              // }}
             />
 
-            {/* WORKING AS OF 09/02/2026 --> EXCEL + PARAMS */}
-            {/* {showBulkUpload && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 3,
-                  borderRadius: 2,
-                  backgroundColor: "#fff",
-                  position: "relative",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
-                  }}
-                  enableReinitialize={false}
-                  onSubmit={async (values, { setSubmitting }) => {
-                    if (!selectedFileExcel) {
-                      toast.error("Please select an Excel file");
-                      setSubmitting(false);
-                      return;
-                    }
 
-
-                    try {
-                      const formData = new FormData();
-                     
-                      const formatScreenName = (name) => {
-                        if (!name) return "";
-                        return name
-                          .trim()
-                          .split(" ")
-                          .filter(Boolean)
-                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                          .join("");
-                      };
-
-                      const formattedScreenName = formatScreenName(screenName);
-                      const forcedFileName = `${formattedScreenName}.xlsx`;
-                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
-
-                      formData.append("excel", selectedFileExcel, forcedFileName);
-                      formData.append("CompanyID", compID);
-                      formData.append("screename", screenName);
-                      formData.append("Sync", values.Sync);
-                      formData.append("FinYear", YearRecorid || 0);
-
-                      await dispatch(
-                        ExcelFileUpload({
-                          formData,
-                          forcedFileName
-                        })
-                      ).unwrap();
-
-
-                      toast.success("Excel uploaded successfully");
-                      setShowBulkUpload(false);
-                    } catch (error) {
-                      toast.error("Upload failed");
-                    } finally {
-                      setSubmitting(false);
-                    }
-                  }}
-
-                >
-                  {({
-                    values,
-                    handleSubmit,
-                    setFieldValue,
-                    isSubmitting,
-                  }) => (
-                    <form onSubmit={handleSubmit}>
-
-                      <Tooltip title="Close">
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowBulkUpload(false)}
-                          sx={{ position: "absolute", top: 5, right: 5 }}
-                        >
-                          <CancelIcon color="error" />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Stack spacing={2} marginTop={2}
-                        sx={{
-                          width: "100%",
-                        }}>
-
-                        <Button
-                          variant="outlined"
-                          color="success"
-                          startIcon={<FileDownloadOutlinedIcon />}
-                          onClick={async () => {
-                            try {
-                              const formatScreenName = (name) => {
-                                if (!name) return "";
-
-                                return name
-                                  .trim()                       // remove leading/trailing spaces
-                                  .split(" ")                   // split words
-                                  .filter(Boolean)              // remove extra empty spaces
-                                  .map(word =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                  )
-                                  .join("");                    // join without space
-                              };
-
-                              const formattedScreenName = formatScreenName(screenName);
-                              const fileName = `${formattedScreenName}.xlsx`;
-
-
-                              const payload = {
-                                file: `'${fileName}'`,   
-                              };
-
-                              const result = await dispatch(
-                                ExcelFileDownload({ data: payload })
-                              );
-
-                              const blob = new Blob([result.payload], {
-                                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                              });
-
-                              const url = window.URL.createObjectURL(blob);
-                              const link = document.createElement("a");
-                              link.href = url;
-                              link.setAttribute("download", fileName);
-                              document.body.appendChild(link);
-                              link.click();
-                              link.remove();
-
-                              toast.success("Excel downloaded successfully");
-                            } catch (error) {
-                              toast.error("Download failed");
-                            }
-                          }}
-                        >
-                          Download Excel Template
-                        </Button>
-
-
-                        <Button
-                          variant="outlined"
-                          startIcon={<FileUploadIconButton />}
-                          onClick={() => fileInputRef.current.click()}
-                        >
-                          Choose Excel File
-                          <input
-                            ref={fileInputRef}
-                            type="file"
-                            hidden
-                            accept=".xlsx,.xls"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                setSelectedFileExcel(file);
-                              }
-                            }}
-                          />
-
-
-                        </Button>
-                        <Typography variant="caption">
-                          Debug: {selectedFileExcel ? "File Loaded" : "No File"}
-                        </Typography>
-
-                        {selectedFileExcel && (
-                          <Typography variant="caption">
-                            Selected: {selectedFileExcel.name}
-                          </Typography>
-                        )}
-
-                        <FormControl>
-                          <RadioGroup
-                            row
-                            value={values.Sync}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              setFieldValue("Sync", value);
-                              sessionStorage.setItem(`${screenName}_Sync`, value);
-                            }}
-                          >
-                            <FormControlLabel value="Y" control={<Radio />} label="Sync" />
-                            <FormControlLabel value="N" control={<Radio />} label="Replace" />
-                          </RadioGroup>
-                        </FormControl>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          disabled={isSubmitting}
-                        >
-                          Upload
-                        </Button>
-
-                      </Stack>
-
-                    </form>
-                  )}
-                </Formik>
-              </Box>
-            )} */}
-
-            {/* SEPERATE API FOR EXCEL AND PARAMS */}
-            {showBulkUpload && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 3,
-                  borderRadius: 2,
-                  backgroundColor: "#fff",
-                  position: "relative",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    // Sync: sessionStorage.getItem(`${screenName}_Sync`) === "Y",
-                    Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
-                  }}
-                  enableReinitialize={false}
-                  onSubmit={async (values, { setSubmitting }) => {
-                    try {
-                      const formData = new FormData();
-                      // formData.append("file", selectedFileExcel);
-                      // Format screenName → remove spaces
-                      const formatScreenName = (name) => {
-                        if (!name) return "";
-                        return name
-                          .trim()
-                          .split(" ")
-                          .filter(Boolean)
-                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                          .join("");
-                      };
-
-                      const formattedScreenName = formatScreenName(screenName);
-                      const forcedFileName = `${formattedScreenName}.xlsx`;
-                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
-
-
-                      formData.append("CompanyID", compID);
-                      formData.append("screename", screenName);
-                      formData.append("Sync", values.Sync);
-                      formData.append("FinYear", YearRecorid || 0);
-                      const excelSetUp = {
-                        CompanyID: compID,
-                        screename: screenName,
-                        Sync: values.Sync,
-                        FinYear: YearRecorid || 0,
-                      };
-
-                      const response = await dispatch(
-                        Setup_MenuExcel(excelSetUp)
-                      ).unwrap();
-
-                      if (response.Status == "Y") {
-                        toast.success(response.Msg);
-                        // window.location.reload();
-                      } else {
-                        toast.error(response.Msg ? response.Msg : "Error");
-                      }
-                    } catch (error) {
-                      toast.error("Upload failed");
-                    } finally {
-                      setSubmitting(false);
-                    }
-                  }}
-
-                >
-                  {({
-                    values,
-                    handleSubmit,
-                    setFieldValue,
-                    isSubmitting,
-                  }) => (
-                    <form onSubmit={handleSubmit}>
-
-                      {/* Close Button */}
-                      <Tooltip title="Close">
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowBulkUpload(false)}
-                          sx={{ position: "absolute", top: 5, right: 5 }}
-                        >
-                          <CancelIcon color="error" />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Stack spacing={2} marginTop={2}
-                        sx={{
-                          width: "100%",
-                        }}>
-
-                        {/* Download Excel Button */}
-                        <Button
-                          variant="outlined"
-                          color="success"
-                          startIcon={<FileDownloadOutlinedIcon />}
-                          onClick={async () => {
-                            try {
-                              const formatScreenName = (name) => {
-                                if (!name) return "";
-
-                                return name
-                                  .trim()                       // remove leading/trailing spaces
-                                  .split(" ")                   // split words
-                                  .filter(Boolean)              // remove extra empty spaces
-                                  .map(word =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                  )
-                                  .join("");                    // join without space
-                              };
-
-                              const formattedScreenName = formatScreenName(screenName);
-                              const fileName = `${formattedScreenName}.xlsx`;
-
-
-                              const payload = {
-                                file: `'${fileName}'`,   // 🔥 REQUIRED single quotes
-                              };
-
-                              const result = await dispatch(
-                                ExcelFileDownload({ data: payload })
-                              );
-
-                              const blob = new Blob([result.payload], {
-                                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                              });
-
-                              const url = window.URL.createObjectURL(blob);
-                              const link = document.createElement("a");
-                              link.href = url;
-                              link.setAttribute("download", fileName);
-                              document.body.appendChild(link);
-                              link.click();
-                              link.remove();
-
-                              toast.success("Excel downloaded successfully");
-                            } catch (error) {
-                              toast.error("Download failed");
-                            }
-                          }}
-                        >
-                          Download Excel Template
-                        </Button>
-
-
-                        {/* ✅ File Upload Button */}
-                        {/* <Button
-                          variant="outlined"
-                          startIcon={<FileUploadIconButton />}
-                          component="label"
-                        >
-                          Choose Excel File
-                          <input
-                            type="file"
-                            // ref={fileInputRef}
-                            hidden
-                            accept=".xlsx,.xls"
-                            onChange={async (e) => {
-                              const file = e.target.files?.[0];
-                              if (!file) return;
-
-                              setSelectedFileName(file.name);
-
-                              try {
-                                const formattedScreenName = screenName
-                                  .trim()
-                                  .split(" ")
-                                  .filter(Boolean)
-                                  .map(word =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                  )
-                                  .join("");
-
-                                const forcedFileName = `${formattedScreenName}.xlsx`;
-
-                                const formData = new FormData();
-                                formData.append("excel", file, forcedFileName);
-
-                                await dispatch(
-                                  ExcelFileUpload({ formData, forcedFileName })
-                                ).unwrap();
-
-                                toast.success("Excel uploaded successfully");
-
-                              } catch (error) {
-                                toast.error("Upload failed");
-                              }
-                            }}
-                          />
-
-
-                        </Button> */}
-                        <Button
-                          variant="outlined"
-                          startIcon={<FileUploadIconButton />}
-                          onClick={() => document.getElementById("bulk-excel-input").click()}
-                        >
-                          Choose Excel File
-                        </Button>
-                        {/* <Typography variant="caption">
-                          Debug: {selectedFileName ? "File Loaded" : "No File"}
-                        </Typography> */}
-                        {/* <Typography variant="caption">
-                          Debug: {selectedFileName || "No File"}
-                        </Typography> */}
-                        {selectedFileName && (
-                          <Typography variant="caption">
-                            Selected: {selectedFileName.name}
-                          </Typography>
-                        )}
-
-
-                        {/* ✅ Sync Checkbox */}
-                        <FormControl>
-                          <RadioGroup
-                            row
-                            value={values.Sync}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              setFieldValue("Sync", value);
-                              sessionStorage.setItem(`${screenName}_Sync`, value);
-                            }}
-                          >
-                            <FormControlLabel value="Y" control={<Radio />} label="Sync" />
-                            <FormControlLabel value="N" control={<Radio />} label="Replace" />
-                          </RadioGroup>
-                        </FormControl>
-
-                        {/* ✅ Upload Button */}
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          disabled={isSubmitting}
-                        >
-                          Upload
-                        </Button>
-
-                      </Stack>
-
-                    </form>
-                  )}
-                </Formik>
-              </Box>
-            )}
-
-
-            {showMore && accessID === "TR313" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    fromdate: sessionStorage.getItem("FromDate") || "",
-                    date: sessionStorage.getItem("ToDate") || "",
-                    Created: sessionStorage.getItem("TR313_Created") === "Y",
-                    Process: sessionStorage.getItem("TR313_Process") === "Y",
-                    Picked: sessionStorage.getItem("TR313_Picked") === "Y",
-                    PartiallyPaid: sessionStorage.getItem("TR313_PartiallyPaid") === "Y",
-                    ReadyToDeliver:
-                      sessionStorage.getItem("TR313_ReadyToDeliver") === "Y",
-                    YetToDeliver:
-                      sessionStorage.getItem("TR313_YetToDeliver") === "Y",
-                    Paid: sessionStorage.getItem("TR313_Paid") === "Y",
-                    Scheduled:
-                      sessionStorage.getItem("TR313_Scheduled") === "Y",
-                    Delivered:
-                      sessionStorage.getItem("TR313_Delivered") === "Y",
-                    Type: "ByProduct",
-                    // party: [],
-                    // product: [],
-                    party:
-                      JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
-                    product:
-                      JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
-                    ordertype: sessionStorage.getItem("ordertype") || "",
-                  }}
-                  enableReinitialize
-                  validate={(values) => {
-                    const hasAtLeastOneValue =
-                      values.fromdate ||
-                      values.date ||
-                      values.party ||
-                      values.product ||
-                      values.ordertype ||
-                      values.Created ||
-                      values.Process ||
-                      values.ReadyToDeliver ||
-                      values.YetToDeliver ||
-                      values.Paid ||
-                      values.Scheduled ||
-                      values.Delivered ||
-                      values.Picked;
-                  }}
-                  // onSubmit={(values, { setSubmitting }) => {
-                  //   const conditions = [];
-                  //   const statusDateMap = {
-                  //     Created: "OROrderDate",
-                  //     Process: "ORProcessDate",
-                  //     ReadyToDeliver: "ORTentativeDate",
-                  //     YetToDeliver: "ORTentativeDate",
-                  //     Picked: "ORPickedDate",
-                  //     Scheduled: "ORTentativeDate",
-                  //     Delivered: "ORDeliveryDate",
-                  //     Paid: "ORPaidDate",
-                  //   };
-
-                  //   const fromDate = values.fromdate || "";
-                  //   const toDate = values.date || "";
-
-
-                  //   sessionStorage.setItem("FromDate", fromDate);
-                  //   sessionStorage.setItem("ToDate", toDate);
-                  //   sessionStorage.setItem("ordertype", values.ordertype);
-                  //   // Store checkbox values
-                  //   Object.keys(statusDateMap).forEach((status) => {
-                  //     sessionStorage.setItem(
-                  //       `TR313_${status}`,
-                  //       values[status] ? "Y" : "N"
-                  //     );
-                  //   });
-
-                  //   sessionStorage.setItem(
-                  //     "TR313_Filters",
-                  //     JSON.stringify(values)
-                  //   );
-
-                  //   const selectedStatuses = Object.keys(statusDateMap).filter(
-                  //     (status) => values[status]
-                  //   );
-
-                  //   if (selectedStatuses.length > 0) {
-                  //     conditions.push(
-                  //       `Status IN (${selectedStatuses
-                  //         .map((s) => `'${s}'`)
-                  //         .join(", ")})`
-                  //     );
-                  //   }
-
-                  //   const dateConditions = [];
-
-                  //   selectedStatuses.forEach((status) => {
-                  //     const field = statusDateMap[status];
-
-                  //     if (fromDate && toDate) {
-                  //       dateConditions.push(
-                  //         `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                  //       );
-                  //     } else if (fromDate) {
-                  //       dateConditions.push(`(${field} >= '${fromDate}')`);
-                  //     } else if (toDate) {
-                  //       dateConditions.push(`(${field} <= '${toDate}')`);
-                  //     }
-                  //   });
-                  //   if (values.party?.length > 0) {
-                  //     const partyIds = values.party
-                  //       .map((p) => `'${p.RecordID}'`)
-                  //       .join(", ");
-
-                  //     conditions.push(`PartyRecordID IN (${partyIds})`);
-                  //   }
-
-                  //   if (values.product?.length > 0) {
-                  //     const productIds = values.product
-                  //       .map((p) => `'${p.RecordID}'`)
-                  //       .join(", ");
-
-                  //     conditions.push(`ProductID IN (${productIds})`);
-                  //   }
-                  //   if (values.ordertype?.length > 0) {
-                  //     // const ordertype = values.ordertype.map(t => t).join("','");
-                  //     conditions.push(`OrderType IN ('${values.ordertype}')`);
-                  //   }
-                  //   if (compID) {
-                  //     conditions.push(`CompanyID = '${compID}'`);
-                  //   }
-                  //   if (dateConditions.length > 0) {
-                  //     conditions.push(`(${dateConditions.join(" OR ")})`);
-                  //   }
-
-                  //   // --------------------------
-                  //   // FINAL WHERE CLAUSE
-                  //   // --------------------------
-                  //   const whereClause = conditions.join(" AND ");
-                  //   console.log("FINAL FILTER:", whereClause);
-
-                  //   dispatch(
-                  //     fetchListview(
-                  //       accessID,
-                  //       screenName,
-                  //       whereClause,
-                  //       "",
-                  //       compID
-                  //     )
-                  //   );
-
-                  //   setTimeout(() => setSubmitting(false), 100);
-                  // }}
-                  onSubmit={(values, { setSubmitting }) => {
-                    const conditions = [];
-
-                    const statusDateMap = {
-                      Created: ["OROrderDate"],
-                      Process: ["OROrderDate"],
-                      ReadyToDeliver: ["OROrderDate"],
-                      Picked: ["OROrderDate"],
-                      YetToDeliver: ["OROrderDate"],
-                      Scheduled: ["OROrderDate"],
-
-                      Delivered: ["ORDeliveryDate"],
-                      Paid: ["ORPaidDate"],
-                      PartiallyPaid: ["ORPaidDate"],
-                    };
-                    // --------------------------
-                    // DATE VALUES (ALWAYS OROrderDate)
-                    // --------------------------
-                    // const fromDate = values.fromdate || "";
-                    // const toDate = values.date || "";
-
-                    // sessionStorage.setItem("FromDate", fromDate);
-                    // sessionStorage.setItem("ToDate", toDate);
-                    // sessionStorage.setItem("ordertype", values.ordertype || "");
-
-                    // if (fromDate && toDate) {
-                    //   conditions.push(
-                    //     `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
-                    //   );
-                    // } else if (fromDate) {
-                    //   conditions.push(`(OROrderDate >= '${fromDate}')`);
-                    // } else if (toDate) {
-                    //   conditions.push(`(OROrderDate <= '${toDate}')`);
-                    // }
-
-                    // --------------------------
-                    // STATUS FILTER
-                    // --------------------------
-                    const allStatuses = [
-                      "Created",
-                      "Process",
-                      "ReadyToDeliver",
-                      "PartiallyPaid",
-                      "YetToDeliver",
-                      "Picked",
-                      "Scheduled",
-                      "Delivered",
-                      "Paid",
-                    ];
-
-                    allStatuses.forEach((status) => {
-                      sessionStorage.setItem(
-                        `TR313_${status}`,
-                        values[status] ? "Y" : "N"
-                      );
-                    });
-
-                    const selectedStatuses = allStatuses.filter(
-                      (status) => values[status]
-                    );
-
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
-
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-                    sessionStorage.setItem("ordertype", values.ordertype || "");
-
-                    const dateConditions = [];
-
-                    if (fromDate || toDate) {
-                      // If no status selected, default to OrderDate
-                      const dateFields =
-                        selectedStatuses.length > 0
-                          ? [...new Set(selectedStatuses.flatMap(s => statusDateMap[s] || []))]
-                          : ["OROrderDate"];
-
-                      dateFields.forEach((field) => {
-                        if (fromDate && toDate) {
-                          dateConditions.push(
-                            `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                          );
-                        } else if (fromDate) {
-                          dateConditions.push(`(${field} >= '${fromDate}')`);
-                        } else if (toDate) {
-                          dateConditions.push(`(${field} <= '${toDate}')`);
-                        }
-                      });
-
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
-                    }
-                    if (selectedStatuses.length > 0) {
-                      conditions.push(
-                        `OEStatus IN (${selectedStatuses
-                          .map((s) => `'${s}'`)
-                          .join(", ")})`
-                      );
-                    }
-
-                    // --------------------------
-                    // PARTY FILTER
-                    // --------------------------
-                    if (values.party?.length > 0) {
-                      const partyIds = values.party
-                        .map((p) => `'${p.RecordID}'`)
-                        .join(", ");
-
-                      conditions.push(`PartyRecordID IN (${partyIds})`);
-                    }
-
-                    // --------------------------
-                    // PRODUCT FILTER
-                    // --------------------------
-                    if (values.product?.length > 0) {
-                      const productIds = values.product
-                        .map((p) => `'${p.RecordID}'`)
-                        .join(", ");
-
-                      conditions.push(`ProductID IN (${productIds})`);
-                    }
-
-                    // --------------------------
-                    // ORDER TYPE FILTER
-                    // --------------------------
-                    if (values.ordertype) {
-                      conditions.push(`OrderType = '${values.ordertype}'`);
-                    }
-
-                    // --------------------------
-                    // COMPANY FILTER
-                    // --------------------------
-                    if (compID) {
-                      conditions.push(`CompanyID = '${compID}'`);
-                    }
-
-                    sessionStorage.setItem(
-                      "TR313_Filters",
-                      JSON.stringify(values)
-                    );
-
-                    // --------------------------
-                    // FINAL WHERE CLAUSE
-                    // --------------------------
-                    const whereClause = conditions.join(" AND ");
-                    console.log("FINAL FILTER:", whereClause);
-
-                    dispatch(
-                      fetchListview(
-                        accessID,
-                        Subscriptionlastthree,
-                        screenName,
-                        whereClause,
-                        "",
-                        compID
-                      )
-                    );
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-
-                >
-                  {({
-                    values,
-                    handleSubmit,
-                    handleChange,
-                    handleBlur,
-                    isSubmitting,
-                    setFieldValue,
-                    resetForm,
-                  }) => {
-
-                    // ✅ NOW you can declare functions here
-                    const generatePdf = async () => {
-
-                      try {
-                        setLoadingPdf(true);
-
-                        const blob = await pdf(
-                          values.Type === "ByProduct" ? (
-                            <OrdEnqProductPDF
-                              data={listViewData}
-                              Product={values?.product?.Name}
-                              Party={values?.party?.Name}
-                              filters={{
-                                fromdate: values?.fromdate,
-                                todate: values?.date,
-                                ordertype: values?.ordertype,
-                                Imageurl: baseurlUAAM,
-                                HeaderImg,
-                                FooterImg,
-                              }}
-                            />
-                          ) : (
-                            <OrdEnqPartyPDF
-                              data={listViewData}
-                              Product={values?.product?.Name}
-                              Party={values?.party?.Name}
-                              filters={{
-                                fromdate: values?.fromdate,
-                                todate: values?.date,
-                                ordertype: values?.ordertype,
-                                Imageurl: baseurlUAAM,
-                                HeaderImg,
-                                FooterImg,
-                              }}
-                            />
-                          )
-                        ).toBlob();
-
-                        const url = URL.createObjectURL(blob);
-                        window.open(url); // ✅ better UX (no extra button)
-                        setLoadingPdf(false);
-                      }
-                      catch (err) {
-                        console.error("PDF ERROR:", err); // 🔥 important
-                      } finally {
-                        setLoadingPdf(false); // ✅ ALWAYS resets
-                      }
-                    }
-                    return (
-
-                      <form onSubmit={handleSubmit}>
-
-                        <Box sx={{ height: 600, overflowY: "auto" }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => setShowMore(false)}
-                            sx={{ position: "absolute", top: 5, right: 4 }}
-                          >
-                            <Tooltip title="Close">
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          </IconButton>
-                          <TextField
-                            name="fromdate"
-                            type="date"
-                            id="fromdate"
-                            label="Transaction From Date"
-                            variant="standard"
-                            value={values.fromdate || ""}
-                            onChange={(e) => {
-                              const newDate = e.target.value;
-                              setFieldValue("fromdate", newDate);
-                              // dispatch(setFromDate(newDate));
-                              sessionStorage.setItem("FromDate", newDate);
-                            }}
-                            focused
-                            InputLabelProps={{ shrink: true }}
-                            inputProps={{
-                              max: new Date().toISOString().split("T")[0],
-                            }}
-                            sx={{ width: 250, mt: 2 }}
-                          />
-
-                          <TextField
-                            name="date"
-                            type="date"
-                            id="date"
-                            label="Transaction To Date"
-                            variant="standard"
-                            value={values.date || ""}
-                            onChange={(e) => {
-                              const newDate = e.target.value;
-                              setFieldValue("date", newDate);
-                              // dispatch(setToDate(newDate));
-                              sessionStorage.setItem("ToDate", newDate);
-                            }}
-                            focused
-                            InputLabelProps={{ shrink: true }}
-                            inputProps={{
-                              max: new Date().toISOString().split("T")[0],
-                            }}
-                            sx={{ width: 250, mt: 2 }}
-                          />
-
-                          {/* <MultiFormikOptimizedAutocomplete */}
-                          <PartymultiSelect
-                            sx={{ width: 250, mt: 1 }}
-                            id="party"
-                            name="party"
-                            label="Party"
-                            variant="outlined"
-                            value={values.party}
-                            onChange={(e, newValue) => {
-                              setFieldValue("party", newValue);
-                              sessionStorage.setItem(
-                                "TR313_Party",
-                                JSON.stringify(newValue)
-                              );
-                            }}
-                            // error={!!touched.party && !!errors.party}
-                            // helperText={touched.party && errors.party}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2140",
-                                ScreenName: "Party",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${compID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ width: 250, mt: 1 }}
-                            id="product"
-                            name="product"
-                            label="Product"
-                            variant="outlined"
-                            value={values.product}
-                            onChange={(e, newValue) => {
-                              setFieldValue("product", newValue);
-                              sessionStorage.setItem(
-                                "TR313_Product",
-                                JSON.stringify(newValue)
-                              );
-                            }}
-                            // error={!!touched.product && !!errors.product}
-                            // helperText={touched.product && errors.product}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2137",
-                                ScreenName: "Product",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-                          <TextField
-                            select
-                            sx={{ width: 250, mt: 1 }}
-                            focused
-                            label="Order Type"
-                            value={values.ordertype || ""}
-                            onChange={(e) => {
-                              const ordertype = e.target.value;
-                              setFieldValue("ordertype", ordertype);
-                              sessionStorage.setItem("ordertype", ordertype);
-                            }}
-                            InputProps={{
-                              endAdornment: values.ordertype && (
-                                <InputAdornment position="end">
-                                  <ClearIcon
-                                    sx={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      setFieldValue("ordertype", "");
-                                      sessionStorage.removeItem("ordertype");
-                                    }}
-                                  />
-                                </InputAdornment>
-                              ),
-                            }}
-                            variant="standard"
-                          >
-                            {/* <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem> */}
-                            <MenuItem value="O">Order</MenuItem>
-                            <MenuItem value="Q">Quotation</MenuItem>
-                          </TextField>
-
-                          <TextField
-                            select
-                            fullWidth
-                            focused
-                            label="Type"
-                            id="Type"
-                            name="Type"
-                            value={values.Type}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            variant="standard"
-                            sx={{ width: 250, mt: 1 }}
-                          >
-                            <MenuItem value="ByParty">By Party</MenuItem>
-                            <MenuItem value="ByProduct">By Product</MenuItem>
-                          </TextField>
-                          <Typography mt={2} fontWeight="bold" color="error">
-                            Status
-                          </Typography>
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Created"
-                                checked={values.Created}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Created", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Created",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Created"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Process"
-                                checked={values.Process}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Process", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Process",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Process"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="ReadyToDeliver"
-                                checked={values.ReadyToDeliver}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("ReadyToDeliver", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_ReadyToDeliver",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Ready To Deliver"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Scheduled"
-                                checked={values.Scheduled}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Scheduled", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Scheduled",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Scheduled"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Picked"
-                                checked={values.Picked}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Picked", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Picked",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Picked"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Delivered"
-                                checked={values.Delivered}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Delivered", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Delivered",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Delivered"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="Paid"
-                                checked={values.Paid}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("Paid", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_Paid",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Paid"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name="PartiallyPaid"
-                                checked={values.PartiallyPaid}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue("PartiallyPaid", checked);
-                                  sessionStorage.setItem(
-                                    "TR313_PartiallyPaid",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Partially Paid"
-                          />
-                          {/* 
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="end"
-                          spacing={1}
-                          mt={2}
-                        >
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            Apply
-                          </Button>
-                        </Stack> */}
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="end"
-                            spacing={1}
-                            marginTop={3}
-                          >
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              color="primary"
-                              disabled={isSubmitting}
-                            >
-                              Apply
-                            </Button>
-                            {/* {values.Type === "ByProduct" ? (                 
-                            <BlobProvider
-                              document={
-                                <OrdEnqProductPDF
-                                  data={listViewData}
-                                  Product={values?.product?.Name}
-                                  Party={values?.party?.Name}
-                                  filters={{
-                                    fromdate: values?.fromdate,
-                                    todate: values?.date,
-                                    ordertype: values?.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                  }}
-                                />
-                              }
-                            >
-                              {({ url, loading }) => {
-                                if (loading || !url) {
-                                  return <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />;
-                                }
-
-                                return (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
-                                    onClick={() => {
-                                      if (url) {
-                                        window.open(url);
-                                      }
-                                    }}
-                                  />
-                                );
-                              }}
-                            </BlobProvider>
-                          ) : (
-                            <PDFDownloadLink
-                              document={
-                                <OrdEnqPartyPDF
-                                  data={listViewData}
-                                  Product={values?.product?.Name}
-                                  Party={values?.party?.Name}
-                                  filters={{
-                                    fromdate: values?.fromdate,
-                                    todate: values?.date,
-                                    ordertype: values.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                  }}
-                                />
-                              }
-                              // fileName={`OrderEnquirySummary_Party".pdf`}
-                              fileName={`OrderEnquirySummary_Party.pdf`}
-                              style={{ color: "#d32f2f", cursor: "pointer" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, opacity: 0.5 }}
-                                  />
-                                ) : (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                )
-                              }
-
-                            </PDFDownloadLink>
-                          )} */}
-
-                            {/* CHANGED AS ON 08/04/2026 - TO SOLVE SLOW PDF GENERATION */}
-                            <PictureAsPdfIcon
-                              sx={{
-                                fontSize: 24,
-                                color: loadingPdf ? "grey" : "#d32f2f",
-                                cursor: loadingPdf ? "not-allowed" : "pointer",
-                                opacity: loadingPdf ? 0.5 : 1,
-                              }}
-                              onClick={() => {
-                                if (!loadingPdf) generatePdf();
-                              }}
-                            />
-
-                            {/* <FaFileExcel
-  size={20}
-  color="#1D6F42"
-  style={{ cursor: "pointer" }}
-  onClick={() =>
-    OrderEnqProdandPartyExcel(
-      listViewData,
-      {
-        fromdate: values?.fromdate,
-        todate: values?.todate,
-        ordertype: values?.ordertype,
-        product: values?.product?.Name || "",
-        party: values?.party?.Name || "",
-      }
-    )
-  }
-/> */}
-
-                            {/* <Button
-                            type="button"
-                            variant="contained"
-                            color="error"
-                            size="small"                         
-                          >
-                            RESET
-                          </Button> */}
-                            <Button
-                              type="button"
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                [
-                                  "FromDate",
-                                  "ToDate",
-                                  "ordertype",
-                                  "TR313_Created",
-                                  "TR313_Process",
-                                  "TR313_ReadyToDeliver",
-                                  "TR313_YetToDeliver",
-                                  "TR313_PartiallyPaid",
-                                  "TR313_Picked",
-                                  "TR313_Scheduled",
-                                  "TR313_Delivered",
-                                  "TR313_Paid",
-                                  "TR313_Party",
-                                  "TR313_Product",
-                                  "TR313_Filters",
-                                ].forEach((key) =>
-                                  sessionStorage.removeItem(key)
-                                );
-
-                                resetForm({
-                                  values: {
-                                    fromdate: "",
-                                    date: "",
-                                    Created: false,
-                                    Process: false,
-                                    ReadyToDeliver: false,
-                                    YetToDeliver: false,
-                                    Picked: false,
-                                    Scheduled: false,
-                                    Delivered: false,
-                                    Paid: false,
-                                    party: [],
-                                    product: [],
-                                    Type: "ByProduct",
-                                    ordertype: ""
-                                  },
-                                });
-                              }}
-                            >
-                              RESET
-                            </Button>
-                          </Stack>
-                        </Box>
-                      </form>
-                    )
-                  }}
-                </Formik>
-              </Box>
-            )}
-            {/* {showMore && (accessID === "TR331" || accessID === "TR366") && (() => {
-
-              const savedFilters =
-                JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
-
-              const initialFormValues = {
-                fromDate: savedFilters.fromDate || defaultFromDate,
-                toDate: savedFilters.toDate || defaultToDate,
-                project: savedFilters.project || [],
-                Employee: savedFilters.Employee || [],
-                attmonth: savedFilters.attmonth || currentMonthNumber,
-                attyear: savedFilters.attyear || currentYear,
-              };
-
-              return (
-                <Box
-                  sx={{
-                    width: 320,
-                    p: 2,
-                    borderRadius: 1,
-                    backgroundColor: "#fff",
-                    position: "relative"
-                  }}
-                >
-                  <Formik
-                    initialValues={initialFormValues}
-                    enableReinitialize
-                    onSubmit={(values, { setSubmitting }) => {
-
-                      sessionStorage.setItem(
-                        "TR331_Filters",
-                        JSON.stringify(values)
-                      );
-
-                      const conditions = [];
-                      
-
-                      if (values.fromDate && values.toDate) {
-                        conditions.push(
-                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
-                        );
-                      }
-
-                      if (values.attmonth) {
-                        conditions.push(
-                          `BillableMonth='${values.attmonth}'`
-                        );
-                      }
-
-                      if (values.attyear) {
-                        conditions.push(
-                          `BillableYear='${values.attyear}'`
-                        );
-                      }
-
-                      if (values.Employee?.length > 0) {
-                        const EmpIds = values.Employee
-                          .map((e) => `'${e.RecordID}'`)
-                          .join(",");
-                        conditions.push(`EmployeeID IN (${EmpIds})`);
-                      }
-
-                      if (values.project?.length > 0) {
-                        const projIds = values.project
-                          .map((p) => `'${p.RecordID}'`)
-                          .join(",");
-                        conditions.push(`ProjectID IN (${projIds})`);
-                      }
-
-                      conditions.push(`CompanyID='${CompId}'`);
-
-                      const whereClause = conditions.join(" AND ");
-
-                      dispatch(
-                        fetchListview(
-                          "TR331",
-                          Subscriptionlastthree,
-                          screenName,
-                          whereClause,
-                          "",
-                          CompId
-                        )
-                      );
-
-                      setTimeout(() => setSubmitting(false), 100);
-                    }}
-                  >
-                    {({
-                      values,
-                      handleChange,
-                      handleSubmit,
-                      resetForm,
-                      setFieldValue,
-                      isSubmitting
-                    }) => (
-                      <form onSubmit={handleSubmit}>
-                        <Box sx={{ height: 600, overflowY: "auto" }}>
-
-                          <IconButton
-                            size="small"
-                            onClick={() => setShowMore(false)}
-                            sx={{ position: "absolute", top: 5, right: 4 }}
-                          >
-                            <Tooltip title="Close">
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          </IconButton>
-
-                          <TextField
-                            fullWidth
-                            label="From Date"
-                            type="date"
-                            name="fromDate"
-                            value={values.fromDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          <TextField
-                            fullWidth
-                            label="To Date"
-                            type="date"
-                            name="toDate"
-                            value={values.toDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="project"
-                            label={is003Subscription ? "Standard/Activities" : "Project"}
-                            value={values.project}
-                            onChange={(e, newValue) =>
-                              setFieldValue("project", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2054",
-                                ScreenName: "Project",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-
-
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="Employee"
-                            label={is003Subscription ? "Student" : "Personnel"}
-                            value={values.Employee}
-                            onChange={(e, newValue) =>
-                              setFieldValue("Employee", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2116",
-                                ScreenName: "Personnel",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`} />
-
-                         
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Month"
-                            name="attmonth"
-                            value={values.attmonth || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attmonth && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attmonth", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            {[
-                              "January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"
-                            ].map((month, index) => (
-                              <MenuItem key={index + 1} value={index + 1}>
-                                {month}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-
-                         
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Year"
-                            name="attyear"
-                            value={values.attyear || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attyear && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attyear", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            <MenuItem value="2026">2026</MenuItem>
-                            <MenuItem value="2025">2025</MenuItem>
-                          </TextField>
-
-                          <Stack
-                            direction="row"
-                            justifyContent="end"
-                            spacing={1}
-                            mt={3}
-                          >
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              disabled={isSubmitting}
-                            >
-                              Apply
-                            </Button>
-
-                            <PDFDownloadLink
-                              document={
-                                <InvpaymentPDF
-                                  data={listViewData}
-                                  Project={values?.project}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                    fromDate: values.fromDate,
-                                    toDate: values.toDate
-                                  }}
-                                />
-                              }
-                              fileName="Invoice_pdf"
-                              style={{ color: "#d32f2f" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon />
-                                )
-                              }
-                            </PDFDownloadLink>
-
-                            <Button
-                              type="button"
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                sessionStorage.removeItem("TR331_Filters");
-
-                                resetForm({
-                                  values: {
-                                    project: [],
-                                    Employee: [],
-                                    fromDate: defaultFromDate,
-                                    toDate: defaultToDate,
-                                    attmonth: currentMonthNumber,
-                                    attyear: currentYear,
-                                  },
-                                });
-                              }}
-                            >
-                              RESET
-                            </Button>
-                          </Stack>
-
-                        </Box>
-                      </form>
-                    )}
-                  </Formik>
-                </Box>
-              );
-
-            })()} */}
-            {showMore && (accessID === "TR331") && (() => {
-
-              // Restore session filters
-              const savedFilters =
-                JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
-
-              const initialFormValues = {
-                fromDate: savedFilters.fromDate || defaultFromDate,
-                toDate: savedFilters.toDate || defaultToDate,
-                project: savedFilters.project || [],
-                Employee: savedFilters.Employee || [],
-                attmonth: savedFilters.attmonth || currentMonthNumber,
-                attyear: savedFilters.attyear || currentYear,
-              };
-
-              return (
-                <Box
-                  sx={{
-                    width: 320,
-                    p: 2,
-                    borderRadius: 1,
-                    backgroundColor: "#fff",
-                    position: "relative"
-                  }}
-                >
-                  <Formik
-                    initialValues={initialFormValues}
-                    enableReinitialize
-                    onSubmit={(values, { setSubmitting }) => {
-
-                      // Save filters to session
-                      sessionStorage.setItem(
-                        "TR331_Filters",
-                        JSON.stringify(values)
-                      );
-
-                      const conditions = [];
-                      // const fromDate = formattedDate2(values.fromDate);
-                      // const toDate = formattedDate2(values.toDate);
-
-                      if (values.fromDate && values.toDate) {
-                        conditions.push(
-                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
-                        );
-                      }
-
-                      if (values.attmonth) {
-                        conditions.push(
-                          `BillableMonth='${values.attmonth}'`
-                        );
-                      }
-
-                      if (values.attyear) {
-                        conditions.push(
-                          `BillableYear='${values.attyear}'`
-                        );
-                      }
-
-                      if (values.Employee?.length > 0) {
-                        const EmpIds = values.Employee
-                          .map((e) => `'${e.RecordID}'`)
-                          .join(",");
-                        conditions.push(`EmployeeID IN (${EmpIds})`);
-                      }
-
-                      if (values.project?.length > 0) {
-                        const projIds = values.project
-                          .map((p) => `'${p.RecordID}'`)
-                          .join(",");
-                        conditions.push(`ProjectID IN (${projIds})`);
-                      }
-
-                      conditions.push(`CompanyID='${CompId}'`);
-
-                      const whereClause = conditions.join(" AND ");
-
-                      dispatch(
-                        fetchListview(
-                          "TR331",
-                          Subscriptionlastthree,
-                          screenName,
-                          whereClause,
-                          "",
-                          CompId
-                        )
-                      );
-
-                      setTimeout(() => setSubmitting(false), 100);
-                    }}
-                  >
-                    {({
-                      values,
-                      handleChange,
-                      handleSubmit,
-                      resetForm,
-                      setFieldValue,
-                      isSubmitting
-                    }) => (
-                      <form onSubmit={handleSubmit}>
-                        <Box sx={{ height: 600, overflowY: "auto" }}>
-
-                          {/* Close Button */}
-                          <IconButton
-                            size="small"
-                            onClick={() => setShowMore(false)}
-                            sx={{ position: "absolute", top: 5, right: 4 }}
-                          >
-                            <Tooltip title="Close">
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          </IconButton>
-
-                          {/* From Date */}
-                          <TextField
-                            fullWidth
-                            label="From Date"
-                            type="date"
-                            name="fromDate"
-                            value={values.fromDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          {/* To Date */}
-                          <TextField
-                            fullWidth
-                            label="To Date"
-                            type="date"
-                            name="toDate"
-                            value={values.toDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          {/* Project */}
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="project"
-                            label={is003Subscription ? "Standard/Activities" : "Project"}
-                            value={values.project}
-                            onChange={(e, newValue) =>
-                              setFieldValue("project", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2054",
-                                ScreenName: "Project",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-
-
-                          {/* Employee */}
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="Employee"
-                            label={is003Subscription ? "Student" : "Personnel"}
-                            value={values.Employee}
-                            onChange={(e, newValue) =>
-                              setFieldValue("Employee", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2116",
-                                ScreenName: "Personnel",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`} />
-
-                          {/*  Month */}
-                          {/* <TextField
-                          sx={{ mt: 2 }}
-                          variant="standard"
-                          label="Month"
-                          name="attmonth"
-                          value={values.attmonth}
-                          onChange={handleChange}
-                          select
-                          fullWidth
-                          focused
-                        >
-                          {[
-                            "January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"
-                          ].map((month, index) => (
-                            <MenuItem key={index + 1} value={index + 1}>
-                              {month}
-                            </MenuItem>
-                          ))}
-                        </TextField> */}
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Month"
-                            name="attmonth"
-                            value={values.attmonth || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attmonth && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attmonth", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            {[
-                              "January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"
-                            ].map((month, index) => (
-                              <MenuItem key={index + 1} value={index + 1}>
-                                {month}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-
-                          {/* Year */}
-                          {/* <TextField
-                          sx={{ mt: 2 }}
-                          variant="standard"
-                          label="Year"
-                          name="attyear"
-                          value={values.attyear}
-                          onChange={handleChange}
-                          select
-                          fullWidth
-                          focused
-                        >
-                          <MenuItem value="2026">2026</MenuItem>
-                          <MenuItem value="2025">2025</MenuItem>
-                        </TextField> */}
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Year"
-                            name="attyear"
-                            value={values.attyear || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attyear && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attyear", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            <MenuItem value="2026">2026</MenuItem>
-                            <MenuItem value="2025">2025</MenuItem>
-                          </TextField>
-
-                          {/* Buttons */}
-                          <Stack
-                            direction="row"
-                            justifyContent="end"
-                            spacing={1}
-                            mt={3}
-                          >
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              disabled={isSubmitting}
-                            >
-                              Apply
-                            </Button>
-
-                            <PDFDownloadLink
-                              document={
-                                <InvpaymentPDF
-                                  data={listViewData}
-                                  Project={values?.project}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                    fromDate: values.fromDate,
-                                    toDate: values.toDate
-                                  }}
-                                />
-                              }
-                              fileName="Invoice_pdf"
-                              style={{ color: "#d32f2f" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon />
-                                )
-                              }
-                            </PDFDownloadLink>
-
-                            <Button
-                              type="button"
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                sessionStorage.removeItem("TR331_Filters");
-
-                                resetForm({
-                                  values: {
-                                    project: [],
-                                    Employee: [],
-                                    fromDate: defaultFromDate,
-                                    toDate: defaultToDate,
-                                    attmonth: currentMonthNumber,
-                                    attyear: currentYear,
-                                  },
-                                });
-                              }}
-                            >
-                              RESET
-                            </Button>
-                          </Stack>
-
-                        </Box>
-                      </form>
-                    )}
-                  </Formik>
-                </Box>
-              );
-
-            })()}
-            {showMore && (accessID === "TR366") && (() => {
-
-              // Restore session filters
-              const savedFilters =
-                JSON.parse(sessionStorage.getItem("TR366_Filters")) || {};
-
-              const initialFormValues = {
-                fromDate: savedFilters.fromDate || defaultFromDate,
-                toDate: savedFilters.toDate || defaultToDate,
-                project: savedFilters.project || [],
-                Employee: savedFilters.Employee || [],
-                attmonth: savedFilters.attmonth || currentMonthNumber,
-                attyear: savedFilters.attyear || currentYear,
-              };
-
-              return (
-                <Box
-                  sx={{
-                    width: 320,
-                    p: 2,
-                    borderRadius: 1,
-                    backgroundColor: "#fff",
-                    position: "relative"
-                  }}
-                >
-                  <Formik
-                    initialValues={initialFormValues}
-                    enableReinitialize
-                    onSubmit={(values, { setSubmitting }) => {
-
-                      // Save filters to session
-                      sessionStorage.setItem(
-                        "TR366_Filters",
-                        JSON.stringify(values)
-                      );
-
-                      const conditions = [];
-                      // const fromDate = formattedDate2(values.fromDate);
-                      // const toDate = formattedDate2(values.toDate);
-
-                      if (values.fromDate && values.toDate) {
-                        conditions.push(
-                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
-                        );
-                      }
-
-                      if (values.attmonth) {
-                        conditions.push(
-                          `BillableMonth='${values.attmonth}'`
-                        );
-                      }
-
-                      if (values.attyear) {
-                        conditions.push(
-                          `BillableYear='${values.attyear}'`
-                        );
-                      }
-
-                      if (values.Employee?.length > 0) {
-                        const EmpIds = values.Employee
-                          .map((e) => `'${e.RecordID}'`)
-                          .join(",");
-                        conditions.push(`EmployeeID IN (${EmpIds})`);
-                      }
-
-                      if (values.project?.length > 0) {
-                        const projIds = values.project
-                          .map((p) => `'${p.RecordID}'`)
-                          .join(",");
-                        conditions.push(`ProjectID IN (${projIds})`);
-                      }
-
-                      conditions.push(`CompanyID='${CompId}'`);
-
-                      const whereClause = conditions.join(" AND ");
-
-                      dispatch(
-                        fetchListview(
-                          "TR366",
-                          Subscriptionlastthree,
-                          screenName,
-                          whereClause,
-                          "",
-                          CompId
-                        )
-                      );
-
-                      setTimeout(() => setSubmitting(false), 100);
-                    }}
-                  >
-                    {({
-                      values,
-                      handleChange,
-                      handleSubmit,
-                      resetForm,
-                      setFieldValue,
-                      isSubmitting
-                    }) => (
-                      <form onSubmit={handleSubmit}>
-                        <Box sx={{ height: 600, overflowY: "auto" }}>
-
-                          {/* Close Button */}
-                          <IconButton
-                            size="small"
-                            onClick={() => setShowMore(false)}
-                            sx={{ position: "absolute", top: 5, right: 4 }}
-                          >
-                            <Tooltip title="Close">
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          </IconButton>
-
-                          {/* From Date */}
-                          <TextField
-                            fullWidth
-                            label="From Date"
-                            type="date"
-                            name="fromDate"
-                            value={values.fromDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          {/* To Date */}
-                          <TextField
-                            fullWidth
-                            label="To Date"
-                            type="date"
-                            name="toDate"
-                            value={values.toDate}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{ mt: 2 }}
-                            focused
-                          />
-
-                          {/* Project */}
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="project"
-                            label={is003Subscription ? "Standard/Activities" : "Project"}
-                            value={values.project}
-                            onChange={(e, newValue) =>
-                              setFieldValue("project", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2054",
-                                ScreenName: "Project",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-
-
-                          {/* Employee */}
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ mt: 2 }}
-                            name="Employee"
-                            label={is003Subscription ? "Student" : "Personnel"}
-                            value={values.Employee}
-                            onChange={(e, newValue) =>
-                              setFieldValue("Employee", newValue)
-                            }
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2116",
-                                ScreenName: "Personnel",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${CompId}'`,
-                                Any: "",
-                              },
-                            })}`} />
-
-                          {/*  Month */}
-                          {/* <TextField
-                          sx={{ mt: 2 }}
-                          variant="standard"
-                          label="Month"
-                          name="attmonth"
-                          value={values.attmonth}
-                          onChange={handleChange}
-                          select
-                          fullWidth
-                          focused
-                        >
-                          {[
-                            "January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"
-                          ].map((month, index) => (
-                            <MenuItem key={index + 1} value={index + 1}>
-                              {month}
-                            </MenuItem>
-                          ))}
-                        </TextField> */}
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Month"
-                            name="attmonth"
-                            value={values.attmonth || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attmonth && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attmonth", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            {[
-                              "January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"
-                            ].map((month, index) => (
-                              <MenuItem key={index + 1} value={index + 1}>
-                                {month}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-
-                          {/* Year */}
-                          {/* <TextField
-                          sx={{ mt: 2 }}
-                          variant="standard"
-                          label="Year"
-                          name="attyear"
-                          value={values.attyear}
-                          onChange={handleChange}
-                          select
-                          fullWidth
-                          focused
-                        >
-                          <MenuItem value="2026">2026</MenuItem>
-                          <MenuItem value="2025">2025</MenuItem>
-                        </TextField> */}
-                          <TextField
-                            sx={{ mt: 2 }}
-                            variant="standard"
-                            label="Year"
-                            name="attyear"
-                            value={values.attyear || ""}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            focused
-                            InputProps={{
-                              endAdornment: values.attyear && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => setFieldValue("attyear", "")}
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          >
-                            <MenuItem value="2026">2026</MenuItem>
-                            <MenuItem value="2025">2025</MenuItem>
-                          </TextField>
-
-                          {/* Buttons */}
-                          <Stack
-                            direction="row"
-                            justifyContent="end"
-                            spacing={1}
-                            mt={3}
-                          >
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              disabled={isSubmitting}
-                            >
-                              Apply
-                            </Button>
-
-                            <PDFDownloadLink
-                              document={
-                                <InvpaymentPDF
-                                  data={listViewData}
-                                  Project={values?.project}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                    fromDate: values.fromDate,
-                                    toDate: values.toDate
-                                  }}
-                                />
-                              }
-                              fileName="Invoice_pdf"
-                              style={{ color: "#d32f2f" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon />
-                                )
-                              }
-                            </PDFDownloadLink>
-
-                            <Button
-                              type="button"
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                sessionStorage.removeItem("TR366_Filters");
-
-                                resetForm({
-                                  values: {
-                                    project: [],
-                                    Employee: [],
-                                    fromDate: defaultFromDate,
-                                    toDate: defaultToDate,
-                                    attmonth: currentMonthNumber,
-                                    attyear: currentYear,
-                                  },
-                                });
-                              }}
-                            >
-                              RESET
-                            </Button>
-                          </Stack>
-
-                        </Box>
-                      </form>
-                    )}
-                  </Formik>
-                </Box>
-              );
-
-            })()}
-            {showMore && accessID === "TR243" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    fromdate: sessionStorage.getItem("FromDate") || "",
-                    date: sessionStorage.getItem("ToDate") || "",
-                    Created: sessionStorage.getItem("TR243_Created") === "Y",
-                    Process: sessionStorage.getItem("TR243_Process") === "Y",
-                    Paid: sessionStorage.getItem("TR243_Paid") === "Y",
-                    Picked: sessionStorage.getItem("TR243_Picked") === "Y",
-                    ReadyToDeliver:
-                      sessionStorage.getItem("TR243_ReadyToDeliver") === "Y",
-                    Delivered:
-                      sessionStorage.getItem("TR243_Delivered") === "Y",
-                    Scheduled:
-                      sessionStorage.getItem("TR243_Scheduled") === "Y",
-                  }}
-                  enableReinitialize
-                  validate={(values) => {
-                    const hasAtLeastOneValue =
-                      values.fromdate ||
-                      values.date ||
-                      values.Created ||
-                      values.Process ||
-                      values.ReadyToDeliver ||
-                      values.Paid ||
-                      values.Scheduled ||
-                      values.Delivered ||
-                      values.Picked;
-                  }}
-                  // onSubmit={(values, { setSubmitting }) => {
-                  //   const conditions = [];
-
-                  //   const fromDate = values.fromdate || "";
-                  //   const toDate = values.date || "";
-
-                  //   sessionStorage.setItem("FromDate", fromDate);
-                  //   sessionStorage.setItem("ToDate", toDate);
-                  //   // sessionStorage.setItem("EmployeeID", empId);
-
-                  //   [
-                  //     "Created",
-                  //     "Process",
-                  //     "Ready To Deliver",
-                  //     "Paid",
-                  //     "Picked",
-                  //     "Deivered",
-                  //     "Scheduled",
-                  //   ].forEach((key) => {
-                  //     sessionStorage.setItem(
-                  //       `TR243_${key}`,
-                  //       values[key] ? "Y" : "N"
-                  //     );
-                  //   });
-
-                  //   sessionStorage.setItem(
-                  //     "TR243_Filters",
-                  //     JSON.stringify(values)
-                  //   );
-
-                  //   // conditions.push(`EmployeesID='${empId}'`);
-
-                  //   if (fromDate && toDate) {
-                  //     conditions.push(
-                  //       `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
-                  //     );
-                  //   } else if (fromDate) {
-                  //     conditions.push(`HVLastOrderDate >= '${fromDate}'`);
-                  //   } else if (toDate) {
-                  //     conditions.push(`HVLastOrderDate <= '${toDate}'`);
-                  //   }
-
-                  //   const statusFilters = [];
-
-                  //   if (values.Created) statusFilters.push("'Created'");
-                  //   if (values.Process) statusFilters.push("'Process'");
-                  //   if (values.ReadyToDeliver)
-                  //     statusFilters.push("'Ready To Deliver'");
-                  //   if (values.Picked) statusFilters.push("'Picked'");
-                  //   if (values.Delivered) statusFilters.push("'Delivered'");
-                  //   if (values.Scheduled) statusFilters.push("'Scheduled'");
-                  //   if (values.Paid) statusFilters.push("'Paid'");
-
-                  //   if (statusFilters.length > 0) {
-                  //     conditions.push(
-                  //       `LastOrderStatus IN (${statusFilters.join(", ")})`
-                  //     );
-                  //   }
-
-                  //   //conditions.push(`CompanyID='${compID}'`);
-                  //   //const whereClause = conditions.join(" AND ");
-                  //   const filter = [
-                  //     `CompanyID='${compID}'`,
-                  //     ...conditions,
-                  //   ].join(" AND ");
-                  //   //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
-
-                  //   dispatch(
-                  //     fetchListview(
-                  //       accessID,
-                  //       screenName,
-                  //       filter,
-                  //       "",
-                  //       //whereClause,
-                  //       ""
-                  //     )
-                  //   );
-                  //   setTimeout(() => setSubmitting(false), 100);
-                  // }}
-                  onSubmit={(values, { setSubmitting }) => {
-                    const conditions = [];
-                    const statusDateMap = {
-                      Created: "OROrderDate",
-                      Process: "ORProcessDate",
-                      ReadyToDeliver: "ORTentativeDate",
-                      YetToDeliver: "ORTentativeDate",
-                      Picked: "ORPickedDate",
-                      Scheduled: "ORTentativeDate",
-                      Delivered: "ORDeliveryDate",
-                      Paid: "ORPaidDate",
-                    };
-
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
-
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-
-                    // Store checkbox values
-                    Object.keys(statusDateMap).forEach((status) => {
-                      sessionStorage.setItem(
-                        `TR243_${status}`,
-                        values[status] ? "Y" : "N"
-                      );
-                    });
-
-                    sessionStorage.setItem(
-                      "TR243_Filters",
-                      JSON.stringify(values)
-                    );
-
-                    // --------------------------
-                    // 1. STATUS IN ('A','B','C')
-                    // --------------------------
-                    const selectedStatuses = Object.keys(statusDateMap).filter(
-                      (status) => values[status]
-                    );
-
-                    if (selectedStatuses.length > 0) {
-                      conditions.push(
-                        `LastOrderStatus IN (${selectedStatuses
-                          .map((s) => `'${s}'`)
-                          .join(", ")})`
-                      );
-                    }
-
-                    // -------------------------------------------------
-                    // 2. DATE FIELD CONDITIONS based on selected status
-                    // -------------------------------------------------
-                    const dateConditions = [];
-
-                    selectedStatuses.forEach((status) => {
-                      const field = statusDateMap[status];
-
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-                    });
-
-                    if (dateConditions.length > 0) {
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
-                    }
-
-                    // --------------------------
-                    // FINAL WHERE CLAUSE
-                    // --------------------------
-                    const whereClause = conditions.join(" AND ");
-                    console.log("FINAL FILTER:", whereClause);
-
-                    dispatch(
-                      fetchListview(
-                        accessID,
-                        Subscriptionlastthree,
-                        screenName,
-                        whereClause,
-                        "",
-                        compID
-                      )
-                    );
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-                >
-                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
-                    <form onSubmit={handleSubmit}>
-                      <Box sx={{ height: 600, overflowY: "auto" }}>
-                        <TextField
-                          name="fromdate"
-                          type="date"
-                          id="fromdate"
-                          label="From Date"
-                          variant="standard"
-                          value={values.fromdate || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("fromdate", newDate);
-                            // dispatch(setFromDate(newDate));
-                            sessionStorage.setItem("FromDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />
-
-                        <TextField
-                          name="date"
-                          type="date"
-                          id="date"
-                          label="To Date"
-                          variant="standard"
-                          value={values.date || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("date", newDate);
-                            // dispatch(setToDate(newDate));
-                            sessionStorage.setItem("ToDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />
-
-                        <Typography mt={2} fontWeight="bold" color="error">
-                          Status
-                        </Typography>
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Created"
-                              checked={values.Created}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Created", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Created",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Created"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Process"
-                              checked={values.Process}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Process", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Process",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Confirm"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="ReadyToDeliver"
-                              checked={values.ReadyToDeliver}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("ReadyToDeliver", checked);
-                                sessionStorage.setItem(
-                                  "TR243_ReadyToDeliver",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Ready To Deliver"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Scheduled"
-                              checked={values.Scheduled}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Scheduled", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Scheduled",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Scheduled"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Picked"
-                              checked={values.Picked}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Picked", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Picked",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Picked"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Delivered"
-                              checked={values.Delivered}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Delivered", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Delivered",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Delivered"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Paid"
-                              checked={values.Paid}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Paid", checked);
-                                sessionStorage.setItem(
-                                  "TR243_Paid",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Paid"
-                        />
-
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="end"
-                          spacing={1}
-                          mt={2}
-                        >
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            Apply
-                          </Button>
-                        </Stack>
-                      </Box>
-                    </form>
-                  )}
-                </Formik>
-              </Box>
-            )}
-            {/* WORKING CODE BELOW ----- */}
-            {/* {showMore && accessID === "TR321" && (
-  <Box sx={{ width: 300, p: 2, borderRadius: 1, backgroundColor: "#fff" }}>
-    <Formik
-      initialValues={{
-        days: sessionStorage.getItem("TR321_Days") || "",
-        type: sessionStorage.getItem("TR321_type") || "",
-        Created: sessionStorage.getItem("TR321_Created") === "Y",
-        Process: sessionStorage.getItem("TR321_Process") === "Y",
-        Paid: sessionStorage.getItem("TR321_Paid") === "Y",
-        Picked: sessionStorage.getItem("TR321_Picked") === "Y",
-        ReadyToDeliver: sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
-        Delivered: sessionStorage.getItem("TR321_Delivered") === "Y",
-        Scheduled: sessionStorage.getItem("TR321_Scheduled") === "Y",
-        NextVisitDate: sessionStorage.getItem("TR321_NextVisitDate") === "Y",
-        Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
-        Balance: sessionStorage.getItem("TR321_Balance") === "Y",
-      }}
-      enableReinitialize
-      // onSubmit={(values, { setSubmitting }) => {
-      //   // ✅ SAVES TO SESSIONSTORAGE (your code is correct)
-      //   sessionStorage.setItem("TR321_Days", values.days || "");
-      //   sessionStorage.setItem("TR321_type", values.type || "");
-      //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-      //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-        
-      //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-      //   statusKeys.forEach(status => {
-      //     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
-      //   });
-
-      //   if (values.Prospect || values.Balance) {
-      //     let simpleWhere = `CompanyID=${compID}`;
-      //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
-      //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
-      //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
-      //   } else {
-      //     // Your status logic (keep as is)
-      //     // ... existing status code
-      //   }
-      //   setTimeout(() => setSubmitting(false), 100);
-      // }}
-
-
-      onSubmit={(values, { setSubmitting }) => {
-  // SAVE ALL TO SESSIONSTORAGE
-  sessionStorage.setItem("TR321_Days", values.days || "");
-  sessionStorage.setItem("TR321_type", values.type || "");
-  sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-  sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-  
-  const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-  statusKeys.forEach(status => {
-    sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
-  });
-
-  //  CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
-  if (values.Prospect || values.Balance) {
-    let simpleWhere = `CompanyID=${compID}`;
-    if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
-    if (values.Balance) simpleWhere += ` AND Balance < 0`;
-    console.log(' APPLY - CASE 1:', simpleWhere);
-    dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
-    setTimeout(() => setSubmitting(false), 100);
-    return;
-  }
-
-  //  CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
-  const statusDateMap = {
-    Created: "OR_ORDERDATE",
-    Process: "OR_PROCESSDATE",
-    Paid: "OR_PAIDDATE",
-    ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-    Scheduled: "OR_TENTATIVEDELIVERYDATE",
-    NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-    Picked: "OR_PICKEDDATETIME",
-    Delivered: "OR_DELIVERYDATE",
-  };
-
-  const whereParts = [`CompanyID=${compID}`];
-  let fromdate = "", todate = "";
-
-  if (values.days && values.type) {
-    const today = new Date();
-    const dToday = today.toISOString().split("T")[0];
-    const shifted = new Date(today);
-
-    if (values.type === "A") {
-      shifted.setDate(today.getDate() - Number(values.days));
-      fromdate = shifted.toISOString().split("T")[0];
-    } else if (values.type === "L") {
-      shifted.setDate(today.getDate() - Number(values.days));
-      fromdate = shifted.toISOString().split("T")[0];
-      todate = dToday;
-    } else if (values.type === "N") {
-      shifted.setDate(today.getDate() + Number(values.days));
-      fromdate = dToday;
-      todate = shifted.toISOString().split("T")[0];
-    }
-
-    const dateConditions = [];
-    Object.keys(statusDateMap).forEach((status) => {
-      if (values[status]) {
-        const col = statusDateMap[status];
-        if (values.type === "A") {
-          dateConditions.push(`${col}='${fromdate}'`);
-        } else {
-          dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-        }
-      }
-    });
-
-    if (dateConditions.length > 0) {
-      whereParts.push(`(${dateConditions.join(" OR ")})`);
-    }
-  }
-
-  const dynamicWhere = whereParts.join(" AND ");
-  const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
-  const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-  console.log(' APPLY - CASE 2:', finalWhereClause);
-  dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
-  setTimeout(() => setSubmitting(false), 100);
-}}
-
-    >
-      {({
-        values,
-        handleSubmit,
-        isSubmitting,
-        setFieldValue,
-      }) => {
-        const statusKeys = [
-          "Created", "Process", "Paid", "Picked", 
-          "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"
-        ];
-        const statusLabelMap = {
-          ReadyToDeliver: "Ready For Delivery",
-          NextVisitDate: "Next Visit Date",
-        };
-        const isStatusSelected = statusKeys.some((k) => values[k]);
-        const isDateSelected = Boolean(values.days && values.type);
-        const isStatusGroupActive = isStatusSelected || isDateSelected;
-        const isProspectGroupActive = values.Prospect || values.Balance;
-
-        //  FIXED: Proper Reset function with ALL variables in scope
-        const handleResetFilters = () => {
-          setFieldValue('days', '');
-          setFieldValue('type', '');
-          setFieldValue('Prospect', false);
-          setFieldValue('Balance', false);
-          statusKeys.forEach(k => setFieldValue(k, false));
-          
-          // Clear ALL sessionStorage keys
-          ['Days', 'type', 'Created', 'Process', 'Paid', 'Picked', 
-           'ReadyToDeliver', 'Delivered', 'Scheduled', 'NextVisitDate', 
-           'Prospect', 'Balance'].forEach(k => {
-            sessionStorage.removeItem(`TR321_${k}`);
-          });
-          
-          // Reload CompanyID only
-          dispatch(fetchListview(accessID, 'Party', `CompanyID=${compID}`, '', compID));
-        };
-
-        return (
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ height: 600, overflowY: "auto" }}>
-              <Typography mt={2} fontWeight="bold" color="error">Status</Typography>
-              
-              {statusKeys.map((key) => (
-                <FormControlLabel
-                  key={key}
-                  control={
-                    <Checkbox
-                      checked={values[key]}
-                      disabled={isProspectGroupActive}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        if (checked) {
-                          setFieldValue("Prospect", false);
-                          setFieldValue("Balance", false);
-                          sessionStorage.setItem("TR321_Prospect", "N");
-                          sessionStorage.setItem("TR321_Balance", "N");
-                        }
-                        setFieldValue(key, checked);
-                        sessionStorage.setItem(`TR321_${key}`, checked ? "Y" : "N");
-                      }}
-                    />
-                  }
-                  label={statusLabelMap[key] || key}
-                />
-              ))}
-
-              <TextField
-                name="days"
-                type="number"
-                label="Days"
-                variant="standard"
-                value={values.days}
-                disabled={isProspectGroupActive}
-                onChange={(e) => {
-                  setFieldValue("days", e.target.value);
-                  sessionStorage.setItem("TR321_Days", e.target.value);
-                }}
-                sx={{ mt: 2 }}
-                fullWidth
-              />
-
-              <TextField
-                select
-                name="type"
-                label="Type"
-                variant="standard"
-                value={values.type}
-                disabled={isProspectGroupActive}
-                onChange={(e) => {
-                  setFieldValue("type", e.target.value);
-                  sessionStorage.setItem("TR321_type", e.target.value);
-                }}
-                sx={{ mt: 2}}
-                fullWidth
-              >
-                <MenuItem value="A">Ago</MenuItem>
-                <MenuItem value="L">Latest</MenuItem>
-                <MenuItem value="N">Next</MenuItem>
-              </TextField>
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.Prospect}
-                    disabled={isStatusGroupActive}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      if (checked) {
-                        statusKeys.forEach((k) => {
-                          setFieldValue(k, false);
-                          sessionStorage.setItem(`TR321_${k}`, "N");
-                        });
-                        setFieldValue("days", "");
-                        setFieldValue("type", "");
-                        sessionStorage.setItem("TR321_Days", "");
-                        sessionStorage.setItem("TR321_type", "");
-                      }
-                      setFieldValue("Prospect", checked);
-                      sessionStorage.setItem("TR321_Prospect", checked ? "Y" : "N");
-                    }}
-                  />
-                }
-                label="Prospects"
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.Balance}
-                    disabled={isStatusGroupActive}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      if (checked) {
-                        statusKeys.forEach((k) => {
-                          setFieldValue(k, false);
-                          sessionStorage.setItem(`TR321_${k}`, "N");
-                        });
-                        setFieldValue("days", "");
-                        setFieldValue("type", "");
-                        sessionStorage.setItem("TR321_Days", "");
-                        sessionStorage.setItem("TR321_type", "");
-                      }
-                      setFieldValue("Balance", checked);
-                      sessionStorage.setItem("TR321_Balance", checked ? "Y" : "N");
-                    }}
-                  />
-                }
-                label="Due"
-              />
-
-              <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} mt={2}>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                  Apply
-                </Button>
-                <Button variant="contained" color="error" onClick={handleResetFilters} disabled={isSubmitting}>
-                  Reset
-                </Button>
-              </Stack>
-            </Box>
-          </form>
-        );
-      }}
-    </Formik>
-  </Box>
-)} */}
-
-            {showMore && accessID === "TR321" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    days: sessionStorage.getItem("TR321_Days") || "",
-                    type: sessionStorage.getItem("TR321_type") || "",
-                    Created: sessionStorage.getItem("TR321_Created") === "Y",
-                    Process: sessionStorage.getItem("TR321_Process") === "Y",
-                    Paid: sessionStorage.getItem("TR321_Paid") === "Y",
-                    Picked: sessionStorage.getItem("TR321_Picked") === "Y",
-                    ReadyToDeliver:
-                      sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
-                    Delivered:
-                      sessionStorage.getItem("TR321_Delivered") === "Y",
-                    Scheduled:
-                      sessionStorage.getItem("TR321_Scheduled") === "Y",
-                    NextVisitDate:
-                      sessionStorage.getItem("TR321_NextVisitDate") === "Y",
-                    Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
-                    Balance: sessionStorage.getItem("TR321_Balance") === "Y",
-                  }}
-                  enableReinitialize
-                  // onSubmit={(values, { setSubmitting }) => {
-                  //   // SAVE ALL TO SESSIONSTORAGE
-                  //   sessionStorage.setItem("TR321_Days", values.days || "");
-                  //   sessionStorage.setItem("TR321_type", values.type || "");
-                  //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-                  //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-                  //   sessionStorage.setItem("TR321_HASFILTER", 'Y');
-
-                  //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-                  //   statusKeys.forEach(status => {
-                  //     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
-                  //   });
-
-                  //   // CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
-                  //   if (values.Prospect || values.Balance) {
-                  //     let simpleWhere = `CompanyID=${compID}`;
-                  //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
-                  //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
-                  //     console.log(' APPLY - CASE 1:', simpleWhere);
-                  //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
-                  //     setTimeout(() => setSubmitting(false), 100);
-                  //     return;
-                  //   }
-
-                  //   // CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
-                  //   const statusDateMap = {
-                  //     Created: "OR_ORDERDATE",
-                  //     Process: "OR_PROCESSDATE",
-                  //     Paid: "OR_PAIDDATE",
-                  //     ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-                  //     Scheduled: "OR_TENTATIVEDELIVERYDATE",
-                  //     NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-                  //     Picked: "OR_PICKEDDATETIME",
-                  //     Delivered: "OR_DELIVERYDATE",
-                  //   };
-
-                  //   const whereParts = [`CompanyID=${compID}`];
-                  //   let fromdate = "", todate = "";
-
-                  //   if (values.days && values.type) {
-                  //     const today = new Date();
-                  //     const dToday = today.toISOString().split("T")[0];
-                  //     const shifted = new Date(today);
-
-                  //     if (values.type === "A") {
-                  //       shifted.setDate(today.getDate() - Number(values.days));
-                  //       fromdate = shifted.toISOString().split("T")[0];
-                  //     } else if (values.type === "L") {
-                  //       shifted.setDate(today.getDate() - Number(values.days));
-                  //       fromdate = shifted.toISOString().split("T")[0];
-                  //       todate = dToday;
-                  //     } else if (values.type === "N") {
-                  //       shifted.setDate(today.getDate() + Number(values.days));
-                  //       fromdate = dToday;
-                  //       todate = shifted.toISOString().split("T")[0];
-                  //     }
-
-                  //     const dateConditions = [];
-                  //     Object.keys(statusDateMap).forEach((status) => {
-                  //       if (values[status]) {
-                  //         const col = statusDateMap[status];
-                  //         if (values.type === "A") {
-                  //           dateConditions.push(`${col}='${fromdate}'`);
-                  //         } else {
-                  //           dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-                  //         }
-                  //       }
-                  //     });
-
-                  //     if (dateConditions.length > 0) {
-                  //       whereParts.push(`(${dateConditions.join(" OR ")})`);
-                  //     }
-                  //   }
-
-                  //   const dynamicWhere = whereParts.join(" AND ");
-                  //   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
-                  //   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-                  //   console.log(' APPLY - CASE 2:', finalWhereClause);
-                  //   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
-                  //   setTimeout(() => setSubmitting(false), 100);
-                  // }}
-
-                  onSubmit={(values, { setSubmitting }) => {
-                    //  CHECK IF ANY ACTUAL FILTER SELECTED
-                    const statusKeys = [
-                      "Created",
-                      "Process",
-                      "Paid",
-                      "Picked",
-                      "ReadyToDeliver",
-                      "Delivered",
-                      "Scheduled",
-                      "NextVisitDate",
-                    ];
-                    const hasStatusFilter = statusKeys.some(
-                      (status) => values[status]
-                    );
-                    const hasDateFilter = values.days && values.type;
-                    const hasProspectFilter = values.Prospect;
-                    const hasBalanceFilter = values.Balance;
-
-                    console.log(
-                      " APPLY DEBUG - hasStatus:",
-                      hasStatusFilter,
-                      "hasDate:",
-                      hasDateFilter,
-                      "Prospect:",
-                      hasProspectFilter,
-                      "Balance:",
-                      hasBalanceFilter
-                    );
-
-                    //  NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
-                    if (
-                      !hasStatusFilter &&
-                      !hasDateFilter &&
-                      !hasProspectFilter &&
-                      !hasBalanceFilter
-                    ) {
-                      console.log(" APPLY - NO FILTERS: CompanyID only");
-                      sessionStorage.setItem("TR321_HASFILTER", "N");
-                      [
-                        "Days",
-                        "type",
-                        "Created",
-                        "Process",
-                        "Paid",
-                        "Picked",
-                        "ReadyToDeliver",
-                        "Delivered",
-                        "Scheduled",
-                        "NextVisitDate",
-                        "Prospect",
-                        "Balance",
-                      ].forEach((k) => sessionStorage.removeItem(`TR321_${k}`));
-                      dispatch(
-                        fetchListview(
-                          accessID,
-                          Subscriptionlastthree,
-                          "Party",
-                          `CompanyID=${compID}`,
-                          "",
-                          compID
-                        )
-                      );
-                      setTimeout(() => setSubmitting(false), 100);
-                      return;
-                    }
-
-                    // HAS FILTERS → Save to sessionStorage + HASFILTER=Y
-                    sessionStorage.setItem("TR321_HASFILTER", "Y");
-                    sessionStorage.setItem("TR321_Days", values.days || "");
-                    sessionStorage.setItem("TR321_type", values.type || "");
-                    sessionStorage.setItem(
-                      "TR321_Prospect",
-                      values.Prospect ? "Y" : "N"
-                    );
-                    sessionStorage.setItem(
-                      "TR321_Balance",
-                      values.Balance ? "Y" : "N"
-                    );
-                    statusKeys.forEach((status) => {
-                      sessionStorage.setItem(
-                        `TR321_${status}`,
-                        values[status] ? "Y" : "N"
-                      );
-                    });
-
-                    // CASE 1: PROSPECT/BALANCE
-                    if (values.Prospect || values.Balance) {
-                      let simpleWhere = `CompanyID=${compID}`;
-                      if (values.Prospect)
-                        simpleWhere += ` AND Prospects = 'Y'`;
-                      if (values.Balance) simpleWhere += ` AND Balance < 0`;
-                      console.log("APPLY - CASE 1:", simpleWhere);
-                      dispatch(
-                        fetchListview(
-                          accessID,
-                          Subscriptionlastthree,
-                          "Party",
-                          simpleWhere,
-                          "",
-                          compID
-                        )
-                      );
-                      setTimeout(() => setSubmitting(false), 100);
-                      return;
-                    }
-
-                    // CASE 2: STATUS + DAYS (ONLY if actual status selected)
-                    if (hasStatusFilter && hasDateFilter) {
-                      const statusDateMap = {
-                        Created: "OR_ORDERDATE",
-                        Process: "OR_PROCESSDATE",
-                        Paid: "OR_PAIDDATE",
-                        ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-                        Scheduled: "OR_TENTATIVEDELIVERYDATE",
-                        NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-                        Picked: "OR_PICKEDDATETIME",
-                        Delivered: "OR_DELIVERYDATE",
-                      };
-
-                      const whereParts = [`CompanyID=${compID}`];
-                      const today = new Date();
-                      const dToday = today.toISOString().split("T")[0];
-                      const shifted = new Date(today);
-                      let fromdate, todate;
-
-                      if (values.type === "A") {
-                        shifted.setDate(today.getDate() - Number(values.days));
-                        fromdate = shifted.toISOString().split("T")[0];
-                      } else if (values.type === "L") {
-                        shifted.setDate(today.getDate() - Number(values.days));
-                        fromdate = shifted.toISOString().split("T")[0];
-                        todate = dToday;
-                      } else if (values.type === "N") {
-                        shifted.setDate(today.getDate() + Number(values.days));
-                        fromdate = dToday;
-                        todate = shifted.toISOString().split("T")[0];
-                      }
-
-                      const dateConditions = [];
-                      Object.keys(statusDateMap).forEach((status) => {
-                        if (values[status]) {
-                          const col = statusDateMap[status];
-                          if (values.type === "A") {
-                            dateConditions.push(`${col}='${fromdate}'`);
-                          } else {
-                            dateConditions.push(
-                              `${col} BETWEEN '${fromdate}' AND '${todate}'`
-                            );
-                          }
-                        }
-                      });
-
-                      if (dateConditions.length > 0) {
-                        whereParts.push(`(${dateConditions.join(" OR ")})`);
-                      }
-
-                      const dynamicWhere = whereParts.join(" AND ");
-                      const innerWhere = dynamicWhere.replace(
-                        `CompanyID=${compID} AND `,
-                        ""
-                      );
-                      const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-                      console.log("APPLY - CASE 2:", finalWhereClause);
-                      dispatch(
-                        fetchListview(
-                          accessID,
-                          Subscriptionlastthree,
-                          "Party",
-                          finalWhereClause,
-                          "",
-                          compID
-                        )
-                      );
-                    } else {
-                      // Days/Type but no status → CompanyID only
-                      console.log(
-                        "APPLY - Days/Type but no status: CompanyID"
-                      );
-                      dispatch(
-                        fetchListview(
-                          accessID,
-                          Subscriptionlastthree,
-                          "Party",
-                          `CompanyID=${compID}`,
-                          "",
-                          compID
-                        )
-                      );
-                    }
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-                >
-                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => {
-                    const statusKeys = [
-                      "Created",
-                      "Process",
-                      "Paid",
-                      "Picked",
-                      "ReadyToDeliver",
-                      "Delivered",
-                      "Scheduled",
-                      "NextVisitDate",
-                    ];
-                    const statusLabelMap = {
-                      ReadyToDeliver: "Ready For Delivery",
-                      NextVisitDate: "Next Visit Date",
-                    };
-                    const isStatusSelected = statusKeys.some((k) => values[k]);
-                    const isDateSelected = Boolean(values.days && values.type);
-                    const isStatusGroupActive =
-                      isStatusSelected || isDateSelected;
-                    const isProspectGroupActive =
-                      values.Prospect || values.Balance;
-
-                    //  FIXED RESET with RESET FLAG
-                    const handleResetFilters = () => {
-                      setFieldValue("days", "");
-                      setFieldValue("type", "");
-                      setFieldValue("Prospect", false);
-                      setFieldValue("Balance", false);
-                      statusKeys.forEach((k) => setFieldValue(k, false));
-
-                      // Clear ALL filters
-                      [
-                        "Days",
-                        "type",
-                        "Created",
-                        "Process",
-                        "Paid",
-                        "Picked",
-                        "ReadyToDeliver",
-                        "Delivered",
-                        "Scheduled",
-                        "NextVisitDate",
-                        "Prospect",
-                        "Balance",
-                      ].forEach((k) => {
-                        sessionStorage.removeItem(`TR321_${k}`);
-                      });
-
-                      // SET NO-FILTER STATE
-                      sessionStorage.setItem("TR321_RESET", "Y");
-                      sessionStorage.setItem("TR321_HASFILTER", "N");
-                      // NO DISPATCH → Initial load handles single CompanyID call
-                    };
-
-                    return (
-                      <form onSubmit={handleSubmit}>
-                        <Box sx={{ height: 600, overflowY: "auto" }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => setShowMore(false)}
-                            sx={{ position: "absolute", top: 5, right: 4 }}
-                          >
-                            <Tooltip title="Close">
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          </IconButton>
-                          <Typography mt={2} fontWeight="bold" color="error">
-                            Status
-                          </Typography>
-
-                          {statusKeys.map((key) => (
-                            <FormControlLabel
-                              key={key}
-                              control={
-                                <Checkbox
-                                  checked={values[key]}
-                                  disabled={isProspectGroupActive}
-                                  onChange={(e) => {
-                                    const checked = e.target.checked;
-                                    if (checked) {
-                                      setFieldValue("Prospect", false);
-                                      setFieldValue("Balance", false);
-                                      sessionStorage.setItem(
-                                        "TR321_Prospect",
-                                        "N"
-                                      );
-                                      sessionStorage.setItem(
-                                        "TR321_Balance",
-                                        "N"
-                                      );
-                                    }
-                                    setFieldValue(key, checked);
-                                    sessionStorage.setItem(
-                                      `TR321_${key}`,
-                                      checked ? "Y" : "N"
-                                    );
-                                  }}
-                                />
-                              }
-                              label={statusLabelMap[key] || key}
-                            />
-                          ))}
-
-                          <TextField
-                            name="days"
-                            type="number"
-                            label="Days"
-                            variant="standard"
-                            value={values.days}
-                            disabled={isProspectGroupActive}
-                            onChange={(e) => {
-                              setFieldValue("days", e.target.value);
-                              sessionStorage.setItem(
-                                "TR321_Days",
-                                e.target.value
-                              );
-                            }}
-                            sx={{ mt: 2 }}
-                            fullWidth
-                          />
-
-                          <TextField
-                            select
-                            name="type"
-                            label="Type"
-                            variant="standard"
-                            value={values.type}
-                            disabled={isProspectGroupActive}
-                            onChange={(e) => {
-                              setFieldValue("type", e.target.value);
-                              sessionStorage.setItem(
-                                "TR321_type",
-                                e.target.value
-                              );
-                            }}
-                            sx={{ mt: 2 }}
-                            fullWidth
-                          >
-                            <MenuItem value="A">Ago</MenuItem>
-                            <MenuItem value="L">Latest</MenuItem>
-                            <MenuItem value="N">Next</MenuItem>
-                          </TextField>
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.Prospect}
-                                disabled={isStatusGroupActive}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  if (checked) {
-                                    statusKeys.forEach((k) => {
-                                      setFieldValue(k, false);
-                                      sessionStorage.setItem(`TR321_${k}`, "N");
-                                    });
-                                    setFieldValue("days", "");
-                                    setFieldValue("type", "");
-                                    sessionStorage.setItem("TR321_Days", "");
-                                    sessionStorage.setItem("TR321_type", "");
-                                  }
-                                  setFieldValue("Prospect", checked);
-                                  sessionStorage.setItem(
-                                    "TR321_Prospect",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Prospects"
-                          />
-
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.Balance}
-                                disabled={isStatusGroupActive}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  if (checked) {
-                                    statusKeys.forEach((k) => {
-                                      setFieldValue(k, false);
-                                      sessionStorage.setItem(`TR321_${k}`, "N");
-                                    });
-                                    setFieldValue("days", "");
-                                    setFieldValue("type", "");
-                                    sessionStorage.setItem("TR321_Days", "");
-                                    sessionStorage.setItem("TR321_type", "");
-                                  }
-                                  setFieldValue("Balance", checked);
-                                  sessionStorage.setItem(
-                                    "TR321_Balance",
-                                    checked ? "Y" : "N"
-                                  );
-                                }}
-                              />
-                            }
-                            label="Due"
-                          />
-
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="end"
-                            spacing={1}
-                            mt={2}
-                          >
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              color="primary"
-                              disabled={isSubmitting}
-                            >
-                              Apply
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={handleResetFilters}
-                              disabled={isSubmitting}
-                            >
-                              Reset
-                            </Button>
-                          </Stack>
-                        </Box>
-                      </form>
-                    );
-                  }}
-                </Formik>
-              </Box>
-            )}
-
-            {/* {showMore && accessID === "TR328" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    fromdate: sessionStorage.getItem("FromDate") || "",
-                    date: sessionStorage.getItem("ToDate") || "",
-                    party:
-                      JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
-                    product:
-                      JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
-                    freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
-                    nextDueDate: sessionStorage.getItem("TR328_NextDueDate") || "N",
-                    days: sessionStorage.getItem("TR328_Days") || "",
-                    type: sessionStorage.getItem("TR328_type") || "",
-                  }}
-                  enableReinitialize
-                  validate={(values) => {
-                    const hasAtLeastOneValue =
-                      values.fromdate ||
-                      values.date ||
-                      values.party ||
-                      values.product;
-                  }}
-                  onSubmit={(values, { setSubmitting }) => {
-
-                    const conditions = [];
-
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
-
-                    const freshCall = values.freshCall === "Y";
-                    const nextDueDate = values.nextDueDate === "Y";
-
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-
-                    sessionStorage.setItem(
-                      "TR328_Filters",
-                      JSON.stringify(values)
-                    );
-
-
-
-                    const field = "FilterLastCallDate";
-                    if (values.party?.length > 0) {
-                      const partyIds = values.party
-                        .map((p) => `'${p.RecordID}'`)
-                        .join(", ");
-
-                      // conditions.push(`PartyID = ${partyIds}`);
-                      conditions.push(`PartyID IN (${partyIds})`);
-                    }
-
-                    if (values.product?.length > 0) {
-                      const productIds = values.product
-                        .map((p) => `'${p.RecordID}'`)
-                        .join(", ");
-
-                      // conditions.push(`ProjectID = ${productIds}`);
-                      conditions.push(`ProjectID IN (${productIds})`);
-                    }
-                    if (compID) {
-                      conditions.push(
-                        `HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`
-                      );
-                    }
-                    if (freshCall) {
-                      // 👉 Fresh Call flow (NO DATE SENT)
-                      conditions.push(`CallType = 'FC'`);   // ⚠️ change field name if backend uses different column
-                    }
-                    else {
-                      const dateConditions = [];
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-
-
-                      if (dateConditions.length > 0) {
-                        conditions.push(`(${dateConditions.join(" OR ")})`);
-                      }
-                    }
-                    // --------------------------
-                    // FINAL WHERE CLAUSE
-                    // --------------------------
-                    const whereClause = conditions.join(" AND ");
-                    sessionStorage.setItem("TR328_WHERE", whereClause);
-
-                    console.log("FINAL FILTER:", whereClause);
-
-                    dispatch(
-                      fetchListview(
-                        accessID,
-                        screenName,
-                        whereClause,
-                        "",
-                        compID
-                      )
-                    );
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-
-
-                >
-                  {({
-                    values,
-                    handleSubmit,
-                    handleChange,
-                    handleBlur,
-                    isSubmitting,
-                    setFieldValue,
-                    resetForm,
-                  }) => (
-                    <form onSubmit={handleSubmit}>
-
-                      <Box
-                        sx={{
-                          height: 600,
-                          overflowY: "auto",
-                          marginTop: "20px",
-                        }}
-
-                      >
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowMore(false)}
-                          sx={{ position: "absolute", top: 5, right: 4 }}
-                        >
-                          <Tooltip title="Close">
-                            <CancelIcon color="error" />
-                          </Tooltip>
-                        </IconButton>
-                        <TextField
-                          name="fromdate"
-                          type="date"
-                          id="fromdate"
-                          label="From Date"
-                          variant="standard"
-                          value={values.fromdate || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("fromdate", newDate);
-                            // dispatch(setFromDate(newDate));
-                            sessionStorage.setItem("FromDate", newDate);
-
-                            if (newDate) {
-                              setFieldValue("freshCall", "N");
-                              sessionStorage.setItem("TR328_FreshCall", "N");
-                              setFieldValue("nextDueDate", "N");
-                              sessionStorage.setItem("TR328_NextDueDate", "N");
-                            }
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                          disabled={values.freshCall === "Y" || values.nextDueDate === "Y"}
-                        />
-
-                        <TextField
-                          name="date"
-                          type="date"
-                          id="date"
-                          label="To Date"
-                          variant="standard"
-                          value={values.date || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("date", newDate);
-                            // dispatch(setToDate(newDate));
-                            sessionStorage.setItem("ToDate", newDate);
-
-                            if (newDate) {
-                              setFieldValue("freshCall", "N");
-                              sessionStorage.setItem("TR328_FreshCall", "N");
-                              setFieldValue("nextDueDate", "N");
-                              sessionStorage.setItem("TR328_NextDueDate", "N");
-                            }
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                          disabled={values.freshCall === "Y" || values.nextDueDate === "Y"}
-                        />
-                        <MultiFormikOptimizedAutocomplete
-                          sx={{ width: 250, mt: 1 }}
-                          id="party"
-                          name="party"
-                          label="Party"
-                          variant="outlined"
-                          value={values.party}
-                          onChange={(e, newValue) => {
-                            setFieldValue("party", newValue);
-                            sessionStorage.setItem(
-                              "TR328_Party",
-                              JSON.stringify(newValue)
-                            );
-                          }}
-                          disablePortal={false}
-                          PopperProps={{
-                            sx: {
-                              zIndex: 1500,
-                            },
-                          }}
-                          // error={!!touched.party && !!errors.party}
-                          // helperText={touched.party && errors.party}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
-                        />
-                        <MultiFormikOptimizedAutocomplete
-                          sx={{ width: 250, mt: 1 }}
-                          id="product"
-                          name="product"
-                          label="Product"
-                          variant="outlined"
-                          value={values.product}
-                          onChange={(e, newValue) => {
-                            setFieldValue("product", newValue);
-                            sessionStorage.setItem(
-                              "TR328_Product",
-                              JSON.stringify(newValue)
-                            );
-                          }}
-                          // error={!!touched.product && !!errors.product}
-                          // helperText={touched.product && errors.product}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={values.freshCall === "Y"}
-                              //disabled={Boolean(values.fromdate || values.date)}
-                              onChange={(e) => {
-                                const val = e.target.checked ? "Y" : "N";
-                                setFieldValue("freshCall", val);
-                                sessionStorage.setItem("TR328_FreshCall", val);
-                                if (val === "Y") {
-                                  setFieldValue("fromdate", "");
-                                  setFieldValue("date", "");
-                                  sessionStorage.removeItem("FromDate");
-                                  sessionStorage.removeItem("ToDate");
-                                }
-                              }}
-                            />
-                          }
-                          label="Fresh Calls"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={values.nextDueDate === "Y"}
-                              //disabled={Boolean(values.fromdate || values.date)}
-                              onChange={(e) => {
-                                const val = e.target.checked ? "Y" : "N";
-                                setFieldValue("nextDueDate", val);
-                                sessionStorage.setItem("TR328_NextDueDate", val);
-                                if (val === "Y") {
-                                  setFieldValue("fromdate", "");
-                                  setFieldValue("date", "");
-                                  sessionStorage.removeItem("FromDate");
-                                  sessionStorage.removeItem("ToDate");
-                                }
-                              }}
-                            />
-                          }
-                          label="Next Due Date"
-                        />
-
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="end"
-                          spacing={1}
-                          marginTop={3}
-                        >
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            Apply
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="contained"
-                            color="error"
-                            onClick={() => {
-                              [
-                                "FromDate",
-                                "ToDate",
-
-                                "TR328_Party",
-                                "TR328_Product",
-                                "TR328_Filters",
-                                "TR328_WHERE",
-                                "TR328_FreshCall",
-                                "TR328_NextDueDate",
-                              ].forEach((key) =>
-                                sessionStorage.removeItem(key)
-                              );
-
-                              resetForm({
-                                values: {
-                                  fromdate: "",
-                                  date: "",
-                                  party: [],
-                                  product: [],
-                                },
-                              });
-                            }}
-                          >
-                            RESET
-                          </Button>
-                        </Stack>
-                      </Box>
-                    </form>
-                  )}
-                </Formik>
-              </Box>
-            )} */}
-            {showMore && accessID === "TR328" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    fromdate: sessionStorage.getItem("FromDate") || "",
-                    date: sessionStorage.getItem("ToDate") || "",
-                    party: JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
-                    product: JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
-                    freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
-                    nextDueDate: sessionStorage.getItem("TR328_NextDueDate") || "N",
-                    days: sessionStorage.getItem("TR328_Days") || "",
-                    type: sessionStorage.getItem("TR328_type") || "",
-                  }}
-                  enableReinitialize
-                  onSubmit={(values, { setSubmitting }) => {
-                    const conditions = [];
-
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
-                    const freshCall = values.freshCall === "Y";
-                    const nextDueDate = values.nextDueDate === "Y";
-
-                    const field = "FilterLastCallDate";
-
-                    // SAVE
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-                    sessionStorage.setItem("TR328_Filters", JSON.stringify(values));
-
-                    // PARTY
-                    if (values.party?.length > 0) {
-                      const partyIds = values.party.map((p) => `'${p.RecordID}'`).join(", ");
-                      conditions.push(`PartyID IN (${partyIds})`);
-                    }
-
-                    // PRODUCT
-                    if (values.product?.length > 0) {
-                      const productIds = values.product.map((p) => `'${p.RecordID}'`).join(", ");
-                      conditions.push(`ProjectID IN (${productIds})`);
-                    }
-
-                    // BASE
-                    if (compID) {
-                      conditions.push(`HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`);
-                    }
-
-                    // FILTER LOGIC
-                    if (freshCall) {
-                      conditions.push(`CallType = 'FC'`);
-                    }
-                    if (nextDueDate) {
-                      conditions.push(`CallType <> 'FC'`); // adjust if needed
-                    }
-                    if (values.days && values.type) {
-                      const today = new Date();
-                      const dToday = today.toISOString().split("T")[0];
-                      const shifted = new Date(today);
-
-                      let fromdate, todate;
-
-                      if (values.type === "A") {
-                        shifted.setDate(today.getDate() - Number(values.days));
-                        fromdate = shifted.toISOString().split("T")[0];
-                        conditions.push(`${field} = '${fromdate}'`);
-                      }
-                      else if (values.type === "L") {
-                        shifted.setDate(today.getDate() - Number(values.days));
-                        fromdate = shifted.toISOString().split("T")[0];
-                        todate = dToday;
-                        conditions.push(`${field} BETWEEN '${fromdate}' AND '${todate}'`);
-                      }
-                      else if (values.type === "N") {
-                        shifted.setDate(today.getDate() + Number(values.days));
-                        fromdate = dToday;
-                        todate = shifted.toISOString().split("T")[0];
-                        conditions.push(`${field} BETWEEN '${fromdate}' AND '${todate}'`);
-                      }
-                    }
-                    // else {
-                    //   const dateConditions = [];
-                    //   if (fromDate && toDate) {
-                    //     dateConditions.push(`(${field} BETWEEN '${fromDate}' AND '${toDate}')`);
-                    //   } else if (fromDate) {
-                    //     dateConditions.push(`(${field} >= '${fromDate}')`);
-                    //   } else if (toDate) {
-                    //     dateConditions.push(`(${field} <= '${toDate}')`);
-                    //   }
-
-                    //   if (dateConditions.length > 0) {
-                    //     conditions.push(`(${dateConditions.join(" OR ")})`);
-                    //   }
-                    // }
-                    // DATE FILTER (always apply if present)
-                    if (!(values.days && values.type) && (fromDate || toDate)) {
-                      if (fromDate && toDate) {
-                        conditions.push(`${field} BETWEEN '${fromDate}' AND '${toDate}'`);
-                      } else if (fromDate) {
-                        conditions.push(`${field} >= '${fromDate}'`);
-                      } else if (toDate) {
-                        conditions.push(`${field} <= '${toDate}'`);
-                      }
-                    }
-
-                    const whereClause = conditions.join(" AND ");
-                    sessionStorage.setItem("TR328_WHERE", whereClause);
-
-                    dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, whereClause, "", compID));
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-                >
-                  {({ values, handleSubmit, isSubmitting, setFieldValue, resetForm }) => {
-                    const isDateSelected = Boolean(values.fromdate || values.date);
-                    const isDaysTypeSelected = Boolean(values.days && values.type);
-                    const isFreshCall = values.freshCall === "Y";
-                    const isNextDue = values.nextDueDate === "Y";
-
-                    return (
-                      <form onSubmit={handleSubmit}>
-                        <Box sx={{ height: 600, overflowY: "auto", mt: 4 }}>
-
-                          {/* FROM DATE */}
-                          <TextField
-                            type="date"
-                            label="From Date"
-                            id="fromdate"
-                            name="fromdate"
-                            variant="standard"
-                            value={values.fromdate}
-                            onChange={(e) => {
-                              setFieldValue("fromdate", e.target.value);
-                              sessionStorage.setItem("FromDate", e.target.value);
-
-                              if (e.target.value) {
-                                setFieldValue("days", "");
-                                setFieldValue("type", "");
-                                // setFieldValue("freshCall", "N");
-                                // setFieldValue("nextDueDate", "N");
-
-                                sessionStorage.removeItem("TR328_Days");
-                                sessionStorage.removeItem("TR328_type");
-                              }
-                            }}
-                            fullWidth
-                            focused
-                            sx={{ width: "250px", mt: 2 }}
-                            InputLabelProps={{ shrink: true }}
-                            // disabled={isDaysTypeSelected || isFreshCall || isNextDue}
-                            disabled={isDaysTypeSelected}
-                            inputProps={{
-                              max: new Date().toISOString().split("T")[0],
-                            }}
-                          />
-
-                          {/* TO DATE */}
-                          <TextField
-                            type="date"
-                            label="To Date"
-                            id="date"
-                            name="date"
-                            variant="standard"
-                            value={values.date}
-                            onChange={(e) => {
-                              setFieldValue("date", e.target.value);
-                              sessionStorage.setItem("ToDate", e.target.value);
-
-                              if (e.target.value) {
-                                setFieldValue("days", "");
-                                setFieldValue("type", "");
-                                // setFieldValue("freshCall", "N");
-                                // setFieldValue("nextDueDate", "N");
-
-                                sessionStorage.removeItem("TR328_Days");
-                                sessionStorage.removeItem("TR328_type");
-                              }
-                            }}
-                            fullWidth
-                            sx={{ width: "250px", mt: 1 }}
-                            InputLabelProps={{ shrink: true }}
-                            disabled={isDaysTypeSelected}
-                            focused
-                          />
-
-                          <PartymultiSelect
-                            sx={{ width: 250, mt: 1 }}
-                            id="party"
-                            name="party"
-                            label="Party"
-                            variant="outlined"
-                            value={values.party}
-                            onChange={(e, newValue) => {
-                              setFieldValue("party", newValue);
-                              sessionStorage.setItem(
-                                "TR328_Party",
-                                JSON.stringify(newValue)
-                              );
-                            }}
-                            disablePortal={false}
-                            PopperProps={{
-                              sx: {
-                                zIndex: 1500,
-                              },
-                            }}
-                            // error={!!touched.party && !!errors.party}
-                            // helperText={touched.party && errors.party}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2140", "VerticalLicense": Subscriptionlastthree, "ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2140",
-                                ScreenName: "Party",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${compID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-                          <MultiFormikOptimizedAutocomplete
-                            sx={{ width: 250, mt: 1 }}
-                            id="product"
-                            name="product"
-                            label="Product"
-                            variant="outlined"
-                            value={values.product}
-                            onChange={(e, newValue) => {
-                              setFieldValue("product", newValue);
-                              sessionStorage.setItem(
-                                "TR328_Product",
-                                JSON.stringify(newValue)
-                              );
-                            }}
-                            // error={!!touched.product && !!errors.product}
-                            // helperText={touched.product && errors.product}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2137",
-                                ScreenName: "Product",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
-                                Any: "",
-                              },
-                            })}`}
-                          />
-
-
-                          {/* FRESH CALL */}
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={isFreshCall}
-                                // onChange={(e) => {
-                                //   const val = e.target.checked ? "Y" : "N";
-                                //   setFieldValue("freshCall", val);
-                                //   sessionStorage.setItem("TR328_FreshCall", val);
-
-                                //   if (val === "Y") {
-                                //     setFieldValue("nextDueDate", "N");
-                                //     setFieldValue("fromdate", "");
-                                //     setFieldValue("date", "");
-                                //     setFieldValue("days", "");
-                                //     setFieldValue("type", "");
-                                //   }
-                                // }}
-                                // disabled={isDaysTypeSelected || isNextDue}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-
-                                  if (checked) {
-                                    setFieldValue("freshCall", "Y");
-                                    setFieldValue("nextDueDate", "N");
-
-                                    sessionStorage.setItem("TR328_FreshCall", "Y");
-                                    sessionStorage.setItem("TR328_NextDueDate", "N");
-
-                                    // CLEAR ALL OTHER FILTERS
-                                    // setFieldValue("fromdate", "");
-                                    // setFieldValue("date", "");
-                                    // setFieldValue("days", "");
-                                    // setFieldValue("type", "");
-
-                                    // sessionStorage.removeItem("FromDate");
-                                    // sessionStorage.removeItem("ToDate");
-                                    // sessionStorage.removeItem("TR328_Days");
-                                    // sessionStorage.removeItem("TR328_type");
-                                  } else {
-                                    setFieldValue("freshCall", "N");
-                                    sessionStorage.setItem("TR328_FreshCall", "N");
-                                  }
-                                }}
-                              />
-                            }
-                            label="Fresh Calls"
-                          />
-
-                          {/* NEXT DUE */}
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={isNextDue}
-                                // onChange={(e) => {
-                                //   const val = e.target.checked ? "Y" : "N";
-                                //   setFieldValue("nextDueDate", val);
-                                //   sessionStorage.setItem("TR328_NextDueDate", val);
-
-                                //   if (val === "Y") {
-                                //     setFieldValue("freshCall", "N");
-                                //     setFieldValue("fromdate", "");
-                                //     setFieldValue("date", "");
-                                //     setFieldValue("days", "");
-                                //     setFieldValue("type", "");
-                                //   }
-                                // }}
-                                // disabled={isDaysTypeSelected || isFreshCall}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-
-                                  if (checked) {
-                                    setFieldValue("nextDueDate", "Y");
-                                    setFieldValue("freshCall", "N");
-
-                                    sessionStorage.setItem("TR328_NextDueDate", "Y");
-                                    sessionStorage.setItem("TR328_FreshCall", "N");
-
-                                    // CLEAR ALL OTHER FILTERS
-                                    // setFieldValue("fromdate", "");
-                                    // setFieldValue("date", "");
-                                    // setFieldValue("days", "");
-                                    // setFieldValue("type", "");
-
-                                    // sessionStorage.removeItem("FromDate");
-                                    // sessionStorage.removeItem("ToDate");
-                                    // sessionStorage.removeItem("TR328_Days");
-                                    // sessionStorage.removeItem("TR328_type");
-                                  } else {
-                                    setFieldValue("nextDueDate", "N");
-                                    sessionStorage.setItem("TR328_NextDueDate", "N");
-                                  }
-                                }}
-                              />
-                            }
-                            label="Next Due Date"
-                          />
-
-
-                          {/* DAYS */}
-                          <TextField
-                            type="number"
-                            label="Days"
-                            // variant="outlined"
-                            variant="standard"
-                            value={values.days}
-                            onChange={(e) => {
-                              setFieldValue("days", e.target.value);
-                              sessionStorage.setItem("TR328_Days", e.target.value);
-
-                              if (e.target.value) {
-                                setFieldValue("fromdate", "");
-                                setFieldValue("date", "");
-                                // setFieldValue("freshCall", "N");
-                                // setFieldValue("nextDueDate", "N");
-
-                                sessionStorage.removeItem("FromDate");
-                                sessionStorage.removeItem("ToDate");
-                              }
-                            }}
-                            fullWidth
-                            sx={{ width: "250px", mt: 1 }}
-                            disabled={isDateSelected}
-                            focused
-                          />
-
-                          {/* TYPE */}
-                          <TextField
-                            select
-                            label="Type"
-                            // variant="outlined"
-                            variant="standard"
-                            value={values.type}
-                            onChange={(e) => {
-                              setFieldValue("type", e.target.value);
-                              sessionStorage.setItem("TR328_type", e.target.value);
-
-                              if (e.target.value) {
-                                setFieldValue("fromdate", "");
-                                setFieldValue("date", "");
-                                // setFieldValue("freshCall", "N");
-                                // setFieldValue("nextDueDate", "N");
-
-                                sessionStorage.removeItem("FromDate");
-                                sessionStorage.removeItem("ToDate");
-                              }
-                            }}
-                            fullWidth
-                            sx={{ width: "250px", mt: 1 }}
-                            focused
-                            disabled={isDateSelected}
-                          >
-                            <MenuItem value="A">Ago</MenuItem>
-                            <MenuItem value="L">Latest</MenuItem>
-                            <MenuItem value="N">Next</MenuItem>
-                          </TextField>
-
-                          {/* ACTIONS */}
-                          <Stack direction="row" justifyContent="end" spacing={1} mt={3}>
-                            <Button type="submit" variant="contained" disabled={isSubmitting}>
-                              Apply
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                [
-                                  "FromDate",
-                                  "ToDate",
-
-                                  "TR328_Party",
-                                  "TR328_Product",
-                                  "TR328_Filters",
-                                  "TR328_WHERE",
-                                  "TR328_FreshCall",
-                                  "TR328_NextDueDate",
-                                  "TR328_Days",
-                                  "TR328_type",
-                                ].forEach((key) =>
-                                  sessionStorage.removeItem(key)
-                                );
-
-                                resetForm({
-                                  values: {
-                                    fromdate: "",
-                                    date: "",
-                                    party: [],
-                                    product: [],
-                                    freshCall: "N",
-                                    nextDueDate: "N",
-                                    days: "",
-                                    type: "",
-                                  },
-                                });
-                              }}
-                            >
-                              Reset
-                            </Button>
-                          </Stack>
-                        </Box>
-                      </form>
-                    );
-                  }}
-                </Formik>
-              </Box>
-            )}
-          </Box>
+                                                                                              
+                     {/* WORKING AS OF 09/02/2026 --> EXCEL + PARAMS */}
+                     {/* {showBulkUpload && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 3,
+                           borderRadius: 2,
+                           backgroundColor: "#fff",
+                           position: "relative",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
+                           }}
+                           enableReinitialize={false}
+                           onSubmit={async (values, { setSubmitting }) => {
+                             if (!selectedFileExcel) {
+                               toast.error("Please select an Excel file");
+                               setSubmitting(false);
+                               return;
+                             }
+         
+         
+                             try {
+                               const formData = new FormData();
+                              
+                               const formatScreenName = (name) => {
+                                 if (!name) return "";
+                                 return name
+                                   .trim()
+                                   .split(" ")
+                                   .filter(Boolean)
+                                   .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                   .join("");
+                               };
+         
+                               const formattedScreenName = formatScreenName(screenName);
+                               const forcedFileName = `${formattedScreenName}.xlsx`;
+                               console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+         
+                               formData.append("excel", selectedFileExcel, forcedFileName);
+                               formData.append("CompanyID", compID);
+                               formData.append("screename", screenName);
+                               formData.append("Sync", values.Sync);
+                               formData.append("FinYear", YearRecorid || 0);
+         
+                               await dispatch(
+                                 ExcelFileUpload({
+                                   formData,
+                                   forcedFileName
+                                 })
+                               ).unwrap();
+         
+         
+                               toast.success("Excel uploaded successfully");
+                               setShowBulkUpload(false);
+                             } catch (error) {
+                               toast.error("Upload failed");
+                             } finally {
+                               setSubmitting(false);
+                             }
+                           }}
+         
+                         >
+                           {({
+                             values,
+                             handleSubmit,
+                             setFieldValue,
+                             isSubmitting,
+                           }) => (
+                             <form onSubmit={handleSubmit}>
+         
+                               <Tooltip title="Close">
+                                 <IconButton
+                                   size="small"
+                                   onClick={() => setShowBulkUpload(false)}
+                                   sx={{ position: "absolute", top: 5, right: 5 }}
+                                 >
+                                   <CancelIcon color="error" />
+                                 </IconButton>
+                               </Tooltip>
+         
+                               <Stack spacing={2} marginTop={2}
+                                 sx={{
+                                   width: "100%",
+                                 }}>
+         
+                                 <Button
+                                   variant="outlined"
+                                   color="success"
+                                   startIcon={<FileDownloadOutlinedIcon />}
+                                   onClick={async () => {
+                                     try {
+                                       const formatScreenName = (name) => {
+                                         if (!name) return "";
+         
+                                         return name
+                                           .trim()                       // remove leading/trailing spaces
+                                           .split(" ")                   // split words
+                                           .filter(Boolean)              // remove extra empty spaces
+                                           .map(word =>
+                                             word.charAt(0).toUpperCase() + word.slice(1)
+                                           )
+                                           .join("");                    // join without space
+                                       };
+         
+                                       const formattedScreenName = formatScreenName(screenName);
+                                       const fileName = `${formattedScreenName}.xlsx`;
+         
+         
+                                       const payload = {
+                                         file: `'${fileName}'`,   
+                                       };
+         
+                                       const result = await dispatch(
+                                         ExcelFileDownload({ data: payload })
+                                       );
+         
+                                       const blob = new Blob([result.payload], {
+                                         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                       });
+         
+                                       const url = window.URL.createObjectURL(blob);
+                                       const link = document.createElement("a");
+                                       link.href = url;
+                                       link.setAttribute("download", fileName);
+                                       document.body.appendChild(link);
+                                       link.click();
+                                       link.remove();
+         
+                                       toast.success("Excel downloaded successfully");
+                                     } catch (error) {
+                                       toast.error("Download failed");
+                                     }
+                                   }}
+                                 >
+                                   Download Excel Template
+                                 </Button>
+         
+         
+                                 <Button
+                                   variant="outlined"
+                                   startIcon={<FileUploadIconButton />}
+                                   onClick={() => fileInputRef.current.click()}
+                                 >
+                                   Choose Excel File
+                                   <input
+                                     ref={fileInputRef}
+                                     type="file"
+                                     hidden
+                                     accept=".xlsx,.xls"
+                                     onChange={(e) => {
+                                       const file = e.target.files?.[0];
+                                       if (file) {
+                                         setSelectedFileExcel(file);
+                                       }
+                                     }}
+                                   />
+         
+         
+                                 </Button>
+                                 <Typography variant="caption">
+                                   Debug: {selectedFileExcel ? "File Loaded" : "No File"}
+                                 </Typography>
+         
+                                 {selectedFileExcel && (
+                                   <Typography variant="caption">
+                                     Selected: {selectedFileExcel.name}
+                                   </Typography>
+                                 )}
+         
+                                 <FormControl>
+                                   <RadioGroup
+                                     row
+                                     value={values.Sync}
+                                     onChange={(e) => {
+                                       const value = e.target.value;
+                                       setFieldValue("Sync", value);
+                                       sessionStorage.setItem(`${screenName}_Sync`, value);
+                                     }}
+                                   >
+                                     <FormControlLabel value="Y" control={<Radio />} label="Sync" />
+                                     <FormControlLabel value="N" control={<Radio />} label="Replace" />
+                                   </RadioGroup>
+                                 </FormControl>
+                                 <Button
+                                   type="submit"
+                                   variant="contained"
+                                   disabled={isSubmitting}
+                                 >
+                                   Upload
+                                 </Button>
+         
+                               </Stack>
+         
+                             </form>
+                           )}
+                         </Formik>
+                       </Box>
+                     )} */}
+         
+                     {/* SEPERATE API FOR EXCEL AND PARAMS */}
+                     {showBulkUpload && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 3,
+                           borderRadius: 2,
+                           backgroundColor: "#fff",
+                           position: "relative",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             // Sync: sessionStorage.getItem(`${screenName}_Sync`) === "Y",
+                             Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
+                           }}
+                           enableReinitialize={false}
+                           onSubmit={async (values, { setSubmitting }) => {
+                             try {
+                               const formData = new FormData();
+                               // formData.append("file", selectedFileExcel);
+                               // Format screenName → remove spaces
+                               const formatScreenName = (name) => {
+                                 if (!name) return "";
+                                 return name
+                                   .trim()
+                                   .split(" ")
+                                   .filter(Boolean)
+                                   .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                   .join("");
+                               };
+         
+                               const formattedScreenName = formatScreenName(screenName);
+                               const forcedFileName = `${formattedScreenName}.xlsx`;
+                               console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
+         
+         
+                               formData.append("CompanyID", compID);
+                               formData.append("screename", screenName);
+                               formData.append("Sync", values.Sync);
+                               formData.append("FinYear", YearRecorid || 0);
+                               const excelSetUp = {
+                                 CompanyID: compID,
+                                 screename: screenName,
+                                 Sync: values.Sync,
+                                 FinYear: YearRecorid || 0,
+                               };
+         
+                               const response = await dispatch(
+                                 Setup_MenuExcel(excelSetUp)
+                               ).unwrap();
+         
+                               if (response.Status == "Y") {
+                                 toast.success(response.Msg);
+                                 // window.location.reload();
+                               } else {
+                                 toast.error(response.Msg ? response.Msg : "Error");
+                               }
+                             } catch (error) {
+                               toast.error("Upload failed");
+                             } finally {
+                               setSubmitting(false);
+                             }
+                           }}
+         
+                         >
+                           {({
+                             values,
+                             handleSubmit,
+                             setFieldValue,
+                             isSubmitting,
+                           }) => (
+                             <form onSubmit={handleSubmit}>
+         
+                               {/* Close Button */}
+                               <Tooltip title="Close">
+                                 <IconButton
+                                   size="small"
+                                   onClick={() => setShowBulkUpload(false)}
+                                   sx={{ position: "absolute", top: 5, right: 5 }}
+                                 >
+                                   <CancelIcon color="error" />
+                                 </IconButton>
+                               </Tooltip>
+         
+                               <Stack spacing={2} marginTop={2}
+                                 sx={{
+                                   width: "100%",
+                                 }}>
+         
+                                 {/* Download Excel Button */}
+                                 <Button
+                                   variant="outlined"
+                                   color="success"
+                                   startIcon={<FileDownloadOutlinedIcon />}
+                                   onClick={async () => {
+                                     try {
+                                       const formatScreenName = (name) => {
+                                         if (!name) return "";
+         
+                                         return name
+                                           .trim()                       // remove leading/trailing spaces
+                                           .split(" ")                   // split words
+                                           .filter(Boolean)              // remove extra empty spaces
+                                           .map(word =>
+                                             word.charAt(0).toUpperCase() + word.slice(1)
+                                           )
+                                           .join("");                    // join without space
+                                       };
+         
+                                       const formattedScreenName = formatScreenName(screenName);
+                                       const fileName = `${formattedScreenName}.xlsx`;
+         
+         
+                                       const payload = {
+                                         file: `'${fileName}'`,   // 🔥 REQUIRED single quotes
+                                       };
+         
+                                       const result = await dispatch(
+                                         ExcelFileDownload({ data: payload })
+                                       );
+         
+                                       const blob = new Blob([result.payload], {
+                                         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                       });
+         
+                                       const url = window.URL.createObjectURL(blob);
+                                       const link = document.createElement("a");
+                                       link.href = url;
+                                       link.setAttribute("download", fileName);
+                                       document.body.appendChild(link);
+                                       link.click();
+                                       link.remove();
+         
+                                       toast.success("Excel downloaded successfully");
+                                     } catch (error) {
+                                       toast.error("Download failed");
+                                     }
+                                   }}
+                                 >
+                                   Download Excel Template
+                                 </Button>
+         
+         
+                                 {/* ✅ File Upload Button */}
+                                 {/* <Button
+                                   variant="outlined"
+                                   startIcon={<FileUploadIconButton />}
+                                   component="label"
+                                 >
+                                   Choose Excel File
+                                   <input
+                                     type="file"
+                                     // ref={fileInputRef}
+                                     hidden
+                                     accept=".xlsx,.xls"
+                                     onChange={async (e) => {
+                                       const file = e.target.files?.[0];
+                                       if (!file) return;
+         
+                                       setSelectedFileName(file.name);
+         
+                                       try {
+                                         const formattedScreenName = screenName
+                                           .trim()
+                                           .split(" ")
+                                           .filter(Boolean)
+                                           .map(word =>
+                                             word.charAt(0).toUpperCase() + word.slice(1)
+                                           )
+                                           .join("");
+         
+                                         const forcedFileName = `${formattedScreenName}.xlsx`;
+         
+                                         const formData = new FormData();
+                                         formData.append("excel", file, forcedFileName);
+         
+                                         await dispatch(
+                                           ExcelFileUpload({ formData, forcedFileName })
+                                         ).unwrap();
+         
+                                         toast.success("Excel uploaded successfully");
+         
+                                       } catch (error) {
+                                         toast.error("Upload failed");
+                                       }
+                                     }}
+                                   />
+         
+         
+                                 </Button> */}
+                                 <Button
+                                   variant="outlined"
+                                   startIcon={<FileUploadIconButton />}
+                                   onClick={() => document.getElementById("bulk-excel-input").click()}
+                                 >
+                                   Choose Excel File
+                                 </Button>
+                                 {/* <Typography variant="caption">
+                                   Debug: {selectedFileName ? "File Loaded" : "No File"}
+                                 </Typography> */}
+                                 {/* <Typography variant="caption">
+                                   Debug: {selectedFileName || "No File"}
+                                 </Typography> */}
+                                 {selectedFileName && (
+                                   <Typography variant="caption">
+                                     Selected: {selectedFileName.name}
+                                   </Typography>
+                                 )}
+         
+         
+                                 {/* ✅ Sync Checkbox */}
+                                 <FormControl>
+                                   <RadioGroup
+                                     row
+                                     value={values.Sync}
+                                     onChange={(e) => {
+                                       const value = e.target.value;
+                                       setFieldValue("Sync", value);
+                                       sessionStorage.setItem(`${screenName}_Sync`, value);
+                                     }}
+                                   >
+                                     <FormControlLabel value="Y" control={<Radio />} label="Sync" />
+                                     <FormControlLabel value="N" control={<Radio />} label="Replace" />
+                                   </RadioGroup>
+                                 </FormControl>
+         
+                                 {/* ✅ Upload Button */}
+                                 <Button
+                                   type="submit"
+                                   variant="contained"
+                                   disabled={isSubmitting}
+                                 >
+                                   Upload
+                                 </Button>
+         
+                               </Stack>
+         
+                             </form>
+                           )}
+                         </Formik>
+                       </Box>
+                     )}
+         
+         
+                     {showMore && accessID === "TR313" && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 2,
+                           borderRadius: 1,
+                           backgroundColor: "#fff",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             fromdate: sessionStorage.getItem("FromDate") || "",
+                             date: sessionStorage.getItem("ToDate") || "",
+                             Created: sessionStorage.getItem("TR313_Created") === "Y",
+                             Process: sessionStorage.getItem("TR313_Process") === "Y",
+                             Picked: sessionStorage.getItem("TR313_Picked") === "Y",
+                             ReadyToDeliver:
+                               sessionStorage.getItem("TR313_ReadyToDeliver") === "Y",
+                             YetToDeliver:
+                               sessionStorage.getItem("TR313_YetToDeliver") === "Y",
+                             Paid: sessionStorage.getItem("TR313_Paid") === "Y",
+                             Scheduled:
+                               sessionStorage.getItem("TR313_Scheduled") === "Y",
+                             Delivered:
+                               sessionStorage.getItem("TR313_Delivered") === "Y",
+                             Type: "ByProduct",
+                             // party: [],
+                             // product: [],
+                             party:
+                               JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
+                             product:
+                               JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
+                             ordertype: sessionStorage.getItem("ordertype") || "",
+                           }}
+                           enableReinitialize
+                           validate={(values) => {
+                             const hasAtLeastOneValue =
+                               values.fromdate ||
+                               values.date ||
+                               values.party ||
+                               values.product ||
+                               values.ordertype ||
+                               values.Created ||
+                               values.Process ||
+                               values.ReadyToDeliver ||
+                               values.YetToDeliver ||
+                               values.Paid ||
+                               values.Scheduled ||
+                               values.Delivered ||
+                               values.Picked;
+                           }}
+                           // onSubmit={(values, { setSubmitting }) => {
+                           //   const conditions = [];
+                           //   const statusDateMap = {
+                           //     Created: "OROrderDate",
+                           //     Process: "ORProcessDate",
+                           //     ReadyToDeliver: "ORTentativeDate",
+                           //     YetToDeliver: "ORTentativeDate",
+                           //     Picked: "ORPickedDate",
+                           //     Scheduled: "ORTentativeDate",
+                           //     Delivered: "ORDeliveryDate",
+                           //     Paid: "ORPaidDate",
+                           //   };
+         
+                           //   const fromDate = values.fromdate || "";
+                           //   const toDate = values.date || "";
+         
+         
+                           //   sessionStorage.setItem("FromDate", fromDate);
+                           //   sessionStorage.setItem("ToDate", toDate);
+                           //   sessionStorage.setItem("ordertype", values.ordertype);
+                           //   // Store checkbox values
+                           //   Object.keys(statusDateMap).forEach((status) => {
+                           //     sessionStorage.setItem(
+                           //       `TR313_${status}`,
+                           //       values[status] ? "Y" : "N"
+                           //     );
+                           //   });
+         
+                           //   sessionStorage.setItem(
+                           //     "TR313_Filters",
+                           //     JSON.stringify(values)
+                           //   );
+         
+                           //   const selectedStatuses = Object.keys(statusDateMap).filter(
+                           //     (status) => values[status]
+                           //   );
+         
+                           //   if (selectedStatuses.length > 0) {
+                           //     conditions.push(
+                           //       `Status IN (${selectedStatuses
+                           //         .map((s) => `'${s}'`)
+                           //         .join(", ")})`
+                           //     );
+                           //   }
+         
+                           //   const dateConditions = [];
+         
+                           //   selectedStatuses.forEach((status) => {
+                           //     const field = statusDateMap[status];
+         
+                           //     if (fromDate && toDate) {
+                           //       dateConditions.push(
+                           //         `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                           //       );
+                           //     } else if (fromDate) {
+                           //       dateConditions.push(`(${field} >= '${fromDate}')`);
+                           //     } else if (toDate) {
+                           //       dateConditions.push(`(${field} <= '${toDate}')`);
+                           //     }
+                           //   });
+                           //   if (values.party?.length > 0) {
+                           //     const partyIds = values.party
+                           //       .map((p) => `'${p.RecordID}'`)
+                           //       .join(", ");
+         
+                           //     conditions.push(`PartyRecordID IN (${partyIds})`);
+                           //   }
+         
+                           //   if (values.product?.length > 0) {
+                           //     const productIds = values.product
+                           //       .map((p) => `'${p.RecordID}'`)
+                           //       .join(", ");
+         
+                           //     conditions.push(`ProductID IN (${productIds})`);
+                           //   }
+                           //   if (values.ordertype?.length > 0) {
+                           //     // const ordertype = values.ordertype.map(t => t).join("','");
+                           //     conditions.push(`OrderType IN ('${values.ordertype}')`);
+                           //   }
+                           //   if (compID) {
+                           //     conditions.push(`CompanyID = '${compID}'`);
+                           //   }
+                           //   if (dateConditions.length > 0) {
+                           //     conditions.push(`(${dateConditions.join(" OR ")})`);
+                           //   }
+         
+                           //   // --------------------------
+                           //   // FINAL WHERE CLAUSE
+                           //   // --------------------------
+                           //   const whereClause = conditions.join(" AND ");
+                           //   console.log("FINAL FILTER:", whereClause);
+         
+                           //   dispatch(
+                           //     fetchListview(
+                           //       accessID,
+                           //       screenName,
+                           //       whereClause,
+                           //       "",
+                           //       compID
+                           //     )
+                           //   );
+         
+                           //   setTimeout(() => setSubmitting(false), 100);
+                           // }}
+                           onSubmit={(values, { setSubmitting }) => {
+                             const conditions = [];
+         
+                             // --------------------------
+                             // DATE VALUES (ALWAYS OROrderDate)
+                             // --------------------------
+                             const fromDate = values.fromdate || "";
+                             const toDate = values.date || "";
+         
+                             sessionStorage.setItem("FromDate", fromDate);
+                             sessionStorage.setItem("ToDate", toDate);
+                             sessionStorage.setItem("ordertype", values.ordertype || "");
+         
+                             if (fromDate && toDate) {
+                               conditions.push(
+                                 `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                               );
+                             } else if (fromDate) {
+                               conditions.push(`(OROrderDate >= '${fromDate}')`);
+                             } else if (toDate) {
+                               conditions.push(`(OROrderDate <= '${toDate}')`);
+                             }
+         
+                             // --------------------------
+                             // STATUS FILTER
+                             // --------------------------
+                             const allStatuses = [
+                               "Created",
+                               "Process",
+                               "ReadyToDeliver",
+                               "YetToDeliver",
+                               "Picked",
+                               "Scheduled",
+                               "Delivered",
+                               "Paid",
+                             ];
+         
+                             allStatuses.forEach((status) => {
+                               sessionStorage.setItem(
+                                 `TR313_${status}`,
+                                 values[status] ? "Y" : "N"
+                               );
+                             });
+         
+                             const selectedStatuses = allStatuses.filter(
+                               (status) => values[status]
+                             );
+         
+                             if (selectedStatuses.length > 0) {
+                               conditions.push(
+                                 `Status IN (${selectedStatuses
+                                   .map((s) => `'${s}'`)
+                                   .join(", ")})`
+                               );
+                             }
+         
+                             // --------------------------
+                             // PARTY FILTER
+                             // --------------------------
+                             if (values.party?.length > 0) {
+                               const partyIds = values.party
+                                 .map((p) => `'${p.RecordID}'`)
+                                 .join(", ");
+         
+                               conditions.push(`PartyRecordID IN (${partyIds})`);
+                             }
+         
+                             // --------------------------
+                             // PRODUCT FILTER
+                             // --------------------------
+                             if (values.product?.length > 0) {
+                               const productIds = values.product
+                                 .map((p) => `'${p.RecordID}'`)
+                                 .join(", ");
+         
+                               conditions.push(`ProductID IN (${productIds})`);
+                             }
+         
+                             // --------------------------
+                             // ORDER TYPE FILTER
+                             // --------------------------
+                             if (values.ordertype) {
+                               conditions.push(`OrderType = '${values.ordertype}'`);
+                             }
+         
+                             // --------------------------
+                             // COMPANY FILTER
+                             // --------------------------
+                             if (compID) {
+                               conditions.push(`CompanyID = '${compID}'`);
+                             }
+         
+                             sessionStorage.setItem(
+                               "TR313_Filters",
+                               JSON.stringify(values)
+                             );
+         
+                             // --------------------------
+                             // FINAL WHERE CLAUSE
+                             // --------------------------
+                             const whereClause = conditions.join(" AND ");
+                             console.log("FINAL FILTER:", whereClause);
+         
+                             dispatch(
+                               fetchListview(
+                                 accessID,
+                                 Subscriptionlastthree,
+                                 screenName,
+                                 whereClause,
+                                 "",
+                                 compID
+                               )
+                             );
+         
+                             setTimeout(() => setSubmitting(false), 100);
+                           }}
+         
+                         >
+                           {({
+                             values,
+                             handleSubmit,
+                             handleChange,
+                             handleBlur,
+                             isSubmitting,
+                             setFieldValue,
+                             resetForm,
+                           }) => {
+         
+                             // ✅ NOW you can declare functions here
+                             const generatePdf = async () => {
+         
+                               try {
+                                 setLoadingPdf(true);
+         
+                                 const blob = await pdf(
+                                   values.Type === "ByProduct" ? (
+                                     <OrdEnqProductPDF
+                                       data={listViewData}
+                                       Product={values?.product?.Name}
+                                       Party={values?.party?.Name}
+                                       filters={{
+                                         fromdate: values?.fromdate,
+                                         todate: values?.date,
+                                         ordertype: values?.ordertype,
+                                         Imageurl: baseurlUAAM,
+                                         HeaderImg,
+                                         FooterImg,
+                                       }}
+                                     />
+                                   ) : (
+                                     <OrdEnqPartyPDF
+                                       data={listViewData}
+                                       Product={values?.product?.Name}
+                                       Party={values?.party?.Name}
+                                       filters={{
+                                         fromdate: values?.fromdate,
+                                         todate: values?.date,
+                                         ordertype: values?.ordertype,
+                                         Imageurl: baseurlUAAM,
+                                         HeaderImg,
+                                         FooterImg,
+                                       }}
+                                     />
+                                   )
+                                 ).toBlob();
+         
+                                 const url = URL.createObjectURL(blob);
+                                 window.open(url); // ✅ better UX (no extra button)
+                                 setLoadingPdf(false);
+                               }
+                               catch (err) {
+                                 console.error("PDF ERROR:", err); // 🔥 important
+                               } finally {
+                                 setLoadingPdf(false); // ✅ ALWAYS resets
+                               }
+                             }
+                             return (
+         
+                               <form onSubmit={handleSubmit}>
+         
+                                 <Box sx={{ height: 600, overflowY: "auto" }}>
+                                   <IconButton
+                                     size="small"
+                                     onClick={() => setShowMore(false)}
+                                     sx={{ position: "absolute", top: 5, right: 4 }}
+                                   >
+                                     <Tooltip title="Close">
+                                       <CancelIcon color="error" />
+                                     </Tooltip>
+                                   </IconButton>
+                                   <TextField
+                                     name="fromdate"
+                                     type="date"
+                                     id="fromdate"
+                                     label="Transaction From Date"
+                                     variant="standard"
+                                     value={values.fromdate || ""}
+                                     onChange={(e) => {
+                                       const newDate = e.target.value;
+                                       setFieldValue("fromdate", newDate);
+                                       // dispatch(setFromDate(newDate));
+                                       sessionStorage.setItem("FromDate", newDate);
+                                     }}
+                                     focused
+                                     InputLabelProps={{ shrink: true }}
+                                     inputProps={{
+                                       max: new Date().toISOString().split("T")[0],
+                                     }}
+                                     sx={{ width: 250, mt: 2 }}
+                                   />
+         
+                                   <TextField
+                                     name="date"
+                                     type="date"
+                                     id="date"
+                                     label="Transaction To Date"
+                                     variant="standard"
+                                     value={values.date || ""}
+                                     onChange={(e) => {
+                                       const newDate = e.target.value;
+                                       setFieldValue("date", newDate);
+                                       // dispatch(setToDate(newDate));
+                                       sessionStorage.setItem("ToDate", newDate);
+                                     }}
+                                     focused
+                                     InputLabelProps={{ shrink: true }}
+                                     inputProps={{
+                                       max: new Date().toISOString().split("T")[0],
+                                     }}
+                                     sx={{ width: 250, mt: 2 }}
+                                   />
+         
+                                   {/* <MultiFormikOptimizedAutocomplete */}
+                                   <PartymultiSelect
+                                     sx={{ width: 250, mt: 1 }}
+                                     id="party"
+                                     name="party"
+                                     label="Party"
+                                     variant="outlined"
+                                     value={values.party}
+                                     onChange={(e, newValue) => {
+                                       setFieldValue("party", newValue);
+                                       sessionStorage.setItem(
+                                         "TR313_Party",
+                                         JSON.stringify(newValue)
+                                       );
+                                     }}
+                                     // error={!!touched.party && !!errors.party}
+                                     // helperText={touched.party && errors.party}
+                                     // url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2140",
+                                         ScreenName: "Party",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${compID}'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+         
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ width: 250, mt: 1 }}
+                                     id="product"
+                                     name="product"
+                                     label="Product"
+                                     variant="outlined"
+                                     value={values.product}
+                                     onChange={(e, newValue) => {
+                                       setFieldValue("product", newValue);
+                                       sessionStorage.setItem(
+                                         "TR313_Product",
+                                         JSON.stringify(newValue)
+                                       );
+                                     }}
+                                     // error={!!touched.product && !!errors.product}
+                                     // helperText={touched.product && errors.product}
+                                     // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2137",
+                                         ScreenName: "Product",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+                                   <TextField
+                                     select
+                                     sx={{ width: 250, mt: 1 }}
+                                     focused
+                                     label="Order Type"
+                                     value={values.ordertype || ""}
+                                     onChange={(e) => {
+                                       const ordertype = e.target.value;
+                                       setFieldValue("ordertype", ordertype);
+                                       sessionStorage.setItem("ordertype", ordertype);
+                                     }}
+                                     InputProps={{
+                                       endAdornment: values.ordertype && (
+                                         <InputAdornment position="end">
+                                           <ClearIcon
+                                             sx={{ cursor: "pointer" }}
+                                             onClick={() => {
+                                               setFieldValue("ordertype", "");
+                                               sessionStorage.removeItem("ordertype");
+                                             }}
+                                           />
+                                         </InputAdornment>
+                                       ),
+                                     }}
+                                     variant="standard"
+                                   >
+                                     {/* <MenuItem value="">
+                                     <em>None</em>
+                                   </MenuItem> */}
+                                     <MenuItem value="O">Order</MenuItem>
+                                     <MenuItem value="Q">Quotation</MenuItem>
+                                   </TextField>
+         
+                                   <TextField
+                                     select
+                                     fullWidth
+                                     focused
+                                     label="Type"
+                                     id="Type"
+                                     name="Type"
+                                     value={values.Type}
+                                     onChange={handleChange}
+                                     onBlur={handleBlur}
+                                     variant="standard"
+                                     sx={{ width: 250, mt: 1 }}
+                                   >
+                                     <MenuItem value="ByParty">By Party</MenuItem>
+                                     <MenuItem value="ByProduct">By Product</MenuItem>
+                                   </TextField>
+                                   <Typography mt={2} fontWeight="bold" color="error">
+                                     Status
+                                   </Typography>
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Created"
+                                         checked={values.Created}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Created", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Created",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Created"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Process"
+                                         checked={values.Process}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Process", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Process",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Process"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="ReadyToDeliver"
+                                         checked={values.ReadyToDeliver}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("ReadyToDeliver", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_ReadyToDeliver",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Ready To Deliver"
+                                   />
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Scheduled"
+                                         checked={values.Scheduled}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Scheduled", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Scheduled",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Scheduled"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Picked"
+                                         checked={values.Picked}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Picked", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Picked",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Picked"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Delivered"
+                                         checked={values.Delivered}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Delivered", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Delivered",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Delivered"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         name="Paid"
+                                         checked={values.Paid}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           setFieldValue("Paid", checked);
+                                           sessionStorage.setItem(
+                                             "TR313_Paid",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Paid"
+                                   />
+                                   {/* 
+                                 <Stack
+                                   direction="row"
+                                   alignItems="center"
+                                   justifyContent="end"
+                                   spacing={1}
+                                   mt={2}
+                                 >
+                                   <Button
+                                     type="submit"
+                                     variant="contained"
+                                     color="primary"
+                                     disabled={isSubmitting}
+                                   >
+                                     Apply
+                                   </Button>
+                                 </Stack> */}
+                                   <Stack
+                                     direction="row"
+                                     alignItems="center"
+                                     justifyContent="end"
+                                     spacing={1}
+                                     marginTop={3}
+                                   >
+                                     <Button
+                                       type="submit"
+                                       variant="contained"
+                                       color="primary"
+                                       disabled={isSubmitting}
+                                     >
+                                       Apply
+                                     </Button>
+                                     {/* {values.Type === "ByProduct" ? (                 
+                                     <BlobProvider
+                                       document={
+                                         <OrdEnqProductPDF
+                                           data={listViewData}
+                                           Product={values?.product?.Name}
+                                           Party={values?.party?.Name}
+                                           filters={{
+                                             fromdate: values?.fromdate,
+                                             todate: values?.date,
+                                             ordertype: values?.ordertype,
+                                             Imageurl: baseurlUAAM,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                           }}
+                                         />
+                                       }
+                                     >
+                                       {({ url, loading }) => {
+                                         if (loading || !url) {
+                                           return <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />;
+                                         }
+         
+                                         return (
+                                           <PictureAsPdfIcon
+                                             sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+                                             onClick={() => {
+                                               if (url) {
+                                                 window.open(url);
+                                               }
+                                             }}
+                                           />
+                                         );
+                                       }}
+                                     </BlobProvider>
+                                   ) : (
+                                     <PDFDownloadLink
+                                       document={
+                                         <OrdEnqPartyPDF
+                                           data={listViewData}
+                                           Product={values?.product?.Name}
+                                           Party={values?.party?.Name}
+                                           filters={{
+                                             fromdate: values?.fromdate,
+                                             todate: values?.date,
+                                             ordertype: values.ordertype,
+                                             Imageurl: baseurlUAAM,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                           }}
+                                         />
+                                       }
+                                       // fileName={`OrderEnquirySummary_Party".pdf`}
+                                       fileName={`OrderEnquirySummary_Party.pdf`}
+                                       style={{ color: "#d32f2f", cursor: "pointer" }}
+                                     >
+                                       {({ loading }) =>
+                                         loading ? (
+                                           <PictureAsPdfIcon
+                                             sx={{ fontSize: 24, opacity: 0.5 }}
+                                           />
+                                         ) : (
+                                           <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                         )
+                                       }
+         
+                                     </PDFDownloadLink>
+                                   )} */}
+         
+                                     {/* CHANGED AS ON 08/04/2026 - TO SOLVE SLOW PDF GENERATION */}
+                                     <PictureAsPdfIcon
+                                       sx={{
+                                         fontSize: 24,
+                                         color: loadingPdf ? "grey" : "#d32f2f",
+                                         cursor: loadingPdf ? "not-allowed" : "pointer",
+                                         opacity: loadingPdf ? 0.5 : 1,
+                                       }}
+                                       onClick={() => {
+                                         if (!loadingPdf) generatePdf();
+                                       }}
+                                     />
+         
+                                     {/* <FaFileExcel
+           size={20}
+           color="#1D6F42"
+           style={{ cursor: "pointer" }}
+           onClick={() =>
+             OrderEnqProdandPartyExcel(
+               listViewData,
+               {
+                 fromdate: values?.fromdate,
+                 todate: values?.todate,
+                 ordertype: values?.ordertype,
+                 product: values?.product?.Name || "",
+                 party: values?.party?.Name || "",
+               }
+             )
+           }
+         /> */}
+         
+                                     {/* <Button
+                                     type="button"
+                                     variant="contained"
+                                     color="error"
+                                     size="small"                         
+                                   >
+                                     RESET
+                                   </Button> */}
+                                     <Button
+                                       type="button"
+                                       variant="contained"
+                                       color="error"
+                                       onClick={() => {
+                                         [
+                                           "FromDate",
+                                           "ToDate",
+                                           "ordertype",
+                                           "TR313_Created",
+                                           "TR313_Process",
+                                           "TR313_ReadyToDeliver",
+                                           "TR313_YetToDeliver",
+                                           "TR313_Picked",
+                                           "TR313_Scheduled",
+                                           "TR313_Delivered",
+                                           "TR313_Paid",
+                                           "TR313_Party",
+                                           "TR313_Product",
+                                           "TR313_Filters",
+                                         ].forEach((key) =>
+                                           sessionStorage.removeItem(key)
+                                         );
+         
+                                         resetForm({
+                                           values: {
+                                             fromdate: "",
+                                             date: "",
+                                             Created: false,
+                                             Process: false,
+                                             ReadyToDeliver: false,
+                                             YetToDeliver: false,
+                                             Picked: false,
+                                             Scheduled: false,
+                                             Delivered: false,
+                                             Paid: false,
+                                             party: [],
+                                             product: [],
+                                             Type: "ByProduct",
+                                             ordertype: ""
+                                           },
+                                         });
+                                       }}
+                                     >
+                                       RESET
+                                     </Button>
+                                   </Stack>
+                                 </Box>
+                               </form>
+                             )
+                           }}
+                         </Formik>
+                       </Box>
+                     )}
+         
+                     {showMore && (accessID === "TR331") && (() => {
+         
+                       // Restore session filters
+                       const savedFilters =
+                         JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
+         
+                       const initialFormValues = {
+                         fromDate: savedFilters.fromDate || defaultFromDate,
+                         toDate: savedFilters.toDate || defaultToDate,
+                         project: savedFilters.project || [],
+                         Employee: savedFilters.Employee || [],
+                         attmonth: savedFilters.attmonth || currentMonthNumber,
+                         attyear: savedFilters.attyear || currentYear,
+                       };
+         
+                       return (
+                         <Box
+                           sx={{
+                             width: 320,
+                             p: 2,
+                             borderRadius: 1,
+                             backgroundColor: "#fff",
+                             position: "relative"
+                           }}
+                         >
+                           <Formik
+                             initialValues={initialFormValues}
+                             enableReinitialize
+                             onSubmit={(values, { setSubmitting }) => {
+         
+                               // Save filters to session
+                               sessionStorage.setItem(
+                                 "TR331_Filters",
+                                 JSON.stringify(values)
+                               );
+         
+                               const conditions = [];
+                               // const fromDate = formattedDate2(values.fromDate);
+                               // const toDate = formattedDate2(values.toDate);
+         
+                               if (values.fromDate && values.toDate) {
+                                 conditions.push(
+                                   `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                                 );
+                               }
+         
+                               if (values.attmonth) {
+                                 conditions.push(
+                                   `BillableMonth='${values.attmonth}'`
+                                 );
+                               }
+         
+                               if (values.attyear) {
+                                 conditions.push(
+                                   `BillableYear='${values.attyear}'`
+                                 );
+                               }
+         
+                               if (values.Employee?.length > 0) {
+                                 const EmpIds = values.Employee
+                                   .map((e) => `'${e.RecordID}'`)
+                                   .join(",");
+                                 conditions.push(`EmployeeID IN (${EmpIds})`);
+                               }
+         
+                               if (values.project?.length > 0) {
+                                 const projIds = values.project
+                                   .map((p) => `'${p.RecordID}'`)
+                                   .join(",");
+                                 conditions.push(`ProjectID IN (${projIds})`);
+                               }
+         
+                               conditions.push(`CompanyID='${CompId}'`);
+         
+                               const whereClause = conditions.join(" AND ");
+         
+                               dispatch(
+                                 fetchListview(
+                                   "TR331",
+                                   Subscriptionlastthree,
+                                   screenName,
+                                   whereClause,
+                                   "",
+                                   CompId
+                                 )
+                               );
+         
+                               setTimeout(() => setSubmitting(false), 100);
+                             }}
+                           >
+                             {({
+                               values,
+                               handleChange,
+                               handleSubmit,
+                               resetForm,
+                               setFieldValue,
+                               isSubmitting
+                             }) => (
+                               <form onSubmit={handleSubmit}>
+                                 <Box sx={{ height: 600, overflowY: "auto" }}>
+         
+                                   {/* Close Button */}
+                                   <IconButton
+                                     size="small"
+                                     onClick={() => setShowMore(false)}
+                                     sx={{ position: "absolute", top: 5, right: 4 }}
+                                   >
+                                     <Tooltip title="Close">
+                                       <CancelIcon color="error" />
+                                     </Tooltip>
+                                   </IconButton>
+         
+                                   {/* From Date */}
+                                   <TextField
+                                     fullWidth
+                                     label="From Date"
+                                     type="date"
+                                     name="fromDate"
+                                     value={values.fromDate}
+                                     onChange={handleChange}
+                                     InputLabelProps={{ shrink: true }}
+                                     sx={{ mt: 2 }}
+                                     focused
+                                   />
+         
+                                   {/* To Date */}
+                                   <TextField
+                                     fullWidth
+                                     label="To Date"
+                                     type="date"
+                                     name="toDate"
+                                     value={values.toDate}
+                                     onChange={handleChange}
+                                     InputLabelProps={{ shrink: true }}
+                                     sx={{ mt: 2 }}
+                                     focused
+                                   />
+         
+                                   {/* Project */}
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ mt: 2 }}
+                                     name="project"
+                                     label={is003Subscription ? "Standard/Activities" : "Project"}
+                                     value={values.project}
+                                     onChange={(e, newValue) =>
+                                       setFieldValue("project", newValue)
+                                     }
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2054",
+                                         ScreenName: "Project",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `parentID='${CompId}'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+         
+         
+                                   {/* Employee */}
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ mt: 2 }}
+                                     name="Employee"
+                                     label={is003Subscription ? "Student" : "Personnel"}
+                                     value={values.Employee}
+                                     onChange={(e, newValue) =>
+                                       setFieldValue("Employee", newValue)
+                                     }
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2116",
+                                         ScreenName: "Personnel",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${CompId}'`,
+                                         Any: "",
+                                       },
+                                     })}`} />
+         
+                                   {/*  Month */}
+                                   {/* <TextField
+                                   sx={{ mt: 2 }}
+                                   variant="standard"
+                                   label="Month"
+                                   name="attmonth"
+                                   value={values.attmonth}
+                                   onChange={handleChange}
+                                   select
+                                   fullWidth
+                                   focused
+                                 >
+                                   {[
+                                     "January", "February", "March", "April", "May", "June",
+                                     "July", "August", "September", "October", "November", "December"
+                                   ].map((month, index) => (
+                                     <MenuItem key={index + 1} value={index + 1}>
+                                       {month}
+                                     </MenuItem>
+                                   ))}
+                                 </TextField> */}
+                                   <TextField
+                                     sx={{ mt: 2 }}
+                                     variant="standard"
+                                     label="Month"
+                                     name="attmonth"
+                                     value={values.attmonth || ""}
+                                     onChange={handleChange}
+                                     select
+                                     fullWidth
+                                     focused
+                                     InputProps={{
+                                       endAdornment: values.attmonth && (
+                                         <InputAdornment position="end">
+                                           <IconButton
+                                             size="small"
+                                             sx={{ marginRight: 2 }}
+                                             onClick={() => setFieldValue("attmonth", "")}
+                                           >
+                                             <ClearIcon fontSize="small" />
+                                           </IconButton>
+                                         </InputAdornment>
+                                       ),
+                                     }}
+                                   >
+                                     {[
+                                       "January", "February", "March", "April", "May", "June",
+                                       "July", "August", "September", "October", "November", "December"
+                                     ].map((month, index) => (
+                                       <MenuItem key={index + 1} value={index + 1}>
+                                         {month}
+                                       </MenuItem>
+                                     ))}
+                                   </TextField>
+         
+                                   {/* Year */}
+                                   {/* <TextField
+                                   sx={{ mt: 2 }}
+                                   variant="standard"
+                                   label="Year"
+                                   name="attyear"
+                                   value={values.attyear}
+                                   onChange={handleChange}
+                                   select
+                                   fullWidth
+                                   focused
+                                 >
+                                   <MenuItem value="2026">2026</MenuItem>
+                                   <MenuItem value="2025">2025</MenuItem>
+                                 </TextField> */}
+                                   <TextField
+                                     sx={{ mt: 2 }}
+                                     variant="standard"
+                                     label="Year"
+                                     name="attyear"
+                                     value={values.attyear || ""}
+                                     onChange={handleChange}
+                                     select
+                                     fullWidth
+                                     focused
+                                     InputProps={{
+                                       endAdornment: values.attyear && (
+                                         <InputAdornment position="end">
+                                           <IconButton
+                                             size="small"
+                                             sx={{ marginRight: 2 }}
+                                             onClick={() => setFieldValue("attyear", "")}
+                                           >
+                                             <ClearIcon fontSize="small" />
+                                           </IconButton>
+                                         </InputAdornment>
+                                       ),
+                                     }}
+                                   >
+                                     <MenuItem value="2026">2026</MenuItem>
+                                     <MenuItem value="2025">2025</MenuItem>
+                                   </TextField>
+         
+                                   {/* Buttons */}
+                                   <Stack
+                                     direction="row"
+                                     justifyContent="end"
+                                     spacing={1}
+                                     mt={3}
+                                   >
+                                     <Button
+                                       type="submit"
+                                       variant="contained"
+                                       disabled={isSubmitting}
+                                     >
+                                       Apply
+                                     </Button>
+         
+                                     <PDFDownloadLink
+                                       document={
+                                         <InvpaymentPDF
+                                           data={listViewData}
+                                           Project={values?.project}
+                                           filters={{
+                                             Imageurl: baseurl1,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                             fromDate: values.fromDate,
+                                             toDate: values.toDate
+                                           }}
+                                         />
+                                       }
+                                       fileName="Invoice_pdf"
+                                       style={{ color: "#d32f2f" }}
+                                     >
+                                       {({ loading }) =>
+                                         loading ? (
+                                           <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+                                         ) : (
+                                           <PictureAsPdfIcon />
+                                         )
+                                       }
+                                     </PDFDownloadLink>
+         
+                                     <Button
+                                       type="button"
+                                       variant="contained"
+                                       color="error"
+                                       onClick={() => {
+                                         sessionStorage.removeItem("TR331_Filters");
+         
+                                         resetForm({
+                                           values: {
+                                             project: [],
+                                             Employee: [],
+                                             fromDate: defaultFromDate,
+                                             toDate: defaultToDate,
+                                             attmonth: currentMonthNumber,
+                                             attyear: currentYear,
+                                           },
+                                         });
+                                       }}
+                                     >
+                                       RESET
+                                     </Button>
+                                   </Stack>
+         
+                                 </Box>
+                               </form>
+                             )}
+                           </Formik>
+                         </Box>
+                       );
+         
+                     })()}
+                     {showMore && (accessID === "TR366") && (() => {
+         
+                       // Restore session filters
+                       const savedFilters =
+                         JSON.parse(sessionStorage.getItem("TR366_Filters")) || {};
+         
+                       const initialFormValues = {
+                         fromDate: savedFilters.fromDate || defaultFromDate,
+                         toDate: savedFilters.toDate || defaultToDate,
+                         project: savedFilters.project || [],
+                         Employee: savedFilters.Employee || [],
+                         attmonth: savedFilters.attmonth || currentMonthNumber,
+                         attyear: savedFilters.attyear || currentYear,
+                       };
+         
+                       return (
+                         <Box
+                           sx={{
+                             width: 320,
+                             p: 2,
+                             borderRadius: 1,
+                             backgroundColor: "#fff",
+                             position: "relative"
+                           }}
+                         >
+                           <Formik
+                             initialValues={initialFormValues}
+                             enableReinitialize
+                             onSubmit={(values, { setSubmitting }) => {
+         
+                               // Save filters to session
+                               sessionStorage.setItem(
+                                 "TR366_Filters",
+                                 JSON.stringify(values)
+                               );
+         
+                               const conditions = [];
+                               // const fromDate = formattedDate2(values.fromDate);
+                               // const toDate = formattedDate2(values.toDate);
+         
+                               if (values.fromDate && values.toDate) {
+                                 conditions.push(
+                                   `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                                 );
+                               }
+         
+                               if (values.attmonth) {
+                                 conditions.push(
+                                   `BillableMonth='${values.attmonth}'`
+                                 );
+                               }
+         
+                               if (values.attyear) {
+                                 conditions.push(
+                                   `BillableYear='${values.attyear}'`
+                                 );
+                               }
+         
+                               if (values.Employee?.length > 0) {
+                                 const EmpIds = values.Employee
+                                   .map((e) => `'${e.RecordID}'`)
+                                   .join(",");
+                                 conditions.push(`EmployeeID IN (${EmpIds})`);
+                               }
+         
+                               if (values.project?.length > 0) {
+                                 const projIds = values.project
+                                   .map((p) => `'${p.RecordID}'`)
+                                   .join(",");
+                                 conditions.push(`ProjectID IN (${projIds})`);
+                               }
+         
+                               conditions.push(`CompanyID='${CompId}'`);
+         
+                               const whereClause = conditions.join(" AND ");
+         
+                               dispatch(
+                                 fetchListview(
+                                   "TR366",
+                                   Subscriptionlastthree,
+                                   screenName,
+                                   whereClause,
+                                   "",
+                                   CompId
+                                 )
+                               );
+         
+                               setTimeout(() => setSubmitting(false), 100);
+                             }}
+                           >
+                             {({
+                               values,
+                               handleChange,
+                               handleSubmit,
+                               resetForm,
+                               setFieldValue,
+                               isSubmitting
+                             }) => (
+                               <form onSubmit={handleSubmit}>
+                                 <Box sx={{ height: 600, overflowY: "auto" }}>
+         
+                                   {/* Close Button */}
+                                   <IconButton
+                                     size="small"
+                                     onClick={() => setShowMore(false)}
+                                     sx={{ position: "absolute", top: 5, right: 4 }}
+                                   >
+                                     <Tooltip title="Close">
+                                       <CancelIcon color="error" />
+                                     </Tooltip>
+                                   </IconButton>
+         
+                                   {/* From Date */}
+                                   <TextField
+                                     fullWidth
+                                     label="From Date"
+                                     type="date"
+                                     name="fromDate"
+                                     value={values.fromDate}
+                                     onChange={handleChange}
+                                     InputLabelProps={{ shrink: true }}
+                                     sx={{ mt: 2 }}
+                                     focused
+                                   />
+         
+                                   {/* To Date */}
+                                   <TextField
+                                     fullWidth
+                                     label="To Date"
+                                     type="date"
+                                     name="toDate"
+                                     value={values.toDate}
+                                     onChange={handleChange}
+                                     InputLabelProps={{ shrink: true }}
+                                     sx={{ mt: 2 }}
+                                     focused
+                                   />
+         
+                                   {/* Project */}
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ mt: 2 }}
+                                     name="project"
+                                     label={is003Subscription ? "Standard/Activities" : "Project"}
+                                     value={values.project}
+                                     onChange={(e, newValue) =>
+                                       setFieldValue("project", newValue)
+                                     }
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2054",
+                                         ScreenName: "Project",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `parentID='${CompId}'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+         
+         
+                                   {/* Employee */}
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ mt: 2 }}
+                                     name="Employee"
+                                     label={is003Subscription ? "Student" : "Personnel"}
+                                     value={values.Employee}
+                                     onChange={(e, newValue) =>
+                                       setFieldValue("Employee", newValue)
+                                     }
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2116",
+                                         ScreenName: "Personnel",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${CompId}'`,
+                                         Any: "",
+                                       },
+                                     })}`} />
+         
+                                   {/*  Month */}
+                                   {/* <TextField
+                                   sx={{ mt: 2 }}
+                                   variant="standard"
+                                   label="Month"
+                                   name="attmonth"
+                                   value={values.attmonth}
+                                   onChange={handleChange}
+                                   select
+                                   fullWidth
+                                   focused
+                                 >
+                                   {[
+                                     "January", "February", "March", "April", "May", "June",
+                                     "July", "August", "September", "October", "November", "December"
+                                   ].map((month, index) => (
+                                     <MenuItem key={index + 1} value={index + 1}>
+                                       {month}
+                                     </MenuItem>
+                                   ))}
+                                 </TextField> */}
+                                   <TextField
+                                     sx={{ mt: 2 }}
+                                     variant="standard"
+                                     label="Month"
+                                     name="attmonth"
+                                     value={values.attmonth || ""}
+                                     onChange={handleChange}
+                                     select
+                                     fullWidth
+                                     focused
+                                     InputProps={{
+                                       endAdornment: values.attmonth && (
+                                         <InputAdornment position="end">
+                                           <IconButton
+                                             size="small"
+                                             sx={{ marginRight: 2 }}
+                                             onClick={() => setFieldValue("attmonth", "")}
+                                           >
+                                             <ClearIcon fontSize="small" />
+                                           </IconButton>
+                                         </InputAdornment>
+                                       ),
+                                     }}
+                                   >
+                                     {[
+                                       "January", "February", "March", "April", "May", "June",
+                                       "July", "August", "September", "October", "November", "December"
+                                     ].map((month, index) => (
+                                       <MenuItem key={index + 1} value={index + 1}>
+                                         {month}
+                                       </MenuItem>
+                                     ))}
+                                   </TextField>
+         
+                                   {/* Year */}
+                                   {/* <TextField
+                                   sx={{ mt: 2 }}
+                                   variant="standard"
+                                   label="Year"
+                                   name="attyear"
+                                   value={values.attyear}
+                                   onChange={handleChange}
+                                   select
+                                   fullWidth
+                                   focused
+                                 >
+                                   <MenuItem value="2026">2026</MenuItem>
+                                   <MenuItem value="2025">2025</MenuItem>
+                                 </TextField> */}
+                                   <TextField
+                                     sx={{ mt: 2 }}
+                                     variant="standard"
+                                     label="Year"
+                                     name="attyear"
+                                     value={values.attyear || ""}
+                                     onChange={handleChange}
+                                     select
+                                     fullWidth
+                                     focused
+                                     InputProps={{
+                                       endAdornment: values.attyear && (
+                                         <InputAdornment position="end">
+                                           <IconButton
+                                             size="small"
+                                             sx={{ marginRight: 2 }}
+                                             onClick={() => setFieldValue("attyear", "")}
+                                           >
+                                             <ClearIcon fontSize="small" />
+                                           </IconButton>
+                                         </InputAdornment>
+                                       ),
+                                     }}
+                                   >
+                                     <MenuItem value="2026">2026</MenuItem>
+                                     <MenuItem value="2025">2025</MenuItem>
+                                   </TextField>
+         
+                                   {/* Buttons */}
+                                   <Stack
+                                     direction="row"
+                                     justifyContent="end"
+                                     spacing={1}
+                                     mt={3}
+                                   >
+                                     <Button
+                                       type="submit"
+                                       variant="contained"
+                                       disabled={isSubmitting}
+                                     >
+                                       Apply
+                                     </Button>
+         
+                                     <PDFDownloadLink
+                                       document={
+                                         <InvpaymentPDF
+                                           data={listViewData}
+                                           Project={values?.project}
+                                           filters={{
+                                             Imageurl: baseurl1,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                             fromDate: values.fromDate,
+                                             toDate: values.toDate
+                                           }}
+                                         />
+                                       }
+                                       fileName="Invoice_pdf"
+                                       style={{ color: "#d32f2f" }}
+                                     >
+                                       {({ loading }) =>
+                                         loading ? (
+                                           <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+                                         ) : (
+                                           <PictureAsPdfIcon />
+                                         )
+                                       }
+                                     </PDFDownloadLink>
+         
+                                     <Button
+                                       type="button"
+                                       variant="contained"
+                                       color="error"
+                                       onClick={() => {
+                                         sessionStorage.removeItem("TR366_Filters");
+         
+                                         resetForm({
+                                           values: {
+                                             project: [],
+                                             Employee: [],
+                                             fromDate: defaultFromDate,
+                                             toDate: defaultToDate,
+                                             attmonth: currentMonthNumber,
+                                             attyear: currentYear,
+                                           },
+                                         });
+                                       }}
+                                     >
+                                       RESET
+                                     </Button>
+                                   </Stack>
+         
+                                 </Box>
+                               </form>
+                             )}
+                           </Formik>
+                         </Box>
+                       );
+         
+                     })()}
+                     {showMore && accessID === "TR243" && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 2,
+                           borderRadius: 1,
+                           backgroundColor: "#fff",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             fromdate: sessionStorage.getItem("FromDate") || "",
+                             date: sessionStorage.getItem("ToDate") || "",
+                             Created: sessionStorage.getItem("TR243_Created") === "Y",
+                             Process: sessionStorage.getItem("TR243_Process") === "Y",
+                             Paid: sessionStorage.getItem("TR243_Paid") === "Y",
+                             Picked: sessionStorage.getItem("TR243_Picked") === "Y",
+                             ReadyToDeliver:
+                               sessionStorage.getItem("TR243_ReadyToDeliver") === "Y",
+                             Delivered:
+                               sessionStorage.getItem("TR243_Delivered") === "Y",
+                             Scheduled:
+                               sessionStorage.getItem("TR243_Scheduled") === "Y",
+                           }}
+                           enableReinitialize
+                           validate={(values) => {
+                             const hasAtLeastOneValue =
+                               values.fromdate ||
+                               values.date ||
+                               values.Created ||
+                               values.Process ||
+                               values.ReadyToDeliver ||
+                               values.Paid ||
+                               values.Scheduled ||
+                               values.Delivered ||
+                               values.Picked;
+                           }}
+                           // onSubmit={(values, { setSubmitting }) => {
+                           //   const conditions = [];
+         
+                           //   const fromDate = values.fromdate || "";
+                           //   const toDate = values.date || "";
+         
+                           //   sessionStorage.setItem("FromDate", fromDate);
+                           //   sessionStorage.setItem("ToDate", toDate);
+                           //   // sessionStorage.setItem("EmployeeID", empId);
+         
+                           //   [
+                           //     "Created",
+                           //     "Process",
+                           //     "Ready To Deliver",
+                           //     "Paid",
+                           //     "Picked",
+                           //     "Deivered",
+                           //     "Scheduled",
+                           //   ].forEach((key) => {
+                           //     sessionStorage.setItem(
+                           //       `TR243_${key}`,
+                           //       values[key] ? "Y" : "N"
+                           //     );
+                           //   });
+         
+                           //   sessionStorage.setItem(
+                           //     "TR243_Filters",
+                           //     JSON.stringify(values)
+                           //   );
+         
+                           //   // conditions.push(`EmployeesID='${empId}'`);
+         
+                           //   if (fromDate && toDate) {
+                           //     conditions.push(
+                           //       `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                           //     );
+                           //   } else if (fromDate) {
+                           //     conditions.push(`HVLastOrderDate >= '${fromDate}'`);
+                           //   } else if (toDate) {
+                           //     conditions.push(`HVLastOrderDate <= '${toDate}'`);
+                           //   }
+         
+                           //   const statusFilters = [];
+         
+                           //   if (values.Created) statusFilters.push("'Created'");
+                           //   if (values.Process) statusFilters.push("'Process'");
+                           //   if (values.ReadyToDeliver)
+                           //     statusFilters.push("'Ready To Deliver'");
+                           //   if (values.Picked) statusFilters.push("'Picked'");
+                           //   if (values.Delivered) statusFilters.push("'Delivered'");
+                           //   if (values.Scheduled) statusFilters.push("'Scheduled'");
+                           //   if (values.Paid) statusFilters.push("'Paid'");
+         
+                           //   if (statusFilters.length > 0) {
+                           //     conditions.push(
+                           //       `LastOrderStatus IN (${statusFilters.join(", ")})`
+                           //     );
+                           //   }
+         
+                           //   //conditions.push(`CompanyID='${compID}'`);
+                           //   //const whereClause = conditions.join(" AND ");
+                           //   const filter = [
+                           //     `CompanyID='${compID}'`,
+                           //     ...conditions,
+                           //   ].join(" AND ");
+                           //   //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+         
+                           //   dispatch(
+                           //     fetchListview(
+                           //       accessID,
+                           //       screenName,
+                           //       filter,
+                           //       "",
+                           //       //whereClause,
+                           //       ""
+                           //     )
+                           //   );
+                           //   setTimeout(() => setSubmitting(false), 100);
+                           // }}
+                           onSubmit={(values, { setSubmitting }) => {
+                             const conditions = [];
+                             const statusDateMap = {
+                               Created: "OROrderDate",
+                               Process: "ORProcessDate",
+                               ReadyToDeliver: "ORTentativeDate",
+                               YetToDeliver: "ORTentativeDate",
+                               Picked: "ORPickedDate",
+                               Scheduled: "ORTentativeDate",
+                               Delivered: "ORDeliveryDate",
+                               Paid: "ORPaidDate",
+                             };
+         
+                             const fromDate = values.fromdate || "";
+                             const toDate = values.date || "";
+         
+                             sessionStorage.setItem("FromDate", fromDate);
+                             sessionStorage.setItem("ToDate", toDate);
+         
+                             // Store checkbox values
+                             Object.keys(statusDateMap).forEach((status) => {
+                               sessionStorage.setItem(
+                                 `TR243_${status}`,
+                                 values[status] ? "Y" : "N"
+                               );
+                             });
+         
+                             sessionStorage.setItem(
+                               "TR243_Filters",
+                               JSON.stringify(values)
+                             );
+         
+                             // --------------------------
+                             // 1. STATUS IN ('A','B','C')
+                             // --------------------------
+                             const selectedStatuses = Object.keys(statusDateMap).filter(
+                               (status) => values[status]
+                             );
+         
+                             if (selectedStatuses.length > 0) {
+                               conditions.push(
+                                 `LastOrderStatus IN (${selectedStatuses
+                                   .map((s) => `'${s}'`)
+                                   .join(", ")})`
+                               );
+                             }
+         
+                             // -------------------------------------------------
+                             // 2. DATE FIELD CONDITIONS based on selected status
+                             // -------------------------------------------------
+                             const dateConditions = [];
+         
+                             selectedStatuses.forEach((status) => {
+                               const field = statusDateMap[status];
+         
+                               if (fromDate && toDate) {
+                                 dateConditions.push(
+                                   `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                                 );
+                               } else if (fromDate) {
+                                 dateConditions.push(`(${field} >= '${fromDate}')`);
+                               } else if (toDate) {
+                                 dateConditions.push(`(${field} <= '${toDate}')`);
+                               }
+                             });
+         
+                             if (dateConditions.length > 0) {
+                               conditions.push(`(${dateConditions.join(" OR ")})`);
+                             }
+         
+                             // --------------------------
+                             // FINAL WHERE CLAUSE
+                             // --------------------------
+                             const whereClause = conditions.join(" AND ");
+                             console.log("FINAL FILTER:", whereClause);
+         
+                             dispatch(
+                               fetchListview(
+                                 accessID,
+                                 Subscriptionlastthree,
+                                 screenName,
+                                 whereClause,
+                                 "",
+                                 compID
+                               )
+                             );
+         
+                             setTimeout(() => setSubmitting(false), 100);
+                           }}
+                         >
+                           {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
+                             <form onSubmit={handleSubmit}>
+                               <Box sx={{ height: 600, overflowY: "auto" }}>
+                                 <TextField
+                                   name="fromdate"
+                                   type="date"
+                                   id="fromdate"
+                                   label="From Date"
+                                   variant="standard"
+                                   value={values.fromdate || ""}
+                                   onChange={(e) => {
+                                     const newDate = e.target.value;
+                                     setFieldValue("fromdate", newDate);
+                                     // dispatch(setFromDate(newDate));
+                                     sessionStorage.setItem("FromDate", newDate);
+                                   }}
+                                   focused
+                                   InputLabelProps={{ shrink: true }}
+                                   inputProps={{
+                                     max: new Date().toISOString().split("T")[0],
+                                   }}
+                                   sx={{ width: 250, mt: 2 }}
+                                 />
+         
+                                 <TextField
+                                   name="date"
+                                   type="date"
+                                   id="date"
+                                   label="To Date"
+                                   variant="standard"
+                                   value={values.date || ""}
+                                   onChange={(e) => {
+                                     const newDate = e.target.value;
+                                     setFieldValue("date", newDate);
+                                     // dispatch(setToDate(newDate));
+                                     sessionStorage.setItem("ToDate", newDate);
+                                   }}
+                                   focused
+                                   InputLabelProps={{ shrink: true }}
+                                   inputProps={{
+                                     max: new Date().toISOString().split("T")[0],
+                                   }}
+                                   sx={{ width: 250, mt: 2 }}
+                                 />
+         
+                                 <Typography mt={2} fontWeight="bold" color="error">
+                                   Status
+                                 </Typography>
+         
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Created"
+                                       checked={values.Created}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Created", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Created",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Created"
+                                 />
+         
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Process"
+                                       checked={values.Process}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Process", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Process",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Confirm"
+                                 />
+         
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="ReadyToDeliver"
+                                       checked={values.ReadyToDeliver}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("ReadyToDeliver", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_ReadyToDeliver",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Ready To Deliver"
+                                 />
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Scheduled"
+                                       checked={values.Scheduled}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Scheduled", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Scheduled",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Scheduled"
+                                 />
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Picked"
+                                       checked={values.Picked}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Picked", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Picked",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Picked"
+                                 />
+         
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Delivered"
+                                       checked={values.Delivered}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Delivered", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Delivered",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Delivered"
+                                 />
+         
+                                 <FormControlLabel
+                                   control={
+                                     <Checkbox
+                                       name="Paid"
+                                       checked={values.Paid}
+                                       onChange={(e) => {
+                                         const checked = e.target.checked;
+                                         setFieldValue("Paid", checked);
+                                         sessionStorage.setItem(
+                                           "TR243_Paid",
+                                           checked ? "Y" : "N"
+                                         );
+                                       }}
+                                     />
+                                   }
+                                   label="Paid"
+                                 />
+         
+                                 <Stack
+                                   direction="row"
+                                   alignItems="center"
+                                   justifyContent="end"
+                                   spacing={1}
+                                   mt={2}
+                                 >
+                                   <Button
+                                     type="submit"
+                                     variant="contained"
+                                     color="primary"
+                                     disabled={isSubmitting}
+                                   >
+                                     Apply
+                                   </Button>
+                                 </Stack>
+                               </Box>
+                             </form>
+                           )}
+                         </Formik>
+                       </Box>
+                     )}
+                     {/* WORKING CODE BELOW ----- */}
+         
+         
+                     {showMore && accessID === "TR321" && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 2,
+                           borderRadius: 1,
+                           backgroundColor: "#fff",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             days: sessionStorage.getItem("TR321_Days") || "",
+                             type: sessionStorage.getItem("TR321_type") || "",
+                             Created: sessionStorage.getItem("TR321_Created") === "Y",
+                             Process: sessionStorage.getItem("TR321_Process") === "Y",
+                             Paid: sessionStorage.getItem("TR321_Paid") === "Y",
+                             Picked: sessionStorage.getItem("TR321_Picked") === "Y",
+                             ReadyToDeliver:
+                               sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
+                             Delivered:
+                               sessionStorage.getItem("TR321_Delivered") === "Y",
+                             Scheduled:
+                               sessionStorage.getItem("TR321_Scheduled") === "Y",
+                             NextVisitDate:
+                               sessionStorage.getItem("TR321_NextVisitDate") === "Y",
+                             Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
+                             Balance: sessionStorage.getItem("TR321_Balance") === "Y",
+                           }}
+                           enableReinitialize
+                           // onSubmit={(values, { setSubmitting }) => {
+                           //   // SAVE ALL TO SESSIONSTORAGE
+                           //   sessionStorage.setItem("TR321_Days", values.days || "");
+                           //   sessionStorage.setItem("TR321_type", values.type || "");
+                           //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
+                           //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
+                           //   sessionStorage.setItem("TR321_HASFILTER", 'Y');
+         
+                           //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
+                           //   statusKeys.forEach(status => {
+                           //     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
+                           //   });
+         
+                           //   // CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
+                           //   if (values.Prospect || values.Balance) {
+                           //     let simpleWhere = `CompanyID=${compID}`;
+                           //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
+                           //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
+                           //     console.log(' APPLY - CASE 1:', simpleWhere);
+                           //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
+                           //     setTimeout(() => setSubmitting(false), 100);
+                           //     return;
+                           //   }
+         
+                           //   // CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
+                           //   const statusDateMap = {
+                           //     Created: "OR_ORDERDATE",
+                           //     Process: "OR_PROCESSDATE",
+                           //     Paid: "OR_PAIDDATE",
+                           //     ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+                           //     Scheduled: "OR_TENTATIVEDELIVERYDATE",
+                           //     NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+                           //     Picked: "OR_PICKEDDATETIME",
+                           //     Delivered: "OR_DELIVERYDATE",
+                           //   };
+         
+                           //   const whereParts = [`CompanyID=${compID}`];
+                           //   let fromdate = "", todate = "";
+         
+                           //   if (values.days && values.type) {
+                           //     const today = new Date();
+                           //     const dToday = today.toISOString().split("T")[0];
+                           //     const shifted = new Date(today);
+         
+                           //     if (values.type === "A") {
+                           //       shifted.setDate(today.getDate() - Number(values.days));
+                           //       fromdate = shifted.toISOString().split("T")[0];
+                           //     } else if (values.type === "L") {
+                           //       shifted.setDate(today.getDate() - Number(values.days));
+                           //       fromdate = shifted.toISOString().split("T")[0];
+                           //       todate = dToday;
+                           //     } else if (values.type === "N") {
+                           //       shifted.setDate(today.getDate() + Number(values.days));
+                           //       fromdate = dToday;
+                           //       todate = shifted.toISOString().split("T")[0];
+                           //     }
+         
+                           //     const dateConditions = [];
+                           //     Object.keys(statusDateMap).forEach((status) => {
+                           //       if (values[status]) {
+                           //         const col = statusDateMap[status];
+                           //         if (values.type === "A") {
+                           //           dateConditions.push(`${col}='${fromdate}'`);
+                           //         } else {
+                           //           dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+                           //         }
+                           //       }
+                           //     });
+         
+                           //     if (dateConditions.length > 0) {
+                           //       whereParts.push(`(${dateConditions.join(" OR ")})`);
+                           //     }
+                           //   }
+         
+                           //   const dynamicWhere = whereParts.join(" AND ");
+                           //   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
+                           //   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+         
+                           //   console.log(' APPLY - CASE 2:', finalWhereClause);
+                           //   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
+                           //   setTimeout(() => setSubmitting(false), 100);
+                           // }}
+         
+                           onSubmit={(values, { setSubmitting }) => {
+                             //  CHECK IF ANY ACTUAL FILTER SELECTED
+                             const statusKeys = [
+                               "Created",
+                               "Process",
+                               "Paid",
+                               "Picked",
+                               "ReadyToDeliver",
+                               "Delivered",
+                               "Scheduled",
+                               "NextVisitDate",
+                             ];
+                             const hasStatusFilter = statusKeys.some(
+                               (status) => values[status]
+                             );
+                             const hasDateFilter = values.days && values.type;
+                             const hasProspectFilter = values.Prospect;
+                             const hasBalanceFilter = values.Balance;
+         
+                             console.log(
+                               " APPLY DEBUG - hasStatus:",
+                               hasStatusFilter,
+                               "hasDate:",
+                               hasDateFilter,
+                               "Prospect:",
+                               hasProspectFilter,
+                               "Balance:",
+                               hasBalanceFilter
+                             );
+         
+                             //  NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
+                             if (
+                               !hasStatusFilter &&
+                               !hasDateFilter &&
+                               !hasProspectFilter &&
+                               !hasBalanceFilter
+                             ) {
+                               console.log(" APPLY - NO FILTERS: CompanyID only");
+                               sessionStorage.setItem("TR321_HASFILTER", "N");
+                               [
+                                 "Days",
+                                 "type",
+                                 "Created",
+                                 "Process",
+                                 "Paid",
+                                 "Picked",
+                                 "ReadyToDeliver",
+                                 "Delivered",
+                                 "Scheduled",
+                                 "NextVisitDate",
+                                 "Prospect",
+                                 "Balance",
+                               ].forEach((k) => sessionStorage.removeItem(`TR321_${k}`));
+                               dispatch(
+                                 fetchListview(
+                                   accessID,
+                                   Subscriptionlastthree,
+                                   "Party",
+                                   `CompanyID=${compID}`,
+                                   "",
+                                   compID
+                                 )
+                               );
+                               setTimeout(() => setSubmitting(false), 100);
+                               return;
+                             }
+         
+                             // HAS FILTERS → Save to sessionStorage + HASFILTER=Y
+                             sessionStorage.setItem("TR321_HASFILTER", "Y");
+                             sessionStorage.setItem("TR321_Days", values.days || "");
+                             sessionStorage.setItem("TR321_type", values.type || "");
+                             sessionStorage.setItem(
+                               "TR321_Prospect",
+                               values.Prospect ? "Y" : "N"
+                             );
+                             sessionStorage.setItem(
+                               "TR321_Balance",
+                               values.Balance ? "Y" : "N"
+                             );
+                             statusKeys.forEach((status) => {
+                               sessionStorage.setItem(
+                                 `TR321_${status}`,
+                                 values[status] ? "Y" : "N"
+                               );
+                             });
+         
+                             // CASE 1: PROSPECT/BALANCE
+                             if (values.Prospect || values.Balance) {
+                               let simpleWhere = `CompanyID=${compID}`;
+                               if (values.Prospect)
+                                 simpleWhere += ` AND Prospects = 'Y'`;
+                               if (values.Balance) simpleWhere += ` AND Balance < 0`;
+                               console.log("APPLY - CASE 1:", simpleWhere);
+                               dispatch(
+                                 fetchListview(
+                                   accessID,
+                                   Subscriptionlastthree,
+                                   "Party",
+                                   simpleWhere,
+                                   "",
+                                   compID
+                                 )
+                               );
+                               setTimeout(() => setSubmitting(false), 100);
+                               return;
+                             }
+         
+                             // CASE 2: STATUS + DAYS (ONLY if actual status selected)
+                             if (hasStatusFilter && hasDateFilter) {
+                               const statusDateMap = {
+                                 Created: "OR_ORDERDATE",
+                                 Process: "OR_PROCESSDATE",
+                                 Paid: "OR_PAIDDATE",
+                                 ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+                                 Scheduled: "OR_TENTATIVEDELIVERYDATE",
+                                 NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+                                 Picked: "OR_PICKEDDATETIME",
+                                 Delivered: "OR_DELIVERYDATE",
+                               };
+         
+                               const whereParts = [`CompanyID=${compID}`];
+                               const today = new Date();
+                               const dToday = today.toISOString().split("T")[0];
+                               const shifted = new Date(today);
+                               let fromdate, todate;
+         
+                               if (values.type === "A") {
+                                 shifted.setDate(today.getDate() - Number(values.days));
+                                 fromdate = shifted.toISOString().split("T")[0];
+                               } else if (values.type === "L") {
+                                 shifted.setDate(today.getDate() - Number(values.days));
+                                 fromdate = shifted.toISOString().split("T")[0];
+                                 todate = dToday;
+                               } else if (values.type === "N") {
+                                 shifted.setDate(today.getDate() + Number(values.days));
+                                 fromdate = dToday;
+                                 todate = shifted.toISOString().split("T")[0];
+                               }
+         
+                               const dateConditions = [];
+                               Object.keys(statusDateMap).forEach((status) => {
+                                 if (values[status]) {
+                                   const col = statusDateMap[status];
+                                   if (values.type === "A") {
+                                     dateConditions.push(`${col}='${fromdate}'`);
+                                   } else {
+                                     dateConditions.push(
+                                       `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                                     );
+                                   }
+                                 }
+                               });
+         
+                               if (dateConditions.length > 0) {
+                                 whereParts.push(`(${dateConditions.join(" OR ")})`);
+                               }
+         
+                               const dynamicWhere = whereParts.join(" AND ");
+                               const innerWhere = dynamicWhere.replace(
+                                 `CompanyID=${compID} AND `,
+                                 ""
+                               );
+                               const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+         
+                               console.log("APPLY - CASE 2:", finalWhereClause);
+                               dispatch(
+                                 fetchListview(
+                                   accessID,
+                                   Subscriptionlastthree,
+                                   "Party",
+                                   finalWhereClause,
+                                   "",
+                                   compID
+                                 )
+                               );
+                             } else {
+                               // Days/Type but no status → CompanyID only
+                               console.log(
+                                 "APPLY - Days/Type but no status: CompanyID"
+                               );
+                               dispatch(
+                                 fetchListview(
+                                   accessID,
+                                   Subscriptionlastthree,
+                                   "Party",
+                                   `CompanyID=${compID}`,
+                                   "",
+                                   compID
+                                 )
+                               );
+                             }
+         
+                             setTimeout(() => setSubmitting(false), 100);
+                           }}
+                         >
+                           {({ values, handleSubmit, isSubmitting, setFieldValue }) => {
+                             const statusKeys = [
+                               "Created",
+                               "Process",
+                               "Paid",
+                               "Picked",
+                               "ReadyToDeliver",
+                               "Delivered",
+                               "Scheduled",
+                               "NextVisitDate",
+                             ];
+                             const statusLabelMap = {
+                               ReadyToDeliver: "Ready For Delivery",
+                               NextVisitDate: "Next Visit Date",
+                             };
+                             const isStatusSelected = statusKeys.some((k) => values[k]);
+                             const isDateSelected = Boolean(values.days && values.type);
+                             const isStatusGroupActive =
+                               isStatusSelected || isDateSelected;
+                             const isProspectGroupActive =
+                               values.Prospect || values.Balance;
+         
+                             //  FIXED RESET with RESET FLAG
+                             const handleResetFilters = () => {
+                               setFieldValue("days", "");
+                               setFieldValue("type", "");
+                               setFieldValue("Prospect", false);
+                               setFieldValue("Balance", false);
+                               statusKeys.forEach((k) => setFieldValue(k, false));
+         
+                               // Clear ALL filters
+                               [
+                                 "Days",
+                                 "type",
+                                 "Created",
+                                 "Process",
+                                 "Paid",
+                                 "Picked",
+                                 "ReadyToDeliver",
+                                 "Delivered",
+                                 "Scheduled",
+                                 "NextVisitDate",
+                                 "Prospect",
+                                 "Balance",
+                               ].forEach((k) => {
+                                 sessionStorage.removeItem(`TR321_${k}`);
+                               });
+         
+                               // SET NO-FILTER STATE
+                               sessionStorage.setItem("TR321_RESET", "Y");
+                               sessionStorage.setItem("TR321_HASFILTER", "N");
+                               // NO DISPATCH → Initial load handles single CompanyID call
+                             };
+         
+                             return (
+                               <form onSubmit={handleSubmit}>
+                                 <Box sx={{ height: 600, overflowY: "auto" }}>
+                                   <IconButton
+                                     size="small"
+                                     onClick={() => setShowMore(false)}
+                                     sx={{ position: "absolute", top: 5, right: 4 }}
+                                   >
+                                     <Tooltip title="Close">
+                                       <CancelIcon color="error" />
+                                     </Tooltip>
+                                   </IconButton>
+                                   <Typography mt={2} fontWeight="bold" color="error">
+                                     Status
+                                   </Typography>
+         
+                                   {statusKeys.map((key) => (
+                                     <FormControlLabel
+                                       key={key}
+                                       control={
+                                         <Checkbox
+                                           checked={values[key]}
+                                           disabled={isProspectGroupActive}
+                                           onChange={(e) => {
+                                             const checked = e.target.checked;
+                                             if (checked) {
+                                               setFieldValue("Prospect", false);
+                                               setFieldValue("Balance", false);
+                                               sessionStorage.setItem(
+                                                 "TR321_Prospect",
+                                                 "N"
+                                               );
+                                               sessionStorage.setItem(
+                                                 "TR321_Balance",
+                                                 "N"
+                                               );
+                                             }
+                                             setFieldValue(key, checked);
+                                             sessionStorage.setItem(
+                                               `TR321_${key}`,
+                                               checked ? "Y" : "N"
+                                             );
+                                           }}
+                                         />
+                                       }
+                                       label={statusLabelMap[key] || key}
+                                     />
+                                   ))}
+         
+                                   <TextField
+                                     name="days"
+                                     type="number"
+                                     label="Days"
+                                     variant="standard"
+                                     value={values.days}
+                                     disabled={isProspectGroupActive}
+                                     onChange={(e) => {
+                                       setFieldValue("days", e.target.value);
+                                       sessionStorage.setItem(
+                                         "TR321_Days",
+                                         e.target.value
+                                       );
+                                     }}
+                                     sx={{ mt: 2 }}
+                                     fullWidth
+                                   />
+         
+                                   <TextField
+                                     select
+                                     name="type"
+                                     label="Type"
+                                     variant="standard"
+                                     value={values.type}
+                                     disabled={isProspectGroupActive}
+                                     onChange={(e) => {
+                                       setFieldValue("type", e.target.value);
+                                       sessionStorage.setItem(
+                                         "TR321_type",
+                                         e.target.value
+                                       );
+                                     }}
+                                     sx={{ mt: 2 }}
+                                     fullWidth
+                                   >
+                                     <MenuItem value="A">Ago</MenuItem>
+                                     <MenuItem value="L">Latest</MenuItem>
+                                     <MenuItem value="N">Next</MenuItem>
+                                   </TextField>
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         checked={values.Prospect}
+                                         disabled={isStatusGroupActive}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           if (checked) {
+                                             statusKeys.forEach((k) => {
+                                               setFieldValue(k, false);
+                                               sessionStorage.setItem(`TR321_${k}`, "N");
+                                             });
+                                             setFieldValue("days", "");
+                                             setFieldValue("type", "");
+                                             sessionStorage.setItem("TR321_Days", "");
+                                             sessionStorage.setItem("TR321_type", "");
+                                           }
+                                           setFieldValue("Prospect", checked);
+                                           sessionStorage.setItem(
+                                             "TR321_Prospect",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Prospects"
+                                   />
+         
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         checked={values.Balance}
+                                         disabled={isStatusGroupActive}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+                                           if (checked) {
+                                             statusKeys.forEach((k) => {
+                                               setFieldValue(k, false);
+                                               sessionStorage.setItem(`TR321_${k}`, "N");
+                                             });
+                                             setFieldValue("days", "");
+                                             setFieldValue("type", "");
+                                             sessionStorage.setItem("TR321_Days", "");
+                                             sessionStorage.setItem("TR321_type", "");
+                                           }
+                                           setFieldValue("Balance", checked);
+                                           sessionStorage.setItem(
+                                             "TR321_Balance",
+                                             checked ? "Y" : "N"
+                                           );
+                                         }}
+                                       />
+                                     }
+                                     label="Due"
+                                   />
+         
+                                   <Stack
+                                     direction="row"
+                                     alignItems="center"
+                                     justifyContent="end"
+                                     spacing={1}
+                                     mt={2}
+                                   >
+                                     <Button
+                                       type="submit"
+                                       variant="contained"
+                                       color="primary"
+                                       disabled={isSubmitting}
+                                     >
+                                       Apply
+                                     </Button>
+                                     <Button
+                                       variant="contained"
+                                       color="error"
+                                       onClick={handleResetFilters}
+                                       disabled={isSubmitting}
+                                     >
+                                       Reset
+                                     </Button>
+                                   </Stack>
+                                 </Box>
+                               </form>
+                             );
+                           }}
+                         </Formik>
+                       </Box>
+                     )}
+         
+         
+                     {showMore && accessID === "TR328" && (
+                       <Box
+                         sx={{
+                           width: 300,
+                           p: 2,
+                           borderRadius: 1,
+                           backgroundColor: "#fff",
+                         }}
+                       >
+                         <Formik
+                           initialValues={{
+                             fromdate: sessionStorage.getItem("FromDate") || "",
+                             date: sessionStorage.getItem("ToDate") || "",
+                             party: JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
+                             product: JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
+                             freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
+                             nextDueDate: sessionStorage.getItem("TR328_NextDueDate") || "N",
+                             days: sessionStorage.getItem("TR328_Days") || "",
+                             type: sessionStorage.getItem("TR328_type") || "",
+                           }}
+                           enableReinitialize
+                           onSubmit={(values, { setSubmitting }) => {
+                             const conditions = [];
+         
+                             const fromDate = values.fromdate || "";
+                             const toDate = values.date || "";
+                             const freshCall = values.freshCall === "Y";
+                             const nextDueDate = values.nextDueDate === "Y";
+         
+                             const field = "FilterLastCallDate";
+         
+                             // SAVE
+                             sessionStorage.setItem("FromDate", fromDate);
+                             sessionStorage.setItem("ToDate", toDate);
+                             sessionStorage.setItem("TR328_Filters", JSON.stringify(values));
+         
+                             // PARTY
+                             if (values.party?.length > 0) {
+                               const partyIds = values.party.map((p) => `'${p.RecordID}'`).join(", ");
+                               conditions.push(`PartyID IN (${partyIds})`);
+                             }
+         
+                             // PRODUCT
+                             if (values.product?.length > 0) {
+                               const productIds = values.product.map((p) => `'${p.RecordID}'`).join(", ");
+                               conditions.push(`ProjectID IN (${productIds})`);
+                             }
+         
+                             // BASE
+                             if (compID) {
+                               conditions.push(`HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`);
+                             }
+         
+                             // FILTER LOGIC
+                             if (freshCall) {
+                               conditions.push(`CallType = 'FC'`);
+                             }
+                             if (nextDueDate) {
+                               conditions.push(`CallType <> 'FC'`); // adjust if needed
+                             }
+                             if (values.days && values.type) {
+                               const today = new Date();
+                               const dToday = today.toISOString().split("T")[0];
+                               const shifted = new Date(today);
+         
+                               let fromdate, todate;
+         
+                               if (values.type === "A") {
+                                 shifted.setDate(today.getDate() - Number(values.days));
+                                 fromdate = shifted.toISOString().split("T")[0];
+                                 conditions.push(`${field} = '${fromdate}'`);
+                               }
+                               else if (values.type === "L") {
+                                 shifted.setDate(today.getDate() - Number(values.days));
+                                 fromdate = shifted.toISOString().split("T")[0];
+                                 todate = dToday;
+                                 conditions.push(`${field} BETWEEN '${fromdate}' AND '${todate}'`);
+                               }
+                               else if (values.type === "N") {
+                                 shifted.setDate(today.getDate() + Number(values.days));
+                                 fromdate = dToday;
+                                 todate = shifted.toISOString().split("T")[0];
+                                 conditions.push(`${field} BETWEEN '${fromdate}' AND '${todate}'`);
+                               }
+                             }
+                             // else {
+                             //   const dateConditions = [];
+                             //   if (fromDate && toDate) {
+                             //     dateConditions.push(`(${field} BETWEEN '${fromDate}' AND '${toDate}')`);
+                             //   } else if (fromDate) {
+                             //     dateConditions.push(`(${field} >= '${fromDate}')`);
+                             //   } else if (toDate) {
+                             //     dateConditions.push(`(${field} <= '${toDate}')`);
+                             //   }
+         
+                             //   if (dateConditions.length > 0) {
+                             //     conditions.push(`(${dateConditions.join(" OR ")})`);
+                             //   }
+                             // }
+                             // DATE FILTER (always apply if present)
+                             if (!(values.days && values.type) && (fromDate || toDate)) {
+                               if (fromDate && toDate) {
+                                 conditions.push(`${field} BETWEEN '${fromDate}' AND '${toDate}'`);
+                               } else if (fromDate) {
+                                 conditions.push(`${field} >= '${fromDate}'`);
+                               } else if (toDate) {
+                                 conditions.push(`${field} <= '${toDate}'`);
+                               }
+                             }
+         
+                             const whereClause = conditions.join(" AND ");
+                             sessionStorage.setItem("TR328_WHERE", whereClause);
+         
+                             dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, whereClause, "", compID));
+         
+                             setTimeout(() => setSubmitting(false), 100);
+                           }}
+                         >
+                           {({ values, handleSubmit, isSubmitting, setFieldValue, resetForm }) => {
+                             const isDateSelected = Boolean(values.fromdate || values.date);
+                             const isDaysTypeSelected = Boolean(values.days && values.type);
+                             const isFreshCall = values.freshCall === "Y";
+                             const isNextDue = values.nextDueDate === "Y";
+         
+                             return (
+                               <form onSubmit={handleSubmit}>
+                                 <Box sx={{ height: 600, overflowY: "auto", mt: 4 }}>
+         
+                                   {/* FROM DATE */}
+                                   <TextField
+                                     type="date"
+                                     label="From Date"
+                                     id="fromdate"
+                                     name="fromdate"
+                                     variant="standard"
+                                     value={values.fromdate}
+                                     onChange={(e) => {
+                                       setFieldValue("fromdate", e.target.value);
+                                       sessionStorage.setItem("FromDate", e.target.value);
+         
+                                       if (e.target.value) {
+                                         setFieldValue("days", "");
+                                         setFieldValue("type", "");
+                                         // setFieldValue("freshCall", "N");
+                                         // setFieldValue("nextDueDate", "N");
+         
+                                         sessionStorage.removeItem("TR328_Days");
+                                         sessionStorage.removeItem("TR328_type");
+                                       }
+                                     }}
+                                     fullWidth
+                                     focused
+                                     sx={{ width: "250px", mt: 2 }}
+                                     InputLabelProps={{ shrink: true }}
+                                     // disabled={isDaysTypeSelected || isFreshCall || isNextDue}
+                                     disabled={isDaysTypeSelected}
+                                     inputProps={{
+                                       max: new Date().toISOString().split("T")[0],
+                                     }}
+                                   />
+         
+                                   {/* TO DATE */}
+                                   <TextField
+                                     type="date"
+                                     label="To Date"
+                                     id="date"
+                                     name="date"
+                                     variant="standard"
+                                     value={values.date}
+                                     onChange={(e) => {
+                                       setFieldValue("date", e.target.value);
+                                       sessionStorage.setItem("ToDate", e.target.value);
+         
+                                       if (e.target.value) {
+                                         setFieldValue("days", "");
+                                         setFieldValue("type", "");
+                                         // setFieldValue("freshCall", "N");
+                                         // setFieldValue("nextDueDate", "N");
+         
+                                         sessionStorage.removeItem("TR328_Days");
+                                         sessionStorage.removeItem("TR328_type");
+                                       }
+                                     }}
+                                     fullWidth
+                                     sx={{ width: "250px", mt: 1 }}
+                                     InputLabelProps={{ shrink: true }}
+                                     disabled={isDaysTypeSelected}
+                                     focused
+                                   />
+         
+                                   <PartymultiSelect
+                                     sx={{ width: 250, mt: 1 }}
+                                     id="party"
+                                     name="party"
+                                     label="Party"
+                                     variant="outlined"
+                                     value={values.party}
+                                     onChange={(e, newValue) => {
+                                       setFieldValue("party", newValue);
+                                       sessionStorage.setItem(
+                                         "TR328_Party",
+                                         JSON.stringify(newValue)
+                                       );
+                                     }}
+                                     disablePortal={false}
+                                     PopperProps={{
+                                       sx: {
+                                         zIndex: 1500,
+                                       },
+                                     }}
+                                     // error={!!touched.party && !!errors.party}
+                                     // helperText={touched.party && errors.party}
+                                     // url={`${listViewurl}?data={"Query":{"AccessID":"2140", "VerticalLicense": Subscriptionlastthree, "ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2140",
+                                         ScreenName: "Party",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${compID}'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+                                   <MultiFormikOptimizedAutocomplete
+                                     sx={{ width: 250, mt: 1 }}
+                                     id="product"
+                                     name="product"
+                                     label="Product"
+                                     variant="outlined"
+                                     value={values.product}
+                                     onChange={(e, newValue) => {
+                                       setFieldValue("product", newValue);
+                                       sessionStorage.setItem(
+                                         "TR328_Product",
+                                         JSON.stringify(newValue)
+                                       );
+                                     }}
+                                     // error={!!touched.product && !!errors.product}
+                                     // helperText={touched.product && errors.product}
+                                     // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                                     url={`${listViewurl}?data=${JSON.stringify({
+                                       Query: {
+                                         AccessID: "2137",
+                                         ScreenName: "Product",
+                                         VerticalLicense: Subscriptionlastthree,
+                                         Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
+                                         Any: "",
+                                       },
+                                     })}`}
+                                   />
+         
+         
+                                   {/* FRESH CALL */}
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         checked={isFreshCall}
+                                         // onChange={(e) => {
+                                         //   const val = e.target.checked ? "Y" : "N";
+                                         //   setFieldValue("freshCall", val);
+                                         //   sessionStorage.setItem("TR328_FreshCall", val);
+         
+                                         //   if (val === "Y") {
+                                         //     setFieldValue("nextDueDate", "N");
+                                         //     setFieldValue("fromdate", "");
+                                         //     setFieldValue("date", "");
+                                         //     setFieldValue("days", "");
+                                         //     setFieldValue("type", "");
+                                         //   }
+                                         // }}
+                                         // disabled={isDaysTypeSelected || isNextDue}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+         
+                                           if (checked) {
+                                             setFieldValue("freshCall", "Y");
+                                             setFieldValue("nextDueDate", "N");
+         
+                                             sessionStorage.setItem("TR328_FreshCall", "Y");
+                                             sessionStorage.setItem("TR328_NextDueDate", "N");
+         
+                                             // CLEAR ALL OTHER FILTERS
+                                             // setFieldValue("fromdate", "");
+                                             // setFieldValue("date", "");
+                                             // setFieldValue("days", "");
+                                             // setFieldValue("type", "");
+         
+                                             // sessionStorage.removeItem("FromDate");
+                                             // sessionStorage.removeItem("ToDate");
+                                             // sessionStorage.removeItem("TR328_Days");
+                                             // sessionStorage.removeItem("TR328_type");
+                                           } else {
+                                             setFieldValue("freshCall", "N");
+                                             sessionStorage.setItem("TR328_FreshCall", "N");
+                                           }
+                                         }}
+                                       />
+                                     }
+                                     label="Fresh Calls"
+                                   />
+         
+                                   {/* NEXT DUE */}
+                                   <FormControlLabel
+                                     control={
+                                       <Checkbox
+                                         checked={isNextDue}
+                                         // onChange={(e) => {
+                                         //   const val = e.target.checked ? "Y" : "N";
+                                         //   setFieldValue("nextDueDate", val);
+                                         //   sessionStorage.setItem("TR328_NextDueDate", val);
+         
+                                         //   if (val === "Y") {
+                                         //     setFieldValue("freshCall", "N");
+                                         //     setFieldValue("fromdate", "");
+                                         //     setFieldValue("date", "");
+                                         //     setFieldValue("days", "");
+                                         //     setFieldValue("type", "");
+                                         //   }
+                                         // }}
+                                         // disabled={isDaysTypeSelected || isFreshCall}
+                                         onChange={(e) => {
+                                           const checked = e.target.checked;
+         
+                                           if (checked) {
+                                             setFieldValue("nextDueDate", "Y");
+                                             setFieldValue("freshCall", "N");
+         
+                                             sessionStorage.setItem("TR328_NextDueDate", "Y");
+                                             sessionStorage.setItem("TR328_FreshCall", "N");
+         
+                                             // CLEAR ALL OTHER FILTERS
+                                             // setFieldValue("fromdate", "");
+                                             // setFieldValue("date", "");
+                                             // setFieldValue("days", "");
+                                             // setFieldValue("type", "");
+         
+                                             // sessionStorage.removeItem("FromDate");
+                                             // sessionStorage.removeItem("ToDate");
+                                             // sessionStorage.removeItem("TR328_Days");
+                                             // sessionStorage.removeItem("TR328_type");
+                                           } else {
+                                             setFieldValue("nextDueDate", "N");
+                                             sessionStorage.setItem("TR328_NextDueDate", "N");
+                                           }
+                                         }}
+                                       />
+                                     }
+                                     label="Next Due Date"
+                                   />
+         
+         
+                                   {/* DAYS */}
+                                   <TextField
+                                     type="number"
+                                     label="Days"
+                                     // variant="outlined"
+                                     variant="standard"
+                                     value={values.days}
+                                     onChange={(e) => {
+                                       setFieldValue("days", e.target.value);
+                                       sessionStorage.setItem("TR328_Days", e.target.value);
+         
+                                       if (e.target.value) {
+                                         setFieldValue("fromdate", "");
+                                         setFieldValue("date", "");
+                                         // setFieldValue("freshCall", "N");
+                                         // setFieldValue("nextDueDate", "N");
+         
+                                         sessionStorage.removeItem("FromDate");
+                                         sessionStorage.removeItem("ToDate");
+                                       }
+                                     }}
+                                     fullWidth
+                                     sx={{ width: "250px", mt: 1 }}
+                                     disabled={isDateSelected}
+                                     focused
+                                   />
+         
+                                   {/* TYPE */}
+                                   <TextField
+                                     select
+                                     label="Type"
+                                     // variant="outlined"
+                                     variant="standard"
+                                     value={values.type}
+                                     onChange={(e) => {
+                                       setFieldValue("type", e.target.value);
+                                       sessionStorage.setItem("TR328_type", e.target.value);
+         
+                                       if (e.target.value) {
+                                         setFieldValue("fromdate", "");
+                                         setFieldValue("date", "");
+                                         // setFieldValue("freshCall", "N");
+                                         // setFieldValue("nextDueDate", "N");
+         
+                                         sessionStorage.removeItem("FromDate");
+                                         sessionStorage.removeItem("ToDate");
+                                       }
+                                     }}
+                                     fullWidth
+                                     sx={{ width: "250px", mt: 1 }}
+                                     focused
+                                     disabled={isDateSelected}
+                                   >
+                                     <MenuItem value="A">Ago</MenuItem>
+                                     <MenuItem value="L">Latest</MenuItem>
+                                     <MenuItem value="N">Next</MenuItem>
+                                   </TextField>
+         
+                                   {/* ACTIONS */}
+                                   <Stack direction="row" justifyContent="end" spacing={1} mt={3}>
+                                     <Button type="submit" variant="contained" disabled={isSubmitting}>
+                                       Apply
+                                     </Button>
+                                     <Button
+                                       variant="contained"
+                                       color="error"
+                                       onClick={() => {
+                                         [
+                                           "FromDate",
+                                           "ToDate",
+         
+                                           "TR328_Party",
+                                           "TR328_Product",
+                                           "TR328_Filters",
+                                           "TR328_WHERE",
+                                           "TR328_FreshCall",
+                                           "TR328_NextDueDate",
+                                           "TR328_Days",
+                                           "TR328_type",
+                                         ].forEach((key) =>
+                                           sessionStorage.removeItem(key)
+                                         );
+         
+                                         resetForm({
+                                           values: {
+                                             fromdate: "",
+                                             date: "",
+                                             party: [],
+                                             product: [],
+                                             freshCall: "N",
+                                             nextDueDate: "N",
+                                             days: "",
+                                             type: "",
+                                           },
+                                         });
+                                       }}
+                                     >
+                                       Reset
+                                     </Button>
+                                   </Stack>
+                                 </Box>
+                               </form>
+                             );
+                           }}
+                         </Formik>
+                       </Box>
+                     )}
+                   </Box>
+           </Box>
           {accessID !== "TR313" && (
             <Box display="flex" alignItems="center" marginLeft={3}>
-              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={-2}>
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mt={2} mb={-2}>
                 Actions Guide
               </Typography>
             </Box>)}

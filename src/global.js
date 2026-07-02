@@ -356,7 +356,8 @@ const initialState = {
   PromotionstudmarksGetUrl: "",
   promotionstudentmarksPosturl: "",
 
-  
+    TermUrl: "",
+
 };
 
 export const getUrlSlice = createSlice({
@@ -583,7 +584,7 @@ export const getUrlSlice = createSlice({
       state.promotionstandardActUrl = APIurl + "getacademicprojectdata.php?";
       state.PromotionstudmarksGetUrl = APIurl + "StudentMarksGet.php";
       state.promotionstudentmarksPosturl = APIurl + "StudentMarksPost.php";
-      
+      state.TermUrl = APIurl + "TermVersioningPost.php";
     },
 
   },
@@ -591,3 +592,11 @@ export const getUrlSlice = createSlice({
 
 export const { initGlobalUrl } = getUrlSlice.actions;
 export default getUrlSlice.reducer;
+
+
+
+
+
+
+
+

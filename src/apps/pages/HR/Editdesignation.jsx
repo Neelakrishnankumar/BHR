@@ -16,7 +16,10 @@ import {
   InputLabel,
   Select,
   Chip,
+  Stack
 } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Field, Formik } from "formik";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -250,14 +253,22 @@ const Editdesignation = () => {
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>
+        <Box sx={{ display: "flex", flexDirection: "row", }}>
+          <Typography
+          sx={{
+            fontWeight: 700,
+          }}
+          >
             {show == "1"
               ? "List of Documents"
               : ""
             }
           </Typography>
-          {show == "1" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
+          {show == "1" && (<Typography
+          sx={{
+            fontWeight: 700,
+          }}
+          variant="h5">{`(${rowCount})`}</Typography>)}
         </Box>
         <Box
           sx={{
@@ -269,7 +280,8 @@ const Editdesignation = () => {
           <GridToolbarQuickFilter />
           {show != "1" && (
             <Tooltip title="ADD">
-              <IconButton type="reset">
+              <IconButton
+               type="reset">
                 <AddOutlinedIcon />
               </IconButton>
             </Tooltip>)}
@@ -343,10 +355,148 @@ const Editdesignation = () => {
       }
     });
   };
+    const [sectionsOpen, setSectionsOpen] = useState(true);
+  
+
+const formSections = [
+  {
+    value: 0,
+    label: "Designation",
+    desc: "Employee roles and titles",
+   icon: "👤" 
+  },
+  {
+    value: 1,
+    label: "List Of Documents",
+    desc: "Employee document records",
+   icon: "📄"
+  }
+];
+
+
+ function FormSectionsSidebar({ 
+    show,
+    screenChange,
+    sections,
+    open,
+    onToggle,
+  }) {
+    return (
+      <Box
+        sx={{
+          width: open ? 250 : 70,
+          transition: "all .3s",
+          background: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          position: "sticky",
+          top: 10,
+          height: "calc(100vh - 20px)",
+          overflowY: "auto",
+
+          // Hide scrollbar
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE
+
+          "&::-webkit-scrollbar": {
+            display: "none", // Chrome, Safari
+          },
+        }}
+      >
+        {/* Header */}
+        <Box
+          display="flex"
+          justifyContent={open ? "space-between" : "center"}
+          alignItems="center"
+          p={2}
+          borderBottom="1px solid #E5E7EB"
+        >
+          {open && (
+            <Typography fontWeight={700}>
+              Explore
+            </Typography>
+          )}
+
+          <IconButton size="small" onClick={onToggle}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+
+        <Stack spacing={0.5} p={1}>
+          {sections.map((item) => {
+            const active = Number(show) === Number(item.value);
+
+            return (
+              <Tooltip
+                key={item.value}
+                title={!open ? item.label : ""}
+                placement="right"
+              >
+                <Box
+                  onClick={() =>
+                    screenChange({
+                      target: { value: item.value },
+                    })
+                  }
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 1.25,
+                    cursor: "pointer",
+                    borderRadius: 2,
+                    bgcolor: active ? "#EEF2FF" : "transparent",
+                    "&:hover": {
+                      bgcolor: "#F3F4F6",
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      bgcolor: active ? "#E0E7FF" : "#F3F4F6",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+
+                  {open && (
+                    <Box>
+                      <Typography
+                        fontWeight={active ? 700 : 500}
+                        color={active ? "#4F46E5" : "inherit"}
+                      >
+                        {item.label}
+                      </Typography>
+
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        {item.desc}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+            );
+          })}
+        </Stack>
+      </Box>
+    );
+  }
+
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+      {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -420,10 +570,102 @@ const Editdesignation = () => {
             </Tooltip>
           </Box>
         </Box>
-      </Paper>
+      </Paper> */}
+ <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
 
+
+          <Box sx={{ p: 2, borderRadius: 3, }}>
+           <Paper sx={{borderRadius: 3, }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    setScreen(0);
+                  }}
+                >
+                  Designation
+                </Typography>
+                {show == "1" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    List Of Documents
+                  </Typography>
+                ) : (
+                  false
+                )}
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+
+            {/* {mode !== "A" ? (
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Explore</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={show}
+                  label="Explore"
+                  onChange={screenChange}
+                >
+                  <MenuItem value={0}>Designation</MenuItem>
+                  <MenuItem value={1}>List Of Documents</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              false
+            )} */}
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
+          </Box>
       {show == "0" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+         <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                      {/* LEFT: Form Sections sidebar */}
+                      {mode !== "A" && (
+                        <FormSectionsSidebar
+                          show={show}
+                          screenChange={screenChange}
+                          sections={formSections}
+                          open={sectionsOpen}
+                          onToggle={() => setSectionsOpen((p) => !p)}
+                        />
+                      )}
+       <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                      <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -444,6 +686,28 @@ const Editdesignation = () => {
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <Typography sx={{ fontSize: 16 }}>👤</Typography>
+                                          </Box>
+                                          <Box>
+                                                               <Typography
+                                                                variant="subtitle1" fontWeight={700} color="#4F46E5"
+                                                               >
+                                                                 Designation
+                                                               </Typography>
+                                         
+                                                               <Typography
+                                                                 variant="body2"
+                                                                 color="text.secondary"
+                                                               >
+                                                                 Employee roles and titles
+                                                               </Typography>
+                                                             </Box>
+                                        </Box>
+                                       
+                
                 <Box
                   display="grid"
                   gap={formGap}
@@ -463,7 +727,8 @@ const Editdesignation = () => {
                       id="code"
                       label="Code"
                       placeholder="Auto"
-                      variant="standard"
+                      variant="outlined"
+                    size="small"
                       focused
                       // required
                       value={values.code}
@@ -471,12 +736,30 @@ const Editdesignation = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                       InputProps={{ readOnly: true }}
                     // autoFocus
                     />
@@ -493,7 +776,8 @@ const Editdesignation = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
+                      variant="outlined"
+                    size="small"
                       focused
                       // required
                       value={values.code}
@@ -501,16 +785,58 @@ const Editdesignation = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                       autoFocus
                     />
                   )}
                   <TextField
+                    sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                     name="name"
                     type="text"
                     id="name"
@@ -522,7 +848,8 @@ const Editdesignation = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
@@ -545,16 +872,40 @@ const Editdesignation = () => {
                     }}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                    // sx={{
+                    //   backgroundColor: "#ffffff", // Set the background to white
+                    //   "& .MuiFilledInput-root": {
+                    //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                    //   },
+                    // }}
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   <TextField
+                    sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                     name="rank"
                     type="number"
                     id="rank"
@@ -566,7 +917,8 @@ const Editdesignation = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     value={values.rank}
                     onBlur={handleBlur}
@@ -591,7 +943,8 @@ const Editdesignation = () => {
                     //     Hours Rate<span style={{ color: "red", fontSize: "20px" }}>*</span>
                     //   </>
                     // }
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     value={values.hoursrate}
                     onBlur={handleBlur}
@@ -605,13 +958,39 @@ const Editdesignation = () => {
                     // required
                     error={!!touched.hoursrate && !!errors.hoursrate}
                     helperText={touched.hoursrate && errors.hoursrate}
-                  />
+                  
+                    sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
+  />
                   <TextField
                     name="sortorder"
                     type="number"
                     id="sortorder"
                     label="Sort Order"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     value={values.sortorder}
                     onBlur={handleBlur}
@@ -630,6 +1009,31 @@ const Editdesignation = () => {
                         .toString()
                         .slice(0, 8);
                     }}
+
+                      sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                   />
                   <Box>
                     <Field
@@ -739,12 +1143,38 @@ const Editdesignation = () => {
             )}
           </Formik>
         </Paper>
+          </Box>
+                    </Box>
       ) : (
         false
       )}
 
       {show == "1" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+           <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+        
+                      {/* SIDEBAR */}
+                      {mode !== "A" && (
+                        <FormSectionsSidebar
+                          show={show}
+                          screenChange={screenChange}
+                          sections={formSections}
+                          open={sectionsOpen}
+                          onToggle={() => setSectionsOpen((p) => !p)}
+                        />
+                      )}
+        
+                      {/* RIGHT SIDE */}
+                      <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+        
+          <Paper
+                          elevation={0}
+                          sx={{
+                            backgroundColor: "#fff",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 3,
+                            p: 3,
+                          }}
+                        >
           <Formik
             initialValues={InitialValue}
             enableReinitialize={true}
@@ -767,7 +1197,26 @@ const Editdesignation = () => {
               // }}
               >
 
-
+  {/* ----- CARD HEADER ----- */}
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <Typography sx={{ fontSize: 16 }}>📄</Typography>
+                                          </Box>
+                                          <Box>
+                                                               <Typography
+                                                                variant="subtitle1" fontWeight={700} color="#4F46E5"
+                                                               >
+                                                                 Documents
+                                                               </Typography>
+                                         
+                                                               <Typography
+                                                                 variant="body2"
+                                                                 color="text.secondary"
+                                                               >
+                                                                 Employee document records
+                                                               </Typography>
+                                                             </Box>
+                                        </Box>
                 <Box
                   display="grid"
                   gap={formGap}
@@ -783,7 +1232,8 @@ const Editdesignation = () => {
                   {/* <FormControl sx={{ gap: formGap }}> */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="code"
                     name="code"
@@ -795,11 +1245,36 @@ const Editdesignation = () => {
                     InputProps={{
                       readOnly: true
                     }}
+                      sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                   />
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="name"
                     name="name"
@@ -811,6 +1286,30 @@ const Editdesignation = () => {
                     InputProps={{
                       readOnly: true
                     }}
+                      sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                   />
                   {/* </FormControl> */}
                 </Box>
@@ -835,6 +1334,7 @@ const Editdesignation = () => {
                       backgroundColor: colors.blueAccent[800],
                       borderBottom: "none",
                     },
+                  
                     "& .MuiDataGrid-virtualScroller": {
                       backgroundColor: colors.primary[400],
                     },
@@ -853,6 +1353,35 @@ const Editdesignation = () => {
                       backgroundColor: "#D3D3D3",
                       color: "", // Color for even rows
                     },
+
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 700
+                              },
+                   "& .MuiTablePagination-root": { color: colors.blueAccent[900],},
+                   /* ✅ PAGINATION STYLES (WHITE COLOR) */
+  "& .MuiTablePagination-root": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-selectLabel": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-displayedRows": {
+    color: "#fff",
+  },
+
+  /* Dropdown icon */
+  "& .MuiTablePagination-selectIcon": {
+    color: "#fff",
+  },
+
+  /* Left & Right arrow buttons */
+  "& .MuiTablePagination-actions button": {
+    color: "#fff",
+  },
+                
                   }}
                 >
                   <DataGrid
@@ -908,6 +1437,7 @@ const Editdesignation = () => {
             )}
 
           </Formik>
+
           <Box display="flex" justifyContent="space-between" padding={1}>
 
             <Box>
@@ -938,9 +1468,16 @@ const Editdesignation = () => {
             </Box>
           </Box>
         </Paper>
+        
+                      </Box>
+        
+                    </Box>
       ) : (
         false
       )}
+
+        </Box>
+        </Box>
     </React.Fragment>
   );
 };

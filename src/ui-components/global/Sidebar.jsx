@@ -377,7 +377,9 @@ const Sidebars = () => {
   console.log(menu, "--+heloooooooooooooo menu");
 
 
-  const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
+
+  //handleMenu change as handleMenuWithStyling 
+  const handleMenuWithStyling = (children, accessRow, isChild, parentMenuID = null) => {
     return children.map(
       ({
         children,
@@ -388,34 +390,16 @@ const Sidebars = () => {
         id,
         UGA_ACCESSIDS,
         MenuID,
-
       }) => {
         const accessItem = accessRow.find(
           (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
         );
-        console.log(accessItem?.SM_CAPTION1, "--accessItem?.SM_CAPTION1");
 
-        // if (name === "Party") {
-        //   console.log("Party parent:", parentMenuID);
-        // }
-        if (is003Subscription && name === "CRM") {
-          return null;
-        }
-        if (!is003Subscription && (name === "Academic Year" || name === "Slot")) {
-          return null;
-        }
+        if (is003Subscription && name === "CRM") return null;
+        if (!is003Subscription && (name === "Academic Year" || name === "Slot")) return null;
+        if (restrictedMenus003.includes(name) && is003Subscription) return null;
 
-        //  HIDE CRM → Party for 003 subscription
-        if (
-          // parentMenuID === "CRM1800" &&
-          restrictedMenus003.includes(name) &&
-          is003Subscription
-        ) {
-          console.log("HIDDEN PARTY");
-          return null;
-        }
         if (!children) {
-
           return accessRow.map(
             ({
               UGA_ADD,
@@ -428,102 +412,165 @@ const Sidebars = () => {
             }) => {
               if (
                 UGA_ACCESSID === UGA_ACCESSIDS &&
-                (UGA_ADD ||
-                  UGA_DEL ||
-                  UGA_MOD ||
-                  UGA_PRINT ||
-                  UGA_PROCESS ||
-                  UGA_VIEW)
+                (UGA_ADD || UGA_DEL || UGA_MOD || UGA_PRINT || UGA_PROCESS || UGA_VIEW)
               ) {
-
+                const isActive = selected === (accessItem?.SM_CAPTION1 || name);
 
                 return (
-                  <List component="div" disablePadding key={id}>
-                    <ListItem
-                      disableGutters
-                      style={{ padding: "0px", height: menuHeight }}
-                      key={id}
+                  <ListItem
+                    disablePadding
+                    key={id}
+                    sx={{
+                      px: 1.2,
+                      mb: 0.6,
+                    }}
+                  >
+                    <ListItemButton
+                      onClick={() => {
+                        setSelected(accessItem?.SM_CAPTION1 || name);
+                        navigate(url, {
+                          state: {
+                            name: accessItem?.SM_CAPTION1 || name,
+                            accessId: UGA_ACCESSIDS,
+                            id: id,
+                          },
+                        });
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        py: 1,
+                        pl: collapsed ? 0 : (isChild ? 3 : 2),
+                        pr: collapsed ? 0 : 2,
+                        justifyContent: collapsed ? "center" : "flex-start",
+                        //color: isActive ? "#4F46E5" : colors.grey[700],
+                        color: isActive ? "#4F46E5" : "#000000",
+                        backgroundColor: isActive ? "#c6cbd8" : "transparent",
+                        fontSize: 14,
+                        fontWeight: isActive ? 600 : 500,
+                        transition: "all 0.2s ease",
+                        borderLeft: collapsed
+                          ? "none"
+                          : isActive
+                            ? "3px solid #4F46E5"
+                            : "3px solid transparent",
+                        "&:hover": {
+                          backgroundColor: isActive ? "#EEF2FF" : "#F3F4F6",
+                          color: "#4F46E5",
+                        },
+                      }}
                     >
-                      <Item
-                        isChild={isChild}
-                        title={accessItem?.SM_CAPTION1 || name}
-                        // title={name}
-                        to={url}
-                        icon={icon}
-                        selected={selected}
-                        setSelected={setSelected}
-                        Tooltipname={accessItem?.SM_CAPTION1 || Tooltipname}
-                        state={{
-                          name: accessItem?.SM_CAPTION1 || name,
-                          // name: name,
-                          accessId: UGA_ACCESSIDS,
-                          id: id,
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 40,
+                          color: isActive ? "#4F46E5" : "#000000",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
-
-                      />
-                    </ListItem>
-                  </List>
+                      >
+                        {icon}
+                      </ListItemIcon>
+                      {!collapsed && (
+                        <ListItemText
+                          primary={accessItem?.SM_CAPTION1 || name}
+                          primaryTypographyProps={{
+                            fontSize: 14,
+                            fontWeight: "inherit",
+                          }}
+                        />
+                      )}
+                    </ListItemButton>
+                  </ListItem>
                 );
               }
             }
           );
         }
 
+        // Parent menu with children
         return Modules.map(({ PPD, SM_PMENU }) => {
           if (PPD && SM_PMENU === MenuID) {
+            const isParentOpen = menu[name] || false;
+
             return (
               <div key={id}>
                 <ListItem
                   disableGutters
-                  key={id}
-                  style={{ height: menuHeight }}
-                  onClick={() => handleClicks(name)}
+                  disablePadding
+                  sx={{ px: 1.2, mb: 0.6 }}
                 >
-                  {!collapsed && (
-                    <Tooltip title={Tooltipname}>
-                      {/* // <Tooltip title={Tooltipname+"Hello"}> */}
-                      <ListItemButton style={{ height: menuHeight }}>
-                        <ListItemIcon>{icon}</ListItemIcon>
-                        {/* <ListItemText primary={name+"hiii"} /> */}
-                        <ListItemText primary={name} />
-                        {menu[name] ? (
-                          <ExpandMore />
-                        ) : (
-                          <ChevronRightOutlinedIcon />
-                        )}
-                      </ListItemButton>
-                    </Tooltip>
-                  )}
-                  {collapsed && (
-                    <ListItemButton style={{ height: menuHeight }}>
-                      <ListItemIcon>
-                        {icon}{" "}
-                        {menu[name] ? (
-                          <ExpandMore />
-                        ) : (
-                          <ChevronRightOutlinedIcon />
-                        )}
-                      </ListItemIcon>
-                    </ListItemButton>
-                  )}
+                  <ListItemButton
+                    onClick={() => handleClicks(name)}
+                    sx={{
+                      borderRadius: 2,
+                      py: 1,
+                      pl: collapsed ? 0 : 1.5,
+                      pr: collapsed ? 0 : 1.5,
+                      justifyContent: collapsed ? "center" : "flex-start",
+                      //color: colors.grey[700],
+                      color: "#000000",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        backgroundColor: "#F3F4F6",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: collapsed ? "auto" : 40,
+                        mr: collapsed ? 0 : 1,
+                        color: "inherit",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {icon}
+                    </ListItemIcon>
+                    {!collapsed && (
+                      <>
+                        <ListItemText
+                          primary={name}
+                          primaryTypographyProps={{
+                            fontSize: 14,
+                            fontWeight: 500,
+                          }}
+                        />
+                        <Box sx={{ ml: "auto" }}>
+                          {isParentOpen ? (
+                            <ExpandMore
+                              sx={{
+                                fontSize: 20,
+                                color: "#000000",
+                              }}
+                            />
+                          ) : (
+                            <ChevronRightOutlinedIcon
+                              sx={{
+                                fontSize: 20,
+                                color: "#000000",
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </>
+                    )}
+                  </ListItemButton>
                 </ListItem>
-                <Collapse
-                  in={menu[name] ? true : false}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  {handleMenu(children, Groupaccess, false, MenuID)}
+
+                <Collapse in={isParentOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {handleMenuWithStyling(children, Groupaccess, false, MenuID)}
+                  </List>
                 </Collapse>
               </div>
             );
           }
         });
-
-        //
-        // }
       }
     );
   };
+
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
   // const Expiryin = sessionStorage.getItem("Expiryin");
   const Expiryin = Number(sessionStorage.getItem("Expiryin")) || 0;
@@ -1204,7 +1251,7 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
-            {
+          {
             name: "Admission",
             url: "./TR379/Admission",
             id: 5596,
@@ -1759,165 +1806,217 @@ const Sidebars = () => {
   };
   const filteredMenuData =
     firstLogin === "Y"
-      ? child.data.filter((menu) => menu.name === "Company")
+      ? []
       : child.data.filter((menu) => menu.name !== "Company");
+
   return (
     <Box
       sx={{
         position: "sticky",
         display: "flex",
         height: "100vh",
-        // height: menuHeight,
         top: 0,
         bottom: 0,
         zIndex: 7,
-        "& .sidebar": {
-          border: "none",
-        },
-        "& .menu-icon": {
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-item": {
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-anchor": {
-          color: "inherit !important",
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-item:hover": {
-          color: `${colors.blueAccent[500]} !important`,
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-item.active": {
-          color: `${colors.greenAccent[500]} !important`,
-          backgroundColor: "transparent !important",
-        },
       }}
     >
-      <Sidebar breakPoint="md" backgroundColor={colors.primary[400]}>
-        <Menu>
-          <MenuItem
-            icon={
-              collapsed ? (
-                <IconButton onClick={() => collapseSidebar()}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              ) : undefined
-            }
-            style={{
-              margin: "40px 0 3px 0",
-              // margin: "10px 0 3px 0",
-              color: colors.grey[100],
+      <Sidebar
+        breakPoint="md"
+        backgroundColor="#F5F5F5"
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            backgroundColor: "#F5F5F5",
+            overflowY: "auto",
+          }}
+        >
+          {/* ===== LOGO SECTION ===== */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              p: 2,
+              backgroundColor: "#F5F5F5",
+              borderBottom: "1px solid #E5E7EB",
             }}
           >
-            {!collapsed && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              // ml="15px"
-              >
-
-                <img
-                  src={logoSrc}
-                  style={{ height: "60px", width: "180px", objectFit: "contain" }}
-                  // onClick={() => navigate("./HR")}
-                  onClick={() =>
-                    firstLogin === "Y"
-                      ? navigate("/Apps/ChangeyourPassword_1")
-                      : navigate("./HR")
-                  }
-                />
-
+            {!collapsed ? (
+              <>
+                {logoSrc && (
+                  <img
+                    src={logoSrc}
+                    style={{
+                      width: "170px",
+                      height: "60px",
+                      objectFit: "contain",
+                      cursor: "pointer",
+                      borderRadius: '10px'
+                    }}
+                    onClick={() =>
+                      firstLogin === "Y"
+                        ? navigate("/Apps/ChangeyourPassword_1")
+                        : navigate("./HR")
+                    }
+                  />
+                )}
                 <IconButton
-                  onClick={
-                    broken ? () => toggleSidebar() : () => collapseSidebar()
-                  }
+                  onClick={broken ? () => toggleSidebar() : () => collapseSidebar()}
+                  sx={{ color: colors.grey[700] }}
+                  size="small"
                 >
-                  <ArrowBackIcon />
+                  <ArrowBackIcon sx={{ fontSize: 20 }} />
                 </IconButton>
-              </Box>
+              </>
+            ) : (
+              <IconButton
+                onClick={() => collapseSidebar()}
+                sx={{ color: colors.grey[700], width: "100%" }}
+                size="small"
+              >
+                <MenuOutlinedIcon sx={{ fontSize: 20 }} />
+              </IconButton>
             )}
-          </MenuItem>
+          </Box>
+
+          {/* ===== COMPANY INFO BOX ===== */}
           {!collapsed && (
             <Box
-              display="flex"
-              flexDirection={"column"}
-              justifyContent="space-around"
-              width="91%"
-              height="67px"
-              mt="16px"
-              p="7px"
-              ml="8px"
-              borderRadius="4px"
-              boxShadow="0px 3px 5px -1px rgba(0, 0, 0, 0.06),0px 5px 8px 0px rgba(0, 0, 0, 0.042),0px 1px 14px 0px rgba(0, 0, 0, 0.036)"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                mx: 1.2,
+                my: 1.5,
+                p: 1.5,
+                borderRadius: 2,
+                backgroundColor: "#FFFFFF",   // White
+                border: "1px solid #E5E7EB",  // Light border
+                boxShadow: "0 1px 3px rgba(0,0,0,0.08)", // Optional
+              }}
             >
-              <Box display="flex" alignItems="center">
-                <Typography variant="subtitle2">{company}</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between"
-                alignItems="center">
-                <Typography variant="subtitle2">{year}</Typography>
+              <Typography variant="body2" fontWeight={600} color="text.primary">
+                {company || "Company"}
+              </Typography>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="body2" fontWeight={500} color="text.secondary">
+                  {year || "Year"}
+                </Typography>
                 <Tooltip title="Configuration">
-                  <ListItemButton
-                    onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}
+                  <IconButton
+                    size="small"
+                    onClick={() => navigate("/Apps/ChangeyourPassword_1")}
+                    sx={{ color: colors.blueAccent[500] }}
                   >
-                    <ListItemIcon>
-                      <InfoRoundedIcon color="info" size="small"/>
-                    </ListItemIcon>
-                  </ListItemButton>
+                    <InfoRoundedIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
                 </Tooltip>
               </Box>
             </Box>
           )}
-          <Box></Box>
-          <Box paddingBottom={3}>
-            {/* {handleMenu(child.data, Groupaccess, true)} */}
-            {handleMenu(filteredMenuData, Groupaccess, true)}
 
-            <Tooltip title="Logout">
-              <ListItemButton
-                // onClick={() => {
-                //   navigate("/");
-                //   dispatch(logout());
-                // }}
-                onClick={() => { handleLogout() }}
-              >
-                <ListItemIcon>
-                  <LogoutOutlinedIcon color="error" />
-                </ListItemIcon>
+          {/* ===== MENU LIST ===== */}
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              px: 0.5,
+              py: 1,
+              "& ::-webkit-scrollbar": {
+                width: "6px",
+              },
+              "& ::-webkit-scrollbar-track": {
+                backgroundColor: "transparent",
+              },
+              "& ::-webkit-scrollbar-thumb": {
+                backgroundColor: colors.grey[400],
+                borderRadius: "3px",
+              },
+            }}
+          >
+            <List component="nav" disablePadding>
+              {handleMenuWithStyling(filteredMenuData, Groupaccess, true)}
+            </List>
+          </Box>
 
-                {!collapsed && <ListItemText primary="Logout" />}
-              </ListItemButton>
-            </Tooltip>
-
-
-            <Divider sx={{ mt: 1 }} variant="middle" />
-
-            <Grid mt={1} p={1} container direction={"column"} spacing={2}>
-              {Expiryin < 10 ? (
-                <Paper
-                  elevation={3}
-                  sx={{ padding: 2, maxWidth: 400, margin: "auto" }}
+          {/* ===== FOOTER SECTION ===== */}
+          <Box
+            sx={{
+              borderTop: `1px solid ${colors.primary[300]}`,
+              p: 1,
+              backgroundColor: colors.primary[400],
+            }}
+          >
+            {/* LOGOUT BUTTON */}
+            <ListItem disablePadding sx={{ mb: 0.5 }}>
+              <Tooltip title="Logout">
+                <ListItemButton
+                  onClick={() => handleLogout()}
+                  sx={{
+                    mx: 1.2,
+                    borderRadius: 2,
+                    py: 1,
+                    //color: colors.grey[700],
+                    color: "#000000",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "#FEE2E2",
+                      color: "#DC2626",
+                    },
+                  }}
                 >
-                  <Box
+                  <ListItemIcon
                     sx={{
-                      border: "1px solid red",
-                      backgroundColor: "#ffebee",
-                      padding: 2,
-                      textAlign: "center",
+                      minWidth: 40,
+                      color: "#000000",
                     }}
                   >
-                    <Typography variant="body1" color="error" fontWeight="bold">
-                      ⚠ Warning: Your subscription will expire in {Expiryin}{" "}
-                      days!
-                    </Typography>
-                  </Box>
-                </Paper>
-              ) : null}
-            </Grid>
+                    <LogoutOutlinedIcon sx={{ fontSize: 20 }} />
+                  </ListItemIcon>
+                  {!collapsed && (
+                    <ListItemText
+                      primary="Logout"
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                        fontWeight: 500,
+                      }}
+                    />
+                  )}
+                </ListItemButton>
+              </Tooltip>
+            </ListItem>
+
+            {/* EXPIRY WARNING */}
+            {Expiryin < 10 && !collapsed && (
+              <Paper
+                elevation={0}
+                sx={{
+                  mt: 1,
+                  mx: 1.2,
+                  p: 1.5,
+                  backgroundColor: "#FEE2E2",
+                  border: "1px solid #FECACA",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  fontWeight={600}
+                  color="#DC2626"
+                  display="block"
+                  textAlign="center"
+                >
+                  ⚠ Expires in {Expiryin} days
+                </Typography>
+              </Paper>
+            )}
           </Box>
-        </Menu>
+        </Box>
       </Sidebar>
     </Box>
   );
