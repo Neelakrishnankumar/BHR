@@ -350,7 +350,13 @@ const initialState = {
   StandardstaffmapingGET: "",
   ActivityOccupancy:"",
   TaskProcessController:"",
-  TermUrl: "",
+  promotiongetUrl: "",
+  promotionupdateUrl: "",
+  promotionstandardActUrl: "",
+  PromotionstudmarksGetUrl: "",
+  promotionstudentmarksPosturl: "",
+
+    TermUrl: "",
 
 };
 
@@ -573,6 +579,11 @@ export const getUrlSlice = createSlice({
       state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
       state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
       state.TaskProcessController = APIurl + "TaskProcessController.php";
+      state.promotiongetUrl = APIurl + "StudentPromotionGet.php";
+      state.promotionupdateUrl = APIurl + "PromotionStatusUpdate.php";
+      state.promotionstandardActUrl = APIurl + "getacademicprojectdata.php?";
+      state.PromotionstudmarksGetUrl = APIurl + "StudentMarksGet.php";
+      state.promotionstudentmarksPosturl = APIurl + "StudentMarksPost.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
     },
 

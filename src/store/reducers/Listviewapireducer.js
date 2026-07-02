@@ -1997,8 +1997,17 @@ export const fetchListview =
                         />
                       )}
                       
-                      {is003Subscription && (
-                        <Link to={`./EditPromotion/${params.row.RecordID}/E`}>
+     {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
+                        <Link to={`./EditPromotion/${params.row.RecordID}/E`}
+                         state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
                           <Tooltip title="Promotion">
                             <IconButton color="info" size="small">
                               <NextWeekIcon />
@@ -2006,6 +2015,15 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
+                  {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
+                          <Tooltip title="Promotion">
+                            <IconButton color="info" size="small" disabled>
+                              <NextWeekIcon />
+                            </IconButton>
+                          </Tooltip>
+                   
+                      )}
+
 
                       {is003Subscription && (
                         // <Link
