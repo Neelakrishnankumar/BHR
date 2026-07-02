@@ -109,7 +109,7 @@ const EditSettlements = () => {
                     Amount: Yup.number()
                         .typeError(data.Settlement.Amount)
                         .required(data.Settlement.Amount)
-                         .moreThan(0, "Amount must be greater than 0"),
+                        .moreThan(0, "Amount must be greater than 0"),
 
                     paymentmode: Yup.string()
                         .typeError(data.Settlement.paymentmode)
@@ -246,56 +246,116 @@ const EditSettlements = () => {
         });
     };
 
+
+
     return (
         <React.Fragment>
+
+            {/* //Breadcrumbs and Header Section */}
             {getLoading ? <LinearProgress /> : false}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-                <Box display="flex" justifyContent="space-between" p={2}>
-                    <Box display="flex" borderRadius="3px" alignItems="center">
+            <Paper
+                elevation={0}
+                sx={{
+                    mx: 2,
+                    mb: 2,
+                    borderRadius: 3,
+                    border: "1px solid #E5E7EB",
+                    bgcolor: "#fff",
+                    overflow: "hidden", 
+                }}
+            >
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    px={3}
+                    py={2}
+                >
+                    {/* LEFT SIDE */}
+                    <Box display="flex" alignItems="center" gap={2}>
                         {broken && !rtl && (
-                            <IconButton onClick={() => toggleSidebar()}>
+                            <IconButton
+                                onClick={() => toggleSidebar()}
+                                sx={{
+                                    bgcolor: "#F3F4F6",
+                                    "&:hover": { bgcolor: "#E5E7EB" },
+                                }}
+                            >
                                 <MenuOutlinedIcon />
                             </IconButton>
                         )}
-                        <Breadcrumbs
-                            maxItems={2}
-                            aria-label="breadcrumb"
-                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                        >
+
+                        <Box>
                             <Typography
-                                variant="h5"
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                onClick={() => {
-                                    navigate("/Apps/TR380/Settlements");
+                                sx={{
+                                    fontSize: 20,
+                                    fontWeight: 700,
+                                    color: "#111827",
+                                    lineHeight: 1.2,
                                 }}
                             >
-                                List Of Settlement
+                                Settlement
                             </Typography>
-                            <Typography
-                                variant="h5"
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                onClick={() => {
-                                    navigate(-1);
-                                }}
+
+                            <Breadcrumbs
+                                maxItems={2}
+                                separator={
+                                    <NavigateNextIcon sx={{ color: "#9CA3AF", fontSize: 18 }} />
+                                }
                             >
-                                {mode === "E"
-                                    // ? `Settlement (${state.Code || ""} )`
-                                    ? `Settlement (Edit)`
-                                    : `Settlement(New)` || ""}
-                            </Typography>
-                        </Breadcrumbs>
+                                <Typography
+                                    sx={{
+                                        color: "#2563EB",
+                                        cursor: "pointer",
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                    }}
+                                    onClick={() => navigate("/Apps/TR380/Settlements")}
+                                >
+                                    List Of Settlement
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        color: "#6B7280",
+                                        fontSize: 14,
+                                        fontWeight: 600,
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() => navigate(-1)}
+                                >
+                                    {mode === "E"
+                                        ? "Edit"
+                                        : "New"}
+                                </Typography>
+                            </Breadcrumbs>
+                        </Box>
                     </Box>
 
-                    <Box display="flex">
+                    {/* RIGHT SIDE */}
+                    <Box display="flex" gap={1}>
                         <Tooltip title="Close">
-                            <IconButton onClick={() => fnLogOut("Close")} color="error">
+                            <IconButton
+                                onClick={() => fnLogOut("Close")}
+                                sx={{
+                                    borderRadius: 2,
+                                    color: "#DC2626",
+                                    "&:hover": { bgcolor: "#FEE2E2" },
+                                }}
+                            >
                                 <ResetTvIcon />
                             </IconButton>
                         </Tooltip>
+
                         <Tooltip title="Logout">
-                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                            <IconButton
+                                onClick={() => fnLogOut("Logout")}
+                                sx={{
+                                    borderRadius: 2,
+                                    color: "#DC2626",
+                                    "&:hover": { bgcolor: "#FEE2E2" },
+                                }}
+                            >
                                 <LogoutOutlinedIcon />
                             </IconButton>
                         </Tooltip>
@@ -304,7 +364,16 @@ const EditSettlements = () => {
             </Paper>
 
             {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
+                <Paper
+                    elevation={0}
+                    sx={{
+                        m: 2,
+                        p: 3,
+                        borderRadius: 3,
+                        border: "1px solid #E5E7EB",
+                        background: "#fff",
+                    }}
+                >
                     <Formik
                         initialValues={InitialValue}
                         onSubmit={(values, setSubmitting) => {
@@ -320,260 +389,207 @@ const EditSettlements = () => {
                             touched,
                             handleBlur,
                             handleChange,
-                            isSubmitting,
                             values,
                             handleSubmit,
                             setFieldValue,
-                        }) => {
+                        }) => (
+                            <form onSubmit={handleSubmit}>
 
-                            return (
-                                <form onSubmit={handleSubmit}>
-                                    <Box
-                                        display="grid"
-                                        gap={formGap}
-                                        padding={1}
-                                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                        // gap="30px"
-                                        sx={{
-                                            "& > div": {
-                                                gridColumn: isNonMobile ? undefined : "span 2",
+                                {/* GRID */}
+                                <Box
+                                    display="grid"
+                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                    gap={2.5}
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
+                                >
+
+                                    {/* DATE BOX */}
+                                    <TextField
+                                        fullWidth
+                                        type="date"
+                                        name="Date"
+                                        label={
+                                            <>
+                                                Date <span style={{ color: "red" }}>*</span>
+                                            </>
+                                        }
+                                        variant="outlined"
+                                        focused
+                                        value={values.Date}
+                                        onBlur={handleBlur}
+                                        onChange={(e) => handleDateChange(e, handleChange)}
+                                        error={!!touched.Date && !!errors.Date}
+                                        helperText={touched.Date && errors.Date}
+                                    />
+
+
+                                    {/* GIVER BOX */}
+
+                                    <SettlementSingleSelect
+                                        name="GiverID"
+                                        label={
+                                            <>
+                                                Giver <span style={{ color: "red" }}>*</span>
+                                            </>
+                                        }
+                                        value={values.GiverID}
+                                        onChange={(newValue) =>
+                                            setFieldValue("GiverID", newValue)
+                                        }
+                                        error={!!touched.GiverID && !!errors.GiverID}
+                                        helperText={touched.GiverID && errors.GiverID}
+                                        url={`${listViewurl}?data=${JSON.stringify({
+                                            Query: {
+                                                AccessID: "2179",
+                                                ScreenName: "SETTLEMENTGIVER",
+                                                VerticalLicense: Subscriptionlastthree,
+                                                Filter: `CompanyID=${CompanyID}`,
+                                                Any: "",
                                             },
+                                        })}`}
+                                    />
+
+
+                                    {/* RECEIVER BOX */}
+                                    <SettlementSingleSelect
+                                        name="ReceiverID"
+                                        label={
+                                            <>
+                                                Receiver <span style={{ color: "red" }}>*</span>
+                                            </>
+                                        }
+                                        value={values.ReceiverID}
+                                        onChange={(newValue) =>
+                                            setFieldValue("ReceiverID", newValue)
+                                        }
+                                        error={!!touched.ReceiverID && !!errors.ReceiverID}
+                                        helperText={touched.ReceiverID && errors.ReceiverID}
+                                        url={`${listViewurl}?data=${JSON.stringify({
+                                            Query: {
+                                                AccessID: "2178",
+                                                ScreenName: "SETTLEMENTRECEIVER",
+                                                VerticalLicense: Subscriptionlastthree,
+                                                Filter: `CompanyID=${CompanyID}`,
+                                                Any: "",
+                                            },
+                                        })}`}
+                                    />
+
+
+                                    {/* PAYMENT MODE BOX */}
+                                    <TextField
+                                        select
+                                        fullWidth
+                                        name="paymentmode"
+                                        label={
+                                            <>
+                                                Mode Of Payment <span style={{ color: "red" }}>*</span>
+                                            </>
+                                        }
+                                        value={values.paymentmode}
+                                        onBlur={handleBlur}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            sessionStorage.setItem("paymentmode", e.target.value);
+                                        }}
+                                        error={!!touched.paymentmode && !!errors.paymentmode}
+                                        helperText={touched.paymentmode && errors.paymentmode}
+                                        variant="outlined"
+                                        focused
+                                    >
+                                        <MenuItem value="COD">Cash On Delivery</MenuItem>
+                                        <MenuItem value="UPI">UPI</MenuItem>
+                                        <MenuItem value="Others">Others</MenuItem>
+                                    </TextField>
+
+                                    {/* AMOUNT BOX */}
+                                    <TextField
+                                        fullWidth
+                                        name="Amount"
+                                        label={
+                                            <>
+                                                Amount <span style={{ color: "red" }}>*</span>
+                                            </>
+                                        }
+                                        value={values.Amount}
+                                        variant="outlined"
+                                        focused
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (/^\d*\.?\d*$/.test(val)) {
+                                                setFieldValue("Amount", val);
+                                            }
+                                        }}
+                                        onBlur={(e) => {
+                                            const num = parseFloat(e.target.value);
+                                            if (!isNaN(num)) {
+                                                setFieldValue("Amount", num.toFixed(2));
+                                            }
+                                        }}
+                                        error={!!touched.Amount && !!errors.Amount}
+                                        helperText={touched.Amount && errors.Amount}
+                                        InputProps={{
+                                            inputProps: { style: { textAlign: "right" } },
+                                        }}
+                                    />
+
+                                    {/* REMARKS BOX */}
+                                    <TextField
+                                        fullWidth
+                                        name="Remarks"
+                                        label="Remarks"
+                                        value={values.Remarks}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.Remarks && !!errors.Remarks}
+                                        helperText={touched.Remarks && errors.Remarks}
+                                        variant="outlined"
+                                        focused
+                                    />
+
+                                </Box>
+
+                                {/* BUTTONS */}
+                                <Box
+                                    display="flex"
+                                    justifyContent="flex-end"
+                                    gap={2}
+                                    mt={4}
+                                >
+                                    <LoadingButton
+                                        type="submit"
+                                        variant="contained"
+                                        loading={isLoading}
+                                        sx={{
+                                            bgcolor: "#0D9488",
+                                            "&:hover": { bgcolor: "#0F766E" },
+                                            borderRadius: 2,
+                                            px: 4,
                                         }}
                                     >
-                                        <TextField
-                                            name="Date"
-                                            type="date"
-                                            id="Date"
-                                            // label="Date"
-                                            label={
-                                                <span>
-                                                    Date
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </span>
-                                            }
-                                            variant="standard"
-                                            focused
-                                            inputFormat="YYYY-MM-DD"
-                                            value={values.Date}
-                                            onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            onChange={(e) => handleDateChange(e, handleChange)}
-                                            error={!!touched.Date && !!errors.Date}
-                                            helperText={touched.Date && errors.Date}
-                                        // required
-                                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                                        />
-                                        <SettlementSingleSelect
-                                            name="GiverID"
-                                            label={
-                                                <span>
-                                                    {/* Giver Name */}
-                                                    Giver
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </span>
-                                            }
-                                            // variant="outlined"
-                                            id="GiverID"
-                                            value={values.GiverID}
-                                            focused
-                                            onChange={(newValue) => {
-                                                setFieldValue("GiverID", {
-                                                    RecordID: newValue.RecordID,
-                                                    Code: newValue.Code,
-                                                    Name: newValue.Name,
-                                                });
-                                            }}
-                                            error={
-                                                !!touched.GiverID && !!errors.GiverID
-                                            }
-                                            helperText={
-                                                touched.GiverID && errors.GiverID
-                                            }
-                                            // url={`${listViewurl}?data=${JSON.stringify({
-                                            //     Query: {
-                                            //         AccessID: "2178",
-                                            //         ScreenName: "SETTLEMENTGIVER",
-                                            //         VerticalLicense: Subscriptionlastthree,
-                                            //         Filter: `CompanyID=${CompanyID}`,
-                                            //         Any: "",
-                                            //     },
-                                            // })}`}
-                                            url={`${listViewurl}?data=${JSON.stringify({
-                                                Query: {
-                                                    AccessID: "2179",
-                                                    ScreenName: "SETTLEMENTGIVER",
-                                                    VerticalLicense: Subscriptionlastthree,
-                                                    Filter: `CompanyID=${CompanyID}`,
-                                                    Any: "",
-                                                },
-                                            })}`}
-                                        />
-                                        <SettlementSingleSelect
-                                            name="ReceiverID"
-                                            label={
-                                                <span>
-                                                    {/* Receiver Name */}
-                                                    Receiver
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </span>
-                                            }
-                                            // variant="outlined"
-                                            id="ReceiverID"
-                                            focused
-                                            value={values.ReceiverID}
-                                            onChange={(newValue) => {
-                                                setFieldValue("ReceiverID", {
-                                                    RecordID: newValue.RecordID,
-                                                    Code: newValue.Code,
-                                                    Name: newValue.Name,
-                                                });
-                                            }}
-                                            error={
-                                                !!touched.ReceiverID && !!errors.ReceiverID
-                                            }
-                                            helperText={
-                                                touched.ReceiverID && errors.ReceiverID
-                                            }
-                                            
-                                             url={`${listViewurl}?data=${JSON.stringify({
-                                                Query: {
-                                                    AccessID: "2178",
-                                                    ScreenName: "SETTLEMENTRECEIVER",
-                                                    VerticalLicense: Subscriptionlastthree,
-                                                    Filter: `CompanyID=${CompanyID}`,
-                                                    Any: "",
-                                                },
-                                            })}`}
-                                        />
-                                        <TextField
-                                            select
-                                            // label="Payment Mode"
-                                            label={
-                                                <span>
-                                                    Mode Of Payment
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </span>
-                                            }
-                                            id="paymentmode"
-                                            name="paymentmode"
-                                            value={values.paymentmode}
-                                            onBlur={handleBlur}
-                                            onChange={(e) => {
-                                                handleChange(e); // update form state (Formik)
-                                                sessionStorage.setItem(
-                                                    "paymentmode",
-                                                    e.target.value
-                                                ); // save to sessionStorage
-                                            }}
-                                            error={!!touched.paymentmode && !!errors.paymentmode}
-                                            helperText={touched.paymentmode && errors.paymentmode}
-                                            focused
-                                            variant="standard"
+                                        Save
+                                    </LoadingButton>
 
-                                        >
-                                            <MenuItem value="COD">Cash On Delivery</MenuItem>
-                                            <MenuItem value="UPI">UPI</MenuItem>
-                                            <MenuItem value="Others">Others</MenuItem>
-                                        </TextField>
-                                        <TextField
-                                            name="Amount"
-                                            id="Amount"
-                                            // label="Amount"
-                                            label={
-                                                <span>
-                                                    Amount
-                                                    <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                    </span>
-                                                </span>
-                                            }
-                                            type="text"
-                                            inputMode="decimal"
-                                            variant="standard"
-                                            focused
-                                            value={values.Amount}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            onChange={(e) => {
-                                                // allow only numbers + decimal
-                                                const val = e.target.value;
-                                                if (/^\d*\.?\d*$/.test(val)) {
-                                                    setFieldValue("Amount", val);
-                                                }
-                                            }}
-                                            onBlur={(e) => {
-                                                let val = e.target.value;
-
-                                                if (val === "" || val === ".") {
-                                                    setFieldValue("Amount", "");
-                                                    return;
-                                                }
-
-                                                const num = parseFloat(val);
-                                                if (!isNaN(num)) {
-                                                    setFieldValue("Amount", num.toFixed(2)); // ✅ forces .00
-                                                }
-                                            }}
-                                            error={!!touched.Amount && !!errors.Amount}
-                                            helperText={touched.Amount && errors.Amount}
-                                            InputProps={{
-                                                inputProps: {
-                                                    style: { textAlign: "right" },
-                                                },
-                                            }}
-                                            autoFocus
-                                        />
-                                        <TextField
-                                            name="Remarks"
-                                            type="text"
-                                            id="Remarks"
-                                            label="Remarks"
-                                            variant="standard"
-                                            focused
-                                            value={values.Remarks}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            error={!!touched.Remarks && !!errors.Remarks}
-                                            helperText={touched.Remarks && errors.Remarks}
-                                            autoFocus
-                                        />
-
-                                    </Box>
-                                    <Box
-                                        display="flex"
-                                        justifyContent="end"
-                                        padding={1}
-                                        gap="20px"
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate(-1)}
+                                        sx={{
+                                            bgcolor: "#F97316",
+                                            "&:hover": { bgcolor: "#EA580C" },
+                                            borderRadius: 2,
+                                            px: 4,
+                                        }}
                                     >
+                                        Cancel
+                                    </Button>
+                                </Box>
 
-                                        <LoadingButton
-                                            color="secondary"
-                                            variant="contained"
-                                            type="submit"
-                                            loading={isLoading}
-                                        >
-                                            Save
-                                        </LoadingButton>
-
-                                        <Button
-                                            color="warning"
-                                            variant="contained"
-                                            onClick={() => navigate(-1)}
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </Box>
-                                </form>
-                            );
-                        }}
+                            </form>
+                        )}
                     </Formik>
                 </Paper>
             ) : (
