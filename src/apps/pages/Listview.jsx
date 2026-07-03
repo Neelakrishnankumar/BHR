@@ -631,6 +631,49 @@ const filteredRows = React.useMemo(() => {
       }
     });
   };
+
+  const exportToCsv = (rows, columns, fileName = "export") => {
+    if (!rows || rows.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+  
+    // Exclude hidden columns, SLNO (we generate our own SL# below), and any action/button column
+    const exportColumns = columns.filter((col) => {
+      if (!col.field || col.hide) return false;
+      if (col.type === "actions") return false;
+      const fieldLower = col.field.toLowerCase();
+      const headerLower = (col.headerName || "").toLowerCase();
+      if (fieldLower === "slno") return false;
+      if (fieldLower === "action" || fieldLower === "actions") return false;
+      if (headerLower === "action" || headerLower === "actions") return false;
+      return true;
+    });
+  
+    const headers = ["SL#", ...exportColumns.map((col) => col.headerName || col.field)];
+  
+    const csvRows = rows.map((row, index) => {
+      const rowValues = exportColumns.map((col) => {
+        let value = row[col.field];
+        if (value === null || value === undefined) value = "";
+        value = String(value).replace(/"/g, '""'); // escape quotes
+        return `"${value}"`;
+      });
+      return [index + 1, ...rowValues].join(",");
+    });
+  
+    const csvContent = [headers.join(","), ...csvRows].join("\n");
+  
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${fileName}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
  function CustomToolbar() {
      return (
        <Box
@@ -989,7 +1032,8 @@ const filteredRows = React.useMemo(() => {
              <Tooltip arrow title="Export">
                <IconButton
                  sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
-               >
+               onClick={() => exportToCsv(filteredRows, columns, screenName)}
+              >
                  <SaveAltIcon fontSize="small" />
                </IconButton>
              </Tooltip>
@@ -1604,7 +1648,7 @@ function CustomFooter({
   </Box>
                      
           <Box
-            m="5px 0 0 0"
+            // m="5px 0 0 0"
             // padding={2}
             height={dataGridHeight}
             sx={{
@@ -1629,6 +1673,7 @@ function CustomFooter({
               },
                 "& .MuiDataGrid-columnHeaders": {
                       backgroundColor: colors.blueAccent[800],
+                      // backgroundColor: "#25adad",
                       borderBottom: "none",
                     },
               "& .MuiDataGrid-virtualScroller": {
@@ -1648,7 +1693,7 @@ function CustomFooter({
                 color: "", // Color for odd rows
               },
               "& .even-row": {
-                backgroundColor: "#d0edec",
+                // backgroundColor: "#d0edec",
                   backgroundColor: "",
                 color: "", // Color for even rows
               },

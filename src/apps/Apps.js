@@ -906,7 +906,10 @@ function App() {
                     path="/:accessID/:screenName/EditDepartment/:id/:Mode"
                     element={<Editdept />}
                   />
-                 
+                  <Route
+                    path="/:accessID/:screenName/EditSubject/:id/:Mode"
+                    element={<Editdept />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditTax Master/:id/:Mode"
                     element={<Edittaxmaster />}
