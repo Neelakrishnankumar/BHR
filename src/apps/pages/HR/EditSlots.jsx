@@ -903,7 +903,7 @@ const EditSlots = () => {
                             label="Save"
                             material={{
                                 sx: {
-                                    color: "primary.main",
+                                    color: "info",
                                 },
                             }}
                             onClick={handleSaveClick(id)}
@@ -913,7 +913,7 @@ const EditSlots = () => {
                             label="Cancel"
                             className="textPrimary"
                             onClick={handleCancelClick(id)}
-                            color="inherit"
+                            color="info"
                         />,
                     ];
                 }
@@ -930,13 +930,13 @@ const EditSlots = () => {
                         label="Edit"
                         className="textPrimary"
                         onClick={handleEditClick(id)}
-                        color="inherit"
+                        color="info"
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={handleDeleteClick(id)}
-                        color="inherit"
+                        color="error"
                     />,
                 ];
             },
@@ -1042,8 +1042,13 @@ const EditSlots = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-                <Box display="flex" justifyContent="space-between" p={2}>
+            <Box sx={{ height: "100vh", overflow: "auto" }}>
+                               <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                       
+                       
+                                 <Box sx={{ p: 2, borderRadius: 3, }}>
+                         <Paper sx={{ borderRadius: 3 }}>
+                              <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
                             <IconButton onClick={() => toggleSidebar()}>
@@ -1094,9 +1099,15 @@ const EditSlots = () => {
                     </Box>
                 </Box>
             </Paper>
+                       </Box>
             {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
 
+                          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                                      
+                                             <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                                      
+                      <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+              
                     <Formik
                         initialValues={InitialValue}
                         // onSubmit={(values, setSubmitting) => {
@@ -1118,6 +1129,48 @@ const EditSlots = () => {
                             setFieldValue
                         }) => (
                             <form onSubmit={handleSubmit}>
+                                
+                                   {/* ----- CARD HEADER ----- */}
+                                                                                               <Box
+                                                               display="flex"
+                                                               alignItems="center"
+                                                               gap={1.5}
+                                                               mb={1}
+                                                               sx={{ px: 2, pt: 2 }}
+                                                             >
+                                                               {/* ICON */}
+                                                               <Box
+                                                                 sx={{
+                                                                   width: 36,
+                                                                   height: 36,
+                                                                   borderRadius: "50%",
+                                                                   backgroundColor: "#EFF6FF",
+                                                                   display: "flex",
+                                                                   alignItems: "center",
+                                                                   justifyContent: "center",
+                                                                 }}
+                                                               >
+                                                                 <Typography sx={{ fontSize: 18 }}>
+                                                                   📅
+                                                                 </Typography>
+                                                               </Box>
+                                                             
+                                                               {/* TITLE + SUBTITLE */}
+                                                               <Box>
+                                                                 <Typography
+                                                                   variant="subtitle1"
+                                                                   fontWeight={700}
+                                                                   color="#4F46E5"
+                                                                 >
+                                                                 Slot
+                                                                 </Typography>
+                                                             
+                                                                 <Typography variant="body2" color="text.secondary">
+                                                                   Manage time slot groups and their slot structure
+                                                                 </Typography>
+                                                               </Box>
+                                                             </Box>
+                                                                         
                                 <Box
                                     display="grid"
                                     gap={formGap}
@@ -1137,7 +1190,8 @@ const EditSlots = () => {
                                             id="code"
                                             label="Code"
                                             placeholder="Auto"
-                                            variant="standard"
+                                            variant="outlined"
+                    size="small"
                                             focused
                                             // required
                                             value={values.code}
@@ -1145,12 +1199,30 @@ const EditSlots = () => {
                                             onChange={handleChange}
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
-                                            sx={{
-                                                backgroundColor: "#ffffff", // Set the background to white
-                                                "& .MuiFilledInput-root": {
-                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                                },
-                                            }}
+                                                               sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                             InputProps={{ readOnly: true }}
                                         // autoFocus
                                         />
@@ -1167,7 +1239,8 @@ const EditSlots = () => {
                                                     </span>
                                                 </>
                                             }
-                                            variant="standard"
+                                            variant="outlined"
+                    size="small"
                                             focused
                                             // required
                                             value={values.code}
@@ -1175,12 +1248,30 @@ const EditSlots = () => {
                                             onChange={handleChange}
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
-                                            sx={{
-                                                backgroundColor: "#ffffff", // Set the background to white
-                                                "& .MuiFilledInput-root": {
-                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                                },
-                                            }}
+                                                                sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                             autoFocus
                                         />
                                     )}
@@ -1199,60 +1290,123 @@ const EditSlots = () => {
                                                 </span>
                                             </>
                                         }
-                                        variant="standard"
+                                        variant="outlined"
+                    size="small"
                                         focused
                                         value={values.name}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}
-                                        sx={{
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            },
-                                        }}
+                                                          sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                         // required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
                                 </Box>
                                 <Box
+                                 padding={1}
                                     m="5px 0 0 0"
                                     // height={dataGridHeightExplore}
                                     height="70vh"
-                                    sx={{
-                                        "& .MuiDataGrid-root": {
-                                            border: "none",
-                                        },
-                                        "& .MuiDataGrid-cell": {
-                                            borderBottom: "none",
-                                        },
-                                        "& .name-column--cell": {
-                                            color: colors.greenAccent[300],
-                                        },
-                                        "& .MuiDataGrid-columnHeaders": {
-                                            backgroundColor: colors.blueAccent[800],
-                                            borderBottom: "none",
-                                        },
-                                        "& .MuiDataGrid-virtualScroller": {
-                                            backgroundColor: colors.primary[400],
-                                        },
-                                        "& .MuiDataGrid-footerContainer": {
-                                            borderTop: "none",
-                                            backgroundColor: colors.blueAccent[800],
-                                        },
-                                        "& .MuiCheckbox-root": {
-                                            color: `${colors.greenAccent[200]} !important`,
-                                        },
-                                        "& .odd-row": {
-                                            backgroundColor: "",
-                                            color: "", // Color for odd rows
-                                        },
-                                        "& .even-row": {
-                                            backgroundColor: "#D3D3D3",
-                                            color: "", // Color for even rows
-                                        },
-                                    }}
+                                   sx={{
+                      display: "flex",
+              direction: "row",
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .cell-negative-status": {
+                color: colors.redAccent[500],
+                fontWeight: 600,
+              },
+              "& .cell-positive-status": {
+                color: colors.greenAccent[400],
+                fontWeight: 600,
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+                "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // backgroundColor: "#25adad",
+                      borderBottom: "none",
+                    },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "none",
+                backgroundColor: colors.blueAccent[800],
+                // borderColor: "#d0edec",
+                // backgroundColor: "",
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.greenAccent[200]} !important`,
+              },
+              "& .odd-row": {
+                backgroundColor: "",
+                color: "", // Color for odd rows
+              },
+              "& .even-row": {
+                // backgroundColor: "#d0edec",
+                  backgroundColor: "",
+                color: "", // Color for even rows
+              },
+
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600
+                              },
+                   "& .MuiTablePagination-root": { color: colors.blueAccent[900],},
+                   /* ✅ PAGINATION STYLES (WHITE COLOR) */
+  "& .MuiTablePagination-root": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-selectLabel": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-displayedRows": {
+    color: "#fff",
+  },
+
+  /* Dropdown icon */
+  "& .MuiTablePagination-selectIcon": {
+    color: "#fff",
+  },
+
+  /* Left & Right arrow buttons */
+  "& .MuiTablePagination-actions button": {
+    color: "#fff",
+  },
+                
+                  }}
                                 >
                                     <DataGrid
                                         sx={{
@@ -1331,9 +1485,14 @@ const EditSlots = () => {
                     </Formik>
 
                 </Paper>
+                 </Box>
+                                              </Box>
             ) : (
                 false
             )}
+
+                        </Box>
+                                      </Box>
         </React.Fragment>
     );
 };

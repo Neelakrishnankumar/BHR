@@ -1314,55 +1314,66 @@ const Editdesignation = () => {
                           {/* </FormControl> */}
                         </Box>
 
-                        <Box
-                          padding={1}
-                          m="5px 0 0 0"
-                          // height="50vh"
-                          // height={dataGridHeight}
-                          height={dataGridHeightExplore}
-                          sx={{
-                            "& .MuiDataGrid-root": {
-                              border: "none",
-                            },
-                            "& .MuiDataGrid-cell": {
-                              borderBottom: "none",
-                            },
-                            "& .name-column--cell": {
-                              color: colors.greenAccent[300],
-                            },
-                            "& .MuiDataGrid-columnHeaders": {
-                              backgroundColor: colors.blueAccent[800],
-                              borderBottom: "none",
-                            },
+                <Box
+                  padding={1}
+                  m="5px 0 0 0"
+                  // height="50vh"
+                  // height={dataGridHeight}
+                  height={dataGridHeightExplore}
+                  sx={{
+                     "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .cell-negative-status": {
+                color: colors.redAccent[500],
+                fontWeight: 600,
+              },
+              "& .cell-positive-status": {
+                color: colors.greenAccent[400],
+                fontWeight: 600,
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+                "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // backgroundColor: "#25adad",
+                      borderBottom: "none",
+                    },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "none",
+                backgroundColor: colors.blueAccent[800],
+                // borderColor: "#d0edec",
+                // backgroundColor: "",
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.greenAccent[200]} !important`,
+              },
+              "& .odd-row": {
+                backgroundColor: "",
+                color: "", // Color for odd rows
+              },
+              "& .even-row": {
+                // backgroundColor: "#d0edec",
+                  backgroundColor: "",
+                color: "", // Color for even rows
+              },
 
-                            "& .MuiDataGrid-virtualScroller": {
-                              backgroundColor: colors.primary[400],
-                            },
-                            "& .MuiDataGrid-footerContainer": {
-                              borderTop: "none",
-                              backgroundColor: colors.blueAccent[800],
-                            },
-                            "& .MuiCheckbox-root": {
-                              color: `${colors.greenAccent[200]} !important`,
-                            },
-                            "& .odd-row": {
-                              backgroundColor: "",
-                              color: "", // Color for odd rows
-                            },
-                            "& .even-row": {
-                              backgroundColor: "#D3D3D3",
-                              color: "", // Color for even rows
-                            },
-
-                            "& .MuiDataGrid-columnHeaderTitle": {
-                              color: colors.blueAccent[900],
-                              fontWeight: 700
-                            },
-                            "& .MuiTablePagination-root": { color: colors.blueAccent[900], },
-                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                            "& .MuiTablePagination-root": {
-                              color: "#fff",
-                            },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600
+                              },
+                   "& .MuiTablePagination-root": { color: colors.blueAccent[900],},
+                   /* ✅ PAGINATION STYLES (WHITE COLOR) */
+  "& .MuiTablePagination-root": {
+    color: "#fff",
+  },
 
                             "& .MuiTablePagination-selectLabel": {
                               color: "#fff",

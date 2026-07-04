@@ -274,7 +274,7 @@ const Editdept = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+      {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -318,9 +318,70 @@ const Editdept = () => {
             </Tooltip>
           </Box>
         </Box>
-      </Paper>
+      </Paper> */}
+      
+ <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+
+
+          <Box sx={{ p: 2, borderRadius: 3, }}>
+  <Paper sx={{ borderRadius: 3 }}>
+    
+    {/* MAIN HEADER ROW */}
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      p={2}
+    >
+      
+      {/* LEFT SIDE */}
+      <Box display="flex" alignItems="center">
+        {broken && !rtl && (
+          <IconButton onClick={() => toggleSidebar()}>
+            <MenuOutlinedIcon />
+          </IconButton>
+        )}
+
+        <Breadcrumbs
+          maxItems={3}
+          aria-label="breadcrumb"
+          separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+        >
+          <Typography
+            variant="h5"
+            color="#0000D1"
+            sx={{ cursor: "default" }}
+          >
+            {screenName === "Department" ? "Department" : "Subject"}
+          </Typography>
+        </Breadcrumbs>
+      </Box>
+
+      {/* RIGHT SIDE */}
+      <Box display="flex" gap={1}>
+        <Tooltip title="Close">
+          <IconButton onClick={() => fnLogOut("Close")} color="error">
+            <ResetTvIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Logout">
+          <IconButton onClick={() => fnLogOut("Logout")} color="error">
+            <LogoutOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+    </Box>
+  </Paper>
+</Box>
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+                 <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+        
+               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+        
+        <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
           <Formik
             initialValues={initialValues}
             enableReinitialize={true}
@@ -341,7 +402,48 @@ const Editdept = () => {
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
+     {/* ----- CARD HEADER ----- */}
+                                  <Box
+  display="flex"
+  alignItems="center"
+  gap={1.5}
+  mb={1}
+  sx={{ px: 2, pt: 2 }}
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>
+      {screenName === "Department" ? "🏢" : "📘"}
+    </Typography>
+  </Box>
 
+  {/* TITLE + SUBTITLE */}
+  <Box>
+    <Typography
+      variant="subtitle1"
+      fontWeight={700}
+      color="#4F46E5"
+    >
+      {screenName === "Department" ? "Department" : "Subject"}
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+      {screenName === "Department"
+        ? "Manage organizational units and team structure"
+        : "Manage subjects and academic categories"}
+    </Typography>
+  </Box>
+</Box>
                 <Box
                   display="grid"
                   gap={formGap}
@@ -358,7 +460,8 @@ const Editdept = () => {
                   {CompanyAutoCode == "Y" ? (
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                    size="small"
                       type="text"
                       label="Code"
                       placeholder="Auto"
@@ -373,13 +476,30 @@ const Editdept = () => {
                       // required
                       focused
                       // autoFocus
-                      sx={{
+                                        sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                       inputProps={{ maxLength: 8 }}
                       onInvalid={(e) => {
                         e.target.setCustomValidity("Please Fill The Code");
@@ -392,7 +512,8 @@ const Editdept = () => {
 
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                    size="small"
                       type="text"
                       label={
                         <>
@@ -409,13 +530,30 @@ const Editdept = () => {
                       // required
                       focused
                       autoFocus
-                      sx={{
+                                        sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                       inputProps={{ maxLength: 8 }}
                       onInvalid={(e) => {
                         e.target.setCustomValidity("Please Fill The Code");
@@ -429,7 +567,8 @@ const Editdept = () => {
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     label={
                       <>
@@ -446,13 +585,30 @@ const Editdept = () => {
                     helperText={touched.Name && errors.Name}
                     focused
                     autoFocus={CompanyAutoCode === "Y"}
-                    sx={{
+                                      sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
 
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }}
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                     // required
                     inputProps={{ maxLength: 90 }}
                     multiline
@@ -497,7 +653,8 @@ const Editdept = () => {
                   </TextField> */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     label="Location"
                     // label={
@@ -513,18 +670,37 @@ const Editdept = () => {
                     // required
                     error={!!touched.Loc && !!errors.Loc}
                     helperText={touched.Loc && errors.Loc}
-                    sx={{
+                                      sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
 
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }} focused
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
+                    focused
                     inputProps={{ maxLength: 90 }}
                   />
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="Number"
                     label="Sort Order"
                     value={values.SortOrder}
@@ -547,6 +723,30 @@ const Editdept = () => {
                         .toString()
                         .slice(0, 8);
                     }}
+                                       sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                   />
                   <FormControl>
                     <Box>
@@ -702,9 +902,14 @@ const Editdept = () => {
           </Formik>
 
         </Paper>
+             </Box>
+              </Box>
+              
       ) : (
         false
       )}
+       </Box>
+              </Box>
     </React.Fragment>
   );
 };
