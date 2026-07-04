@@ -294,7 +294,7 @@ const EditArea = () => {
                 <IconButton
                   onClick={() => fnLogOut("Close")}
                   sx={{
-                    bgcolor: "#FEF2F2",
+                   // bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -309,7 +309,7 @@ const EditArea = () => {
                 <IconButton
                   onClick={() => fnLogOut("Logout")}
                   sx={{
-                    bgcolor: "#FEF2F2",
+                //    bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -350,7 +350,7 @@ const EditArea = () => {
                   fontSize: 18,
                 }}
               >
-                🚚
+                ➡️
               </Box>
 
               <Box>

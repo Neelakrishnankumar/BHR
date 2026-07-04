@@ -6957,7 +6957,10 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="Code"
-                              InputProps={{ readOnly: true }}
+                              inputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
                             />
 
                             <TextField
@@ -6972,6 +6975,9 @@ const Editemployee = () => {
                               onChange={handleChange}
                               label="Name"
                               InputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
                             />
                           </Box>
 
@@ -10435,12 +10441,12 @@ const Editemployee = () => {
                           <DialogActions>
 
                             <LoadingButton
-                                loading={loading}
-                                variant="contained"
-                                onClick={handleSubmit}
-                              >
-                                Save
-                              </LoadingButton>
+                              loading={loading}
+                              variant="contained"
+                              onClick={handleSubmit}
+                            >
+                              Save
+                            </LoadingButton>
 
                             <Button
                               color="error"
@@ -15031,7 +15037,7 @@ const Editemployee = () => {
                           selectCellRowData({ rowData: {}, mode: "A", field: "" });
                           resetForm();
                           setOpenItemCustodyModal(true);
-                          
+
                         }}
                       >
 

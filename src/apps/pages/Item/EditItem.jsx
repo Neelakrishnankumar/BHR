@@ -19,6 +19,10 @@ import {
   Divider,
   LinearProgress,
   FormLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
@@ -83,6 +87,11 @@ import {
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { tokens } from "../../../Theme";
 import { useTheme } from "@emotion/react";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import CloseIcon from '@mui/icons-material/Close';
+
 const EditItem = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -145,6 +154,7 @@ const EditItem = () => {
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
+
   const ItemCategorID = params.parentID1;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -207,6 +217,8 @@ const EditItem = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const commentsRef = useRef(null);
+
+  const [openLeadModal, setOpenLeadModal] = useState(false);
 
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
@@ -341,8 +353,6 @@ const EditItem = () => {
     },
   ];
 
-
-
   function FormSectionsSidebar({
     show,
     screenChange,
@@ -461,6 +471,31 @@ const EditItem = () => {
     );
   }
 
+
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db",
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db",
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280",
+    },
+  };
 
   const ItemMainSaveFn = async (values, delAction) => {
     // let action =
@@ -1399,7 +1434,7 @@ const EditItem = () => {
                           variant="contained"
                           color="secondary"
                           loading={isLoading}
-                           sx={{
+                          sx={{
                             textTransform: "none",
                             borderRadius: 2,
                             px: 4,
@@ -1416,7 +1451,7 @@ const EditItem = () => {
                           variant="contained"
                           color="warning"
                           onClick={() => navigate(-1)}
-                           sx={{
+                          sx={{
                             textTransform: "none",
                             borderRadius: 2,
                             px: 4,
@@ -2083,122 +2118,187 @@ const EditItem = () => {
         ) : (
           false
         )}
+
         {show == "2" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={StockinitialValues}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  ItemSaveFn(values, resetForm);
-                }, 100);
-              }}
-              enableReinitialize={true}
-              validationSchema={validationSchema2}
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+            <Box
+              flex={1}
+              minWidth={0}
+              display="flex"
+              flexDirection="column"
+              gap={3}
             >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                setFieldValue,
-                handleSubmit,
-                setFieldTouched,
-              }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    {CompanyAutoCode == "Y" ? (
-                      <TextField
-                        name="Code"
-                        type="text"
-                        id="Code"
-                        label="Code"
-                        placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        InputProps={{ readOnly: true }}
-                      // autoFocus
-                      />
-                    ) : (
-                      <TextField
-                        name="Code"
-                        type="text"
-                        id="Code"
-                        label={
-                          <>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
-                      />
-                    )}
-                    <TextField
-                      name="Description"
-                      type="text"
-                      id="Description"
-                      label={
-                        <span>
-                          Description{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+
+                <Formik
+                  initialValues={StockinitialValues}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      ItemSaveFn(values, resetForm);
+                    }, 100);
+                  }}
+                  enableReinitialize={true}
+                  validationSchema={validationSchema2}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    setFieldValue,
+                    handleSubmit,
+                    setFieldTouched,
+                  }) => (
+                    <Form onSubmit={handleSubmit}>
+
+
+                      <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                        <Box
+                          sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Inventory2OutlinedIcon
+                            sx={{ color: "#4F46E5", fontSize: 20 }}
+                          />
+                        </Box>
+
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#4F46E5"
                           >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.Description}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.Description && !!errors.Description}
-                      helperText={touched.Description && errors.Description}
-                      InputProps={{ readOnly: true }}
-                      autoFocus
-                    />
-                    {/* <TextField
+                            Stock Information
+                          </Typography>
+
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                          >
+                            Configure stock, quantities and inventory details
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="grid"
+                        // gap={formGap}
+                        gap="20px"
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        {CompanyAutoCode == "Y" ? (
+                          <TextField
+                            name="Code"
+                            type="text"
+                            id="Code"
+                            label="Code"
+                            placeholder="Auto"
+                            variant="outlined"
+                            size="small"
+                            // required
+                            value={values.Code}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.Code && !!errors.Code}
+                            helperText={touched.Code && errors.Code}
+                            sx={{
+                              backgroundColor: "#ffffff",
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ",
+                              },
+                            }}
+                            InputProps={{ readOnly: true }}
+                          // autoFocus
+                          />
+                        ) : (
+                          <TextField
+                            name="Code"
+                            type="text"
+                            id="Code"
+                            label={
+                              <>
+                                Code
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            // required
+                            value={values.Code}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.Code && !!errors.Code}
+                            helperText={touched.Code && errors.Code}
+                            sx={{
+                              backgroundColor: "#ffffff",
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ",
+                              },
+                            }}
+                            autoFocus
+                          />
+                        )}
+                        <TextField
+                          name="Description"
+                          type="text"
+                          id="Description"
+                          label={
+                            <span>
+                              Description{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.Description}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.Description && !!errors.Description}
+                          helperText={touched.Description && errors.Description}
+                          InputProps={{ readOnly: true }}
+                          autoFocus
+                        />
+                        {/* <TextField
                       name="BoxQuantity"
                       type="number"
                       id="BoxQuantity"
@@ -2256,93 +2356,93 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     /> */}
-                    <TextField
-                      name="PurchaseUOM"
-                      type="text"
-                      id="PurchaseUOM"
-                      label={
-                        <span>
-                          Major UOM{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.PurchaseUOM}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.PurchaseUOM && !!errors.PurchaseUOM}
-                      helperText={touched.PurchaseUOM && errors.PurchaseUOM}
-                      autoFocus
-                    />
-                    <TextField
-                      name="ConsumptionUOM"
-                      type="text"
-                      id="ConsumptionUOM"
-                      label={
-                        <span>
-                          Minor UOM{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.ConsumptionUOM}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={
-                        !!touched.ConsumptionUOM && !!errors.ConsumptionUOM
-                      }
-                      helperText={
-                        touched.ConsumptionUOM && errors.ConsumptionUOM
-                      }
-                      autoFocus
-                    />
-                    <TextField
-                      name="ConversionQty"
-                      type="number"
-                      id="ConversionQty"
-                      label={
-                        <span>
-                          Conversion Quantity{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.ConversionQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.ConversionQty && !!errors.ConversionQty}
-                      helperText={touched.ConversionQty && errors.ConversionQty}
-                      autoFocus
-                      InputProps={{
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
+                        <TextField
+                          name="PurchaseUOM"
+                          type="text"
+                          id="PurchaseUOM"
+                          label={
+                            <span>
+                              Major UOM{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.PurchaseUOM}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.PurchaseUOM && !!errors.PurchaseUOM}
+                          helperText={touched.PurchaseUOM && errors.PurchaseUOM}
+                          autoFocus
+                        />
+                        <TextField
+                          name="ConsumptionUOM"
+                          type="text"
+                          id="ConsumptionUOM"
+                          label={
+                            <span>
+                              Minor UOM{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.ConsumptionUOM}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.ConsumptionUOM && !!errors.ConsumptionUOM
+                          }
+                          helperText={
+                            touched.ConsumptionUOM && errors.ConsumptionUOM
+                          }
+                          autoFocus
+                        />
+                        <TextField
+                          name="ConversionQty"
+                          type="number"
+                          id="ConversionQty"
+                          label={
+                            <span>
+                              Conversion Quantity{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.ConversionQty}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.ConversionQty && !!errors.ConversionQty}
+                          helperText={touched.ConversionQty && errors.ConversionQty}
+                          autoFocus
+                          InputProps={{
+                            inputProps: { style: { textAlign: "right" } },
+                          }}
+                        />
 
-                    {/* <TextField
+                        {/* <TextField
                       name="GuidelinePrice"
                       type="number"
                       id="GuidelinePrice"
@@ -2395,7 +2495,7 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     /> */}
-                    {/* <TextField
+                        {/* <TextField
                       name="GuidelinePrice"
                       type="text"
                       id="GuidelinePrice"
@@ -2428,868 +2528,1117 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     /> */}
-                    <TextField
-                      name="GuidelinePrice"
-                      type="text"
-                      id="GuidelinePrice"
-                      label="Guideline Price (Box)"
-                      variant="standard"
-                      focused
-                      value={values.GuidelinePrice}
-                      onChange={(e) => {
-                        let val = e.target.value;
+                        <TextField
+                          name="GuidelinePrice"
+                          type="text"
+                          id="GuidelinePrice"
+                          label="Guideline Price (Box)"
+                          variant="outlined"
+                          size="small"
+                          value={values.GuidelinePrice}
+                          onChange={(e) => {
+                            let val = e.target.value;
 
-                        // Allow only numbers and decimal
-                        if (!/^\d*\.?\d*$/.test(val)) return;
+                            // Allow only numbers and decimal
+                            if (!/^\d*\.?\d*$/.test(val)) return;
 
-                        // Just store raw value (NO formatting here)
-                        setFieldValue("GuidelinePrice", val);
-                      }}
-                      onBlur={(e) => {
-                        let val = e.target.value;
+                            // Just store raw value (NO formatting here)
+                            setFieldValue("GuidelinePrice", val);
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
 
-                        if (val === "") return;
+                            if (val === "") return;
 
-                        const num = Number(val);
-                        if (!isNaN(num)) {
-                          setFieldValue("GuidelinePrice", num.toFixed(2));
-                        }
-                      }}
-                      error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
-                      helperText={touched.GuidelinePrice && errors.GuidelinePrice}
-                      autoFocus
-                      InputProps={{
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
+                            const num = Number(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("GuidelinePrice", num.toFixed(2));
+                            }
+                          }}
+                          error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
+                          helperText={touched.GuidelinePrice && errors.GuidelinePrice}
+                          autoFocus
+                          InputProps={{
+                            inputProps: { style: { textAlign: "right" } },
+                          }}
+                        />
 
-                    <TextField
-                      name="MinStock"
-                      type="number"
-                      id="MinStock"
-                      label={
-                        <span>
-                          Minimum Item Quantity{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
+                        <TextField
+                          name="MinStock"
+                          type="number"
+                          id="MinStock"
+                          label={
+                            <span>
+                              Minimum Item Quantity{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.MinStock}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.MinStock && !!errors.MinStock}
+                          helperText={touched.MinStock && errors.MinStock}
+                          autoFocus
+                          InputProps={{
+                            inputProps: { style: { textAlign: "right" } },
+                          }}
+                        />
+                        <TextField
+                          name="ReorderLevel"
+                          type="number"
+                          id="ReorderLevel"
+                          label={
+                            <span>
+                              Reorder Level{" "}
+                              <span
+                                style={{
+                                  fontSize: "20px",
+                                  color: "red",
+                                }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.ReorderLevel}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.ReorderLevel && !!errors.ReorderLevel}
+                          helperText={touched.ReorderLevel && errors.ReorderLevel}
+                          autoFocus
+                          InputProps={{
+                            inputProps: { style: { textAlign: "right" } },
+                          }}
+                        />
+                        <TextField
+                          name="locknumber"
+                          type="number"
+                          id="locknumber"
+                          label="Lot Number"
+                          // label={
+                          //   <span>
+                          //     Lock Number{" "}
+                          //     <span
+                          //       style={{
+                          //         fontSize: "20px",
+                          //         color: "red",
+                          //       }}
+                          //     >
+                          //       *
+                          //     </span>
+                          //   </span>
+                          // }
+                          variant="outlined"
+                          size="small"
+                          value={values.locknumber}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.locknumber && !!errors.locknumber}
+                          helperText={touched.locknumber && errors.locknumber}
+                          autoFocus
+                          InputProps={{
+                            inputProps: { style: { textAlign: "right" } },
+                          }}
+                        />
+                        <TextField
+                          name="expirydate"
+                          type="date"
+                          id="expirydate"
+                          label="Expiry Date"
+                          variant="outlined"
+                          size="small"
+                          // inputFormat="YYYY-MM-DD"
+                          value={values.expirydate || ""}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.expirydate && !!errors.expirydate}
+                          helperText={touched.expirydate && errors.expirydate}
+                          //   sx={{ background: "" }}
+                          inputlabelprops={{ shrink: true }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        />
+                      </Box>
+
+                      {/* ===== STOCK ===== */}
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          mt: 3,
+                          p: 3,
+                          borderRadius: 3,
+                          border: "1px solid #E5E7EB",
+                          backgroundColor: "#fff",
+                        }}
+                      >
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
                           >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.MinStock}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.MinStock && !!errors.MinStock}
-                      helperText={touched.MinStock && errors.MinStock}
-                      autoFocus
-                      InputProps={{
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                    <TextField
-                      name="ReorderLevel"
-                      type="number"
-                      id="ReorderLevel"
-                      label={
-                        <span>
-                          Reorder Level{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
+                            <Inventory2OutlinedIcon
+                              sx={{ color: "#4F46E5", fontSize: 20 }}
+                            />
+                          </Box>
+
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
+                            >
+                              Stock
+                            </Typography>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              Configure available stock quantities
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          <TextField
+                            name="BoxQuantity"
+                            type="number"
+                            label="Major Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.BoxQuantity}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.BoxQuantity && !!errors.BoxQuantity}
+                            helperText={touched.BoxQuantity && errors.BoxQuantity}
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
+
+                          <TextField
+                            name="PieceQuantity"
+                            type="number"
+                            label="Minor Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.PieceQuantity}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.PieceQuantity && !!errors.PieceQuantity}
+                            helperText={touched.PieceQuantity && errors.PieceQuantity}
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
+                        </Box>
+                      </Paper>
+
+                      {/* ===== CUSTOMER STOCK ===== */}
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          mt: 3,
+                          p: 3,
+                          borderRadius: 3,
+                          border: "1px solid #E5E7EB",
+                          backgroundColor: "#fff",
+                        }}
+                      >
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
                           >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.ReorderLevel}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.ReorderLevel && !!errors.ReorderLevel}
-                      helperText={touched.ReorderLevel && errors.ReorderLevel}
-                      autoFocus
-                      InputProps={{
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                    <TextField
-                      name="locknumber"
-                      type="number"
-                      id="locknumber"
-                      label="Lot Number"
-                      // label={
-                      //   <span>
-                      //     Lock Number{" "}
-                      //     <span
-                      //       style={{
-                      //         fontSize: "20px",
-                      //         color: "red",
-                      //       }}
-                      //     >
-                      //       *
-                      //     </span>
-                      //   </span>
-                      // }
-                      variant="standard"
-                      focused
-                      value={values.locknumber}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.locknumber && !!errors.locknumber}
-                      helperText={touched.locknumber && errors.locknumber}
-                      autoFocus
-                      InputProps={{
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                    <TextField
-                      name="expirydate"
-                      type="date"
-                      id="expirydate"
-                      label="Expiry Date"
-                      variant="standard"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      value={values.expirydate}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.expirydate && !!errors.expirydate}
-                      helperText={touched.expirydate && errors.expirydate}
-                      sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                    />
-                  </Box>
+                            <PeopleAltOutlinedIcon
+                              sx={{ color: "#4F46E5", fontSize: 20 }}
+                            />
+                          </Box>
 
-                  {/* ===== STOCK ===== */}
-                  <Divider sx={{ mt: 2 }} />
-                  <Typography variant="h6" padding={1}>
-                    Stock
-                  </Typography>
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
+                            >
+                              Customer Stock
+                            </Typography>
 
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      name="BoxQuantity"
-                      type="number"
-                      label="Major Quantity"
-                      variant="standard"
-                      value={values.BoxQuantity}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.BoxQuantity && !!errors.BoxQuantity}
-                      helperText={touched.BoxQuantity && errors.BoxQuantity}
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              Maintain customer stock quantities
+                            </Typography>
+                          </Box>
+                        </Box>
 
-                    <TextField
-                      name="PieceQuantity"
-                      type="number"
-                      label="Minor Quantity"
-                      variant="standard"
-                      focused
-                      value={values.PieceQuantity}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.PieceQuantity && !!errors.PieceQuantity}
-                      helperText={touched.PieceQuantity && errors.PieceQuantity}
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                  </Box>
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          <TextField
+                            name="majCusstkQty"
+                            type="number"
+                            label="Major Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.majCusstkQty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.majCusstkQty && !!errors.majCusstkQty}
+                            helperText={touched.majCusstkQty && errors.majCusstkQty}
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
 
-                  {/* ===== CUSTOMER STOCK ===== */}
-                  <Divider sx={{ mt: 2 }} />
-                  <Typography variant="h6" padding={1}>
-                    Customer Stock
-                  </Typography>
+                          <TextField
+                            name="minCusstkQty"
+                            type="number"
+                            label="Minor Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.minCusstkQty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.minCusstkQty && !!errors.minCusstkQty}
+                            helperText={touched.minCusstkQty && errors.minCusstkQty}
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
+                        </Box>
+                      </Paper>
 
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      name="majCusstkQty"
-                      type="number"
-                      label="Major Quantity"
-                      variant="standard"
-                      focused
-                      value={values.majCusstkQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.majCusstkQty && !!errors.majCusstkQty}
-                      helperText={touched.majCusstkQty && errors.majCusstkQty}
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
+                      {/* ===== VENDOR STOCK ===== */}
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          mt: 3,
+                          p: 3,
+                          borderRadius: 3,
+                          border: "1px solid #E5E7EB",
+                          backgroundColor: "#fff",
+                        }}
+                      >
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#ECFDF5",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <LocalShippingOutlinedIcon
+                              sx={{ color: "#4F46E5", fontSize: 20 }}
+                            />
+                          </Box>
 
-                    <TextField
-                      name="minCusstkQty"
-                      type="number"
-                      label="Minor Quantity"
-                      variant="standard"
-                      focused
-                      value={values.minCusstkQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.minCusstkQty && !!errors.minCusstkQty}
-                      helperText={touched.minCusstkQty && errors.minCusstkQty}
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                  </Box>
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
+                            >
+                              Vendor Stock
+                            </Typography>
 
-                  {/* ===== VENDOR STOCK ===== */}
-                  <Divider sx={{ mt: 2 }} />
-                  <Typography variant="h6" padding={1}>
-                    Vendor Stock
-                  </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              Maintain vendor stock quantities
+                            </Typography>
+                          </Box>
+                        </Box>
 
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      name="majvendorstkQty"
-                      type="number"
-                      label="Major Quantity"
-                      variant="standard"
-                      focused
-                      value={values.majvendorstkQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={
-                        !!touched.majvendorstkQty && !!errors.majvendorstkQty
-                      }
-                      helperText={
-                        touched.majvendorstkQty && errors.majvendorstkQty
-                      }
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          <TextField
+                            name="majvendorstkQty"
+                            type="number"
+                            label="Major Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.majvendorstkQty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.majvendorstkQty && !!errors.majvendorstkQty
+                            }
+                            helperText={
+                              touched.majvendorstkQty && errors.majvendorstkQty
+                            }
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
 
-                    <TextField
-                      name="minvendorstkQty"
-                      type="number"
-                      label="Minor Quantity"
-                      variant="standard"
-                      focused
-                      value={values.minvendorstkQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={
-                        !!touched.minvendorstkQty && !!errors.minvendorstkQty
-                      }
-                      helperText={
-                        touched.minvendorstkQty && errors.minvendorstkQty
-                      }
-                      InputProps={{
-                        // readOnly: true,
-                        inputProps: { style: { textAlign: "right" } },
-                      }}
-                    />
-                  </Box>
+                          <TextField
+                            name="minvendorstkQty"
+                            type="number"
+                            label="Minor Quantity"
+                            variant="outlined"
+                            size="small"
+                            value={values.minvendorstkQty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.minvendorstkQty && !!errors.minvendorstkQty
+                            }
+                            helperText={
+                              touched.minvendorstkQty && errors.minvendorstkQty
+                            }
+                            InputProps={{
+                              // readOnly: true,
+                              inputProps: { style: { textAlign: "right" } },
+                            }}
+                          />
+                        </Box>
+                      </Paper>
 
-                  {/* BUTTONS */}
-                  <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    padding={1}
-                    gap={2}
-                  >
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
-                    >
-                      Save
-                    </LoadingButton>
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      //onClick={() => navigate(-1)}
-                      onClick={() => setScreen("0")}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                </Form>
-              )}
-            </Formik>
-          </Paper>
+
+                      {/* BUTTONS */}
+                      <Box
+                        display="flex"
+                        justifyContent="flex-end"
+                        gap={2}
+                        mt={4}
+                      >
+                        <LoadingButton
+                          loading={isLoading}
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            px: 4,
+                            borderRadius: 2,
+                            textTransform: "none",
+                            bgcolor: "#0D9488",
+                            "&:hover": {
+                              bgcolor: "#0F766E"
+                            }
+                          }}
+                        >
+                          Save
+                        </LoadingButton>
+                        <Button
+                          variant="contained"
+                          onClick={() => setScreen("0")}
+                          sx={{
+                            px: 4,
+                            borderRadius: 2,
+                            textTransform: "none",
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C"
+                            }
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
+
+
         {show == "3" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={LeadInitialValues}
-              enableReinitialize={false}
-              validationSchema={validationSchema3}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  LeadSaveFn(values, resetForm, false);
-                }, 100);
-              }}
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+            <Box
+              flex={1}
+              minWidth={0}
+              display="flex"
+              flexDirection="column"
+              gap={3}
             >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-                setFieldValue,
-                setFieldTouched,
-              }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  onReset={() => {
-                    selectCellRowData({
-                      rowData: {},
-                      mode: "A",
-                      field: "",
-                      type: "product",
-                    });
-                    resetForm({
-                      values: {
-                        Code: state.ItemCode || "",
-                        Description: state.BreadCrumb3 || "",
-                        supplier: null,
-                        MinOrderQty: "",
-                        LeadTime: "",
-                        AgreedPrice: "0.00",
-                        LastOrderDate: "",
-                        LastOrderNo: "",
-                        LastOrderPrice: "",
-                        LastOrderQty: "",
-                        LastOrderRating: "",
-                      },
-                    });
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+
+                <Formik
+                  initialValues={LeadInitialValues}
+                  enableReinitialize={false}
+                  validationSchema={validationSchema3}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      LeadSaveFn(values, resetForm, false);
+                     
+                       setOpenLeadModal(false);
+                    }, 100);
                   }}
                 >
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="Code"
-                        name="Code"
-                        value={values.Code}
-                        label="Code"
-                        focused
-                        inputProps={{ readOnly: true }}
-                      />
-                    </FormControl>
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="Description"
-                        name="Description"
-                        value={values.Description}
-                        label="Description"
-                        focused
-                        inputProps={{ readOnly: true }}
-                      />
-                    </FormControl>
-
-                    <Box
-                      m="5px 0 0 0"
-                      //height={dataGridHeight}
-                      height="65vh"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": {
-                          backgroundColor: "",
-                          color: "", // Color for odd rows
-                        },
-                        "& .even-row": {
-                          backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
-                        },
-                      }}
-                    >
-                      <DataGrid
-                        sx={{
-                          "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue,
+                    setFieldTouched,
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        selectCellRowData({
+                          rowData: {},
+                          mode: "A",
+                          field: "",
+                          type: "product",
+                        });
+                        setOpenLeadModal(true);
+                        resetForm({
+                          values: {
+                            Code: state.ItemCode || "",
+                            Description: state.BreadCrumb3 || "",
+                            supplier: null,
+                            MinOrderQty: "",
+                            LeadTime: "",
+                            AgreedPrice: "0.00",
+                            LastOrderDate: "",
+                            LastOrderNo: "",
+                            LastOrderPrice: "",
+                            LastOrderQty: "",
+                            LastOrderRating: "",
                           },
-                        }}
-                        rows={explorelistViewData}
-                        columns={newcolumn}
-                        disableSelectionOnClick
-                        getRowId={(row) => row.RecordID}
-                        rowHeight={dataGridRowHeight}
-                        headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
-                        }
-                        onCellClick={(params) => {
-                          selectCellRowData({
-                            rowData: params.row,
-                            mode: "E",
-                            field: params.field,
-                            setFieldValue,
-                            type: "product",
-                          });
-                        }}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                        components={{
-                          Toolbar: Employee,
-                        }}
-                        onStateChange={(stateParams) =>
-                          setRowCount(stateParams.pagination.rowCount)
-                        }
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
-                        loading={exploreLoading}
-                        componentsProps={{
-                          toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                          },
-                        }}
-                      />
-                    </Box>
-
-                    <FormControl
-                      sx={{
-                        gap: formGap,
-                        marginTop: "10px",
-                        // justifyContent:"space-evenly"
-                      }}
-                    >
-                      <CheckinAutocomplete
-                        name="supplier"
-                        //label="Item"
-                        label={
-                          <>
-                            Supplier
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        id="supplier"
-                        value={values.supplier}
-                        onChange={(newValue) => {
-                          setFieldValue("supplier", {
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                          setFieldTouched("supplier", true);
-
-                          // setFieldValue(
-                          //   "productCategoryID",
-                          //   newValue.CrmItemCategoryID || ""
-                          // );
-                          setTimeout(() => {
-                            commentsRef.current?.focus();
-                          }, 100);
-                        }}
-                        error={!!touched.supplier && !!errors.supplier}
-                        helperText={touched.supplier && errors.supplier}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2141",
-                            ScreenName: "Item Lead Time",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `CompanyID=${CompanyID} AND ItemID=${recID}`,
-                            Any: "",
-                          },
-                        })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
-                      />
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="standard"
-                        id="MinOrderQty"
-                        name="MinOrderQty"
-                        //label="Min Order Qty"
-                        label={
-                          <>
-                            Minimum Order Qty
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.MinOrderQty}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={!!touched.MinOrderQty && !!errors.MinOrderQty}
-                        helperText={touched.MinOrderQty && errors.MinOrderQty}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="standard"
-                        id="AgreedPrice"
-                        name="AgreedPrice"
-                        label="Agreed Price"
-                        // label={
-                        //   <>
-                        //     Agreed Price
-                        //     <span style={{ color: "red", fontSize: "20px" }}>
-                        //       *
-                        //     </span>
-                        //   </>
-                        // }
-                        value={values.AgreedPrice}
-                        // onBlur={handleBlur}
-                        // onChange={handleChange}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("AgreedPrice", val);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
-
-                          if (val === "" || val === ".") {
-                            setFieldValue("AgreedPrice", "0.00");
-                            return;
-                          }
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
-                          const num = Number(val);
-                          setFieldValue("AgreedPrice", num.toFixed(2));
-                        }}
-                        focused
-                        error={!!touched.AgreedPrice && !!errors.AgreedPrice}
-                        helperText={touched.AgreedPrice && errors.AgreedPrice}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="standard"
-                        id="LeadTime"
-                        name="LeadTime"
-                        //label="Lead Time (In days)"
-                        label={
-                          <>
-                            Lead Time (In days)
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.LeadTime}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={!!touched.LeadTime && !!errors.LeadTime}
-                        helperText={touched.LeadTime && errors.LeadTime}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-                      {funMode === "E" && (
-                        <>
-                          <TextField
-                            fullWidth
-                            focused
-                            //type="date"
-                            variant="standard"
-                            id="LastOrderDate"
-                            name="LastOrderDate"
-                            label="Last Order Date"
-                            //inputFormat="DD-MM-YYYY"
-                            value={values.LastOrderDate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.LastOrderDate && !!errors.LastOrderDate
-                            }
-                            helperText={
-                              touched.LastOrderDate && errors.LastOrderDate
-                            }
-                            InputProps={{
-                              inputProps: {
-                                //style: { textAlign: "right" },
-                                readOnly: true,
-                              },
-                            }}
-                          />
-                          <TextField
-                            fullWidth
-                            type="text"
-                            variant="standard"
-                            id="LastOrderNo"
-                            name="LastOrderNo"
-                            label="Last Order No."
-                            value={values.LastOrderNo}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            focused
-                            error={
-                              !!touched.LastOrderNo && !!errors.LastOrderNo
-                            }
-                            helperText={
-                              touched.LastOrderNo && errors.LastOrderNo
-                            }
-                            InputProps={{
-                              inputProps: {
-                                //style: { textAlign: "right" },
-                                readOnly: true,
-                              },
-                            }}
-                          />
-                          <TextField
-                            fullWidth
-                            type="number"
-                            variant="standard"
-                            id="LastOrderQty"
-                            name="LastOrderQty"
-                            label="Last Order Qty"
-                            value={values.LastOrderQty}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            focused
-                            error={
-                              !!touched.LastOrderQty && !!errors.LastOrderQty
-                            }
-                            helperText={
-                              touched.LastOrderQty && errors.LastOrderQty
-                            }
-                            InputProps={{
-                              inputProps: {
-                                style: { textAlign: "right" },
-                                readOnly: true,
-                              },
-                            }}
-                          />
-                          <TextField
-                            fullWidth
-                            type="number"
-                            variant="standard"
-                            id="LastOrderPrice"
-                            name="LastOrderPrice"
-                            label="Last Order Price"
-                            value={values.LastOrderPrice}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            focused
-                            error={
-                              !!touched.LastOrderPrice &&
-                              !!errors.LastOrderPrice
-                            }
-                            helperText={
-                              touched.LastOrderPrice && errors.LastOrderPrice
-                            }
-                            InputProps={{
-                              inputProps: {
-                                style: { textAlign: "right" },
-                                readOnly: true,
-                              },
-                            }}
-                          />
-                          <TextField
-                            fullWidth
-                            type="text"
-                            variant="standard"
-                            id="LastOrderRating"
-                            name="LastOrderRating"
-                            label="Last Order Rating"
-                            value={values.LastOrderRating}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            focused
-                            error={
-                              !!touched.LastOrderRating &&
-                              !!errors.LastOrderRating
-                            }
-                            helperText={
-                              touched.LastOrderRating && errors.LastOrderRating
-                            }
-                            InputProps={{
-                              inputProps: {
-                                style: { textAlign: "right" },
-                                readOnly: true,
-                              },
-                            }}
-                          />
-                        </>
-                      )}
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    // style={{ marginTop: "-40px" }}
-                    gap={2}
-                  >
-                    {/* {YearFlag == "true" ? ( */}
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                    {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? ( */}
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Swal.fire({
-                          title: errorMsgData.Warningmsg.Delete,
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Confirm",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            LeadSaveFn(values, resetForm, "harddelete");
-                          } else {
-                            return;
-                          }
                         });
                       }}
-                      disabled={funMode === "A"}
-                    // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
                     >
-                      Delete
-                    </Button>
-                    <Button
-                      type="reset"
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        setScreen(0);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                </form>
-              )}
-            </Formik>
-          </Paper>
+                      {/* ----- CARD HEADER ----- */}
+                      <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 16 }}>🛒</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                            {values.Description || "Item"}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Item lead time & supplier records
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="Code"
+                          name="Code"
+                          value={values.Code}
+                          label="Code"
+                          inputProps={{ readOnly: true }}
+
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="Description"
+                          name="Description"
+                          value={values.Description}
+                          label="Description"
+                          inputProps={{ readOnly: true }}
+
+                        />
+
+                        <Box
+                          m="5px 0 0 0"
+                          height='60vh'
+                          width='100%'
+                          sx={{
+                            gridColumn: "span 2",
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                              width: "100%",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "",
+                            },
+                            "& .even-row": {
+                              backgroundColor: "",
+                              color: "",
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
+                        >
+                          <DataGrid
+                            sx={{
+                              width: "100%",
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
+                              },
+                            }}
+                            rows={explorelistViewData}
+                            columns={newcolumn}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.RecordID}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            pageSize={pageSize}
+                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onCellClick={(params) => {
+                              selectCellRowData({
+                                rowData: params.row,
+                                mode: "E",
+                                field: params.field,
+                                setFieldValue,
+                                type: "product",
+                              });
+                              setOpenLeadModal(true);
+                            }}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: Employee,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            getRowClassName={(params) =>
+                              params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                            }
+                            loading={exploreLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        {/* ================= FORM FIELDS (POPUP) ================= */}
+                        <Dialog
+                          open={openLeadModal}
+                          onClose={() => setOpenLeadModal(false)}
+                          maxWidth="md"
+                          fullWidth
+                          PaperProps={{
+                            sx: {
+                              borderRadius: 3,
+                            },
+                          }}
+                        >
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="h6">
+                              {funMode === "A" ? "Add Lead Time" : "Edit Lead Time"}
+                            </Typography>
+
+                            <IconButton onClick={() => setOpenLeadModal(false)}>
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogTitle>
+
+                          <DialogContent
+                            sx={{
+                              pt: 3,
+                              "&.MuiDialogContent-root": {
+                                paddingTop: "24px",
+                              },
+                            }}
+                          >
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="repeat(2,minmax(0,1fr))"
+                              gap={2}
+                            >
+                              <CheckinAutocomplete
+                                name="supplier"
+                                label={
+                                  <>
+                                    Supplier
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                id="supplier"
+                                value={values.supplier}
+                                onChange={(newValue) => {
+                                  setFieldValue("supplier", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                  setFieldTouched("supplier", true);
+
+                                  setTimeout(() => {
+                                    commentsRef.current?.focus();
+                                  }, 100);
+                                }}
+                                error={!!touched.supplier && !!errors.supplier}
+                                helperText={touched.supplier && errors.supplier}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2141",
+                                    ScreenName: "Item Lead Time",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID=${CompanyID} AND ItemID=${recID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <TextField
+                                fullWidth
+                                type="number"
+                                size="small"
+                                id="MinOrderQty"
+                                name="MinOrderQty"
+                                label={
+                                  <>
+                                    Minimum Order Qty
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                value={values.MinOrderQty}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.MinOrderQty && !!errors.MinOrderQty}
+                                helperText={touched.MinOrderQty && errors.MinOrderQty}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                type="number"
+                                size="small"
+                                id="AgreedPrice"
+                                name="AgreedPrice"
+                                label="Agreed Price"
+                                value={values.AgreedPrice}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (/^\d*\.?\d{0,2}$/.test(val)) {
+                                    setFieldValue("AgreedPrice", val);
+                                  }
+                                }}
+                                onBlur={(e) => {
+                                  handleBlur(e);
+                                  let val = e.target.value;
+
+                                  if (val === "" || val === ".") {
+                                    setFieldValue("AgreedPrice", "0.00");
+                                    return;
+                                  }
+                                  if (!val.includes(".")) {
+                                    val = `${val}.00`;
+                                  }
+                                  const num = Number(val);
+                                  setFieldValue("AgreedPrice", num.toFixed(2));
+                                }}
+                                error={!!touched.AgreedPrice && !!errors.AgreedPrice}
+                                helperText={touched.AgreedPrice && errors.AgreedPrice}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                type="number"
+                                size="small"
+                                id="LeadTime"
+                                name="LeadTime"
+                                label={
+                                  <>
+                                    Lead Time (In days)
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                value={values.LeadTime}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.LeadTime && !!errors.LeadTime}
+                                helperText={touched.LeadTime && errors.LeadTime}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+
+                              {funMode === "E" && (
+                                <>
+                                  <TextField
+                                    fullWidth
+                                    size="small"
+                                    id="LastOrderDate"
+                                    name="LastOrderDate"
+                                    label="Last Order Date"
+                                    value={values.LastOrderDate}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.LastOrderDate && !!errors.LastOrderDate}
+                                    helperText={touched.LastOrderDate && errors.LastOrderDate}
+                                    InputProps={{
+                                      inputProps: {
+                                        readOnly: true,
+                                      },
+                                    }}
+                                  />
+
+                                  <TextField
+                                    fullWidth
+                                    type="text"
+                                    size="small"
+                                    id="LastOrderNo"
+                                    name="LastOrderNo"
+                                    label="Last Order No."
+                                    value={values.LastOrderNo}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.LastOrderNo && !!errors.LastOrderNo}
+                                    helperText={touched.LastOrderNo && errors.LastOrderNo}
+                                    InputProps={{
+                                      inputProps: {
+                                        readOnly: true,
+                                      },
+                                    }}
+                                  />
+
+                                  <TextField
+                                    fullWidth
+                                    type="number"
+                                    size="small"
+                                    id="LastOrderQty"
+                                    name="LastOrderQty"
+                                    label="Last Order Qty"
+                                    value={values.LastOrderQty}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.LastOrderQty && !!errors.LastOrderQty}
+                                    helperText={touched.LastOrderQty && errors.LastOrderQty}
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: "right" },
+                                        readOnly: true,
+                                      },
+                                    }}
+                                  />
+
+                                  <TextField
+                                    fullWidth
+                                    type="number"
+                                    size="small"
+                                    id="LastOrderPrice"
+                                    name="LastOrderPrice"
+                                    label="Last Order Price"
+                                    value={values.LastOrderPrice}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.LastOrderPrice && !!errors.LastOrderPrice}
+                                    helperText={touched.LastOrderPrice && errors.LastOrderPrice}
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: "right" },
+                                        readOnly: true,
+                                      },
+                                    }}
+                                  />
+
+                                  <TextField
+                                    fullWidth
+                                    type="text"
+                                    size="small"
+                                    id="LastOrderRating"
+                                    name="LastOrderRating"
+                                    label="Last Order Rating"
+                                    value={values.LastOrderRating}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.LastOrderRating && !!errors.LastOrderRating}
+                                    helperText={touched.LastOrderRating && errors.LastOrderRating}
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: "right" },
+                                        readOnly: true,
+                                      },
+                                    }}
+                                  />
+                                </>
+                              )}
+                            </Box>
+                          </DialogContent>
+
+                          <DialogActions
+                            sx={{
+                              borderTop: "1px solid #E5E7EB",
+                              p: 2,
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Button
+                              color="error"
+                              variant="outlined"
+                              disabled={funMode === "A"}
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    LeadSaveFn(values, resetForm, "harddelete");
+                                    setOpenLeadModal(false);
+                                  }
+                                });
+                              }}
+                            >
+                              Delete
+                            </Button>
+
+                            <Box display="flex" gap={1}>
+                              <Button
+                                variant="outlined"
+                                color="warning"
+                                onClick={() => setOpenLeadModal(false)}
+                              >
+                                Cancel
+                              </Button>
+
+                              <LoadingButton
+                                color="secondary"
+                                variant="contained"
+                                loading={isLoading}
+                                onClick={handleSubmit}
+                              >
+                                Save
+                              </LoadingButton>
+                            </Box>
+                          </DialogActions>
+                        </Dialog>
+
+                      </Box>
+                      <Box
+                        display="flex"
+                        justifyContent="end"
+                        padding={1}
+                        gap={2}
+                      >
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                        >
+                          Save
+                        </LoadingButton>
+                        <Button
+                          color="error"
+                          variant="contained"
+                          onClick={() => {
+                            Swal.fire({
+                              title: errorMsgData.Warningmsg.Delete,
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Confirm",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                LeadSaveFn(values, resetForm, "harddelete");
+                              } else {
+                                return;
+                              }
+                            });
+                          }}
+                          disabled={funMode === "A"}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          type="reset"
+                          color="warning"
+                          variant="contained"
+                          onClick={() => {
+                            setScreen(0);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
-      </React.Fragment>
+      </React.Fragment >
     </>
   );
 };

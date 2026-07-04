@@ -637,7 +637,7 @@ const Listview = () => {
       toast.error("No data to export");
       return;
     }
-  
+
     // Exclude hidden columns, SLNO (we generate our own SL# below), and any action/button column
     const exportColumns = columns.filter((col) => {
       if (!col.field || col.hide) return false;
@@ -649,9 +649,9 @@ const Listview = () => {
       if (headerLower === "action" || headerLower === "actions") return false;
       return true;
     });
-  
+
     const headers = ["SL#", ...exportColumns.map((col) => col.headerName || col.field)];
-  
+
     const csvRows = rows.map((row, index) => {
       const rowValues = exportColumns.map((col) => {
         let value = row[col.field];
@@ -661,9 +661,9 @@ const Listview = () => {
       });
       return [index + 1, ...rowValues].join(",");
     });
-  
+
     const csvContent = [headers.join(","), ...csvRows].join("\n");
-  
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -674,23 +674,23 @@ const Listview = () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
- function CustomToolbar() {
-     return (
-       <Box
-         key={location.key}
-         sx={{
-           display: "flex",
-           flexDirection: "row",
-           justifyContent: "space-between",
-           alignItems: "center",
-           backgroundColor: "#fff",
-           border: "1px solid #E5E7EB",
-           borderRadius: 3,
-           p: 2,
-           mb: 2,
-         }}
-       >
-         {/* {broken && !rtl && (
+  function CustomToolbar() {
+    return (
+      <Box
+        key={location.key}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          p: 2,
+          mb: 2,
+        }}
+      >
+        {/* {broken && !rtl && (
            <IconButton
              sx={{ margin: "0 6 0 2" }}
              onClick={() => toggleSidebar()}
@@ -974,72 +974,72 @@ const Listview = () => {
              <FileUploadIcon />
            </IconButton>
              </Tooltip> */}
- 
- 
- 
-             {accessID === "TR321" && (
-               <Tooltip arrow title="Party Analytics">
-                 <IconButton
-                   onClick={() => navigate("/Apps/CRMPartyAnalytics")}
-                 >
-                   <AssessmentIcon />
-                 </IconButton>
-               </Tooltip>)}
- 
- 
-             {accessID === "TR315" && (
-               <Tooltip arrow title="Item Analytics">
-                 <IconButton
-                   onClick={() => navigate("/Apps/ItemStokAnalytics")}
-                 >
-                   <AssessmentIcon />
-                 </IconButton>
-               </Tooltip>)}
-             {accessID == "TR064" ? (
-               <Tooltip arrow title="Excel">
-                 <IconButton
-                   size="large"
-                   color="primary"
-                   aria-label="upload picture"
-                   component="label"
-                 >
-                   <input
-                     hidden
-                     accept="all/*"
-                     type="file"
-                     onChange={changeHandler}
-                   />
-                   <FileUploadIcon />
-                 </IconButton>
-               </Tooltip>
-             ) : (
-               false
-             )}
-             {accessID == "TR059" ? (
-               <Tooltip arrow title="Report">
-                 <AssessmentIcon
-                   sx={{ marginTop: "10px" }}
-                   color="primary"
-                   onClick={() => {
-                     navigate("/Apps/TR100/Editreport/EditReport/1/A");
-                   }}
-                 />
-               </Tooltip>
-             ) : (
-               false
-             )}
- 
-             <Tooltip arrow title="Export">
-               <IconButton
-                 sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
-               onClick={() => exportToCsv(filteredRows, columns, screenName)}
+
+
+
+            {accessID === "TR321" && (
+              <Tooltip arrow title="Party Analytics">
+                <IconButton
+                  onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
+
+
+            {accessID === "TR315" && (
+              <Tooltip arrow title="Item Analytics">
+                <IconButton
+                  onClick={() => navigate("/Apps/ItemStokAnalytics")}
+                >
+                  <AssessmentIcon />
+                </IconButton>
+              </Tooltip>)}
+            {accessID == "TR064" ? (
+              <Tooltip arrow title="Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="all/*"
+                    type="file"
+                    onChange={changeHandler}
+                  />
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              false
+            )}
+            {accessID == "TR059" ? (
+              <Tooltip arrow title="Report">
+                <AssessmentIcon
+                  sx={{ marginTop: "10px" }}
+                  color="primary"
+                  onClick={() => {
+                    navigate("/Apps/TR100/Editreport/EditReport/1/A");
+                  }}
+                />
+              </Tooltip>
+            ) : (
+              false
+            )}
+
+            <Tooltip arrow title="Export">
+              <IconButton
+                sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
+                onClick={() => exportToCsv(filteredRows, columns, screenName)}
               >
-                 <SaveAltIcon fontSize="small" />
-               </IconButton>
-             </Tooltip>
-             <Tooltip title="Configuration">
-                <InfoRoundedIcon color="info" size="small"
-                onClick={() => { navigate("/Apps/ChangeyourPassword_1") }}/>          
+                <SaveAltIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Configuration">
+              <InfoRoundedIcon color="info" size="small"
+                onClick={() => { navigate("/Apps/ChangeyourPassword_1") }} />
             </Tooltip>
 
 
@@ -1610,138 +1610,186 @@ const Listview = () => {
           false
         ))}
 
-   {/* Summary card — only Total, since we don't have Active/Leave/Inactive fields yet */}
-                    
-        
-         <Box m="5px">
-            <CustomToolbar />
-             <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={3}>
-                       <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: "#fff", border: "1px solid #E5E7EB" }}>
-                         <Typography variant="body2" color="text.secondary">Total</Typography>
-                         <Typography variant="h4" fontWeight={700} color="#4F46E5">{listViewData.length}</Typography>
-                       </Box>
-                     </Box>
-{/* ONE card wraps search + grid + footer, like Image 1 */}
-<Box
-  sx={{
-    backgroundColor: "#fff",
-    border: "1px solid #E5E7EB",
-    borderRadius: 3,
-    overflow: "hidden",   // <-- this is what rounds the header/footer corners
-  }}
->
-  {/* Search row, bordered off from the grid below it */}
-  <Box p={2} borderBottom="1px solid #F3F4F6">
- <TextField
-    placeholder="Search..."
-    size="small"
-    value={search}
-    onChange={(e) => {
-      setSearch(e.target.value);
-      setPage(0); // reset to first page on new search
-    }}
-    InputProps={{
-      startAdornment: <SearchIcon sx={{ mr: 1, color: "#9CA3AF", fontSize: 20 }} />,
-    }}
-    sx={{ width: 280, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
-  />
-  </Box>
-                     
+        {/* Summary card — only Total, since we don't have Active/Leave/Inactive fields yet */}
+
+
+        <Box m="5px">
+          <CustomToolbar />
+          {accessID === "TR027" ? (
+            <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={3}>
+              <Box
+                sx={{
+                  p: 2.5,
+                  borderRadius: 3,
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Total
+                </Typography>
+                <Typography variant="h4" fontWeight={700} color="#4F46E5">
+                  {listViewData.length}
+                </Typography>
+              </Box>
+            </Box>
+          ) : null}
+          {/* ONE card wraps search + grid + footer, like Image 1 */}
           <Box
-            // m="5px 0 0 0"
-            // padding={2}
-            height={dataGridHeight}
             sx={{
-              display: "flex",
-              direction: "row",
-              "& .MuiDataGrid-root": {
-                border: "none",
-              },
-              "& .cell-negative-status": {
-                color: colors.redAccent[500],
-                fontWeight: 600,
-              },
-              "& .cell-positive-status": {
-                color: colors.greenAccent[400],
-                fontWeight: 600,
-              },
-              "& .MuiDataGrid-cell": {
-                borderBottom: "none",
-              },
-              "& .name-column--cell": {
-                color: colors.greenAccent[300],
-              },
-                "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      // backgroundColor: "#25adad",
-                      borderBottom: "none",
-                    },
-              "& .MuiDataGrid-virtualScroller": {
-                backgroundColor: colors.primary[400],
-              },
-              "& .MuiDataGrid-footerContainer": {
-                borderTop: "none",
-                // backgroundColor: colors.blueAccent[800],
-                // borderColor: "#d0edec",
-                backgroundColor: "",
-              },
-              "& .MuiCheckbox-root": {
-                color: `${colors.greenAccent[200]} !important`,
-              },
-              "& .odd-row": {
-                backgroundColor: "",
-                color: "", // Color for odd rows
-              },
-              "& .even-row": {
-                // backgroundColor: "#d0edec",
-                  backgroundColor: "",
-                color: "", // Color for even rows
-              },
+              backgroundColor: "#fff",
+              border: "1px solid #E5E7EB",
+              borderRadius: 3,
+              overflow: "hidden",   // <-- this is what rounds the header/footer corners
             }}
           >
-            
-            <DataGrid
+            {/* Search row, bordered off from the grid below it */}
+            <Box
+              p={2}
+              borderBottom="1px solid #F3F4F6"
               sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                placeholder="Search..."
+                size="small"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(0);
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: "#9CA3AF", fontSize: 20 }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: search && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSearch("");
+                          setPage(0);
+                        }}
+                      >
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  width: 280,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Box>
+
+            <Box
+              // m="5px 0 0 0"
+              // padding={2}
+              height={dataGridHeight}
+              sx={{
+                display: "flex",
+                direction: "row",
+                "& .MuiDataGrid-root": {
+                  border: "none",
+                },
+                "& .cell-negative-status": {
+                  color: colors.redAccent[500],
+                  fontWeight: 600,
+                },
+                "& .cell-positive-status": {
+                  color: colors.greenAccent[400],
+                  fontWeight: 600,
+                },
+                "& .MuiDataGrid-cell": {
+                  borderBottom: "none",
+                },
+                "& .name-column--cell": {
+                  color: colors.greenAccent[300],
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  backgroundColor: colors.blueAccent[800],
+                  // backgroundColor: "#25adad",
+                  borderBottom: "none",
+                },
+                "& .MuiDataGrid-virtualScroller": {
+                  backgroundColor: colors.primary[400],
+                },
                 "& .MuiDataGrid-footerContainer": {
-                  // height: dataGridHeaderFooterHeight,
-                  // minHeight: dataGridHeaderFooterHeight,
-                  height: dataGridFooterHeight,
-                  minHeight: dataGridFooterHeight,
-                  //  borderColor: "#d0edec",
+                  borderTop: "none",
+                  // backgroundColor: colors.blueAccent[800],
+                  // borderColor: "#d0edec",
+                  backgroundColor: "",
+                },
+                "& .MuiCheckbox-root": {
+                  color: `${colors.greenAccent[200]} !important`,
+                },
+                "& .odd-row": {
+                  backgroundColor: "#ffff",
+                  color: "", // Color for odd rows
+                },
+                "& .even-row": {
+                  // backgroundColor: "#d0edec",
+                  backgroundColor: "#ffff",
+                  color: "", // Color for even rows
+                },
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  color: colors.blueAccent[900],
+                  fontWeight: 800
                 },
               }}
-              key={accessID}
-              // rows={rows}
-               rows={filteredRows} 
-              columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
-              // columns={columns}
-              loading={loading}
-              disableSelectionOnClick
-              rowHeight={dataGridRowHeight_v1}
-              headerHeight={dataGridHeaderHeight_v1}
-              
-              getRowId={(row) => row.RecordID}
-              pageSize={pageSize}
-              page={page}
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-              rowsPerPageOptions={[5, 10, 15, 20]}
-              onPageChange={(pageno) => handlePagechange(pageno)}
-              getRowClassName={(params) =>
-                params.indexRelativeToCurrentPage % 2 === 0
-                  ? "odd-row"
-                  : "even-row"
-              }
-              components={{ Footer: CustomFooter }}          // 👈 add this
-  componentsProps={{                              // 👈 and this
-    footer: {
-      page,
-      pageSize,
-      totalRows: filteredRows.length,
-      onPageChange: handlePagechange,
-      onPageSizeChange: setPageSize,
-      rowsPerPageOptions: [5, 10, 15, 20],
-    },
-  }}
+            >
+
+              <DataGrid
+                sx={{
+                  "& .MuiDataGrid-footerContainer": {
+                    // height: dataGridHeaderFooterHeight,
+                    // minHeight: dataGridHeaderFooterHeight,
+                    height: dataGridFooterHeight,
+                    minHeight: dataGridFooterHeight,
+                    //  borderColor: "#d0edec",
+                  },
+
+                }}
+                key={accessID}
+                // rows={rows}
+                rows={filteredRows}
+                columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
+                // columns={columns}
+                loading={loading}
+                disableSelectionOnClick
+                rowHeight={dataGridRowHeight_v1}
+                headerHeight={dataGridHeaderHeight_v1}
+
+                getRowId={(row) => row.RecordID}
+                pageSize={pageSize}
+                page={page}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[5, 10, 15, 20]}
+                onPageChange={(pageno) => handlePagechange(pageno)}
+                getRowClassName={(params) =>
+                  params.indexRelativeToCurrentPage % 2 === 0
+                    ? "odd-row"
+                    : "even-row"
+                }
+                components={{ Footer: CustomFooter }}          // 👈 add this
+                componentsProps={{                              // 👈 and this
+                  footer: {
+                    page,
+                    pageSize,
+                    totalRows: filteredRows.length,
+                    onPageChange: handlePagechange,
+                    onPageSizeChange: setPageSize,
+                    rowsPerPageOptions: [5, 10, 15, 20],
+                  },
+                }}
               // components={{
               //   Toolbar: CustomToolbar,
               // }}
