@@ -656,8 +656,9 @@ export const PromotionprojAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
+          size="small"
+          // focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -1732,8 +1733,12 @@ export function MultiFormikOptimizedAutocomplete({
     <Autocomplete
       sx={{
         "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+         "& .MuiOutlinedInput-root": {
+      borderRadius: "8px",
+      backgroundColor: "#fff",
+    },
       }}
-      size="small"
+     
       multiple={multiple}
       limitTags={1}
       open={open}
@@ -1742,7 +1747,6 @@ export function MultiFormikOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      variant="standard" // Set variant to "standard"
       focused
       isOptionEqualToValue={(option, value) =>
         option?.RecordID === value?.RecordID
@@ -1762,8 +1766,9 @@ export function MultiFormikOptimizedAutocomplete({
           {...params}
           label={label}
           error={errors}
-          variant="standard"
-          focused
+           variant="outlined"       // ⬅ was "standard"
+    size="small"
+          // focused
           helperText={helper}
           InputProps={{
             ...params.InputProps,
