@@ -5211,7 +5211,7 @@ const Editemployee = () => {
       );
 
       toast.success(response.payload.Msg);
-      
+
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
     } else {
@@ -6957,7 +6957,10 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="Code"
-                              InputProps={{ readOnly: true }}
+                              inputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
                             />
 
                             <TextField
@@ -6972,6 +6975,9 @@ const Editemployee = () => {
                               onChange={handleChange}
                               label="Name"
                               InputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
                             />
                           </Box>
 
@@ -9726,7 +9732,7 @@ const Editemployee = () => {
             false
           )}
 
-          {/* Item Service */}
+          {/* Item Services */}
           {show == "14" ? (
             <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
 
@@ -9761,7 +9767,26 @@ const Editemployee = () => {
                     validationSchema={validationSchema12}
                     onSubmit={(values, { resetForm }) => {
                       setTimeout(() => {
-                        empItemServicesFn(values, resetForm, false);
+                        const payload = {
+                          code: values.code,
+                          description: values.description,
+                          recordID: values.recordID,
+                          servicedate: values.servicedate,
+                          complaints: values.complaints,
+                          tentativecharge: values.tentativecharge,
+                          returndate: values.returndate,
+                          completeddate: values.completeddate,
+                          actualreturndate: values.actualreturndate,
+                          actualcharges: values.actualcharges,
+                          servicecomments: values.servicecomments,
+
+                          // CRITICAL: Send RecordID directly, not nested
+                          itemsRecordID: values.items?.RecordID,
+                          vendorsRecordID: values.vendors?.RecordID,
+                        };
+                        console.log("Iservice", payload);
+
+                        empItemServicesFn(payload, resetForm, false);
                       }, 100);
                     }}
                   >
@@ -9780,6 +9805,7 @@ const Editemployee = () => {
                         onReset={() => {
                           selectCellRowData({ rowData: {}, mode: "A", field: "" });
                           resetForm();
+                          setOpenItemServiceModal(true);
                         }}
                       >
 
@@ -10081,200 +10107,341 @@ const Editemployee = () => {
                           )}
 
                         </Box> */}
+
                         {/* ================= ITEM SERVICE POPUP ================= */}
                         <Dialog
                           open={openItemServiceModal}
                           onClose={() => setOpenItemServiceModal(false)}
                           fullWidth
                           maxWidth="md"
-                          PaperProps={{
-                            sx: {
-                              borderRadius: 2,
-                              overflow: "hidden"
-                            }
-                          }}
                         >
-                          {/* ================= HEADER ================= */}
-                          <DialogTitle
-                            sx={{
-                              borderBottom: "1px solid #E5E7EB",
-                              fontWeight: 600
-                            }}
-                          >
+                          <DialogTitle>
                             Item Service Details
                           </DialogTitle>
 
-                          {/* ================= BODY ================= */}
                           <DialogContent
+                            dividers
                             sx={{
-                              pt: 2,
-                              pb: 2,
-                              maxHeight: "70vh",
-                              overflowY: "auto"
+                              pt: "20px !important",
                             }}
                           >
-                            {/* ================= FORM FIELDS ================= */}
-                            <Box display="flex" flexDirection="column" gap={2} mt={2}>
 
-                              {/* LOOKUPS ROW */}
-                              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
-                                <ItemsLookup
-                                  name="items"
-                                  label={
-                                    <>
-                                      {getBusinessCaption("Item", "Items")}
-                                      <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                    </>
-                                  }
-                                  value={values.items || null}
-                                  onChange={(newValue) => {
-                                    if (!newValue) return;
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                            >
 
-                                    setFieldValue("items", {
-                                      RecordID: newValue.RecordID,
-                                      Code: newValue.Code,
-                                      Name: newValue.Name,
-                                    });
-                                  }}
-                                  error={!!touched.items && !!errors.items}
-                                  helperText={touched.items && errors.items}
-                                  url={`${listViewurl}?data=${JSON.stringify({
-                                    Query: {
-                                      AccessID: "2129",
-                                      ScreenName: "Items",
-                                      VerticalLicense: Subscriptionlastthree,
-                                      Filter: `CompanyID=${CompanyID} AND EmployeeID=${recID}`,
-                                      Any: "",
-                                    },
-                                  })}`}
-                                />
+                              <ItemsLookup
+                                name="items"
+                                label={
+                                  <>
+                                    {getBusinessCaption("Item", "Items")}
+                                    <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.items}
+                                onChange={(newValue) => {
+                                  setFieldValue("items", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                }}
+                                error={!!touched.items && !!errors.items}
+                                helperText={touched.items && errors.items}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2129",
+                                    ScreenName: "Items",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID=${CompanyID} AND EmployeeID=${recID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
 
-                                <CheckinAutocomplete
-                                  name="vendors"
-                                  label={
-                                    <>
-                                      {getBusinessCaption("Vendor", "Vendor")}
-                                      <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                    </>
-                                  }
-                                  value={values.vendors || null}
-                                  onChange={(newValue) => {
-                                    if (!newValue) return;
+                              <CheckinAutocomplete
+                                name="vendors"
+                                label={
+                                  <>
+                                    {getBusinessCaption("Vendor", "Vendor")}
+                                    <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.vendors}
+                                onChange={(newValue) => {
+                                  setFieldValue("vendors", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                }}
+                                error={!!touched.vendors && !!errors.vendors}
+                                helperText={touched.vendors && errors.vendors}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2100",
+                                    ScreenName: "Vendor",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
 
-                                    setFieldValue("vendors", {
-                                      RecordID: newValue.RecordID,
-                                      Code: newValue.Code,
-                                      Name: newValue.Name,
-                                    });
-                                  }}
-                                  error={!!touched.vendors && !!errors.vendors}
-                                  helperText={touched.vendors && errors.vendors}
-                                  url={`${listViewurl}?data=${JSON.stringify({
-                                    Query: {
-                                      AccessID: "2100",
-                                      ScreenName: "Vendor",
-                                      VerticalLicense: Subscriptionlastthree,
-                                      Filter: `parentID=${CompanyID}`,
-                                      Any: "",
-                                    },
-                                  })}`}
-                                />
-                              </Box>
+                              <TextField
+                                fullWidth
+                                type="date"
+                                name="servicedate"
+                                label={
+                                  <>
+                                    Date <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.servicedate}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                InputLabelProps={{ shrink: true }}
+                                error={!!touched.servicedate && !!errors.servicedate}
+                                helperText={touched.servicedate && errors.servicedate}
+                              />
 
-                              {/* DATE + COMPLAINT */}
-                              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
-                                <TextField
-                                  type="date"
-                                  name="servicedate"
-                                  label="Service Date"
-                                  value={values.servicedate}
-                                  onChange={handleChange}
-                                  InputLabelProps={{ shrink: true }}
-                                />
+                              <TextField
+                                fullWidth
+                                multiline
+                                rows={3}
+                                name="complaints"
+                                label={
+                                  <>
+                                    Complaints <span style={{ color: "red" }}>*</span>
+                                  </>
+                                }
+                                value={values.complaints}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.complaints && !!errors.complaints}
+                                helperText={touched.complaints && errors.complaints}
+                              />
 
-                                <TextField
-                                  name="complaints"
-                                  label="Complaints"
-                                  value={values.complaints}
-                                  onChange={handleChange}
-                                />
-                              </Box>
+                              <Grid container spacing={2}>
 
-                              {/* RETURN + CHARGES */}
-                              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
-                                <TextField
-                                  type="date"
-                                  name="returndate"
-                                  label="Expected Return Date"
-                                  value={values.returndate}
-                                  onChange={handleChange}
-                                  InputLabelProps={{ shrink: true }}
-                                />
-
-                                <TextField
-                                  name="tentativecharge"
-                                  label="Tentative Charges"
-                                  value={values.tentativecharge}
-                                  onChange={(e) => {
-                                    const val = e.target.value;
-                                    if (/^\d*\.?\d*$/.test(val)) {
-                                      setFieldValue("tentativecharge", val);
-                                    }
-                                  }}
-                                />
-                              </Box>
-
-                              {/* CONDITIONAL FIELDS */}
-                              {show == "14" && funMode === "E" && (
-                                <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                                <Grid item xs={6}>
                                   <TextField
+                                    fullWidth
                                     type="date"
+                                    name="returndate"
+                                    label={
+                                      <>
+                                        Expected Return Date
+                                        <span style={{ color: "red" }}>*</span>
+                                      </>
+                                    }
+                                    value={values.returndate}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    InputLabelProps={{ shrink: true }}
+                                    error={!!touched.returndate && !!errors.returndate}
+                                    helperText={touched.returndate && errors.returndate}
+                                  />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <TextField
+                                    fullWidth
+                                    name="tentativecharge"
+                                    label={
+                                      <>
+                                        Tentative Charges
+                                        <span style={{ color: "red" }}>*</span>
+                                      </>
+                                    }
+                                    value={values.tentativecharge}
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+
+                                      if (/^\d*\.?\d*$/.test(val)) {
+                                        setFieldValue("tentativecharge", val);
+                                      }
+                                    }}
+                                    onBlur={(e) => {
+
+                                      let val = e.target.value;
+
+                                      if (val === "" || val === ".") {
+                                        setFieldValue("tentativecharge", "0.00");
+                                        return;
+                                      }
+
+                                      const num = parseFloat(val);
+
+                                      if (!isNaN(num)) {
+                                        setFieldValue(
+                                          "tentativecharge",
+                                          num.toFixed(2)
+                                        );
+                                      }
+
+                                    }}
+                                    error={
+                                      !!touched.tentativecharge &&
+                                      !!errors.tentativecharge
+                                    }
+                                    helperText={
+                                      touched.tentativecharge &&
+                                      errors.tentativecharge
+                                    }
+                                    InputProps={{
+                                      inputProps: {
+                                        style: {
+                                          textAlign: "right",
+                                        },
+                                      },
+                                    }}
+                                  />
+                                </Grid>
+
+                              </Grid>
+
+                              {/* ================= EDIT MODE FIELDS ================= */}
+                              {show == "14" && funMode === "E" && (
+                                <>
+
+                                  <TextField
+                                    fullWidth
+                                    type="date"
+                                    id="completeddate"
                                     name="completeddate"
                                     label="Completed Date"
                                     value={values.completeddate}
+                                    onBlur={handleBlur}
                                     onChange={handleChange}
                                     InputLabelProps={{ shrink: true }}
+                                    error={
+                                      !!touched.completeddate &&
+                                      !!errors.completeddate
+                                    }
+                                    helperText={
+                                      touched.completeddate &&
+                                      errors.completeddate
+                                    }
                                   />
 
-                                  <TextField
-                                    type="date"
-                                    name="actualreturndate"
-                                    label="Actual Return Date"
-                                    value={values.actualreturndate}
-                                    onChange={handleChange}
-                                    InputLabelProps={{ shrink: true }}
-                                  />
+                                  <Grid container spacing={2}>
+
+                                    <Grid item xs={6}>
+                                      <TextField
+                                        fullWidth
+                                        type="date"
+                                        id="actualreturndate"
+                                        name="actualreturndate"
+                                        label="Actual Return Date"
+                                        value={values.actualreturndate}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        InputLabelProps={{ shrink: true }}
+                                        error={
+                                          !!touched.actualreturndate &&
+                                          !!errors.actualreturndate
+                                        }
+                                        helperText={
+                                          touched.actualreturndate &&
+                                          errors.actualreturndate
+                                        }
+                                      />
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                      <TextField
+                                        fullWidth
+                                        id="actualcharges"
+                                        name="actualcharges"
+                                        label="Actual Charges"
+                                        value={values.actualcharges}
+                                        onChange={(e) => {
+
+                                          const val = e.target.value;
+
+                                          if (/^\d*\.?\d*$/.test(val)) {
+                                            setFieldValue("actualcharges", val);
+                                          }
+
+                                        }}
+                                        onBlur={(e) => {
+
+                                          let val = e.target.value;
+
+                                          if (val === "" || val === ".") {
+                                            setFieldValue("actualcharges", "0.00");
+                                            return;
+                                          }
+
+                                          const num = parseFloat(val);
+
+                                          if (!isNaN(num)) {
+                                            setFieldValue(
+                                              "actualcharges",
+                                              num.toFixed(2)
+                                            );
+                                          }
+
+                                        }}
+                                        error={
+                                          !!touched.actualcharges &&
+                                          !!errors.actualcharges
+                                        }
+                                        helperText={
+                                          touched.actualcharges &&
+                                          errors.actualcharges
+                                        }
+                                        InputProps={{
+                                          inputProps: {
+                                            style: {
+                                              textAlign: "right",
+                                            },
+                                          },
+                                        }}
+                                      />
+                                    </Grid>
+
+                                  </Grid>
 
                                   <TextField
-                                    name="actualcharges"
-                                    label="Actual Charges"
-                                    value={values.actualcharges}
-                                    onChange={handleChange}
-                                  />
-
-                                  <TextField
+                                    fullWidth
+                                    multiline
+                                    rows={3}
+                                    id="servicecomments"
                                     name="servicecomments"
                                     label="Comments"
                                     value={values.servicecomments}
+                                    onBlur={handleBlur}
                                     onChange={handleChange}
-                                    multiline
+                                    error={
+                                      !!touched.servicecomments &&
+                                      !!errors.servicecomments
+                                    }
+                                    helperText={
+                                      touched.servicecomments &&
+                                      errors.servicecomments
+                                    }
+                                    inputProps={{
+                                      maxLength: 90,
+                                    }}
                                   />
-                                </Box>
+
+                                </>
                               )}
+
                             </Box>
+
                           </DialogContent>
 
                           {/* ================= ACTION BUTTONS ================= */}
-                          <DialogActions
-                            sx={{
-                              px: 3,
-                              pb: 2,
-                              borderTop: "1px solid #E5E7EB",
-                              justifyContent: "flex-end",
-                              gap: 2
-                            }}
-                          >
+
+                          <DialogActions>
+
                             <LoadingButton
+                              loading={loading}
                               variant="contained"
                               onClick={handleSubmit}
                             >
@@ -10284,9 +10451,31 @@ const Editemployee = () => {
                             <Button
                               color="error"
                               variant="contained"
-                              onClick={() =>
-                                empItemServicesFn(values, resetForm, "harddelete")
-                              }
+                              disabled={funMode === "A"}
+                              onClick={() => {
+
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+
+                                  if (result.isConfirmed) {
+
+                                    empItemServicesFn(
+                                      values,
+                                      resetForm,
+                                      "harddelete"
+                                    );
+
+                                  }
+
+                                });
+
+                              }}
                             >
                               Delete
                             </Button>
@@ -10294,12 +10483,51 @@ const Editemployee = () => {
                             <Button
                               color="warning"
                               variant="contained"
-                              onClick={() => setOpenItemServiceModal(false)}
+                              onClick={() => {
+
+                                resetForm();
+
+                                setOpenItemServiceModal(false);
+
+                              }}
                             >
                               Cancel
                             </Button>
+
                           </DialogActions>
+
                         </Dialog>
+
+                        {/* ================= EXISTING POPUPS ================= */}
+
+                        <Popup
+                          title="Functions"
+                          openPopup={openFunPopup}
+                          setOpenPopup={setOpenFunPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2048"
+                            screenName="Functions"
+                            childToParent={childToParent}
+                            filterName={"CompanyID"}
+                            filterValue={CompanyID}
+                          />
+                        </Popup>
+
+                        <Popup
+                          title="Designations"
+                          openPopup={openDesPopup}
+                          setOpenPopup={setOpenDesPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2049"
+                            screenName="Designations"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
+                        </Popup>
+
 
                         {/* ================= ACTION BUTTONS ================= */}
                         <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
@@ -14808,6 +15036,8 @@ const Editemployee = () => {
                         onReset={() => {
                           selectCellRowData({ rowData: {}, mode: "A", field: "" });
                           resetForm();
+                          setOpenItemCustodyModal(true);
+
                         }}
                       >
 

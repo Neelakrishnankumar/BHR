@@ -263,6 +263,9 @@ const Editdesignation = () => {
             sx={{
               fontWeight: 700,
             }}
+            sx={{
+              fontWeight: 700,
+            }}
           >
             {show == "1" ? "List of Documents" : ""}
           </Typography>

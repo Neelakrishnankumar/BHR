@@ -225,54 +225,136 @@ const EditItemGroup = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mb: 2,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            px={3}
+            py={2}
+          >
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    bgcolor: "#F3F4F6",
+                    "&:hover": {
+                      bgcolor: "#E5E7EB",
+                    },
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {getBusinessCaption("ItemGroup", "Item Group")}
+                </Typography>
+
                 <Breadcrumbs
                   maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  separator={
+                    <NavigateNextIcon
+                      sx={{
+                        color: "#9CA3AF",
+                        fontSize: 18,
+                      }}
+                    />
+                  }
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={{
+                      color: "#2563EB",
+                      cursor: "pointer",
+                      fontSize: 14,
+                      fontWeight: 500,
+                    }}
                     onClick={() => navigate("/Apps/TR315/Item%20Group")}
                   >
-                    {/* {mode === "E" ? `List Of Item Group
-                    (${state.BreadCrumb1})` : `List Of Item Group`} */}
                     {mode === "E"
-                      ? `${getBusinessCaption("ListofItemGroup", "List Of Item Group")} (${state.BreadCrumb1})`
-                      : getBusinessCaption("ListofItemGroup", "List Of Item Group")}</Typography>
+                      ? `${getBusinessCaption(
+                        "ListofItemGroup",
+                        "List Of Item Group"
+                      )} (${state.BreadCrumb1})`
+                      : getBusinessCaption(
+                        "ListofItemGroup",
+                        "List Of Item Group"
+                      )}
+                  </Typography>
+
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={{
+                      color: "#6B7280",
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
                   >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+                    {mode === "A"
+                      ? "New"
+                      : mode === "E"
+                        ? "Edit"
+                        : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
             </Box>
 
-            <Box display="flex">
+            {/* Right */}
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    //   width: 42,
+                    // height: 42,
+                    borderRadius: 2,
+                    // bgcolor: "#FEF2F2",
+                    //  border: "1px solid #FECACA",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+                    //   width: 42,
+                    // height: 42,
+                    borderRadius: 2,
+                    //       bgcolor: "#FEF2F2",
+                    //      border: "1px solid #FECACA",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -281,7 +363,16 @@ const EditItemGroup = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper
+            elevation={0}
+            sx={{
+              m: 2,
+              p: 3,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -305,126 +396,104 @@ const EditItemGroup = () => {
                 <Form onSubmit={handleSubmit}>
                   <Box
                     display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                    gap={2.5}
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    {CompanyAutoCode == "Y" ? (
+                    {/* Code */}
+                    {CompanyAutoCode === "Y" ? (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label="Code"
-                        placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
+                        InputProps={{
+                          readOnly: true,
                         }}
-                        InputProps={{ readOnly: true }}
-                      // autoFocus
                       />
                     ) : (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label={
                           <>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            Code <span style={{ color: "red" }}>*</span>
                           </>
                         }
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         error={!!touched.Code && !!errors.Code}
                         helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
                       />
                     )}
-                    <TextField
-                      name="Description"
-                      type="text"
-                      id="Description"
-                      label={
-                        <span>
-                          {/* Description{" "} */}
-                          {getBusinessCaption("ItemGroup", "Description")}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.Description}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.Description && !!errors.Description}
-                      helperText={touched.Description && errors.Description}
-                      autoFocus
-                    />
-                    {/* SORT ORDER */}
+
+                    {/* Description */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      size="small"
+                      variant="outlined"
+                      name="Description"
+                      label={
+                        <>
+                          {getBusinessCaption("ItemGroup", "Description")}
+                          <span style={{ color: "red" }}>*</span>
+                        </>
+                      }
+                      value={values.Description}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.Description && !!errors.Description}
+                      helperText={touched.Description && errors.Description}
+                    />
+
+                    {/* Sort Order */}
+                    <TextField
+                      fullWidth
+                      size="small"
+                      variant="outlined"
                       type="number"
+                      name="Sortorder"
                       label="Sort Order"
                       value={values.Sortorder}
-                      id="Sortorder"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="Sortorder"
-                      // error={!!touched.Sortorder && !!errors.Sortorder}
-                      // helperText={touched.Sortorder && errors.Sortorder}
-
-                      sx={{ background: "" }}
-                      focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
+                        e.target.value = Math.max(
+                          0,
+                          parseInt(e.target.value || 0)
+                        )
                           .toString()
                           .slice(0, 8);
                       }}
                       InputProps={{
                         inputProps: {
-                          style: { textAlign: "right" },
-                          //readOnly: mode == "V",
+                          style: {
+                            textAlign: "right",
+                          },
                         },
                       }}
                     />
-                    <Box>
+
+                    {/* Item Type Checkboxes */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: 0.5,
+                        alignItems: "center",
+                        mt: 1,
+                      }}
+                    >
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -434,13 +503,8 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Purchase Items"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -450,13 +514,8 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Sales Items"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -466,13 +525,8 @@ const EditItemGroup = () => {
                           />
                         }
                         label="JobWorkIn Items"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -482,16 +536,15 @@ const EditItemGroup = () => {
                           />
                         }
                         label="JobWorkOut Items"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
                       />
                     </Box>
-                    {/* CHECKBOX */}
-                    <Box>
+
+                    {/* Delete & Disable */}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={3}
+                    >
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -501,14 +554,8 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Delete"
-                      // sx={{
-                      //   marginTop: "20px",
-                      //   "@media (max-width:500px)": {
-                      //     marginTop: 0,
-                      //   },
-                      // }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -518,36 +565,46 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Disable"
-                      // sx={{
-                      //   marginTop: "20px",
-                      //   "@media (max-width:500px)": {
-                      //     marginTop: 0,
-                      //   },
-                      // }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
+
                   {/* BUTTONS */}
                   <Box
                     display="flex"
                     justifyContent="flex-end"
-                    padding={1}
                     gap={2}
+                    mt={4}
                   >
                     <LoadingButton
+                      loading={isLoading}
                       type="submit"
                       variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
+
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
                       Cancel
                     </Button>

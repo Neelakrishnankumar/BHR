@@ -188,52 +188,129 @@ const EditHSNCategory = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mb: 2,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            px={3}
+            py={2}
+          >
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    bgcolor: "#F3F4F6",
+                    "&:hover": {
+                      bgcolor: "#E5E7EB",
+                    },
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  HSN Category
+                </Typography>
+
                 <Breadcrumbs
                   maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  separator={
+                    <NavigateNextIcon
+                      sx={{
+                        color: "#9CA3AF",
+                        fontSize: 18,
+                      }}
+                    />
+                  }
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category", { state: { ...state, Screenname: screenName } }) }
+                    sx={{
+                      color: "#2563EB",
+                      cursor: "pointer",
+                      fontSize: 14,
+                      fontWeight: 500,
+                    }}
+                    onClick={() =>
+                      navigate("/Apps/TR316/HSN%20Category", {
+                        state: {
+                          ...state,
+                          Screenname: screenName,
+                        },
+                      })
+                    }
                   >
-                    {mode === "E" ? `List Of HSN Category
-                    (${state.BreadCrumb1})` : `List Of HSN Category`}
+                    {mode === "E"
+                      ? `List Of HSN Category (${state.BreadCrumb1})`
+                      : "List Of HSN Category"}
                   </Typography>
+
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={{
+                      color: "#6B7280",
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
                   >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+                    {mode === "A"
+                      ? "New"
+                      : mode === "E"
+                        ? "Edit"
+                        : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
             </Box>
 
-            <Box display="flex">
+            {/* Right */}
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    borderRadius: 2,
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{             
+                    borderRadius: 2,
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -242,7 +319,16 @@ const EditHSNCategory = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper
+            elevation={0}
+            sx={{
+              m: 2,
+              p: 3,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -264,129 +350,99 @@ const EditHSNCategory = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+
                   <Box
                     display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                    gap={2.5}
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    {CompanyAutoCode == "Y" ? (
+                    {/* Code */}
+                    {CompanyAutoCode === "Y" ? (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label="Code"
-                        placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
                       />
                     ) : (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label={
                           <>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            Code <span style={{ color: "red" }}>*</span>
                           </>
                         }
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         error={!!touched.Code && !!errors.Code}
                         helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
                       />
                     )}
-                    <TextField
-                      name="CategoryName"
-                      type="text"
-                      id="CategoryName"
-                      label={
-                        <span>
-                          HSN Category Name{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.CategoryName}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.CategoryName && !!errors.CategoryName}
-                      helperText={touched.CategoryName && errors.CategoryName}
-                      autoFocus
-                    />
-                    {/* SORT ORDER */}
+
+                    {/* Category Name */}
                     <TextField
                       fullWidth
-                      variant="standard"
-                      type="number"
+                      size="small"
+                      variant="outlined"
+                      name="CategoryName"
+                      label={
+                        <>
+                          HSN Category Name <span style={{ color: "red" }}>*</span>
+                        </>
+                      }
+                      value={values.CategoryName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.CategoryName && !!errors.CategoryName}
+                      helperText={touched.CategoryName && errors.CategoryName}
+                    />
+
+                    {/* Sort Order */}
+                    <TextField
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      name="Sortorder"
                       label="Sort Order"
+                      type="number"
                       value={values.Sortorder}
-                      id="Sortorder"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="Sortorder"
-                      // error={!!touched.Sortorder && !!errors.Sortorder}
-                      // helperText={touched.Sortorder && errors.Sortorder}
-
-                      sx={{ background: "" }}
-                      focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
+                        e.target.value = Math.max(
+                          0,
+                          parseInt(e.target.value || 0)
+                        )
                           .toString()
                           .slice(0, 8);
                       }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
-                          //readOnly: mode == "V",
                         },
                       }}
                     />
 
-                    {/* CHECKBOX */}
-                    <Box>
+                    {/* Checkboxes */}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={3}
+                      sx={{ mt: 1 }}
+                    >
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -396,14 +452,8 @@ const EditHSNCategory = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -413,36 +463,46 @@ const EditHSNCategory = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
+
                   {/* BUTTONS */}
                   <Box
                     display="flex"
                     justifyContent="flex-end"
-                    padding={1}
                     gap={2}
+                    mt={4}
                   >
                     <LoadingButton
+                      loading={isLoading}
                       type="submit"
                       variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
+
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
                       Cancel
                     </Button>
