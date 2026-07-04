@@ -226,61 +226,110 @@ const EditItemCategory = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            m: 2,
+            mb: 1,
+            p: 2,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            backgroundColor: "#fff",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            {/* Left Side */}
+            <Box display="flex" alignItems="center">
               {broken && !rtl && (
                 <IconButton onClick={() => toggleSidebar()}>
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
+
+              <Breadcrumbs
+                separator={<NavigateNextIcon fontSize="small" color="primary" />}
+                maxItems={3}
               >
-                <Breadcrumbs
-                  maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={() => navigate("/Apps/TR315/Item%20Group")}
                 >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR315/Item%20Group")}
-                  >
-                    List Of Item Group
-                    ({state.BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate(-1)}
-                  >
-                    {mode === "E" ? `List Of Item Category
-                    (${state.BreadCrumb2})` : `List Of Item Category`}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
+                  List Of Item Group ({state.BreadCrumb1})
+                </Typography>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={() => navigate(-1)}
+                >
+                  {mode === "E"
+                    ? `List Of Item Category (${state.BreadCrumb2})`
+                    : "List Of Item Category"}
+                </Typography>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
+                >
+                  {mode === "A"
+                    ? "New"
+                    : mode === "E"
+                      ? "Edit"
+                      : "View"}
+                </Typography>
+              </Breadcrumbs>
             </Box>
 
-            <Box display="flex">
+            {/* Right Side */}
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -289,7 +338,16 @@ const EditItemCategory = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper
+            elevation={0}
+            sx={{
+              m: 2,
+              p: 3,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -313,15 +371,15 @@ const EditItemCategory = () => {
                 <Form onSubmit={handleSubmit}>
                   <Box
                     display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minmax(0,1fr))"
+                    gridTemplateColumns="repeat(2,minmax(0,1fr))"
+                    gap={2.5}
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
+
                     {CompanyAutoCode == "Y" ? (
                       <TextField
                         name="Code"
@@ -329,8 +387,9 @@ const EditItemCategory = () => {
                         id="Code"
                         label="Code"
                         placeholder="Auto"
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
+                        //  focused
                         // required
                         value={values.Code}
                         onBlur={handleBlur}
@@ -359,8 +418,8 @@ const EditItemCategory = () => {
                             </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         // required
                         value={values.Code}
                         onBlur={handleBlur}
@@ -393,8 +452,8 @@ const EditItemCategory = () => {
                           </span>
                         </span>
                       }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.Description}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -421,6 +480,7 @@ const EditItemCategory = () => {
                         </span>
                       }
                       variant="outlined"
+                      size="small"
                       value={values.HSNCategory}
                       onChange={(newValue) => {
                         setFieldValue("HSNCategory", newValue);
@@ -437,6 +497,7 @@ const EditItemCategory = () => {
                       }}
                       error={!!touched.HSNCategory && !!errors.HSNCategory}
                       helperText={touched.HSNCategory && errors.HSNCategory}
+                      InputLabelProps={{ shrink: true }}
                       url={`${listViewurl}?data=${JSON.stringify({
                         Query: {
                           AccessID: "2136",
@@ -461,7 +522,8 @@ const EditItemCategory = () => {
                           </span>
                         </>
                       }
-                      variant="outlined"
+
+                      size="small"
                       value={values.HSNMaster}
                       onChange={(newValue) => {
                         setFieldValue("HSNMaster", newValue);
@@ -485,7 +547,8 @@ const EditItemCategory = () => {
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="number"
                       label="Sort Order"
                       value={values.Sortorder}
@@ -497,7 +560,7 @@ const EditItemCategory = () => {
                       // helperText={touched.Sortorder && errors.Sortorder}
 
                       sx={{ background: "" }}
-                      focused
+                      // focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
@@ -513,7 +576,12 @@ const EditItemCategory = () => {
                     />
 
                     {/* CHECKBOX */}
-                    <Box>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={3}
+                      sx={{ mt: 1 }}
+                    >
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -554,22 +622,37 @@ const EditItemCategory = () => {
                   <Box
                     display="flex"
                     justifyContent="flex-end"
-                    padding={1}
                     gap={2}
+                    mt={4}
                   >
                     <LoadingButton
+                      loading={isLoading}
                       type="submit"
                       variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
                       Cancel
                     </Button>

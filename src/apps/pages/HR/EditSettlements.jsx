@@ -261,7 +261,7 @@ const EditSettlements = () => {
                     borderRadius: 3,
                     border: "1px solid #E5E7EB",
                     bgcolor: "#fff",
-                    overflow: "hidden", 
+                    overflow: "hidden",
                 }}
             >
                 <Box
@@ -398,7 +398,7 @@ const EditSettlements = () => {
                                 {/* GRID */}
                                 <Box
                                     display="grid"
-                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                    gridTemplateColumns="repeat(2,minmax(0,1fr))"
                                     gap={2.5}
                                     sx={{
                                         "& > div": {
@@ -407,9 +407,10 @@ const EditSettlements = () => {
                                     }}
                                 >
 
-                                    {/* DATE BOX */}
+                                    {/* DATE */}
                                     <TextField
                                         fullWidth
+                                        size="small"
                                         type="date"
                                         name="Date"
                                         label={
@@ -418,18 +419,18 @@ const EditSettlements = () => {
                                             </>
                                         }
                                         variant="outlined"
-                                        focused
                                         value={values.Date}
                                         onBlur={handleBlur}
                                         onChange={(e) => handleDateChange(e, handleChange)}
                                         error={!!touched.Date && !!errors.Date}
                                         helperText={touched.Date && errors.Date}
+                                        
                                     />
 
-
-                                    {/* GIVER BOX */}
+                                    {/* GIVER */}
 
                                     <SettlementSingleSelect
+                                        size="small"
                                         name="GiverID"
                                         label={
                                             <>
@@ -453,9 +454,10 @@ const EditSettlements = () => {
                                         })}`}
                                     />
 
+                                    {/* RECEIVER */}
 
-                                    {/* RECEIVER BOX */}
                                     <SettlementSingleSelect
+                                        size="small"
                                         name="ReceiverID"
                                         label={
                                             <>
@@ -479,12 +481,14 @@ const EditSettlements = () => {
                                         })}`}
                                     />
 
+                                    {/* PAYMENT MODE */}
 
-                                    {/* PAYMENT MODE BOX */}
                                     <TextField
                                         select
                                         fullWidth
+                                        size="small"
                                         name="paymentmode"
+                                        variant="outlined"
                                         label={
                                             <>
                                                 Mode Of Payment <span style={{ color: "red" }}>*</span>
@@ -494,38 +498,42 @@ const EditSettlements = () => {
                                         onBlur={handleBlur}
                                         onChange={(e) => {
                                             handleChange(e);
-                                            sessionStorage.setItem("paymentmode", e.target.value);
+                                            sessionStorage.setItem(
+                                                "paymentmode",
+                                                e.target.value
+                                            );
                                         }}
                                         error={!!touched.paymentmode && !!errors.paymentmode}
                                         helperText={touched.paymentmode && errors.paymentmode}
-                                        variant="outlined"
-                                        focused
                                     >
                                         <MenuItem value="COD">Cash On Delivery</MenuItem>
                                         <MenuItem value="UPI">UPI</MenuItem>
                                         <MenuItem value="Others">Others</MenuItem>
                                     </TextField>
 
-                                    {/* AMOUNT BOX */}
+                                    {/* AMOUNT */}
+
                                     <TextField
                                         fullWidth
+                                        size="small"
                                         name="Amount"
+                                        variant="outlined"
                                         label={
                                             <>
                                                 Amount <span style={{ color: "red" }}>*</span>
                                             </>
                                         }
                                         value={values.Amount}
-                                        variant="outlined"
-                                        focused
                                         onChange={(e) => {
                                             const val = e.target.value;
+
                                             if (/^\d*\.?\d*$/.test(val)) {
                                                 setFieldValue("Amount", val);
                                             }
                                         }}
                                         onBlur={(e) => {
                                             const num = parseFloat(e.target.value);
+
                                             if (!isNaN(num)) {
                                                 setFieldValue("Amount", num.toFixed(2));
                                             }
@@ -533,27 +541,37 @@ const EditSettlements = () => {
                                         error={!!touched.Amount && !!errors.Amount}
                                         helperText={touched.Amount && errors.Amount}
                                         InputProps={{
-                                            inputProps: { style: { textAlign: "right" } },
+                                            inputProps: {
+                                                style: {
+                                                    textAlign: "right",
+                                                },
+                                            },
                                         }}
                                     />
 
-                                    {/* REMARKS BOX */}
+                                    {/* REMARKS */}
+
                                     <TextField
                                         fullWidth
+                                        size="small"
+                                       
                                         name="Remarks"
+                                        variant="outlined"
                                         label="Remarks"
                                         value={values.Remarks}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.Remarks && !!errors.Remarks}
                                         helperText={touched.Remarks && errors.Remarks}
-                                        variant="outlined"
-                                        focused
+                                        // sx={{
+                                        //     gridColumn: "span 2",
+                                        // }}
                                     />
 
                                 </Box>
 
-                                {/* BUTTONS */}
+                                {/* ================= BUTTONS ================= */}
+
                                 <Box
                                     display="flex"
                                     justifyContent="flex-end"
@@ -561,14 +579,17 @@ const EditSettlements = () => {
                                     mt={4}
                                 >
                                     <LoadingButton
+                                        loading={isLoading}
                                         type="submit"
                                         variant="contained"
-                                        loading={isLoading}
                                         sx={{
-                                            bgcolor: "#0D9488",
-                                            "&:hover": { bgcolor: "#0F766E" },
+                                            textTransform: "none",
                                             borderRadius: 2,
                                             px: 4,
+                                            bgcolor: "#0D9488",
+                                            "&:hover": {
+                                                bgcolor: "#0F766E",
+                                            },
                                         }}
                                     >
                                         Save
@@ -578,10 +599,13 @@ const EditSettlements = () => {
                                         variant="contained"
                                         onClick={() => navigate(-1)}
                                         sx={{
-                                            bgcolor: "#F97316",
-                                            "&:hover": { bgcolor: "#EA580C" },
+                                            textTransform: "none",
                                             borderRadius: 2,
                                             px: 4,
+                                            bgcolor: "#F97316",
+                                            "&:hover": {
+                                                bgcolor: "#EA580C",
+                                            },
                                         }}
                                     >
                                         Cancel

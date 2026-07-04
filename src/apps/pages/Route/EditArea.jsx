@@ -194,36 +194,58 @@ const EditArea = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 2,
+            mb: 1,
+            p: 2,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            background: "#fff",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            {/* LEFT SIDE */}
+            <Box display="flex" alignItems="center" gap={1}>
               {broken && !rtl && (
                 <IconButton onClick={() => toggleSidebar()}>
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+
+              <Box display={isNonMobile ? "block" : "none"}>
                 <Breadcrumbs
                   maxItems={3}
+                  separator={
+                    <NavigateNextIcon fontSize="small" color="primary" />
+                  }
                   aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                 >
+                  {/* LEVEL 1 */}
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    variant="body1"
                     onClick={() => navigate("/Apps/TR323/Route")}
+                    sx={{
+                      color: "#0D47A1",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
                   >
                     List Of Route ({state.BreadCrumb1})
                   </Typography>
+
+                  {/* LEVEL 2 */}
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    variant="body1"
                     onClick={() =>
                       navigate(
                         `/Apps/Secondarylistview/Route/${params.accessID}/${params.screenName}/${params.parentID1}`,
@@ -234,31 +256,66 @@ const EditArea = () => {
                         }
                       )
                     }
+                    sx={{
+                      color: "#0D47A1",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
                   >
                     {mode === "E"
-                      ? `List Of Route Area
-                    (${state.BreadCrumb2})`
-                      : `List Of Route Area`}
+                      ? `List Of Route Area (${state.BreadCrumb2})`
+                      : "List Of Route Area"}
                   </Typography>
+
+                  {/* LEVEL 3 */}
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    variant="body1"
+                    sx={{
+                      color: "#6B7280",
+                      fontWeight: 600,
+                    }}
                   >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+                    {mode === "A"
+                      ? "New"
+                      : mode === "E"
+                        ? "Edit"
+                        : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
             </Box>
 
-            <Box display="flex">
+            {/* RIGHT SIDE ICONS */}
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -267,7 +324,52 @@ const EditArea = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+
+          <Paper
+            elevation={0}
+            sx={{
+              mx: 2,
+              mt: 1,
+              p: 3,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
+            {/* HEADER */}
+            <Box display="flex" alignItems="center" gap={1} mb={5}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  backgroundColor: "#EFF6FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                }}
+              >
+                🚚
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  color="#4F46E5"
+                >
+                  Route
+                </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  Manage route master and route area details
+                </Typography>
+              </Box>
+            </Box>
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -275,7 +377,7 @@ const EditArea = () => {
                   RouteAreaSaveFn(values, resetForm);
                 }, 100);
               }}
-              enableReinitialize={true}
+              enableReinitialize
               validationSchema={validationSchema}
             >
               {({
@@ -286,132 +388,70 @@ const EditArea = () => {
                 handleBlur,
                 setFieldValue,
                 handleSubmit,
-                setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+
                   <Box
                     display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                    gap="20px"
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    {CompanyAutoCode == "Y" ? (
-                      <TextField
-                        name="Code"
-                        type="text"
-                        id="Code"
-                        label="Code"
-                        placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        InputProps={{ readOnly: true }}
-                        // autoFocus
-                      />
-                    ) : (
-                      <TextField
-                        name="Code"
-                        type="text"
-                        id="Code"
-                        label={
-                          <>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
-                      />
-                    )}
+
+                    {/* CODE */}
                     <TextField
-                      name="Description"
-                      type="text"
-                      id="Description"
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      name="Code"
                       label={
-                        <span>
-                          Route Area{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
+                        CompanyAutoCode === "Y" ? "Code (Auto)" : <>Code *</>
                       }
-                      variant="standard"
-                      focused
-                      value={values.Description}
-                      onBlur={handleBlur}
+                      value={values.Code}
                       onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      InputProps={{ readOnly: CompanyAutoCode === "Y" }}
+                    />
+
+                    {/* DESCRIPTION */}
+                    <TextField
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      name="Description"
+                      label={<>Route Area *</>}
+                      value={values.Description}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       error={!!touched.Description && !!errors.Description}
                       helperText={touched.Description && errors.Description}
-                      autoFocus
                     />
+
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      size="small"
+                      variant="outlined"
                       type="number"
+                      name="Sortorder"
                       label="Sort Order"
                       value={values.Sortorder}
-                      id="Sortorder"
-                      onBlur={handleBlur}
                       onChange={handleChange}
-                      name="Sortorder"
-                      // error={!!touched.Sortorder && !!errors.Sortorder}
-                      // helperText={touched.Sortorder && errors.Sortorder}
-
-                      sx={{ background: "" }}
-                      focused
-                      onWheel={(e) => e.target.blur()}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
+                      onBlur={handleBlur}
                       InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                          //readOnly: mode == "V",
-                        },
+                        inputProps: { style: { textAlign: "right" } },
                       }}
+                      onWheel={(e) => e.target.blur()}
                     />
 
                     {/* CHECKBOX */}
-                    <Box>
+                    <Box display="flex" gap={3} alignItems="center" sx={{ pt: 1 }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -421,14 +461,8 @@ const EditArea = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -438,40 +472,41 @@ const EditArea = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
+
                   </Box>
+
                   {/* BUTTONS */}
-                  <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    padding={1}
-                    gap={2}
-                  >
+                  <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                     <LoadingButton
                       type="submit"
                       variant="contained"
-                      color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                      sx={{
+                        bgcolor: "#0D9488",
+                        "&:hover": { bgcolor: "#0F766E" },
+                        borderRadius: 2,
+                        px: 4,
+                      }}
                     >
                       Save
                     </LoadingButton>
+
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        bgcolor: "#F97316",
+                        "&:hover": { bgcolor: "#EA580C" },
+                        borderRadius: 2,
+                        px: 4,
+                      }}
                     >
                       Cancel
                     </Button>
                   </Box>
+
                 </Form>
               )}
             </Formik>

@@ -8416,7 +8416,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
-            <Link
+            {/* <Link
               to={`/Apps/${screenName}/imageupload/${accessID}/${params.row.RecordID}`}
               state={{
                 EmpName: params.row.Name,
@@ -8428,7 +8428,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   <AddPhotoAlternateIcon />
                 </IconButton>
               </Tooltip>
-            </Link>
+            </Link> */}
             <Link
               to={`/Apps/leaveenquiry/${params.row.RecordID}`}
               state={{
