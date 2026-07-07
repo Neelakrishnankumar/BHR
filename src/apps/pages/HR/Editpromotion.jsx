@@ -1028,30 +1028,110 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
               <Box
                 padding={1}
                 height={dataGridHeightExplore}
-                sx={{
-                  "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "#3a9e9e", // teal header to match image
-                    color: "#fff",
-                  },
-                  "& .MuiDataGrid-columnSeparator": { display: "none" },
-                  "& .MuiDataGrid-virtualScroller": {
-                    backgroundColor: colors.primary[400],
-                  },
-                  "& .MuiDataGrid-footerContainer": {
-                    backgroundColor: "#3a9e9e",
-                    color: "#fff",
-                  },
+                // sx={{
+                //   "& .MuiDataGrid-columnHeaders": {
+                //     backgroundColor: "#3a9e9e", // teal header to match image
+                //     color: "#fff",
+                //   },
+                //   "& .MuiDataGrid-columnSeparator": { display: "none" },
+                //   "& .MuiDataGrid-virtualScroller": {
+                //     backgroundColor: colors.primary[400],
+                //   },
+                //   "& .MuiDataGrid-footerContainer": {
+                //     backgroundColor: "#3a9e9e",
+                //     color: "#fff",
+                //   },
 
-                  "& .odd-row": { backgroundColor: "" },
-                  "& .even-row": { backgroundColor: "#d9f0ef" },
-                  //checkbox
+                //   "& .odd-row": { backgroundColor: "" },
+                //   "& .even-row": { backgroundColor: "#d9f0ef" },
+                //   //checkbox
 
-                  "& .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root": {
-                    backgroundColor: "#fff", // keep white even when checked
-                    //   border: "1px solid grey",  // keep same border
-                    color: "#3a9e9e", // tick color (optional)
-                  },
-                }}
+                //   "& .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root": {
+                //     backgroundColor: "#fff", // keep white even when checked
+                //     //   border: "1px solid grey",  // keep same border
+                //     color: "#3a9e9e", // tick color (optional)
+                //   },
+                // }}
+
+                 sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
+
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                            "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount": {
+  color: "#fff !important",
+  fontWeight: 500,
+},
+                          }}
               >
                 <DataGrid
                   apiRef={apiRef}

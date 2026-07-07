@@ -16,7 +16,7 @@ import {
   InputLabel,
   Select,
   Chip,
-  Stack
+  Stack,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -46,8 +46,17 @@ import { HsnSchema } from "../../Security/validation";
 import { DesignationSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
 import * as Yup from "yup";
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridHeight,
+  dataGridHeightExplore,
+  dataGridRowHeight,
+} from "../../../ui-components/utils";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { tokens } from "../../../Theme";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
@@ -79,7 +88,7 @@ const Editdesignation = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   var secondaryCurrentPage = parseInt(
-    sessionStorage.getItem("secondaryCurrentPage")
+    sessionStorage.getItem("secondaryCurrentPage"),
   );
   const [show, setScreen] = React.useState("0");
 
@@ -108,12 +117,14 @@ const Editdesignation = () => {
         };
 
         if (CompanyAutoCode === "N") {
-          schemaFields.code = Yup.string().trim().required(data.Designation.code);
+          schemaFields.code = Yup.string()
+            .trim()
+            .required(data.Designation.code);
         }
         if (Subscriptionlastthree === "003") {
           schemaFields.name = Yup.string()
             .trim()
-            .required(data.Designation.Role)
+            .required(data.Designation.Role);
           schemaFields.rank = Yup.string()
             .trim()
             .required(data.Designation.InstiLevel);
@@ -144,12 +155,12 @@ const Editdesignation = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: accessID,
-        })
+        }),
       );
     }
   }, [Subscriptionlastthree, accessID, dispatch]);
   const Customisedcaptiondata = useSelector(
-    (state) => state.formApi.CustomisedCaptionGetData
+    (state) => state.formApi.CustomisedCaptionGetData,
   );
   // Ensure it's always an array
   const captionArray = Array.isArray(Customisedcaptiondata)
@@ -157,9 +168,7 @@ const Editdesignation = () => {
     : Customisedcaptiondata?.data || [];
   console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
   const getBusinessCaption = (CaptionID, defaultCaption) => {
-    const match = captionArray?.find(
-      (item) => item.CAPTIONID === CaptionID
-    );
+    const match = captionArray?.find((item) => item.CAPTIONID === CaptionID);
 
     return match?.CAPTION || defaultCaption;
   };
@@ -180,36 +189,33 @@ const Editdesignation = () => {
           "Designation Documents",
           // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_DRECID))`,
-          ""
-        )
+          "",
+        ),
       );
-
     }
-
   };
   const explorelistViewData = useSelector(
-    (state) => state.exploreApi.explorerowData
+    (state) => state.exploreApi.explorerowData,
   );
   const explorelistViewcolumn = useSelector(
-    (state) => state.exploreApi.explorecolumnData
+    (state) => state.exploreApi.explorecolumnData,
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
-
 
   const VISIBLE_FIELDS =
     show == "1"
       ? [
-        "slno",
-        "Code",
-        "Documents",
-        // "Party",
-        // "Unit",
-        "action",
-      ]
+          "slno",
+          "Code",
+          "Documents",
+          // "Party",
+          // "Unit",
+          "action",
+        ]
       : [];
   const columns = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
-      VISIBLE_FIELDS.includes(column.field)
+      VISIBLE_FIELDS.includes(column.field),
     );
 
     if (VISIBLE_FIELDS.includes("slno")) {
@@ -224,7 +230,6 @@ const Editdesignation = () => {
         //   params.api.getRowIndexRelativeToVisibleRows(params.id) +
         //   1,
         renderCell: (params) => params.row.SLNO,
-
       };
       visibleColumns = [slnoColumn, ...visibleColumns];
     }
@@ -253,22 +258,25 @@ const Editdesignation = () => {
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "row", }}>
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Typography
             sx={{
               fontWeight: 700,
             }}
-          >
-            {show == "1"
-              ? "List of Documents"
-              : ""
-            }
-          </Typography>
-          {show == "1" && (<Typography
             sx={{
               fontWeight: 700,
             }}
-            variant="h5">{`(${rowCount})`}</Typography>)}
+          >
+            {show == "1" ? "List of Documents" : ""}
+          </Typography>
+          {show == "1" && (
+            <Typography
+              sx={{
+                fontWeight: 700,
+              }}
+              variant="h5"
+            >{`(${rowCount})`}</Typography>
+          )}
         </Box>
         <Box
           sx={{
@@ -280,11 +288,11 @@ const Editdesignation = () => {
           <GridToolbarQuickFilter />
           {show != "1" && (
             <Tooltip title="ADD">
-              <IconButton
-                type="reset">
+              <IconButton type="reset">
                 <AddOutlinedIcon />
               </IconButton>
-            </Tooltip>)}
+            </Tooltip>
+          )}
         </Box>
       </GridToolbarContainer>
     );
@@ -357,22 +365,20 @@ const Editdesignation = () => {
   };
   const [sectionsOpen, setSectionsOpen] = useState(true);
 
-
   const formSections = [
     {
       value: 0,
       label: "Designation",
       desc: "Employee roles and titles",
-      icon: "👤"
+      icon: "👤",
     },
     {
       value: 1,
       label: "List Of Documents",
       desc: "Employee document records",
-      icon: "📄"
-    }
+      icon: "📄",
+    },
   ];
-
 
   function FormSectionsSidebar({
     show,
@@ -411,11 +417,7 @@ const Editdesignation = () => {
           p={2}
           borderBottom="1px solid #E5E7EB"
         >
-          {open && (
-            <Typography fontWeight={700}>
-              Explore
-            </Typography>
-          )}
+          {open && <Typography fontWeight={700}>Explore</Typography>}
 
           <IconButton size="small" onClick={onToggle}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -475,10 +477,7 @@ const Editdesignation = () => {
                         {item.label}
                       </Typography>
 
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                      >
+                      <Typography variant="caption" color="text.secondary">
                         {item.desc}
                       </Typography>
                     </Box>
@@ -491,7 +490,6 @@ const Editdesignation = () => {
       </Box>
     );
   }
-
 
   return (
     <React.Fragment>
@@ -573,10 +571,8 @@ const Editdesignation = () => {
       </Paper> */}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-
-
-          <Box sx={{ p: 2, borderRadius: 3, }}>
-            <Paper sx={{ borderRadius: 3, }}>
+          <Box sx={{ p: 2, borderRadius: 3 }}>
+            <Paper sx={{ borderRadius: 3 }}>
               <Box display="flex" justifyContent="space-between" p={2}>
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
@@ -620,7 +616,6 @@ const Editdesignation = () => {
                 </Box>
 
                 <Box display="flex">
-
                   {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Explore</InputLabel>
@@ -644,7 +639,10 @@ const Editdesignation = () => {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Logout">
-                    <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                    <IconButton
+                      color="error"
+                      onClick={() => fnLogOut("Logout")}
+                    >
                       <LogoutOutlinedIcon />
                     </IconButton>
                   </Tooltip>
@@ -653,7 +651,13 @@ const Editdesignation = () => {
             </Paper>
           </Box>
           {show == "0" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: Form Sections sidebar */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -664,8 +668,22 @@ const Editdesignation = () => {
                   onToggle={() => setSectionsOpen((p) => !p)}
                 />
               )}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 3,
+                  }}
+                >
                   <Formik
                     initialValues={InitialValue}
                     onSubmit={(values, setSubmitting) => {
@@ -687,26 +705,39 @@ const Editdesignation = () => {
                     }) => (
                       <form onSubmit={handleSubmit}>
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                          mb={0.5}
+                        >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <Typography sx={{ fontSize: 16 }}>👤</Typography>
                           </Box>
                           <Box>
                             <Typography
-                              variant="subtitle1" fontWeight={700} color="#4F46E5"
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
                             >
                               Designation
                             </Typography>
 
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                            >
+                            <Typography variant="body2" color="text.secondary">
                               Employee roles and titles
                             </Typography>
                           </Box>
                         </Box>
-
 
                         <Box
                           display="grid"
@@ -761,7 +792,7 @@ const Editdesignation = () => {
                                 },
                               }}
                               InputProps={{ readOnly: true }}
-                            // autoFocus
+                              // autoFocus
                             />
                           ) : (
                             <TextField
@@ -771,7 +802,9 @@ const Editdesignation = () => {
                               label={
                                 <>
                                   Code
-                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
                                     *
                                   </span>
                                 </>
@@ -843,7 +876,9 @@ const Editdesignation = () => {
                             label={
                               <>
                                 {getBusinessCaption("Name", "Name")}
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -912,7 +947,9 @@ const Editdesignation = () => {
                             label={
                               <>
                                 {getBusinessCaption("Rank", "Rank")}
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -958,7 +995,6 @@ const Editdesignation = () => {
                             // required
                             error={!!touched.hoursrate && !!errors.hoursrate}
                             helperText={touched.hoursrate && errors.hoursrate}
-
                             sx={{
                               "& .MuiOutlinedInput-root": {
                                 backgroundColor: "#fff",
@@ -1005,11 +1041,13 @@ const Editdesignation = () => {
                             }}
                             onWheel={(e) => e.target.blur()}
                             onInput={(e) => {
-                              e.target.value = Math.max(0, parseInt(e.target.value))
+                              e.target.value = Math.max(
+                                0,
+                                parseInt(e.target.value),
+                              )
                                 .toString()
                                 .slice(0, 8);
                             }}
-
                             sx={{
                               "& .MuiOutlinedInput-root": {
                                 backgroundColor: "#fff",
@@ -1062,7 +1100,12 @@ const Editdesignation = () => {
                             <FormLabel focused={false}>Disable</FormLabel>
                           </Box>
                         </Box>
-                        <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                        <Box
+                          display="flex"
+                          justifyContent="end"
+                          padding={1}
+                          gap="20px"
+                        >
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -1150,8 +1193,13 @@ const Editdesignation = () => {
           )}
 
           {show == "1" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -1164,8 +1212,13 @@ const Editdesignation = () => {
               )}
 
               {/* RIGHT SIDE */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 <Paper
                   elevation={0}
                   sx={{
@@ -1191,28 +1244,41 @@ const Editdesignation = () => {
                     }) => (
                       <form
                         onSubmit={handleSubmit}
-                      // onReset={() => {
-                      //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                      //   resetForm();
-                      // }}
+                        // onReset={() => {
+                        //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                        //   resetForm();
+                        // }}
                       >
-
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                          mb={0.5}
+                        >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <Typography sx={{ fontSize: 16 }}>📄</Typography>
                           </Box>
                           <Box>
                             <Typography
-                              variant="subtitle1" fontWeight={700} color="#4F46E5"
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
                             >
                               Documents
                             </Typography>
 
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                            >
+                            <Typography variant="body2" color="text.secondary">
                               Employee document records
                             </Typography>
                           </Box>
@@ -1228,7 +1294,6 @@ const Editdesignation = () => {
                             },
                           }}
                         >
-
                           {/* <FormControl sx={{ gap: formGap }}> */}
                           <TextField
                             fullWidth
@@ -1243,7 +1308,7 @@ const Editdesignation = () => {
                             label="Code"
                             focused
                             InputProps={{
-                              readOnly: true
+                              readOnly: true,
                             }}
                             sx={{
                               "& .MuiOutlinedInput-root": {
@@ -1284,7 +1349,7 @@ const Editdesignation = () => {
                             label="Name"
                             focused
                             InputProps={{
-                              readOnly: true
+                              readOnly: true,
                             }}
                             sx={{
                               "& .MuiOutlinedInput-root": {
@@ -1367,9 +1432,11 @@ const Editdesignation = () => {
 
                             "& .MuiDataGrid-columnHeaderTitle": {
                               color: colors.blueAccent[900],
-                              fontWeight: 600
+                              fontWeight: 600,
                             },
-                            "& .MuiTablePagination-root": { color: colors.blueAccent[900], },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
                             /* ✅ PAGINATION STYLES (WHITE COLOR) */
                             "& .MuiTablePagination-root": {
                               color: "#fff",
@@ -1392,7 +1459,6 @@ const Editdesignation = () => {
                             "& .MuiTablePagination-actions button": {
                               color: "#fff",
                             },
-
                           }}
                         >
                           <DataGrid
@@ -1441,24 +1507,31 @@ const Editdesignation = () => {
                             }
                           />
                         </Box>
-
-
-
                       </form>
                     )}
-
                   </Formik>
 
-                  <Box display="flex" justifyContent="space-between" padding={1}>
-
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    padding={1}
+                  >
                     <Box>
-                      <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                      <Typography
+                        fontWeight={600}
+                        fontSize={15}
+                        lineHeight={1}
+                        mb={1}
+                        ml={0.5}
+                      >
                         Actions Guide
                       </Typography>
-                      <Box display="flex"
+                      <Box
+                        display="flex"
                         flexDirection="row"
                         gap="15px"
-                        sx={{ overflowY: "auto" }}>
+                        sx={{ overflowY: "auto" }}
+                      >
                         <Chip
                           icon={<VisibilityIcon color="primary" />}
                           label="Open Document"
@@ -1466,7 +1539,11 @@ const Editdesignation = () => {
                         />
                       </Box>
                     </Box>
-                    <Box display="flex" justifyContent="space-between" padding={1}>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      padding={1}
+                    >
                       <Button
                         color="warning"
                         variant="contained"
@@ -1479,14 +1556,11 @@ const Editdesignation = () => {
                     </Box>
                   </Box>
                 </Paper>
-
               </Box>
-
             </Box>
           ) : (
             false
           )}
-
         </Box>
       </Box>
     </React.Fragment>

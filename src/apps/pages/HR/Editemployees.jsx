@@ -5921,7 +5921,7 @@ const Editemployee = () => {
                                         name="Department"
                                         label={<>Department<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         id="Department"
-                                        s value={values.Department}
+                                         value={values.Department}
                                         onChange={(e, newValue) => setFieldValue("Department", newValue, true)}
                                         isOptionEqualToValue={(option, value) => String(option.RecordID) === String(value.RecordID)}
                                         error={!!touched.Department && !!errors.Department}

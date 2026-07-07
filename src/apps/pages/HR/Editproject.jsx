@@ -20,9 +20,11 @@ import {
   InputAdornment,
   List,
   ListItemButton,
-  ListItemText
+  ListItemText,
+  Stack
 } from "@mui/material";
-
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import SearchIcon from "@mui/icons-material/Search";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import PersonIcon from "@mui/icons-material/Person";
@@ -78,7 +80,6 @@ import { GridRowEditStopReasons } from "@mui/x-data-grid";
 import { nanoid } from "@reduxjs/toolkit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import { SECTION_TYPE_GRANULARITY } from "@mui/x-date-pickers/internals/utils/getDefaultReferenceDate";
-
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -114,6 +115,7 @@ const Editproject = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
+  const [sectionsOpen, setSectionsOpen] = useState(true);
   let secondaryCurrentPage = parseInt(
     sessionStorage.getItem("secondaryCurrentPage")
   );
@@ -1288,7 +1290,7 @@ const Editproject = () => {
               label="Cancel"
               className="textPrimary"
               onClick={handleCancelClick(id)}
-              color="inherit"
+              color="info"
             />,
           ];
         }
@@ -1299,13 +1301,13 @@ const Editproject = () => {
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
-            color="inherit"
+            color="info"
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
-            color="inherit"
+            color="error"
           />,
         ];
       },
@@ -1810,20 +1812,145 @@ const Editproject = () => {
   //     );
   //   }
 
+   //For side menu
+  const formSections = [
+    { value: 0, label: getBusinessCaption("ProjectTitle", "Project"), desc: "Basic details about the Project", icon: "📁" },
+    { value: 2, label: "List Of Documents", desc: "Attachments documents for the Project", icon: "📄" },
+    ...(is003Subscription === false ? [{ value: 3, label: "Units", desc: "Unit / block details linked to the Project", icon: "🏢" }] : []),
+   
+  ];
+ function FormSectionsSidebar({
+    show,
+    screenChange,
+    sections,
+    open,
+    onToggle,
+  }) {
+    return (
+      <Box
+        sx={{
+          width: open ? 250 : 70,
+          transition: "all .3s",
+          background: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          position: "sticky",
+          top: 10,
+          height: "calc(100vh - 20px)",
+          overflowY: "auto",
+
+          // Hide scrollbar
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE
+
+          "&::-webkit-scrollbar": {
+            display: "none", // Chrome, Safari
+          },
+        }}
+      >
+        {/* Header */}
+        <Box
+          display="flex"
+          justifyContent={open ? "space-between" : "center"}
+          alignItems="center"
+          p={2}
+          borderBottom="1px solid #E5E7EB"
+        >
+          {open && <Typography fontWeight={700}>Explore</Typography>}
+
+          <IconButton size="small" onClick={onToggle}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+
+        <Stack spacing={0.5} p={1}>
+          {sections.map((item) => {
+            const active = Number(show) === Number(item.value);
+
+            return (
+              <Tooltip
+                key={item.value}
+                title={!open ? item.label : ""}
+                placement="right"
+              >
+                <Box
+                  onClick={() =>
+                    screenChange({
+                      target: { value: item.value },
+                    })
+                  }
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 1.25,
+                    cursor: "pointer",
+                    borderRadius: 2,
+                    bgcolor: active ? "#EEF2FF" : "transparent",
+                    "&:hover": {
+                      bgcolor: "#F3F4F6",
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      bgcolor: active ? "#E0E7FF" : "#F3F4F6",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+
+                  {open && (
+                    <Box>
+                      <Typography
+                        fontWeight={active ? 700 : 500}
+                        color={active ? "#4F46E5" : "inherit"}
+                      >
+                        {item.label}
+                      </Typography>
+
+                      <Typography variant="caption" color="text.secondary">
+                        {item.desc}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+            );
+          })}
+        </Stack>
+      </Box>
+    );
+  }
 
 
 
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
+         <Box sx={{ height: "100vh", overflow: "auto" }}>
+           <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+             <Box sx={{ p: 2, borderRadius: 3 }}>
+               <Paper sx={{ borderRadius: 3 }}>
+                 <Box display="flex" justifyContent="space-between" p={2}>
+                   <Box display="flex" borderRadius="3px" alignItems="center">
+                     {broken && !rtl && (
+                       <IconButton onClick={() => toggleSidebar()}>
+                         <MenuOutlinedIcon />
+                       </IconButton>
+                     )}
+                     <Box
+                       display={isNonMobile ? "flex" : "none"}
+                       borderRadius="3px"
+                       alignItems="center"
+                     >
             <Breadcrumbs
               maxItems={3}
               aria-label="breadcrumb"
@@ -1867,10 +1994,11 @@ const Editproject = () => {
                 </Typography>) : false}
             </Breadcrumbs>
           </Box>
+                      </Box>
 
-          <Box display="flex">
+      <Box display="flex"> 
 
-            {mode !== "A" ? (
+            {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Explore</InputLabel>
                 <Select
@@ -1880,9 +2008,7 @@ const Editproject = () => {
                   label="Explore"
                   onChange={screenChange}
                 >
-                  {/* <MenuItem value={0}>Project</MenuItem>
-                  <MenuItem value={3}>Units</MenuItem>
-                  <MenuItem value={2}>List Of Documents</MenuItem> */}
+               
 
                   <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
                   {is003Subscription === false ? (<MenuItem value="3">Units</MenuItem>) : null}
@@ -1891,7 +2017,7 @@ const Editproject = () => {
               </FormControl>
             ) : (
               false
-            )}
+            )} */}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -1902,18 +2028,49 @@ const Editproject = () => {
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
-          </Box>
+          </Box> 
         </Box>
       </Paper>
-
+  </Box>
       {show == "0" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+
+       <Box
+                display="flex"
+                gap={3}
+                alignItems="flex-start"
+                flexWrap="wrap"
+                sx={{ p: 1 }}
+              >
+                {/* LEFT: Form Sections sidebar */}
+                {mode !== "A" && (
+                  <FormSectionsSidebar
+                    show={show}
+                    screenChange={screenChange}
+                    sections={formSections}
+                    open={sectionsOpen}
+                    onToggle={() => setSectionsOpen((p) => !p)}
+                  />
+                )}
+                <Box
+                  flex={1}
+                  minWidth={0}
+                  display="flex"
+                  flexDirection="column"
+                  gap={3}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 3,
+                      p: 3,
+                    }}
+                  >
           <Formik
             innerRef={formikRef}
             initialValues={InitialValue}
-
-
-            onSubmit={(values, { resetForm }) => {
+           onSubmit={(values, { resetForm }) => {
               if (Subscriptionlastthree === "003") {
                 FnsaveTech(values, false, null, false);
               } else {
@@ -1942,6 +2099,41 @@ const Editproject = () => {
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
+                 {/* ----- CARD HEADER ----- */}
+                                        <Box
+                                          display="flex"
+                                          alignItems="center"
+                                          gap={1}
+                                          mb={0.5}
+                                        >
+                                          <Box
+                                            sx={{
+                                              width: 32,
+                                              height: 32,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 16 }}>📁</Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#4F46E5"
+                                            >
+                                              {getBusinessCaption("ProjectTitle", "Project")}
+                                            </Typography>
+                
+                                            <Typography variant="body2" color="text.secondary">
+                                              Basic details about the Project
+                                            </Typography>
+                                          </Box>
+                                        </Box>
+                
                 <Box
                   display="grid"
                   gap={formGap}
@@ -1963,7 +2155,8 @@ const Editproject = () => {
                       // label="Code"
                       label={getBusinessCaption("ProjectCode", "Code")}
                       placeholder="Auto"
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       focused
                       // required
                       value={values.code}
@@ -1975,6 +2168,32 @@ const Editproject = () => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                     // autoFocus
                     />
                   ) : (
@@ -1991,7 +2210,8 @@ const Editproject = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       focused
                       // required
                       value={values.code}
@@ -2003,6 +2223,30 @@ const Editproject = () => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                     />
                   )}
 
@@ -2021,7 +2265,8 @@ const Editproject = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
@@ -2033,6 +2278,30 @@ const Editproject = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                   />
 
                   <CheckinAutocomplete
@@ -2072,7 +2341,8 @@ const Editproject = () => {
                       name="projectOwner"
                       // label="Project Owner"
                       label={getBusinessCaption("ProjectOwner", "Project Owner")}
-                      variant="outlined"
+                     variant="outlined"
+                      size="small"
                       id="projectOwner"
                       value={values.projectOwner}
                       onChange={(newValue) => {
@@ -2150,13 +2420,39 @@ const Editproject = () => {
                         }
                         // required
                         focused
-                        variant="standard"
+                        CheckinAutocomplete
                         error={!!touched.TentativeStartDate && !!errors.TentativeStartDate}
                         helperText={touched.TentativeStartDate && errors.TentativeStartDate}
                         value={values.TentativeStartDate}
                         // value={values.CurrentStatus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                       />
                       <TextField
                         id="TentativeEndDate"
@@ -2174,18 +2470,67 @@ const Editproject = () => {
                         }
                         // required
                         focused
-                        variant="standard"
+                        variant="outlined"
+                      size="small"
                         error={!!touched.TentativeEndDate && !!errors.TentativeEndDate}
                         helperText={touched.TentativeEndDate && errors.TentativeEndDate}
                         value={values.TentativeEndDate}
                         // value={values.CurrentStatus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                       />
                     </>) : null}
                   {Subscriptionlastthree != "003" ? (
                     <>
                       <TextField
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                         disabled={isHeaderDisabled || mode == "V"}
                         labelId="demo"
                         id="CurrentStatus"
@@ -2204,7 +2549,8 @@ const Editproject = () => {
                         // required
                         focused
                         select
-                        variant="standard"
+                        variant="outlined"
+                      size="small"
                         error={!!touched.CurrentStatus && !!errors.CurrentStatus}
                         helperText={touched.CurrentStatus && errors.CurrentStatus}
                         value={mode == "A" ? "CU" : values.CurrentStatus}
@@ -2237,7 +2583,8 @@ const Editproject = () => {
                     type="number"
                     id="sortorder"
                     label="Sort Order"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.sortorder}
                     onBlur={handleBlur}
@@ -2259,8 +2606,32 @@ const Editproject = () => {
                         .toString()
                         .slice(0, 8);
                     }}
-                  />
+                    sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
 
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
+                  />
+        </Box>
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
@@ -2355,12 +2726,14 @@ const Editproject = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-                </Box>
+
+                  
+        
 
                 {Subscriptionlastthree != "003" ? (
                   <>
-                    <Typography variant="h5" padding={1}>
-                      Costing:
+                    <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                      Costing
                     </Typography>
 
                     {values.ByProduct === true ? (
@@ -2380,7 +2753,6 @@ const Editproject = () => {
                         <TextField
                           //fullWidth
                           disabled={mode == "V"}
-                          variant="standard"
                           type="number"
                           id="price"
                           name="price"
@@ -2388,13 +2760,32 @@ const Editproject = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           label="Price (If it is a product)"
-                          sx={{
-                            gridColumn: "span 1",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                           focused
                           InputProps={{
                             inputProps: {
@@ -2422,7 +2813,32 @@ const Editproject = () => {
                         <TextField
                           disabled={mode == "V"}
                           fullWidth
-                          variant="standard"
+                          variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                           type="number"
                           id="budget"
                           name="budget"
@@ -2439,13 +2855,7 @@ const Editproject = () => {
                         </span> */}
                             </>
                           }
-                          sx={{
-                            gridColumn: "span 1",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          
                           error={!!touched.budget && !!errors.budget}
                           helperText={touched.budget && errors.budget}
                           focused
@@ -2460,7 +2870,6 @@ const Editproject = () => {
                         <TextField
                           fullWidth
                           disabled={mode == "V"}
-                          variant="standard"
                           type="number"
                           id="scheduled"
                           name="scheduled"
@@ -2468,13 +2877,32 @@ const Editproject = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           label="Scheduled Cost"
-                          sx={{
-                            gridColumn: "span 1",
-                            backgroundColor: "#ffffff",
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff",
-                            },
-                          }}
+                          variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                           focused
                           InputProps={{
                             readOnly: true,
@@ -2488,7 +2916,6 @@ const Editproject = () => {
                         <TextField
                           disabled={mode == "V"}
                           fullWidth
-                          variant="standard"
                           type="number"
                           id="actual"
                           name="actual"
@@ -2496,13 +2923,32 @@ const Editproject = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           label="Actual Cost"
-                          sx={{
-                            gridColumn: "span 1",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                           focused
                           InputProps={{
                             readOnly: true,
@@ -2516,7 +2962,7 @@ const Editproject = () => {
                         <TextField
                           disabled={mode == "V"}
                           fullWidth
-                          variant="standard"
+                          
                           type="number"
                           id="OtherExpenses"
                           name="OtherExpenses"
@@ -2524,13 +2970,32 @@ const Editproject = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           label="Other Expenses"
-                          sx={{
-                            gridColumn: "span 1",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                           focused
                           InputProps={{
                             readOnly: true,
@@ -2545,8 +3010,8 @@ const Editproject = () => {
                         {/* </FormControl> */}
                       </Box>
                     )}
-                    <Typography variant="h5" padding={1}>
-                      Location:
+                   <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                      Location
                     </Typography>
                     <Box
                       display="grid"
@@ -2562,7 +3027,6 @@ const Editproject = () => {
                     >
                       <TextField
                         fullWidth
-                        variant="standard"
                         label="Latitude"
                         name="latitude"
                         focused
@@ -2581,10 +3045,35 @@ const Editproject = () => {
                           inputMode: "decimal",
                           style: { textAlign: "right" },
                         }}
+                        variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                       />
                       <TextField
                         fullWidth
-                        variant="standard"
                         label="Longitude"
                         name="longitude"
                         focused
@@ -2602,11 +3091,36 @@ const Editproject = () => {
                           inputMode: "decimal",
                           style: { textAlign: "right" },
                         }}
+                        variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                       />
 
                       <TextField
                         fullWidth
-                        variant="standard"
                         focused
                         label="Radius (m)"
                         name="radius"
@@ -2624,6 +3138,32 @@ const Editproject = () => {
                           inputMode: "decimal",
                           style: { textAlign: "right" },
                         }}
+                        variant="outlined"
+                      size="small"
+                      sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                       />
                       {/* <TextField
                     fullWidth
@@ -2859,6 +3399,8 @@ const Editproject = () => {
             )}
           </Formik>
         </Paper>
+         </Box>
+                    </Box>
       ) : (
         false
       )}
@@ -3273,8 +3815,42 @@ const Editproject = () => {
       )} */}
 
       {show == "3" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
+      <Box
+                display="flex"
+                gap={3}
+                alignItems="flex-start"
+                flexWrap="wrap"
+                sx={{ p: 1 }}
+              >
+                {/* LEFT: Form Sections sidebar */}
+                {mode !== "A" && (
+                  <FormSectionsSidebar
+                    show={show}
+                    screenChange={screenChange}
+                    sections={formSections}
+                    open={sectionsOpen}
+                    onToggle={() => setSectionsOpen((p) => !p)}
+                  />
+                )}
+                <Box
+                  flex={1}
+                  minWidth={0}
+                  display="flex"
+                  flexDirection="column"
+                  gap={3}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 3,
+                      p: 3,
+                    }}
+                  >   
+                  
+                  
+                         <Formik
             initialValues={UnitInitialValues}
             // validationSchema={validationSchema2}
             enableReinitialize={true}
@@ -3304,7 +3880,40 @@ const Editproject = () => {
               //   resetForm();
               // }}
               >
-
+   {/* ----- CARD HEADER ----- */}
+                                        <Box
+                                          display="flex"
+                                          alignItems="center"
+                                          gap={1}
+                                          mb={0.5}
+                                        >
+                                          <Box
+                                            sx={{
+                                              width: 32,
+                                              height: 32,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 16 }}>🏢</Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#4F46E5"
+                                            >
+                                              Units
+                                            </Typography>
+                
+                                            <Typography variant="body2" color="text.secondary">
+                                              Unit / block details linked to the Project
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                 <Box
                   display="grid"
                   gap={formGap}
@@ -3320,7 +3929,8 @@ const Editproject = () => {
                   {/* <FormControl sx={{ gap: formGap }}> */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="code"
                     name="code"
@@ -3332,11 +3942,36 @@ const Editproject = () => {
                     InputProps={{
                       readOnly: true
                     }}
+                      sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                   />
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="description"
                     name="description"
@@ -3348,6 +3983,30 @@ const Editproject = () => {
                     InputProps={{
                       readOnly: true
                     }}
+                      sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                   />
                 </Box>
                 <Box
@@ -3355,39 +4014,81 @@ const Editproject = () => {
                   // height="500px"
                   height={dataGridHeightExplore}
                   marginTop={2}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      // border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      // borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      // borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      // borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
-                    },
-                  }}
+                sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
+
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
                 >
                   <DataGrid
                     sx={{
@@ -3456,12 +4157,12 @@ const Editproject = () => {
                       gap="15px"
                       sx={{ overflowY: "auto" }}>
                       <Chip
-                        icon={<EditIcon color="inherit" />}
+                        icon={<EditIcon color="info" />}
                         label="Edit"
                         variant="outlined"
                       />
                       <Chip
-                        icon={<DeleteIcon color="inherit" />}
+                        icon={<DeleteIcon color="error" />}
                         label="Delete"
                         variant="outlined"
                       />
@@ -3471,7 +4172,7 @@ const Editproject = () => {
                         variant="outlined"
                       />
                       <Chip
-                        icon={<CancelIcon color="inherit" />}
+                        icon={<CancelIcon color="info" />}
                         label="Cancel"
                         variant="outlined"
                       />
@@ -3500,13 +4201,49 @@ const Editproject = () => {
             )}
           </Formik>
         </Paper>
+
+         </Box>
+                    </Box>
       ) : (
         false
       )}
 
       {show == "2" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
+   <Box
+                display="flex"
+                gap={3}
+                alignItems="flex-start"
+                flexWrap="wrap"
+                sx={{ p: 1 }}
+              >
+                {/* LEFT: Form Sections sidebar */}
+                {mode !== "A" && (
+                  <FormSectionsSidebar
+                    show={show}
+                    screenChange={screenChange}
+                    sections={formSections}
+                    open={sectionsOpen}
+                    onToggle={() => setSectionsOpen((p) => !p)}
+                  />
+                )}
+                <Box
+                  flex={1}
+                  minWidth={0}
+                  display="flex"
+                  flexDirection="column"
+                  gap={3}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 3,
+                      p: 3,
+                    }}
+                  >
+                    
+    <Formik
             initialValues={DocInitialValues}
             // validationSchema={validationSchema2}
             enableReinitialize={true}
@@ -3534,7 +4271,40 @@ const Editproject = () => {
                 }}
               >
 
-
+     {/* ----- CARD HEADER ----- */}
+                                        <Box
+                                          display="flex"
+                                          alignItems="center"
+                                          gap={1}
+                                          mb={0.5}
+                                        >
+                                          <Box
+                                            sx={{
+                                              width: 32,
+                                              height: 32,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 16 }}>📄</Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#4F46E5"
+                                            >
+                                              List Of Documents
+                                            </Typography>
+                
+                                            <Typography variant="body2" color="text.secondary">
+                                              Attachments documents for the Project
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                 <Box
                   display="grid"
                   gap={formGap}
@@ -3550,7 +4320,8 @@ const Editproject = () => {
                   {/* <FormControl sx={{ gap: formGap }}> */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="code"
                     name="code"
@@ -3562,11 +4333,36 @@ const Editproject = () => {
                     InputProps={{
                       readOnly: true
                     }}
+                       sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                   />
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                   variant="outlined"
+                    size="small"
                     type="text"
                     id="description"
                     name="description"
@@ -3577,7 +4373,32 @@ const Editproject = () => {
                     focused
                     InputProps={{
                       readOnly: true
+                      
                     }}
+                     sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                   />
                   {/* </FormControl> */}
                 </Box>
@@ -3588,39 +4409,81 @@ const Editproject = () => {
                   // height="50vh"
                   // height={dataGridHeight}
                   height={dataGridHeightExplore}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#D3D3D3",
-                      color: "", // Color for even rows
-                    },
-                  }}
+                   sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
+
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
                 >
                   <DataGrid
                     sx={{
@@ -3707,9 +4570,14 @@ const Editproject = () => {
             </Box>
           </Box>
         </Paper>
+         </Box>
+                    </Box>
       ) : (
         false
       )}
+          </Box>
+            </Box>
+              
     </React.Fragment>
   );
 };
