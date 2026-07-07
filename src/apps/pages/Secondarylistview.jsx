@@ -41,6 +41,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import ForumIcon from '@mui/icons-material/Forum';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import InputAdornment from "@mui/material/InputAdornment";
+import ClearIcon from "@mui/icons-material/Clear";
+
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -5724,12 +5727,13 @@ const handlePageSizeChange = (newPageSize) => {
 
 <CustomToolbar/>
          {/* <CustomToolbar listViewData={listViewData}/> */}
+         { accessID === "TR027" ? (
                      <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={3}>
                                <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: "#fff", border: "1px solid #E5E7EB" }}>
                                  <Typography variant="body2" color="text.secondary">Total</Typography>
                                  <Typography variant="h4" fontWeight={700} color="#4F46E5">{listViewData.length}</Typography>
                                </Box>
-                             </Box>
+                             </Box>) : null}
         {/* ONE card wraps search + grid + footer, like Image 1 */}
         <Box
           sx={{
@@ -5740,21 +5744,51 @@ const handlePageSizeChange = (newPageSize) => {
           }}
         >
           {/* Search row, bordered off from the grid below it */}
-          <Box p={2} borderBottom="1px solid #F3F4F6">
-         <TextField
-            placeholder="Search..."
-            size="small"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(0); // reset to first page on new search
-            }}
-            InputProps={{
-              startAdornment: <SearchIcon sx={{ mr: 1, color: "#9CA3AF", fontSize: 20 }} />,
-            }}
-            sx={{ width: 280, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
-          />
-          </Box>
+          <Box
+              p={2}
+              borderBottom="1px solid #F3F4F6"
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                placeholder="Search..."
+                size="small"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(0);
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: "#9CA3AF", fontSize: 20 }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: search && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSearch("");
+                          setPage(0);
+                        }}
+                      >
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  width: 280,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Box>
                              
         <Box
           // m="5px 0 0 0"
@@ -5797,6 +5831,10 @@ const handlePageSizeChange = (newPageSize) => {
               //backgroundColor: "#8BD2CE",
               backgroundColor: "#ffff",
               color: "", // Color for even rows
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+               color: colors.blueAccent[900],
+               fontWeight: 800
             },
           }}
         >

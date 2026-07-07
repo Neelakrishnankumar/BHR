@@ -183,59 +183,116 @@ const EditAdvancePayment = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      {/* BREADCRUMBS */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          background: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              separator={
+                <NavigateNextIcon
+                  fontSize="small"
+                  color="primary"
+                />
+              }
             >
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#0D47A1",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
                 onClick={() => {
-                  // navigate("/Apps/TR243/Party");
                   navigate("/Apps/TR321/Party");
                 }}
               >
-                {`Party(${state.PartyName || ""})`}
+                {`Party (${state.PartyName || ""})`}
               </Typography>
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#0D47A1",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
                 onClick={() => {
                   navigate(-1);
                 }}
               >
                 Advance Payment
-                {/* {`Advance (${state.Code || ""} )`} */}
               </Typography>
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#6B7280",
+                  fontWeight: 600,
+                }}
               >
-                {mode === "A" ? "Add Advance" : "View Advance"}
+                {mode === "A"
+                  ? "Add Advance"
+                  : "View Advance"}
               </Typography>
             </Breadcrumbs>
           </Box>
 
-          <Box display="flex">
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  // bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  //  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -244,7 +301,16 @@ const EditAdvancePayment = () => {
       </Paper>
 
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            m: 2,
+            p: 3,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            background: "#fff",
+          }}
+        >
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -267,9 +333,43 @@ const EditAdvancePayment = () => {
             }) => {
               return (
                 <form onSubmit={handleSubmit}>
+                  <Box display="flex" alignItems="center" gap={1} mb={3}>
+                    <Box
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        backgroundColor: "#EFF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 18,
+                      }}
+                    >
+                      💰
+                    </Box>
+
+                    <Box>
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#4F46E5"
+                      >
+                        Advance Payment
+                      </Typography>
+
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Advance payment details
+                      </Typography>
+                    </Box>
+                  </Box>
+
                   <Box
                     display="grid"
-                    gap={formGap}
+                    gap="20px"
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     // gap="30px"
@@ -292,8 +392,8 @@ const EditAdvancePayment = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       inputFormat="YYYY-MM-DD"
                       value={values.paymentdate}
                       onBlur={handleBlur}
@@ -320,8 +420,8 @@ const EditAdvancePayment = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.Amount}
                       // onBlur={handleBlur}
                       // onChange={handleChange}
@@ -373,8 +473,8 @@ const EditAdvancePayment = () => {
                       onChange={handleChange}
                       error={!!touched.ModeofPayment && !!errors.ModeofPayment}
                       helperText={touched.ModeofPayment && errors.ModeofPayment}
-                      focused
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                     >
                       <MenuItem value="COD">Cash On Delivery</MenuItem>
                       <MenuItem value="UPI">UPI</MenuItem>
@@ -385,8 +485,8 @@ const EditAdvancePayment = () => {
                       type="text"
                       id="paymentComments"
                       label="Payment Comments"
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.paymentComments}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -408,8 +508,8 @@ const EditAdvancePayment = () => {
                       type="number"
                       id="sortorder"
                       label="Sort Order"
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.sortorder}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -429,7 +529,11 @@ const EditAdvancePayment = () => {
                           .slice(0, 8);
                       }}
                     />
-                    <Box>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      sx={{ pt: 1 }}
+                    >
                       <Field
                         type="checkbox"
                         name="disable"
@@ -446,16 +550,24 @@ const EditAdvancePayment = () => {
                   </Box>
                   <Box
                     display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
+                    justifyContent="flex-end"
+                    gap={2}
+                    mt={4}
                   >
                     {YearFlag == "true" && mode === "A" ? (
                       <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
                         loading={isLoading}
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#0D9488",
+                          "&:hover": {
+                            bgcolor: "#0F766E",
+                          },
+                        }}
                       >
                         Save
                       </LoadingButton>
@@ -470,10 +582,18 @@ const EditAdvancePayment = () => {
                     )}{" "}
                     {YearFlag == "true" && mode === "E" ? (
                       <Button
-                        color="error"
                         variant="contained"
                         onClick={() => {
                           Fnsave(values, "harddelete");
+                        }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#DC2626",
+                          "&:hover": {
+                            bgcolor: "#B91C1C",
+                          },
                         }}
                       >
                         Delete
@@ -484,9 +604,17 @@ const EditAdvancePayment = () => {
                       </Button>
                     )}
                     <Button
-                      color="warning"
                       variant="contained"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        px: 4,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
                       Cancel
                     </Button>

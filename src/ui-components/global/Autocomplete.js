@@ -888,8 +888,8 @@ export const OrderItemAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
+          //focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -4021,7 +4021,7 @@ export const SettlementSingleSelect = ({
           label={props.label || "Select Options"}
           // error={!!error}
           // helperText={error}
-          variant="standard"
+          variant="outlined"
           {...props}
           InputProps={{
             ...params.InputProps,

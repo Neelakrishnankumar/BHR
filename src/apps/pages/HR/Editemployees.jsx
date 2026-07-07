@@ -7390,6 +7390,7 @@ const Editemployee = () => {
                     onSubmit={(values, { resetForm }) => {
                       setTimeout(() => {
                         empFunctionFn(values, resetForm, false);
+                         
                       }, 100);
                     }}
                   >
@@ -7403,8 +7404,12 @@ const Editemployee = () => {
                       resetForm,
                       setFieldValue,
                     }) => (
-                      <form onSubmit={handleSubmit}>
-
+                      <form onSubmit={handleSubmit}
+                       onClick={() => {
+                        resetForm();
+                        setOpenFunctionModal(true);
+                      }}
+                        >
                         {/* HEADER (same style as Skill) */}
                         <Box display="flex" alignItems="center" gap={1} mb={0.5}>
                           <Box sx={{

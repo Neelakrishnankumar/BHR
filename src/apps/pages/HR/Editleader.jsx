@@ -442,28 +442,55 @@ const EditLeader = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      {/* BREADCRUMBS */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          background: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+
             <Box
               display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
               alignItems="center"
             >
               <Breadcrumbs
                 maxItems={3}
                 aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                separator={
+                  <NavigateNextIcon
+                    fontSize="small"
+                    color="primary"
+                  />
+                }
               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
                   onClick={() => {
                     // navigate("/Apps/TR243/Party");
                     navigate("/Apps/TR321/Party");
@@ -471,26 +498,47 @@ const EditLeader = () => {
                 >
                   {`Party(${state.PartyName || params.Name})`}
                 </Typography>
+
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
                 >
-                  {/* {`Marketing Activity(${state.PartyName || params.Name})`} */}
                   Marketing Activity
                 </Typography>
               </Breadcrumbs>
             </Box>
           </Box>
 
-          <Box display="flex">
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -499,7 +547,16 @@ const EditLeader = () => {
       </Paper>
 
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            margin: "10px",
+          }}
+        >
           <Formik
             initialValues={formData}
             enableReinitialize={true}
@@ -522,12 +579,37 @@ const EditLeader = () => {
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
+                {/* ----- CARD HEADER ----- */}
+                <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      backgroundColor: "#EFF6FF",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    📈
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                      Lead / Marketing Activity
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Lead status and follow-up details
+                    </Typography>
+                  </Box>
+                </Box>
+
                 <Box
                   display="grid"
-                  gap={formGap}
+                  gap='20px'
                   padding={1}
                   gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",
@@ -539,8 +621,8 @@ const EditLeader = () => {
                     type="date"
                     id="applieddate"
                     label="Applied Date"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.applieddate}
                     onBlur={handleBlur}
@@ -549,40 +631,21 @@ const EditLeader = () => {
                     helperText={touched.applieddate && errors.applieddate}
                     inputProps={{
                       max: new Date().toISOString().split("T")[0],
-                      // readOnly: true,
                     }}
                     InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
+                      shrink: true,
                     }}
                     disabled={Type === "T"}
+                    
                   />
-                  {/* <CheckinAutocomplete
-                                        id="project"
-                                        name="project"
-                                        label="Product"
-                                        variant="outlined"
-                                        value={values.project}
-                                        onChange={(newValue) => {
-                                            setFieldValue("project", newValue);
-                                            console.log(newValue, "--newvalue project");
-                                            console.log(newValue.RecordID, "project RecordID");
-                                        }}
-                                        error={!!touched.project && !!errors.project}
-                                        helperText={touched.project && errors.project}
-                                        disabled={Type === "T"}
-                                        //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}' AND ByProduct='Y'","Any":""}}`}
-                                    /> */}
+
                   <CheckinAutocomplete
                     id="project"
                     name="project"
-                    //label="Product"
                     label={
                       <>
                         Product
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
                     variant="outlined"
@@ -596,9 +659,8 @@ const EditLeader = () => {
                     helperText={touched.project && errors.project}
                     disabled={Type === "T" && values.project?.Name !== "--"}
                     InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
+                      shrink: true,
                     }}
-                    //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     url={`${listViewurl}?data=${JSON.stringify({
                       Query: {
                         AccessID: "2137",
@@ -608,43 +670,35 @@ const EditLeader = () => {
                         Any: "",
                       },
                     })}`}
-
-                  // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
                   />
 
                   <TextField
-                    // label={
-                    //     <>
-                    //         Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                    //     </>
-                    // }
-                    //label="Lead Title"
                     label={
                       <>
                         Lead Title
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
                     id="leadtitle"
                     type="text"
                     name="leadtitle"
-                    focused
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     value={values.leadtitle}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.leadtitle && !!errors.leadtitle}
                     helperText={touched.leadtitle && errors.leadtitle}
                     InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
+                      shrink: true,
                     }}
                     disabled={Type === "T"}
+                    
                   />
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="comments"
                     name="comments"
@@ -652,20 +706,19 @@ const EditLeader = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Comments"
-                    focused
                     disabled={mode === "V"}
-                    // inputProps={{ readOnly: true }}
                     InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
+                      shrink: true,
                     }}
+                    
                   />
                   <TextField
                     name="visitdate"
                     type="date"
                     id="visitdate"
                     label="Next Visit Date"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.visitdate}
                     onBlur={handleBlur}
@@ -673,40 +726,33 @@ const EditLeader = () => {
                     error={!!touched.visitdate && !!errors.visitdate}
                     helperText={touched.visitdate && errors.visitdate}
                     disabled={mode === "V"}
-                    // inputProps={{
-                    //     max: new Date().toISOString().split("T")[0],
-                    //     // readOnly: true,
-                    // }}
                     InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
+                      shrink: true,
                     }}
+                    
                   />
                   <TextField
                     select
-                    //label="Status"
                     label={
                       <>
                         Status
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
                       </>
                     }
                     id="Status"
                     name="Status"
                     value={values.Status}
                     onBlur={handleBlur}
-                    // onChange={handleChange}
                     disabled={mode === "V"}
-                    // required
                     onChange={(e) => {
-                      handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
+                      handleChange(e);
+                      sessionStorage.setItem("Status", e.target.value);
                     }}
                     error={!!touched.Status && !!errors.Status}
                     helperText={touched.Status && errors.Status}
-                    focused
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
+                    
                   >
                     <MenuItem value="Cool">Cool</MenuItem>
                     <MenuItem value="Warm">Warm</MenuItem>
@@ -716,12 +762,8 @@ const EditLeader = () => {
                     <MenuItem value="Close">Close</MenuItem>
                   </TextField>
                 </Box>
-                <Box
-                  display="flex"
-                  justifyContent="end"
-                  padding={1}
-                  gap={formGap}
-                >
+
+                <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
                   {mode == "IM" && (
                     <>
                       <TextField
@@ -729,33 +771,19 @@ const EditLeader = () => {
                         type="text"
                         id="purpose"
                         label="Purpose"
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         value={values.purpose}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.purpose && !!errors.purpose}
                         helperText={touched.purpose && errors.purpose}
-                        sx={{ gridColumn: "span 2", height: "20px" }}
+                        sx={{  gridColumn: "span 2", height: "20px" }}
                         InputLabelProps={{ shrink: true }}
                       />
 
-                      {/* <Box display="flex" alignItems="center" gap={1}> */}
                       <FileUploadIconButton
                         onFileSelect={(file) => {
-                          // if (!values.purpose && mode === "IM") {
-                          //   Swal.fire({
-                          //     icon: "warning",
-                          //     title: "Purpose Required",
-                          //     text: "Please enter purpose before uploading the file.",
-                          //     confirmButtonText: "OK",
-                          //   });
-                          //   return;
-                          // }
-                          // const finalPurpose =
-                          //   values.purpose?.trim() ||
-                          //   values.leadtitle?.trim() ||
-                          //   "Attachment Upload";
                           fileUpload(
                             file,
                             data.PartyID,
@@ -763,10 +791,8 @@ const EditLeader = () => {
                             "",
                             values.purpose
                           );
-                          //setFieldValue("purpose", "");
                         }}
                       />
-                      {/* </Box> */}
                     </>
                   )}
                   <LoadingButton
@@ -774,6 +800,13 @@ const EditLeader = () => {
                     color="secondary"
                     type="submit"
                     loading={loading}
+                    sx={{
+                      textTransform: "none",
+                      borderRadius: 2,
+                      px: 4,
+                      bgcolor: "#0D9488",
+                      "&:hover": { bgcolor: "#0F766E" },
+                    }}
                   >
                     SAVE
                   </LoadingButton>
@@ -782,8 +815,14 @@ const EditLeader = () => {
                     variant="contained"
                     color="warning"
                     onClick={() => {
-                      // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
                       navigate(-1);
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      borderRadius: 2,
+                      px: 4,
+                      bgcolor: "#F97316",
+                      "&:hover": { bgcolor: "#EA580C" },
                     }}
                   >
                     CANCEL
