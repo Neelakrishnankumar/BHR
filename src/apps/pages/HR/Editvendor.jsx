@@ -15,6 +15,7 @@ import {
   useMediaQuery,
   useTheme,
   Select,
+  Stack,
   Paper,
   Breadcrumbs,
   Grid,
@@ -69,6 +70,8 @@ import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, data
 import CircularProgress from "@mui/material/CircularProgress";
 import { ArrowBack, CloudUpload } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -115,7 +118,7 @@ const Editvendor = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const LoginID = sessionStorage.getItem("loginrecordID");
-   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
@@ -146,6 +149,8 @@ const Editvendor = () => {
   const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
   const colors = tokens(theme.palette.mode);
+
+  const [sectionsOpen, setSectionsOpen] = useState(true);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -608,6 +613,7 @@ const Editvendor = () => {
 
     window.open(filePath, "_blank");
   };
+
   function Employee() {
     return (
       <GridToolbarContainer
@@ -1108,106 +1114,267 @@ const Editvendor = () => {
   };
 
 
+  //For popup modal
+
+  const formSections = [
+    {
+      value: "0",
+      label: "Party",
+      desc: "Basic party information and details",
+      icon: "🏢",
+    },
+    {
+      value: "3",
+      label: "Registration",
+      desc: "PAN, GST and registration documents",
+      icon: "📝",
+    },
+    {
+      value: "4",
+      label: "Default Settings",
+      desc: "Default product and payment mode",
+      icon: "⚙️",
+    },
+    {
+      value: "2",
+      label: "Bank Details",
+      desc: "Bank account and branch information",
+      icon: "🏦",
+    },
+    {
+      value: "1",
+      label: "Contact Details",
+      desc: "Contact persons and ID proofs",
+      icon: "📞",
+    },
+    {
+      value: "5",
+      label: "List Of Documents",
+      desc: "Uploaded party documents",
+      icon: "📄",
+    },
+  ];
+
+  function FormSectionsSidebar({ show, screenChange, sections, open, onToggle }) {
+    return (
+      <Box
+        sx={{
+          width: open ? 250 : 70,
+          transition: "all .3s",
+          background: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          position: "sticky",
+          top: 10,
+          height: "calc(100vh - 20px)",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent={open ? "space-between" : "center"}
+          alignItems="center"
+          p={2}
+          borderBottom="1px solid #E5E7EB"
+        >
+          {open && <Typography fontWeight={700}>Explore</Typography>}
+          <IconButton size="small" onClick={onToggle}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+
+        <Stack spacing={0.5} p={1}>
+          {sections.map((item) => {
+            const active = String(show) === String(item.value);
+
+            return (
+              <Tooltip key={item.value} title={!open ? item.label : ""} placement="right">
+                <Box
+                  onClick={() => screenChange({ target: { value: item.value } })}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 1.25,
+                    cursor: "pointer",
+                    borderRadius: 2,
+                    bgcolor: active ? "#EEF2FF" : "transparent",
+                    "&:hover": {
+                      bgcolor: "#F3F4F6",
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      bgcolor: active ? "#E0E7FF" : "#F3F4F6",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+
+                  {open && (
+                    <Box>
+                      <Typography fontWeight={active ? 700 : 500} color={active ? "#4F46E5" : "inherit"}>
+                        {item.label}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {item.desc}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+            );
+          })}
+        </Stack>
+      </Box>
+    );
+  }
+
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+      "& fieldset": { borderColor: "#d1d5db" },
+      "&:hover fieldset": { borderColor: "#bfc4cc" },
+      "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+    },
+    "& .MuiInputLabel-root": { color: "#6b7280" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+  };
+
+
 
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : null}
 
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+      {/* BREADCRUMBS */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          background: "#fff",
+        }}
+      >
         <Box
           display="flex"
           justifyContent="space-between"
-          p={mode == "A" ? 2 : 1}
+          alignItems="center"
         >
-          <Box display="flex" borderRadius="3px" alignItems="center">
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
+
+            <Breadcrumbs
+              maxItems={3}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon fontSize="small" color="primary" />}
             >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "#0D47A1",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+                onClick={() => {
+                  setScreen(0);
+                }}
               >
+                {mode === "E"
+                  ? `Party (${state.PName})`
+                  : "Party (New)"}
+              </Typography>
+
+              {show == "1" && (
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    setScreen(0);
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
                   }}
                 >
-                  {/* Party ({state.PName}) */}
-                  {mode === "E" ? `Party(${state.PName})` : "Party(New)"}
+                  Contact Details
                 </Typography>
-                {show == "1" ? (
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Contact Details
-                  </Typography>
-                ) : (
-                  false
-                )}
-                {show == "2" ? (
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Bank Details
-                  </Typography>
-                ) : (
-                  false
-                )}
-                {show == "3" ? (
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Registration
-                  </Typography>
-                ) : (
-                  false
-                )}
-                {show == "4" ? (
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    Default Settings
-                  </Typography>
-                ) : (
-                  false
-                )}
-                {show == "5" ? (
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    List Of Documents
-                  </Typography>
-                ) : (
-                  false
-                )}
-              </Breadcrumbs>
-            </Box>
+              )}
+
+              {show == "2" && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
+                >
+                  Bank Details
+                </Typography>
+              )}
+
+              {show == "3" && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
+                >
+                  Registration
+                </Typography>
+              )}
+
+              {show == "4" && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
+                >
+                  Default Settings
+                </Typography>
+              )}
+
+              {show == "5" && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 600,
+                  }}
+                >
+                  List Of Documents
+                </Typography>
+              )}
+            </Breadcrumbs>
           </Box>
 
-          <Box display="flex">
-            {mode !== "A" ? (
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <Box display="flex" alignItems="center" gap={1}>
+            {/* {mode !== "A" && (
+              <FormControl size="small" sx={{ minWidth: 180 }}>
                 <InputLabel id="demo-select-small">Explore</InputLabel>
                 <Select
                   labelId="demo-select-small"
@@ -1222,32 +1389,36 @@ const Editvendor = () => {
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
                   <MenuItem value={5}>List Of Documents</MenuItem>
-                  {/* <MenuItem value={6}>Unit</MenuItem>  */}
-                  {/* {initialValues.employeetype === "CI" ? (
-                                              <MenuItem value={8}>Contracts In</MenuItem>
-                                            ) : null}
-                                            {initialValues.employeetype === "CO" ? (
-                                              <MenuItem value={11}>Contracts Out</MenuItem>
-                                            ) : null}
-                                            <MenuItem value={1}>Employee Process</MenuItem> */}
-                  {/* <MenuItem value={3}>Managers</MenuItem>
-                                            <MenuItem value={4}>Deployment</MenuItem>
-                                            <MenuItem value={9}>Geo Location</MenuItem>
-                                            <MenuItem value={10}>Leave Configuration</MenuItem>
-                                            <MenuItem value={6}>List of Attachments</MenuItem>
-                                            <MenuItem value={7}>Item Custody</MenuItem> */}
                 </Select>
               </FormControl>
-            ) : (
-              false
-            )}
+            )} */}
+
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                 // bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                 // bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -1255,2309 +1426,2074 @@ const Editvendor = () => {
         </Box>
       </Paper>
 
+
+
       {/* {!getLoading ? ( */}
       {show == "0" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={InitialValue}
-            validationSchema={validationSchema}
-            enableReinitialize={true}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                Fnsave(values);
-              }, 100);
-            }}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      variant="standard"
-                      placeholder="Auto"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{ readOnly: true }}
-                    // autoFocus
-                    />
-                  ) : (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      variant="standard"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
-                  )}
-                  <TextField
-                    name="name"
-                    type="text"
-                    id="name"
-                    label={
-                      <>
-                        Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.name && !!errors.name}
-                    helperText={touched.name && errors.name}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    // required
-                    autoFocus={CompanyAutoCode == "Y"}
-                  />
-
-                  <TextField
-                    name="mobilenumber"
-                    id="mobilenumber"
-                    label={
-                      <>
-                        Contact Mobile or Landline Number
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.mobilenumber}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      // Only allow numbers and max 10 digits
-                      if (/^\d{0,11}$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
-                    error={!!touched.mobilenumber && !!errors.mobilenumber}
-                    helperText={touched.mobilenumber && errors.mobilenumber}
-                    inputProps={{ maxLength: 10 }}
-                    sx={{ backgroundColor: "#ffffff" }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: 'left' }
-                      }
-                    }}
-                  />
-                  <TextField
-                    name="emailid"
-                    type="text"
-                    id="emailid"
-                    label="Email ID"
-                    variant="standard"
-                    focused
-                    value={values.emailid}
-                    error={!!touched.emailid && !!errors.emailid}
-                    helperText={touched.emailid && errors.emailid}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  // autoFocus
-                  />
-
-                  <TextField
-                    name="address"
-                    type="text"
-                    id="address"
-                    label="Address"
-                    variant="standard"
-                    focused
-                    multiline
-                    rows={2}
-                    value={values.address}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // error={!!touched.address && !!errors.address}
-                    // helperText={touched.address && errors.address}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  />
-
-                  <CheckinAutocomplete
-                    id="locality"
-                    name="locality"
-                    label="Locality"
-                    // label={
-                    //   <>
-                    //     Locality
-                    //     <span style={{ color: "red", fontSize: "20px" }}>
-                    //       *
-                    //     </span>
-                    //   </>
-                    // }
-                    variant="outlined"
-                    value={values.locality}
-                    onChange={(newValue) => {
-                      setFieldValue("locality", newValue);
-                      console.log(newValue, "--newvalue locality");
-                      console.log(newValue.RecordID, "locality RecordID");
-                    }}
-                    error={!!touched.locality && !!errors.locality}
-                    helperText={touched.locality && errors.locality}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
-                  />
-                  {/* <TextField
-                    name="Pancardnumber"
-                    label="Pan Card Number"
-                    variant="standard"
-                    focused
-                    value={values.Pancardnumber}
-                    onBlur={handleBlur}
-                    // required
-                    onChange={(e) => {
-                      const input = e.target.value.toUpperCase();
-                      if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                        handleChange({
-                          target: {
-                            name: "Pancardnumber",
-                            value: input,
-                          },
-                        });
-                      }
-                    }}
-                    error={!!touched.Pancardnumber && !!errors.Pancardnumber}
-                    helperText={touched.Pancardnumber && errors.Pancardnumber}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    
-                  />
-                  <TextField
-                    name="gstnumber"
-                    label="GST Number"
-                    variant="standard"
-                    focused
-                    value={values.gstnumber}
-                    // required
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const input = e.target.value.toUpperCase();
-                      if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                        // This updates Formik value correctly
-                        handleChange({
-                          target: {
-                            name: "gstnumber",
-                            value: input,
-                          },
-                        });
-                      }
-                    }}
-                    error={!!touched.gstnumber && !!errors.gstnumber}
-                    helperText={touched.gstnumber && errors.gstnumber}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    // autoFocus
-                  /> */}
-
-                  {/* <TextField
-                    name="date"
-                    type="date"
-                    id="date"
-                    label="Date of Registration"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.date}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.date && !!errors.date}
-                    helperText={touched.date && errors.date}
-                    // required
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  />
-                  <TextField
-                    name="verifieddate"
-                    type="date"
-                    id="verifieddate"
-                    label="Date of Verification & Confirmation"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.verifieddate}
-                    // required
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.date && !!errors.date}
-                    helperText={touched.date && errors.date}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ",
-                      },
-                    }}
-                  /> */}
-
-                  <TextField
-                    name="maplink"
-                    type="text"
-                    id="maplink"
-                    label="Map Location"
-                    variant="standard"
-                    focused
-                    value={values.maplink}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // error={!!touched.maplink && !!errors.maplink}
-                    // helperText={touched.maplink && errors.maplink}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  />
-                  <CheckinAutocomplete
-                    id="ReferenceBy"
-                    name="ReferenceBy"
-                    label="Partner Reference"
-                    variant="outlined"
-                    value={values.ReferenceBy}
-                    onChange={(newValue) => {
-                      setFieldValue("ReferenceBy", newValue);
-                      // console.log(newValue, "--newvalue ReferenceBy");
-                      // console.log(newValue.RecordID, "ReferenceBy RecordID");
-                    }}
-                    // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
-                    // helperText={touched.ReferenceBy && errors.ReferenceBy}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
-                  />
-
-                  {/* panimage */}
-
-                  <Box display="flex" flexDirection="column" gap={1}>
-                    {/* First row */}
-                    <Box display="flex" gap={2}>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="vendor"
-                          id="vendor"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Vendor/Supplier</FormLabel>
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={InitialValue}
+                validationSchema={validationSchema}
+                enableReinitialize={true}
+                onSubmit={(values, setSubmitting) => {
+                  setTimeout(() => {
+                    Fnsave(values);
+                  }, 100);
+                }}
+              >
+                {({
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                    <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          backgroundColor: "#EFF6FF",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 18,
+                        }}
+                      >
+                        🏢
                       </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          //    size="small"
-                          type="checkbox"
-                          name="customer"
-                          id="customer"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Customer"
-                        />
-                        <FormLabel focused={false}>Customer</FormLabel>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          //    size="small"
-                          type="checkbox"
-                          name="prospect"
-                          id="prospect"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Prospects"
-                        />
-
-                        <FormLabel focused={false}>Prospects</FormLabel>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          //    size="small"
-                          type="checkbox"
-                          name="BusinessPartner"
-                          id="BusinessPartner"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Business Partner"
-                        />
-                        <FormLabel focused={false}>Partner</FormLabel>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="Parent"
-                          id="Parent"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Parent"
-                        />
-                        <FormLabel focused={false}>Parent</FormLabel>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="delete"
-                          id="delete"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Delete"
-                        />
-
-                        <FormLabel focused={false}>Delete</FormLabel>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="disable"
-                          id="disable"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
-
-                        <FormLabel focused={false}>Disable</FormLabel>
+                      <Box>
+                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                          Party
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Basic party information and details
+                        </Typography>
                       </Box>
                     </Box>
-                  </Box>
-                </Box>
-                <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                  {/* <Tooltip title="PAN Upload">
-                    <IconButton
-                      size="small"
-                      color="warning"
-                      aria-label="upload picture"
-                      component="label"
-                    >
-                      <input
-                        hidden
-                        accept="all/*"
-                        type="file"
-                        onChange={getFilepanChange}
-                      />
-                      <PictureAsPdfOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    component={"a"}
-                    onClick={() => {
-                      data.PanImg || panImage
-                        ? window.open(
-                            panImage
-                              ? store.getState().globalurl.attachmentUrl +
-                                  panImage
-                              : store.getState().globalurl.attachmentUrl +
-                                  data.PanImg,
-                            "_blank"
-                          )
-                        : toast.error("Please Upload File");
-                    }}
-                  >
-                    PAN Image View
-                  </Button>
-                  <Tooltip title="GST Upload">
-                    <IconButton
-                      size="small"
-                      color="warning"
-                      aria-label="upload picture"
-                      component="label"
-                    >
-                      <input
-                        hidden
-                        accept="all/*"
-                        type="file"
-                        onChange={getFilegstChange}
-                      />
-                      <PictureAsPdfOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    component={"a"}
-                    onClick={() => {
-                      data.GstImg || gstImage
-                        ? window.open(
-                            gstImage
-                              ? store.getState().globalurl.attachmentUrl +
-                                  gstImage
-                              : store.getState().globalurl.attachmentUrl +
-                                  data.GstImg,
-                            "_blank"
-                          )
-                        : toast.error("Please Upload File");
-                    }}
-                  >
-                    GST Image View
-                  </Button> */}
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )}
 
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      // navigate("/Apps/TR243/Party");
-                      navigate("/Apps/TR321/Party");
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
+                    <Box
+                      display="grid"
+                      gap="20px"
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
+                      }}
+                    >
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label="Code"
+                          placeholder="Auto"
+                          variant="outlined"
+                          size="small"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          InputProps={{ readOnly: true }}
+                          sx={textFieldSx}
+                        />
+                      ) : (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={textFieldSx}
+                          autoFocus
+                        />
+                      )}
+
+                      <TextField
+                        name="name"
+                        type="text"
+                        id="name"
+                        label={
+                          <>
+                            Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
+                        sx={textFieldSx}
+                        autoFocus={CompanyAutoCode == "Y"}
+                      />
+
+                      <TextField
+                        name="mobilenumber"
+                        id="mobilenumber"
+                        label={
+                          <>
+                            Contact Mobile or Landline Number
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.mobilenumber}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (/^\d{0,11}$/.test(value)) {
+                            handleChange(e);
+                          }
+                        }}
+                        error={!!touched.mobilenumber && !!errors.mobilenumber}
+                        helperText={touched.mobilenumber && errors.mobilenumber}
+                        inputProps={{ maxLength: 10 }}
+                        InputProps={{
+                          inputProps: { style: { textAlign: "left" } },
+                        }}
+                        sx={textFieldSx}
+                      />
+
+                      <TextField
+                        name="emailid"
+                        type="text"
+                        id="emailid"
+                        label="Email ID"
+                        variant="outlined"
+                        size="small"
+                        value={values.emailid}
+                        error={!!touched.emailid && !!errors.emailid}
+                        helperText={touched.emailid && errors.emailid}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                      />
+
+                      <TextField
+                        name="address"
+                        type="text"
+                        id="address"
+                        label="Address"
+                        variant="outlined"
+                        size="small"
+                        multiline
+                        rows={2}
+                        value={values.address}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                      />
+
+                      <CheckinAutocomplete
+                        id="locality"
+                        name="locality"
+                        label="Locality"
+                        variant="outlined"
+                        value={values.locality}
+                        onChange={(newValue) => {
+                          setFieldValue("locality", newValue);
+                        }}
+                        error={!!touched.locality && !!errors.locality}
+                        helperText={touched.locality && errors.locality}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
+                      />
+
+                      <TextField
+                        name="maplink"
+                        type="text"
+                        id="maplink"
+                        label="Map Location"
+                        variant="outlined"
+                        size="small"
+                        value={values.maplink}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                      />
+
+                      <CheckinAutocomplete
+                        id="ReferenceBy"
+                        name="ReferenceBy"
+                        label="Partner Reference"
+                        variant="outlined"
+                        value={values.ReferenceBy}
+                        onChange={(newValue) => {
+                          setFieldValue("ReferenceBy", newValue);
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
+                      />
+
+                      <Box
+                        sx={{
+                          gridColumn: "span 2",
+                          mt: 1,
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="space-between"
+                          flexWrap="nowrap"
+                          sx={{
+                            "& > div": {
+                              display: "flex",
+                              alignItems: "center",
+                              whiteSpace: "nowrap",
+                            },
+                          }}
+                        >
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="vendor"
+                              id="vendor"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Vendor/Supplier</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="customer"
+                              id="customer"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Customer</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="prospect"
+                              id="prospect"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Prospects</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="BusinessPartner"
+                              id="BusinessPartner"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Partner</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="Parent"
+                              id="Parent"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Parent</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="delete"
+                              id="delete"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Delete</FormLabel>
+                          </Box>
+
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="disable"
+                              id="disable"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Disable</FormLabel>
+                          </Box>
+                        </Box>
+                      </Box>
+
+                    </Box>
+
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                      {YearFlag == "true" ? (
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                          sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#0D9488", "&:hover": { bgcolor: "#0F766E" } }}
+                        >
+                          Save
+                        </LoadingButton>
+                      ) : (
+                        <Button color="secondary" variant="contained" disabled sx={{ textTransform: "none", borderRadius: 2, px: 4 }}>
+                          Save
+                        </Button>
+                      )}
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => navigate("/Apps/TR321/Party")}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </form>
+                )}
+              </Formik>
+            </Paper>
+          </Box>
+        </Box>
       ) : (
         false
       )}
+
       {show == "1" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={contactInitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                contactsave(values);
-              }, 100);
-            }}
-            validationSchema={validationSchema3}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      variant="standard"
-                      placeholder="Auto"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{ readOnly: true }}
-                    // autoFocus
-                    />
-                  ) : (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      variant="standard"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
-                  )}
-                  <TextField
-                    name="name"
-                    type="text"
-                    id="name"
-                    label={
-                      <>
-                        Name
-                        {/* <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span> */}
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.name && !!errors.name}
-                    helperText={touched.name && errors.name}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        readOnly: true,
-                      },
-                    }}
-                    // required
-                    autoFocus={CompanyAutoCode == "Y"}
-                  />
-                  <Box
-                    sx={{
-                      padding: 1.5,
-                      backgroundColor: "#b2dfdb", // light green
-                      borderRadius: 1,
-                      width: "100%",
-                    }}
-                  >
-                    <Typography variant="h5" fontWeight="bold">
-                      Contact Person 1
-                    </Typography>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      padding: 1.5,
-                      backgroundColor: "#b2dfdb",
-                      borderRadius: 1,
-                      width: "100%",
-                    }}
-                  >
-                    <Typography variant="h5" fontWeight="bold">
-                      Contact Person 2
-                    </Typography>
-                  </Box>
-                  {/* </Box> */}
-
-                  {/* <Typography>Contact Person 2</Typography> */}
-                  <TextField
-                    name="name1"
-                    label={
-                      <>
-                        Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.name1}
-                    // required
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const input = e.target.value.toUpperCase();
-                    //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                    //     handleChange({
-                    //       target: {
-                    //         name: "name1",
-                    //         value: input,
-                    //       },
-                    //     });
-                    //   }
-                    // }}
-                    error={!!touched.name1 && !!errors.name1}
-                    helperText={touched.name1 && errors.name1}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="name2"
-                    label="Name"
-                    variant="standard"
-                    focused
-                    value={values.name2}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const input = e.target.value.toUpperCase();
-                    //   if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                    //     // This updates Formik value correctly
-                    //     handleChange({
-                    //       target: {
-                    //         name: "name2",
-                    //         value: input,
-                    //       },
-                    //     });
-                    //   }
-                    // }}
-                    error={!!touched.name2 && !!errors.name2}
-                    helperText={touched.name2 && errors.name2}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="emailid1"
-                    type="tel"
-                    id="emailid1"
-                    label={
-                      <>
-                        Email ID
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    // required
-                    focused
-                    value={values.emailid1}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const value = e.target.value;
-                    //   // Only allow numbers and max 10 digits
-                    //   if (/^\d{0,10}$/.test(value)) {
-                    //     handleChange(e);
-                    //   }
-                    // }}
-                    error={!!touched.emailid1 && !!errors.emailid1}
-                    helperText={touched.emailid1 && errors.emailid1}
-                    // inputProps={{ maxLength: 10 }}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-
-                  <TextField
-                    name="emailid2"
-                    type="text"
-                    id="emailid2"
-                    label="Email ID"
-                    variant="standard"
-                    focused
-                    value={values.emailid2}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="mobileno1"
-                    type="tel"
-                    id="mobileno1"
-                    label={
-                      <>
-                        Mobile No
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.mobileno1}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.mobileno1 && !!errors.mobileno1}
-                    helperText={touched.mobileno1 && errors.mobileno1}
-                    // required
-                    inputProps={{ maxLength: 10 }}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="mobileno2"
-                    type="tel"
-                    id="mobileno2"
-                    label="Mobile No"
-                    variant="standard"
-                    focused
-                    inputProps={{ maxLength: 10 }}
-                    value={values.mobileno2}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="aadharcardnumber1"
-                    name="aadharcardnumber1"
-                    value={values.aadharcardnumber1}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Aadhar Card No"
-                    focused
-                    // onWheel={(e) => e.target.blur()}
-                    error={
-                      touched.aadharcardnumber1 &&
-                      Boolean(errors.aadharcardnumber1)
-                    }
-                    helperText={
-                      touched.aadharcardnumber1 && errors.aadharcardnumber1
-                    }
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="aadharcardnumber2"
-                    name="aadharcardnumber2"
-                    value={values.aadharcardnumber2}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Aadhar Card No"
-                    focused
-                    // onWheel={(e) => e.target.blur()}
-                    error={
-                      touched.aadharcardnumber2 &&
-                      Boolean(errors.aadharcardnumber2)
-                    }
-                    helperText={
-                      touched.aadharcardnumber2 && errors.aadharcardnumber2
-                    }
-                  />
-                </Box>
-                <Grid container spacing={2}>
-                  {/* ID Proof (Left side – 50%) */}
-                  <Grid item xs={12} md={6}>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Tooltip title="ID Proof">
-                        <IconButton
-                          size="small"
-                          color="warning"
-                          aria-label="upload picture"
-                          component="label"
-                        >
-                          <input
-                            hidden
-                            accept="all/*"
-                            type="file"
-                            // onChange={getFilepanChange}
-                            onChange={getFileID1Change}
-                          />
-                          <PictureAsPdfOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Button
-                        size="small"
-                        variant="contained"
-                        // onClick={() => {
-                        //   data.ContactPersonIDProofImg1 || ID1Image
-                        //     ? window.open(
-                        //         ID1Image
-                        //           ? store.getState().globalurl.attachmentUrl +
-                        //               ID1Image
-                        //           : store.getState().globalurl.attachmentUrl +
-                        //               data.ContactPersonIDProofImg1,
-                        //         "_blank"
-                        //       )
-                        //     : toast.error("Please Upload File");
-                        // }}
-                        onClick={() => {
-                          partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
-                            ? window.open(
-                              ID1Image
-                                ? store.getState().globalurl.attachmentUrl +
-                                ID1Image
-                                : store.getState().globalurl.attachmentUrl +
-                                partyContactgetdata.ContactPersonIDProofImg1,
-                              "_blank"
-                            )
-                            : toast.error("Please Upload File");
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={contactInitialValue}
+                onSubmit={(values, setSubmitting) => {
+                  setTimeout(() => {
+                    contactsave(values);
+                  }, 100);
+                }}
+                validationSchema={validationSchema3}
+                enableReinitialize={true}
+              >
+                {({
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                    <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          backgroundColor: "#EFF6FF",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 18,
                         }}
                       >
-                        ID Proof View
-                      </Button>
+                        📞
+                      </Box>
+                      <Box>
+                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                          Contact Details
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Contact persons and ID proofs
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Grid>
 
-                  {/* GST Proof (Right side – 50%) */}
-                  <Grid item xs={12} md={6}>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Tooltip title="ID Proof">
-                        <IconButton
-                          size="small"
-                          color="warning"
-                          aria-label="upload picture"
-                          component="label"
-                        >
-                          <input
-                            hidden
-                            accept="all/*"
-                            type="file"
-                            // onChange={getFilegstChange}
-                            onChange={getFileID2Change}
-                          />
-                          <PictureAsPdfOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Button
-                        size="small"
-                        variant="contained"
-                        onClick={() => {
-                          partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
-                            ? window.open(
-                              ID2Image
-                                ? store.getState().globalurl.attachmentUrl +
-                                ID2Image
-                                : store.getState().globalurl.attachmentUrl +
-                                partyContactgetdata.ContactPersonIDProofImg2,
-                              "_blank"
-                            )
-                            : toast.error("Please Upload File");
-                        }}
-                      >
-                        ID Proof View
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
-
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap="20px"
-                >
-                  {/* GSTimage */}
-
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )}
-                  {/* {YearFlag == "true" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Fnsave(values, "harddelete");
+                    <Box
+                      display="grid"
+                      gap='20px'
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
                       }}
                     >
-                      Delete
-                    </Button>
-                  ) : (
-                    <Button color="error" variant="contained" disabled={true}>
-                      Delete
-                    </Button>
-                  )} */}
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label="Code"
+                          variant="outlined"
+                          size="small"
+                          placeholder="Auto"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          InputProps={{ readOnly: true }}
+                          sx={textFieldSx}
+                        />
+                      ) : (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={textFieldSx}
+                          autoFocus
+                        />
+                      )}
+                      <TextField
+                        name="name"
+                        type="text"
+                        id="name"
+                        label="Name"
+                        variant="outlined"
+                        size="small"
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
+                        InputProps={{
+                          inputProps: {
+                            readOnly: true,
+                          },
+                        }}
+                        sx={textFieldSx}
+                        autoFocus={CompanyAutoCode == "Y"}
+                      />
 
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      setScreen(0);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
+                      <Box
+                        sx={{
+                          padding: 1.5,
+                          backgroundColor: "#b2dfdb",
+                          borderRadius: 1,
+                          width: "100%",
+                        }}
+                      >
+                        <Typography variant="h5" fontWeight="bold">
+                          Contact Person 1
+                        </Typography>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          padding: 1.5,
+                          backgroundColor: "#b2dfdb",
+                          borderRadius: 1,
+                          width: "100%",
+                        }}
+                      >
+                        <Typography variant="h5" fontWeight="bold">
+                          Contact Person 2
+                        </Typography>
+                      </Box>
+
+                      <TextField
+                        name="name1"
+                        label={
+                          <>
+                            Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.name1}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name1 && !!errors.name1}
+                        helperText={touched.name1 && errors.name1}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="name2"
+                        label="Name"
+                        variant="outlined"
+                        size="small"
+                        value={values.name2}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name2 && !!errors.name2}
+                        helperText={touched.name2 && errors.name2}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="emailid1"
+                        type="tel"
+                        id="emailid1"
+                        label={
+                          <>
+                            Email ID
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.emailid1}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.emailid1 && !!errors.emailid1}
+                        helperText={touched.emailid1 && errors.emailid1}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="emailid2"
+                        type="text"
+                        id="emailid2"
+                        label="Email ID"
+                        variant="outlined"
+                        size="small"
+                        value={values.emailid2}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="mobileno1"
+                        type="tel"
+                        id="mobileno1"
+                        label={
+                          <>
+                            Mobile No
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.mobileno1}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.mobileno1 && !!errors.mobileno1}
+                        helperText={touched.mobileno1 && errors.mobileno1}
+                        inputProps={{ maxLength: 10 }}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="mobileno2"
+                        type="tel"
+                        id="mobileno2"
+                        label="Mobile No"
+                        variant="outlined"
+                        size="small"
+                        inputProps={{ maxLength: 10 }}
+                        value={values.mobileno2}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        type="number"
+                        id="aadharcardnumber1"
+                        name="aadharcardnumber1"
+                        value={values.aadharcardnumber1}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Aadhar Card No"
+                        error={
+                          touched.aadharcardnumber1 &&
+                          Boolean(errors.aadharcardnumber1)
+                        }
+                        helperText={
+                          touched.aadharcardnumber1 && errors.aadharcardnumber1
+                        }
+                        sx={textFieldSx}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        type="number"
+                        id="aadharcardnumber2"
+                        name="aadharcardnumber2"
+                        value={values.aadharcardnumber2}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Aadhar Card No"
+                        error={
+                          touched.aadharcardnumber2 &&
+                          Boolean(errors.aadharcardnumber2)
+                        }
+                        helperText={
+                          touched.aadharcardnumber2 && errors.aadharcardnumber2
+                        }
+                        sx={textFieldSx}
+                      />
+                    </Box>
+
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Tooltip title="ID Proof">
+                            <IconButton
+                              size="small"
+                              color="warning"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input
+                                hidden
+                                accept="all/*"
+                                type="file"
+                                onChange={getFileID1Change}
+                              />
+                              <PictureAsPdfOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                              partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
+                                ? window.open(
+                                  ID1Image
+                                    ? store.getState().globalurl.attachmentUrl +
+                                    ID1Image
+                                    : store.getState().globalurl.attachmentUrl +
+                                    partyContactgetdata.ContactPersonIDProofImg1,
+                                  "_blank"
+                                )
+                                : toast.error("Please Upload File");
+                            }}
+                          >
+                            ID Proof View
+                          </Button>
+                        </Box>
+                      </Grid>
+
+                      <Grid item xs={12} md={6}>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Tooltip title="ID Proof">
+                            <IconButton
+                              size="small"
+                              color="warning"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input
+                                hidden
+                                accept="all/*"
+                                type="file"
+                                onChange={getFileID2Change}
+                              />
+                              <PictureAsPdfOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                              partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
+                                ? window.open(
+                                  ID2Image
+                                    ? store.getState().globalurl.attachmentUrl +
+                                    ID2Image
+                                    : store.getState().globalurl.attachmentUrl +
+                                    partyContactgetdata.ContactPersonIDProofImg2,
+                                  "_blank"
+                                )
+                                : toast.error("Please Upload File");
+                            }}
+                          >
+                            ID Proof View
+                          </Button>
+                        </Box>
+                      </Grid>
+                    </Grid>
+
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                      {YearFlag == "true" ? (
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": { bgcolor: "#0F766E" },
+                          }}
+                        >
+                          Save
+                        </LoadingButton>
+                      ) : (
+                        <Button
+                          color="secondary"
+                          variant="contained"
+                          disabled={true}
+                          sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                        >
+                          Save
+                        </Button>
+                      )}
+
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          setScreen(0);
+                        }}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#F97316",
+                          "&:hover": { bgcolor: "#EA580C" },
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </form>
+                )}
+              </Formik>
+            </Paper>
+          </Box>
+        </Box>
       ) : (
         false
       )}
-      {show == "2" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={BankInitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                Banksave(values);
-              }, 100);
-            }}
-            validationSchema={validationSchema2}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      variant="standard"
-                      placeholder="Auto"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{ readOnly: true }}
-                    // autoFocus
-                    />
-                  ) : (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      variant="standard"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
-                  )}
-                  <TextField
-                    name="name"
-                    type="text"
-                    id="name"
-                    label={
-                      <>
-                        Name
-                        {/* <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span> */}
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.name && !!errors.name}
-                    helperText={touched.name && errors.name}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        readOnly: true,
-                      },
-                    }}
-                    // required
-                    autoFocus={CompanyAutoCode == "Y"}
-                  />
-                  <TextField
-                    name="bankname"
-                    type="text"
-                    id="bankname"
-                    label={
-                      <>
-                        Bank Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.bankname}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.bankname && !!errors.bankname}
-                    helperText={touched.bankname && errors.bankname}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="Accounttype"
-                    type="text"
-                    id="Accounttype"
-                    label={
-                      <>
-                        Account Type
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.Accounttype}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.Accounttype && !!errors.Accounttype}
-                    helperText={touched.Accounttype && errors.Accounttype}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="branchname"
-                    label={
-                      <>
-                        Branch Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.branchname}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const input = e.target.value.toUpperCase();
-                    //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                    //     handleChange({
-                    //       target: {
-                    //         name: "branchname",
-                    //         value: input,
-                    //       },
-                    //     });
-                    //   }
-                    // }}
-                    error={!!touched.branchname && !!errors.branchname}
-                    helperText={touched.branchname && errors.branchname}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="ifsc"
-                    label={
-                      <>
-                        IFSC Code
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.ifsc}
-                    onBlur={handleBlur}
-                    //  onChange={handleChange}
-                    onChange={(e) => {
-                      const input = e.target.value.toUpperCase();
-                      if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                        // This updates Formik value correctly
-                        handleChange({
-                          target: {
-                            name: "ifsc",
-                            value: input,
-                          },
-                        });
-                      }
-                    }}
-                    error={!!touched.ifsc && !!errors.ifsc}
-                    helperText={touched.ifsc && errors.ifsc}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="accountholdname"
-                    type="text"
-                    id="accountholdname"
-                    label={
-                      <>
-                        Account Holder Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.accountholdname}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={
-                      !!touched.accountholdname && !!errors.accountholdname
-                    }
-                    helperText={
-                      touched.accountholdname && errors.accountholdname
-                    }
-                    // inputProps={{ maxLength: 10 }}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
 
-                  <TextField
-                    name="bankloc"
-                    type="text"
-                    id="bankloc"
-                    label={
-                      <>
-                        Bank Location
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.bankloc}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                    error={!!touched.bankloc && !!errors.bankloc}
-                    helperText={touched.bankloc && errors.bankloc}
-                  />
-                  {/* <TextField
-                    name="accountnumber"
-                    type="number"
-                    id="accountnumber"
-                    label="Account Number"
-                    variant="standard"
-                    focused
-                     required
-                    value={values.accountnumber}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  /> */}
-                  <TextField
-                    name="accountnumber"
-                    type="text" // use "text" instead of "number" to preserve leading 0s and better control
-                    id="accountnumber"
-                    label={
-                      <>
-                        Account Number
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.accountnumber}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const input = e.target.value;
-                      // Allow only digits
-                      if (/^\d*$/.test(input)) {
-                        handleChange({
-                          target: {
-                            name: "accountnumber",
-                            value: input,
-                          },
-                        });
-                      }
-                    }}
-                    error={!!touched.accountnumber && !!errors.accountnumber}
-                    helperText={touched.accountnumber && errors.accountnumber}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                    }}
-                    autoFocus
-                  />
-                  <TextField
-                    name="bankaddress"
-                    type="text"
-                    id="bankaddress"
-                    label={
-                      <>
-                        Bank Address
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.bankaddress}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    error={!!touched.bankaddress && !!errors.bankaddress}
-                    helperText={touched.bankaddress && errors.bankaddress}
-                    autoFocus
-                  />
-                </Box>
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap="20px"
-                >
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )}{" "}
-                  {/* {YearFlag == "true" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Banksave(values, "harddelete");
+      {show == "2" ? (
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={BankInitialValue}
+                onSubmit={(values, setSubmitting) => {
+                  setTimeout(() => {
+                    Banksave(values);
+                  }, 100);
+                }}
+                validationSchema={validationSchema2}
+                enableReinitialize={true}
+              >
+                {({
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                    <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          backgroundColor: "#EFF6FF",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 18,
+                        }}
+                      >
+                        🏦
+                      </Box>
+                      <Box>
+                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                          Bank Details
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Bank account and branch information
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Box
+                      display="grid"
+                      gap='20px'
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
                       }}
                     >
-                      Delete
-                    </Button>
-                  ) : (
-                    <Button color="error" variant="contained" disabled={true}>
-                      Delete
-                    </Button>
-                  )} */}
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      setScreen(0);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label="Code"
+                          variant="outlined"
+                          size="small"
+                          placeholder="Auto"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          InputProps={{ readOnly: true }}
+                          sx={textFieldSx}
+                        />
+                      ) : (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="outlined"
+                          size="small"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={textFieldSx}
+                          autoFocus
+                        />
+                      )}
+                      <TextField
+                        name="name"
+                        type="text"
+                        id="name"
+                        label="Name"
+                        variant="outlined"
+                        size="small"
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
+                        InputProps={{
+                          inputProps: {
+                            readOnly: true,
+                          },
+                        }}
+                        sx={textFieldSx}
+                        autoFocus={CompanyAutoCode == "Y"}
+                      />
+                      <TextField
+                        name="bankname"
+                        type="text"
+                        id="bankname"
+                        label={
+                          <>
+                            Bank Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.bankname}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.bankname && !!errors.bankname}
+                        helperText={touched.bankname && errors.bankname}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="Accounttype"
+                        type="text"
+                        id="Accounttype"
+                        label={
+                          <>
+                            Account Type
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.Accounttype}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Accounttype && !!errors.Accounttype}
+                        helperText={touched.Accounttype && errors.Accounttype}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="branchname"
+                        label={
+                          <>
+                            Branch Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.branchname}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.branchname && !!errors.branchname}
+                        helperText={touched.branchname && errors.branchname}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="ifsc"
+                        label={
+                          <>
+                            IFSC Code
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.ifsc}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const input = e.target.value.toUpperCase();
+                          if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                            handleChange({
+                              target: {
+                                name: "ifsc",
+                                value: input,
+                              },
+                            });
+                          }
+                        }}
+                        error={!!touched.ifsc && !!errors.ifsc}
+                        helperText={touched.ifsc && errors.ifsc}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="accountholdname"
+                        type="text"
+                        id="accountholdname"
+                        label={
+                          <>
+                            Account Holder Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.accountholdname}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.accountholdname && !!errors.accountholdname
+                        }
+                        helperText={
+                          touched.accountholdname && errors.accountholdname
+                        }
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="bankloc"
+                        type="text"
+                        id="bankloc"
+                        label={
+                          <>
+                            Bank Location
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.bankloc}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                        autoFocus
+                        error={!!touched.bankloc && !!errors.bankloc}
+                        helperText={touched.bankloc && errors.bankloc}
+                      />
+                      <TextField
+                        name="accountnumber"
+                        type="text"
+                        id="accountnumber"
+                        label={
+                          <>
+                            Account Number
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.accountnumber}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const input = e.target.value;
+                          if (/^\d*$/.test(input)) {
+                            handleChange({
+                              target: {
+                                name: "accountnumber",
+                                value: input,
+                              },
+                            });
+                          }
+                        }}
+                        error={!!touched.accountnumber && !!errors.accountnumber}
+                        helperText={touched.accountnumber && errors.accountnumber}
+                        sx={textFieldSx}
+                        autoFocus
+                      />
+                      <TextField
+                        name="bankaddress"
+                        type="text"
+                        id="bankaddress"
+                        label={
+                          <>
+                            Bank Address
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        variant="outlined"
+                        size="small"
+                        value={values.bankaddress}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                        error={!!touched.bankaddress && !!errors.bankaddress}
+                        helperText={touched.bankaddress && errors.bankaddress}
+                        autoFocus
+                      />
+                    </Box>
+
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                      {YearFlag == "true" ? (
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": { bgcolor: "#0F766E" },
+                          }}
+                        >
+                          Save
+                        </LoadingButton>
+                      ) : (
+                        <Button
+                          color="secondary"
+                          variant="contained"
+                          disabled={true}
+                          sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                        >
+                          Save
+                        </Button>
+                      )}
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          setScreen(0);
+                        }}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#F97316",
+                          "&:hover": { bgcolor: "#EA580C" },
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </form>
+                )}
+              </Formik>
+            </Paper>
+          </Box>
+        </Box>
       ) : (
         false
       )}
 
       {show == "3" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={RegisterInitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                RegisterFnsave(values);
-              }, 100);
-            }}
-            validationSchema={validationSchema4}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                {!isPartyRegisterLoading ? (
-                  <>
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label="Code"
-                          variant="standard"
-                          placeholder="Auto"
-                          focused
-                          // required
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={RegisterInitialValue}
+                onSubmit={(values, setSubmitting) => {
+                  setTimeout(() => {
+                    RegisterFnsave(values);
+                  }, 100);
+                }}
+                validationSchema={validationSchema4}
+                enableReinitialize={true}
+              >
+                {({
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {!isPartyRegisterLoading ? (
+                      <>
+                        {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: 18,
+                            }}
+                          >
+                            📝
+                          </Box>
+                          <Box>
+                            <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                              Registration
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              PAN, GST and registration documents
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          display="grid"
+                          gap='20px'
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                           sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
                             },
                           }}
-                          InputProps={{ readOnly: true }}
-                        // autoFocus
-                        />
-                      ) : (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          // required
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          autoFocus
-                        />
-                      )}
-                      <TextField
-                        name="name"
-                        type="text"
-                        id="name"
-                        label={
-                          <>
-                            Name
-                            {/* <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span> */}
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.name}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.name && !!errors.name}
-                        helperText={touched.name && errors.name}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            readOnly: true,
-                          },
-                        }}
-                        // required
-                        autoFocus={CompanyAutoCode == "Y"}
-                      />
-                      <TextField
-                        name="Pancardnumber"
-                        label="Pan Card Number"
-                        variant="standard"
-                        focused
-                        value={values.Pancardnumber}
-                        onBlur={handleBlur}
-                        // required
-                        onChange={(e) => {
-                          const input = e.target.value.toUpperCase();
-                          if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                            handleChange({
-                              target: {
-                                name: "Pancardnumber",
-                                value: input,
-                              },
-                            });
-                          }
-                        }}
-                        error={
-                          !!touched.Pancardnumber && !!errors.Pancardnumber
-                        }
-                        helperText={
-                          touched.Pancardnumber && errors.Pancardnumber
-                        }
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        name="gstnumber"
-                        label="GST Number"
-                        variant="standard"
-                        focused
-                        value={values.gstnumber}
-                        // required
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const input = e.target.value.toUpperCase();
-                          if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                            // This updates Formik value correctly
-                            handleChange({
-                              target: {
-                                name: "gstnumber",
-                                value: input,
-                              },
-                            });
-                          }
-                        }}
-                        error={!!touched.gstnumber && !!errors.gstnumber}
-                        helperText={touched.gstnumber && errors.gstnumber}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                      // autoFocus
-                      />
-
-                      <TextField
-                        name="date"
-                        type="date"
-                        id="date"
-                        label="Date of Registration"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.date}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.date && !!errors.date}
-                        helperText={touched.date && errors.date}
-                        // required
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        name="verifieddate"
-                        type="date"
-                        id="verifieddate"
-                        label="Date of Verification & Confirmation"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.verifieddate}
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.date && !!errors.date}
-                        helperText={touched.date && errors.date}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="end"
-                      padding={1}
-                      gap="20px"
-                    >
-                      <Tooltip title="PAN Upload">
-                        <IconButton
-                          size="small"
-                          color="warning"
-                          aria-label="upload picture"
-                          component="label"
                         >
-                          <input
-                            hidden
-                            accept="all/*"
-                            type="file"
-                            onChange={getFilepanChange}
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label="Code"
+                              variant="outlined"
+                              size="small"
+                              placeholder="Auto"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              InputProps={{ readOnly: true }}
+                              sx={textFieldSx}
+                            />
+                          ) : (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              variant="outlined"
+                              size="small"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              sx={textFieldSx}
+                              autoFocus
+                            />
+                          )}
+                          <TextField
+                            name="name"
+                            type="text"
+                            id="name"
+                            label="Name"
+                            variant="outlined"
+                            size="small"
+                            value={values.name}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.name && !!errors.name}
+                            helperText={touched.name && errors.name}
+                            InputProps={{
+                              inputProps: {
+                                readOnly: true,
+                              },
+                            }}
+                            sx={textFieldSx}
+                            autoFocus={CompanyAutoCode == "Y"}
                           />
-                          <PictureAsPdfOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        component={"a"}
-                        onClick={() => {
-                          data.PanImg || panImage
-                            ? window.open(
-                              panImage
-                                ? store.getState().globalurl.attachmentUrl +
-                                panImage
-                                : store.getState().globalurl.attachmentUrl +
-                                data.PanImg,
-                              "_blank"
-                            )
-                            : toast.error("Please Upload File");
-                        }}
-                      >
-                        PAN Image View
-                      </Button>
-                      {/* GSTimage */}
-                      <Tooltip title="GST Upload">
-                        <IconButton
-                          size="small"
-                          color="warning"
-                          aria-label="upload picture"
-                          component="label"
-                        >
-                          <input
-                            hidden
-                            accept="all/*"
-                            type="file"
-                            onChange={getFilegstChange}
+                          <TextField
+                            name="Pancardnumber"
+                            label="Pan Card Number"
+                            variant="outlined"
+                            size="small"
+                            value={values.Pancardnumber}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const input = e.target.value.toUpperCase();
+                              if (/^[A-Z0-9]*$/.test(input) || input === "") {
+                                handleChange({
+                                  target: {
+                                    name: "Pancardnumber",
+                                    value: input,
+                                  },
+                                });
+                              }
+                            }}
+                            error={
+                              !!touched.Pancardnumber && !!errors.Pancardnumber
+                            }
+                            helperText={
+                              touched.Pancardnumber && errors.Pancardnumber
+                            }
+                            sx={textFieldSx}
+                            autoFocus
                           />
-                          <PictureAsPdfOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        component={"a"}
-                        onClick={() => {
-                          data.GstImg || gstImage
-                            ? window.open(
-                              gstImage
-                                ? store.getState().globalurl.attachmentUrl +
-                                gstImage
-                                : store.getState().globalurl.attachmentUrl +
-                                data.GstImg,
-                              "_blank"
-                            )
-                            : toast.error("Please Upload File");
-                        }}
-                      >
-                        GST Image View
-                      </Button>
+                          <TextField
+                            name="gstnumber"
+                            label="GST Number"
+                            variant="outlined"
+                            size="small"
+                            value={values.gstnumber}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const input = e.target.value.toUpperCase();
+                              if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                                handleChange({
+                                  target: {
+                                    name: "gstnumber",
+                                    value: input,
+                                  },
+                                });
+                              }
+                            }}
+                            error={!!touched.gstnumber && !!errors.gstnumber}
+                            helperText={touched.gstnumber && errors.gstnumber}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            name="date"
+                            type="date"
+                            id="date"
+                            label="Date of Registration"
+                            variant="outlined"
+                            size="small"
+                            inputFormat="YYYY-MM-DD"
+                            value={values.date}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.date && !!errors.date}
+                            helperText={touched.date && errors.date}
+                            sx={textFieldSx}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            name="verifieddate"
+                            type="date"
+                            id="verifieddate"
+                            label="Date of Verification & Confirmation"
+                            variant="outlined"
+                            size="small"
+                            inputFormat="YYYY-MM-DD"
+                            value={values.verifieddate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.date && !!errors.date}
+                            helperText={touched.date && errors.date}
+                            sx={textFieldSx}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
 
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
+                        <Box display="flex" justifyContent="end" gap={2} mt={4} flexWrap="wrap">
+                          <Tooltip title="PAN Upload">
+                            <IconButton
+                              size="small"
+                              color="warning"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input
+                                hidden
+                                accept="all/*"
+                                type="file"
+                                onChange={getFilepanChange}
+                              />
+                              <PictureAsPdfOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            component={"a"}
+                            onClick={() => {
+                              data.PanImg || panImage
+                                ? window.open(
+                                  panImage
+                                    ? store.getState().globalurl.attachmentUrl +
+                                    panImage
+                                    : store.getState().globalurl.attachmentUrl +
+                                    data.PanImg,
+                                  "_blank"
+                                )
+                                : toast.error("Please Upload File");
+                            }}
+                          >
+                            PAN Image View
+                          </Button>
 
-                      <Button
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          // navigate("/Apps/TR243/Party");
-                          setScreen(0);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                  </>
-                ) : (
-                  false
+                          <Tooltip title="GST Upload">
+                            <IconButton
+                              size="small"
+                              color="warning"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input
+                                hidden
+                                accept="all/*"
+                                type="file"
+                                onChange={getFilegstChange}
+                              />
+                              <PictureAsPdfOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            component={"a"}
+                            onClick={() => {
+                              data.GstImg || gstImage
+                                ? window.open(
+                                  gstImage
+                                    ? store.getState().globalurl.attachmentUrl +
+                                    gstImage
+                                    : store.getState().globalurl.attachmentUrl +
+                                    data.GstImg,
+                                  "_blank"
+                                )
+                                : toast.error("Please Upload File");
+                            }}
+                          >
+                            GST Image View
+                          </Button>
+
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": { bgcolor: "#0F766E" },
+                            }}
+                          >
+                            Save
+                          </LoadingButton>
+
+                          <Button
+                            color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+                              "&:hover": { bgcolor: "#EA580C" },
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Box>
+                      </>
+                    ) : (
+                      false
+                    )}
+                  </form>
                 )}
-              </form>
-            )}
-          </Formik>
-        </Paper>
+              </Formik>
+            </Paper>
+          </Box>
+        </Box>
       ) : (
         false
       )}
+
       {show == "4" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={DefaultInitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                DefaultFnsave(values);
-              }, 100);
-            }}
-            //validationSchema={validationSchema4}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                {!isPartyDeaultLoading ? (
-                  <>
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label="Code"
-                          variant="standard"
-                          placeholder="Auto"
-                          focused
-                          // required
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={DefaultInitialValue}
+                onSubmit={(values, setSubmitting) => {
+                  setTimeout(() => {
+                    DefaultFnsave(values);
+                  }, 100);
+                }}
+                enableReinitialize={true}
+              >
+                {({
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleChange,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {!isPartyDeaultLoading ? (
+                      <>
+                        {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: 18,
+                            }}
+                          >
+                            ⚙️
+                          </Box>
+                          <Box>
+                            <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                              Default Settings
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Default product and payment mode
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          display="grid"
+                          gap='20px'
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                           sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
                             },
                           }}
-                          InputProps={{ readOnly: true }}
-                        // autoFocus
-                        />
-                      ) : (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          // required
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          autoFocus
-                        />
-                      )}
-                      <TextField
-                        name="name"
-                        type="text"
-                        id="name"
-                        label={
-                          <>
-                            Name
-                            {/* <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span> */}
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.name}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.name && !!errors.name}
-                        helperText={touched.name && errors.name}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            readOnly: true,
-                          },
-                        }}
-                        // required
-                        autoFocus={CompanyAutoCode == "Y"}
-                      />
-                      <OrderItemAutocomplete
-                        id="Product"
-                        name="Product"
-                        label="Default Product"
-                        variant="outlined"
-                        value={values.Product}
-                        onChange={(newValue) => {
-                          setFieldValue("Product", newValue);
-                          console.log(newValue, "--newvalue Product");
-                          console.log(newValue.RecordID, "Product RecordID");
-                        }}
-                        error={!!touched.Product && !!errors.Product}
-                        helperText={touched.Product && errors.Product}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
-                      />
-                      <TextField
-                        name="defaultDelivery"
-                        label="Default Delivery Charges"
-                        variant="standard"
-                        type="number"
-                        focused
-                        value={values.defaultDelivery}
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.defaultDelivery && !!errors.defaultDelivery
-                        }
-                        helperText={
-                          touched.defaultDelivery && errors.defaultDelivery
-                        }
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      // autoFocus
-                      />
-                      {/* <TextField
-                        name="DefaultPaymentMode"
-                        label="Default Payment Mode"
-                        variant="standard"
-                        type="text"
-                        focused
-                        value={values.DefaultPaymentMode}
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.DefaultPaymentMode &&
-                          !!errors.DefaultPaymentMode
-                        }
-                        helperText={
-                          touched.DefaultPaymentMode &&
-                          errors.DefaultPaymentMode
-                        }
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                      /> */}
+                        >
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label="Code"
+                              variant="outlined"
+                              size="small"
+                              placeholder="Auto"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              InputProps={{ readOnly: true }}
+                              sx={textFieldSx}
+                            />
+                          ) : (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              variant="outlined"
+                              size="small"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              sx={textFieldSx}
+                              autoFocus
+                            />
+                          )}
+                          <TextField
+                            name="name"
+                            type="text"
+                            id="name"
+                            label="Name"
+                            variant="outlined"
+                            size="small"
+                            value={values.name}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.name && !!errors.name}
+                            helperText={touched.name && errors.name}
+                            InputProps={{
+                              inputProps: {
+                                readOnly: true,
+                              },
+                            }}
+                            sx={textFieldSx}
+                            autoFocus={CompanyAutoCode == "Y"}
+                          />
+                          <OrderItemAutocomplete
+                            id="Product"
+                            name="Product"
+                            label="Default Product"
+                            variant="outlined"
+                            value={values.Product}
+                            onChange={(newValue) => {
+                              setFieldValue("Product", newValue);
+                              console.log(newValue, "--newvalue Product");
+                              console.log(newValue.RecordID, "Product RecordID");
+                            }}
+                            error={!!touched.Product && !!errors.Product}
+                            helperText={touched.Product && errors.Product}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
+                          />
+                          <TextField
+                            name="defaultDelivery"
+                            label="Default Delivery Charges"
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            value={values.defaultDelivery}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.defaultDelivery && !!errors.defaultDelivery
+                            }
+                            helperText={
+                              touched.defaultDelivery && errors.defaultDelivery
+                            }
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            select
+                            label="Default Payment Mode"
+                            id="DefaultPaymentMode"
+                            name="DefaultPaymentMode"
+                            value={values.DefaultPaymentMode}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem(
+                                "DefaultPaymentMode",
+                                e.target.value
+                              );
+                            }}
+                            variant="outlined"
+                            size="small"
+                            sx={textFieldSx}
+                          >
+                            <MenuItem value="COD">Cash On Delivery</MenuItem>
+                            <MenuItem value="UPI">UPI</MenuItem>
+                            <MenuItem value="Others">Others</MenuItem>
+                          </TextField>
+                        </Box>
 
-                      <TextField
-                        select
-                        label="Default Payment Mode"
-                        id="DefaultPaymentMode"
-                        name="DefaultPaymentMode"
-                        value={values.DefaultPaymentMode}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          handleChange(e); // update form state (Formik)
-                          sessionStorage.setItem(
-                            "DefaultPaymentMode",
-                            e.target.value
-                          ); // save to sessionStorage
-                        }}
-                        focused
-                        variant="standard"
-                      >
-                        <MenuItem value="COD">Cash On Delivery</MenuItem>
-                        <MenuItem value="UPI">UPI</MenuItem>
-                        <MenuItem value="Others">Others</MenuItem>
-                      </TextField>
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="end"
-                      padding={1}
-                      gap="20px"
-                    >
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
+                        <Box display="flex" justifyContent="end" gap={2} mt={4}>
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": { bgcolor: "#0F766E" },
+                            }}
+                          >
+                            Save
+                          </LoadingButton>
 
-                      <Button
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          // navigate("/Apps/TR243/Party");
-                          setScreen(0);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                  </>
-                ) : (
-                  false
+                          <Button
+                            color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+                              "&:hover": { bgcolor: "#EA580C" },
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Box>
+                      </>
+                    ) : (
+                      false
+                    )}
+                  </form>
                 )}
-              </form>
-            )}
-          </Formik>
-        </Paper>
+              </Formik>
+            </Paper>
+          </Box>
+        </Box>
       ) : (
         false
       )}
 
 
       {show == "5" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={InitialValue}
-            // validationSchema={validationSchema2}
-            enableReinitialize={true}
-          // onSubmit={(values, { resetForm, setFieldValue }) => {
-          //   setTimeout(() => {
-          //     FnAttachment(values, resetForm, false, setFieldValue);
-          //   }, 100);
-          // }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleSubmit,
-              handleChange,
-              setFieldValue,
-              resetForm,
-            }) => (
-              <form
-                onSubmit={handleSubmit}
-                onReset={() => {
-                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                  resetForm();
-                }}
+        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+          {mode !== "A" && (
+            <FormSectionsSidebar
+              show={show}
+              screenChange={screenChange}
+              sections={formSections}
+              open={sectionsOpen}
+              onToggle={() => setSectionsOpen((p) => !p)}
+            />
+          )}
+          <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 3,
+                p: 3,
+              }}
+            >
+              <Formik
+                initialValues={InitialValue}
+                enableReinitialize={true}
               >
-
-
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-
-                  {/* <FormControl sx={{ gap: formGap }}> */}
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    id="code"
-                    name="code"
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Code"
-                    focused
-                    InputProps={{
-                      readOnly: true
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleBlur,
+                  handleSubmit,
+                  handleChange,
+                  setFieldValue,
+                  resetForm,
+                }) => (
+                  <form
+                    onSubmit={handleSubmit}
+                    onReset={() => {
+                      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                      resetForm();
                     }}
-                  />
+                  >
+                    {/* ----- CARD HEADER ----- */}
+                    <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          backgroundColor: "#EFF6FF",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 18,
+                        }}
+                      >
+                        📄
+                      </Box>
+                      <Box>
+                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                          List Of Documents
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Uploaded party documents
+                        </Typography>
+                      </Box>
+                    </Box>
 
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={values.name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Name"
-                    focused
-                    InputProps={{
-                      readOnly: true
-                    }}
-                  />
-                  {/* </FormControl> */}
+                    <Box
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        sx={textFieldSx}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        sx={textFieldSx}
+                      />
+                    </Box>
+
+                    <Box
+                      padding={1}
+                      m="5px 0 0 0"
+                      height={dataGridHeightExplore}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .cell-negative-status": {
+                          color: colors.redAccent[500],
+                          fontWeight: 600,
+                        },
+                        "& .cell-positive-status": {
+                          color: colors.greenAccent[400],
+                          fontWeight: 600,
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "",
+                        },
+                        "& .even-row": {
+                          backgroundColor: "",
+                          color: "",
+                        },
+                        "& .MuiDataGrid-columnHeaderTitle": {
+                          color: colors.blueAccent[900],
+                          fontWeight: 600,
+                        },
+                        "& .MuiTablePagination-root": {
+                          color: "#fff",
+                        },
+                        "& .MuiTablePagination-selectLabel": {
+                          color: "#fff",
+                        },
+                        "& .MuiTablePagination-displayedRows": {
+                          color: "#fff",
+                        },
+                        "& .MuiTablePagination-selectIcon": {
+                          color: "#fff",
+                        },
+                        "& .MuiTablePagination-actions button": {
+                          color: "#fff",
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                      />
+                    </Box>
+                  </form>
+                )}
+              </Formik>
+
+              <Box display="flex" justifyContent="space-between" padding={1}>
+                <Box>
+                  <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                    Actions Guide
+                  </Typography>
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    gap="15px"
+                    sx={{ overflowY: "auto" }}
+                  >
+                    <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="Open Document"
+                      variant="outlined"
+                    />
+                  </Box>
                 </Box>
-
-                <Box
-                  padding={1}
-                  m="5px 0 0 0"
-                  // height="50vh"
-                  height={dataGridHeightExplore}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#D3D3D3",
-                      color: "", // Color for even rows
-                    },
-                  }}
-                >
-                  <DataGrid
+                <Box display="flex" justifyContent="space-between" padding={1}>
+                  <Button
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      setScreen("0");
+                    }}
                     sx={{
-                      "& .MuiDataGrid-footerContainer": {
-                        height: dataGridHeaderFooterHeight,
-                        minHeight: dataGridHeaderFooterHeight,
-                      },
+                      textTransform: "none",
+                      borderRadius: 2,
+                      px: 4,
+                      bgcolor: "#F97316",
+                      "&:hover": { bgcolor: "#EA580C" },
                     }}
-                    rows={explorelistViewData}
-                    columns={columns}
-                    disableSelectionOnClick
-                    getRowId={(row) => row.RecordID}
-                    rowHeight={dataGridRowHeight}
-                    headerHeight={dataGridHeaderFooterHeight}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) =>
-                      setPageSize(newPageSize)
-                    }
-                    onCellClick={(params) => {
-                      selectCellRowData({
-                        rowData: params.row,
-                        mode: "E",
-                        field: params.field,
-                      });
-                    }}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pagination
-                    components={{
-                      Toolbar: Employee,
-                    }}
-                    onStateChange={(stateParams) =>
-                      setRowCount(stateParams.pagination.rowCount)
-                    }
-                    loading={exploreLoading}
-                    componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
-                    }}
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row"
-                    }
-                  />
+                  >
+                    Cancel
+                  </Button>
                 </Box>
-
-
-
-              </form>
-            )}
-          </Formik>
-          <Box display="flex" justifyContent="space-between" padding={1}>
-
-            <Box>
-              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
-                Actions Guide
-              </Typography>
-              <Box display="flex"
-                flexDirection="row"
-                gap="15px"
-                sx={{ overflowY: "auto" }}>
-                <Chip
-                  icon={<VisibilityIcon color="primary" />}
-                  label="Open Document"
-                  variant="outlined"
-                />
               </Box>
-            </Box>
-            <Box display="flex" justifyContent="space-between" padding={1}>
-              <Button
-                color="warning"
-                variant="contained"
-                onClick={() => {
-                  setScreen("0");
-                }}
-              >
-                Cancel
-              </Button>
-            </Box>
+            </Paper>
           </Box>
-        </Paper>
+        </Box>
       ) : (
         false
       )}

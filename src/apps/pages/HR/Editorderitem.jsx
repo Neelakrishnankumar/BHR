@@ -350,25 +350,47 @@ const EditOrderitem = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      {/* BREADCRUMBS */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          background: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+
             <Breadcrumbs
-              maxItems={2}
+              maxItems={4}
+              separator={<NavigateNextIcon fontSize="small" color="primary" />}
               aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#0D47A1",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
                 onClick={() => {
-                  // navigate("/Apps/TR243/Party");
                   navigate("/Apps/TR321/Party");
                 }}
               >
@@ -377,12 +399,15 @@ const EditOrderitem = () => {
 
               {params.Type === "Leader" ? (
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  // onClick={() => {
-                  //   navigate(-1);
-                  // }}
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
                   onClick={() => {
                     navigate(
                       `/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`,
@@ -393,10 +418,17 @@ const EditOrderitem = () => {
                   {`Lead(${state.LeadTitle || ""})`}
                 </Typography>
               ) : null}
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#0D47A1",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
                 onClick={() => {
                   navigate(
                     `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
@@ -407,11 +439,18 @@ const EditOrderitem = () => {
                 {params.OrderType === "O" ? "Order" : "Quotation"} (
                 {state.Code || ""})
               </Typography>
+
               {params.Type === "Party" && mode === "E" ? (
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
                   onClick={() => {
                     navigate(
                       `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
@@ -422,11 +461,18 @@ const EditOrderitem = () => {
                   {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
+
               {params.Type === "Leader" ? (
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  variant="body1"
+                  sx={{
+                    color: "#0D47A1",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
                   onClick={() => {
                     navigate(
                       `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
@@ -437,12 +483,14 @@ const EditOrderitem = () => {
                   {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                variant="body1"
+                sx={{
+                  color: "#6B7280",
+                  fontWeight: 600,
+                }}
               >
-                {/* {mode === "A" ? "Add Order Item" : "Edit Order Item"} */}
                 {params.OrderType === "O"
                   ? mode === "A"
                     ? "Add Order Item"
@@ -453,14 +501,34 @@ const EditOrderitem = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-          <Box display="flex">
+
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                //  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+               //  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }} 
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -469,18 +537,24 @@ const EditOrderitem = () => {
       </Paper>
 
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            margin: "10px",
+          }}
+        >
           <Formik
             initialValues={InitialValue}
-            //sinitialValues={mode === "A" ? blankInitial : InitialValue}
-
             onSubmit={(values, setSubmitting, actions) => {
               setTimeout(() => {
                 Fnsave(values, actions);
               }, 100);
             }}
             validationSchema={validationSchema}
-            //enableReinitialize={mode === "E"}
             enableReinitialize={true}
           >
             {({
@@ -494,51 +568,14 @@ const EditOrderitem = () => {
               setFieldValue,
               setFieldTouched,
             }) => {
-
               const netQuantity = Number(values.quantity || 0) + Number(ReplacementQty || 0);
-              // const recalc = (changedField, newValue) => {
-              //   const price = parseFloat(values.price || 0);
-              //   const net = parseFloat(values.netprice || 0);
-              //   const qty = parseFloat(values.quantity || 0);
 
-              //   switch (changedField) {
-              //     case "discount": {
-              //       const disc = parseFloat(newValue || 0);
-              //       const newNet = price - (price * disc) / 100;
-              //       setFieldValue("discount", newValue);
-              //       setFieldValue("netprice", newNet.toFixed(2));
-              //       setFieldValue("amount", (newNet * qty).toFixed(2));
-              //       break;
-              //     }
-
-              //     case "quantity": {
-              //       const q = parseFloat(newValue || 0);
-              //       setFieldValue("quantity", newValue);
-              //       setFieldValue("amount", (net * q).toFixed(2));
-              //       break;
-              //     }
-
-              //     case "amount": {
-              //       const newAmt = parseFloat(newValue || 0);
-              //       const newNet = qty > 0 ? newAmt / qty : 0;
-              //       const newDisc = price
-              //         ? ((price - newNet) / price) * 100
-              //         : 0;
-
-              //       setFieldValue("amount", newValue);
-              //       setFieldValue("netprice", newNet.toFixed(2));
-              //       setFieldValue("discount", newDisc.toFixed(2));
-              //       break;
-              //     }
-              //   }
-              // };
               const recalc = (changedField, newValue) => {
                 const price = parseFloat(values.price || 0);
                 const qty = parseFloat(values.quantity || 0);
                 const discount = parseFloat(values.discount || 0);
                 const net = parseFloat(values.netprice || 0);
 
-                // 🔥 Helper → calculate net from price & discount
                 const computeNet = (p, d) => p - (p * d) / 100;
 
                 switch (changedField) {
@@ -573,13 +610,11 @@ const EditOrderitem = () => {
                     break;
                   }
 
-                  // ⭐ SPECIAL CASE → When PRICE changes (due to product selection)
                   case "price": {
                     const newPrice = parseFloat(newValue || 0);
 
                     setFieldValue("price", newValue);
 
-                    // default behaviour: if discount = 0 → net price = price
                     if (discount === 0) {
                       setFieldValue("netprice", newPrice.toFixed(2));
                       setFieldValue("amount", (newPrice * qty).toFixed(2));
@@ -610,12 +645,37 @@ const EditOrderitem = () => {
 
               return (
                 <form onSubmit={handleSubmit}>
+                  {/* ----- CARD HEADER ----- */}
+                  <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "#EFF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 18,
+                      }}
+                    >
+                      🛍️
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        Order Item
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Product pricing and quantity details
+                      </Typography>
+                    </Box>
+                  </Box>
+
                   <Box
                     display="grid"
-                    gap={formGap}
+                    gap = "20px"
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
@@ -624,110 +684,23 @@ const EditOrderitem = () => {
                   >
                     <FormControl
                       sx={{
-                        //gridColumn: "span 2",
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
                       }}
                     >
-                      {/* <OrderItemAutocomplete
-                        id="product"
-                        name="product"
-                        //label="Product"
-                        label={
-                          <>
-                            Product
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
-                          </>
-                        }
-                        variant="outlined"
-                        value={values.product}
-                        onBlur={() => setFieldTouched("product", true)}
-                        onChange={(newValue) => {
-                          const prevProduct = values.product;
-                          // Set the selected product
-                          setFieldValue("product", newValue);
-
-                          // If nothing selected (cleared)
-                          if (!newValue) {
-                            setFieldValue("price", "");
-                            setFieldValue("discount", "");
-                            setFieldValue("netprice", "");
-                            setFieldValue("quantity", "");
-                            setFieldValue("amount", "");
-                            return;
-                          }
-
-                          //  If SAME product is selected again — DO NOTHING
-                          if (
-                            prevProduct &&
-                            prevProduct.RecordID === newValue.RecordID
-                          ) {
-                            console.log("Same product selected — no reset");
-                            return;
-                          }
-
-                          // ★ If NEW product selected → reset all dependent fields
-                          setFieldValue("price", newValue.Price);
-                          setFieldValue("discount", "");
-                          setFieldValue("netprice", "");
-                          setFieldValue("quantity", "");
-                          setFieldValue("amount", "");
-                        }}
-                        error={!!touched.product && !!errors.product}
-                        helperText={touched.product && errors.product}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      /> */}
                       <OrderItemAutocomplete
                         id="product"
                         name="product"
-                        //label="Product"
                         label={
                           <>
                             Product
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}> * </span>
                           </>
                         }
                         variant="outlined"
                         value={values.product}
                         onBlur={() => setFieldTouched("product", true)}
-                        // onChange={(newValue) => {
-                        //   const prevProduct = values.product;
-                        //   // Set the selected product
-                        //   setFieldValue("product", newValue);
-
-                        //   // If nothing selected (cleared)
-                        //   if (!newValue) {
-                        //     setFieldValue("price", "");
-                        //     setFieldValue("discount", "");
-                        //     setFieldValue("netprice", "");
-                        //     setFieldValue("quantity", "");
-                        //     setFieldValue("amount", "");
-                        //     return;
-                        //   }
-
-                        //   //  If SAME product is selected again — DO NOTHING
-                        //   if (
-                        //     prevProduct &&
-                        //     prevProduct.RecordID === newValue.RecordID
-                        //   ) {
-                        //     console.log("Same product selected — no reset");
-                        //     return;
-                        //   }
-
-                        //   // ★ If NEW product selected → reset all dependent fields
-                        //   setFieldValue("price", newValue.Price);
-                        //   setFieldValue("discount", "");
-                        //   setFieldValue("netprice", "");
-                        //   setFieldValue("quantity", "");
-                        //   setFieldValue("amount", "");
-                        // }}
                         onChange={async (newValue) => {
                           const prevProduct = values.product;
                           setFieldValue("product", newValue);
@@ -757,21 +730,15 @@ const EditOrderitem = () => {
                             console.log("API Response:", res);
 
                             if (res.Status === "Y") {
-                              // setFieldValue("price", res.Price);   // THIS LINE SETS 60.00
-
                               const price = parseFloat(res.Price || 0);
-                              // ✅ SET PRICE
                               setFieldValue("price", price.toFixed(2));
 
-                              // ✅ SET DISCOUNT = 0
                               const discount = 0;
                               setFieldValue("discount", discount);
 
-                              // ✅ CALCULATE NET PRICE
                               const netPrice = price - (price * discount) / 100;
                               setFieldValue("netprice", netPrice.toFixed(2));
 
-                              // OPTIONAL: reset qty & amount
                               setFieldValue("quantity", "");
                               setFieldValue("amount", "");
 
@@ -783,11 +750,6 @@ const EditOrderitem = () => {
                             console.error("Price fetch failed", err);
                             setFieldValue("price", "");
                           }
-
-                          // setFieldValue("discount", "");
-                          // setFieldValue("netprice", "");
-                          // setFieldValue("quantity", "");
-                          // setFieldValue("amount", "");
                         }}
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
@@ -799,8 +761,8 @@ const EditOrderitem = () => {
                       type="number"
                       id="price"
                       label="Price"
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.price}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -812,28 +774,23 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
+                    
                       autoFocus
                     />
                     <TextField
                       name="discount"
                       type="number"
                       id="discount"
-                      //label="Discount (In Percentage)"
                       label={
                         <>
-                          {/* Discount / Add On(%) */}
                           Discount / Add-on (%)
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            {" "}
-                            *{" "}
-                          </span>
+                          <span style={{ color: "red", fontSize: "20px" }}> * </span>
                         </>
                       }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.discount}
                       onBlur={handleBlur}
-                      //onChange={handleChange}
                       onChange={(e) => recalc("discount", e.target.value)}
                       error={!!touched.discount && !!errors.discount}
                       helperText={touched.discount && errors.discount}
@@ -842,6 +799,7 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
+                      
                       autoFocus
                     />
                     <TextField
@@ -849,20 +807,19 @@ const EditOrderitem = () => {
                       type="number"
                       id="netprice"
                       label="Net Price"
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.netprice}
                       onBlur={handleBlur}
-                      // onChange={handleChange}
                       onChange={(e) => recalc("netprice", e.target.value)}
                       error={!!touched.netprice && !!errors.netprice}
                       helperText={touched.netprice && errors.netprice}
                       InputProps={{
-                        // readOnly: true,
                         inputProps: {
                           style: { textAlign: "right" },
                         },
                       }}
+                      
                     />
                     <TextField
                       select
@@ -877,7 +834,6 @@ const EditOrderitem = () => {
                         handleChange(e);
                         sessionStorage.setItem("PurchaseType", type);
 
-                        // RESET / RECALCULATE AMOUNT BASED ON TYPE
                         if (type === "Damage" || type === "Return") {
                           setFieldValue("amount", "0.00");
                           setFieldValue("quantity", "0");
@@ -893,9 +849,9 @@ const EditOrderitem = () => {
                           setFieldValue("amount", amt.toFixed(2));
                         }
                       }}
-
-                      focused
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
+                      
                     >
                       <MenuItem value="Purchase">Purchase</MenuItem>
                       <MenuItem value="Damage">Damage</MenuItem>
@@ -910,18 +866,14 @@ const EditOrderitem = () => {
                         label={
                           <>
                             Damage Quantity
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}> * </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         value={values.damageqty}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // onChange={(e) => recalc("damageqty", e.target.value)}
                         error={!!touched.damageqty && !!errors.damageqty}
                         helperText={touched.damageqty && errors.damageqty}
                         InputProps={{
@@ -929,6 +881,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
+                        
                         autoFocus
                       />
                     ) : values.PurchaseType === "Return" ? (
@@ -939,18 +892,14 @@ const EditOrderitem = () => {
                         label={
                           <>
                             Return Quantity
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}> * </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         value={values.returnQuantity}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // onChange={(e) => recalc("returnQuantity", e.target.value)}
                         error={!!touched.returnQuantity && !!errors.returnQuantity}
                         helperText={touched.returnQuantity && errors.returnQuantity}
                         InputProps={{
@@ -958,25 +907,24 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
+                        
                         autoFocus
-                      />) : (<TextField
+                      />
+                    ) : (
+                      <TextField
                         name="quantity"
                         type="number"
                         id="quantity"
                         label={
                           <>
                             Quantity
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}> * </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         value={values.quantity}
                         onBlur={handleBlur}
-                        //onChange={handleChange}
                         onChange={(e) => recalc("quantity", e.target.value)}
                         error={!!touched.quantity && !!errors.quantity}
                         helperText={touched.quantity && errors.quantity}
@@ -985,8 +933,10 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
+                        
                         autoFocus
-                      />)}
+                      />
+                    )}
 
                     {(values.PurchaseType === "Damage" || values.PurchaseType === "Return") ? (
                       <TextField
@@ -994,11 +944,10 @@ const EditOrderitem = () => {
                         type="number"
                         id="amount"
                         label="Amount"
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                        size="small"
                         value={values.amount}
                         onBlur={handleBlur}
-                        // onChange={handleChange}
                         onChange={(e) => {
                           const discount = e.target.value;
                           setFieldValue("discount", discount);
@@ -1011,7 +960,6 @@ const EditOrderitem = () => {
 
                           setFieldValue("netprice", fixedNet);
 
-                          // ★ Recalculate amount if quantity already entered
                           const qty = parseFloat(values.quantity || 0);
                           const amt = 0;
 
@@ -1025,44 +973,46 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
+                        
                       />
-                    ) : (<TextField
-                      name="amount"
-                      type="number"
-                      id="amount"
-                      label="Amount"
-                      variant="standard"
-                      focused
-                      value={values.amount}
-                      onBlur={handleBlur}
-                      //onChange={handleChange}
-                      onChange={(e) => {
-                        const discount = e.target.value;
-                        setFieldValue("discount", discount);
+                    ) : (
+                      <TextField
+                        name="amount"
+                        type="number"
+                        id="amount"
+                        label="Amount"
+                        variant="outlined"
+                        size="small"
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const discount = e.target.value;
+                          setFieldValue("discount", discount);
 
-                        const price = parseFloat(values.price || 0);
-                        const disc = parseFloat(discount || 0);
+                          const price = parseFloat(values.price || 0);
+                          const disc = parseFloat(discount || 0);
 
-                        const netPrice = price - (price * disc) / 100;
-                        const fixedNet = parseFloat(netPrice.toFixed(2));
+                          const netPrice = price - (price * disc) / 100;
+                          const fixedNet = parseFloat(netPrice.toFixed(2));
 
-                        setFieldValue("netprice", fixedNet);
+                          setFieldValue("netprice", fixedNet);
 
-                        // ★ Recalculate amount if quantity already entered
-                        const qty = parseFloat(values.quantity || 0);
-                        const amt = fixedNet * qty;
+                          const qty = parseFloat(values.quantity || 0);
+                          const amt = fixedNet * qty;
 
-                        setFieldValue("amount", amt.toFixed(2));
-                      }}
-                      error={!!touched.amount && !!errors.amount}
-                      helperText={touched.amount && errors.amount}
-                      InputProps={{
-                        readOnly: true,
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                    />)}
+                          setFieldValue("amount", amt.toFixed(2));
+                        }}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        InputProps={{
+                          readOnly: true,
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        
+                      />
+                    )}
 
                     {(mode === "A" && ReplacementQty > 0) ? (
                       <>
@@ -1071,8 +1021,8 @@ const EditOrderitem = () => {
                           type="number"
                           id="replacementQty"
                           label="Replacement Qty"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={ReplacementQty}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -1082,14 +1032,15 @@ const EditOrderitem = () => {
                               style: { textAlign: "right" },
                             },
                           }}
+                          
                         />
                         <TextField
                           name="netQty"
                           type="number"
                           id="netQty"
                           label="Net Quantity"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={netQuantity}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -1101,22 +1052,26 @@ const EditOrderitem = () => {
                               style: { textAlign: "right" },
                             },
                           }}
+                          
                         />
-
-                      </>) : null}
+                      </>
+                    ) : null}
                   </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
-                  >
+
+                  <Box display="flex" justifyContent="end" gap={2} mt={4}>
                     {YearFlag == "true" ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
                         type="submit"
                         loading={isLoading}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#0D9488",
+                          "&:hover": { bgcolor: "#0F766E" },
+                        }}
                       >
                         Save
                       </LoadingButton>
@@ -1125,10 +1080,11 @@ const EditOrderitem = () => {
                         color="secondary"
                         variant="contained"
                         disabled={true}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
                       >
                         Save
                       </Button>
-                    )}{" "}
+                    )}
                     {YearFlag == "true" && mode === "E" ? (
                       <Button
                         color="error"
@@ -1136,11 +1092,17 @@ const EditOrderitem = () => {
                         onClick={() => {
                           Fnsave(values, "harddelete");
                         }}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
                       >
                         Delete
                       </Button>
                     ) : (
-                      <Button color="error" variant="contained" disabled={true}>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        disabled={true}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                      >
                         Delete
                       </Button>
                     )}
@@ -1148,17 +1110,18 @@ const EditOrderitem = () => {
                       <Button
                         color="warning"
                         variant="contained"
-                        // onClick={() => {
-                        //   navigate(
-                        //     `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
-                        //     { state: { ...state } }
-                        //   );
-                        // }}
                         onClick={() => {
                           navigate(
                             `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/${params.filtertype1}`,
                             { state: { ...state } }
                           );
+                        }}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#F97316",
+                          "&:hover": { bgcolor: "#EA580C" },
                         }}
                       >
                         Cancel
@@ -1173,41 +1136,18 @@ const EditOrderitem = () => {
                             { state: { ...state } }
                           );
                         }}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#F97316",
+                          "&:hover": { bgcolor: "#EA580C" },
+                        }}
                       >
                         Cancel
                       </Button>
                     )}
                   </Box>
-                  {/* <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                <LoadingButton 
-                    color="secondary" 
-                    variant="contained" 
-                    type="submit" 
-                    loading={isLoading}
-                >
-                    Save
-                </LoadingButton>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                            Fnsave(values,  "harddelete");
-                          }}
-                >
-                    Delete
-                </Button>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                          navigate("/Apps/TR133/Project");
-                        }}
-                >
-                    Cancel
-                </Button>
-                </Box> */}
                 </form>
               );
             }}
