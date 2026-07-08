@@ -220,7 +220,10 @@ const CreateSession = () => {
           </Button>
         </Box> */}
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+              <Box sx={{ p: 2, borderRadius: 3 }}>
+                <Paper sx={{ borderRadius: 3 }}>
           <Box display="flex" justifyContent="space-between" p={2}>
             <Box display="flex" borderRadius="3px" alignItems="center">
               {broken && !rtl && (
@@ -366,9 +369,32 @@ const CreateSession = () => {
             </Box>
           </Box>
         </Paper>
+          </Box>
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
+        <Box
+                     display="flex"
+                     gap={3}
+                     alignItems="flex-start"
+                     flexWrap="wrap"
+                     sx={{ p: 1 }}
+                   >
+                     <Box
+                       flex={1}
+                       minWidth={0}
+                       display="flex"
+                       flexDirection="column"
+                       gap={3}
+                     >
+                       <Paper
+                         elevation={3}
+                         sx={{
+                           margin: "10px",
+                           backgroundColor: "#ffff",
+                           border: "1px solid #b9bcc0",
+                           borderRadius: 3,
+                         }}
+                       >
+                         <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
@@ -390,6 +416,47 @@ const CreateSession = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                                            <Box
+                                              display="flex"
+                                              alignItems="center"
+                                              gap={1.5}
+                                              mb={1}
+                                              sx={{ px: 2, pt: 2 }}
+                                            >
+                                              {/* ICON */}
+                                              <Box
+                                                sx={{
+                                                  width: 36,
+                                                  height: 36,
+                                                  borderRadius: "50%",
+                                                  backgroundColor: "#EFF6FF",
+                                                  display: "flex",
+                                                  alignItems: "center",
+                                                  justifyContent: "center",
+                                                }}
+                                              >
+                                                <Typography sx={{ fontSize: 18 }}>🕒</Typography>
+                                              </Box>
+                  
+                                              {/* TITLE + SUBTITLE */}
+                                              <Box>
+                                                <Typography
+                                                  variant="subtitle1"
+                                                  fontWeight={700}
+                                                  color="#4F46E5"
+                                                >
+                                                  Session
+                                                </Typography>
+                  
+                                                <Typography
+                                                  variant="body2"
+                                                  color="text.secondary"
+                                                >
+                                                 Manage and schedule assessment sessions for organized and timely evaluations
+                                                </Typography>
+                                              </Box>
+                                            </Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -404,7 +471,8 @@ const CreateSession = () => {
                     {/* TEXTFIELD */}
                     {CompanyAutoCode === "Y" ? (
                       <TextField
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="text"
                         name="Code"
                         label="Code"
@@ -418,16 +486,35 @@ const CreateSession = () => {
                         helperText={touched.Code && errors.Code}
                         //disabled={mode === "V"}
                         inputProps={{ readOnly: mode == "V" }}
-                        sx={{
-                          // backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                          sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       />
                     ) : (
                       <TextField
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="text"
                         name="Code"
                         label={
@@ -448,18 +535,37 @@ const CreateSession = () => {
                         helperText={touched.Code && errors.Code}
                         //disabled={mode === "V"}
                         inputProps={{ readOnly: mode == "V" }}
-                        sx={{
-                          // backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                          sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                         autoFocus
                       />
                     )}
 
                     <TextField
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       type="text"
                       name="Name"
                       label={
@@ -479,12 +585,30 @@ const CreateSession = () => {
                       error={!!touched.Name && !!errors.Name}
                       helperText={touched.Name && errors.Name}
                       //disabled={mode === "V"}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       inputProps={{ readOnly: mode == "V" }}
                       autoFocus={CompanyAutoCode == "Y"}
                     />
@@ -511,7 +635,8 @@ const CreateSession = () => {
                       id="ContentType"
                       // required
                       focused
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       value={values.ContentType}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -519,6 +644,30 @@ const CreateSession = () => {
                       select
                       error={!!touched.ContentType && !!errors.ContentType}
                       helperText={touched.ContentType && errors.ContentType}
+                        sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     // MenuProps={{
                     //   PaperProps: {
                     //     sx: {
@@ -537,7 +686,8 @@ const CreateSession = () => {
                     {/* SORT ORDER */}
 
                     <TextField
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       name="SortOrder"
                       id="SortOrder"
                       type="number"
@@ -548,7 +698,30 @@ const CreateSession = () => {
                       // error={!!touched.SortOrder && !!errors.SortOrder}
                       // helperText={touched.SortOrder && errors.SortOrder}
                       //disabled={mode === "V"}
-                      sx={{ background: "" }}
+                        sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
@@ -686,6 +859,17 @@ const CreateSession = () => {
                               toast.error("Please Upload File");
                             }
                           }}
+                          sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  // bgcolor: "#F97316",
+                                 
+                                  // "&:hover": {
+                                  //   bgcolor: "#EA580C",
+                                   
+                                  // },
+                                }}
                         >
                           View
                         </Button>
@@ -693,29 +877,54 @@ const CreateSession = () => {
                     )}
 
                     <LoadingButton
-                      color={mode == "V" ? "error" : "secondary"}
+                      // color={mode == "V" ? "error" : "secondary"}
                       variant="contained"
                       type="submit"
                       loading={isLoading}
                       disabled={mode == "V" ? true : false}
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  color: mode == "V" ? "error" : "#ffff",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                    color: mode == "V" ? "error" : "#ffff"
+                                  },
+                                }}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
-                      color="warning"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                       onClick={() => navigate(-1)}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>
               )}
             </Formik>
           </Paper>
+            </Box>
+                      </Box>
         ) : (
           false
         )}
+          </Box>
+                    </Box>
       </React.Fragment>
     </>
   );

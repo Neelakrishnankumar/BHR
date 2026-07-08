@@ -579,7 +579,10 @@ const NewSchedule = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+             <Box sx={{ height: "100vh", overflow: "auto" }}>
+                             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                               <Box sx={{ p: 2, borderRadius: 3 }}>
+                                 <Paper sx={{ borderRadius: 3 }}>
           <Box display="flex" justifyContent="space-between" p={2}>
             <Box display="flex" borderRadius="3px" alignItems="center">
               {broken && !rtl && (
@@ -670,10 +673,14 @@ const NewSchedule = () => {
             </Box>
           </Box>
         </Paper>
-
+   </Box>
         {!scheduleLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
+              <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                                
+                                       <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                                
+                                <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                            <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
@@ -695,6 +702,46 @@ const NewSchedule = () => {
               }) => (
                 <Form onSubmit={handleSubmit}>
                   {/* {JSON.stringify(errors)} */}
+                       {/* ----- CARD HEADER ----- */}
+                          <Box
+                                      display="flex"
+                                      alignItems="center"
+                                      gap={1.5}
+                                      mb={1}
+                                      sx={{ px: 2, pt: 2 }}
+                                    >
+                                      {/* ICON */}
+                                      <Box
+                                        sx={{
+                                          width: 36,
+                                          height: 36,
+                                          borderRadius: "50%",
+                                          backgroundColor: "#EFF6FF",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <Typography sx={{ fontSize: 18 }}>
+                                          📅
+                                        </Typography>
+                                      </Box>
+                                    
+                                      {/* TITLE + SUBTITLE */}
+                                      <Box>
+                                        <Typography
+                                          variant="subtitle1"
+                                          fontWeight={700}
+                                          color="#4F46E5"
+                                        >
+                                          Schedule
+                                        </Typography>
+                                    
+                                        <Typography variant="body2" color="text.secondary">
+                                      Plan and manage assessment schedules to ensure timely and organized evaluations
+                                        </Typography>
+                                      </Box>
+                                    </Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -709,7 +756,8 @@ const NewSchedule = () => {
 
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Assessment Name"
                       value={values.AssessmentName}
@@ -720,19 +768,38 @@ const NewSchedule = () => {
                       focused
                       error={!!touched.AssessmentName && !!errors.AssessmentName}
                       helperText={touched.AssessmentName && errors.AssessmentName}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                         sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{
                         inputProps: { readOnly: true }
                       }}
                     />
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Designation"
                       value={values.Designation}
@@ -743,12 +810,30 @@ const NewSchedule = () => {
                       focused
                       error={!!touched.Designation && !!errors.Designation}
                       helperText={touched.Designation && errors.Designation}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                         sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{
                         inputProps: { readOnly: true }
                       }}
@@ -802,14 +887,38 @@ const NewSchedule = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       focused
                       value={values.Date}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.Date && !!errors.Date}
                       helperText={touched.Date && errors.Date}
-                      sx={{ background: "" }}
+                         sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{
                         readOnly: mode === "A",
                       }}
@@ -929,6 +1038,17 @@ const NewSchedule = () => {
                   <Box display="flex" justifyContent="flex-end" padding={1} gap={2}>
                     <Button
                       variant="contained"
+                        sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 3,
+                                  // bgcolor: "#F97316",
+                                 
+                                  // "&:hover": {
+                                  //   bgcolor: "#EA580C",
+                                  
+                                  // },
+                                }}
                       color="primary"
                       onClick={() => {
                         // Prevent adding empty employee selection
@@ -1021,6 +1141,37 @@ const NewSchedule = () => {
                     backgroundColor: "#D3D3D3",
                     color: "", // Color for even rows
                   },
+
+                   "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+
                 }}
               >
                 <DataGrid
@@ -1069,7 +1220,15 @@ const NewSchedule = () => {
             <Box display="flex" justifyContent="flex-end" padding={2} gap={2}>
               <LoadingButton
                 variant="contained"
-                color="secondary"
+                 sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                 loading={isLoading}
                 onClick={async () => {
                   if (localRows.length === 0) {
@@ -1103,17 +1262,31 @@ const NewSchedule = () => {
               </LoadingButton>
               <Button
                 variant="contained"
-                color="warning"
+                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  
+                                  },
+                                }}
                 onClick={() => navigate(-1)}
               >
-                Cancel
+                Back
               </Button>
             </Box>
 
           </Paper>
+                </Box>
+                                              </Box>
         ) : (
           false
         )}
+              </Box>
+                                            </Box>
       </React.Fragment>
     </>
   );

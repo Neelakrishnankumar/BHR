@@ -479,7 +479,10 @@ const EditAttendance = () => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+     <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+              <Box sx={{ p: 2, borderRadius: 3 }}>
+                <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -503,9 +506,11 @@ const EditAttendance = () => {
           </Box>
         </Box>
       </Paper>
-
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
+ </Box>
+      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+             <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+               <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
           onSubmit={(values, { resetForm }) => {
@@ -540,6 +545,49 @@ const EditAttendance = () => {
                 dispatch(resetTrackingData());
               }}
             >
+
+                  {/* ----- CARD HEADER ----- */}
+                                                              <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1.5}
+                              mb={1}
+                              // sx={{ px: 2, pt: 2 }}
+                            >
+                              {/* ICON */}
+                              <Box
+                                sx={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: "50%",
+                                  backgroundColor: "#EFF6FF",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography sx={{ fontSize: 18 }}>
+                                 📋
+                                </Typography>
+                              </Box>
+                            
+                              {/* TITLE + SUBTITLE */}
+                              <Box>
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight={700}
+                                  color="#4F46E5"
+                                >
+                                  Monthly Attendance
+                                </Typography>
+                            
+                                <Typography variant="body2" color="text.secondary">
+                                 Monthly Attendance Summary Report
+                                </Typography>
+                              </Box>
+                            </Box>
+
+
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -554,7 +602,8 @@ const EditAttendance = () => {
                 <Stack direction="row" spacing={2}>
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="attmonth"
                     name="attmonth"
@@ -569,9 +618,28 @@ const EditAttendance = () => {
                     onBlur={handleBlur}
                     select
                     sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional: adjust if needed
-                      },
+                       "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                       width: 200,
                     }}
                   >
@@ -591,7 +659,8 @@ const EditAttendance = () => {
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     id="attyear"
                     name="attyear"
@@ -606,9 +675,28 @@ const EditAttendance = () => {
                     }}
                     onBlur={handleBlur}
                     sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional
-                      },
+                       "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                       width: 200,
                     }}
                   />
@@ -639,7 +727,31 @@ const EditAttendance = () => {
 
                   {/* <Employeeautocomplete */}
                   <TimeSheetEmployeeautocomplete
-                    sx={{ width: 400 }}
+                    sx={{ 
+                      width: 400,
+ "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                     name="ProName"
                     label={getBusinessCaption("Project", "Project")}
                     id="ProName"
@@ -677,7 +789,31 @@ const EditAttendance = () => {
 
                   {/* <Employeeautocomplete */}
                   <TimeSheetEmployeeautocomplete
-                    sx={{ width: 400 }}
+                    sx={{ width: 400,
+                       "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+
+                     }}
                     name="Employee"
                     label="Personnel"
                     id="Employee"
@@ -798,11 +934,36 @@ const EditAttendance = () => {
                     </Button>
 
                   </PDFDownloadLink> */}
-                  <Button type="submit" variant="contained" color="secondary">
-                    APPLY
+                  <Button 
+                  type="submit" 
+                  variant="contained" 
+                  sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                  >
+                    Apply
                   </Button>
-                  <Button type="reset" variant="contained" color="error">
-                    RESET
+                  <Button 
+                  type="reset" 
+                  variant="contained" 
+                  color="error"
+                  sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#0D9488",
+                        // "&:hover": {
+                        //   bgcolor: "#0F766E",
+                        // },
+                      }}
+                  >
+                    Reset
                   </Button>
                   {AttendanceDataLoading ? (
                     <CircularProgress size={20} />
@@ -931,7 +1092,7 @@ const EditAttendance = () => {
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
-                  padding={1}
+                  // padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}
@@ -979,6 +1140,35 @@ const EditAttendance = () => {
                       backgroundColor: "#f3cd9b", // light green
                       color: "#a16a03", // dark green text
                     },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                   }}
                 >
                   <DataGrid
@@ -1085,6 +1275,10 @@ const EditAttendance = () => {
           )}
         </Formik>
       </Paper>
+          </Box>
+                        </Box>
+                            </Box>
+                                          </Box>
     </React.Fragment>
   );
 };

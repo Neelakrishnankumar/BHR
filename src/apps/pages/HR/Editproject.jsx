@@ -3202,7 +3202,15 @@ const Editproject = () => {
                     <Box display="flex" justifyContent="end" padding={1} gap="20px">
                       {YearFlag == "true" ? (
                         <LoadingButton
-                          color="secondary"
+                          sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                           variant="contained"
                           type="submit"
                           loading={isLoading}
@@ -3211,7 +3219,15 @@ const Editproject = () => {
                         </LoadingButton>
                       ) : (
                         <Button
-                          color="secondary"
+                          sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                           variant="contained"
                           disabled={true}
                         >
@@ -3251,14 +3267,22 @@ const Editproject = () => {
                     // </Button>
                     null} */}
                       <Button
-                        color="warning"
+                         sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                         variant="contained"
                         onClick={() => {
                           // navigate("/Apps/TR133/Project");
                           navigate(-1);
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </>
@@ -4180,20 +4204,36 @@ const Editproject = () => {
                   </Box>
                   <Box display="flex" justifyContent="space-between" padding={1} gap="20px">
                     <LoadingButton
-                      color="secondary"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       type="submit"
                     >
                       Save
                     </LoadingButton>
                     <Button
-                      color="warning"
+                       sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                       variant="contained"
                       onClick={() => {
                         setScreen(0);
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Box>
@@ -4559,13 +4599,21 @@ const Editproject = () => {
             </Box>
             <Box display="flex" justifyContent="space-between" padding={1}>
               <Button
-                color="warning"
+                sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                 variant="contained"
                 onClick={() => {
                   setScreen("0");
                 }}
               >
-                Cancel
+                Back
               </Button>
             </Box>
           </Box>

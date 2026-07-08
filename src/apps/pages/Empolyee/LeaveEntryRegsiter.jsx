@@ -255,15 +255,15 @@ const LeaveEntryRegister = () => {
   }
   return (
     <React.Fragment>
-      <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Paper
-          elevation={3}
-          sx={{ height: "50px", margin: "10px 10px", background: "#F2F0F0" }}
-        >
+        <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+              <Box sx={{ p: 2, borderRadius: 3 }}>
+                <Paper sx={{ borderRadius: 3 }}>
           <Box
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            p={2}
           >
             <Box>
               <Breadcrumbs maxItems={3} aria-label="breadcrumb">
@@ -290,8 +290,30 @@ const LeaveEntryRegister = () => {
             </Box>
           </Box>
         </Paper>
-
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+ </Box>
+   <Box
+               display="flex"
+               gap={3}
+               alignItems="flex-start"
+               flexWrap="wrap"
+               sx={{ p: 1 }}
+             >
+  <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 3,
+                  }}
+                >
           <Formik
             // onSubmit={handleFormSubmit}
             initialValues={{
@@ -339,7 +361,8 @@ const LeaveEntryRegister = () => {
                         type="date"
                         id="FromDate"
                         label="From Date"
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         InputLabelProps={{ shrink: true }}
                         focused
                         value={values.FromDate}
@@ -361,14 +384,39 @@ const LeaveEntryRegister = () => {
                         error={!!touched.FromDate && !!errors.FromDate}
                         helperText={touched.FromDate && errors.FromDate}
                         // required
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ 
+                          gridColumn: "span 2",
+ "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                         }}
                       />
                       <TextField
                         name="ToDate"
                         type="date"
                         id="ToDate"
                         label="To Date"
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         InputLabelProps={{ shrink: true }}
                         focused
                         value={values.ToDate}
@@ -385,7 +433,30 @@ const LeaveEntryRegister = () => {
                         error={!!touched.ToDate && !!errors.ToDate}
                         helperText={touched.ToDate && errors.ToDate}
                         // required
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                           "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                         }}
                         inputProps={{
                           min:
                             values.FromDate ||
@@ -444,13 +515,31 @@ const LeaveEntryRegister = () => {
                     justifyContent="end"
                     marginTop={-4}
                   >
-                    <Button variant="contained" color="secondary" type="submit">
-                      APPLY
+                    <Button variant="contained" sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                       type="submit">
+                      Apply
                     </Button>
                     <Button
                       type="reset"
                       variant="contained"
                       color="error"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#F97316",
+                        // "&:hover": {
+                        //   bgcolor: "#EA580C",
+                        // },
+                      }}
                       size="small"
                       onClick={() => {
                         // setRows([]);
@@ -458,11 +547,19 @@ const LeaveEntryRegister = () => {
                         setRows([]);
                       }}
                     >
-                      RESET
+                      Reset
                     </Button>
                     <Button
                       variant="contained"
-                      color="warning"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                       size="small"
                       onClick={() => {
                         setRows([]);
@@ -470,7 +567,7 @@ const LeaveEntryRegister = () => {
                         navigate(-1);
                       }}
                     >
-                      CANCEL
+                      Back
                     </Button>
 
                     {rows?.length > 0 && (
@@ -524,39 +621,114 @@ const LeaveEntryRegister = () => {
                   <Box
                     m="5px 0 0 0"
                     height="500px"
-                    sx={{
-                      "& .MuiDataGrid-root": {
-                        // border: "none",
-                      },
-                      "& .MuiDataGrid-cell": {
-                        // borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        // borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        // borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        backgroundColor: "#d0edec",
-                        color: "", // Color for even rows
-                      },
-                    }}
+                    // sx={{
+                    //   "& .MuiDataGrid-root": {
+                    //     // border: "none",
+                    //   },
+                    //   "& .MuiDataGrid-cell": {
+                    //     // borderBottom: "none",
+                    //   },
+                    //   "& .name-column--cell": {
+                    //     color: colors.greenAccent[300],
+                    //   },
+                    //   "& .MuiDataGrid-columnHeaders": {
+                    //     backgroundColor: colors.blueAccent[800],
+                    //     // borderBottom: "none",
+                    //   },
+                    //   "& .MuiDataGrid-virtualScroller": {
+                    //     backgroundColor: colors.primary[400],
+                    //   },
+                    //   "& .MuiDataGrid-footerContainer": {
+                    //     // borderTop: "none",
+                    //     backgroundColor: colors.blueAccent[800],
+                    //   },
+                    //   "& .MuiCheckbox-root": {
+                    //     color: `${colors.greenAccent[200]} !important`,
+                    //   },
+                    //   "& .odd-row": {
+                    //     backgroundColor: "",
+                    //     color: "", // Color for odd rows
+                    //   },
+                    //   "& .even-row": {
+                    //     backgroundColor: "#d0edec",
+                    //     color: "", // Color for even rows
+                    //   },
+                    // }}
+                     sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
+
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
                   >
                     <DataGrid
                       sx={{
@@ -611,6 +783,9 @@ const LeaveEntryRegister = () => {
           </Formik>
         </Paper>
       </Box>
+       </Box>
+                  </Box>
+                   </Box>
     </React.Fragment>
   );
 };

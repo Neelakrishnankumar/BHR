@@ -1696,7 +1696,12 @@ const Configuration = () => {
     return (
         <React.Fragment>
 
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box sx={{ height: "100vh", overflow: "auto" }}>
+               <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+       
+       
+                 <Box sx={{ p: 2, borderRadius: 3, }}>
+         <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -1736,6 +1741,7 @@ const Configuration = () => {
                     </Box>
                 </Box>
             </Paper>
+            </Box>
             {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box
@@ -1802,8 +1808,12 @@ const Configuration = () => {
                 </Box>
             </Paper> */}
             {show == "0" ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-                    <Formik
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                    
+                           <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                    
+                    <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                      <Formik
                         initialValues={initialvalues}
                         // onSubmit={(values, setSubmitting, resetForm) => {
                         //     setTimeout(() => {
@@ -1831,7 +1841,47 @@ const Configuration = () => {
                             resetForm
                         }) => (
                             <form onSubmit={handleSubmit}>
+ {/* ----- CARD HEADER ----- */}
+                                  <Box
+  display="flex"
+  alignItems="center"
+  gap={1.5}
+  mb={1}
+  sx={{ px: 2, pt: 2 }}
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>
+      ⚙️
+    </Typography>
+  </Box>
 
+  {/* TITLE + SUBTITLE */}
+  <Box>
+    <Typography
+      variant="subtitle1"
+      fontWeight={700}
+      color="#4F46E5"
+    >
+     Configuration
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+     
+      Manage subscription, company and billing details
+    </Typography>
+  </Box>
+</Box>
                                 <Typography variant="h5" padding={1}>Subscriptions:</Typography>
 
                                 <Box
@@ -1847,14 +1897,40 @@ const Configuration = () => {
                                 >
                                     <FormControl
                                         fullWidth
-                                        sx={{ gridColumn: "span 2", gap: formGap }}
+                                        sx={{ 
+                                            gridColumn: "span 2", 
+                                            gap: formGap,
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                         }}
                                     >
                                         <TextField
                                             name="subscriptionStartDate"
                                             type="date"
                                             id="subscriptionStartDate"
                                             label="Subscription Start Date"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // onChange={(e) => handleChangesub(e, Setsubfromdate)}
                                             // value={subfromdate}
@@ -1866,6 +1942,7 @@ const Configuration = () => {
                                             // helperText={touched.subscriptionPeriod && errors.subscriptionPeriod}
                                             autoFocus
                                             inputProps={{ readOnly: true }}
+
                                         />
 
                                         <TextField
@@ -1873,7 +1950,8 @@ const Configuration = () => {
                                             type="number"
                                             id="subscriptionperiod"
                                             label="Subscription Period (in months)"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
                                             // value={subperiod}
@@ -1897,7 +1975,8 @@ const Configuration = () => {
                                             type="date"
                                             id="retainDate"
                                             label="Retain Date"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             value={values.retainDate}
                                             // onBlur={handleBlur}
@@ -1912,7 +1991,8 @@ const Configuration = () => {
                                             type="number"
                                             id="noofusers"
                                             label="No of Users"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
                                             // value={subperiod}
@@ -1936,7 +2016,8 @@ const Configuration = () => {
                                             type="number"
                                             id="gracetime"
                                             label="Grace Time"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // value={values.gracetime}
                                             value={gracetime}
@@ -1959,14 +2040,38 @@ const Configuration = () => {
                                     </FormControl>
                                     <FormControl
                                         fullWidth
-                                        sx={{ gridColumn: "span 2", gap: formGap }}
+                                        sx={{ gridColumn: "span 2", gap: formGap,
+                                                "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                         }}
                                     >
                                         <TextField
                                             name="subscriptionEndDate"
                                             type="date"
                                             id="subscriptionEndDate"
                                             label="Subscription End Date"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // onChange={(e) => handleChangesub(e, SetsubEnddate)}
                                             // value={subEnddate}
@@ -1985,7 +2090,8 @@ const Configuration = () => {
                                             type="date"
                                             id="notificationDate"
                                             label="Notification Date"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             value={values.notificationDate}
                                             // onBlur={handleBlur}
@@ -2004,7 +2110,8 @@ const Configuration = () => {
                                             type="number"
                                             id="noofemployee"
                                             label="No of Personnel"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
                                             // value={subperiod}
@@ -2028,7 +2135,8 @@ const Configuration = () => {
                                             type="number"
                                             id="sessiontime"
                                             label="Session Time"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // value={values.sessiontime}
                                             value={sessiontime}
@@ -2066,7 +2174,31 @@ const Configuration = () => {
                                         },
                                     }}
                                 >
-                                    <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap }}>
+                                    <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap,
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+
+                                     }}>
                                         {/* <TextField
                                             name="address"
                                             type="text"
@@ -2088,7 +2220,8 @@ const Configuration = () => {
                                             type="text"
                                             id="address"
                                             label="Office Address"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             multiline
                                             rows={3}
                                             focused
@@ -2123,7 +2256,8 @@ const Configuration = () => {
                                         <TextField
                                             name="gstnumber"
                                             label="GST Number"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             value={gst}
                                             onChange={(e) => {
@@ -2186,6 +2320,15 @@ const Configuration = () => {
                                     <Button
                                         size="small"
                                         variant="contained"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#F97316",
+                        // "&:hover": {
+                        //   bgcolor: "#EA580C",
+                        // },
+                      }}
                                         component={"a"}
                                         onClick={() => {
                                             data.logoimage || logoimage
@@ -2221,6 +2364,15 @@ const Configuration = () => {
                                     <Button
                                         size="small"
                                         variant="contained"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#F97316",
+                        // "&:hover": {
+                        //   bgcolor: "#EA580C",
+                        // },
+                      }}
                                         component={"a"}
                                         onClick={() => {
                                             data.GstImg || gstImage
@@ -2271,7 +2423,15 @@ const Configuration = () => {
                     </Button> */}
 
                                     <LoadingButton
-                                        color="secondary"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                         variant="contained"
                                         type="submit"
                                         loading={isLoading}
@@ -2283,14 +2443,22 @@ const Configuration = () => {
 
 
                                     <Button
-                                        color={"warning"}
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                                         variant="contained"
                                         onClick={() => resetForm()}
                                     // onClick={() => {
                                     //   navigate("/Apps/TR213/LeaveType");
                                     // }}
                                     >
-                                        Cancel
+                                        Back
                                     </Button>
                                 </Box>
 
@@ -2298,9 +2466,14 @@ const Configuration = () => {
                         )}
                     </Formik>
                 </Paper>
+                  </Box>
+                              </Box>
             ) : (
                 false
             )}
+</Box>
+</Box>
+
             {show == "1" ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik

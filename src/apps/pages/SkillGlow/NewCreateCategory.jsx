@@ -184,7 +184,10 @@ const NewCreateCategoryMain = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+           <Box sx={{ height: "100vh", overflow: "auto" }}>
+                        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                          <Box sx={{ p: 2, borderRadius: 3 }}>
+                            <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -208,7 +211,7 @@ const NewCreateCategoryMain = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => navigate("/Apps/TR299/List%20Of%20Assessment%20Type")}
                 >
-                  List Of Assessment Type {(state.BreadCrumb1)}
+                  List Of Assessment Type ({(state.BreadCrumb1)})
                 </Typography>
                 <Typography
                   variant="h5"
@@ -243,10 +246,14 @@ const NewCreateCategoryMain = () => {
           </Box>
         </Box>
       </Paper>
-
+  </Box>
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
+             <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                       
+                              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                       
+                       <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                   <Formik
             initialValues={initialValues}
             onSubmit={(values, { resetForm }) => {
               setTimeout(() => {
@@ -267,6 +274,48 @@ const NewCreateCategoryMain = () => {
               setFieldTouched,
             }) => (
               <form onSubmit={handleSubmit}>
+
+              {/* ----- CARD HEADER ----- */}
+        <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1.5}
+                    mb={1}
+                    sx={{ px: 2, pt: 2 }}
+                  >
+                    {/* ICON */}
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "#EFF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography sx={{ fontSize: 18 }}>
+                        🎯
+                      </Typography>
+                    </Box>
+                  
+                    {/* TITLE + SUBTITLE */}
+                    <Box>
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#4F46E5"
+                      >
+                        Skill Assesment
+                      </Typography>
+                  
+                      <Typography variant="body2" color="text.secondary">
+                    Evaluate and track employee skills to identify strengths and areas for improvement
+                      </Typography>
+                    </Box>
+                  </Box>
+
                 <Box
                   display="grid"
                   gap={formGap}
@@ -281,7 +330,8 @@ const NewCreateCategoryMain = () => {
                   {CompanyAutoCode == "Y" ? (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Code"
                       // label={
@@ -301,19 +351,38 @@ const NewCreateCategoryMain = () => {
                       focused
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{ readOnly: true }}
 
                     />
                   ) : (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       //label="Code"
                       label={
@@ -333,19 +402,38 @@ const NewCreateCategoryMain = () => {
                       focused
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       autoFocus
                     />
                   )}
 
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     type="text"
                     //label="Name"
                     label={
@@ -365,12 +453,30 @@ const NewCreateCategoryMain = () => {
                     focused
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                     sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   {/* <TextField
@@ -439,7 +545,8 @@ const NewCreateCategoryMain = () => {
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     type="number"
                     label="Sort Order"
                     value={values.sortOrder}
@@ -450,7 +557,30 @@ const NewCreateCategoryMain = () => {
                     // error={!!touched.sortOrder && !!errors.sortOrder}
                     // helperText={touched.sortOrder && errors.sortOrder}
 
-                    sx={{ background: "" }}
+                     sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     focused
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
@@ -502,7 +632,15 @@ const NewCreateCategoryMain = () => {
                   gap={2}
                 >
                   <LoadingButton
-                    color="secondary"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     variant="contained"
                     type="submit"
                     loading={isLoading}
@@ -536,19 +674,33 @@ const NewCreateCategoryMain = () => {
                   ) : null} */}
                   <Button
                     variant="contained"
-                    color="warning"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  
+                                  },
+                                }}
                     onClick={() => navigate(-1)}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>
             )}
           </Formik>
         </Paper>
+            </Box>
+                                    </Box>
       ) : (
         false
       )}
+          </Box>
+                                  </Box>
     </React.Fragment>
   );
 };

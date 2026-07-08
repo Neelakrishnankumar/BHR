@@ -227,7 +227,12 @@ const EditAcademicyear = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+           <Box sx={{ height: "100vh", overflow: "auto" }}>
+                  <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          
+          
+                    <Box sx={{ p: 2, borderRadius: 3, }}>
+            <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -268,9 +273,11 @@ const EditAcademicyear = () => {
                     </Box>
                 </Box>
             </Paper>
+            </Box>
             {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-
+                <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
                     <Formik
                         initialValues={InitialValue}
                         onSubmit={(values, setSubmitting) => {
@@ -292,6 +299,46 @@ const EditAcademicyear = () => {
                             setFieldValue
                         }) => (
                             <form onSubmit={handleSubmit}>
+                                     {/* ----- CARD HEADER ----- */}
+                                                                  <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1.5}
+                                  mb={1}
+                                  sx={{ px: 2, pt: 2 }}
+                                >
+                                  {/* ICON */}
+                                  <Box
+                                    sx={{
+                                      width: 36,
+                                      height: 36,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#EFF6FF",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Typography sx={{ fontSize: 18 }}>
+                                     📅
+                                    </Typography>
+                                  </Box>
+                                
+                                  {/* TITLE + SUBTITLE */}
+                                  <Box>
+                                    <Typography
+                                      variant="subtitle1"
+                                      fontWeight={700}
+                                      color="#4F46E5"
+                                    >
+                               Academic Year
+                                    </Typography>
+                                
+                                    <Typography variant="body2" color="text.secondary">
+                                     Manage academic year start and end periods
+                                    </Typography>
+                                  </Box>
+                                </Box>
                                 <Box
                                     display="grid"
                                     gap={formGap}
@@ -305,6 +352,30 @@ const EditAcademicyear = () => {
                                     }}
                                 >
                                     <TextField
+                                                                         sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                         name="academicyear"
                                         type="text"
                                         id="academicyear"
@@ -317,7 +388,8 @@ const EditAcademicyear = () => {
                                                 </span>
                                             </>
                                         }
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         value={values.academicyear}
                                         onBlur={handleBlur}
@@ -365,6 +437,30 @@ const EditAcademicyear = () => {
 
                                     />
                                     <TextField
+                                                                         sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                         name="fromdate"
                                         type="date"
                                         id="fromdate"
@@ -377,7 +473,8 @@ const EditAcademicyear = () => {
                                             </>
                                         }
                                         inputFormat="YYYY-MM-DD"
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         value={values.fromdate}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -401,7 +498,8 @@ const EditAcademicyear = () => {
                                                 </span>
                                             </>
                                         }
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         inputFormat="YYYY-MM-DD"
                                         value={values.todate}
@@ -413,20 +511,68 @@ const EditAcademicyear = () => {
                                             min: minDate,
                                             max: maxDate,
                                         }}
+                                                                             sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                     />
                                     <TextField
                                         name="sortorder"
                                         type="number"
                                         id="sortorder"
                                         label="Sort Order"
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         value={values.sortorder}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.sortorder && !!errors.sortorder}
                                         helperText={touched.sortorder && errors.sortorder}
-                                        sx={{ background: "" }}
+                                                                            sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                         InputProps={{
                                             inputProps: {
                                                 style: { textAlign: "right" },
@@ -469,7 +615,15 @@ const EditAcademicyear = () => {
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
 
                                     <LoadingButton
-                                        color="secondary"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                         variant="contained"
                                         type="submit"
                                         loading={isLoading}
@@ -478,13 +632,21 @@ const EditAcademicyear = () => {
                                     </LoadingButton>
 
                                     <Button
-                                        color="warning"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                                         variant="contained"
                                         onClick={() => {
                                             navigate(-1);
                                         }}
                                     >
-                                        Cancel
+                                        Back
                                     </Button>
                                 </Box>
                             </form>
@@ -492,9 +654,13 @@ const EditAcademicyear = () => {
                     </Formik>
 
                 </Paper>
+                   </Box>
+                              </Box>
             ) : (
                 false
             )}
+             </Box>
+                          </Box>
         </React.Fragment>
     );
 };

@@ -3224,7 +3224,7 @@ export const TimeSheetEmployeeautocomplete = ({
   //   },[options,defaultValue,onChange])
   return (
     <Autocomplete
-      // size="small"
+      size="small"
       fullWidth
       limitTags={1}
       options={options}
@@ -3236,7 +3236,8 @@ export const TimeSheetEmployeeautocomplete = ({
       renderInput={(params) => (
         <TextField
           focused
-          variant="standard"
+          variant="outlined"
+          size="small"
           {...params}
           label={props.label || "Select Options"}
           error={!!error}
@@ -3947,7 +3948,7 @@ export const PartySingleSelect = ({
           label={props.label || "Select Options"}
           // error={!!error}
           // helperText={error}
-          variant="standard"
+          variant="outlined"
           {...props}
           InputProps={{
             ...params.InputProps,
@@ -4183,7 +4184,8 @@ export function EventsmultiSelect({
           {...params}
           label={label}
           // error={errors}
-          variant="standard"
+          variant="outlined"
+          size="small"
           focused
           // helperText={helper}
           error={Boolean(error)}
@@ -4340,7 +4342,8 @@ export function EventsSportsmultiSelect({
           {...params}
           label={label}
           // error={errors}
-          variant="standard"
+          variant="outlined"
+          size="small"
           focused
           // helperText={helper}
           error={Boolean(error)}

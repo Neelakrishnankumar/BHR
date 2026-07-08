@@ -3954,7 +3954,15 @@ const Editproject_V1 = () => {
                         >
                           {YearFlag == "true" ? (
                             <LoadingButton
-                              color="secondary"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               variant="contained"
                               type="submit"
                               loading={isLoading}
@@ -3963,7 +3971,15 @@ const Editproject_V1 = () => {
                             </LoadingButton>
                           ) : (
                             <Button
-                              color="secondary"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               variant="contained"
                               disabled={true}
                             >
@@ -3971,11 +3987,19 @@ const Editproject_V1 = () => {
                             </Button>
                           )}
                           <Button
-                            color="warning"
+                            sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                             variant="contained"
                             onClick={() => navigate(-1)}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -4230,18 +4254,34 @@ const Editproject_V1 = () => {
                             gap="20px"
                           >
                             <LoadingButton
-                              color="secondary"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               variant="contained"
                               type="submit"
                             >
                               Save
                             </LoadingButton>
                             <Button
-                              color="warning"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                               variant="contained"
                               onClick={() => setScreen(0)}
                             >
-                              Cancel
+                              Back
                             </Button>
                           </Box>
                         </Box>
@@ -4568,11 +4608,19 @@ const Editproject_V1 = () => {
                             padding={1}
                           >
                             <Button
-                              color="warning"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                               variant="contained"
                               onClick={() => setScreen("0")}
                             >
-                              Cancel
+                          Back
                             </Button>
                           </Box>
                         </Box>
@@ -4818,11 +4866,19 @@ const Editproject_V1 = () => {
                             padding={1}
                           >
                             <Button
-                              color="warning"
+                              sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                               variant="contained"
                               onClick={() => setScreen("0")}
                             >
-                              Cancel
+                              Back
                             </Button>
                           </Box>
                         </Box>
@@ -4971,11 +5027,19 @@ const Editproject_V1 = () => {
                   marginTop="36px"
                 >
                   <Button
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     variant="contained"
                     onClick={() => setScreen("0")}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </Paper>
@@ -5021,7 +5085,15 @@ const Editproject_V1 = () => {
                   </Button>
                   <Button
                     variant="contained"
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     onClick={() => setOpenProcessModal(false)}
                   >
                     Back
@@ -5258,11 +5330,19 @@ const Editproject_V1 = () => {
                       </Box>
                       <Box display="flex" justifyContent="flex-end" padding={1}>
                         <Button
-                          color="warning"
+                          sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                           variant="contained"
                           onClick={() => setScreen("0")}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                     </Box>

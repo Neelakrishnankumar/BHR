@@ -322,9 +322,7 @@ const Editdept = () => {
       
  <Box sx={{ height: "100vh", overflow: "auto" }}>
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-
-
-          <Box sx={{ p: 2, borderRadius: 3, }}>
+         <Box sx={{ p: 2, borderRadius: 3, }}>
   <Paper sx={{ borderRadius: 3 }}>
     
     {/* MAIN HEADER ROW */}
@@ -812,7 +810,15 @@ const Editdept = () => {
                 <Box display="flex" justifyContent="end" padding={1} gap={2}>
                   {YearFlag == "true" ? (
                     <LoadingButton
-                      color="secondary"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       type="submit"
                       loading={loading}
@@ -824,7 +830,15 @@ const Editdept = () => {
                     </LoadingButton>
                   ) : (
                     <Button
-                      color="secondary"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       disabled={true}
                     >
@@ -888,13 +902,21 @@ const Editdept = () => {
                     Delete
                   </Button> */}
                   <Button
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     variant="contained"
                     onClick={() => {
                       navigate(-1);
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

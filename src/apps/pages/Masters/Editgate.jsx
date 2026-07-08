@@ -176,7 +176,12 @@ const Editgate = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+     <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+    
+    
+              <Box sx={{ p: 2, borderRadius: 3, }}>
+      <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -244,9 +249,14 @@ const Editgate = () => {
           </Box>
         </Box>
       </Paper>
+      </Box>
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          {/* <Box m="20px"> */}
+                 <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+           
+                  <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+           
+           <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+           
 
           <Formik
             initialValues={InitialValue}
@@ -268,6 +278,47 @@ const Editgate = () => {
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
+                  {/* ----- CARD HEADER ----- */}
+                                                  <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1.5}
+                  mb={1}
+                  sx={{ px: 2, pt: 2 }}
+                >
+                  {/* ICON */}
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      backgroundColor: "#EFF6FF",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography sx={{ fontSize: 18 }}>
+                 🚪
+                    </Typography>
+                  </Box>
+                
+                  {/* TITLE + SUBTITLE */}
+                  <Box>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={700}
+                      color="#4F46E5"
+                    >
+                     Gate
+                    </Typography>
+                
+                    <Typography variant="body2" color="text.secondary">
+                      
+                       Manage gate entries, exits, and access control records
+                    </Typography>
+                  </Box>
+                </Box>
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(4 , minMax(0,1fr))"
@@ -289,7 +340,8 @@ const Editgate = () => {
                       type="text"
                       id="code"
                       label="Code"
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       placeholder="Auto"
                       focused
                       // required
@@ -299,10 +351,28 @@ const Editgate = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        },
+                       "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                         gridColumn: "span 2",
                       }}
                       InputProps={{ readOnly: true }}
@@ -321,7 +391,8 @@ const Editgate = () => {
                           </span>
                         </>
                       }
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       focused
                       // required
                       value={values.code}
@@ -330,10 +401,28 @@ const Editgate = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        },
+                       "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                         gridColumn: "span 2",
                       }}
                       autoFocus
@@ -352,14 +441,39 @@ const Editgate = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                     // autoFocus
                     autoFocus={CompanyAutoCode == "Y"}
                   />
@@ -368,36 +482,111 @@ const Editgate = () => {
                     type="text"
                     id="readercode"
                     label="Reader Code"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.readercode}
                     onChange={handleChange}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                   />
                   <TextField
                     name="readername"
                     type="text"
                     id="readername"
                     label="Reader Name"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.readername}
                     onChange={handleChange}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                   />
                   <TextField
                     name="latitude"
                     type="number"
                     id="latitude"
                     label="Latitude"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.latitude}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.latitude && !!errors.latitude}
                     helperText={touched.latitude && errors.latitude}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
@@ -410,17 +599,45 @@ const Editgate = () => {
                     type="number"
                     id="longitude"
                     label="Longitude"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.longitude}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.longitude && !!errors.longitude}
                     helperText={touched.longitude && errors.longitude}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                    }}
                     InputProps={{
                       inputProps: {
-                        style: { textAlign: "right" },
+                        style: { textAlign: "right",
+
+
+                         },
                       },
                     }}
                   />
@@ -429,14 +646,39 @@ const Editgate = () => {
                     type="text"
                     id="comment"
                     label="Comment"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.comment}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                     }}
                   />
 
                   <TextField
@@ -444,14 +686,40 @@ const Editgate = () => {
                     type="number"
                     id="sortorder"
                     label="Sort Order"
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     focused
                     value={values.sortorder}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.sortorder && !!errors.sortorder}
                     helperText={touched.sortorder && errors.sortorder}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+
+                     }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
@@ -500,7 +768,15 @@ const Editgate = () => {
                 >
                   {/* {YearFlag == "true" ? ( */}
                   <LoadingButton
-                    color="secondary"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     variant="contained"
                     type="submit"
                     loading={isLoading}
@@ -517,7 +793,15 @@ const Editgate = () => {
                     </Button> */}
                   {/* )} */}
                   <Button
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     variant="contained"
                     onClick={() => {
                       navigate(
@@ -526,18 +810,21 @@ const Editgate = () => {
                       );
                     }}
                   >
-                    Cancel
+            Back
                   </Button>
                 </Box>
               </form>
             )}
           </Formik>
 
-          {/* </Box> */}
-        </Paper>
+            </Paper>
+                      </Box>
+                       </Box>
       ) : (
         false
       )}
+       </Box>
+                    </Box>
     </React.Fragment>
   );
 };

@@ -97,8 +97,6 @@ import { getConfig } from "../../../config";
 import TimesheetReportExcel from "../pdf/TimesheetReportExcel";
 import { FaFileExcel } from "react-icons/fa";
 
-
-
 const Edittimesheetreport = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -125,7 +123,7 @@ const Edittimesheetreport = () => {
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
   const pdfEnabled = Array.isArray(AttendanceData) && AttendanceData.length > 0;
-  console.log("🚀 ~ Edittimesheetreport ~ pdfEnabled:", pdfEnabled)
+  console.log("🚀 ~ Edittimesheetreport ~ pdfEnabled:", pdfEnabled);
   const projectName = useSelector((state) => state.formApi.projectName);
   const managerName = useSelector((state) => state.formApi.managerName);
   console.log("AttendanceData", AttendanceData);
@@ -160,12 +158,12 @@ const Edittimesheetreport = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: accessID,
-        })
+        }),
       );
     }
   }, [Subscriptionlastthree, accessID, dispatch]);
   const Customisedcaptiondata = useSelector(
-    (state) => state.formApi.CustomisedCaptionGetData
+    (state) => state.formApi.CustomisedCaptionGetData,
   );
   // Ensure it's always an array
   const captionArray = Array.isArray(Customisedcaptiondata)
@@ -173,9 +171,7 @@ const Edittimesheetreport = () => {
     : Customisedcaptiondata?.data || [];
   console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
   const getBusinessCaption = (CaptionID, defaultCaption) => {
-    const match = captionArray?.find(
-      (item) => item.CAPTIONID === CaptionID
-    );
+    const match = captionArray?.find((item) => item.CAPTIONID === CaptionID);
 
     return match?.CAPTION || defaultCaption;
   };
@@ -438,7 +434,7 @@ const Edittimesheetreport = () => {
 
       const calculatedHeight = Math.min(
         pageWidth * aspectRatio,
-        MAX_FOOTER_HEIGHT
+        MAX_FOOTER_HEIGHT,
       );
 
       setFooterHeight(calculatedHeight);
@@ -584,8 +580,8 @@ const Edittimesheetreport = () => {
     () =>
       explorelistViewColumn
         ? explorelistViewColumn.filter((column) =>
-          VISIBLE_FIELDS.includes(column.field),
-        )
+            VISIBLE_FIELDS.includes(column.field),
+          )
         : [],
     [explorelistViewColumn],
   );
@@ -621,18 +617,21 @@ const Edittimesheetreport = () => {
   return (
     <React.Fragment>
       {/* {getLoading && <LinearProgress />} */}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Typography variant="h3">Timesheet Report</Typography>
-          </Box>
-          <Box display="flex">
-            {/* <Tooltip title="Attendance ">
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{ p: 2, borderRadius: 3 }}>
+            <Paper sx={{ borderRadius: 3 }}>
+              <Box display="flex" justifyContent="space-between" p={2}>
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  {broken && !rtl && (
+                    <IconButton onClick={() => toggleSidebar()}>
+                      <MenuOutlinedIcon />
+                    </IconButton>
+                  )}
+                  <Typography variant="h3">Timesheet Report</Typography>
+                </Box>
+                <Box display="flex">
+                  {/* <Tooltip title="Attendance ">
             <IconButton
               onClick={() => navigate("/Apps/TR217/Attendance")}
               color="primary"
@@ -640,155 +639,217 @@ const Edittimesheetreport = () => {
               <ListAltOutlinedIcon />
             </IconButton>
           </Tooltip> */}
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+                  <Tooltip title="Close">
+                    <IconButton onClick={() => fnLogOut("Close")} color="error">
+                      <ResetTvIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Logout">
+                    <IconButton
+                      color="error"
+                      onClick={() => fnLogOut("Logout")}
+                    >
+                      <LogoutOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Paper>
           </Box>
-        </Box>
-      </Paper>
-
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        {/* <Box m="10px"> */}
-        <Formik
-          initialValues={AttInitialvalues}
-          enableReinitialize={true}
-          onSubmit={(values, { resetForm }) => {
-            setTimeout(() => {
-              attendaceFnSave(values, resetForm);
-            }, 100);
-          }}
-        >
-          {({
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            isSubmitting,
-            values,
-            handleSubmit,
-            resetForm,
-            setFieldValue,
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              onReset={() => {
-                resetForm();
-                setSelectedPro([]);
-                setempData(null);
-                sessionStorage.removeItem("proData");
-                sessionStorage.removeItem("empData");
-                sessionStorage.removeItem("checkbox1");
-                sessionStorage.removeItem("checkbox2");
-                sessionStorage.removeItem("checkbox3");
-                sessionStorage.removeItem("checkbox4");
-                sessionStorage.removeItem("checkbox5");
-                sessionStorage.removeItem("checkbox6");
-                sessionStorage.removeItem("checkbox7");
-                sessionStorage.removeItem("checkbox8");
-                dispatch(resetTrackingData());
-
-              }}
+          <Box
+            display="flex"
+            gap={3}
+            alignItems="flex-start"
+            flexWrap="wrap"
+            sx={{ p: 1 }}
+          >
+            <Box
+              flex={1}
+              minWidth={0}
+              display="flex"
+              flexDirection="column"
+              gap={3}
             >
-              <Box
-                display="grid"
-                gridTemplateColumns="repeat(2, minmax(0, 1fr))"
-                gap={formGap}
-                padding={1}
+              <Paper
+                elevation={3}
                 sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4",
-                  },
+                  margin: "10px",
+                  backgroundColor: "#ffff",
+                  border: "1px solid #b9bcc0",
+                  borderRadius: 3,
                 }}
               >
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  gap={2}
-                  sx={{ flexWrap: "wrap", gridColumn: "span 2" }}
+                <Formik
+                  initialValues={AttInitialvalues}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      attendaceFnSave(values, resetForm);
+                    }, 100);
+                  }}
                 >
-                  {/* {isManager == "1" && ( */}
-                  <Box sx={{ minWidth: 250 }}>
-                    <MultiFormikOptimizedAutocomplete
-                      sx={{ width: "100%" }}
-                      name="ProName"
-                      label={getBusinessCaption("Project", "Project")}
-                      id="ProName"
-                      value={selectedPro}
-                      // onChange={(e, newValue) => {
-                      //     setFieldValue("block", newValue);
-                      //     setSelectedPro(newValue);
-                      // }}
-                      onChange={(e, newValue) => {
-                        setFieldValue("ProName", newValue);
-                        setSelectedPro(newValue);
-                        if (newValue) {
-                          sessionStorage.setItem(
-                            "proData",
-                            JSON.stringify(newValue),
-                          );
-                        } else {
-                          sessionStorage.removeItem("proData");
-                        }
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue,
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        resetForm();
+                        setSelectedPro([]);
+                        setempData(null);
+                        sessionStorage.removeItem("proData");
+                        sessionStorage.removeItem("empData");
+                        sessionStorage.removeItem("checkbox1");
+                        sessionStorage.removeItem("checkbox2");
+                        sessionStorage.removeItem("checkbox3");
+                        sessionStorage.removeItem("checkbox4");
+                        sessionStorage.removeItem("checkbox5");
+                        sessionStorage.removeItem("checkbox6");
+                        sessionStorage.removeItem("checkbox7");
+                        sessionStorage.removeItem("checkbox8");
+                        dispatch(resetTrackingData());
                       }}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                        Query: {
-                          AccessID: "2054",
-                          ScreenName: "Project",
-                          VerticalLicense: Subscriptionlastthree,
-                          Filter: `parentID='${CompanyID}'`,
-                          Any: "",
-                        },
-                      })}`}
-                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    />
-                  </Box>
+                    >
+                      {/* ----- CARD HEADER ----- */}
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        mb={1}
+                        sx={{ px: 2, pt: 2 }}
+                      >
+                        {/* ICON */}
+                        <Box
+                          sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 18 }}>⏰</Typography>
+                        </Box>
 
-                  <Box sx={{ minWidth: 250 }}>
-                    <CheckinAutocomplete
-                      name="Employee"
-                      label={
-                        <span>
-                          Personnel
-                          {/* <span style={{ color: "red", fontWeight: "bold" }}>*</span> */}
-                        </span>
-                      }
-                      variant="outlined"
-                      id="Employee"
-                      value={empData}
-                      //disabled={isManager === "0"}
-                      // onChange={handleSelectionEmployeeChange}
-                      onChange={(newValue) => {
-                        setempData(newValue);
-                        if (newValue)
-                          sessionStorage.setItem(
-                            "empData",
-                            JSON.stringify(newValue),
-                          );
-                        else sessionStorage.removeItem("empData");
-                        setUseCurrentEmp(false);
-                      }}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                        Query: {
-                          AccessID: "2116",
-                          ScreenName: "EMPLOYEETEAMS",
-                          VerticalLicense: Subscriptionlastthree,
-                          Filter: `CompanyID='${CompanyID}'`,
-                          Any: "",
-                        },
-                      })}`}
-                    // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
-                    />
-                  </Box>
-                  {/* )} */}
+                        {/* TITLE + SUBTITLE */}
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#4F46E5"
+                          >
+                            Timesheet Report
+                          </Typography>
 
-                  {/* <FormControlLabel
+                          <Typography variant="body2" color="text.secondary">
+                            Track daily work hours and activity logs
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="grid"
+                        gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+                        gap={formGap}
+                        padding={1}
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 4",
+                          },
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={2}
+                          sx={{ flexWrap: "wrap", gridColumn: "span 2" }}
+                        >
+                          {/* {isManager == "1" && ( */}
+                          <Box sx={{ minWidth: 250 }}>
+                            <MultiFormikOptimizedAutocomplete
+                              sx={{ width: "100%" }}
+                              name="ProName"
+                              label={getBusinessCaption("Project", "Project")}
+                              id="ProName"
+                              value={selectedPro}
+                              // onChange={(e, newValue) => {
+                              //     setFieldValue("block", newValue);
+                              //     setSelectedPro(newValue);
+                              // }}
+                              onChange={(e, newValue) => {
+                                setFieldValue("ProName", newValue);
+                                setSelectedPro(newValue);
+                                if (newValue) {
+                                  sessionStorage.setItem(
+                                    "proData",
+                                    JSON.stringify(newValue),
+                                  );
+                                } else {
+                                  sessionStorage.removeItem("proData");
+                                }
+                              }}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2054",
+                                  ScreenName: "Project",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID='${CompanyID}'`,
+                                  Any: "",
+                                },
+                              })}`}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                            />
+                          </Box>
+
+                          <Box sx={{ minWidth: 250 }}>
+                            <CheckinAutocomplete
+                              name="Employee"
+                              label={
+                                <span>
+                                  Personnel
+                                  {/* <span style={{ color: "red", fontWeight: "bold" }}>*</span> */}
+                                </span>
+                              }
+                              variant="outlined"
+                              id="Employee"
+                              value={empData}
+                              //disabled={isManager === "0"}
+                              // onChange={handleSelectionEmployeeChange}
+                              onChange={(newValue) => {
+                                setempData(newValue);
+                                if (newValue)
+                                  sessionStorage.setItem(
+                                    "empData",
+                                    JSON.stringify(newValue),
+                                  );
+                                else sessionStorage.removeItem("empData");
+                                setUseCurrentEmp(false);
+                              }}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2116",
+                                  ScreenName: "EMPLOYEETEAMS",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `CompanyID='${CompanyID}'`,
+                                  Any: "",
+                                },
+                              })}`}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                            />
+                          </Box>
+                          {/* )} */}
+
+                          {/* <FormControlLabel
                                         control={
                                             <Checkbox
                                                 checked={useCurrentEmp}
@@ -802,10 +863,10 @@ const Edittimesheetreport = () => {
                                         label="Self"
                                         sx={{ marginLeft: 2 }}
                                     /> */}
-                </Box>
+                        </Box>
 
-                {/* Below: Other Checkboxes */}
-                {/* <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
+                        {/* Below: Other Checkboxes */}
+                        {/* <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
                                     <Box sx={{ paddingX: 3, paddingY: 2 }}>
                                         <Grid container spacing={1}>
                                             <Grid item xs={12} sm={6}>
@@ -848,365 +909,434 @@ const Edittimesheetreport = () => {
                                     </Box>
                                 </FormControl> */}
 
-                <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
-                  <Box sx={{ paddingX: 3, paddingY: 2 }}>
-                    <Grid container spacing={2}>
-                      {/* Left Section (Main Checkboxes) */}
-                      <Grid item xs={12} sm={8}>
-                        <Grid container spacing={1}>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox1}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox1",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox1",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Self Task"
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox4}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox4",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox4",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Created"
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox2}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox2",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox2",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Manager Assigned Task"
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox7}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox7",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox7",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Backlog"
-                            />
-                            {/* <FormControlLabel
+                        <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
+                          <Box sx={{ paddingX: 3, paddingY: 2 }}>
+                            <Grid container spacing={2}>
+                              {/* Left Section (Main Checkboxes) */}
+                              <Grid item xs={12} sm={8}>
+                                <Grid container spacing={1}>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox1}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox1",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox1",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Self Task"
+                                    />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox4}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox4",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox4",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Created"
+                                    />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox2}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox2",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox2",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Manager Assigned Task"
+                                    />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox7}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox7",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox7",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Backlog"
+                                    />
+                                    {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox5" as={Checkbox} />}
               label="Approved"
             /> */}
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox3}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox3",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox3",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Scheduled Task"
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox8}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox8",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox8",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Inprogress"
-                            />
-                            {/* <FormControlLabel
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox3}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox3",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox3",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Scheduled Task"
+                                    />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox8}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox8",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox8",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Inprogress"
+                                    />
+                                    {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox6" as={Checkbox} />}
               label="Rejected"
             /> */}
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
 
-                      {/* Right Section (New Column for Last 2 Checkboxes) */}
-                      <Grid item xs={12} sm={4}>
-                        <Grid container spacing={1} direction="column">
-                          <Grid item>
-                            {/* <FormControlLabel
+                              {/* Right Section (New Column for Last 2 Checkboxes) */}
+                              <Grid item xs={12} sm={4}>
+                                <Grid container spacing={1} direction="column">
+                                  <Grid item>
+                                    {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox7" as={Checkbox} />}
               label="In Progressnew"
             /> */}
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox6}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox6",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox6",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
-                                />
-                              }
-                              label="Completed"
-                            />
-                          </Grid>
-                          <Grid item>
-                            {/* <FormControlLabel
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox6}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox6",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox6",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Completed"
+                                    />
+                                  </Grid>
+                                  <Grid item>
+                                    {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox8" as={Checkbox} />}
               label="Completed new"
             /> */}
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={values.checkbox5}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      "checkbox5",
-                                      e.target.checked,
-                                    ); // update Formik
-                                    sessionStorage.setItem(
-                                      "checkbox5",
-                                      e.target.checked,
-                                    ); // save session
-                                  }}
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={values.checkbox5}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "checkbox5",
+                                              e.target.checked,
+                                            ); // update Formik
+                                            sessionStorage.setItem(
+                                              "checkbox5",
+                                              e.target.checked,
+                                            ); // save session
+                                          }}
+                                        />
+                                      }
+                                      label="Approved"
+                                    />
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </FormControl>
+                      </Box>
+
+                      <Box
+                        mt={-6}
+                        display="flex"
+                        justifyContent="end"
+                        padding={1}
+                        gap={formGap}
+                      >
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": {
+                              bgcolor: "#0F766E",
+                            },
+                          }}
+                        >
+                          Apply
+                        </Button>
+                        <Button
+                          type="reset"
+                          variant="contained"
+                          color="error"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            // bgcolor: "#2196f3",
+                            // "&:hover": {
+                            //   bgcolor: "#2196f3",
+                            // },
+                          }}
+                        >
+                          Reset
+                        </Button>
+                        <Button
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C",
+                            },
+                          }}
+                          variant="contained"
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        >
+                          Back
+                        </Button>
+                        {pdfEnabled ? (
+                          <PDFDownloadLink
+                            document={
+                              <TimeSheetreportpdf
+                                data={safeAttendanceData}
+                                projectName={projectName}
+                                managerName={managerName}
+                                filters={{
+                                  Month: Month,
+                                  Year: Year,
+                                  EmployeeID: empData?.Name || EMPNAME,
+                                  Imageurl: baseurlUAAM,
+                                  HeaderImg: HeaderImg,
+                                  FooterImg: FooterImg,
+                                }}
+                                footerHeight={footerHeight}
+                              />
+                            }
+                            fileName={`TimeSheet_Report_${empData?.Name || "Employee"}.pdf`}
+                            style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
+                          >
+                            {({ loading }) =>
+                              loading ? (
+                                <PictureAsPdfIcon
+                                  sx={{ fontSize: 24, opacity: 0.5 }}
                                 />
-                              }
-                              label="Approved"
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </FormControl>
-              </Box>
+                              ) : (
+                                <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                              )
+                            }
+                          </PDFDownloadLink>
+                        ) : (
+                          <PictureAsPdfIcon
+                            sx={{
+                              fontSize: 24,
+                              opacity: 0.4,
+                              color: "#9e9e9e",
+                              cursor: "not-allowed",
+                            }}
+                          />
+                        )}
+                        <FaFileExcel
+                          size={20}
+                          color="#1D6F42"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            TimesheetReportExcel(
+                              safeAttendanceData,
+                              {
+                                Month: Month,
+                                Year: Year,
+                                EmployeeID: empData?.Name || EMPNAME,
+                              },
+                              projectName,
+                              managerName,
+                            )
+                          }
+                        />
+                      </Box>
 
-              <Box
-                mt={-6}
-                display="flex"
-                justifyContent="end"
-                padding={1}
-                gap={formGap}
-              >
-                <Button type="submit" variant="contained" color="secondary">
-                  APPLY
-                </Button>
-                <Button type="reset" variant="contained" color="error">
-                  RESET
-                </Button>
-                <Button
-                  color="warning"
-                  variant="contained"
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  Cancel
-                </Button>
-                {pdfEnabled ? (
-                  <PDFDownloadLink
-                    document={
-                      <TimeSheetreportpdf
-                        data={safeAttendanceData}
-                        projectName={projectName}
-                        managerName={managerName}
-                        filters={{
-                          Month: Month,
-                          Year: Year,
-                          EmployeeID: empData?.Name || EMPNAME,
-                          Imageurl: baseurlUAAM,
-                          HeaderImg: HeaderImg,
-                          FooterImg: FooterImg,
-                        }}
-                        footerHeight={footerHeight}
-                      />
-                    }
-                    fileName={`TimeSheet_Report_${empData?.Name || "Employee"}.pdf`}
-                    style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
-                  >
-                    {({ loading }) =>
-                      loading ? (
-                        <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
-                      ) : (
-                        <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                      )
-                    }
-                  </PDFDownloadLink>
-                ) : (
-                  <PictureAsPdfIcon
-                    sx={{
-                      fontSize: 24,
-                      opacity: 0.4,
-                      color: "#9e9e9e",
-                      cursor: "not-allowed",
-                    }}
-                  />
-                )}
-                <FaFileExcel
-                  size={20}
-                  color="#1D6F42"
-                  style={{ cursor: "pointer" }}
-                  onClick={() =>
-                    TimesheetReportExcel(
-                      safeAttendanceData,
-                      {
-                        Month: Month,
-                        Year: Year,
-                        EmployeeID: empData?.Name || EMPNAME,
-                      },
-                      projectName,
-                      managerName,
+                      <Box sx={{ gridColumn: "span 4" }}>
+                        <Box
+                          height="450px"
+                          padding={1}
+                          // height={dataGridHeight}
+                          //marginTop={2}
+                          sx={{
+                            "& .MuiDataGrid-root": {
+                              // border: "none",
+                            },
+                            "& .MuiDataGrid-cell": {
+                              // borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              // borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              backgroundColor: "#d0edec",
+                              color: "", // Color for even rows
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
 
-                    )
-                  }
-                />
-              </Box>
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
 
-              <Box sx={{ gridColumn: "span 4" }}>
-                <Box
-                  height="450px"
-                  // height={dataGridHeight}
-                  //marginTop={2}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      // border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      // borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      // borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      // borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
-                    },
-                  }}
-                >
-                  <DataGrid
-                    sx={{
-                      "& .MuiDataGrid-footerContainer": {
-                        height: dataGridHeaderFooterHeight,
-                        minHeight: dataGridHeaderFooterHeight,
-                      },
-                    }}
-                    rowHeight={dataGridRowHeight}
-                    headerHeight={dataGridHeaderFooterHeight}
-                    rows={AttendanceData}
-                    columns={AttColumn}
-                    disableSelectionOnClick
-                    getRowId={(row) => row.RecordID}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => { }}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pagination
-                    components={{
-                      Toolbar: AttendanceTool,
-                    }}
-                    onStateChange={(stateParams) =>
-                      setRowCount(stateParams.pagination.rowCount)
-                    }
-                    loading={exploreLoading}
-                    componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
-                    }}
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row"
-                    }
-                  />
-                </Box>
-              </Box>
-            </form>
-          )}
-        </Formik>
-        {/* </Box> */}
-      </Paper>
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
+                        >
+                          <DataGrid
+                            sx={{
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
+                              },
+                            }}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            rows={AttendanceData}
+                            columns={AttColumn}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.RecordID}
+                            pageSize={pageSize}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
+                            onCellClick={(params) => {}}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: AttendanceTool,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            loading={exploreLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                            getRowClassName={(params) =>
+                              params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </React.Fragment>
   );
 };

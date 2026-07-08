@@ -501,7 +501,10 @@ const EditAttendanceHistory = () => {
   return (
     <React.Fragment>
       {/* {getLoading && <LinearProgress />} */}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            <Box sx={{ height: "100vh", overflow: "auto" }}>
+                   <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                    <Box sx={{ p: 2, borderRadius: 3, }}>
+             <Paper sx={{ borderRadius: 3 }}>
 
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -534,11 +537,13 @@ const EditAttendanceHistory = () => {
           </Box>
         </Box>
       </Paper>
-
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-
-        {/* <Box m="10px"> */}
-        <Formik
+ </Box>
+       <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+             
+                    <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+             
+             <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+               <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
           onSubmit={(values, { resetForm }) => {
@@ -570,6 +575,48 @@ const EditAttendanceHistory = () => {
                 setSummaryCheck(false);
               }}
             >
+
+                       {/* ----- CARD HEADER ----- */}
+                                                              <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1.5}
+                              mb={1}
+                              sx={{ px: 2, pt: 2 }}
+                            >
+                              {/* ICON */}
+                              <Box
+                                sx={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: "50%",
+                                  backgroundColor: "#EFF6FF",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography sx={{ fontSize: 18 }}>
+                                📋
+                                </Typography>
+                              </Box>
+                            
+                              {/* TITLE + SUBTITLE */}
+                              <Box>
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight={700}
+                                  color="#4F46E5"
+                                >
+                                  Attendance History
+                                </Typography>
+                            
+                                <Typography variant="body2" color="text.secondary">
+                                 Track and review daily attendance for all personnel
+                                </Typography>
+                              </Box>
+                            </Box>
+
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -586,7 +633,8 @@ const EditAttendanceHistory = () => {
                 <Stack direction="row" spacing={2}>
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="month"
                     name="month"
@@ -601,9 +649,28 @@ const EditAttendanceHistory = () => {
                     onBlur={handleBlur}
                     select
                     sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional: adjust if needed
-                      },
+                     "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                       width: 200
                     }}
                   >
@@ -623,7 +690,8 @@ const EditAttendanceHistory = () => {
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     id="year"
                     name="year"
@@ -638,10 +706,28 @@ const EditAttendanceHistory = () => {
                     }}
                     onBlur={handleBlur}
                     sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent",
-                        // optional
-                      },
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                       width: 200
                     }}
                   />
@@ -676,11 +762,37 @@ const EditAttendanceHistory = () => {
                   }
                   label="Summary"
                 />
-                  <Button type="submit" variant="contained" color="secondary" >
-                    APPLY
+                  <Button
+                   type="submit" 
+                   variant="contained" 
+                   sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                    >
+                    Apply
                   </Button>
-                  <Button type="reset" variant="contained" color="error" size="small">
-                    RESET
+                  <Button
+                   type="reset" 
+                   variant="contained" 
+                   color="error" 
+                   size="small"
+                   sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#0D9488",
+                        // "&:hover": {
+                        //   bgcolor: "#0F766E",
+                        // },
+                      }}
+                   >
+                    Reset
                   </Button>
                   {!summarycheck && AttendanceData?.length > 0 && (
                     <PDFDownloadLink
@@ -869,6 +981,37 @@ const EditAttendanceHistory = () => {
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
+
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+
                   }}
                 >
                   <DataGrid
@@ -911,6 +1054,7 @@ const EditAttendanceHistory = () => {
                         ? 'odd-row'
                         : 'even-row'
                     }
+                    
                   />
                 </Box>
               </Box>
@@ -954,6 +1098,35 @@ const EditAttendanceHistory = () => {
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                   }}
                 >
                   <DataGrid
@@ -1069,7 +1242,10 @@ const EditAttendanceHistory = () => {
         </Formik>
         {/* </Box> */}
       </Paper>
-
+   </Box>
+                    </Box>
+           </Box>
+                    </Box>
     </React.Fragment>
   );
 };

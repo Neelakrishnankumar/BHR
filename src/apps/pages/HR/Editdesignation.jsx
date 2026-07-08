@@ -1108,7 +1108,15 @@ const Editdesignation = () => {
                         >
                           {YearFlag == "true" ? (
                             <LoadingButton
-                              color="secondary"
+                               sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               variant="contained"
                               type="submit"
                               loading={isLoading}
@@ -1117,7 +1125,15 @@ const Editdesignation = () => {
                             </LoadingButton>
                           ) : (
                             <Button
-                              color="secondary"
+                               sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               variant="contained"
                               disabled={true}
                             >
@@ -1172,14 +1188,22 @@ const Editdesignation = () => {
                   )} */}
 
                           <Button
-                            color="warning"
+                            sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                             variant="contained"
                             onClick={() => {
                               // navigate("/Apps/TR122/Designation");
                               navigate(-1);
                             }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -1545,13 +1569,21 @@ const Editdesignation = () => {
                       padding={1}
                     >
                       <Button
-                        color="warning"
+                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                         variant="contained"
                         onClick={() => {
                           setScreen("0");
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </Box>
