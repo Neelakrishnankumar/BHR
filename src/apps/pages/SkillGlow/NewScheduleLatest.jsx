@@ -686,7 +686,10 @@ const NewScheduleLatest = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+             <Box sx={{ height: "100vh", overflow: "auto" }}>
+                             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                               <Box sx={{ p: 2, borderRadius: 3 }}>
+                                 <Paper sx={{ borderRadius: 3 }}>
           <Box display="flex" justifyContent="space-between" p={2}>
             <Box display="flex" borderRadius="3px" alignItems="center">
               {broken && !rtl && (
@@ -776,10 +779,12 @@ const NewScheduleLatest = () => {
             </Box>
           </Box>
         </Paper>
-
+   </Box>
         {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Box m="5px">
+            <Box m="5px"
+            padding={1}
+            >
               <Box
                 m="5px 0 0 0"
                 height={dataGridHeight}
@@ -787,8 +792,10 @@ const NewScheduleLatest = () => {
                   "& .MuiDataGrid-root": {
                     border: "none",
                   },
+                  
                   "& .MuiDataGrid-cell": {
-                    borderBottom: "none",
+                    // borderBottom: "none",
+                    borderBottom: "1px solid #F3F4F6"
                   },
                   "& .name-column--cell": {
                     color: colors.greenAccent[300],
@@ -812,9 +819,48 @@ const NewScheduleLatest = () => {
                     color: "", // Color for odd rows
                   },
                   "& .even-row": {
-                    backgroundColor: "#D3D3D3",
+                    // backgroundColor: "#D3D3D3",
+                    backgroundColor: "#F3F4F6",
                     color: "", // Color for even rows
                   },
+                //     "& .odd-row": {
+                //   backgroundColor: "#ffff",
+                //   color: "", // Color for odd rows 
+                // },
+                // "& .even-row": {
+                //   // backgroundColor: "#d0edec",
+                //   backgroundColor: "#ffff",
+                //   color: "", // Color for even rows
+                // },
+                     "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                 }}
               >
                 <DataGrid
@@ -860,16 +906,26 @@ const NewScheduleLatest = () => {
             <Box display="flex" justifyContent="flex-end" padding={2}>
               <Button
                 variant="contained"
-                color="warning"
+                   sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                   "&:hover": {
+                                   bgcolor: "#EA580C",
+                                   },
+                                }}
                 onClick={() => navigate(-1)}
               >
-                Cancel
+                Back
               </Button>
             </Box>
           </Paper>
         ) : (
           false
         )}
+              </Box>
+                    </Box>
       </React.Fragment>
     </>
   );
