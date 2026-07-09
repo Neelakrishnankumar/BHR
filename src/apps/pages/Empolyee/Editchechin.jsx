@@ -334,57 +334,111 @@ const Editcheckin = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 1.5,
+          mt: 1,
+          mb: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          px={3}
+          py={2}
+        >
+          {/* LEFT */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Breadcrumbs
-              maxItems={3}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-            >
+
+
+            {/* TITLE */}
+            <Box>
+              <Breadcrumbs
+                separator={
+                  <NavigateNextIcon
+                    sx={{ color: "#9CA3AF", fontSize: 18 }}
+                  />
+                }
+              >
+                <Typography
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    color: "#4F46E5",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate(-1)}
+                >
+                  {getBusinessCaption("CheckIn", "Check In")}
+                </Typography>
+              </Breadcrumbs>
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
-                }}
+                variant="body2"
+                color="text.secondary"
               >
-                {/* {mode === "E" ? `Personnel(${state.EmpName})` : "Employee(New)"} */}
-                {getBusinessCaption("CheckIn", "Check In")}
+                Manage employee check-in information
               </Typography>
-              {/* <Typography
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-
-              >
-                Check In
-              </Typography> */}
-
-            </Breadcrumbs>
+            </Box>
           </Box>
 
-          <Box display="flex">
+          {/* RIGHT */}
+          <Box display="flex" alignItems="center" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  //   border: "1px solid #E5E7EB",
+                  backgroundColor: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#F9FAFB",
+                  },
+                }}
+              >
+                <ResetTvIcon color="error" />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  //  border: "1px solid #E5E7EB",
+                  backgroundColor: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#F9FAFB",
+                  },
+                }}
+              >
+                <LogoutOutlinedIcon color="error" />
               </IconButton>
             </Tooltip>
           </Box>
         </Box>
       </Paper>
+
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            mx: 1,
+            mt: 2,
+          }}
+        >
 
           <Formik
             initialValues={InitialValue}
@@ -407,12 +461,40 @@ const Editcheckin = () => {
               setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
+
+                <Box mb={3}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography sx={{ fontSize: 20 }}>📍</Typography>
+
+                    <Typography
+                      sx={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: "#1F2937",
+                      }}
+                    >
+                      Check In Details
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    Manage employee check-in information and attendance.
+                  </Typography>
+                </Box>
+
+
                 <Box
                   display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
+                  gridTemplateColumns={{
+                    xs: "1fr",
+                    md: "repeat(2,1fr)",
+                  }}
+                  gap={3}
+                  mt={2}
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",
@@ -422,7 +504,6 @@ const Editcheckin = () => {
 
                   <FormControl
                     sx={{
-
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -523,8 +604,8 @@ const Editcheckin = () => {
                     type="date"
                     id="date"
                     label={getBusinessCaption("CheckInDate", "Check In Date")}
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.date}
                     onBlur={handleBlur}
@@ -536,9 +617,8 @@ const Editcheckin = () => {
                   />
 
                   <FormControl
-                    focused
-                    variant="standard"
-
+                    variant="outlined"
+                    size="small"
                   >
                     <InputLabel id="status">Type</InputLabel>
                     <Select
@@ -548,6 +628,7 @@ const Editcheckin = () => {
                       value={values.checkintype}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      label = "Type"
                     >
                       <MenuItem value="R">Regular</MenuItem>
                       <MenuItem value="L">Late</MenuItem>
@@ -556,6 +637,7 @@ const Editcheckin = () => {
                       <MenuItem value="V">Leave</MenuItem>
                     </Select>
                   </FormControl>
+                  
                   <TextField
                     name="checkintime"
                     type="time"
@@ -567,11 +649,11 @@ const Editcheckin = () => {
                       </span>
                     }
                     inputFormat="HH:mm:aa"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     value={values.checkintime}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    focused
                     error={!!touched.checkintime && !!errors.checkintime}
                     helperText={touched.checkintime && errors.checkintime}
                     sx={{ background: "#f5f5f5" }}
@@ -581,8 +663,8 @@ const Editcheckin = () => {
                     type="text"
                     id="comment"
                     label="Check In Comment"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     value={values.comment}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -595,27 +677,55 @@ const Editcheckin = () => {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }} />
-                  <Box>
+
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "100%",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 2,
+                      px: 2,
+                    }}
+                  >
                     <Field
-                      //  size="small"
                       type="checkbox"
                       name="disable"
                       id="disable"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
-                      label="Work From Home"
                     />
-                    <FormLabel focused={true}>Work From Home</FormLabel>
+
+                    <FormLabel focused={false}>
+                      Work From Home
+                    </FormLabel>
                   </Box>
+
                 </Box>
-                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  gap={2}
+                  mt={4}
+                  pt={3}
+                  borderTop="1px solid #E5E7EB"
+                >
                   {YearFlag == "true" ? (
                     <LoadingButton
-                      color="secondary"
+                      loading={isLoading}
                       variant="contained"
                       type="submit"
-                      loading={isLoading}
+                      sx={{
+                        px: 4,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
@@ -628,7 +738,7 @@ const Editcheckin = () => {
                       Save
                     </Button>
                   )}
-                   {/* {YearFlag == "true" && mode == "E" ? (
+                  {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -657,12 +767,17 @@ const Editcheckin = () => {
                     null
                   )} */}
                   <Button
-                    color="warning"
                     variant="contained"
-                    onClick={() => {
-                      //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-                      navigate(-1);
-                      // navigate("/Apps/Secondarylistview/TR123/Check In/");
+                    onClick={() => navigate(-1)}
+                    sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
                     }}
                   >
                     Cancel

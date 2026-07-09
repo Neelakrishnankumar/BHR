@@ -311,54 +311,122 @@ const Editcheckout = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 1,
+          mt: 1,
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          backgroundColor: "#fff",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          px={3}
+          py={2}
+        >
+          {/* LEFT */}
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+
             <Breadcrumbs
               maxItems={3}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              separator={
+                <NavigateNextIcon
+                  sx={{
+                    color: "#9CA3AF",
+                    fontSize: 18,
+                  }}
+                />
+              }
             >
+              {/* Existing breadcrumb */}
               {/* <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate("/Apps/TR027/Employee");
-                }}
-              >
-                {`Employee(${state.EmpName})`}
-              </Typography> */}
+          variant="body1"
+          sx={{
+            color: "#6B7280",
+            cursor: "pointer",
+            fontWeight: 500,
+          }}
+          onClick={() => navigate("/Apps/TR027/Employee")}
+        >
+          {`Employee (${state.EmpName})`}
+        </Typography> */}
+
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                sx={{
+                  fontSize: "22px",
+                  fontWeight: 700,
+                  color: "#111827",
+                }}
               >
                 {getBusinessCaption("CheckOut", "Check Out")}
               </Typography>
             </Breadcrumbs>
           </Box>
-          <Box display="flex">
+
+          {/* RIGHT */}
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  //border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEF2F2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  // border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEF2F2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
           </Box>
         </Box>
       </Paper>
+
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            m: 2,
+          }}
+        >
           {/* // <Box m="20px"> */}
           <Formik
             initialValues={InitialValue}
@@ -381,18 +449,41 @@ const Editcheckout = () => {
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
+                <Box mb={3}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography sx={{ fontSize: 18 }}>📋</Typography>
+
+                    <Typography
+                      fontWeight={700}
+                      color="#1F2937"
+                    >
+                      Check Out Details
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    mt={0.5}
+                  >
+                    Record employee check-out information
+                  </Typography>
+                </Box>
+
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap={formGap}
-                  padding={1}
+                  gridTemplateColumns={{
+                    xs: "1fr",
+                    md: "repeat(2, minmax(0, 1fr))",
+                  }}
+                  gap={3}
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? "span 1" : "span 2",
                     },
                   }}
                 >
-                  <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                  <FormControl sx={{ display: "flex" }}>
                     <FormControl
                       sx={{
                         display: "flex",
@@ -411,6 +502,7 @@ const Editcheckout = () => {
                           </span>
                         }
                         variant="outlined"
+                        size="small"
                         id="Employee"
                         // value={selectEMPLOYEELookupData}
                         value={values.Employee}
@@ -458,10 +550,12 @@ const Editcheckout = () => {
                         focused
                       /> */}
                     </FormControl>
+
                   </FormControl>
+
                   <FormControl
                     sx={{
-                      gridColumn: "span 2",
+                     // gridColumn: "span 2",
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -514,6 +608,7 @@ const Editcheckout = () => {
                         </span>
                       }
                       variant="outlined"
+                      size="small"
                       id="Location"
                       // value={selectLocationLookupData}
                       value={values.Location}
@@ -527,9 +622,10 @@ const Editcheckout = () => {
                       url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","VerticalLicense": "${Subscriptionlastthree}","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                   </FormControl>
+
                   <FormControl
                     sx={{
-                      gridColumn: "span 2",
+                     // gridColumn: "span 2",
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -597,29 +693,30 @@ const Editcheckout = () => {
 
 
                   </FormControl>
+
                   <TextField
                     name="date"
                     type="date"
                     id="date"
                     // label="Check Out Date"
                     label={getBusinessCaption("CheckOutDate", "Check Out Date")}
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.date}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2", background: "" }}
+                    sx={{ background: "" }}
                     inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
-                  <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ gridColumn: "span 2" }}
+                    <FormControl
+                    variant="outlined"
+                    size="small"
+                    //sx={{ gridColumn: "span 2" }}
                   >
-                    <InputLabel id="status">Type</InputLabel>
+                    <InputLabel id="checkouttype-label">Type</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="checkouttype"
@@ -627,6 +724,7 @@ const Editcheckout = () => {
                       value={values.checkouttype}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      label="Type"
                     >
                       <MenuItem value="R">Regular</MenuItem>
                       <MenuItem value="L">Late</MenuItem>
@@ -649,9 +747,9 @@ const Editcheckout = () => {
                     value={values.checkouttime}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    focused
-                    sx={{ gridColumn: "span 2", background: "" }}
-                    variant="standard"
+                    sx={{ background: "" }}
+                    variant="outlined"
+                    size="small"
                     error={!!touched.checkouttime && !!errors.checkouttime}
                     helperText={touched.checkouttime && errors.checkouttime}
                   />
@@ -660,15 +758,15 @@ const Editcheckout = () => {
                     type="text"
                     id="comment"
                     label="Check Out Comment"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     value={values.comment}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
                     sx={{
-                      gridColumn: "span 2",
+                    //  gridColumn: "span 2",
                       backgroundColor: "", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "", // Ensure the filled variant also has a white background
@@ -678,17 +776,29 @@ const Editcheckout = () => {
                 </Box>
                 <Box
                   display="flex"
-                  padding={1}
-                  justifyContent="end"
-                  mt="20px"
-                  gap="20px"
+                  justifyContent="flex-end"
+                  gap={2}
+                  mt={4}
+                  pt={2}
+                  sx={{
+                    borderTop: "1px solid #E5E7EB",
+                  }}
                 >
                   {YearFlag == "true" ? (
                     <LoadingButton
-                      color="secondary"
-                      variant="contained"
                       type="submit"
                       loading={isLoading}
+                      variant="contained"
+                      sx={{
+                        px: 4,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        bgcolor: "#0D9488",
+                        color: "#fff",
+                        "&:hover": {
+                          bgcolor: "#0F766E"
+                        }
+                      }}
                     >
                       Save
                     </LoadingButton>
@@ -731,10 +841,17 @@ const Editcheckout = () => {
                     </Button>
                   )} */}
                   <Button
-                    color="warning"
                     variant="contained"
-                    onClick={() => {
-                      navigate(-1);
+                    onClick={() => navigate(-1)}
+                    sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C"
+                      }
                     }}
                   >
                     Cancel

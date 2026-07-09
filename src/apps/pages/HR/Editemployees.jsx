@@ -415,6 +415,7 @@ const Editemployee = () => {
   const [openFunctionModal, setOpenFunctionModal] = useState(false); //Function 
   const [openManagerModal, setOpenManagerModal] = useState(false); //Managers
   const [openItemCustodyModal, setOpenItemCustodyModal] = useState(false); // Itemcustody
+  const [openCourseModal, setOpenCourseModal] = useState(false); // Course Attendance
 
   //IMAGE PREVIEW
   const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
@@ -2576,7 +2577,10 @@ const Editemployee = () => {
         >
           <GridToolbarQuickFilter />
           <Tooltip title="ADD" >
-            <IconButton onClick={() => selectcelldata("", "A", "")}>
+            <IconButton onClick={() => {
+              selectcelldata("", "A", "");
+              setOpenSkillModal(true);
+            }}>
               <AddOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -2618,6 +2622,25 @@ const Editemployee = () => {
   // }
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
+  // handleFunction
+  const handleFunction = () => {
+    selectCellRowData({
+      rowData: "{}",
+      mode: "A",
+      field: "",
+    });
+    setOpenFunctionModal(true);
+  };
+
+  // Manager  
+   const handleManager = () => {
+    selectCellRowData({
+      rowData: {},
+      mode: "A",
+      field: "",
+    });
+    setOpenManagerModal(true);
+  };
 
   function Employee() {
     return (
@@ -2722,7 +2745,22 @@ const Editemployee = () => {
 
           {/* ADD BUTTON */}
           {show != "21" && (
-            <Tooltip title="ADD">
+            <Tooltip title="ADD"
+              // onClick={() => {
+              //   selectcelldata("", "A", "");
+              //   setOpenManagerModal(true);
+              // }}
+              // onClick={() => {
+              //   if (show == "2") {
+              //     handleFunction();
+              //   } else if (show == "3") {
+              //     handleManager();
+              //   } else if (show == "2") {
+              //   } else if (show == "3") {
+              //   } else if (show == "4") {
+              //   }
+              // }}
+            >
               <IconButton
                 type="reset"
                 sx={{
@@ -2747,6 +2785,7 @@ const Editemployee = () => {
       </GridToolbarContainer>
     );
   }
+
   const [laomode, setLaoMode] = useState("A");
   const [laoEmpRecID, setLaoEmpRecID] = useState("");
 
@@ -5921,7 +5960,7 @@ const Editemployee = () => {
                                         name="Department"
                                         label={<>Department<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         id="Department"
-                                         value={values.Department}
+                                        value={values.Department}
                                         onChange={(e, newValue) => setFieldValue("Department", newValue, true)}
                                         isOptionEqualToValue={(option, value) => String(option.RecordID) === String(value.RecordID)}
                                         error={!!touched.Department && !!errors.Department}
@@ -5937,26 +5976,28 @@ const Editemployee = () => {
 
                                     {CompanyAutoCode == "Y" ? (
                                       <TextField
-                                        fullWidth variant="standard" type="text" label="Code"
+                                        fullWidth variant="outlined" size="small" type="text" label="Code"
                                         value={values.Code} id="Code" onBlur={handleBlur} onChange={handleChange} name="Code"
-                                        placeholder="Auto" sx={{ backgroundColor: "#ffffff" }} focused
+                                        placeholder="Auto" sx={{ backgroundColor: "#ffffff" }}
                                         inputProps={{ maxLength: 8 }} InputProps={{ readOnly: true }}
+                                        InputLabelProps={{ shrink: true }}
                                       />
                                     ) : (
                                       <TextField
-                                        fullWidth variant="standard" type="text"
+                                        fullWidth variant="outlined" size="small" type="text"
                                         label={<>Code<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                         value={values.Code} id="Code" onBlur={handleBlur} onChange={handleChange} name="Code"
                                         error={!!touched.Code && !!errors.Code} helperText={touched.Code && errors.Code}
-                                        sx={{ backgroundColor: "#ffffff" }} focused autoFocus inputProps={{ maxLength: 8 }}
+                                        sx={{ backgroundColor: "#ffffff" }} autoFocus inputProps={{ maxLength: 8 }}
+                                        InputLabelProps={{ shrink: true }}
                                       />
                                     )}
 
                                     <TextField
-                                      select fullWidth variant="standard"
+                                      select fullWidth variant="outlined" size="small"
                                       label={<>Gender<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                       value={values.Gender} id="Gender" onBlur={handleBlur} onChange={handleChange} name="Gender"
-                                      error={!!touched.Gender && !!errors.Gender} helperText={touched.Gender && errors.Gender} focused
+                                      error={!!touched.Gender && !!errors.Gender} helperText={touched.Gender && errors.Gender}
                                     >
                                       <MenuItem value="M">Male</MenuItem>
                                       <MenuItem value="F">Female</MenuItem>
@@ -5964,62 +6005,65 @@ const Editemployee = () => {
                                     </TextField>
 
                                     <TextField
-                                      name="dateofbirth" type="date" id="dateofbirth" label="Date of Birth" variant="standard" focused
+                                      name="dateofbirth" type="date" id="dateofbirth" label="Date of Birth" variant="outlined" size="small"
                                       inputFormat="YYYY-MM-DD" value={values.dateofbirth} onBlur={handleBlur}
                                       onChange={(e) => handleDateChange(e, handleChange)}
                                       error={!!touched.dateofbirth && !!errors.dateofbirth} helperText={touched.dateofbirth && errors.dateofbirth}
+                                      InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="standard" type="text"
+                                      fullWidth variant="outlined" type="text"
                                       label={<>Name<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                       value={values.Name} id="Name" onBlur={handleBlur}
                                       onChange={(e) => { if (/^[a-zA-Z\s.]*$/.test(e.target.value)) handleChange(e); }}
                                       name="Name" error={!!touched.Name && !!errors.Name} helperText={touched.Name && errors.Name}
-                                      sx={{ backgroundColor: "#ffffff" }} focused inputProps={{ maxLength: 90 }}
+                                      sx={{ backgroundColor: "#ffffff" }} inputProps={{ maxLength: 90 }}
                                     />
 
                                     <TextField
-                                      name="joindate" type="date" id="joindate" label="Date of Joining" variant="standard" focused
+                                      name="joindate" type="date" id="joindate" label="Date of Joining" variant="outlined" size="small"
                                       inputFormat="YYYY-MM-DD" value={values.joindate} onBlur={handleBlur}
                                       onChange={(e) => handleDateChange(e, handleChange)}
                                       error={!!touched.joindate && !!errors.joindate} helperText={touched.joindate && errors.joindate}
+                                      InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="standard" type="password"
+                                      fullWidth variant="outlined" type="password" size="small"
                                       label={<>Password<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                       value={values.Password} id="Password" onBlur={handleBlur} onChange={handleChange} name="Password"
                                       error={!!touched.Password && !!errors.Password} helperText={touched.Password && errors.Password}
-                                      sx={{ backgroundColor: "#ffffff" }} focused
+                                      sx={{ backgroundColor: "#ffffff" }}
                                     />
 
                                     <TextField
-                                      name="confirmdate" type="date" id="confirmdate" label="Date of Confirmation" variant="standard" focused
+                                      name="confirmdate" type="date" id="confirmdate" label="Date of Confirmation" variant="outlined" size="small"
                                       inputFormat="YYYY-MM-DD" value={values.confirmdate} onBlur={handleBlur}
                                       onChange={(e) => handleDateChange(e, handleChange)}
                                       error={!!touched.confirmdate && !!errors.confirmdate} helperText={touched.confirmdate && errors.confirmdate}
+                                      InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="standard" type="text" label="Job" placeholder="Enter job title"
+                                      fullWidth variant="outlined" type="text" label="Job" placeholder="Enter job title"
                                       value={values.Job} id="Job" onBlur={handleBlur} onChange={handleChange} name="Job"
                                       error={!!touched.Job && !!errors.Job} helperText={touched.Job && errors.Job}
-                                      sx={{ backgroundColor: "#ffffff" }} focused inputProps={{ maxLength: 90 }}
+                                      sx={{ backgroundColor: "#ffffff" }} size="small" inputProps={{ maxLength: 90 }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="standard" type="text" label="Comments" placeholder="Enter comments"
+                                      fullWidth variant="outlined" type="text" label="Comments" placeholder="Enter comments"
                                       value={values.Comm} id="Comm" onBlur={handleBlur} onChange={handleChange} name="Comm"
                                       error={!!touched.Comm && !!errors.Comm} helperText={touched.Comm && errors.Comm}
-                                      focused inputProps={{ maxLength: 90 }}
+                                      size="small" inputProps={{ maxLength: 90 }}
                                     />
 
                                     <TextField
-                                      select fullWidth variant="standard"
+                                      select fullWidth variant="outlined"
                                       label={<>Type<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                                       value={values.employeetype} id="employeetype" onBlur={handleBlur} onChange={handleChange} name="employeetype"
-                                      error={!!touched.employeetype && !!errors.employeetype} helperText={touched.employeetype && errors.employeetype} focused
+                                      error={!!touched.employeetype && !!errors.employeetype} helperText={touched.employeetype && errors.employeetype} size="small"
                                     >
                                       <MenuItem value="PP">Probation Period</MenuItem>
                                       <MenuItem value="PM">Permanent</MenuItem>
@@ -6029,16 +6073,16 @@ const Editemployee = () => {
                                     </TextField>
 
                                     <TextField
-                                      fullWidth variant="standard" type="number" label="Sort Order"
+                                      fullWidth variant="outlined" type="number" label="Sort Order"
                                       value={values.SortOrder} id="SortOrder" onBlur={handleBlur} onChange={handleChange} name="SortOrder"
                                       error={!!touched.SortOrder && !!errors.SortOrder} helperText={touched.SortOrder && errors.SortOrder}
-                                      focused onWheel={(e) => e.target.blur()}
+                                      size="small" onWheel={(e) => e.target.blur()}
                                       onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 8); }}
                                       InputProps={{ inputProps: { style: { textAlign: "right" } } }}
                                     />
 
                                     <TextField
-                                      name="amount" type="text" id="amount" label="Basic Pay" placeholder="Enter basic pay" variant="standard" focused
+                                      name="amount" type="text" id="amount" label="Basic Pay" placeholder="Enter basic pay" variant="outlined" size="small"
                                       value={values.amount} onBlur={handleBlur} onChange={handleChange}
                                       error={!!touched.amount && !!errors.amount} helperText={touched.amount && errors.amount}
                                       InputProps={{ inputProps: { style: { textAlign: "right" }, min: 0, max: 24 } }}
@@ -6105,28 +6149,47 @@ const Editemployee = () => {
                               {/* ----- Bottom actions (inside the card) ----- */}
                               <Box sx={{ p: 3, display: "flex", justifyContent: "flex-end", gap: 1.5 }}>
                                 <Button
-                                  type="button" variant="outlined"
+                                  color="secondary" variant="contained" type="submit" disabled={loading}
+                                  sx={{
+                                    textTransform: "none",
+                                    borderRadius: 2,
+                                    color: "#fff",
+                                    px: 4,
+                                    bgcolor: "#0D9488",
+                                    "&:hover": {
+                                      bgcolor: "#0F766E",
+                                    },
+                                  }}
+                                >
+                                  Save
+                                </Button>
+                                <Button
+                                  type="button" variant="contained"
                                   onClick={() => {
                                     is00123Subscription
                                       ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state })
                                       : navigate(`/Apps/TR027/Personnel`, { state });
                                   }}
-                                  sx={{ textTransform: "none", borderRadius: 2 }}
+                                  sx={{
+                                    px: 4,
+                                    borderRadius: 2,
+                                    color: "#fff",
+                                    textTransform: "none",
+                                    bgcolor: "#F97316",
+                                    "&:hover": {
+                                      bgcolor: "#EA580C",
+                                    },
+                                  }}
                                 >
-                                  Cancel
+                                  Back
                                 </Button>
-                                <Button
+                                {/* <Button
                                   type="button" variant="outlined" onClick={handleSaveAndNext} disabled={loading}
                                   sx={{ textTransform: "none", borderRadius: 2 }}
                                 >
                                   Save & Next
-                                </Button>
-                                <Button
-                                  color="secondary" variant="contained" type="submit" disabled={loading}
-                                  sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#0E9F9A" }}
-                                >
-                                  Save
-                                </Button>
+                                </Button> */}
+
                               </Box>
                             </Box>
 
@@ -6485,22 +6548,29 @@ const Editemployee = () => {
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
                         <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-                          <Button
-                            type="reset"
-                            variant="outlined"
-                            onClick={() => {
-                              setScreen(0);
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
                             }}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
                           >
-                            Cancel
-                          </Button>
+                            Save
+                          </LoadingButton>
+
 
                           {YearFlag == "true" && (
                             <Button
-                              variant="outlined"
-                              color="error"
-                              sx={{ textTransform: "none", borderRadius: 2 }}
+                              variant="contained"
                               onClick={() => {
                                 Swal.fire({
                                   title: errorMsgData.Warningmsg.Delete,
@@ -6515,20 +6585,46 @@ const Editemployee = () => {
                                   }
                                 });
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                  boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                },
+                                "&:active": {
+                                  bgcolor: "#991B1B",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
                           )}
 
-                          <LoadingButton
-                            color="secondary"
+                          <Button
+                            type="reset"
                             variant="contained"
-                            type="submit"
-                            loading={isLoading}
-                            sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#0E9F9A", "&:hover": { backgroundColor: "#4338CA" } }}
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              color: "#fff",
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
                           >
-                            Save
-                          </LoadingButton>
+                            Back
+                          </Button>
+
                         </Box>
                       </form>
                     )}
@@ -6811,22 +6907,45 @@ const Editemployee = () => {
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
                         <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-                          <Button
-                            type="reset"
-                            variant="outlined"
-                            onClick={() => {
-                              setScreen(0);
-                            }}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
-                          >
-                            Cancel
-                          </Button>
 
+                          {/* Save */}
+                          {YearFlag == "true" ? (
+                            <LoadingButton
+                              loading={isLoading}
+                              type="submit"
+                              variant="contained"
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                color: "#fff",
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              disabled
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                              }}
+                            >
+                              Save
+                            </Button>
+                          )}
+
+
+                          {/* Delete */}
                           {YearFlag == "true" ? (
                             <Button
-                              color="error"
-                              variant="outlined"
-                              sx={{ textTransform: "none", borderRadius: 2 }}
+                              variant="contained"
                               onClick={() => {
                                 Swal.fire({
                                   title: errorMsgData.Warningmsg.Delete,
@@ -6841,30 +6960,56 @@ const Editemployee = () => {
                                   }
                                 });
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                color: "#fff",
+                                bgcolor: "#DC2626",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
                           ) : (
-                            <Button color="error" variant="outlined" disabled sx={{ textTransform: "none", borderRadius: 2 }}>
+                            <Button
+                              variant="contained"
+                              disabled
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                              }}
+                            >
                               Delete
                             </Button>
                           )}
 
-                          {YearFlag == "true" ? (
-                            <LoadingButton
-                              color="secondary"
-                              variant="contained"
-                              type="submit"
-                              loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#0E9F9A", "&:hover": { backgroundColor: "#4338CA" } }}
-                            >
-                              Save
-                            </LoadingButton>
-                          ) : (
-                            <Button color="secondary" variant="contained" disabled sx={{ textTransform: "none", borderRadius: 2 }}>
-                              Save
-                            </Button>
-                          )}
+
+                          {/* Cancel */}
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              color: "#fff",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
+
+
+
                         </Box>
 
                         {/* Popups - unchanged */}
@@ -6911,6 +7056,7 @@ const Editemployee = () => {
                     initialValues={initialValues}
                     enableReinitialize={true}
                     validationSchema={validationSchema3}
+
                   >
                     {({
                       values,
@@ -7250,89 +7396,89 @@ const Editemployee = () => {
 
                         <DialogActions
                           sx={{
-                            borderTop:
-                              "1px solid #E5E7EB",
+                            borderTop: "1px solid #E5E7EB",
                             p: 2,
-                            justifyContent:
-                              "space-between",
+                            justifyContent: "flex-end",
+                            gap: 1,
                           }}
                         >
-                          <Box>
-                            {YearFlag == "true" ? (
-                              <Button
-                                color="error"
-                                variant="outlined"
-                                disabled={
-                                  boMode == "A"
-                                }
-                                onClick={() => {
-                                  Swal.fire({
-                                    title:
-                                      errorMsgData
-                                        .Warningmsg
-                                        .Delete,
-                                    icon: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonText:
-                                      "Confirm",
-                                  }).then(
-                                    (
-                                      result
-                                    ) => {
-                                      if (
-                                        result.isConfirmed
-                                      ) {
-                                        fnProcess(
-                                          values,
-                                          resetForm,
-                                          "harddelete"
-                                        );
+                          <LoadingButton
+                            loading={loading}
+                            variant="contained"
+                            onClick={handleSubmit}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              color: "#fff",
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
+                          >
+                            Save
+                          </LoadingButton>
 
-                                        setOpenSkillModal(
-                                          false
-                                        );
-                                      }
-                                    }
-                                  );
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            ) : (
-                              <Button
-                                disabled
-                                color="error"
-                                variant="outlined"
-                              >
-                                Delete
-                              </Button>
-                            )}
-                          </Box>
-
-                          <Box display="flex" gap={1}>
+                          {YearFlag == "true" ? (
                             <Button
-                              variant="outlined"
-                              onClick={() =>
-                                setOpenSkillModal(
-                                  false
-                                )
-                              }
-                            >
-                              Cancel
-                            </Button>
-
-                            <LoadingButton
-                              loading={loading}
-                              variant="contained"
-                              onClick={handleSubmit}
+                              disabled={boMode == "A"}
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    fnProcess(values, resetForm, "harddelete");
+                                    setOpenSkillModal(false);
+                                  }
+                                });
+                              }}
                               sx={{
-                                background:
-                                  "#0D9488",
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                color: "#fff",
+                                bgcolor: "#DC2626",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                },
                               }}
                             >
-                              Save
-                            </LoadingButton>
-                          </Box>
+                              Delete
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              disabled
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          )}
+
+                          <Button
+                            variant="contained"
+                            onClick={() => setOpenSkillModal(false)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              color: "#fff",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Cancel
+                          </Button>
                         </DialogActions>
 
                         <Popup
@@ -7390,7 +7536,7 @@ const Editemployee = () => {
                     onSubmit={(values, { resetForm }) => {
                       setTimeout(() => {
                         empFunctionFn(values, resetForm, false);
-                         
+
                       }, 100);
                     }}
                   >
@@ -7404,12 +7550,16 @@ const Editemployee = () => {
                       resetForm,
                       setFieldValue,
                     }) => (
-                      <form onSubmit={handleSubmit}
-                       onClick={() => {
-                        resetForm();
-                        setOpenFunctionModal(true);
-                      }}
-                        >
+                      <form
+                      // onClick={() => {
+                      //   setOpenFunctionModal(true);
+                      // }}
+                      onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenFunctionModal(true);
+                        }}
+                      >
                         {/* HEADER (same style as Skill) */}
                         <Box display="flex" alignItems="center" gap={1} mb={0.5}>
                           <Box sx={{
@@ -7582,6 +7732,16 @@ const Editemployee = () => {
                               onClick={handleSubmit}
                               variant="contained"
                               loading={isLoading}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
                               Save
                             </LoadingButton>
@@ -7601,14 +7761,37 @@ const Editemployee = () => {
                                   }
                                 });
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                  boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                },
+                                "&:active": {
+                                  bgcolor: "#991B1B",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
 
                             <Button
-                              variant="contained"
+                              type="reset"
                               color="warning"
+                              variant="contained"
                               onClick={() => setOpenFunctionModal(false)}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                "&:hover": { bgcolor: "#EA580C" },
+                              }}
                             >
                               Cancel
                             </Button>
@@ -7617,7 +7800,7 @@ const Editemployee = () => {
                         </Dialog>
 
                         {/* ===== ACTION BUTTONS ===== */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
                           <LoadingButton
                             type="submit"
@@ -7654,7 +7837,7 @@ const Editemployee = () => {
                           >
                             Cancel
                           </Button>
-                        </Box>
+                        </Box> */}
 
                       </form>
                     )}
@@ -7714,8 +7897,18 @@ const Editemployee = () => {
                     initialValues={managerInitialValue}
                     enableReinitialize={true}
                     validationSchema={validationSchema8}
+                    // onClick={() => {
+                    //   setOpenManagerModal(true);
+                    // }}
+                     
                   >
-                    {({ values }) => (
+                    {({ values, resetForm }) => (
+                      <form 
+                      onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenManagerModal(true);
+                        }}>
                       <Box>
 
                         {/* HEADER */}
@@ -7741,6 +7934,7 @@ const Editemployee = () => {
                               label="Code"
                               value={values.code}
                               InputProps={{ readOnly: true }}
+                              InputLabelProps={{ shrink: true }}
                             />
 
                             <TextField
@@ -7749,6 +7943,7 @@ const Editemployee = () => {
                               label="Name"
                               value={values.description}
                               InputProps={{ readOnly: true }}
+                              InputLabelProps={{ shrink: true }}
                             />
                           </Box>
 
@@ -7829,6 +8024,7 @@ const Editemployee = () => {
                           </Box>
                         </Box>
                       </Box>
+                      </form>
                     )}
                   </Formik>
                 </Paper>
@@ -7870,6 +8066,7 @@ const Editemployee = () => {
                           setFieldValue,
                         });
                         resetForm();
+
                       }}>
 
                         <Dialog
@@ -7989,6 +8186,16 @@ const Editemployee = () => {
                               onClick={handleSubmit}
                               variant="contained"
                               loading={isLoading}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
                               Save
                             </LoadingButton>
@@ -8007,6 +8214,21 @@ const Editemployee = () => {
                                   }
                                 });
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                  boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                },
+                                "&:active": {
+                                  bgcolor: "#991B1B",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
@@ -8015,6 +8237,16 @@ const Editemployee = () => {
                               color="warning"
                               variant="contained"
                               onClick={() => setOpenManagerModal(false)}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                color: "#fff",
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
                             >
                               Cancel
                             </Button>
@@ -8023,7 +8255,7 @@ const Editemployee = () => {
                         </Dialog>
 
                         {/* ACTIONS */}
-                        <Box display="flex" justifyContent="flex-end" mt={3} gap={2}>
+                        {/* <Box display="flex" justifyContent="flex-end" mt={3} gap={2}>
 
                           <LoadingButton type="submit" variant="contained" loading={isLoading}>
                             Save
@@ -8050,7 +8282,7 @@ const Editemployee = () => {
                           <Button color="warning" variant="contained" onClick={() => setScreen(0)}>
                             Cancel
                           </Button>
-                        </Box>
+                        </Box> */}
 
                         {/* POPUPS (UNCHANGED) */}
                         <Popup title="Functions" openPopup={openFunPopup} setOpenPopup={setOpenFunPopup}>
@@ -8519,23 +8751,44 @@ const Editemployee = () => {
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
                         <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-                          <Button
-                            type="reset"
-                            variant="outlined"
-                            onClick={() => setScreen(0)}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
-                          >
-                            Cancel
-                          </Button>
+
 
                           <Button
                             color="secondary"
                             variant="contained"
                             type="submit"
                             disabled={isLoading}
-                            sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#0E9F9A", "&:hover": { backgroundColor: "#4338CA" } }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             Save
+                          </Button>
+
+                          <Button
+                            type="reset"
+                            variant="outlined"
+                            onClick={() => setScreen(0)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              color: "#fff",
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+
+                          >
+                            Cancel
                           </Button>
                         </Box>
 
@@ -8837,6 +9090,16 @@ const Editemployee = () => {
                             color="secondary"
                             variant="contained"
                             type="submit"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             Save
                           </Button>
@@ -8846,6 +9109,16 @@ const Editemployee = () => {
                             color="warning"
                             variant="outlined"
                             onClick={() => setScreen(0)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              color: "#fff",
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
                           >
                             Cancel
                           </Button>
@@ -9185,6 +9458,16 @@ const Editemployee = () => {
                                   variant="contained"
                                   color="secondary"
                                   loading={isLoading}
+                                  sx={{
+                                    textTransform: "none",
+                                    borderRadius: 2,
+                                    color: "#fff",
+                                    px: 4,
+                                    bgcolor: "#0D9488",
+                                    "&:hover": {
+                                      bgcolor: "#0F766E",
+                                    },
+                                  }}
                                 >
                                   Save
                                 </LoadingButton>
@@ -9195,6 +9478,21 @@ const Editemployee = () => {
                                   onClick={() =>
                                     FnAttachment(values, resetForm, "harddelete")
                                   }
+                                  sx={{
+                                    px: 4,
+                                    borderRadius: 2,
+                                    textTransform: "none",
+                                    bgcolor: "#DC2626",
+                                    color: "#fff",
+                                    boxShadow: "none",
+                                    "&:hover": {
+                                      bgcolor: "#B91C1C",
+                                      boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                    },
+                                    "&:active": {
+                                      bgcolor: "#991B1B",
+                                    },
+                                  }}
                                 >
                                   Delete
                                 </Button>
@@ -9203,6 +9501,16 @@ const Editemployee = () => {
                                   variant="contained"
                                   color="warning"
                                   onClick={() => setOpenDocModal(false)}
+                                  sx={{
+                                    px: 4,
+                                    borderRadius: 2,
+                                    color: "#fff",
+                                    textTransform: "none",
+                                    bgcolor: "#F97316",
+                                    "&:hover": {
+                                      bgcolor: "#EA580C",
+                                    },
+                                  }}
                                 >
                                   Cancel
                                 </Button>
@@ -9214,7 +9522,7 @@ const Editemployee = () => {
                         </Dialog>
 
                         {/* ================= FILE ACTIONS ================= */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
                           <IconButton component="label" color="warning">
                             <input
@@ -9261,7 +9569,7 @@ const Editemployee = () => {
                             Cancel
                           </Button>
 
-                        </Box>
+                        </Box> */}
 
                       </form>
                     )}
@@ -9651,6 +9959,16 @@ const Editemployee = () => {
                         variant="contained"
                         type="submit"
                         loading={isLoading}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          color: "#fff",
+                          px: 4,
+                          bgcolor: "#0D9488",
+                          "&:hover": {
+                            bgcolor: "#0F766E",
+                          },
+                        }}
                       >
                         Save
                       </LoadingButton>
@@ -9684,6 +10002,21 @@ const Editemployee = () => {
                             }
                           });
                         }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#DC2626",
+                          color: "#fff",
+                          boxShadow: "none",
+                          "&:hover": {
+                            bgcolor: "#B91C1C",
+                            boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                          },
+                          "&:active": {
+                            bgcolor: "#991B1B",
+                          },
+                        }}
                       >
                         Delete
                       </Button>
@@ -9699,8 +10032,18 @@ const Editemployee = () => {
                         onClick={() => {
                           setScreen(0);
                         }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          color: "#fff",
+                          textTransform: "none",
+                          bgcolor: "#F97316",
+                          "&:hover": {
+                            bgcolor: "#EA580C",
+                          },
+                        }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                     <Popup
@@ -10449,6 +10792,16 @@ const Editemployee = () => {
                               loading={loading}
                               variant="contained"
                               onClick={handleSubmit}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
                               Save
                             </LoadingButton>
@@ -10481,6 +10834,21 @@ const Editemployee = () => {
                                 });
 
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                  boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                },
+                                "&:active": {
+                                  bgcolor: "#991B1B",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
@@ -10489,14 +10857,21 @@ const Editemployee = () => {
                               color="warning"
                               variant="contained"
                               onClick={() => {
-
                                 resetForm();
-
                                 setOpenItemServiceModal(false);
-
+                              }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                color: "#fff",
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
                               }}
                             >
-                              Cancel
+                              Back
                             </Button>
 
                           </DialogActions>
@@ -10535,7 +10910,7 @@ const Editemployee = () => {
 
 
                         {/* ================= ACTION BUTTONS ================= */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
                           <LoadingButton type="submit" variant="contained">
                             Save
@@ -10559,7 +10934,7 @@ const Editemployee = () => {
                             Cancel
                           </Button>
 
-                        </Box>
+                        </Box> */}
 
                       </form>
                     )}
@@ -10570,331 +10945,396 @@ const Editemployee = () => {
             </Box>
           ) : false}
 
+          {/* Parent Form - school login */}
           {show == "15" ? (
-            <Paper elevation={3} sx={{ margin: "10px" }}>
-              <Formik
-                initialValues={ParentInitialValue}
-                validationSchema={validationSchema14}
-                enableReinitialize={true}
-                onSubmit={(values, setSubmitting) => {
-                  setTimeout(() => {
-                    Fnsave(values);
-                  }, 100);
-                }}
-              // onSubmit={(values, actions) => {
-              //   actions.setTouched({
-              //     code1: true,
-              //     name1: true,
-              //     mobilenumber: true,
-              //     emailid: true,
-              //     address: true,
-              //   });
+            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+              {/* LEFT: shared Form Sections sidebar — same as Personnel */}
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                  <Formik
+                    initialValues={ParentInitialValue}
+                    validationSchema={validationSchema14}
+                    enableReinitialize={true}
+                    onSubmit={(values, setSubmitting) => {
+                      setTimeout(() => {
+                        Fnsave(values);
+                      }, 100);
+                    }}
+                  // onSubmit={(values, actions) => {
+                  //   actions.setTouched({
+                  //     code1: true,
+                  //     name1: true,
+                  //     mobilenumber: true,
+                  //     emailid: true,
+                  //     address: true,
+                  //   });
 
-              //   if (Object.keys(actions.errors || {}).length > 0) return;
+                  //   if (Object.keys(actions.errors || {}).length > 0) return;
 
-              //   Fnsave(values);
-              // }}
-              >
-                {({
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  isSubmitting,
-                  values,
-                  handleSubmit,
-                  setFieldValue,
-                }) => (
-                  <form
-                    onSubmit={handleSubmit}>
-                    {/* {JSON.stringify(errors)} */}
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          name="code1"
-                          type="text"
-                          id="code1"
-                          label="Code"
-                          variant="standard"
-                          placeholder="Auto"
-                          focused
-                          // required
-                          value={values.code1}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code1 && !!errors.code1}
-                          helperText={touched.code1 && errors.code1}
+                  //   Fnsave(values);
+                  // }}
+                  >
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      isSubmitting,
+                      values,
+                      handleSubmit,
+                      setFieldValue,
+                    }) => (
+                      <form
+                        onSubmit={handleSubmit}>
+                        {/* {JSON.stringify(errors)} */}
+
+                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              bgcolor: "#EFF6FF",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: 18,
+                            }}
+                          >
+                            👪
+                          </Box>
+
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#4F46E5"
+                            >
+                              Parents Details
+                            </Typography>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              Parent information and location details
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          display="grid"
+                          gap="20px"
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          // gap="30px"
                           sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
                             },
                           }}
-                          InputProps={{ readOnly: true }}
-                        // autoFocus
-                        />
-                      ) : (
-                        <TextField
-                          name="code1"
-                          type="text"
-                          id="code1"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          // required
-                          value={values.code1}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code1 && !!errors.code1}
-                          helperText={touched.code1 && errors.code1}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          autoFocus
-                        />
-                      )}
-                      <TextField
-                        name="name1"
-                        type="text"
-                        id="name1"
-                        label={
-                          <>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.name1}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.name1 && !!errors.name1}
-                        helperText={touched.name1 && errors.name1}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        // required
-                        autoFocus={CompanyAutoCode == "Y"}
-                      />
-
-                      <TextField
-                        name="mobilenumber"
-                        id="mobilenumber"
-                        label={
-                          <>
-                            Contact Mobile Number
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.mobilenumber}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          // Only allow numbers and max 10 digits
-                          if (/^\d{0,10}$/.test(value)) {
-                            handleChange(e);
-                          }
-                        }}
-                        error={!!touched.mobilenumber && !!errors.mobilenumber}
-                        helperText={touched.mobilenumber && errors.mobilenumber}
-                        inputProps={{ maxLength: 10 }}
-                        sx={{ backgroundColor: "#ffffff" }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'left' }
-                          }
-                        }}
-                      />
-                      <TextField
-                        name="emailid"
-                        type="text"
-                        id="emailid"
-                        // label="Email ID"
-                        label={
-                          <>
-                            Email ID
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.emailid}
-                        error={!!touched.emailid && !!errors.emailid}
-                        helperText={touched.emailid && errors.emailid}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      // autoFocus
-                      />
-
-                      <TextField
-                        name="address"
-                        type="text"
-                        id="address"
-                        // label="Address"
-                        label={
-                          <>
-                            Address
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        multiline
-                        minRows={1}
-                        maxRows={5}
-                        value={values.address}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\s{2,}/g, " "); // avoid double spaces
-                          setFieldValue("address", value);
-                        }}
-                        error={!!touched.address && !!errors.address}
-                        helperText={touched.address && errors.address}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      />
-
-                      {/* <CheckinAutocomplete
-                      id="locality"
-                      name="locality"
-                      label="Locality"
-                      // label={
-                      //   <>
-                      //     Locality
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </>
-                      // }
-                      variant="outlined"
-                      value={values.locality}
-                      onChange={(newValue) => {
-                        setFieldValue("locality", newValue);
-                        console.log(newValue, "--newvalue locality");
-                        console.log(newValue.RecordID, "locality RecordID");
-                      }}
-                      error={!!touched.locality && !!errors.locality}
-                      helperText={touched.locality && errors.locality}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"EmployeeID=${recID} AND CompanyID=${CompanyID}","Any":""}}`}
-                    /> */}
-
-
-                      <TextField
-                        name="maplink"
-                        type="text"
-                        id="maplink"
-                        label="Map Location"
-                        variant="standard"
-                        focused
-                        value={values.maplink}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // error={!!touched.maplink && !!errors.maplink}
-                        // helperText={touched.maplink && errors.maplink}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      />
-                      {/* <CheckinAutocomplete
-                      id="ReferenceBy"
-                      name="ReferenceBy"
-                      label="Partner Reference"
-                      variant="outlined"
-                      value={values.ReferenceBy}
-                      onChange={(newValue) => {
-                        setFieldValue("ReferenceBy", newValue);
-                        // console.log(newValue, "--newvalue ReferenceBy");
-                        // console.log(newValue.RecordID, "ReferenceBy RecordID");
-                      }}
-                      // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
-                      // helperText={touched.ReferenceBy && errors.ReferenceBy}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"EmployeeID=${recID} AND ParentID=${CompanyID}","Any":""}}`}
-                    /> */}
-
-                      {/* panimage */}
-                    </Box>
-                    <Box display="flex" justifyContent="end" padding={1} gap="20px">
-
-                      {YearFlag == "true" ? (
-                        <LoadingButton
-                          color="secondary"
-                          variant="contained"
-                          type="submit"
-                          loading={isLoading}
                         >
-                          Save
-                        </LoadingButton>
-                      ) : (
-                        <Button
-                          color="secondary"
-                          variant="contained"
-                          disabled={true}
-                        >
-                          Save
-                        </Button>
-                      )}
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              name="code1"
+                              type="text"
+                              id="code1"
+                              label="Code"
+                              variant="outlined"
+                              size="small"
+                              placeholder="Auto"
+                              // required
+                              value={values.code1}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code1 && !!errors.code1}
+                              helperText={touched.code1 && errors.code1}
+                              sx={{
+                                backgroundColor: "#ffffff", // Set the background to white
+                                "& .MuiFilledInput-root": {
+                                  backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                },
+                              }}
+                              InputProps={{ readOnly: true }}
+                            // autoFocus
+                            />
+                          ) : (
+                            <TextField
+                              name="code1"
+                              type="text"
+                              id="code1"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              variant="outlined"
+                              size="small"
+                              // required
+                              value={values.code1}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code1 && !!errors.code1}
+                              helperText={touched.code1 && errors.code1}
+                              sx={{
+                                backgroundColor: "#ffffff", // Set the background to white
+                                "& .MuiFilledInput-root": {
+                                  backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                },
+                              }}
+                              autoFocus
+                            />
+                          )}
+                          <TextField
+                            name="name1"
+                            type="text"
+                            id="name1"
+                            label={
+                              <>
+                                Name
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            value={values.name1}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.name1 && !!errors.name1}
+                            helperText={touched.name1 && errors.name1}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            // required
+                            autoFocus={CompanyAutoCode == "Y"}
+                          />
 
-                      <Button
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          setScreen(0);
+                          <TextField
+                            name="mobilenumber"
+                            id="mobilenumber"
+                            label={
+                              <>
+                                Contact Mobile Number
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            value={values.mobilenumber}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              // Only allow numbers and max 10 digits
+                              if (/^\d{0,10}$/.test(value)) {
+                                handleChange(e);
+                              }
+                            }}
+                            error={!!touched.mobilenumber && !!errors.mobilenumber}
+                            helperText={touched.mobilenumber && errors.mobilenumber}
+                            inputProps={{ maxLength: 10 }}
+                            sx={{ backgroundColor: "#ffffff" }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'left' }
+                              }
+                            }}
+                          />
+                          <TextField
+                            name="emailid"
+                            type="text"
+                            id="emailid"
+                            // label="Email ID"
+                            label={
+                              <>
+                                Email ID
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            value={values.emailid}
+                            error={!!touched.emailid && !!errors.emailid}
+                            helperText={touched.emailid && errors.emailid}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                          // autoFocus
+                          />
+
+                          <TextField
+                            name="address"
+                            type="text"
+                            id="address"
+                            // label="Address"
+                            label={
+                              <>
+                                Address
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            multiline
+                            minRows={1}
+                            maxRows={5}
+                            value={values.address}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\s{2,}/g, " "); // avoid double spaces
+                              setFieldValue("address", value);
+                            }}
+                            error={!!touched.address && !!errors.address}
+                            helperText={touched.address && errors.address}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                          />
+
+                          {/* <CheckinAutocomplete
+                        id="locality"
+                        name="locality"
+                        label="Locality"
+                        // label={
+                        //   <>
+                        //     Locality
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </>
+                        // }
+                        variant="outlined"
+                        value={values.locality}
+                        onChange={(newValue) => {
+                          setFieldValue("locality", newValue);
+                          console.log(newValue, "--newvalue locality");
+                          console.log(newValue.RecordID, "locality RecordID");
                         }}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                  </form>
-                )}
-              </Formik>
-            </Paper>
+                        error={!!touched.locality && !!errors.locality}
+                        helperText={touched.locality && errors.locality}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"EmployeeID=${recID} AND CompanyID=${CompanyID}","Any":""}}`}
+                      /> */}
+
+
+                          <TextField
+                            name="maplink"
+                            type="text"
+                            id="maplink"
+                            label="Map Location"
+                            variant="outlined"
+                            size="small"
+                            value={values.maplink}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            // error={!!touched.maplink && !!errors.maplink}
+                            // helperText={touched.maplink && errors.maplink}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                          />
+                          {/* <CheckinAutocomplete
+                        id="ReferenceBy"
+                        name="ReferenceBy"
+                        label="Partner Reference"
+                        variant="outlined"
+                        value={values.ReferenceBy}
+                        onChange={(newValue) => {
+                          setFieldValue("ReferenceBy", newValue);
+                          // console.log(newValue, "--newvalue ReferenceBy");
+                          // console.log(newValue.RecordID, "ReferenceBy RecordID");
+                        }}
+                        // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
+                        // helperText={touched.ReferenceBy && errors.ReferenceBy}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"EmployeeID=${recID} AND ParentID=${CompanyID}","Any":""}}`}
+                      /> */}
+
+                          {/* panimage */}
+                        </Box>
+                        <Box display="flex" justifyContent="end" padding={1} gap="20px">
+
+                          {YearFlag == "true" ? (
+                            <LoadingButton
+                              color="secondary"
+                              variant="contained"
+                              type="submit"
+                              loading={isLoading}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
+                          ) : (
+                            <Button
+                              color="secondary"
+                              variant="contained"
+                              disabled={true}
+                            >
+                              Save
+                            </Button>
+                          )}
+
+                          <Button
+                            variant="contained"
+                            onClick={() => navigate(-1)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Paper>
+              </Box>
+            </Box>
           ) : (
             false
           )}
@@ -11366,6 +11806,17 @@ const Editemployee = () => {
                           variant="contained"
                           type="submit"
                           loading={isLoading}
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            color: "#fff",
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": {
+                              bgcolor: "#0F766E",
+                            },
+                          }}
+
                         >
                           Save
                         </LoadingButton>
@@ -11374,6 +11825,15 @@ const Editemployee = () => {
                           color="secondary"
                           variant="contained"
                           disabled={true}
+                          sx={{
+                            px: 4,
+                            borderRadius: 2,
+                            textTransform: "none",
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C",
+                            },
+                          }}
                         >
                           Save
                         </Button>
@@ -11400,8 +11860,17 @@ const Editemployee = () => {
                         onClick={() => {
                           setScreen(0);
                         }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#F97316",
+                          "&:hover": {
+                            bgcolor: "#EA580C",
+                          },
+                        }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </form>
@@ -11456,6 +11925,7 @@ const Editemployee = () => {
                         onReset={() => {
                           selectCellRowData({ rowData: {}, mode: "A", field: "" });
                           resetForm();
+                          //setOpenContractPopup(true);
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
@@ -12504,14 +12974,31 @@ const Editemployee = () => {
                             </Box>
 
                             <Box display="flex" gap={1.5}>
-                              {/* Cancel Button */}
-                              <Button
-                                variant="outlined"
-                                onClick={() => setOpen(false)}
-                                sx={{ textTransform: "none", borderRadius: 2 }}
+
+                              {/* Save Button - ORIGINAL LOGIC */}
+                              <LoadingButton
+                                color="primary"
+                                variant="contained"
+                                loading={isLoading}
+                                onClick={() => {
+                                  handleSubmit();  // ✅ ORIGINAL Formik submit
+                                  setTimeout(() => {
+                                    setOpen(false);
+                                  }, 300);
+                                }}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  color: "#fff",
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                               >
-                                Cancel
-                              </Button>
+                                Save
+                              </LoadingButton>
 
                               {/* Delete Button - ORIGINAL LOGIC */}
                               {funMode === "E" && (
@@ -12534,37 +13021,48 @@ const Editemployee = () => {
                                       }
                                     });
                                   }}
+                                  sx={{
+                                    px: 4,
+                                    borderRadius: 2,
+                                    textTransform: "none",
+                                    bgcolor: "#DC2626",
+                                    color: "#fff",
+                                    boxShadow: "none",
+                                    "&:hover": {
+                                      bgcolor: "#B91C1C",
+                                      boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                    },
+                                    "&:active": {
+                                      bgcolor: "#991B1B",
+                                    },
+                                  }}
                                 >
                                   Delete
                                 </Button>
                               )}
 
-                              {/* Save Button - ORIGINAL LOGIC */}
-                              <LoadingButton
-                                color="primary"
-                                variant="contained"
-                                loading={isLoading}
-                                onClick={() => {
-                                  handleSubmit();  // ✅ ORIGINAL Formik submit
-                                  setTimeout(() => {
-                                    setOpen(false);
-                                  }, 300);
-                                }}
+                              {/* Cancel Button */}
+                              <Button
+                                variant="standard"
+                                onClick={() => setOpen(false)}
                                 sx={{
-                                  textTransform: "none",
+                                  px: 4,
                                   borderRadius: 2,
-                                  backgroundColor: "#0E9F9A",
-                                  "&:hover": { backgroundColor: "#0E9F9A" },
+                                  textTransform: "none",
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
                                 }}
                               >
-                                Save
-                              </LoadingButton>
+                                Back
+                              </Button>
                             </Box>
                           </DialogActions>
                         </Dialog>
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
-                        <Box display="flex" justifyContent="flex-end" gap={1.5} flexWrap="wrap">
+                        {/* <Box display="flex" justifyContent="flex-end" gap={1.5} flexWrap="wrap">
                           {funMode === "E" && is003Subscription && flag !== "P" && ["OF", "TF"].includes(values?.BillingUnits || "") && (
                             <Button
                               variant="outlined"
@@ -12657,7 +13155,7 @@ const Editemployee = () => {
                           >
                             Save
                           </LoadingButton>
-                        </Box>
+                        </Box> */}
 
                         <Popup title="vendor" openPopup={openvenPopup} setOpenPopup={setOpenvenPopup}>
                           <Listviewpopup accessID="2100" screenName="Vendor" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
@@ -13373,6 +13871,16 @@ const Editemployee = () => {
                         variant="contained"
                         type="submit"
                         loading={isLoading}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          color: "#fff",
+                          px: 4,
+                          bgcolor: "#0D9488",
+                          "&:hover": {
+                            bgcolor: "#0F766E",
+                          },
+                        }}
                       >
                         Save
                       </LoadingButton>
@@ -13405,6 +13913,21 @@ const Editemployee = () => {
                             }
                           });
                         }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#DC2626",
+                          color: "#fff",
+                          boxShadow: "none",
+                          "&:hover": {
+                            bgcolor: "#B91C1C",
+                            boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                          },
+                          "&:active": {
+                            bgcolor: "#991B1B",
+                          },
+                        }}
                       >
                         Delete
                       </Button>
@@ -13419,6 +13942,15 @@ const Editemployee = () => {
                         variant="contained"
                         onClick={() => {
                           setScreen(0);
+                        }}
+                        sx={{
+                          px: 4,
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#F97316",
+                          "&:hover": {
+                            bgcolor: "#EA580C",
+                          },
                         }}
                       >
                         Cancel
@@ -13712,18 +14244,7 @@ const Editemployee = () => {
                           mt={3}
                           gap={1.5}
                         >
-                          <Button
-                            variant="outlined"
-                            onClick={() => {
-                              setScreen(0);
-                            }}
-                            sx={{
-                              borderRadius: 2,
-                              textTransform: "none",
-                            }}
-                          >
-                            Cancel
-                          </Button>
+
 
                           {YearFlag == "true" ? (
                             <LoadingButton
@@ -13732,8 +14253,14 @@ const Editemployee = () => {
                               type="submit"
                               loading={isLoading}
                               sx={{
-                                borderRadius: 2,
                                 textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
                               }}
                             >
                               Save
@@ -13750,6 +14277,24 @@ const Editemployee = () => {
                               Save
                             </Button>
                           )}
+
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
                         </Box>
                       </form>
                     )}
@@ -14157,24 +14702,44 @@ const Editemployee = () => {
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
                         <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-                          <Button
-                            type="reset"
-                            variant="outlined"
-                            onClick={() => setScreen(0)}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
-                          >
-                            Cancel
-                          </Button>
+
 
                           <Button
                             color="secondary"
                             variant="contained"
                             disabled={isLoading}
                             onClick={() => Invsave2()}
-                            sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#0E9F9A", "&:hover": { backgroundColor: "#4338CA" } }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             SAVE
                           </Button>
+
+                          <Button
+                            type="reset"
+                            variant="contained"
+                            onClick={() => setScreen(0)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
+
                         </Box>
                       </form>
                     )}
@@ -14247,6 +14812,7 @@ const Editemployee = () => {
                         onReset={() => {
                           selectCellRowData({ rowData: {}, mode: "A", field: "" });
                           resetForm();
+                          setOpenLeaveModal(true);
                         }}
                       >
 
@@ -14507,55 +15073,79 @@ const Editemployee = () => {
                             sx={{
                               borderTop: "1px solid #E5E7EB",
                               p: 2,
-                              justifyContent: "space-between",
+                              justifyContent: "flex-end",
                             }}
                           >
-                            <Button
-                              color="error"
-                              variant="outlined"
-                              onClick={() => {
-                                Swal.fire({
-                                  title: errorMsgData.Warningmsg.Delete,
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonText: "Confirm",
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    LCsaveFn(
-                                      values,
-                                      resetForm,
-                                      "harddelete"
-                                    );
-
-                                    setOpenLeaveModal(false);
-                                  }
-                                });
-                              }}
-                            >
-                              Delete
-                            </Button>
-
                             <Box display="flex" gap={1}>
-                              <Button
-                                variant="outlined"
-                                onClick={() => setOpenLeaveModal(false)}
-                              >
-                                Cancel
-                              </Button>
-
                               <LoadingButton
                                 loading={loading}
                                 variant="contained"
                                 onClick={handleSubmit}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  color: "#fff",
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                               >
                                 Save
                               </LoadingButton>
+
+                              <Button
+                                variant="contained"
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: errorMsgData.Warningmsg.Delete,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      LCsaveFn(values, resetForm, "harddelete");
+                                      setOpenLeaveModal(false);
+                                    }
+                                  });
+                                }}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  color: "#fff",
+                                  bgcolor: "#DC2626",
+                                  "&:hover": {
+                                    bgcolor: "#B91C1C",
+                                  },
+                                }}
+                              >
+                                Delete
+                              </Button>
+
+                              <Button
+                                variant="contained"
+                                onClick={() => setOpenLeaveModal(false)}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  color: "#fff",
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
+                              >
+                                Cancel
+                              </Button>
                             </Box>
                           </DialogActions>
                         </Dialog>
 
                         {/* ================= BUTTONS ================= */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
                           <LoadingButton
                             type="submit"
@@ -14593,7 +15183,7 @@ const Editemployee = () => {
                             Cancel
                           </Button>
 
-                        </Box>
+                        </Box> */}
 
                       </form>
                     )}
@@ -14885,7 +15475,7 @@ const Editemployee = () => {
                               py: 2,
                               borderTop: "1px solid #E5E7EB",
                               justifyContent: "flex-end",
-                              gap: 2,
+                              gap: 1,
                             }}
                           >
                             <LoadingButton
@@ -14894,13 +15484,22 @@ const Editemployee = () => {
                                 console.log("Save Clicked");
                                 handleSubmit();
                               }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                color: "#fff",
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
                               Save
                             </LoadingButton>
 
                             {YearFlag === "true" && funMode !== "A" && (
                               <Button
-                                color="error"
                                 variant="contained"
                                 onClick={() => {
                                   Swal.fire({
@@ -14914,15 +15513,34 @@ const Editemployee = () => {
                                     }
                                   });
                                 }}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  color: "#fff",
+                                  bgcolor: "#DC2626",
+                                  "&:hover": {
+                                    bgcolor: "#B91C1C",
+                                  },
+                                }}
                               >
                                 Delete
                               </Button>
                             )}
 
                             <Button
-                              color="warning"
                               variant="contained"
                               onClick={() => setOpenLocalityModal(false)}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                color: "#fff",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
                             >
                               Cancel
                             </Button>
@@ -14930,7 +15548,7 @@ const Editemployee = () => {
                         </Dialog>
 
                         {/* Action Buttons */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                           {YearFlag === "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -14977,7 +15595,7 @@ const Editemployee = () => {
                           >
                             Cancel
                           </Button>
-                        </Box>
+                        </Box> */}
                       </form>
                     )}
                   </Formik>
@@ -15275,17 +15893,31 @@ const Editemployee = () => {
 
                           <DialogActions>
 
-                            <Button
-                              variant="outlined"
-                              color="warning"
-                              onClick={() => setOpenItemCustodyModal(false)}
+                            <LoadingButton
+                              type="submit"
+                              variant="contained"
+                              loading={isLoading}
+                              onClick={(handleSubmit)}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
-                              Cancel
-                            </Button>
+                              Save
+                            </LoadingButton>
+
+
+
 
                             {funMode === "E" && (
                               <Button
-                                variant="outlined"
+                                variant="contained"
                                 color="error"
                                 onClick={() => {
                                   Swal.fire({
@@ -15299,36 +15931,71 @@ const Editemployee = () => {
                                     }
                                   });
                                 }}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  bgcolor: "#DC2626",
+                                  color: "#fff",
+                                  boxShadow: "none",
+                                  "&:hover": {
+                                    bgcolor: "#B91C1C",
+                                    boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                  },
+                                  "&:active": {
+                                    bgcolor: "#991B1B",
+                                  },
+                                }}
                               >
                                 Delete
                               </Button>
                             )}
 
-                            <LoadingButton
-                              type="submit"
+
+                            <Button
                               variant="contained"
-                              loading={isLoading}
-                              onClick={(handleSubmit)}
+                              color="warning"
+                              onClick={() => setOpenItemCustodyModal(false)}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
                             >
-                              Save
-                            </LoadingButton>
+                              Cancel
+                            </Button>
 
                           </DialogActions>
                         </Dialog>
 
                         {/* ================= BUTTONS ================= */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
 
-                          <Button
-                            variant="outlined"
-                            color="warning"
-                            onClick={() => setScreen(0)}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
+                         
+                          
+                          <LoadingButton
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            loading={isLoading}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
-                            Cancel
-                          </Button>
+                            Save
+                          </LoadingButton>
 
-                          {funMode === "E" && (
+{funMode === "E" && (
                             <Button
                               variant="outlined"
                               color="error"
@@ -15344,29 +16011,43 @@ const Editemployee = () => {
                                   }
                                 });
                               }}
-                              sx={{ textTransform: "none", borderRadius: 2 }}
+                             sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                  boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                },
+                                "&:active": {
+                                  bgcolor: "#991B1B",
+                                },
+                              }}
                             >
                               Delete
                             </Button>
                           )}
 
-                          <LoadingButton
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            loading={isLoading}
+                           <Button
+                            variant="outlined"
+                            color="warning"
+                            onClick={() => setScreen(0)}
                             sx={{
-                              textTransform: "none",
+                              px: 4,
                               borderRadius: 2,
-                              backgroundColor: "#0D9488",
-                              "&:hover": { backgroundColor: "#0D9488" },
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
                             }}
                           >
-                            Save
-                          </LoadingButton>
-
-                        </Box>
-
+                            Cancel
+                          </Button>
+                        </Box> */}
                       </form>
                     )}
                   </Formik>
@@ -15731,14 +16412,33 @@ const Editemployee = () => {
                             variant="contained"
                             type="submit"
                             loading={isLoading}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             Save
                           </LoadingButton>
 
                           <Button
                             color="warning"
-                            variant="outlined"
+                            variant="contained"
                             onClick={() => setScreen(0)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
                           >
                             Cancel
                           </Button>
@@ -15929,11 +16629,21 @@ const Editemployee = () => {
                               variant="contained"
                               type="submit"
                               loading={isLoading}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                             >
                               Save
                             </LoadingButton>
                           ) : (
-                            <Button color="secondary" variant="contained" disabled>
+                            <Button color="secondary" variant="contained" disabled >
                               Save
                             </Button>
                           )}
@@ -15941,10 +16651,19 @@ const Editemployee = () => {
                           <Button
                             type="reset"
                             color="warning"
-                            variant="outlined"
+                            variant="contained"
                             onClick={() => setScreen(0)}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -16147,153 +16866,160 @@ const Editemployee = () => {
 
           {/* COURSE ATTENDANCE */}
           {show == "23" ? (
-            <Paper elevation={3} sx={{ margin: "10px" }}>
-              <Formik
-                initialValues={CourseAttendenceInitialValue}
-                enableReinitialize={true}
-                validationSchema={validationSchema23}
-                onSubmit={(values, { resetForm }) => {
-                  setTimeout(() => {
-                    courseAttendanceSaveFn(values, resetForm, false);
-                  }, 100);
-                }}
-              >
-                {({
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  isSubmitting,
-                  values,
-                  handleSubmit,
-                  resetForm,
-                  setFieldValue,
-                }) => (
-                  <form
-                    onSubmit={handleSubmit}
-                    onReset={() => {
-                      selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                      resetForm();
+            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 3,
+                  }}
+                >
+                  <Formik
+                    initialValues={CourseAttendenceInitialValue}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema23}
+                    onSubmit={(values, { resetForm }) => {
+                      setTimeout(() => {
+                        courseAttendanceSaveFn(values, resetForm, false);
+                      }, 100);
                     }}
                   >
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      <FormControl sx={{ gap: formGap }}>
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="Code"
-                          name="Code"
-                          value={values.Code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Code"
-                          sx={{
-                            //gridColumn: "span 2",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
-
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="Name"
-                          name="Name"
-                          value={values.Name}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Name"
-                          sx={{
-                            //gridColumn: "span 2",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
-                      </FormControl>
-
-                      <Stack
-                        sx={{
-                          gap: formGap,
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      isSubmitting,
+                      values,
+                      handleSubmit,
+                      resetForm,
+                      setFieldValue,
+                    }) => (
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenCourseModal(true);
                         }}
                       >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
+                        {/* ================= HEADER ================= */}
+                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#E0E7FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 16 }}>📋</Typography>
+                          </Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                            Course Attendance
+                          </Typography>
+                        </Box>
 
-                      <Box>
-                        <Box
-                          m="5px 0 0 0"
-                          //height={dataGridHeight}
-                          height="50vh"
-                          sx={{
-                            "& .MuiDataGrid-root": {
-                              border: "none",
-                            },
-                            "& .MuiDataGrid-cell": {
-                              borderBottom: "none",
-                            },
-                            "& .name-column--cell": {
-                              color: colors.greenAccent[300],
-                            },
-                            "& .MuiDataGrid-columnHeaders": {
-                              backgroundColor: colors.blueAccent[800],
-                              borderBottom: "none",
-                            },
-                            "& .MuiDataGrid-virtualScroller": {
-                              backgroundColor: colors.primary[400],
-                            },
-                            "& .MuiDataGrid-footerContainer": {
-                              borderTop: "none",
-                              backgroundColor: colors.blueAccent[800],
-                            },
-                            "& .MuiCheckbox-root": {
-                              color: `${colors.greenAccent[200]} !important`,
-                            },
-                            "& .odd-row": {
-                              backgroundColor: "",
-                              color: "", // Color for odd rows
-                            },
-                            "& .even-row": {
-                              backgroundColor: "#D3D3D3",
-                              color: "", // Color for even rows
-                            },
-                          }}
-                        >
+                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                          Manage Course Attendance information and details
+                        </Typography>
+
+                        {/* ================= TOP SECTION (Code + Name + Photo) ================= */}
+                        <Box display="flex" gap={3} flexWrap="wrap">
+                          <Box
+                            flex={1}
+                            minWidth={200}
+                            display="flex"
+                            flexDirection="column"
+                            gap={2}
+                            mt={3}
+                          >
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              type="text"
+                              id="Code"
+                              name="Code"
+                              value={values.Code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              label="Code"
+                              InputProps={{ readOnly: true }}
+                            />
+
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              type="text"
+                              id="Name"
+                              name="Name"
+                              value={values.Name}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              label="Name"
+                              InputProps={{ readOnly: true }}
+                            />
+                          </Box>
+
+                          <Box sx={{ width: 250, flexShrink: 0 }}>
+                            <Stack
+                              sx={{
+                                alignContent: "center",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Avatar
+                                variant="rounded"
+                                src={userimg}
+                                sx={{ width: "200px", height: "120px" }}
+                              />
+                            </Stack>
+                          </Box>
+                        </Box>
+
+                        {/* ================= DATA GRID (full width) ================= */}
+                        <Box sx={{ height: "45vh", mt: 2 }}>
                           <DataGrid
                             sx={{
-                              "& .MuiDataGrid-footerContainer": {
-                                height: dataGridHeaderFooterHeight,
-                                minHeight: dataGridHeaderFooterHeight,
+                              "& .MuiDataGrid-root": { border: "none" },
+                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: "#0D9488",
+                                borderBottom: "none",
                               },
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: "#fff",
+                                fontWeight: 700,
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "1px solid #E5E7EB",
+                                backgroundColor: "#0D9488",
+                                height: "40px",
+                                minHeight: "40px",
+                              },
+                              "& .MuiTablePagination-root": { color: "#fff" },
+                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
+                              "& .odd-row": { backgroundColor: "" },
+                              "& .even-row": { backgroundColor: "#F3F4F6" },
+                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
                             }}
                             rows={explorelistViewData}
                             columns={columns}
@@ -16302,9 +17028,7 @@ const Editemployee = () => {
                             pageSize={pageSize}
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
+                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                             onCellClick={(params) => {
                               selectCellRowData({
                                 rowData: params.row,
@@ -16312,6 +17036,7 @@ const Editemployee = () => {
                                 field: params.field,
                                 setFieldValue,
                               });
+                              setOpenCourseModal(true);
                             }}
                             rowsPerPageOptions={[5, 10, 20]}
                             pagination
@@ -16335,198 +17060,293 @@ const Editemployee = () => {
                             }}
                           />
                         </Box>
-                      </Box>
-                      <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                        <CheckinAutocomplete
-                          id="project"
-                          name="project"
-                          label={
-                            <>
-                              {getBusinessCaption("Project", "Project")}
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="outlined"
-                          value={values.project}
-                          onChange={(newValue) => {
-                            if (!newValue) {
-                              setFieldValue("project", null);
-                              return;
-                            }
-                            setFieldValue("project", {
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
-                            });
-                          }}
-                          error={!!touched.project && !!errors.project}
-                          helperText={touched.project && errors.project}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2054",
-                              ScreenName: "Project",
-                              VerticalLicense: Subscriptionlastthree,
-                              Filter: `parentID=${CompanyID}`,
-                              Any: "",
+
+                        {/* ================= FORM FIELDS (POPUP) ================= */}
+                        <Dialog
+                          open={openCourseModal}
+                          onClose={() => setOpenCourseModal(false)}
+                          maxWidth="md"
+                          fullWidth
+                          PaperProps={{
+                            sx: {
+                              borderRadius: 3,
                             },
-                          })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                        />
-                        <CheckinAutocomplete
-                          id="shift"
-                          name="shift"
-                          label={
-                            <span>
-                              Shift 1
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </span>
-                          }
-                          variant="outlined"
-                          value={values.shift}
-                          error={!!touched.shift && !!errors.shift}
-                          helperText={touched.shift && errors.shift}
-                          onChange={(newValue) => {
-                            if (!newValue) {
-                              setFieldValue("shift", null);
-                              return;
-                            }
-                            setFieldValue("shift", {
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
-                            });
-                            console.log(newValue, "--newvalue shift");
-                            console.log(newValue.RecordID, "shift RecordID");
                           }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2108",
-                              ScreenName: "Shift",
-                              VerticalLicense: Subscriptionlastthree,
-                              Filter: `CompanyID=${CompanyID}`,
-                              Any: "",
-                            },
-                          })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                        />
-                        <CheckinAutocomplete
-                          id="shift2"
-                          name="shift2"
-                          label="Shift 2"
-                          variant="outlined"
-                          value={values.shift2}
-                          error={!!touched.shift2 && !!errors.shift2}
-                          helperText={touched.shift2 && errors.shift2}
-                          onChange={(newValue) => {
-                            if (!newValue) {
-                              setFieldValue("shift2", null);
-                              return;
-                            }
-                            setFieldValue("shift2", {
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
-                            });
-                            console.log(newValue, "--newvalue shift2");
-                            console.log(newValue.RecordID, "shift2 RecordID");
-                          }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2108",
-                              ScreenName: "Shift2",
-                              VerticalLicense: Subscriptionlastthree,
-                              Filter: `CompanyID=${CompanyID}`,
-                              Any: "",
-                            },
-                          })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                        />
-                      </FormControl>
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="end"
-                      padding={1}
-                      // style={{ marginTop: "-35px" }}
-                      gap={2}
-                    >
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                      {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
+                        >
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="h6">
+                              {funMode === "A" ? "Add Course Attendance" : "Edit Course Attendance"}
+                            </Typography>
+
+                            <IconButton onClick={() => setOpenCourseModal(false)}>
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogTitle>
+
+                          <DialogContent
+                            sx={{
+                              pt: 3,
+                              "&.MuiDialogContent-root": {
+                                paddingTop: "24px",
+                              },
+                            }}
+                          >
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="repeat(2,minmax(0,1fr))"
+                              gap={2}
+                            >
+                              <CheckinAutocomplete
+                                id="project"
+                                name="project"
+                                label={
+                                  <>
+                                    {getBusinessCaption("Project", "Project")}
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                value={values.project}
+                                onChange={(newValue) => {
+                                  if (!newValue) {
+                                    setFieldValue("project", null);
+                                    return;
+                                  }
+                                  setFieldValue("project", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                }}
+                                error={!!touched.project && !!errors.project}
+                                helperText={touched.project && errors.project}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2054",
+                                    ScreenName: "Project",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <CheckinAutocomplete
+                                id="shift"
+                                name="shift"
+                                label={
+                                  <span>
+                                    Shift 1
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                value={values.shift}
+                                error={!!touched.shift && !!errors.shift}
+                                helperText={touched.shift && errors.shift}
+                                onChange={(newValue) => {
+                                  if (!newValue) {
+                                    setFieldValue("shift", null);
+                                    return;
+                                  }
+                                  setFieldValue("shift", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                  console.log(newValue, "--newvalue shift");
+                                  console.log(newValue.RecordID, "shift RecordID");
+                                }}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2108",
+                                    ScreenName: "Shift",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <CheckinAutocomplete
+                                id="shift2"
+                                name="shift2"
+                                label="Shift 2"
+                                variant="outlined"
+                                value={values.shift2}
+                                error={!!touched.shift2 && !!errors.shift2}
+                                helperText={touched.shift2 && errors.shift2}
+                                onChange={(newValue) => {
+                                  if (!newValue) {
+                                    setFieldValue("shift2", null);
+                                    return;
+                                  }
+                                  setFieldValue("shift2", {
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+                                  });
+                                  console.log(newValue, "--newvalue shift2");
+                                  console.log(newValue.RecordID, "shift2 RecordID");
+                                }}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2108",
+                                    ScreenName: "Shift2",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+                            </Box>
+                          </DialogContent>
+
+                          <DialogActions
+                            sx={{
+                              borderTop: "1px solid #E5E7EB",
+                              p: 2,
+                              gap: 1,
+                              justifyContent: "flex-end",
+                            }}
+                          >
+
+                            <Box display="flex" gap={1}>
+
+
+                              <LoadingButton
+                                color="secondary"
+                                variant="contained"
+                                loading={isLoading}
+                                onClick={handleSubmit}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                              >
+                                Save
+                              </LoadingButton>
+                              <Button
+                                variant="contained"
+                                onClick={() => setOpenCourseModal(false)}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </Box>
+
+
+                            <Button
+                              variant="contained"
+                              disabled={funMode === "A"}
+                              onClick={() => {
+                                Swal.fire({
+                                  title: errorMsgData.Warningmsg.Delete,
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "rgb(228, 128, 128)",
+                                  confirmButtonText: "Confirm",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    courseAttendanceSaveFn(values, resetForm, "harddelete");
+                                    setOpenCourseModal(false);
+                                  }
+                                });
+                              }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#DC2626",
+                                color: "#fff",
+                                "&:hover": {
+                                  bgcolor: "#B91C1C",
+                                },
+                                "&.Mui-disabled": {
+                                  bgcolor: "#F3F4F6",
+                                  color: "#9CA3AF",
+                                },
+                              }}
+                            >
+                              Delete
+                            </Button>
+
+
+                          </DialogActions>
+                        </Dialog>
+
+                        {/* ================= BOTTOM BUTTONS ================= */}
+                        {/* <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                          >
+                            Save
+                          </LoadingButton>
+
+                          <Button
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              Swal.fire({
+                                title: errorMsgData.Warningmsg.Delete,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  courseAttendanceSaveFn(values, resetForm, "harddelete");
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+
+                          <Button
+                            type="reset"
+                            color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Box> */}
+                      </form>
                     )}
-                    {YearFlag == "true" ? ( */}
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          Swal.fire({
-                            title: errorMsgData.Warningmsg.Delete,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Confirm",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              courseAttendanceSaveFn(values, resetForm, "harddelete");
-                            } else {
-                              return;
-                            }
-                          });
-                        }}
-                      >
-                        Delete
-                      </Button>
-                      {/* ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )} */}
-                      <Button
-                        type="reset"
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          setScreen(0);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                    {/* <Popup
-                    title="vendor"
-                    openPopup={openvenPopup}
-                    setOpenPopup={setOpenvenPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2100"
-                      screenName="Vendor"
-                      childToParent={childToParent}
-                      filterName={"parentID"}
-                      filterValue={CompanyID}
-                    />
-                  </Popup> */}
-                  </form>
-                )}
-              </Formik>
-            </Paper>
+                  </Formik>
+                </Paper>
+              </Box>
+            </Box>
           ) : (
             false
           )}

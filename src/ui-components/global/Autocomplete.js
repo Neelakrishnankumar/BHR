@@ -100,7 +100,6 @@ export const Productautocomplete = ({
           label={props.label || "Select Options"}
           error={!!error}
           helperText={error}
-          focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
