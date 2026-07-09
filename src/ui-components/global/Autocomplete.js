@@ -979,7 +979,7 @@ export const ProductautocompleteLevel = ({
           {...params}
           label={props.label || "Select Options"}
           {...props}
-          variant="standard"
+          variant="outlined"
           focused
           InputProps={{
             ...params.InputProps,
@@ -3396,8 +3396,7 @@ export const ItemGroupLookup = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -3471,8 +3470,7 @@ export const ItemsLookup = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
