@@ -49,6 +49,8 @@ const NewCreateCategoryMain = () => {
   const navigate = useNavigate();
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const params = useParams();
+  console.log(params, "--find Params");
+  
   const { state } = useLocation();
   const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -58,7 +60,7 @@ const NewCreateCategoryMain = () => {
   const AssessmentType = params.parentID1;
   //const parentID2 = params.parentID2;
   const SkillAssTypeID = state.SkillAssTypeID;
-  console.log("🚀 ~ NewCreateCategoryMain ~ SkillAssTypeID:", SkillAssTypeID)
+  console.log("🚀 ~ NewCreateCategoryMain ~ SkillAssTypeID: & AssessmentType", SkillAssTypeID,AssessmentType)
   const screenName = params.screenName;
   const mode = params.Mode;
 
@@ -181,6 +183,40 @@ const NewCreateCategoryMain = () => {
   //   disable: Yup.boolean(),
   // });
 
+  const assessmentConfig = {
+  SK: {
+    icon: "🎯",
+    title: "Skill Assessment",
+    summary:
+      "Evaluate and track employee skills to identify strengths and areas for improvement",
+  },
+  AP: {
+    icon: "📈",
+    title: "Appraisal",
+    summary:
+      "Assess employee performance and growth to support career development",
+  },
+  CL: {
+    icon: "🛡️",
+    title: "Compliance",
+    summary:
+      "Ensure adherence to policies, standards, and regulatory requirements",
+  },
+  SV: {
+    icon: "📋",
+    title: "Survey",
+    summary:
+      "Collect feedback and insights to improve processes and decision-making",
+  },
+  FB: {
+    icon: "💬",
+    title: "Feedback",
+    summary:
+      "Gather opinions and suggestions to enhance performance and engagement",
+  },
+};
+      const current = assessmentConfig[AssessmentType] || assessmentConfig.SK;
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -276,45 +312,36 @@ const NewCreateCategoryMain = () => {
               <form onSubmit={handleSubmit}>
 
               {/* ----- CARD HEADER ----- */}
-        <Box
-                    display="flex"
-                    alignItems="center"
-                    gap={1.5}
-                    mb={1}
-                    sx={{ px: 2, pt: 2 }}
-                  >
-                    {/* ICON */}
-                    <Box
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: "50%",
-                        backgroundColor: "#EFF6FF",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography sx={{ fontSize: 18 }}>
-                        🎯
-                      </Typography>
-                    </Box>
-                  
-                    {/* TITLE + SUBTITLE */}
-                    <Box>
-                      <Typography
-                        variant="subtitle1"
-                        fontWeight={700}
-                        color="#4F46E5"
-                      >
-                        Skill Assesment
-                      </Typography>
-                  
-                      <Typography variant="body2" color="text.secondary">
-                    Evaluate and track employee skills to identify strengths and areas for improvement
-                      </Typography>
-                    </Box>
-                  </Box>
+
+<Box display="flex" alignItems="center" gap={1.5} mb={1} sx={{ px: 2, pt: 2 }}>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>
+      {current.icon}
+    </Typography>
+  </Box>
+
+  {/* TITLE + SUBTITLE */}
+  <Box>
+    <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+      {current.title}
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+      {current.summary}
+    </Typography>
+  </Box>
+</Box>
 
                 <Box
                   display="grid"

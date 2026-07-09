@@ -351,7 +351,10 @@ const CreateSurvey = () => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+          <Box sx={{ height: "100vh", overflow: "auto" }}>
+             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+               <Box sx={{ p: 2, borderRadius: 3 }}>
+                 <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -448,9 +451,32 @@ const CreateSurvey = () => {
           </Box>
         </Box>
       </Paper>
+         </Box>
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
+       <Box
+                    display="flex"
+                    gap={3}
+                    alignItems="flex-start"
+                    flexWrap="wrap"
+                    sx={{ p: 1 }}
+                  >
+                    <Box
+                      flex={1}
+                      minWidth={0}
+                      display="flex"
+                      flexDirection="column"
+                      gap={3}
+                    >
+                      <Paper
+                        elevation={3}
+                        sx={{
+                          margin: "10px",
+                          backgroundColor: "#ffff",
+                          border: "1px solid #b9bcc0",
+                          borderRadius: 3,
+                        }}
+                      >
+                        <Formik
             initialValues={initialValues}
             onSubmit={(values, { resetForm }) => {
               setTimeout(() => {
@@ -472,6 +498,44 @@ const CreateSurvey = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 {/* {JSON.stringify(errors)} */}
+                  {/* ----- CARD HEADER ----- */}
+                                        <Box
+                                          display="flex"
+                                          alignItems="center"
+                                          gap={1.5}
+                                          mb={1}
+                                          sx={{ px: 2, pt: 2 }}
+                                        >
+                                          {/* ICON */}
+                                          <Box
+                                            sx={{
+                                              width: 36,
+                                              height: 36,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 18 }}>📋</Typography>
+                                          </Box>
+                
+                                          {/* TITLE + SUBTITLE */}
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#4F46E5"
+                                            >
+                                              Survey
+                                            </Typography>
+                
+                                            <Typography variant="body2" color="text.secondary">
+                                              Collect feedback and insights to improve processes and decision-making
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                 <Box
                   display="grid"
                   gap={formGap}
@@ -487,7 +551,8 @@ const CreateSurvey = () => {
                   {CompanyAutoCode === "Y" ? (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Code"
                       placeholder="Auto"
@@ -500,17 +565,36 @@ const CreateSurvey = () => {
                       error={!!touched.Code && !!errors.Code}
                       helperText={touched.Code && errors.Code}
                       sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{ readOnly: true }}
                     />
                   ) : (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label={
                         <>
@@ -530,18 +614,37 @@ const CreateSurvey = () => {
                       error={!!touched.Code && !!errors.Code}
                       helperText={touched.Code && errors.Code}
                       sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       autoFocus
                     />
                   )}
 
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     label={
                       <>
@@ -561,11 +664,29 @@ const CreateSurvey = () => {
                     error={!!touched.Name && !!errors.Name}
                     helperText={touched.Name && errors.Name}
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   {/* <FormControl
@@ -627,7 +748,8 @@ const CreateSurvey = () => {
                   /> */}
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     // label="Duration (In Days)"
                     label={
@@ -648,11 +770,29 @@ const CreateSurvey = () => {
                     error={!!touched.Duration && !!errors.Duration}
                     helperText={touched.Duration && errors.Duration}
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ",
-                      },
-                    }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
@@ -661,7 +801,8 @@ const CreateSurvey = () => {
                   />
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     // label="Mininum Score"
                     label={
@@ -682,11 +823,29 @@ const CreateSurvey = () => {
                     error={!!touched.Minimumscore && !!errors.Minimumscore}
                     helperText={touched.Minimumscore && errors.Minimumscore}
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
@@ -705,7 +864,8 @@ const CreateSurvey = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.Date}
@@ -713,13 +873,37 @@ const CreateSurvey = () => {
                     onChange={handleChange}
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
-                    sx={{ background: "" }}
+                    sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                   // required
                   //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     // label="No. Of Attempts Permitted"
                     label={
@@ -740,11 +924,29 @@ const CreateSurvey = () => {
                     error={!!touched.Permittedtimes && !!errors.Permittedtimes}
                     helperText={touched.Permittedtimes && errors.Permittedtimes}
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
@@ -757,7 +959,8 @@ const CreateSurvey = () => {
                       {/* NO OF QUESTION GROUP */}
                       <TextField
                         // fullWidth
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="number"
                         // label="No. Of Attempts Permitted"
                         label="No. Of Question Groups"
@@ -777,10 +980,29 @@ const CreateSurvey = () => {
                         }
                         disabled
                         sx={{
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -793,7 +1015,8 @@ const CreateSurvey = () => {
 
                       <TextField
                         // fullWidth
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="number"
                         // label="No. Of Attempts Permitted"
                         label="No. Of Questions"
@@ -813,10 +1036,29 @@ const CreateSurvey = () => {
                         }
                         disabled
                         sx={{
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -938,7 +1180,8 @@ const CreateSurvey = () => {
                   )} */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     label="Sort Order"
                     value={values.SortOrder}
@@ -948,7 +1191,30 @@ const CreateSurvey = () => {
                     name="SortOrder"
                     // error={!!touched.SortOrder && !!errors.SortOrder}
                     // helperText={touched.SortOrder && errors.SortOrder}
-                    sx={{ background: "" }}
+                    sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     focused
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
@@ -1010,7 +1276,15 @@ const CreateSurvey = () => {
                   gap={2}
                 >
                   <LoadingButton
-                    color="secondary"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     variant="contained"
                     type="submit"
                     loading={isLoading}
@@ -1046,19 +1320,31 @@ const CreateSurvey = () => {
 
                   <Button
                     variant="contained"
-                    color="warning"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
                     onClick={() => navigate(-1)}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>
             )}
           </Formik>
         </Paper>
+             </Box>
+                    </Box>
       ) : (
         false
       )}
+           </Box>
+                  </Box>
     </React.Fragment>
   );
 };
