@@ -126,7 +126,7 @@ export const AppraisalAutocompletePayload = ({
           {...props}
           variant="outlined"
           size="small"
-          focused
+          
           InputProps={{
             ...paramsInput.InputProps,
             endAdornment: (
