@@ -42,6 +42,7 @@ import {
     fetchApidata,
     getFetchData,
     getFetchData_v1,
+    Standardwisestudentget,
     postApidata,
     postData,
     staffmappingTeacherget,
@@ -2077,6 +2078,44 @@ const Editproject_V1 = () => {
             },
         },
     ];
+    const columnsshow8 = [
+        {
+            field: "SLNO",
+            headerName: "SL#",
+            align: "right",
+            headerAlign: "center",
+            width: 60,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            valueGetter: (params) => {
+                const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+                const totalVisibleRows = params.api.getAllRowIds().length;
+                const totalAllRows = params.api.getRowsCount();
+                if (totalVisibleRows < totalAllRows) {
+                    return index + 1;
+                } else {
+                    return page * pageSize + index + 1;
+                }
+            },
+        },
+        {
+            field: "Code",
+            headerName: "Student Code",
+            headerAlign: "center",
+            flex: 1,
+
+        },
+
+        {
+            field: "Employee",
+            headerName: "Student Name",
+            headerAlign: "center",
+            flex: 2,
+
+        },
+
+    ];
 
     const handleRowModesModelChangeTeach = (newRowModesModel) => {
         setRowModesModelteach(newRowModesModel);
@@ -2183,7 +2222,7 @@ const Editproject_V1 = () => {
     //         const formattedRows = staffmappingGetData.Terms.map((item) => ({
     //             id: Number(item.id),
     //             id: Number(item.id),
-    //             department: { RecordID: item.DepartmentID, Name: item.DeptName },
+    //             department: { RecordID: item.DepartmentID, Name: item. },
     //             // Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
     //         }));
 
@@ -2192,10 +2231,23 @@ const Editproject_V1 = () => {
     //         setPage(0);
     //     }
     // }, [data]);
+    const [itemsStatus, setItemsStatus] = useState(null);
+    const [itemsData, setItemsData] = useState(null);
 
     useEffect(() => {
         if (show == "0") {
             dispatch(getFetchData({ accessID, get: "get", recID }));
+        }
+        if (show == "8") {
+            // dispatch(Standardwisestudentget({ data: { ProjectID:recID,CompanyID:CompanyID } })).then
+
+            dispatch(Standardwisestudentget({ data: { ProjectID: recID, CompanyID: CompanyID } })).then((res) => {
+                const status = res.payload?.Status;
+                setItemsStatus(status);
+                if (status === "Y" && res.payload?.data) {
+                    setItemsData(res.payload.data);
+                }
+            });
         }
         // if (show == "0") {
         //     if (recID && mode === "E") {
@@ -3262,6 +3314,15 @@ const Editproject_V1 = () => {
                                     Time Table({data.Project})
                                 </Typography>
                             )}
+                            {show == "8" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                >
+                                    Students List({data.Project})
+                                </Typography>
+                            )}
                             {show == "5" && (
                                 <Typography
                                     variant="h5"
@@ -3306,7 +3367,7 @@ const Editproject_V1 = () => {
                                         (
                                             [
                                                 <MenuItem value="4">Staff Mapping</MenuItem>,
-                                                // <MenuItem value="7">Units/Area</MenuItem>
+                                                // <MenuItem value="8">Students List</MenuItem>
                                             ]
                                         )}
                                     {/* {is003Subscription === true ? (
@@ -4805,6 +4866,121 @@ const Editproject_V1 = () => {
                                             getRowId={(row) => row.RecordID}
                                             rows={unitrows2 || []}
                                             columns={unitColumns2}
+                                            loading={exploreLoading}
+                                            editMode="row"
+                                            disableSelectionOnClick
+                                            rowModesModel={rowModesModelunit2}
+                                            onRowModesModelChange={handleRowModesModelChangeUnit2}
+                                            onRowEditStop={handleRowEditStopUnit2}
+                                            processRowUpdate={processRowUpdateUnit2}
+                                            disableRowSelectionOnClick
+                                            experimentalFeatures={{ newEditingApi: true }}
+                                            onProcessRowUpdateError={(error) => {
+                                                console.error(
+                                                    "Row update validation failed:",
+                                                    error.message,
+                                                );
+                                                toast.error(error.message);
+                                            }}
+                                            // components={{ Toolbar: EditToolbarunit2 }}
+                                            componentsProps={{
+                                                toolbar: {
+                                                    setunitrows2,
+                                                    setRowModesModelunit2,
+                                                    isRowEditing,
+                                                    setPage,
+                                                    pageSize,
+                                                },
+                                            }}
+                                            rowsPerPageOptions={[5, 10, 20]}
+                                            getRowClassName={(params) =>
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
+                                            }
+                                            pagination
+                                            pageSize={pageSize}
+                                            page={page}
+                                            onPageSizeChange={(newPageSize) =>
+                                                setPageSize(newPageSize)
+                                            }
+                                            onPageChange={(newPage) => setPage(newPage)}
+                                        />
+                                    </Box>
+                                    <Box display="flex" justifyContent="flex-end" padding={1}>
+                                        <Button
+                                            color="warning"
+                                            variant="contained"
+                                            onClick={() => setScreen("0")}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : null}
+            {show == "8" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik initialValues={InitialValue} enableReinitialize={true}>
+                        {({
+                            values,
+                            handleBlur,
+                            handleSubmit,
+                            handleChange,
+                            setFieldValue,
+                            touched,
+                            errors,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(1 , minMax(0,1fr))"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 1",
+                                        },
+                                    }}
+                                >
+                                    <Box
+                                        height="60vh"
+                                        m={1}
+                                        sx={{
+                                            "& .MuiDataGrid-root": { border: "none" },
+                                            "& .MuiDataGrid-cell": { borderBottom: "none" },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
+                                            "& .odd-row": { backgroundColor: "" },
+                                            "& .even-row": { backgroundColor: "#D3D3D3" },
+                                        }}
+                                    >
+                                        <DataGrid
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                   
+                                                },
+                                                 width: "50%",
+                                            }}
+                                            rowHeight={35}
+                                            headerHeight={dataGridHeaderFooterHeight}
+                                            getRowId={(row) => row.SLNO}
+                                            rows={itemsData || []}
+                                            columns={columnsshow8}
                                             loading={exploreLoading}
                                             editMode="row"
                                             disableSelectionOnClick

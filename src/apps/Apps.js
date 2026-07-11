@@ -236,6 +236,7 @@ import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
 import Editpromotion from "./pages/HR/Editpromotion";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
+import Editcurricular from "./pages/HR/Editcocurricular";
 
 function App() {
   //   useEffect(() => {
@@ -1346,6 +1347,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
                     element={<Editproject />}
+                  />
+                   <Route
+                    path="/:accessID/:screenName/EditCo-curricular Activity/:id/:Mode"
+                    element={<Editcurricular />}
                   />
 
                   <Route

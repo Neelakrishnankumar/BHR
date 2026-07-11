@@ -98,7 +98,7 @@
       ]
     },
     {
-      "heading": "Back Office System Configuration – Bootstrap",
+      "heading": "Back Office System Configuration",
       "points": [
         {
           "text": "Initial master setup required before using the system. These configurations define how the organization, users and operational data are structured."

@@ -353,6 +353,7 @@ const initialState = {
   TaskSessionGet:"",
   TaskSessionUpdate:"",
   TermUrl: "",
+  Standardwisestudentget: "",
 
 };
 
@@ -578,6 +579,7 @@ export const getUrlSlice = createSlice({
       state.TaskSessionGet = APIurl + "SessionGet.php";
       state.TaskSessionUpdate = APIurl + "SessionUpdate.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
+      state.Standardwisestudentget = APIurl + "Standardwisestudentget.php";
     },
 
   },

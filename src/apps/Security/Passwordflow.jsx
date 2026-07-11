@@ -219,13 +219,13 @@ const ChangeyourPassword_1 = () => {
   // Bootstrap section
   const bootstrapSection = termsData.sections.find(
     (section) =>
-      section.heading === "Back Office System Configuration – Bootstrap"
+      section.heading === "Back Office System Configuration"
   );
 
   // Other sections
   const otherSections = termsData.sections.filter(
     (section) =>
-      section.heading !== "Back Office System Configuration – Bootstrap"
+      section.heading !== "Back Office System Configuration"
   );
 
   return (
@@ -253,9 +253,10 @@ const ChangeyourPassword_1 = () => {
             variant="h5"
             fontWeight="bold"
             mb={2}
-            textAlign="center"
+            textAlign="center" 
           >
             Welcome to Beyondexs Agile Task Manager
+            {/* Welcome to Lak Institution */}
           </Typography>
 
           {/* Back Office Configuration Heading */}

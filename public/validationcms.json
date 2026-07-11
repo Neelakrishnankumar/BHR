@@ -477,6 +477,10 @@
     "Description": "Please enter the Description", 
     "code": "Please enter the Code"
   },
+   "Cocurricular": {
+    "Name": "Please enter the Name",
+    "Code": "Please enter the Code"
+  },
   "ResetParty": {
     "Password": "Please Enter Your Passord"
   },

@@ -1140,7 +1140,7 @@ const Editemployee = () => {
   //     return match ? match.ID : null;
   //   })
   //   .filter(id => id !== null);
-
+  console.log(Data, "Datasssss");
   const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
@@ -1174,7 +1174,7 @@ const Editemployee = () => {
           : Data.Gender === "Others"
             ? "O"
             : "",
-    checkbox: Data.Disable === "Y" ? true : false,
+    disable: Data.Disable == true ? true : false,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -1410,10 +1410,10 @@ const Editemployee = () => {
         : mode === "E" && del
           ? "harddelete"
           : "update";
-    var isCheck = "N";
-    if (values.checkbox || values.scrummaster == true) {
-      isCheck = "Y";
-    }
+    // var isCheck = "N";
+    // if (values.disable || values.scrummaster == true) {
+    //   isCheck = "Y";
+    // }
     const deptIds = isStudentClassification
       ? [0]
       : values.Department?.map((d) => d.RecordID) || [];
@@ -1432,7 +1432,7 @@ const Editemployee = () => {
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
-      Disable: values.checkbox === true ? "Y" : "N",
+      Disable: values.disable === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
@@ -2868,7 +2868,7 @@ const Editemployee = () => {
           localityname: rowData.Name,
           LCpincode: rowData.Pincode,
         });
-
+        setBU(rowData.BillingUnits || "");
         setContractorData({
           recordID: rowData.RecordID,
           Description: rowData.Description,
@@ -2887,11 +2887,13 @@ const Editemployee = () => {
               Name: rowData.VendorName,
             }
             : null,
+          HeaderID: rowData.FSHeaderID,
           Term: rowData.TermID
             ? {
               RecordID: rowData.TermID,
               Code: rowData.TermCode,
               Name: rowData.Term,
+
             }
             : null,
           // Components: Array.isArray(rowData?.CompanentsList)
@@ -3069,6 +3071,8 @@ const Editemployee = () => {
     }
     console.log(selectCellRowData, "Itemservices");
   };
+  console.log(contractorData, "selectCellRowData");
+  console.log(contractorData?.Term?.RecordID, "selectCellRowData");
 
   const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
@@ -3680,7 +3684,15 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const[BU,setBU]=useState('');
+  const effectiveUnit = BU || contractorData.units;
+console.log(BU, "BU");
+console.log(effectiveUnit, "effectiveUnit");
+  const isTermFeesSelected =
+    effectiveUnit === "TF" || effectiveUnit === "Term Fees";
 
+  const isAnnualFeesSelected =
+    effectiveUnit === "AF" || effectiveUnit === "Annual Fees";
   //contract initialvalue
   const ContractInitialValue = {
     Code: Data.Code,
@@ -3707,7 +3719,9 @@ const Editemployee = () => {
                 ? "OF"
                 : contractorData.units === "Term Fees"
                   ? "TF"
-                  : "",
+                  : contractorData.units === "Annual Fees"
+                    ? "AF"
+                    : "",
     BillingType:
       contractorData.BillingType === "Cash Memo"
         ? "CashMemo"
@@ -5970,8 +5984,8 @@ const Editemployee = () => {
                           <Field
                             //  size="small"
                             type="checkbox"
-                            name="checkbox"
-                            id="checkbox"
+                            name="disable"
+                            id="disable"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             as={Checkbox}
@@ -6430,8 +6444,8 @@ const Editemployee = () => {
                             <Field
                               //  size="small"
                               type="checkbox"
-                              name="checkbox"
-                              id="checkbox"
+                              name="disable"
+                              id="disable"
                               onChange={handleChange}
                               onBlur={handleBlur}
                               as={Checkbox}
@@ -13562,14 +13576,17 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         // onChange={handleChange}
                         // onChange={(e) => {
-                        //   setFieldValue("BillingUnits", e.target.value);   // ✅ FIX
+                        //   // setFieldValue("BillingUnits", e.target.value); 
                         // }}
                         onChange={(e) => {
                           const value = e.target.value;
                           setFieldValue("BillingUnits", value);
-
+                           setBU(value); 
+                            setFieldValue("Components", []);   
+                            setFieldValue("UnitRate", "");     
+                            setFieldValue("Term", null);   
                           if (!["OF", "TF"].includes(value)) {
-                            setFieldValue("DueDate", "");   // ✅ clear when switching
+                            setFieldValue("DueDate", "");   // clear when switching
                           }
                         }}
                         name="BillingUnits"
@@ -13595,7 +13612,8 @@ const Editemployee = () => {
                           <MenuItem key="OF" value="OF">Other Fees</MenuItem>,
                         ]}
                       </TextField>
-                      {(values.BillingUnits == "TF" || contractorData.units == "Term Fees") && isStudentClassification ? (
+                      {/* {(values.BillingUnits == "TF" || contractorData.units == "Term Fees") && isStudentClassification ? ( */}
+                      {isStudentClassification && !isAnnualFeesSelected && isTermFeesSelected && (
                         <>
                           <CheckinAutocomplete
                             id="Term"
@@ -13642,6 +13660,7 @@ const Editemployee = () => {
                               },
                             })}`}
                           />
+
                           <MultiFormikOptimizedAutocomplete
                             sx={{
                               width: "100%",
@@ -13681,41 +13700,16 @@ const Editemployee = () => {
                                 AccessID: "2189",
                                 ScreenName: "Components",
                                 VerticalLicense: Subscriptionlastthree,
-                                Filter: `HeaderID='${values?.Term?.Header}' AND TermID='${values?.Term?.TermsID}'`,
+                                Filter: `HeaderID='${values?.Term?.Header || contractorData.HeaderID}' AND TermID='${values?.Term?.TermsID || contractorData?.Term?.RecordID}'`,
                                 Any: "",
                               },
                             })}`}
                           />
-                          {/* <MultiFormikOptimizedAutocomplete
-                            sx={{
-                              width: "100%",
-                              gridColumn: "span 2",
-                            }}
-                            name="Components"
-                            label="Component"
-                            id="Components"
-                            value={values.Components}
-                            onChange={(e, newValue) => {
-                              setFieldValue("Components", newValue, true);
-                            }}
-                            isOptionEqualToValue={(option, value) =>
-                              String(option.RecordID) === String(value.RecordID)
-                            }
-                            error={!!touched.Components && !!errors.Components}
-                            helperText={touched.Components && errors.Components}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2189",
-                                ScreenName: "Components",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `HeaderID=${values?.Term?.Header}`,
-                                Any: "",
-                              },
-                            })}`}
-                          /> */}
                         </>
-                      ) : null}
-                      {(values.BillingUnits == "AF" || contractorData.units == "Annual Fees") && isStudentClassification ? (
+                      )}
+                      {/* {(values.BillingUnits == "AF" || contractorData.units == "Annual Fees") && isStudentClassification ? ( */}
+                        
+                        {isStudentClassification && isAnnualFeesSelected && !isTermFeesSelected &&(
                         <MultiFormikOptimizedAutocomplete
                           sx={{
                             width: "100%",
@@ -13724,9 +13718,23 @@ const Editemployee = () => {
                           name="Components"
                           label="Component"
                           id="Components"
-                          value={values.Components}
+                          value={values.Components || []}
                           onChange={(e, newValue) => {
                             setFieldValue("Components", newValue, true);
+                            // Calculate total amount
+                            const totalAmount = newValue.reduce(
+                              (sum, item) => sum + Number(item.Amount || 0),
+                              0
+                            );
+
+                            // Apply discount
+                            const discount = Number(values.discount || 0);
+
+                            const finalAmount =
+                              totalAmount - (totalAmount * discount) / 100;
+
+                            // Set amount field
+                            setFieldValue("UnitRate", finalAmount.toFixed(2));
                           }}
                           isOptionEqualToValue={(option, value) =>
                             String(option.RecordID) === String(value.RecordID)
@@ -13738,12 +13746,12 @@ const Editemployee = () => {
                               AccessID: "2190",
                               ScreenName: "Components",
                               VerticalLicense: Subscriptionlastthree,
-                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID || contractorData?.project?.RecordID},ProjectID)`,
                               Any: "",
                             },
                           })}`}
                         />
-                      ) : null}
+                      )}
 
                       <Box
                         sx={{
@@ -13857,7 +13865,7 @@ const Editemployee = () => {
 
                             //   setFieldValue("UnitRate", finalAmount.toFixed(2));
                             // }}
-                           onChange={handleChange}
+                            onChange={handleChange}
                             onBlur={handleBlur}
                             error={!!touched.discount && !!errors.discount}
                             helperText={touched.discount && errors.discount}

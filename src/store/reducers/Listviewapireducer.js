@@ -2000,7 +2000,7 @@ export const fetchListview =
                         />
                       )}
                       
-                      {is003Subscription && (
+                      {/* {is003Subscription && (
                         <Link to={`./EditPromotion/${params.row.RecordID}/E`}>
                           <Tooltip title="Promotion">
                             <IconButton color="info" size="small">
@@ -2008,7 +2008,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
-                      )}
+                      )} */}
 
                       {is003Subscription && (
                         // <Link

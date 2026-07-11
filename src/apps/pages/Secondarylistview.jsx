@@ -171,6 +171,7 @@ const ListviewSecondary = () => {
   const baseurlUAAM = config.UAAM_URL;
   console.log("baseurlUAAM", baseurlUAAM)
   const state = location.state || {};
+  console.log(state,"Classification");
   const storedStatus = sessionStorage.getItem("Status") || state.LEStatus
   // const storedStatus = "Close";
   console.log(state.LEStatus, sessionStorage.getItem("Status"), "storedStatus");
@@ -6158,11 +6159,13 @@ const ListviewSecondary = () => {
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
-                  <Chip
-                    icon={<PermContactCalendarOutlinedIcon color="primary" />}
-                    label="Staff Timetable"
-                    variant="outlined"
-                  />
+                  {state.Classification === "Teaching Staff" && (
+                    <Chip
+                      icon={<PermContactCalendarOutlinedIcon color="primary" />}
+                      label="Staff Timetable"
+                      variant="outlined"
+                    />
+                  )}
                 </Box>
 
               )
@@ -7109,12 +7112,12 @@ const ListviewSecondary = () => {
                             label="Timetable"
                             variant="outlined"
                           />
-                            <Chip
+                            {/* <Chip
                             icon={<NextWeekIcon
                               color="primary" />}
                             label="Promotion"
                             variant="outlined"
-                          />
+                          /> */}
 
                           <Chip
                             icon={<DeleteIcon

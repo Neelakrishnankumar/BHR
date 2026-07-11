@@ -43,6 +43,7 @@ import {
 } from "@mui/material";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 //import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FactCheckRoundedIcon from "@mui/icons-material/FactCheckRounded";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
@@ -597,6 +598,23 @@ const Sidebars = () => {
                 UGA_VIEW: true,
                 UGA_ACCESSIDS: "TR401",
               },
+               {
+            name: "Co-curricular Activity",
+            id: 34546,
+            url: "./TR405/Co-curricular Activity",
+            icon: (
+              <Tooltip title="Co-curricular Activity">
+                <LocalActivityIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR405",
+          },
             ] : []),
 
           {
@@ -1845,9 +1863,9 @@ const Sidebars = () => {
               flexDirection={"column"}
               justifyContent="space-around"
               width="91%"
-              height="67px"
+              height="72px"
               mt="16px"
-              p="7px"
+              p="5px"
               ml="8px"
               borderRadius="4px"
               boxShadow="0px 3px 5px -1px rgba(0, 0, 0, 0.06),0px 5px 8px 0px rgba(0, 0, 0, 0.042),0px 1px 14px 0px rgba(0, 0, 0, 0.036)"

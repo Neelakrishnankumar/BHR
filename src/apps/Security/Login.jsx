@@ -504,7 +504,7 @@ import { toast } from "react-hot-toast";
 // import background from "../../assets/img/Back_Office_Final.png";
 // import background from "../../assets/img/Back_Office_Final2.png";
 import background from "../../assets/img/BOS_Coverimg2.png";
-
+import background_LAK from "../../assets/img/LAK_loginimg.png";
 const FlexBox = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
@@ -800,7 +800,8 @@ const Login = () => {
 
           // ✅ Add this
           backgroundImage: {
-            xs: `url(${background})`,
+             xs: `url(${background})`,
+            // xs: `url(${background_LAK})`,
             sm: "none",
           },
           backgroundSize: {
@@ -1106,6 +1107,7 @@ const Login = () => {
             <Box
               sx={{
                 backgroundImage: `url(${background})`,
+                // backgroundImage: `url(${background_LAK})`,
                 // backgroundSize: "cover",
                 backgroundSize: "contain",
                 backgroundSize: "100% 100%",
