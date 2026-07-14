@@ -74,7 +74,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
@@ -3162,8 +3162,19 @@ const Editrequests = () => {
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box
+         <Paper
+                   elevation={0}
+                   sx={{
+                     mx: 2,
+                     mt: 1,
+                     mb: 1,
+                     p: 1,
+                     borderRadius: 3,
+                     border: "1px solid #E5E7EB",
+                     bgcolor: "#fff",
+                   }}
+                 >
+                            <Box
             display="flex"
             justifyContent="space-between"
             p={mode == "A" ? 2 : 1}
@@ -3178,20 +3189,34 @@ const Editrequests = () => {
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
+                 <Box>
+             
+                    <Typography
+                                           sx={{
+                                             fontSize: 20,
+                                             fontWeight: 700,
+                                             color: "#111827",
+                                             // mb: 0.2,
+                                                 px: 1,
+                                   py: 0.2,
+                                           }}
+                                         >
+                                           {mode === "A" ? "New Request" : "Edit Request"}
+                                         </Typography>
+                                          {/* <Box
                 display={isNonMobile ? "flex" : "none"}
                 borderRadius="3px"
                 alignItems="center"
-              >
+              > */}
+                                         
                 <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                 sx={breadcrumbStyles.item}
                     onClick={() => {
                       setScreen(0);
                     }}
@@ -3203,9 +3228,7 @@ const Editrequests = () => {
                   </Typography>
                   {show == "2" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Leave
                     </Typography>
@@ -3214,9 +3237,7 @@ const Editrequests = () => {
                   )}
                   {show == "6" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={breadcrumbStyles.active}
                     >
                       Over Time
                     </Typography>
@@ -3225,9 +3246,7 @@ const Editrequests = () => {
                   )}
                   {show == "7" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={breadcrumbStyles.active}
                     >
                       Salary Advance
                     </Typography>
@@ -3236,9 +3255,7 @@ const Editrequests = () => {
                   )}
                   {show == "8" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       On Duty
                     </Typography>
@@ -3247,9 +3264,7 @@ const Editrequests = () => {
                   )}
                   {show == "11" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={breadcrumbStyles.active}
                     >
                       Permission
                     </Typography>
@@ -3258,9 +3273,7 @@ const Editrequests = () => {
                   )}
                   {show == "9" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Expense
                     </Typography>
@@ -3269,9 +3282,7 @@ const Editrequests = () => {
                   )}
                   {show == "10" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Regularization
                     </Typography>
@@ -3280,9 +3291,7 @@ const Editrequests = () => {
                   )}
                   {show == "3" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Attendance
                     </Typography>
@@ -3291,9 +3300,7 @@ const Editrequests = () => {
                   )}
                   {show == "4" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Payroll Attendance
                     </Typography>
@@ -3304,7 +3311,7 @@ const Editrequests = () => {
               </Box>
             </Box>
             <Box display="flex">
-              {mode !== "A" ? (
+              {/* {mode !== "A" ? (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                   <InputLabel id="demo-select-small">Explore</InputLabel>
                   <Select
@@ -3326,7 +3333,7 @@ const Editrequests = () => {
                 </FormControl>
               ) : (
                 false
-              )}
+              )} */}
 
               <Tooltip title="Close">
                 <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -3383,7 +3390,7 @@ const Editrequests = () => {
                     setFieldValue,
                   }) => (
                     <form onSubmit={handleSubmit}>
-                      <Box display="flex" alignItems="center" gap={2} mb={0.5}>
+                      <Box display="flex" alignItems="center"gap={1} mb={0.5}>
                         <Box
                           sx={{
                             width: 32,
@@ -3397,17 +3404,19 @@ const Editrequests = () => {
                         >
                           <Typography sx={{ fontSize: 16 }}>👤</Typography>
                         </Box>
-                        <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                               <Box>
+                        <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                           Personnel
                         </Typography>
-                      </Box>
-                      <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                    
+                      <Typography variant="body2" color="text.secondary">
                         Basic details about the personnel
                       </Typography>
-
+  </Box>
+    </Box>
                       <Box
                         display="grid"
-                        gap="20px"
+                       gap={formGap}
                         padding={1}
                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                         sx={{
@@ -3895,7 +3904,7 @@ const Editrequests = () => {
                             },
                           }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
 
@@ -4278,7 +4287,15 @@ const Editrequests = () => {
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
-                      color="secondary"
+                     sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       type="submit"
                       loading={isLoading}
@@ -4324,7 +4341,15 @@ const Editrequests = () => {
                       )} */}
                     <Button
                       type="reset"
-                      color="warning"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                       variant="contained"
                       onClick={() => {
                         setScreen(0);
@@ -4427,8 +4452,9 @@ const Editrequests = () => {
                             <Typography sx={{ fontSize: 16 }}>🏖️</Typography>
                           </Box>
                           <Box>
-                            <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                              {values.description || "Employee"}
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                                                   Leave
+
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Leave requests and balances
@@ -4979,10 +5005,14 @@ const Editrequests = () => {
                                 variant="contained"
                                 type="submit"
                                 loading={loading}
-                                sx={{
+                                 sx={{
                                   textTransform: "none",
-                                  borderRadius: "8px",
-                                  px: 3,
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
                                 }}
                               >
                                 Save
@@ -4992,7 +5022,7 @@ const Editrequests = () => {
                               {YearFlag === "true" && mode === "E" ? (
                                 <Button
                                   color="error"
-                                  variant="outlined"
+                                  variant="contained"
                                   onClick={() => {
                                     Swal.fire({
                                       title: errorMsgData.Warningmsg.Delete,
@@ -5021,18 +5051,24 @@ const Editrequests = () => {
 
                               {/* Cancel */}
                               <Button
-                                variant="outlined"
-                                color="warning"
+                               
                                 onClick={() => {
                                   navigate(-1);
                                 }}
-                                sx={{
+                                variant="contained"
+                    sx={{
                                   textTransform: "none",
-                                  borderRadius: "8px",
-                                  px: 3,
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
                             </DialogActions>
                           </Dialog>
@@ -5139,8 +5175,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>⏱️</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Over Time
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Overtime records and payment
@@ -5601,18 +5637,25 @@ const Editrequests = () => {
                             }}
                           >
                             <LoadingButton
-                              color="secondary"
-                              variant="contained"
+                               sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                               onClick={handleSubmit}
                               loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
                               Save
                             </LoadingButton>
 
                             <Button
                               color="error"
-                              variant="outlined"
+                              variant="contained"
                               onClick={() => {
                                 Swal.fire({
                                   title: errorMsgData.Warningmsg.Delete,
@@ -5636,12 +5679,21 @@ const Editrequests = () => {
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              color="warning"
+                             variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                               onClick={() => setOpenOTPopup(false)}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
-                              Cancel
+                              Back
                             </Button>
                           </DialogActions>
                         </Dialog>
@@ -5725,8 +5777,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>💰</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Salary Advance
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Salary advance requests
@@ -6182,18 +6234,25 @@ const Editrequests = () => {
                             }}
                           >
                             <LoadingButton
-                              color="secondary"
-                              variant="contained"
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                               onClick={handleSubmit}
                               loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
                               Save
                             </LoadingButton>
 
                             <Button
                               color="error"
-                              variant="outlined"
+                              variant="contained"
                               onClick={() => {
                                 Swal.fire({
                                   title: errorMsgData.Warningmsg.Delete,
@@ -6217,12 +6276,19 @@ const Editrequests = () => {
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              color="warning"
+                               variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
                               onClick={() => setOpenSAPopup(false)}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
-                              Cancel
+                              Back
                             </Button>
                           </DialogActions>
                         </Dialog>
@@ -6317,8 +6383,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>🧳</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            On Duty
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             On Duty requests and approval
@@ -6795,18 +6861,26 @@ const Editrequests = () => {
                             }}
                           >
                             <LoadingButton
-                              color="secondary"
-                              variant="contained"
+                              sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                               onClick={handleSubmit}
                               loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
+                              
                             >
                               Save
                             </LoadingButton>
 
                             <Button
                               color="error"
-                              variant="outlined"
+                              variant="contained"
                               onClick={() => {
                                 Swal.fire({
                                   title: errorMsgData.Warningmsg.Delete,
@@ -6830,12 +6904,22 @@ const Editrequests = () => {
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              color="warning"
+                                 variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                               onClick={() => setOpenODPopup(false)}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
+                             
                             >
-                              Cancel
+                            Back
                             </Button>
 
                             <Popup
@@ -6932,8 +7016,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>🕒</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Permission
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Permission requests and approvals
@@ -7376,7 +7460,7 @@ const Editrequests = () => {
                           >
                             <Button
                               color="error"
-                              variant="outlined"
+                              variant="contained"
                               disabled={funMode === "A"}
                               onClick={() => {
                                 Swal.fire({
@@ -7399,16 +7483,34 @@ const Editrequests = () => {
 
                             <Box display="flex" gap={1}>
                               <Button
-                                variant="outlined"
-                                color="warning"
+                                variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                                 onClick={() => setOpenADPopup(false)}
                               >
-                                Cancel
+                                Back
                               </Button>
 
                               <LoadingButton
-                                color="secondary"
-                                variant="contained"
+                                 sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                                 loading={isLoading}
                                 onClick={handleSubmit}
                               >
@@ -7519,8 +7621,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>🧾</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Expense
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Expense claims and attachments
@@ -7988,18 +8090,25 @@ const Editrequests = () => {
                             }}
                           >
                             <LoadingButton
-                              color="secondary"
-                              variant="contained"
+                             sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                               onClick={handleSubmit}
                               loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
                               Save
                             </LoadingButton>
 
                             <Button
                               color="error"
-                              variant="outlined"
+                              variant="contained"
                               disabled={funMode === "A"}
                               onClick={() => {
                                 Swal.fire({
@@ -8024,12 +8133,21 @@ const Editrequests = () => {
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              color="warning"
+                                      variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                               onClick={() => setOpenExpPopup(false)}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
-                              Cancel
+                              Back
                             </Button>
                           </DialogActions>
                         </Dialog>
@@ -8111,8 +8229,8 @@ const Editrequests = () => {
                           <Typography sx={{ fontSize: 16 }}>🔁</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Regularization
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Attendance regularization
@@ -8606,22 +8724,38 @@ const Editrequests = () => {
                             }}
                           >
                             <LoadingButton
-                              color="secondary"
-                              variant="contained"
+                              sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                    variant="contained"
                               onClick={handleSubmit}
                               loading={isLoading}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
                               Save
                             </LoadingButton>
 
                             <Button
-                              variant="outlined"
-                              color="warning"
+                               variant="contained"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                               onClick={() => setOpenRegPopup(false)}
-                              sx={{ textTransform: "none", borderRadius: "8px", px: 3 }}
                             >
-                              Cancel
+                              Back
                             </Button>
 
                             <Popup

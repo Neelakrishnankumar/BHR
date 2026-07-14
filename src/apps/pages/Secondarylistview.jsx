@@ -5745,7 +5745,7 @@ const handlePageSizeChange = (newPageSize) => {
         >
           {/* Search row, bordered off from the grid below it */}
           <Box
-              p={2}
+              p={1}
               borderBottom="1px solid #F3F4F6"
               sx={{
                 display: "flex",

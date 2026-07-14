@@ -394,10 +394,18 @@ const EditPayment = ({ appId, empId }) => {
   return (
     <React.Fragment>
       {getLoading && <LinearProgress />}
-      <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3, p: 2 }}>
+        <Paper
+                elevation={0}
+                sx={{
+                  mx: 2,
+                  mt: 1,
+                  mb: 1,
+                  p: 2,
+                  borderRadius: 3,
+                  border: "1px solid #E5E7EB",
+                  bgcolor: "#fff",
+                }}
+              >
               <Box display="flex" justifyContent="space-between">
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
@@ -406,8 +414,14 @@ const EditPayment = ({ appId, empId }) => {
                     </IconButton>
                   )}
                   <Typography
-                    variant="h3"
-                    sx={{ marginLeft: "10px", fontSize: "19px" }}
+            sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
                   >{`Payment(${state.Employee})`}</Typography>
                 </Box>
                 <Box display="flex">
@@ -427,7 +441,7 @@ const EditPayment = ({ appId, empId }) => {
                 </Box>
               </Box>
             </Paper>
-          </Box>
+
           {!getLoading ? (
             <Box
               display="flex"
@@ -502,7 +516,7 @@ const EditPayment = ({ appId, empId }) => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                                 color="#0D94885"
                             >
                               Payment
                             </Typography>
@@ -971,8 +985,7 @@ const EditPayment = ({ appId, empId }) => {
               </Paper>
             </Box>
           ) : null}
-        </Box>
-      </Box>
+    
     </React.Fragment>
   );
 };

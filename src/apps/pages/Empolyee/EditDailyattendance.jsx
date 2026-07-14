@@ -347,9 +347,8 @@ const EditdailyAttendance = () => {
     <React.Fragment>
             
        <Box sx={{ height: "100vh", overflow: "auto" }}>
-              <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-               <Box sx={{ p: 2, borderRadius: 3, }}>
-        <Paper sx={{ borderRadius: 3 }}>
+                <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                            <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -357,7 +356,16 @@ const EditdailyAttendance = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Daily Attendance</Typography>
+            <Typography 
+               sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+            >Daily Attendance</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -373,7 +381,7 @@ const EditdailyAttendance = () => {
           </Box>
         </Box>
       </Paper>
-</Box>
+
      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
         
                <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
@@ -440,7 +448,7 @@ const EditdailyAttendance = () => {
                   <Typography
                     variant="subtitle1"
                     fontWeight={700}
-                    color="#4F46E5"
+                     color="#0D94885"
                   >
                     Daily Attendance
                   </Typography>

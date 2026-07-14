@@ -213,7 +213,7 @@ const Editlocation = () => {
       {getLoading ? <LinearProgress /> : false}
  <Box sx={{ height: "100vh", overflow: "auto" }}>
               <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                <Box sx={{ p: 2, borderRadius: 3 }}>
+                
                   <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -238,9 +238,14 @@ const Editlocation = () => {
              {`Company(${rowData.CompanyName})`}
               </Typography> */}
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                       px: 1,
+                       py: 0.2,
+                   }}
                 onClick={() => {
                   navigate("/Apps/TR128/Location");
                 }}
@@ -269,9 +274,9 @@ const Editlocation = () => {
           </Box>
         </Box>
       </Paper>
-            </Box>
+     
       {!getLoading ? (
-                 <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                 <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 0 }}>
                     
                            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                     
@@ -327,7 +332,7 @@ const Editlocation = () => {
                     <Typography
                       variant="subtitle1"
                       fontWeight={700}
-                      color="#4F46E5"
+                      color="#0D94885"
                     >
                       Location
                     </Typography>

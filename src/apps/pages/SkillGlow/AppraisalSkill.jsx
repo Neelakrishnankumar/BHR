@@ -45,6 +45,7 @@ import { LoadingButton } from "@mui/lab";
 import toast from "react-hot-toast";
 import { AppraisalAutocompletePayload } from "./SkillGlowAutocomplete";
 import { fetchListview } from "../../../store/reducers/Listviewapireducer";
+import { breadcrumbStyles } from "../../../Theme";
 
 const CreateAppraisalSkill = () => {
   const navigate = useNavigate();
@@ -359,8 +360,8 @@ const CreateAppraisalSkill = () => {
         sx={{
           mx: 2,
           mt: 1,
-          mb: 2,
-          p: 2.5,
+          mb: 1,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
           bgcolor: "#fff",
@@ -388,37 +389,56 @@ const CreateAppraisalSkill = () => {
             <Box>
               <Typography
                 sx={{
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: 700,
                   color: "#111827",
-                  mb: 0.5,
+                  // mb: 0.2,
+                      px: 1,
+        py: 0.2,
                 }}
               >
-                {mode === "A" ? "New Assessment" : "Edit Assessment"}
+                {mode === "A" ? "New Appraisal" : "Edit Appraisal"}
               </Typography>
 
               <Breadcrumbs
                 separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                sx={{
-                  "& .MuiBreadcrumbs-separator": {
-                    color: "#9CA3AF",
-                  },
-                }}
+                 sx={breadcrumbStyles.separator}
+                // sx={{
+                //   "& .MuiBreadcrumbs-separator": {
+                //     color: "#9CA3AF",
+                //   },
+                // }}
               >
                 <Typography
                   onClick={() =>
                     navigate("/Apps/TR299/List%20Of%20Assessment%20Type")
                   }
-                  sx={{
-                    cursor: "pointer",
-                    color: "#6B7280",
-                    fontWeight: 500,
-                    "&:hover": {
-                      color: "#14B8A6",
-                    },
-                  }}
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                             sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
                 >
-                  Assessment Type ({state.BreadCrumb1})
+                List of Assessment Type ({state.BreadCrumb1})
                 </Typography>
 
                 <Typography
@@ -430,28 +450,60 @@ const CreateAppraisalSkill = () => {
                       }
                     )
                   }
-                  sx={{
-                    cursor: "pointer",
-                    color: "#6B7280",
-                    fontWeight: 500,
-                    "&:hover": {
-                      color: "#14B8A6",
-                    },
-                  }}
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                             sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
                 >
-                  Category ({state.BreadCrumb2})
+                  List of Category ({state.BreadCrumb2})
                 </Typography>
 
                 <Typography
                   onClick={() => navigate(-1)}
-                  sx={{
-                    cursor: "pointer",
-                    color: "#6B7280",
-                    fontWeight: 500,
-                    "&:hover": {
-                      color: "#14B8A6",
-                    },
-                  }}
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                 sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
                 >
                   {params.parentID2 === "AP"
                     ? "Appraisal"
@@ -465,10 +517,21 @@ const CreateAppraisalSkill = () => {
                 </Typography>
 
                 <Typography
-                  sx={{
-                    color: "#14B8A6",
-                    fontWeight: 700,
-                  }}
+                  // sx={{
+                  //   color: "#14B8A6",
+                  //   fontWeight: 700,
+                  // }}
+                  sx={breadcrumbStyles.active}
+    //               sx={{
+    //   px: 1.5,
+    //   py: 0.5,
+    //   borderRadius: 2,
+    //   fontWeight: 700,
+    //   fontSize: 13,
+    //   color: "#fff",
+    //   background: "linear-gradient(135deg, #0D9488, #14B8A6)",
+    //   boxShadow: "0 2px 8px rgba(13,148,136,0.4)",
+    // }}
                 >
                   {mode === "A" ? "New" : "Edit"}
                 </Typography>
@@ -542,14 +605,17 @@ const CreateAppraisalSkill = () => {
 
                 <Box mb={3}>
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography sx={{ fontSize: 20 }}>🎯</Typography>
+                    <Typography 
+                   sx={{ fontSize: 18 }}
+                    >🎯</Typography>
 
                     <Typography
-                      sx={{
-                        fontSize: "18px",
-                        fontWeight: 700,
-                        color: "#1F2937",
-                      }}
+                    variant="subtitle1" fontWeight={700} color="#0D94885"
+                      // sx={{
+                      //   fontSize: "18px",
+                      //   fontWeight: 700,
+                      //   color: "#1F2937",
+                      // }}
                     >
                       Appraisal Skill Details
                     </Typography>
@@ -1163,7 +1229,7 @@ const CreateAppraisalSkill = () => {
                       },
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

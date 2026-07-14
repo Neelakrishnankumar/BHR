@@ -273,21 +273,13 @@ const Approval = () => {
   };
   return (
     <React.Fragment>
-      {/* <Box m="10px">
-        <Typography
-          variant="h2"
-          fontSize="1.2rem"
-          fontWeight="bold"
-          marginBottom={3}
-        >
-          Approval
-        </Typography> */}
+  
       {getLoading ? <LinearProgress /> : null}
      <Box sx={{ height: "100vh", overflow: "auto" }}>
             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
     
     
-              <Box sx={{ p: 2, borderRadius: 3, }}>
+              <Box sx={{ borderRadius: 3, }}>
       <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -302,9 +294,14 @@ const Approval = () => {
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
               <Typography
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                variant="h5"
+                sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+                         py: 0.2,
+                   }}
               >
                 Approval
               </Typography>
@@ -391,7 +388,7 @@ const Approval = () => {
              <Typography
                variant="subtitle1"
                fontWeight={700}
-               color="#4F46E5"
+              color="#0D94885"
              >
                Approval
              </Typography>

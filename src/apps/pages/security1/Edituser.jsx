@@ -54,6 +54,12 @@ const Edituser = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const SubscriptionID = sessionStorage.getItem("SubscriptionID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   console.log("SubscriptionID", SubscriptionID);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const [loading, setLoading] = useState(false);
@@ -223,20 +229,49 @@ const Edituser = () => {
       }
     });
   };
+
+  const label =
+  Subscriptionlastthree === "003" ? "User Management" : "Users";
+
+const text =
+  mode === "E"
+    ? `${label}(${data.Name1})`
+    : `${label}(New)`;
+
+
   return (
     <React.Fragment>
-      {/* {getLoading ? <LinearProgress /> : false} */}
-      <Box sx={{ height: "100vh", overflow: "auto" }}>
-                    <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                      <Box sx={{ p: 2, borderRadius: 3 }}>
-                        <Paper sx={{ borderRadius: 3 }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
+    <Paper
+           elevation={0}
+           sx={{
+             mx: 2,
+             mt: 1,
+             mb: 1,
+             p: 2,
+             borderRadius: 3,
+             border: "1px solid #E5E7EB",
+             bgcolor: "#fff",
+           }}
+         >
+           <Box
+             display="flex"
+             justifyContent="space-between"
+             alignItems="center"
+           >
+             {/* Left */}
+             <Box display="flex" alignItems="center" gap={2}>
+               {broken && !rtl && (
+                 <IconButton
+                   onClick={() => toggleSidebar()}
+                   sx={{
+                     border: "1px solid #E5E7EB",
+                     borderRadius: 2,
+                   }}
+                 >
+                   <MenuOutlinedIcon />
+                 </IconButton>
+               )}
+   
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -268,15 +303,20 @@ const Edituser = () => {
                   {`Subscriptions(${rowData.SubsName})`}
                 </Typography> */}
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                 sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
                   onClick={() => {
                     navigate(-1);
                   }}
                 >
-                  {mode === "E" ? `Users(${data.Name1})` : "Users(New)"}
-
+                  {/* {mode === "E" ? `Users(${data.Name1})` : "Users(New)"} */}
+                  {text}
                   {/* {`Users(${rowData.Users})`} */}
                 </Typography>
               </Breadcrumbs>
@@ -299,9 +339,9 @@ const Edituser = () => {
           </Box>
         </Box>
       </Paper>
-          </Box>
-      {/* {!getLoading ? ( */}
-               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+      
+
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
                <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
              <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
         {/* <Box m="20px"> */}
@@ -345,8 +385,8 @@ const Edituser = () => {
                                           👥
                                         </Box>
                                         <Box>
-                                          <Typography variant="h6" fontWeight={700} color="#4F46E5">
-                                           Users
+                                          <Typography variant="h6" fontWeight={700}  color="#0D94885">
+                                           {label}
                                           </Typography>
                                           <Typography variant="caption" color="text.secondary">
                                             Create and manage user accounts, login credentials, and access permissions.
@@ -833,11 +873,7 @@ const Edituser = () => {
       </Paper>
        </Box>
                         </Box>
-                         </Box>
-                                          </Box>
-      {/* ) : (
-        false
-      )} */}
+
     </React.Fragment>
   );
 };

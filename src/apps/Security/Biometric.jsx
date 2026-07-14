@@ -31,7 +31,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import store from "../..";
 import { fileUpload, imageUpload } from "../../store/reducers/Imguploadreducer";
 import Resizer from "react-image-file-resizer";
-import { tokens } from "../../Theme";
+import { breadcrumbStyles, tokens } from "../../Theme";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -217,7 +217,7 @@ const Biometricconfiguration = () => {
                     <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
             
             
-                      <Box sx={{ p: 2, borderRadius: 3, }}>
+                      <Box sx={{borderRadius: 3, }}>
               <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -228,14 +228,19 @@ const Biometricconfiguration = () => {
                         )}
                         <Breadcrumbs
                             maxItems={3}
-                            aria-label="breadcrumb"
-                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                            separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                    sx={breadcrumbStyles.separator}
                         >
 
                             <Typography
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                variant="h5"
+                               sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
 
                             >
                                 Biometric Integration
@@ -259,7 +264,7 @@ const Biometricconfiguration = () => {
                 </Box>
             </Paper>
             </Box>
-               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 0 }}>
                
                       <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                
@@ -322,7 +327,7 @@ const Biometricconfiguration = () => {
     <Typography
       variant="subtitle1"
       fontWeight={700}
-      color="#4F46E5"
+      color="#0D94885"
     >
     Biometric</Typography>
 

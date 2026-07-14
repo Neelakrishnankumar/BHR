@@ -64,7 +64,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
@@ -2547,24 +2547,29 @@ const EditemployeePayroll = () => {
                 </IconButton>
               )}
 
+ <Box>
+             
+                    <Typography
+                                           sx={{
+                                             fontSize: 20,
+                                             fontWeight: 700,
+                                             color: "#111827",
+                                             // mb: 0.2,
+                                                 px: 1,
+                                   py: 0.2,
+                                           }}
+                                         >
+                                           {mode === "A" ? "New Payroll" : "Edit Payroll"}
+                                         </Typography>
               {isNonMobile && (
                 <Breadcrumbs
-                  separator={
-                    <NavigateNextIcon
-                      sx={{
-                        color: "#9CA3AF",
-                        fontSize: 18,
-                      }}
-                    />
-                  }
+                 maxItems={3}
+                  aria-label="breadcrumb"
+                  sx={breadcrumbStyles.separator}
+                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
                 >
                   <Typography
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                      color: "#6B7280",
-                      cursor: "pointer",
-                    }}
+                     sx={breadcrumbStyles.item}
                     onClick={() => setScreen(0)}
                   >
                     {mode === "E"
@@ -2574,11 +2579,7 @@ const EditemployeePayroll = () => {
 
                   {show == "1" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                       sx={breadcrumbStyles.active}
                     >
                       Allowances
                     </Typography>
@@ -2586,11 +2587,7 @@ const EditemployeePayroll = () => {
 
                   {show == "5" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       Deductions
                     </Typography>
@@ -2598,11 +2595,7 @@ const EditemployeePayroll = () => {
 
                   {show == "2" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                       sx={breadcrumbStyles.active}
                     >
                       Leave
                     </Typography>
@@ -2610,11 +2603,7 @@ const EditemployeePayroll = () => {
 
                   {show == "6" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                         sx={breadcrumbStyles.active}
                     >
                       OT
                     </Typography>
@@ -2622,11 +2611,7 @@ const EditemployeePayroll = () => {
 
                   {show == "7" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       Salary Advance
                     </Typography>
@@ -2634,11 +2619,7 @@ const EditemployeePayroll = () => {
 
                   {show == "8" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       On Duty
                     </Typography>
@@ -2646,11 +2627,7 @@ const EditemployeePayroll = () => {
 
                   {show == "9" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       Expense
                     </Typography>
@@ -2658,11 +2635,7 @@ const EditemployeePayroll = () => {
 
                   {show == "3" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       Attendance
                     </Typography>
@@ -2670,11 +2643,7 @@ const EditemployeePayroll = () => {
 
                   {show == "4" && (
                     <Typography
-                      sx={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: "#0D9488",
-                      }}
+                        sx={breadcrumbStyles.active}
                     >
                       Payroll Attendance
                     </Typography>
@@ -2682,6 +2651,7 @@ const EditemployeePayroll = () => {
                 </Breadcrumbs>
               )}
             </Box>
+               </Box>
 
             {/* Right Side */}
             <Box display="flex" gap={1}>
@@ -2759,8 +2729,8 @@ const EditemployeePayroll = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       {/* ----- CARD HEADER ----- */}
-                      <Box display="flex" alignItems="center" gap={2} mb={0.5}>
-                        <Box
+                                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Box
                           sx={{
                             width: 32,
                             height: 32,
@@ -2773,14 +2743,16 @@ const EditemployeePayroll = () => {
                         >
                           <Typography sx={{ fontSize: 16 }}>👤</Typography>
                         </Box>
-                        <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                           <Box>
+                        <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                           Personnel
                         </Typography>
-                      </Box>
-                      <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                     
+                      <Typography variant="body2" color="text.secondary" >
                         Basic details about the personnel
                       </Typography>
-
+  </Box>
+                        </Box>
                       <Box
                         display="grid"
                         gap="20px"
@@ -3254,7 +3226,7 @@ const EditemployeePayroll = () => {
         )}
 
         {show == "11" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, mt: 2}}>
             <Formik
               initialValues={PayprocessInitialvalues}
               enableReinitialize={true}
@@ -3282,6 +3254,45 @@ const EditemployeePayroll = () => {
                     dispatch(resetTrackingData());
                   }}
                 >
+                    {/* ----- CARD HEADER ----- */}
+                                      <Box
+  display="flex"
+  alignItems="center"
+  gap={1.5}   // 👈 increase gap between icon and text
+  mb={0.5}
+  m="10px"
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,          // 👈 slightly bigger
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      mr: 0.5,            // 👈 extra spacing from text
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>💰</Typography>
+  </Box>
+
+  {/* TEXT */}
+  <Box>
+    <Typography
+      variant="subtitle1"
+      fontWeight={700}
+      color="#0D94885"
+    >
+      Payroll
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+      Salary processing, payslips, deductions & allowances
+    </Typography>
+  </Box>
+</Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -3363,7 +3374,8 @@ const EditemployeePayroll = () => {
                     />
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="month"
                       id="month"
                       name="month"
@@ -3373,6 +3385,31 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
+                       sx={{
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                      width: 530,
+                    }}
                     >
                       <MenuItem value={"1"}>January</MenuItem>
                       <MenuItem value={"2"}>February</MenuItem>
@@ -3407,7 +3444,8 @@ const EditemployeePayroll = () => {
                     /> */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       id="year"
                       name="year"
                       label="Year"
@@ -3416,6 +3454,32 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
+                           sx={{
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                      width: 530,
+                    }}
+
                     >
                       {yearOptions.map((year) => (
                         <MenuItem key={year} value={year.toString()}>
@@ -3430,19 +3494,30 @@ const EditemployeePayroll = () => {
                     padding={1}
                     gap="20px"
                   >
-                    <Button type="submit" variant="contained" color="secondary">
-                      APPLY
+                    <Button type="submit" variant="contained" 
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                    >
+                      Apply
                     </Button>
                     <Button
+                    sx={{ textTransform: "none" }} 
                       type="reset"
                       variant="contained"
                       color="primary"
                       onClick={() => attendaceProcessFnSave(values)}
                     >
-                      PROCESS
+                      Process
                     </Button>
-                    <Button type="reset" variant="contained" color="error">
-                      RESET
+                    <Button type="reset" variant="contained" color="error" sx={{ textTransform: "none" }} >
+                      Reset
                     </Button>
                     {/* <PDFDownloadLink
                       document={<RegisterOfWagesPDF data={sampleData} />}
@@ -3499,6 +3574,36 @@ const EditemployeePayroll = () => {
                           backgroundColor: "#D3D3D3",
                           color: "", // Color for even rows
                         },
+
+                           "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                       }}
                     >
                       <DataGrid

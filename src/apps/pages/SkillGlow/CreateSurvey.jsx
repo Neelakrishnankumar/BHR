@@ -45,6 +45,7 @@ import { LoadingButton } from "@mui/lab";
 import toast from "react-hot-toast";
 import { AppraisalAutocompletePayload } from "./SkillGlowAutocomplete";
 import { fetchListview } from "../../../store/reducers/Listviewapireducer";
+import { breadcrumbStyles } from "../../../Theme";
 
 const CreateSurvey = () => {
   const navigate = useNavigate();
@@ -351,31 +352,58 @@ const CreateSurvey = () => {
 
   return (
     <React.Fragment>
-          <Box sx={{ height: "100vh", overflow: "auto" }}>
-             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-               <Box sx={{ p: 2, borderRadius: 3 }}>
-                 <Paper sx={{ borderRadius: 3 }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+          <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 1,
+          mb: 1,
+          p: 1,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          bgcolor: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          {/* Left */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  // mb: 0.2,
+                      px: 1,
+        py: 0.2,
+                }}
               >
+                {mode === "A" ? "New Survey" : "Edit Survey"}
+              </Typography>
+
+            <Breadcrumbs
+                            separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                             sx={breadcrumbStyles.separator}
+                       
+                          >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                 sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
                   }}
@@ -383,9 +411,7 @@ const CreateSurvey = () => {
                   List of Assessment Type ({state.BreadCrumb1})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                         sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
                       { state: { ...state } }
@@ -407,9 +433,7 @@ const CreateSurvey = () => {
                   ({state.BreadCrumb2})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                   sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate(-1);
                   }}
@@ -427,9 +451,7 @@ const CreateSurvey = () => {
                   {/* List of Assessment */}
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  sx={breadcrumbStyles.active}
                 >
                   {mode == "A" ? "New" : "Edit"}
                 </Typography>
@@ -451,7 +473,7 @@ const CreateSurvey = () => {
           </Box>
         </Box>
       </Paper>
-         </Box>
+       
       {!getLoading ? (
        <Box
                     display="flex"
@@ -526,7 +548,7 @@ const CreateSurvey = () => {
                                             <Typography
                                               variant="subtitle1"
                                               fontWeight={700}
-                                              color="#4F46E5"
+                                              color="#0D94885"
                                             >
                                               Survey
                                             </Typography>
@@ -1343,8 +1365,7 @@ const CreateSurvey = () => {
       ) : (
         false
       )}
-           </Box>
-                  </Box>
+          
     </React.Fragment>
   );
 };

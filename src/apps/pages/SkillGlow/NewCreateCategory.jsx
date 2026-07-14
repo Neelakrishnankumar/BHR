@@ -44,6 +44,7 @@ import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
+import { breadcrumbStyles } from "../../../Theme";
 
 const NewCreateCategoryMain = () => {
   const navigate = useNavigate();
@@ -220,47 +221,69 @@ const NewCreateCategoryMain = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-           <Box sx={{ height: "100vh", overflow: "auto" }}>
-                        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                          <Box sx={{ p: 2, borderRadius: 3 }}>
-                            <Paper sx={{ borderRadius: 3 }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
+         <Paper
+                   elevation={0}
+                   sx={{
+                     mx: 2,
+                     mt: 1,
+                     mb: 1,
+                     p: 1,
+                     borderRadius: 3,
+                     border: "1px solid #E5E7EB",
+                     bgcolor: "#fff",
+                   }}
+                 >
+                   <Box
+                     display="flex"
+                     justifyContent="space-between"
+                     alignItems="center"
+                   >
+                     {/* Left */}
+                     <Box display="flex" alignItems="center" gap={2}>
+                       {broken && !rtl && (
+                         <IconButton
+                           onClick={() => toggleSidebar()}
+                           sx={{
+                             border: "1px solid #E5E7EB",
+                             borderRadius: 2,
+                           }}
+                         >
+                           <MenuOutlinedIcon />
+                         </IconButton>
+                       )}
+           
+                       <Box>
+                         <Typography
+                           sx={{
+                             fontSize: 20,
+                             fontWeight: 700,
+                             color: "#111827",
+                             // mb: 0.2,
+                                 px: 1,
+                   py: 0.2,
+                           }}
+                         >
+                           {mode === "A" ? "New Assesment" : "Edit Assessment"}
+                         </Typography>
+           
+                         <Breadcrumbs
+                           separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                            sx={breadcrumbStyles.separator}
+                    >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+           sx={breadcrumbStyles.item}
                   onClick={() => navigate("/Apps/TR299/List%20Of%20Assessment%20Type")}
                 >
                   List Of Assessment Type ({(state.BreadCrumb1)})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.item}
                   onClick={() => navigate(-1)}
                 >
                   List Of Category 
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                   sx={breadcrumbStyles.active}
                 >
                   {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                 </Typography>
@@ -282,7 +305,7 @@ const NewCreateCategoryMain = () => {
           </Box>
         </Box>
       </Paper>
-  </Box>
+  {/* </Box> */}
       {!getLoading ? (
              <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
                        
@@ -326,14 +349,16 @@ const NewCreateCategoryMain = () => {
       justifyContent: "center",
     }}
   >
-    <Typography sx={{ fontSize: 18 }}>
+    <Typography  sx={{  width: 36, height: 36, borderRadius: "50%",
+  bgcolor: "#CCFBF1", // teal-100
+  display: "flex", alignItems: "center", justifyContent: "center" }}>
       {current.icon}
     </Typography>
   </Box>
 
   {/* TITLE + SUBTITLE */}
   <Box>
-    <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+    <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
       {current.title}
     </Typography>
 
@@ -726,8 +751,8 @@ const NewCreateCategoryMain = () => {
       ) : (
         false
       )}
-          </Box>
-                                  </Box>
+          {/* </Box>
+                                  </Box> */}
     </React.Fragment>
   );
 };

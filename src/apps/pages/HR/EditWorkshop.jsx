@@ -51,6 +51,7 @@ import {
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
 import * as Yup from "yup";
+import { breadcrumbStyles } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditWorkshop = () => {
@@ -294,26 +295,52 @@ const EditWorkshop = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       {imageLoading ? <LinearProgress /> : false}
-      <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3 }}>
-              <Box display="flex" justifyContent="space-between" p={2}>
+      <Paper  elevation={0}
+                sx={{
+                  mx: 2,
+                  mt: 1,
+                  mb: 1,
+                  p: 2,
+                  borderRadius: 3,
+                  border: "1px solid #E5E7EB",
+                  bgcolor: "#fff",
+                }}>
+              <Box display="flex" justifyContent="space-between">
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
                     <IconButton onClick={() => toggleSidebar()}>
                       <MenuOutlinedIcon />
                     </IconButton>
                   )}
+                       <Box>
+                                            <Typography
+                                                         sx={{
+                                                           fontSize: 20,
+                                                           fontWeight: 700,
+                                                           color: "#111827",
+                                                           // mb: 0.2,
+                                                               px: 1,
+                                                 py: 0.2,
+                                                         }}
+                                                       >
+                                        {mode === "E"
+                        ? "Edit Workshop"
+                        : mode === "V"
+                          ? "View Workshop"
+                          : "Add Workshop"}
+                                                       </Typography>
                   <Breadcrumbs
                     maxItems={2}
                     aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    separator={<NavigateNextIcon
+                      sx={{
+        fontSize: 18,
+        color: "#94A3B8",
+        margin: "0 4px",
+      }} />}
                   >
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={breadcrumbStyles.item}
                       onClick={() => {
                         // navigate("/Apps/TR243/Party");
                         navigate("/Apps/TR383/Academic%20Year");
@@ -322,9 +349,7 @@ const EditWorkshop = () => {
                       {`Academic Year(${state.AcademicYear || ""})`}
                     </Typography>
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.item}
                       onClick={() => {
                         // navigate("/Apps/TR243/Party");
                         navigate(
@@ -338,9 +363,7 @@ const EditWorkshop = () => {
                       {`Event Category(${state.BreadCrumb1 || ""})`}
                     </Typography>
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={breadcrumbStyles.item}
                       onClick={() => {
                         // navigate("/Apps/TR243/Party");
                         navigate(
@@ -357,9 +380,7 @@ const EditWorkshop = () => {
                     </Typography>
 
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                     sx={breadcrumbStyles.active}
                     >
                       {mode === "E"
                         ? "Edit Workshop"
@@ -369,7 +390,7 @@ const EditWorkshop = () => {
                     </Typography>
                   </Breadcrumbs>
                 </Box>
-
+   </Box>
                 <Box display="flex">
                   <Tooltip title="Close">
                     <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -387,7 +408,7 @@ const EditWorkshop = () => {
                 </Box>
               </Box>
             </Paper>
-          </Box>
+       
           {!getLoading ? (
             <Box
               display="flex"
@@ -477,7 +498,7 @@ const EditWorkshop = () => {
                               <Typography
                                 variant="subtitle1"
                                 fontWeight={700}
-                                color="#4F46E5"
+                                color="#0D94885"
                               >
                                 Workshop
                               </Typography>
@@ -1326,8 +1347,7 @@ const EditWorkshop = () => {
           ) : (
             false
           )}
-        </Box>
-      </Box>
+  
     </React.Fragment>
   );
 };

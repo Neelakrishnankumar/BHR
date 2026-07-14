@@ -563,9 +563,9 @@ const EditTimeSheet = () => {
   return (
     <React.Fragment>
         <Box sx={{ height: "100vh", overflow: "auto" }}>
-                <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                 <Box sx={{ p: 2, borderRadius: 3, }}>
-          <Paper sx={{ borderRadius: 3 }}>
+                <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+         
+          <Paper sx={{borderRadius: 3,border: "1px solid #E5E7EB", }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -573,7 +573,15 @@ const EditTimeSheet = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Timesheet</Typography>
+            <Typography
+                sx={{
+                                                           fontSize: 20,
+                                                           fontWeight: 700,
+                                                           color: "#111827",
+                                                           // mb: 0.2,
+                                                               px: 1,
+                                                 py: 0.2,
+                                                         }}>Timesheet</Typography>
             {/* <Typography variant="h4">
                             Timesheet ({empData?.Name})
                         </Typography> */}
@@ -600,12 +608,12 @@ const EditTimeSheet = () => {
           </Box>
         </Box>
       </Paper>
-</Box>
-      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+
+      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
           
                  <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
           
-          <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+          <Paper elevation={3} sx={{ margin: "5px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, mt: 2}}>
             <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
@@ -669,7 +677,7 @@ const EditTimeSheet = () => {
                                 <Typography
                                   variant="subtitle1"
                                   fontWeight={700}
-                                  color="#4F46E5"
+                                  color="#0D94885"
                                 >
                                   Timesheet
                                 </Typography>

@@ -64,7 +64,7 @@ import {
   MultiFormikOptimizedAutocomplete,
   MultiFormikScheduleOptimizedAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -662,7 +662,11 @@ const NewScheduleLatest = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Schedule</Typography>
+          <Typography
+          variant="subtitle1"
+            fontWeight={700}
+                              color="#0D94885"
+          >List of Schedule</Typography>
         </Box>
         <GridToolbarQuickFilter />
       </GridToolbarContainer>
@@ -685,32 +689,57 @@ const NewScheduleLatest = () => {
           height: "100vh",
         }}
       >
-        {/* BREADCRUMBS */}
-             <Box sx={{ height: "100vh", overflow: "auto" }}>
-                             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                               <Box sx={{ p: 2, borderRadius: 3 }}>
-                                 <Paper sx={{ borderRadius: 3 }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+      <Paper
+               elevation={0}
+               sx={{
+                 mx: 2,
+                 mt: 1,
+                 mb: 1,
+                 p: 1,
+                 borderRadius: 3,
+                 border: "1px solid #E5E7EB",
+                 bgcolor: "#fff",
+               }}
+             >
+               <Box
+                 display="flex"
+                 justifyContent="space-between"
+                 alignItems="center"
+               >
+                 {/* Left */}
+                 <Box display="flex" alignItems="center" gap={2}>
+                   {broken && !rtl && (
+                     <IconButton
+                       onClick={() => toggleSidebar()}
+                       sx={{
+                         border: "1px solid #E5E7EB",
+                         borderRadius: 2,
+                       }}
+                     >
+                       <MenuOutlinedIcon />
+                     </IconButton>
+                   )}
+       
+                   <Box>
+                     <Typography
+                       sx={{
+                         fontSize: 20,
+                         fontWeight: 700,
+                         color: "#111827",
+                         // mb: 0.2,
+                             px: 1,
+               py: 0.2,
+                       }}
+                     >
+                       {mode === "A" ? "Schedule History" : "Schedule History"}
+                     </Typography>
+       
+                     <Breadcrumbs
+                       separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                        sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
                     }}
@@ -718,9 +747,7 @@ const NewScheduleLatest = () => {
                     List of Assessment Type ({state.BreadCrumb1})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate(
                         `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}`,
@@ -731,9 +758,7 @@ const NewScheduleLatest = () => {
                     List of Category ({state.BreadCrumb2})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate(
                         `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID1}/${params.parentID3}`,
@@ -755,9 +780,7 @@ const NewScheduleLatest = () => {
                     ({state.BreadCrumb3})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={breadcrumbStyles.active}
                   >
                     Schedule History
                   </Typography>
@@ -779,7 +802,7 @@ const NewScheduleLatest = () => {
             </Box>
           </Box>
         </Paper>
-   </Box>
+
         {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px"
@@ -924,8 +947,7 @@ const NewScheduleLatest = () => {
         ) : (
           false
         )}
-              </Box>
-                    </Box>
+           
       </React.Fragment>
     </>
   );

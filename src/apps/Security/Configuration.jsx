@@ -1700,7 +1700,7 @@ const Configuration = () => {
                <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
        
        
-                 <Box sx={{ p: 2, borderRadius: 3, }}>
+                 <Box sx={{borderRadius: 3, }}>
          <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -1716,9 +1716,14 @@ const Configuration = () => {
                         >
 
                             <Typography
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                variant="h5"
+                                sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+                       py: 0.2,
+                   }}
 
                             >
                                 Company Configuration
@@ -1808,7 +1813,7 @@ const Configuration = () => {
                 </Box>
             </Paper> */}
             {show == "0" ? (
-               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 0 }}>
                     
                            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                     
@@ -1871,7 +1876,7 @@ const Configuration = () => {
     <Typography
       variant="subtitle1"
       fontWeight={700}
-      color="#4F46E5"
+      color="#0D94885"
     >
      Configuration
     </Typography>

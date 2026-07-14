@@ -79,6 +79,13 @@ const Editusergroup = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const [pageSize, setPageSize] = React.useState(20);
 
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+
   // console.log("🚀 ~ file: Editusergroup.jsx:65 ~ Editusergroup ~ Year:", Year)
 
   useEffect(() => {
@@ -276,7 +283,11 @@ const Editusergroup = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Screen Names</Typography>
+          <Typography sx={{
+            fontWeight: 700,
+            color: "#111827",
+          }}
+          >List of Screen Names</Typography>
         </Box>
         <Box
           sx={{
@@ -508,12 +519,21 @@ const Editusergroup = () => {
       toast.error(response.payload.Msg);
     }
   };
+
+
+    const label =
+  Subscriptionlastthree === "003" ? "Permission Management" : "User Group";
+
+const text =
+  mode === "E"
+    ? `${label}(${data.CompanyName})`
+    : `${label}(New)`;
   return (
     <React.Fragment>
       {/* {getLoading ? <LinearProgress /> : false} */}
         <Box sx={{ height: "100vh", overflow: "auto" }}>
                     <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                      <Box sx={{ p: 2, borderRadius: 3 }}>
+                      <Box sx={{borderRadius: 3 }}>
                         <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -532,27 +552,24 @@ const Editusergroup = () => {
                 aria-label="breadcrumb"
                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
-                {/* <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR099/User Rights");
-                  }}
-                >
-                  {`Company(${rowDatastate.UGCompany})`}
-                </Typography> */}
+              
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                   sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
                 // onClick={() => {
                 //   navigate(
                 //     `/Apps/Secondarylistview/TR095/Usergroups/${CompanyID}`
                 //   );
                 // }}
                 >
-                  {mode === "E" ? `User Group(${data.CompanyName})` : "User Group(New)"}
+{text}
+                  {/* {mode === "E" ? `User Group(${data.CompanyName})` : "User Group(New)"} */}
 
                 </Typography>
               </Breadcrumbs>
@@ -617,8 +634,8 @@ const Editusergroup = () => {
                                                           👥
                                                         </Box>
                                                         <Box>
-                                                          <Typography variant="h6" fontWeight={700} color="#4F46E5">
-                                                            User Group
+                                                          <Typography variant="h6" fontWeight={700} color="#0D94885">
+                                                           {label}
                                                           </Typography>
                                                           <Typography variant="caption" color="text.secondary">
                                                             Manage user groups, roles, and access permissions.

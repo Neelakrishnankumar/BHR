@@ -502,7 +502,7 @@ const EditAttendanceHistory = () => {
     <React.Fragment>
       {/* {getLoading && <LinearProgress />} */}
             <Box sx={{ height: "100vh", overflow: "auto" }}>
-                   <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                   <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
                     <Box sx={{ p: 2, borderRadius: 3, }}>
              <Paper sx={{ borderRadius: 3 }}>
 
@@ -513,7 +513,15 @@ const EditAttendanceHistory = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance History</Typography>
+            <Typography
+             sx={{
+            fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    px: 1,
+                    py: 0.2,
+                  }}
+                    >Attendance History</Typography>
           </Box>
           <Box display="flex">
             {/* <Tooltip title="Attendance ">
@@ -538,11 +546,11 @@ const EditAttendanceHistory = () => {
         </Box>
       </Paper>
  </Box>
-       <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+       <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
              
                     <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
              
-             <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+             <Paper elevation={3} sx={{ margin: "2px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
                <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
@@ -606,7 +614,7 @@ const EditAttendanceHistory = () => {
                                 <Typography
                                   variant="subtitle1"
                                   fontWeight={700}
-                                  color="#4F46E5"
+                                   color="#0D94885"
                                 >
                                   Attendance History
                                 </Typography>

@@ -570,8 +570,8 @@ const Editdesignation = () => {
         </Box>
       </Paper> */}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
+        <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{ p: 1, borderRadius: 3 }}>
             <Paper sx={{ borderRadius: 3 }}>
               <Box display="flex" justifyContent="space-between" p={2}>
                 <Box display="flex" borderRadius="3px" alignItems="center">

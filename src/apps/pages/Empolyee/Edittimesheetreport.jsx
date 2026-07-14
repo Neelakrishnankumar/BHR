@@ -616,22 +616,31 @@ const Edittimesheetreport = () => {
   const projecID = selectedPro.map((ProName) => ProName.RecordID).join(",");
   return (
     <React.Fragment>
-      {/* {getLoading && <LinearProgress />} */}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3 }}>
-              <Box display="flex" justifyContent="space-between" p={2}>
-                <Box display="flex" borderRadius="3px" alignItems="center">
-                  {broken && !rtl && (
-                    <IconButton onClick={() => toggleSidebar()}>
-                      <MenuOutlinedIcon />
-                    </IconButton>
-                  )}
-                  <Typography variant="h3">Timesheet Report</Typography>
-                </Box>
-                <Box display="flex">
-                  {/* <Tooltip title="Attendance ">
+        <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
+            <Box display="flex" justifyContent="space-between" p={2}>
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                {broken && !rtl && (
+                  <IconButton onClick={() => toggleSidebar()}>
+                    <MenuOutlinedIcon />
+                  </IconButton>
+                )}
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  Timesheet Report
+                </Typography>
+              </Box>
+              <Box display="flex">
+                {/* <Tooltip title="Attendance ">
             <IconButton
               onClick={() => navigate("/Apps/TR217/Attendance")}
               color="primary"
@@ -639,29 +648,26 @@ const Edittimesheetreport = () => {
               <ListAltOutlinedIcon />
             </IconButton>
           </Tooltip> */}
-                  <Tooltip title="Close">
-                    <IconButton onClick={() => fnLogOut("Close")} color="error">
-                      <ResetTvIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Logout">
-                    <IconButton
-                      color="error"
-                      onClick={() => fnLogOut("Logout")}
-                    >
-                      <LogoutOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+                <Tooltip title="Close">
+                  <IconButton onClick={() => fnLogOut("Close")} color="error">
+                    <ResetTvIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Logout">
+                  <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                    <LogoutOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
               </Box>
-            </Paper>
-          </Box>
+            </Box>
+          </Paper>
+
           <Box
             display="flex"
             gap={3}
             alignItems="flex-start"
             flexWrap="wrap"
-            sx={{ p: 1 }}
+            sx={{ p: 0, mt: 2 }}
           >
             <Box
               flex={1}
@@ -673,7 +679,7 @@ const Edittimesheetreport = () => {
               <Paper
                 elevation={3}
                 sx={{
-                  margin: "10px",
+                  margin: "2px",
                   backgroundColor: "#ffff",
                   border: "1px solid #b9bcc0",
                   borderRadius: 3,
@@ -746,7 +752,7 @@ const Edittimesheetreport = () => {
                           <Typography
                             variant="subtitle1"
                             fontWeight={700}
-                            color="#4F46E5"
+                            color="#0D94885"
                           >
                             Timesheet Report
                           </Typography>

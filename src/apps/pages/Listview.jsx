@@ -901,9 +901,10 @@ const Listview = () => {
             ) : accessID == "TR330" ? (
               false
             )
-              // : accessID == "TR336" ? (
-              //false
-              //)
+           : accessID == "TR366" ? (
+              false
+            )
+            
               : accessID == "TR337" ? (
                 false
               )
@@ -1645,7 +1646,7 @@ const Listview = () => {
           >
             {/* Search row, bordered off from the grid below it */}
             <Box
-              p={2}
+              p={1}
               borderBottom="1px solid #F3F4F6"
               sx={{
                 display: "flex",
