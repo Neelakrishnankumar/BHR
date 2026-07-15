@@ -72,6 +72,7 @@ import { ArrowBack, CloudUpload } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { breadcrumbStyles } from "../../../Theme";
 
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -1271,7 +1272,7 @@ const Editvendor = () => {
           p: 2,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
-          background: "#fff",
+          bgcolor: "#fff",
         }}
       >
         <Box
@@ -1279,125 +1280,77 @@ const Editvendor = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Box display="flex" alignItems="center" gap={1}>
+          {/* LEFT */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
 
-            <Breadcrumbs
-              maxItems={3}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon fontSize="small" color="primary" />}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-                onClick={() => {
-                  setScreen(0);
-                }}
+            <Box>
+            
+              {/* Breadcrumb */}
+              <Breadcrumbs
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                sx={breadcrumbStyles.separator}
               >
-                {mode === "E"
-                  ? `Party (${state.PName})`
-                  : "Party (New)"}
-              </Typography>
-
-              {show == "1" && (
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
+                  sx={breadcrumbStyles.item}
+                  onClick={() => {
+                    setScreen(0);
                   }}
                 >
-                  Contact Details
+                  {mode === "E"
+                    ? `Party (${state.PName})`
+                    : "Party (New)"}
                 </Typography>
-              )}
 
-              {show == "2" && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
-                >
-                  Bank Details
-                </Typography>
-              )}
+                {show == "1" && (
+                  <Typography sx={breadcrumbStyles.active}>
+                    Contact Details
+                  </Typography>
+                )}
 
-              {show == "3" && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
-                >
-                  Registration
-                </Typography>
-              )}
+                {show == "2" && (
+                  <Typography sx={breadcrumbStyles.active}>
+                    Bank Details
+                  </Typography>
+                )}
 
-              {show == "4" && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
-                >
-                  Default Settings
-                </Typography>
-              )}
+                {show == "3" && (
+                  <Typography sx={breadcrumbStyles.active}>
+                    Registration
+                  </Typography>
+                )}
 
-              {show == "5" && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
-                >
-                  List Of Documents
-                </Typography>
-              )}
-            </Breadcrumbs>
+                {show == "4" && (
+                  <Typography sx={breadcrumbStyles.active}>
+                    Default Settings
+                  </Typography>
+                )}
+
+                {show == "5" && (
+                  <Typography sx={breadcrumbStyles.active}>
+                    List Of Documents
+                  </Typography>
+                )}
+              </Breadcrumbs>
+            </Box>
           </Box>
 
-          <Box display="flex" alignItems="center" gap={1}>
-            {/* {mode !== "A" && (
-              <FormControl size="small" sx={{ minWidth: 180 }}>
-                <InputLabel id="demo-select-small">Explore</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={show}
-                  label="Explore"
-                  onChange={screenChange}
-                >
-                  <MenuItem value={0}>Party</MenuItem>
-                  <MenuItem value={3}>Registration</MenuItem>
-                  <MenuItem value={4}>Default Settings</MenuItem>
-                  <MenuItem value={2}>Bank Details</MenuItem>
-                  <MenuItem value={1}>Contact Details</MenuItem>
-                  <MenuItem value={5}>List Of Documents</MenuItem>
-                </Select>
-              </FormControl>
-            )} */}
-
+          {/* RIGHT */}
+          <Box display="flex">
             <Tooltip title="Close">
               <IconButton
                 onClick={() => fnLogOut("Close")}
                 sx={{
-                 // bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
@@ -1412,7 +1365,6 @@ const Editvendor = () => {
               <IconButton
                 onClick={() => fnLogOut("Logout")}
                 sx={{
-                 // bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
@@ -1776,7 +1728,6 @@ const Editvendor = () => {
                     <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                       {YearFlag == "true" ? (
                         <LoadingButton
-                          color="secondary"
                           variant="contained"
                           type="submit"
                           loading={isLoading}
@@ -1785,7 +1736,7 @@ const Editvendor = () => {
                           Save
                         </LoadingButton>
                       ) : (
-                        <Button color="secondary" variant="contained" disabled sx={{ textTransform: "none", borderRadius: 2, px: 4 }}>
+                        <Button variant="contained" disabled sx={{ textTransform: "none", borderRadius: 2, px: 4 }}>
                           Save
                         </Button>
                       )}
@@ -1795,7 +1746,7 @@ const Editvendor = () => {
                         onClick={() => navigate("/Apps/TR321/Party")}
                         sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </form>
@@ -2201,7 +2152,6 @@ const Editvendor = () => {
                     <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                       {YearFlag == "true" ? (
                         <LoadingButton
-                          color="secondary"
                           variant="contained"
                           type="submit"
                           loading={isLoading}
@@ -2240,7 +2190,7 @@ const Editvendor = () => {
                           "&:hover": { bgcolor: "#EA580C" },
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </form>
@@ -2578,7 +2528,6 @@ const Editvendor = () => {
                     <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                       {YearFlag == "true" ? (
                         <LoadingButton
-                          color="secondary"
                           variant="contained"
                           type="submit"
                           loading={isLoading}
@@ -2616,7 +2565,7 @@ const Editvendor = () => {
                           "&:hover": { bgcolor: "#EA580C" },
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </Box>
                   </form>
@@ -2928,7 +2877,6 @@ const Editvendor = () => {
                           </Button>
 
                           <LoadingButton
-                            color="secondary"
                             variant="contained"
                             type="submit"
                             loading={isLoading}
@@ -2957,7 +2905,7 @@ const Editvendor = () => {
                               "&:hover": { bgcolor: "#EA580C" },
                             }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </>
@@ -3178,7 +3126,6 @@ const Editvendor = () => {
 
                         <Box display="flex" justifyContent="end" gap={2} mt={4}>
                           <LoadingButton
-                            color="secondary"
                             variant="contained"
                             type="submit"
                             loading={isLoading}
@@ -3207,7 +3154,7 @@ const Editvendor = () => {
                               "&:hover": { bgcolor: "#EA580C" },
                             }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </>
@@ -3479,15 +3426,10 @@ const Editvendor = () => {
                     onClick={() => {
                       setScreen("0");
                     }}
-                    sx={{
-                      textTransform: "none",
-                      borderRadius: 2,
-                      px: 4,
-                      bgcolor: "#F97316",
-                      "&:hover": { bgcolor: "#EA580C" },
-                    }}
+                    sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}
+                    
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </Box>

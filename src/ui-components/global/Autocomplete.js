@@ -735,8 +735,7 @@ export const HSNCategoryAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -812,8 +811,7 @@ export const HSNMasterAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (

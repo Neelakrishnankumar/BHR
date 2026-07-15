@@ -690,7 +690,7 @@ const EditHSNMaster = () => {
                         },
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>

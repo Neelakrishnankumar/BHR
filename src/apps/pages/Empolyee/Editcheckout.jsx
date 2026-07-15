@@ -854,7 +854,7 @@ const Editcheckout = () => {
                       }
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

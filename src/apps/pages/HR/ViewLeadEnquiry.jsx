@@ -34,7 +34,7 @@ const LeaderCardView = () => {
   const listViewUrl = useSelector((store) => store.globalurl.listViewurl);
   const state = location.state || {};
   console.log(state, "state");
- const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
@@ -337,7 +337,7 @@ const LeaderCardView = () => {
                     <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                   </Typography>
                   {/* {row.RequestDateTime && ( */}
-                   <Typography>
+                  <Typography>
                     <strong>Request Date & Time:</strong> {row.RequestDateTime || "N/A"}
                   </Typography>
                   {/* )} */}
@@ -458,11 +458,20 @@ const LeaderCardView = () => {
 
       {/* Bottom Cancel button */}
       <Box display="flex" justifyContent="flex-end" mt={4}>
-        <Button variant="contained" color="warning" onClick={handleCancel}>
-          Cancel
+        <Button variant="contained" color="warning" onClick={handleCancel}
+          sx={{
+            textTransform: "none",
+            borderRadius: 2,
+            px: 4,
+            bgcolor: "#F97316",
+            "&:hover": {
+              bgcolor: "#EA580C",
+            }
+          }} >
+            Back
         </Button>
-      </Box>
     </Box>
+    </Box >
   );
 };
 

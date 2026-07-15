@@ -41,6 +41,8 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { CustomisedCaptionGet, getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import { breadcrumbStyles } from "../../../Theme";
+
 // import {
 //   ManagerAppraisalPayload,
 //   PeerAppraisalPayload,
@@ -229,19 +231,18 @@ const EditItemGroup = () => {
           elevation={0}
           sx={{
             mx: 2,
-            mb: 2,
+            mt: 1,
+            mb: 1,
+            p: 1,
             borderRadius: 3,
             border: "1px solid #E5E7EB",
             bgcolor: "#fff",
-            overflow: "hidden",
           }}
         >
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            px={3}
-            py={2}
           >
             {/* Left */}
             <Box display="flex" alignItems="center" gap={2}>
@@ -249,10 +250,8 @@ const EditItemGroup = () => {
                 <IconButton
                   onClick={() => toggleSidebar()}
                   sx={{
-                    bgcolor: "#F3F4F6",
-                    "&:hover": {
-                      bgcolor: "#E5E7EB",
-                    },
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 2,
                   }}
                 >
                   <MenuOutlinedIcon />
@@ -265,31 +264,22 @@ const EditItemGroup = () => {
                     fontSize: 20,
                     fontWeight: 700,
                     color: "#111827",
-                    lineHeight: 1.2,
+                    px: 1,
+                    py: 0.2,
                   }}
                 >
                   {getBusinessCaption("ItemGroup", "Item Group")}
                 </Typography>
 
                 <Breadcrumbs
-                  maxItems={3}
-                  separator={
-                    <NavigateNextIcon
-                      sx={{
-                        color: "#9CA3AF",
-                        fontSize: 18,
-                      }}
-                    />
-                  }
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    sx={{
-                      color: "#2563EB",
-                      cursor: "pointer",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                    onClick={() => navigate("/Apps/TR315/Item%20Group")}
+                    sx={breadcrumbStyles.item}
+                    onClick={() =>
+                      navigate("/Apps/TR315/Item%20Group")
+                    }
                   >
                     {mode === "E"
                       ? `${getBusinessCaption(
@@ -302,13 +292,7 @@ const EditItemGroup = () => {
                       )}
                   </Typography>
 
-                  <Typography
-                    sx={{
-                      color: "#6B7280",
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
+                  <Typography sx={breadcrumbStyles.active}>
                     {mode === "A"
                       ? "New"
                       : mode === "E"
@@ -320,16 +304,11 @@ const EditItemGroup = () => {
             </Box>
 
             {/* Right */}
-            <Box display="flex" gap={1}>
+            <Box display="flex">
               <Tooltip title="Close">
                 <IconButton
                   onClick={() => fnLogOut("Close")}
                   sx={{
-                    //   width: 42,
-                    // height: 42,
-                    borderRadius: 2,
-                    // bgcolor: "#FEF2F2",
-                    //  border: "1px solid #FECACA",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -344,11 +323,6 @@ const EditItemGroup = () => {
                 <IconButton
                   onClick={() => fnLogOut("Logout")}
                   sx={{
-                    //   width: 42,
-                    // height: 42,
-                    borderRadius: 2,
-                    //       bgcolor: "#FEF2F2",
-                    //      border: "1px solid #FECACA",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -373,6 +347,41 @@ const EditItemGroup = () => {
               background: "#fff",
             }}
           >
+
+            <Box display="flex" alignItems="center" gap={1} mb={5}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  backgroundColor: "#EFF6FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                }}
+              >
+                📦
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  color="#4F46E5"
+                >
+                  {getBusinessCaption("ItemGroup", "Item Group")}
+                </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  Manage item group details and master information
+                </Typography>
+              </Box>
+            </Box>
+
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -606,7 +615,7 @@ const EditItemGroup = () => {
                         },
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>

@@ -305,6 +305,7 @@ const NewCreateCategoryMain = () => {
           </Box>
         </Box>
       </Paper>
+      
   {/* </Box> */}
       {!getLoading ? (
              <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>

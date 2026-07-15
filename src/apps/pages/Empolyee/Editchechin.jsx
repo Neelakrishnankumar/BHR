@@ -374,7 +374,7 @@ const Editcheckin = () => {
                   sx={{
                     fontSize: "18px",
                     fontWeight: 700,
-                    color: "#4F46E5",
+                    color: "#111827",
                     cursor: "pointer",
                   }}
                   onClick={() => navigate(-1)}
@@ -780,7 +780,7 @@ const Editcheckin = () => {
                       },
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

@@ -37,6 +37,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { breadcrumbStyles } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditOrder = () => {
@@ -318,7 +319,7 @@ const EditOrder = () => {
     });
   };
 
-    const textFieldSx = {
+  const textFieldSx = {
     "& .MuiOutlinedInput-root": {
       backgroundColor: "#fff",
       borderRadius: "6px",
@@ -345,7 +346,7 @@ const EditOrder = () => {
           p: 2,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
-          background: "#fff",
+          bgcolor: "#fff",
         }}
       >
         <Box
@@ -353,82 +354,29 @@ const EditOrder = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Box display="flex" alignItems="center" gap={1}>
+          {/* LEFT */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
 
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon fontSize="small" color="primary" />}
-            >
+            <Box>
+              {/* Page Title */}
               <Typography
-                variant="body1"
                 sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-                onClick={() => {
-                  navigate("/Apps/TR321/Party");
-                }}
-              >
-                {`Party (${state.PartyName || ""})`}
-              </Typography>
-
-              {params.Type === "Leader" ? (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  {`Lead (${state.LeadTitle || ""})`}
-                </Typography>
-              ) : null}
-
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-                onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                {params.OrderType === "O"
-                  ? mode === "E"
-                    ? `Order (${state.Code || ""})`
-                    : "Order (New)"
-                  : mode === "E"
-                    ? `Quotation (${state.Code || ""})`
-                    : "Quotation (New)"}
-              </Typography>
-
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#6B7280",
-                  fontWeight: 600,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  px: 1,
+                  py: 0.2,
                 }}
               >
                 {params.OrderType === "O"
@@ -439,15 +387,67 @@ const EditOrder = () => {
                     ? "Add Quotation"
                     : "Edit Quotation"}
               </Typography>
-            </Breadcrumbs>
+
+              {/* Breadcrumb */}
+              <Breadcrumbs
+                maxItems={4}
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                sx={breadcrumbStyles.separator}
+              >
+                <Typography
+                  sx={breadcrumbStyles.item}
+                  onClick={() => {
+                    navigate("/Apps/TR321/Party");
+                  }}
+                >
+                  {`Party (${state.PartyName || ""})`}
+                </Typography>
+
+                {params.Type === "Leader" ? (
+                  <Typography
+                    sx={breadcrumbStyles.item}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    {`Lead (${state.LeadTitle || ""})`}
+                  </Typography>
+                ) : null}
+
+                <Typography
+                  sx={breadcrumbStyles.item}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  {params.OrderType === "O"
+                    ? mode === "E"
+                      ? `Order (${state.Code || ""})`
+                      : "Order (New)"
+                    : mode === "E"
+                      ? `Quotation (${state.Code || ""})`
+                      : "Quotation (New)"}
+                </Typography>
+
+                <Typography sx={breadcrumbStyles.active}>
+                  {params.OrderType === "O"
+                    ? mode === "A"
+                      ? "Add Order"
+                      : "Edit Order"
+                    : mode === "A"
+                      ? "Add Quotation"
+                      : "Edit Quotation"}
+                </Typography>
+              </Breadcrumbs>
+            </Box>
           </Box>
 
-          <Box display="flex" gap={1}>
+          {/* RIGHT */}
+          <Box display="flex">
             <Tooltip title="Close">
               <IconButton
                 onClick={() => fnLogOut("Close")}
                 sx={{
-                  // bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
@@ -462,7 +462,6 @@ const EditOrder = () => {
               <IconButton
                 onClick={() => fnLogOut("Logout")}
                 sx={{
-                  //  bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
@@ -539,8 +538,8 @@ const EditOrder = () => {
 
                   <Box
                     display="grid"
-                   // gap={formGap}
-                    gap = '20px'
+                    // gap={formGap}
+                    gap='20px'
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
@@ -1223,7 +1222,6 @@ const EditOrder = () => {
                   <Box display="flex" justifyContent="end" gap={2} mt={4}>
                     {YearFlag == "true" && (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
-                        color="secondary"
                         variant="contained"
                         type="submit"
                         loading={isLoading}
@@ -1240,7 +1238,6 @@ const EditOrder = () => {
                       </LoadingButton>
                     ) : (
                       <Button
-                        color="secondary"
                         variant="contained"
                         disabled={true}
                         sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
@@ -1299,7 +1296,7 @@ const EditOrder = () => {
                         "&:hover": { bgcolor: "#EA580C" },
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </form>

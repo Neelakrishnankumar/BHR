@@ -65,6 +65,8 @@ import {
   VendorRegisterFetchData,
 } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import { breadcrumbStyles } from "../../../Theme";
+
 // import {
 //   ManagerAppraisalPayload,
 //   PeerAppraisalPayload,
@@ -967,16 +969,16 @@ const EditItem = () => {
         {isLoading ? <LinearProgress /> : null}
 
         {/* BREADCRUMBS */}
-        {/* BREADCRUMBS */}
         <Paper
           elevation={0}
           sx={{
-            mx: 1,
-            mb: 2,
-            p: 2,
-            border: "1px solid #E5E7EB",
+            mx: 2,
+            mt: 1,
+            mb: 1,
+            p: 1,
             borderRadius: 3,
-            background: "#fff",
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
           }}
         >
           <Box
@@ -984,64 +986,51 @@ const EditItem = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            {/* LEFT */}
-            <Box display="flex" alignItems="center">
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 2,
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
 
-              <Box ml={1}>
-                {/* Page Title */}
+              <Box>
                 <Typography
-                  variant="h5"
-                  fontWeight={700}
-                  color="#111827"
-                  mb={0.5}
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    px: 1,
+                    py: 0.2,
+                  }}
                 >
-                  {mode == "A"
+                  {mode === "A"
                     ? "New Item"
-                    : mode == "E"
+                    : mode === "E"
                       ? "Edit Item"
                       : "View Item"}
                 </Typography>
 
-                {/* Breadcrumbs */}
                 <Breadcrumbs
                   maxItems={4}
-                  separator={
-                    <NavigateNextIcon
-                      sx={{
-                        fontSize: 18,
-                        color: "#9CA3AF",
-                      }}
-                    />
-                  }
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    sx={{
-                      cursor: "pointer",
-                      color: "#6B7280",
-                      fontSize: 14,
-                      "&:hover": {
-                        color: "#4F46E5",
-                      },
-                    }}
+                    sx={breadcrumbStyles.item}
                     onClick={() => navigate("/Apps/TR315/ItemGroup")}
                   >
                     List Of Item Group ({state.BreadCrumb1})
                   </Typography>
 
                   <Typography
-                    sx={{
-                      cursor: "pointer",
-                      color: "#6B7280",
-                      fontSize: 14,
-                      "&:hover": {
-                        color: "#4F46E5",
-                      },
-                    }}
+                    sx={breadcrumbStyles.item}
                     onClick={() =>
                       navigate(
                         `/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`,
@@ -1057,31 +1046,18 @@ const EditItem = () => {
                   </Typography>
 
                   <Typography
-                    sx={{
-                      cursor: "pointer",
-                      color: "#6B7280",
-                      fontSize: 14,
-                      "&:hover": {
-                        color: "#4F46E5",
-                      },
-                    }}
+                    sx={breadcrumbStyles.item}
                     onClick={() => navigate(-1)}
                   >
                     {mode === "E"
                       ? `List Of Items (${state.BreadCrumb3})`
-                      : `List Of Item`}
+                      : "List Of Item"}
                   </Typography>
 
-                  <Typography
-                    sx={{
-                      color: "#4F46E5",
-                      fontWeight: 600,
-                      fontSize: 14,
-                    }}
-                  >
-                    {mode == "A"
+                  <Typography sx={breadcrumbStyles.active}>
+                    {mode === "A"
                       ? "New"
-                      : mode == "E"
+                      : mode === "E"
                         ? "Edit"
                         : "View"}
                   </Typography>
@@ -1089,13 +1065,16 @@ const EditItem = () => {
               </Box>
             </Box>
 
-            {/* RIGHT */}
-            <Box display="flex" alignItems="center" gap={1}>
+            {/* Right */}
+            <Box display="flex">
               <Tooltip title="Close">
                 <IconButton
                   onClick={() => fnLogOut("Close")}
                   sx={{
-                    color: "#EF4444",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
                   }}
                 >
                   <ResetTvIcon />
@@ -1106,7 +1085,10 @@ const EditItem = () => {
                 <IconButton
                   onClick={() => fnLogOut("Logout")}
                   sx={{
-                    color: "#EF4444",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
                   }}
                 >
                   <LogoutOutlinedIcon />
@@ -1432,7 +1414,6 @@ const EditItem = () => {
                         <LoadingButton
                           type="submit"
                           variant="contained"
-                          color="secondary"
                           loading={isLoading}
                           sx={{
                             textTransform: "none",
@@ -1461,7 +1442,7 @@ const EditItem = () => {
                             },
                           }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                     </Form>
@@ -2106,7 +2087,7 @@ const EditItem = () => {
                             },
                           }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                     </Form>
@@ -2995,7 +2976,7 @@ const EditItem = () => {
                             }
                           }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                     </Form>
@@ -3044,8 +3025,8 @@ const EditItem = () => {
                   onSubmit={(values, { resetForm }) => {
                     setTimeout(() => {
                       LeadSaveFn(values, resetForm, false);
-                     
-                       setOpenLeadModal(false);
+
+                      setOpenLeadModal(false);
                     }, 100);
                   }}
                 >
@@ -3555,6 +3536,16 @@ const EditItem = () => {
                                   }
                                 });
                               }}
+                               sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#d33",
+                                  color:'#fff',
+                                  "&:hover": {
+                                    bgcolor: "#d33",
+                                  },
+                                }}
                             >
                               Delete
                             </Button>
@@ -3564,15 +3555,33 @@ const EditItem = () => {
                                 variant="outlined"
                                 color="warning"
                                 onClick={() => setOpenLeadModal(false)}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  color:'#fff',
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
                               >
                                 Cancel
                               </Button>
 
                               <LoadingButton
-                                color="secondary"
                                 variant="contained"
                                 loading={isLoading}
                                 onClick={handleSubmit}
+                                sx={{
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                               >
                                 Save
                               </LoadingButton>
@@ -3581,7 +3590,7 @@ const EditItem = () => {
                         </Dialog>
 
                       </Box>
-                      <Box
+                      {/* <Box
                         display="flex"
                         justifyContent="end"
                         padding={1}
@@ -3628,7 +3637,7 @@ const EditItem = () => {
                         >
                           Cancel
                         </Button>
-                      </Box>
+                      </Box> */}
                     </form>
                   )}
                 </Formik>

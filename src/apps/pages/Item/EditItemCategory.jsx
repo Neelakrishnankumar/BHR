@@ -41,6 +41,8 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import { breadcrumbStyles } from "../../../Theme";
+
 // import {
 //   ManagerAppraisalPayload,
 //   PeerAppraisalPayload,
@@ -229,12 +231,13 @@ const EditItemCategory = () => {
         <Paper
           elevation={0}
           sx={{
-            m: 2,
+            mx: 2,
+            mt: 1,
             mb: 1,
-            p: 2,
+            p: 1,
             borderRadius: 3,
             border: "1px solid #E5E7EB",
-            backgroundColor: "#fff",
+            bgcolor: "#fff",
           }}
         >
           <Box
@@ -242,73 +245,70 @@ const EditItemCategory = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            {/* Left Side */}
-            <Box display="flex" alignItems="center">
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 2,
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
 
-              <Breadcrumbs
-                separator={<NavigateNextIcon fontSize="small" color="primary" />}
-                maxItems={3}
-              >
+              <Box>
                 <Typography
-                  variant="body1"
                   sx={{
-                    color: "#0D47A1",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    px: 1,
+                    py: 0.2,
                   }}
-                  onClick={() => navigate("/Apps/TR315/Item%20Group")}
                 >
-                  List Of Item Group ({state.BreadCrumb1})
+                  Item Category
                 </Typography>
 
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                  onClick={() => navigate(-1)}
+                <Breadcrumbs
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
-                  {mode === "E"
-                    ? `List Of Item Category (${state.BreadCrumb2})`
-                    : "List Of Item Category"}
-                </Typography>
+                  <Typography
+                    sx={breadcrumbStyles.item}
+                    onClick={() => navigate("/Apps/TR315/Item%20Group")}
+                  >
+                    List Of Item Group ({state.BreadCrumb1})
+                  </Typography>
 
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
-                >
-                  {mode === "A"
-                    ? "New"
-                    : mode === "E"
-                      ? "Edit"
-                      : "View"}
-                </Typography>
-              </Breadcrumbs>
+                  <Typography
+                    sx={breadcrumbStyles.item}
+                    onClick={() => navigate(-1)}
+                  >
+                    {mode === "E"
+                      ? `List Of Item Category (${state.BreadCrumb2})`
+                      : "List Of Item Category"}
+                  </Typography>
+
+                  <Typography sx={breadcrumbStyles.active}>
+                    {mode === "A"
+                      ? "New"
+                      : mode === "E"
+                        ? "Edit"
+                        : "View"}
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
             </Box>
 
-            {/* Right Side */}
-            <Box display="flex" gap={1}>
+            {/* Right */}
+            <Box display="flex">
               <Tooltip title="Close">
                 <IconButton
                   onClick={() => fnLogOut("Close")}
                   sx={{
-                    bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -323,7 +323,6 @@ const EditItemCategory = () => {
                 <IconButton
                   onClick={() => fnLogOut("Logout")}
                   sx={{
-                    bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -348,6 +347,40 @@ const EditItemCategory = () => {
               background: "#fff",
             }}
           >
+            <Box display="flex" alignItems="center" gap={1} mb={5}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  backgroundColor: "#EFF6FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                }}
+              >
+                🗂️
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  color="#4F46E5"
+                >
+                  {mode === "A" ? "New Item Category" : "Edit Item Category"}
+                </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  Create and manage item category details
+                </Typography>
+              </Box>
+            </Box>
+
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -654,7 +687,7 @@ const EditItemCategory = () => {
                         },
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>
