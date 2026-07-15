@@ -41,6 +41,8 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import { breadcrumbStyles } from "../../../Theme";
+
 // import {
 //   ManagerAppraisalPayload,
 //   PeerAppraisalPayload,
@@ -198,12 +200,12 @@ const EditArea = () => {
           elevation={0}
           sx={{
             mx: 2,
-            mt: 2,
+            mt: 1,
             mb: 1,
-            p: 2,
+            p: 1,
             borderRadius: 3,
             border: "1px solid #E5E7EB",
-            background: "#fff",
+            bgcolor: "#fff",
           }}
         >
           <Box
@@ -211,41 +213,49 @@ const EditArea = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            {/* LEFT SIDE */}
-            <Box display="flex" alignItems="center" gap={1}>
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 2,
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
 
               <Box display={isNonMobile ? "block" : "none"}>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  Route Area
+                </Typography>
+
                 <Breadcrumbs
                   maxItems={3}
-                  separator={
-                    <NavigateNextIcon fontSize="small" color="primary" />
-                  }
-                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   {/* LEVEL 1 */}
                   <Typography
-                    variant="body1"
+                    sx={breadcrumbStyles.item}
                     onClick={() => navigate("/Apps/TR323/Route")}
-                    sx={{
-                      color: "#0D47A1",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      "&:hover": {
-                        textDecoration: "underline",
-                      },
-                    }}
                   >
                     List Of Route ({state.BreadCrumb1})
                   </Typography>
 
                   {/* LEVEL 2 */}
                   <Typography
-                    variant="body1"
+                    sx={breadcrumbStyles.item}
                     onClick={() =>
                       navigate(
                         `/Apps/Secondarylistview/Route/${params.accessID}/${params.screenName}/${params.parentID1}`,
@@ -256,14 +266,6 @@ const EditArea = () => {
                         }
                       )
                     }
-                    sx={{
-                      color: "#0D47A1",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      "&:hover": {
-                        textDecoration: "underline",
-                      },
-                    }}
                   >
                     {mode === "E"
                       ? `List Of Route Area (${state.BreadCrumb2})`
@@ -271,13 +273,7 @@ const EditArea = () => {
                   </Typography>
 
                   {/* LEVEL 3 */}
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: "#6B7280",
-                      fontWeight: 600,
-                    }}
-                  >
+                  <Typography sx={breadcrumbStyles.active}>
                     {mode === "A"
                       ? "New"
                       : mode === "E"
@@ -288,13 +284,12 @@ const EditArea = () => {
               </Box>
             </Box>
 
-            {/* RIGHT SIDE ICONS */}
-            <Box display="flex" gap={1}>
+            {/* Right */}
+            <Box display="flex">
               <Tooltip title="Close">
                 <IconButton
                   onClick={() => fnLogOut("Close")}
                   sx={{
-                   // bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -309,7 +304,6 @@ const EditArea = () => {
                 <IconButton
                   onClick={() => fnLogOut("Logout")}
                   sx={{
-                //    bgcolor: "#FEF2F2",
                     color: "#DC2626",
                     "&:hover": {
                       bgcolor: "#FEE2E2",
@@ -503,7 +497,7 @@ const EditArea = () => {
                         px: 4,
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
 
