@@ -58,7 +58,7 @@ import {
   dataGridRowHeight,
 } from "../../../ui-components/utils";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import { useTheme } from "@emotion/react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -570,30 +570,55 @@ const Editdesignation = () => {
         </Box>
       </Paper> */}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 1, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3 }}>
-              <Box display="flex" justifyContent="space-between" p={2}>
+        {/* <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{ p: 1, borderRadius: 3 }}> */}
+               <Paper
+                            elevation={0}
+                            sx={{
+                              mx: 2,
+                              mt: 1,
+                              mb: 1,
+                              p: 1,
+                              borderRadius: 3,
+                              border: "1px solid #E5E7EB",
+                              bgcolor: "#fff",
+                            }}
+                          >
+              <Box display="flex" justifyContent="space-between">
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
                     <IconButton onClick={() => toggleSidebar()}>
                       <MenuOutlinedIcon />
                     </IconButton>
                   )}
+                     <Box>
+                                           <Typography
+                                             sx={{
+                                               fontSize: 20,
+                                               fontWeight: 700,
+                                               color: "#111827",
+                                               // mb: 0.2,
+                                                   px: 1,
+                                     py: 0.2,
+                                             }}
+                                           >
+                                             {mode === "A" ? "New Designation" : "Edit Designation"}
+                                           </Typography>
+
                   <Box
                     display={isNonMobile ? "flex" : "none"}
                     borderRadius="3px"
                     alignItems="center"
                   >
+
                     <Breadcrumbs
                       maxItems={3}
                       aria-label="breadcrumb"
-                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                      separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                      sx={breadcrumbStyles.separator}
                     >
                       <Typography
-                        variant="h5"
-                        color="#0000D1"
-                        sx={{ cursor: "default" }}
+                      sx={show == "1" ? breadcrumbStyles.item : breadcrumbStyles.active}
                         onClick={() => {
                           setScreen(0);
                         }}
@@ -602,9 +627,7 @@ const Editdesignation = () => {
                       </Typography>
                       {show == "1" ? (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                         sx={breadcrumbStyles.active}
                         >
                           List Of Documents
                         </Typography>
@@ -614,7 +637,7 @@ const Editdesignation = () => {
                     </Breadcrumbs>
                   </Box>
                 </Box>
-
+   </Box>
                 <Box display="flex">
                   {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -649,7 +672,7 @@ const Editdesignation = () => {
                 </Box>
               </Box>
             </Paper>
-          </Box>
+          {/* </Box> */}
           {show == "0" ? (
             <Box
               display="flex"
@@ -728,7 +751,7 @@ const Editdesignation = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Designation
                             </Typography>
@@ -1297,7 +1320,7 @@ const Editdesignation = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Documents
                             </Typography>
@@ -1593,7 +1616,7 @@ const Editdesignation = () => {
           ) : (
             false
           )}
-        </Box>
+        {/* </Box> */}
       </Box>
     </React.Fragment>
   );

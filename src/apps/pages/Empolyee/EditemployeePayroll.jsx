@@ -3094,7 +3094,7 @@ const EditemployeePayroll = () => {
                         {YearFlag == "true" ? (
                           <LoadingButton
                             disabled={mode == "E"}
-                            color="secondary"
+                           
                             variant="contained"
                             type="submit"
                             loading={loading}
@@ -3113,10 +3113,16 @@ const EditemployeePayroll = () => {
                           </LoadingButton>
                         ) : (
                           <Button
-                            color="secondary"
+                           
                             variant="contained"
                             disabled={true}
-                            sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": { bgcolor: "#0F766E" },
+                            }}
                           >
                             Save
                           </Button>
@@ -3148,20 +3154,23 @@ const EditemployeePayroll = () => {
                           </Button>
                         ) : null}
                         <Button
-                          color="warning"
+                          
                           variant="contained"
                           onClick={() => {
                             navigate(-1);
                           }}
-                          sx={{
-                            textTransform: "none",
-                            borderRadius: 2,
-                            px: 4,
-                            bgcolor: "#F97316",
-                            "&:hover": { bgcolor: "#EA580C" },
-                          }}
+                        sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
+                    }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                       <Popup
@@ -3730,8 +3739,8 @@ const EditemployeePayroll = () => {
                             <Typography sx={{ fontSize: 16 }}>➕</Typography>
                           </Box>
                           <Box>
-                            <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                              {values.description || "Employee"}
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                             Allowances
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Allowance components and values
@@ -4068,7 +4077,7 @@ const EditemployeePayroll = () => {
                                   },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
                             </DialogActions>
                           </Dialog>
@@ -4177,8 +4186,8 @@ const EditemployeePayroll = () => {
                             <Typography sx={{ fontSize: 16 }}>➖</Typography>
                           </Box>
                           <Box>
-                            <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                              {values.description || "Employee"}
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                             Deduction
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Deduction components and values
@@ -4455,17 +4464,14 @@ const EditemployeePayroll = () => {
                                 color="success"
                                 onClick={handleSubmit}
                                 sx={{
-                                  minWidth: 110,
-                                  borderRadius: 2,
-                                  textTransform: "none",
-                                  fontWeight: 600,
-                                  bgcolor: "#0D9488",
-                                  color: "#fff",
-                                  boxShadow: "none",
-                                  "&:hover": {
-                                    bgcolor: "#0F766E",
-                                  },
-                                }}
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                               >
                                 Save
                               </LoadingButton>
@@ -4490,9 +4496,9 @@ const EditemployeePayroll = () => {
                                   });
                                 }}
                                 sx={{
-                                  minWidth: 110,
-                                  borderRadius: 2,
                                   textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
                                   fontWeight: 600,
                                   boxShadow: "none",
                                 }}
@@ -4504,19 +4510,17 @@ const EditemployeePayroll = () => {
                                 variant="contained"
                                 onClick={() => setOpenADPopup(false)}
                                 sx={{
-                                  minWidth: 110,
-                                  borderRadius: 2,
                                   textTransform: "none",
-                                  fontWeight: 600,
+                                  borderRadius: 2,
+                                  px: 4,
                                   bgcolor: "#F97316",
-                                  color: "#fff",
-                                  boxShadow: "none",
-                                  "&:hover": {
+                                 "&:hover": {
                                     bgcolor: "#EA580C",
+                                   
                                   },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
                             </DialogActions>
                           </Dialog>
@@ -4875,7 +4879,15 @@ const EditemployeePayroll = () => {
                   >
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
-                      color="secondary"
+                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       type="submit"
                       loading={isLoading}
@@ -4921,13 +4933,23 @@ const EditemployeePayroll = () => {
                     )} */}
                     <Button
                       type="reset"
-                      color="warning"
+                                        sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                       variant="contained"
                       onClick={() => {
                         setScreen(0);
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                     <Popup
                       title="Leave Type"
@@ -6694,8 +6716,8 @@ const EditemployeePayroll = () => {
                           <Typography sx={{ fontSize: 16 }}>🗓️</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Attendance
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Monthly attendance summary
@@ -6844,18 +6866,14 @@ const EditemployeePayroll = () => {
                           type="submit"
                           variant="contained"
                           sx={{
-                            px: 4,
-                            minWidth: 110,
-                            borderRadius: 2,
-                            textTransform: "none",
-                            fontWeight: 600,
-                            bgcolor: "#0D9488",
-                            color: "#fff",
-                            boxShadow: "none",
-                            "&:hover": {
-                              bgcolor: "#0F766E",
-                            },
-                          }}
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                         >
                           Apply
                         </Button>
@@ -6864,10 +6882,9 @@ const EditemployeePayroll = () => {
                           variant="contained"
                           onClick={() => attendaceProcessFnSave(values)}
                           sx={{
-                            px: 4,
-                            minWidth: 110,
-                            borderRadius: 2,
-                            textTransform: "none",
+                             textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
                             fontWeight: 600,
                             bgcolor: "#2563EB",
                             color: "#fff",
@@ -6884,10 +6901,9 @@ const EditemployeePayroll = () => {
                           type="reset"
                           variant="contained"
                           sx={{
-                            px: 4,
-                            minWidth: 110,
-                            borderRadius: 2,
                             textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
                             fontWeight: 600,
                             bgcolor: "#DC2626",
                             color: "#fff",
@@ -6903,21 +6919,19 @@ const EditemployeePayroll = () => {
                         <Button
                           variant="contained"
                           onClick={() => setScreen(0)}
-                          sx={{
-                            px: 4,
-                            minWidth: 110,
-                            borderRadius: 2,
-                            textTransform: "none",
-                            fontWeight: 600,
-                            bgcolor: "#F97316",
-                            color: "#fff",
-                            boxShadow: "none",
-                            "&:hover": {
-                              bgcolor: "#EA580C",
-                            },
-                          }}
+                                           sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
 
@@ -7069,8 +7083,8 @@ const EditemployeePayroll = () => {
                           <Typography sx={{ fontSize: 16 }}>📄</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
-                            {values.description || "Employee"}
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Payroll Attendance
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Payroll attendance and payslip
@@ -7196,18 +7210,20 @@ const EditemployeePayroll = () => {
 
                         <Button
                           type="reset"
-                          color="warning"
                           variant="contained"
                           onClick={() => setScreen(0)}
-                          sx={{
-                            textTransform: "none",
-                            borderRadius: 2,
-                            px: 4,
-                            bgcolor: "#F97316",
-                            "&:hover": { bgcolor: "#EA580C" },
-                          }}
+                       sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                         >
-                          Cancel
+                          Back
                         </Button>
                       </Box>
                     </form>
@@ -7535,7 +7551,15 @@ const EditemployeePayroll = () => {
                   >
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
-                      color="secondary"
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                       variant="contained"
                       type="submit"
                       loading={isLoading}

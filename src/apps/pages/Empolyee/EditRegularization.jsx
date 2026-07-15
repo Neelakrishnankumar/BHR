@@ -516,16 +516,15 @@ const Regularization = ({ onCancel }) => {
                       loading={isLoading}
                       type="submit"
                       variant="contained"
-                      sx={{
-                        px: 4,
-                        borderRadius: 2,
-                        textTransform: "none",
-                        bgcolor: "#0D9488",
-                        color: "#fff",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     >
                       Save
                     </LoadingButton>
@@ -533,13 +532,22 @@ const Regularization = ({ onCancel }) => {
                     <Button
                       variant="contained"
                       disabled
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     >
                       Save
                     </Button>
                   )}
 
                   <Button
-                    variant="contained"
+                   
                     onClick={() => navigate(-1)}
                     sx={{
                       px: 4,
@@ -552,7 +560,7 @@ const Regularization = ({ onCancel }) => {
                       },
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

@@ -321,8 +321,8 @@ const Editdept = () => {
       </Paper> */}
       
  <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-         <Box sx={{ p: 2, borderRadius: 3, }}>
+        <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+         <Box sx={{ p: 1.5, borderRadius: 3, }}>
   <Paper sx={{ borderRadius: 3 }}>
     
     {/* MAIN HEADER ROW */}
@@ -347,9 +347,18 @@ const Editdept = () => {
           separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
         >
           <Typography
-            variant="h5"
-            color="#0000D1"
-            sx={{ cursor: "default" }}
+            // variant="h5"
+            // fontWeight={700} 
+            // color="#0D94885"
+            sx={{ 
+              cursor: "default",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#111827",
+              // mb: 0.2,
+              px: 1,
+              py: 0.2,
+            }}
           >
             {screenName === "Department" ? "Department" : "Subject"}
           </Typography>
@@ -430,7 +439,7 @@ const Editdept = () => {
     <Typography
       variant="subtitle1"
       fontWeight={700}
-      color="#4F46E5"
+      color="#0D94885"
     >
       {screenName === "Department" ? "Department" : "Subject"}
     </Typography>

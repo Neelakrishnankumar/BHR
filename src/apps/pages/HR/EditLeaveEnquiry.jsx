@@ -348,11 +348,18 @@ const EditLeaveEnquiry = () => {
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-                           <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                   
-                   
-                             <Box sx={{ p: 2, borderRadius: 3, }}>
-                     <Paper sx={{ borderRadius: 3 }}>
+             <Paper
+                       elevation={0}
+                       sx={{
+                         mx: 2,
+                         mt: 1,
+                         mb: 1,
+                         p: 1,
+                         borderRadius: 3,
+                         border: "1px solid #E5E7EB",
+                         bgcolor: "#fff",
+                       }}
+                     >
           <Box
             display="flex"
             alignItems="center"
@@ -367,9 +374,15 @@ const EditLeaveEnquiry = () => {
                             )}
                 <Breadcrumbs maxItems={3} aria-label="breadcrumb">
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default", margin: "10px" }}
+                     sx={{
+                                             fontSize: 20,
+                                             fontWeight: 700,
+                                             color: "#111827",
+                                             // mb: 0.2,
+                                             px: 1,
+                                             py: 0.2,
+                                           }}
+                                      
                   >
                     {`Leave Enquiry (${state?.Employee ?? ""})`}
                   </Typography>
@@ -392,13 +405,12 @@ const EditLeaveEnquiry = () => {
                   </Box>
           </Box>
         </Paper>
-      </Box>
-
+     
                  <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
                               
                                      <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                               
-              <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+              <Paper elevation={3} sx={{ margin: "5px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
       
           <Formik
             initialValues={{
@@ -455,7 +467,7 @@ const EditLeaveEnquiry = () => {
                                                   <Typography
                                                     variant="subtitle1"
                                                     fontWeight={700}
-                                                    color="#4F46E5"
+                                                   color="#0D94885"
                                                   >
                                                   Leave Enquiry
                                                   </Typography>
@@ -635,16 +647,37 @@ const EditLeaveEnquiry = () => {
                     justifyContent="flex-end"
                     alignItems={{ xs: "stretch", sm: "center" }}
                   >
-                    <Button variant="contained" color="secondary" type="submit">
-                      APPLY
+                    <Button
+                    variant="contained" 
+                    type="submit"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+
+                    >
+                      Apply
                     </Button>
 
                     <Button
                       variant="contained"
-                      color="warning"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
                       onClick={() => navigate(-1)}
                     >
-                      CANCEL
+                      Back
                     </Button>
 
                     {rows.length > 0 && (
@@ -831,8 +864,8 @@ const EditLeaveEnquiry = () => {
         </Paper>
       </Box>
        </Box>
-            </Box>
-                                 </Box>
+         
+             </Box>                  
                             
                                                       
     </React.Fragment>

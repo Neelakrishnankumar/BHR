@@ -3886,23 +3886,20 @@ const Editrequests = () => {
 
                         {/* Cancel */}
                         <Button
-                          variant="outlined"
-                          color="inherit"
+                        
                           onClick={() => {
                             navigate(-1);
                           }}
                           sx={{
-                            minWidth: 110,
-                            borderRadius: 2,
-                            textTransform: "none",
-                            fontWeight: 600,
-                            boxShadow: "none",
-                            bgcolor: "#F97316",
-                            color: "#fff",
-                            "&:hover": {
-                              bgcolor: "#EA580C",
-                            },
-                          }}
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
+                    }}
                         >
                           Back
                         </Button>
@@ -5001,7 +4998,7 @@ const Editrequests = () => {
                               }}
                             >
                               <LoadingButton
-                                color="secondary"
+                               
                                 variant="contained"
                                 type="submit"
                                 loading={loading}

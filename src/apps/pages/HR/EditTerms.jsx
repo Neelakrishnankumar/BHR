@@ -44,6 +44,7 @@ import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/global/utils";
 import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { breadcrumbStyles } from "../../../Theme";
 // import CryptoJS from "crypto-js";
 const EditTerms = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -224,12 +225,12 @@ const EditTerms = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
-   <Box sx={{ height: "100vh", overflow: "auto" }}>
-          <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-  
-  
-            <Box sx={{ p: 2, borderRadius: 3, }}>
-    <Paper sx={{ borderRadius: 3 }}>
+           <Box sx={{ height: "100vh", overflow: "auto" }}>
+                  <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          
+          
+                    <Box sx={{ p: 2, borderRadius: 3, }}>
+          <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -237,15 +238,28 @@ const EditTerms = () => {
                                 <MenuOutlinedIcon />
                             </IconButton>
                         )}
+                        <Box>
+                                <Typography
+                                         sx={{
+                                        fontSize: 20,
+                                                fontWeight: 700,
+                                                color: "#111827",
+                                                px: 1,
+                                                py: 0.2,
+                                              }}
+                                                >
+
+                                                    {mode == "A" ? "Add Terms" : "Edit Terms"}
+                                                </Typography>
+                       
                         <Breadcrumbs
                             maxItems={3}
                             aria-label="breadcrumb"
                             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                        >
+                       sx={breadcrumbStyles.separator}
+                       >
                             <Typography
-                                variant="h5"
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
+                               sx={breadcrumbStyles.item}
                                 onClick={() => {
                                     navigate(-1);
                                 }}
@@ -253,9 +267,7 @@ const EditTerms = () => {
                                 Academic Year({state.AcademicYear})
                             </Typography>
                             <Typography
-                                variant="h5"
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
+                                 sx={breadcrumbStyles.active}
                                 onClick={() => {
                                     navigate(-1);
                                 }}
@@ -265,6 +277,7 @@ const EditTerms = () => {
 
                         </Breadcrumbs>
                     </Box>
+                     </Box>
 
                     <Box display="flex">
                         <Tooltip title="Close">
@@ -282,7 +295,7 @@ const EditTerms = () => {
             </Paper>
             </Box>
             {!getLoading ? (
-                    <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                    <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
                      
                             <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                      
@@ -339,7 +352,7 @@ const EditTerms = () => {
     <Typography
       variant="subtitle1"
       fontWeight={700}
-      color="#4F46E5"
+      color="#0D94885"
     >
 Terms
     </Typography>

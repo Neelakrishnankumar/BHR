@@ -77,7 +77,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
@@ -5421,11 +5421,22 @@ const Editemployee = () => {
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#ffff", p: 1, borderRadius: 3, }}>
+        <Paper
+                            elevation={0}
+                            sx={{
+                              mx: 2,
+                              mt: 1,
+                              mb: 1,
+                              p: 1,
+                              borderRadius: 3,
+                              border: "1px solid #E5E7EB",
+                              bgcolor: "#fff",
+                            }}
+                          >
           <Box
             display="flex"
             justifyContent="space-between"
-            p={mode == "A" ? 2 : 1}
+            // p={mode == "A" ? 2 : 1}
           >
             <Box display="flex" borderRadius="3px" alignItems="center">
               {broken && !rtl && (
@@ -5433,6 +5444,21 @@ const Editemployee = () => {
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
+
+                <Box>
+                                                         <Typography
+                                                           sx={{
+                                                             fontSize: 20,
+                                                             fontWeight: 700,
+                                                             color: "#111827",
+                                                             // mb: 0.2,
+                                                                 px: 1,
+                                                   py: 0.2,
+                                                           }}
+                                                         >
+                                                           {mode === "A" ? "New Personnel" : "Edit Personnel"}
+                                                         </Typography>
+
               <Box
                 display={isNonMobile ? "flex" : "none"}
                 borderRadius="3px"
@@ -5441,12 +5467,11 @@ const Editemployee = () => {
                 <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                      sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={show == "0" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     onClick={() => {
                       // setScreen(1);
                       setScreen(0);
@@ -5469,9 +5494,7 @@ const Editemployee = () => {
                   </Typography>
                   {show == "5" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "5" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Contact
                     </Typography>
@@ -5480,9 +5503,7 @@ const Editemployee = () => {
                   )}
                   {show == "1" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "1" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Skills", "Skills")}
                     </Typography>
@@ -5491,9 +5512,7 @@ const Editemployee = () => {
                   )}
                   {show == "2" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={show == "2" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Functions
                     </Typography>
@@ -5502,9 +5521,7 @@ const Editemployee = () => {
                   )}
                   {show == "3" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "3" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Managers", "Manager")}
                     </Typography>
@@ -5513,9 +5530,7 @@ const Editemployee = () => {
                   )}
                   {show == "4" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={show == "4" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Deployment", "Deployment")}
                     </Typography>
@@ -5524,9 +5539,7 @@ const Editemployee = () => {
                   )}
                   {show == "6" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "6" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       List of Documents
                     </Typography>
@@ -5535,9 +5548,7 @@ const Editemployee = () => {
                   )}
                   {show == "7" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "7" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("ItemCustody", "ItemCustody")}
                     </Typography>
@@ -5546,9 +5557,7 @@ const Editemployee = () => {
                   )}
                   {show == "17" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                     sx={show == "17" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("ItemCustody", "ItemCustody")}
                     </Typography>
@@ -5558,9 +5567,7 @@ const Editemployee = () => {
 
                   {show == "15" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "15" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Parent
                     </Typography>
@@ -5569,9 +5576,7 @@ const Editemployee = () => {
                   )}
                   {show == "16" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "16" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Parent Contact Details
                     </Typography>
@@ -5580,9 +5585,7 @@ const Editemployee = () => {
                   )}
                   {show == "20" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "20" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Inventory
                     </Typography>
@@ -5591,9 +5594,7 @@ const Editemployee = () => {
                   )}
                   {show == "8" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "8" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("ContractIn", "Contract In")}
                     </Typography>
@@ -5602,9 +5603,7 @@ const Editemployee = () => {
                   )}
                   {show == "23" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={show == "23" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Course Attendance
                     </Typography>
@@ -5614,9 +5613,7 @@ const Editemployee = () => {
 
                   {show == "11" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "11" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Contract Out
                     </Typography>
@@ -5625,9 +5622,7 @@ const Editemployee = () => {
                   )}
                   {show == "9" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={show == "9" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Geolocation", "Geo Location")}
                     </Typography>
@@ -5636,9 +5631,7 @@ const Editemployee = () => {
                   )}
                   {show == "10" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "10" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {/* Leave Configuration */}
                       {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
@@ -5648,9 +5641,7 @@ const Editemployee = () => {
                   )}
                   {show == "12" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "12" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Approvals", "Approvals")}
                     </Typography>
@@ -5659,9 +5650,7 @@ const Editemployee = () => {
                   )}
                   {show == "14" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "14" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("ItemServices", "ItemServices")}
                     </Typography>
@@ -5670,9 +5659,7 @@ const Editemployee = () => {
                   )}
                   {show == "13" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "13" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Locality
                     </Typography>
@@ -5681,9 +5668,7 @@ const Editemployee = () => {
                   )}
                   {show == "19" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={show == "19" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       SOP Configuration
                     </Typography>
@@ -5692,9 +5677,7 @@ const Editemployee = () => {
                   )}
                   {show == "18" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "18" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Specimen Sign
                     </Typography>
@@ -5703,9 +5686,7 @@ const Editemployee = () => {
                   )}
                   {show == "21" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "21" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       {getBusinessCaption("Documents", "Documents")}
                     </Typography>
@@ -5717,9 +5698,7 @@ const Editemployee = () => {
 
                   {show == "22" ? (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                      sx={show == "22" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     >
                       Resignation
                     </Typography>
@@ -5729,6 +5708,7 @@ const Editemployee = () => {
                 </Breadcrumbs>
               </Box>
             </Box>
+             </Box>
             <Box display="flex">
               {/* RIGHT: sidebar - replaces Explore dropdown, same screenChange logic */}
               {/* {mode !== "A" && (
@@ -5818,79 +5798,7 @@ const Editemployee = () => {
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
 
 
-          <Box sx={{ p: 2, borderRadius: 3, }}>
-            <Paper sx={{ p: 2, borderRadius: 3, }}>
-              {/* ===== BREADCRUMB ===== */}
-              {/* <Box display="flex" alignItems="center" mb={3} gap={0.5} >
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => {
-                    is00123Subscription
-                      ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state })
-                      : navigate(`/Apps/TR027/Personnel`, { state });
-                  }}
-                >
-                  Personnel
-                </Typography>
-                <Typography variant="h6" color="text.secondary">›</Typography>
-                <Typography variant="h6" fontWeight={700}>
-                  {mode === "E" ? "Edit Personnel" : "Add Personnel"}
-                </Typography>
-              </Box> */}
-
-              {/* ===== TOP HEADER ===== */}
-              <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" mb={1} gap={2}>
-                <Box>
-                  <Typography variant="h4" fontWeight={900}>
-                    {mode === "E"
-                      ? `Edit ${currentSection.label}`
-                      : `Add ${currentSection.label}`}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Manage {currentSection.label} information and details
-                  </Typography>
-                </Box>
-
-                <Box display="flex" gap={1.5}>
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    startIcon={<span style={{ fontSize: 16 }}>←</span>}
-                    onClick={() => {
-                      is00123Subscription
-                        ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state })
-                        : navigate(`/Apps/TR027/Personnel`, { state });
-                    }}
-                    sx={{ textTransform: "none", borderRadius: 2, color: "text.primary", borderColor: "#D1D5DB" }}
-                  >
-                    Back to List
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    startIcon={<span style={{ fontSize: 16 }}>↻</span>}
-                    // onClick={() => resetForm()}
-                    sx={{ textTransform: "none", borderRadius: 2, color: "text.primary", borderColor: "#D1D5DB" }}
-                  >
-                    Reset
-                  </Button>
-
-                  {/* <Button
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    disabled={loading}
-                    sx={{ textTransform: "none", borderRadius: 2, backgroundColor: "#4F46E5", "&:hover": { backgroundColor: "#4338CA" } }}
-                  >
-                    Save
-                  </Button> */}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
+         
 
           {/* Personnel Form */}
           {show == "0" ? (
@@ -5940,7 +5848,7 @@ const Editemployee = () => {
                                   <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                     <Typography sx={{ fontSize: 16 }}>👤</Typography>
                                   </Box>
-                                  <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                                  <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                                     Personnel Information
                                   </Typography>
                                 </Box>
@@ -6272,7 +6180,7 @@ const Editemployee = () => {
                           <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <Typography sx={{ fontSize: 16 }}>📞</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Contact Information
                           </Typography>
                         </Box>
@@ -7580,7 +7488,7 @@ const Editemployee = () => {
                             <Typography sx={{ fontSize: 16 }}>⚙️</Typography>
                           </Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Function Details
                           </Typography>
                         </Box>
@@ -8853,7 +8761,7 @@ const Editemployee = () => {
                     </Box>
                     <Box>
                       <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
-                        Employee Resignation
+                        Resignation
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         Record resignation and exit details
@@ -9206,7 +9114,7 @@ const Editemployee = () => {
                       >
 
                         {/* ================= HEADER ================= */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                        <Box display="flex" alignItems="center" gap={1} mb={2}>
                           <Box
                             sx={{
                               width: 32,
@@ -9221,7 +9129,7 @@ const Editemployee = () => {
                             <Typography sx={{ fontSize: 16 }}>📎</Typography>
                           </Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Document Attachment
                           </Typography>
                         </Box>
@@ -10802,7 +10710,7 @@ const Editemployee = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Parents Details
                             </Typography>
@@ -11718,7 +11626,7 @@ const Editemployee = () => {
                           <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <Typography sx={{ fontSize: 16 }}>📄</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             {getBusinessCaption("ContractIn", "Contract In")}
                           </Typography>
                         </Box>
@@ -13833,7 +13741,7 @@ const Editemployee = () => {
                           <Typography
                             variant="subtitle1"
                             fontWeight={700}
-                            color="#4F46E5"
+                            color="#0D94885"
                           >
                             Geolocation
                           </Typography>
@@ -14603,7 +14511,7 @@ const Editemployee = () => {
                             <Typography sx={{ fontSize: 16 }}>🏖️</Typography>
                           </Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Leave Configuration
                           </Typography>
                         </Box>
@@ -15454,7 +15362,7 @@ const Editemployee = () => {
                             <Typography sx={{ fontSize: 16 }}>📦</Typography>
                           </Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Item Custody Details
                           </Typography>
                         </Box>
@@ -16509,7 +16417,7 @@ const Editemployee = () => {
                           <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <Typography sx={{ fontSize: 16 }}>📑</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             {getBusinessCaption("Documents", "Documents")}
                           </Typography>
                         </Box>
@@ -16725,7 +16633,7 @@ const Editemployee = () => {
                           >
                             <Typography sx={{ fontSize: 16 }}>📋</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Course Attendance
                           </Typography>
                         </Box>

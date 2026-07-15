@@ -35,6 +35,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useProSidebar } from "react-pro-sidebar";
 import * as Yup from "yup";
+import { breadcrumbStyles } from "../../../Theme";
 const RaiseComplaints = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -291,25 +292,46 @@ const RaiseComplaints = () => {
       {getLoading && <LinearProgress />}
       {imageLoading && <LinearProgress />}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3 }}>
-              <Box display="flex" justifyContent="space-between" p={2}>
+           <Paper
+                          elevation={0}
+                          sx={{
+                            mx: 2,
+                            mt: 1,
+                            mb: 1,
+                            p: 1,
+                            borderRadius: 3,
+                            border: "1px solid #E5E7EB",
+                            bgcolor: "#fff",
+                          }}
+                        >
+              <Box display="flex" justifyContent="space-between">
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
                     <IconButton onClick={() => toggleSidebar()}>
                       <MenuOutlinedIcon />
                     </IconButton>
                   )}
+                     <Box>
+                                      <Typography
+                                                             sx={{
+                                                               fontSize: 20,
+                                                               fontWeight: 700,
+                                                               color: "#111827",
+                                                               // mb: 0.2,
+                                                                   px: 1,
+                                                     py: 0.2,
+                                                             }}
+                                                           >
+                                                             {mode === "A" ? "New Escalation" : mode === "V" ? "View Escalation" : "Edit Escalation"}
+                                                           </Typography>
                   <Breadcrumbs
+                  sx={breadcrumbStyles.separator}
                     maxItems={2}
                     aria-label="breadcrumb"
                     separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                   >
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                     sx={breadcrumbStyles.item}
                       onClick={() => {
                         // navigate("/Apps/TR243/Party");
                         navigate("/Apps/TR391/Escalation");
@@ -321,9 +343,7 @@ const RaiseComplaints = () => {
                         : `List Of Escalation`}
                     </Typography>
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                     sx={breadcrumbStyles.active}
                     >
                       {/* {mode === "E" ? "Edit Feedback/Complaint" : mode === "V" ? "View Feedback/Complaint" : "Add Feedback/Complaint"} */}
                       {mode === "E"
@@ -334,7 +354,7 @@ const RaiseComplaints = () => {
                     </Typography>
                   </Breadcrumbs>
                 </Box>
-
+   </Box>
                 <Box display="flex">
                   <Tooltip title="Close">
                     <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -352,7 +372,7 @@ const RaiseComplaints = () => {
                 </Box>
               </Box>
             </Paper>
-          </Box>
+      
           {!getLoading ? (
             <Box
               display="flex"
@@ -423,7 +443,7 @@ const RaiseComplaints = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Escalation
                             </Typography>
@@ -961,7 +981,7 @@ const RaiseComplaints = () => {
             false
           )}
         </Box>
-      </Box>
+   
     </>
   );
 };

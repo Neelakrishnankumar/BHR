@@ -382,7 +382,7 @@ const EditdailyAttendance = () => {
         </Box>
       </Paper>
 
-     <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+     <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
         
                <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
         
