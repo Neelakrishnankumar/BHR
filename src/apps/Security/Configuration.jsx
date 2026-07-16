@@ -1700,7 +1700,7 @@ const Configuration = () => {
                <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
        
        
-                 <Box sx={{borderRadius: 3, }}>
+                 <Box sx={{borderRadius: 3, p: 1,}}>
          <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">

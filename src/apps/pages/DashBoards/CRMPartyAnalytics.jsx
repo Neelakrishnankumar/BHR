@@ -694,7 +694,14 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                         // onClick={() => onApply({ search, typeFilter, from, to })}
                         onClick={() => onApply(filters)}
                         sx={{
-                            flex: { xs: 1, sm: "unset" }
+                                px: 3,
+                                textTransform: "none",
+                                  borderRadius: 2,
+                                 bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                            flex: { xs: 1, sm: "unset"}
                         }}
                     >
                         Apply
@@ -706,7 +713,11 @@ function PartyListPage({ parties, orders: allOrders, payments: allPayments, onOp
                             dispatch(resetPartyAnalyticsdata())}
                         sx={{
                             flex: { xs: 1, sm: "unset" },
-                            background: "linear-gradient(135deg, #ef3f1c, #ed664b)"
+                            background: "linear-gradient(135deg, #ef3f1c, #ed664b)",
+                            px: 3,
+                            textTransform: "none",
+                            borderRadius: 2,
+                        
                         }}
                     >
                         Reset

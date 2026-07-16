@@ -55,6 +55,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import MicIcon from "@mui/icons-material/Mic";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { breadcrumbStyles } from "../../../Theme";
 
 const EditLeader = () => {
   const dispatch = useDispatch();
@@ -97,7 +98,8 @@ const EditLeader = () => {
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
-    : ""; console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   const OrderType = params.OrderType;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -114,15 +116,15 @@ const EditLeader = () => {
         //   frequency: Yup.string().required(data.Overhead.frequency),
         // };
         let schemaFields = {
-          leadtitle: Yup.string().trim().required(
-            data.LeadMarketingActivity.leadtitle
-          ),
+          leadtitle: Yup.string()
+            .trim()
+            .required(data.LeadMarketingActivity.leadtitle),
           Status: Yup.string().required(data.LeadMarketingActivity.Status),
           project: Yup.object()
             .nullable()
             .shape({
               RecordID: Yup.string().required(
-                data.LeadMarketingActivity.project
+                data.LeadMarketingActivity.project,
               ),
               Name: Yup.string().nullable(), // optional
             })
@@ -177,7 +179,7 @@ const EditLeader = () => {
           setLoading(true);
 
           const resultAction = await dispatch(
-            LeaderData({ data: { LeaderID: filtertype } })
+            LeaderData({ data: { LeaderID: filtertype } }),
           );
 
           const result = resultAction.payload;
@@ -196,9 +198,9 @@ const EditLeader = () => {
               Status: "",
               project: leaderData.ProjectID
                 ? {
-                  RecordID: leaderData.ProjectID,
-                  Name: leaderData.ProjectName,
-                }
+                    RecordID: leaderData.ProjectID,
+                    Name: leaderData.ProjectName,
+                  }
                 : null,
             });
           }
@@ -327,7 +329,7 @@ const EditLeader = () => {
               LeadTitle: values.leadtitle,
               LEStatus: values.Status,
             },
-          }
+          },
         );
       } else if (values.Status === "Opt to Quote") {
         navigate(
@@ -340,7 +342,7 @@ const EditLeader = () => {
               LeadTitle: values.leadtitle,
               LEStatus: values.Status,
             },
-          }
+          },
         );
       } else if (Type === "T") {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
@@ -388,7 +390,7 @@ const EditLeader = () => {
         }
         if (props === "Close") {
           navigate(
-            `/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`
+            `/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`,
           );
         }
       } else {
@@ -449,69 +451,63 @@ const EditLeader = () => {
           mx: 2,
           mt: 2,
           mb: 1,
-          p: 2,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
           background: "#fff",
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <Box display="flex" justifyContent="space-between" alignItems="center">
           <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={
-                  <NavigateNextIcon
-                    fontSize="small"
-                    color="primary"
-                  />
-                }
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  // mb: 0.2,
+                  px: 1,
+                  py: 0.2,
+                }}
               >
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                  onClick={() => {
-                    // navigate("/Apps/TR243/Party");
-                    navigate("/Apps/TR321/Party");
-                  }}
-                >
-                  {`Party(${state.PartyName || params.Name})`}
-                </Typography>
+                {mode === "A"
+                  ? `New Marketing Activity`
+                  : mode === "E"
+                    ? `Edit Marketing Activity`
+                    : `View Marketing Activity`}
+              </Typography>
 
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
+              <Box display={isNonMobile ? "flex" : "none"} alignItems="center">
+                <Breadcrumbs
+                  maxItems={3}
+                                   aria-label="breadcrumb"
+                                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                   sx={breadcrumbStyles.separator}
                 >
-                  Marketing Activity
-                </Typography>
-              </Breadcrumbs>
+                  <Typography
+                     sx={breadcrumbStyles.item}
+                    onClick={() => {
+                      // navigate("/Apps/TR243/Party");
+                      navigate("/Apps/TR321/Party");
+                    }}
+                  >
+                    {`Party(${state.PartyName || params.Name})`}
+                  </Typography>
+
+                  <Typography
+                    sx={breadcrumbStyles.active}
+                  >
+                    Marketing Activity
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
             </Box>
           </Box>
-
           <Box display="flex" gap={1}>
             <Tooltip title="Close">
               <IconButton
@@ -596,7 +592,7 @@ const EditLeader = () => {
                     📈
                   </Box>
                   <Box>
-                    <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                    <Typography variant="h6" fontWeight={700} color="#0D94885">
                       Lead / Marketing Activity
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -607,7 +603,7 @@ const EditLeader = () => {
 
                 <Box
                   display="grid"
-                  gap='20px'
+                  gap="20px"
                   padding={1}
                   gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                   sx={{
@@ -636,7 +632,6 @@ const EditLeader = () => {
                       shrink: true,
                     }}
                     disabled={Type === "T"}
-                    
                   />
 
                   <CheckinAutocomplete
@@ -645,7 +640,9 @@ const EditLeader = () => {
                     label={
                       <>
                         Product
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="outlined"
@@ -676,7 +673,9 @@ const EditLeader = () => {
                     label={
                       <>
                         Lead Title
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     id="leadtitle"
@@ -693,7 +692,6 @@ const EditLeader = () => {
                       shrink: true,
                     }}
                     disabled={Type === "T"}
-                    
                   />
                   <TextField
                     fullWidth
@@ -710,7 +708,6 @@ const EditLeader = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    
                   />
                   <TextField
                     name="visitdate"
@@ -729,14 +726,15 @@ const EditLeader = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    
                   />
                   <TextField
                     select
                     label={
                       <>
                         Status
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     id="Status"
@@ -752,7 +750,6 @@ const EditLeader = () => {
                     helperText={touched.Status && errors.Status}
                     variant="outlined"
                     size="small"
-                    
                   >
                     <MenuItem value="Cool">Cool</MenuItem>
                     <MenuItem value="Warm">Warm</MenuItem>
@@ -763,7 +760,12 @@ const EditLeader = () => {
                   </TextField>
                 </Box>
 
-                <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
+                <Box
+                  display="flex"
+                  justifyContent="end"
+                  padding={1}
+                  gap={formGap}
+                >
                   {mode == "IM" && (
                     <>
                       <TextField
@@ -778,7 +780,7 @@ const EditLeader = () => {
                         onChange={handleChange}
                         error={!!touched.purpose && !!errors.purpose}
                         helperText={touched.purpose && errors.purpose}
-                        sx={{  gridColumn: "span 2", height: "20px" }}
+                        sx={{ gridColumn: "span 2", height: "20px" }}
                         InputLabelProps={{ shrink: true }}
                       />
 
@@ -789,7 +791,7 @@ const EditLeader = () => {
                             data.PartyID,
                             "upload",
                             "",
-                            values.purpose
+                            values.purpose,
                           );
                         }}
                       />
@@ -797,7 +799,6 @@ const EditLeader = () => {
                   )}
                   <LoadingButton
                     variant="contained"
-                    color="secondary"
                     type="submit"
                     loading={loading}
                     sx={{
@@ -805,15 +806,16 @@ const EditLeader = () => {
                       borderRadius: 2,
                       px: 4,
                       bgcolor: "#0D9488",
-                      "&:hover": { bgcolor: "#0F766E" },
+                      "&:hover": {
+                        bgcolor: "#0F766E",
+                      },
                     }}
                   >
-                    SAVE
+                    Save
                   </LoadingButton>
 
                   <Button
                     variant="contained"
-                    color="warning"
                     onClick={() => {
                       navigate(-1);
                     }}
@@ -822,10 +824,12 @@ const EditLeader = () => {
                       borderRadius: 2,
                       px: 4,
                       bgcolor: "#F97316",
-                      "&:hover": { bgcolor: "#EA580C" },
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
                     }}
                   >
-                    CANCEL
+                    Back
                   </Button>
                 </Box>
               </form>
@@ -927,7 +931,7 @@ const EditLeader = () => {
                                   data.PartyID,
                                   "delete",
                                   file.id,
-                                  file.purpose
+                                  file.purpose,
                                 )
                               }
                               size="small"

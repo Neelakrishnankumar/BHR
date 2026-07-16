@@ -1153,7 +1153,7 @@ const EditItem = () => {
                           📋
                         </Box>
                         <Box>
-                          <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                          <Typography variant="h6" fontWeight={700} color="#0D94885">
                             Main
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
@@ -1524,7 +1524,7 @@ const EditItem = () => {
                           <Typography
                             variant="h6"
                             fontWeight={700}
-                            color="#4F46E5"
+                            color="#0D94885"
                           >
                             Flags
                           </Typography>
@@ -2172,7 +2172,7 @@ const EditItem = () => {
                           <Typography
                             variant="subtitle1"
                             fontWeight={700}
-                            color="#4F46E5"
+                            color="#0D94885"
                           >
                             Stock Information
                           </Typography>
@@ -2684,7 +2684,7 @@ const EditItem = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Stock
                             </Typography>
@@ -2777,7 +2777,7 @@ const EditItem = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Customer Stock
                             </Typography>
@@ -2870,7 +2870,7 @@ const EditItem = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Vendor Stock
                             </Typography>
@@ -3085,7 +3085,7 @@ const EditItem = () => {
                           <Typography sx={{ fontSize: 16 }}>🛒</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             {values.Description || "Item"}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -3514,10 +3514,29 @@ const EditItem = () => {
                             sx={{
                               borderTop: "1px solid #E5E7EB",
                               p: 2,
-                              justifyContent: "space-between",
+                              justifyContent: "flex-end",
                             }}
                           >
-                            <Button
+                           
+
+                            <Box display="flex" gap={1}>
+                                <LoadingButton
+                                variant="contained"
+                                loading={isLoading}
+                                onClick={handleSubmit}
+                                sx={{
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                              >
+                                Save
+                              </LoadingButton>
+ <Button
                               color="error"
                               variant="outlined"
                               disabled={funMode === "A"}
@@ -3549,8 +3568,6 @@ const EditItem = () => {
                             >
                               Delete
                             </Button>
-
-                            <Box display="flex" gap={1}>
                               <Button
                                 variant="outlined"
                                 color="warning"
@@ -3566,25 +3583,10 @@ const EditItem = () => {
                                   },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
 
-                              <LoadingButton
-                                variant="contained"
-                                loading={isLoading}
-                                onClick={handleSubmit}
-                                sx={{
-                                  borderRadius: 2,
-                                  textTransform: "none",
-                                  px: 4,
-                                  bgcolor: "#0D9488",
-                                  "&:hover": {
-                                    bgcolor: "#0F766E",
-                                  },
-                                }}
-                              >
-                                Save
-                              </LoadingButton>
+                            
                             </Box>
                           </DialogActions>
                         </Dialog>

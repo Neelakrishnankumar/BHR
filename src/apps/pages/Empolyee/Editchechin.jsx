@@ -383,12 +383,7 @@ const Editcheckin = () => {
                 </Typography>
               </Breadcrumbs>
 
-              <Typography
-                variant="body2"
-                color="text.secondary"
-              >
-                Manage employee check-in information
-              </Typography>
+             
             </Box>
           </Box>
 
@@ -434,7 +429,7 @@ const Editcheckin = () => {
             backgroundColor: "#fff",
             border: "1px solid #E5E7EB",
             borderRadius: 3,
-            p: 3,
+            p: 1,
             mx: 1,
             mt: 2,
           }}
@@ -462,20 +457,30 @@ const Editcheckin = () => {
             }) => (
               <form onSubmit={handleSubmit}>
 
-                <Box mb={3}>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography sx={{ fontSize: 20 }}>📍</Typography>
+             <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+                                                    <Box
+                                                      sx={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        borderRadius: "50%",
+                                                        backgroundColor: "#EFF6FF",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                      }}
+                                                    >
+                    <Typography sx={{ fontSize: 16 }}>📍</Typography>
 
-                    <Typography
-                      sx={{
-                        fontSize: "18px",
-                        fontWeight: 700,
-                        color: "#1F2937",
-                      }}
-                    >
-                      Check In Details
+                   </Box>
+                                                          <Box>
+                                                            <Typography
+                                                              variant="subtitle1"
+                                                              fontWeight={700}
+                                                              color="#0D94885"
+                                                            >
+                     {getBusinessCaption("CheckIn", "Check In")} Details
                     </Typography>
-                  </Box>
+              
 
                   <Typography
                     variant="body2"
@@ -485,6 +490,7 @@ const Editcheckin = () => {
                     Manage employee check-in information and attendance.
                   </Typography>
                 </Box>
+                                                    </Box>
 
 
                 <Box
@@ -494,7 +500,7 @@ const Editcheckin = () => {
                     md: "repeat(2,1fr)",
                   }}
                   gap={3}
-                  mt={2}
+                  mt={3}
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",

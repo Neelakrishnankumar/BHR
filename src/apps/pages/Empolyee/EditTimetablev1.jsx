@@ -49,7 +49,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTheme } from "@mui/material";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import {
   CheckinAutocomplete,
   SprintEmpAutocomplete1,
@@ -1376,7 +1376,7 @@ const EditTimetablev1 = () => {
       {/* Header */}
           <Box sx={{ height: "100vh", overflow: "auto" }}>
             <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-              <Box sx={{ p: 2, borderRadius: 3 }}>
+              <Box sx={{ p: 1, borderRadius: 3 }}>
                 <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between"  p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -1385,6 +1385,21 @@ const EditTimetablev1 = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+            <Box>
+                            <Typography
+                              sx={{
+                                fontSize: 20,
+                                fontWeight: 700,
+                                color: "#111827",
+                                // mb: 0.2,
+                                px: 1,
+                                py: 0.2,
+                              }}
+                            >
+                              {mode === "A"
+                                ? `New Timetable`
+                                : `Edit Timetable`}{" "}
+                            </Typography>
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -1393,16 +1408,11 @@ const EditTimetablev1 = () => {
               <Breadcrumbs
                 maxItems={3}
                 aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                 sx={breadcrumbStyles.separator}
+                               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => {
                     is003Subscription
                       ? navigate("/Apps/TR133/Classes")
@@ -1412,13 +1422,7 @@ const EditTimetablev1 = () => {
                   List Of Classes ({rowData.BreadCrumb1 || ""})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => navigate(-1)}
                 >
                   {mode == "A"
@@ -1426,19 +1430,14 @@ const EditTimetablev1 = () => {
                     : `List Of Time Table (${rowData.BreadCrumb2})`}
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.active}
                   onClick={() => navigate(-1)}
                 >
                   Timetable
                 </Typography>
               </Breadcrumbs>
             </Box>
+          </Box>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -1515,7 +1514,7 @@ const EditTimetablev1 = () => {
                                           <Typography
                                             variant="subtitle1"
                                             fontWeight={700}
-                                            color="#4F46E5"
+                                            color="#0D94885"
                                           >
                                             Timetable
                                           </Typography>
@@ -2048,17 +2047,28 @@ const EditTimetablev1 = () => {
                       if (Object.keys(validationErrors).length > 0) return;
                       handleGenerateTimetable(values);
                     }}
-                    sx={{
-                      backgroundColor: "#27ae60",
-                      "&:hover": { backgroundColor: "#229954" },
-                      textTransform: "none",
-                      fontWeight: 600,
-                    }}
+                       sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                   >
-                    GENERATE
+                    Generate
                   </LoadingButton>
                   <Button
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     variant="contained"
                     startIcon={<ArrowBackIcon />}
                     onClick={() => navigate(-1)}

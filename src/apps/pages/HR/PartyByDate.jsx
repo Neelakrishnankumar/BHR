@@ -120,7 +120,7 @@ const PartyByDate = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>Party Details</Typography>
+          <Typography fontWeight={700}>Party Details</Typography>
         </Box>
         <Box
           sx={{
@@ -280,11 +280,14 @@ const PartyByDate = () => {
             )}
 
             <Typography
-              variant="body1"
               sx={{
-                color: "#0D47A1",
-                fontWeight: 600,
-              }}
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
             >
               Aging Report
             </Typography>
@@ -374,14 +377,14 @@ const PartyByDate = () => {
                     fontSize: 18,
                   }}
                 >
-                  🗓️
+                  ⏳
                 </Box>
                 <Box>
-                  <Typography variant="h6" fontWeight={700} color="#4F46E5">
-                    Attendance
+                  <Typography variant="h6" fontWeight={700} color="#0D94885">
+                    Aging
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Party-wise attendance and filter settings
+                     View outstanding balances and analyze receivables/payables by aging period.
                   </Typography>
                 </Box>
               </Box>
@@ -429,16 +432,17 @@ const PartyByDate = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    color="secondary"
-                    sx={{
-                      textTransform: "none",
-                      borderRadius: 2,
-                      px: 4,
-                      bgcolor: "#0D9488",
-                      "&:hover": { bgcolor: "#0F766E" },
-                    }}
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                   >
-                    APPLY
+                    Apply
                   </Button>
                   <Button
                     type="reset"
@@ -455,7 +459,7 @@ const PartyByDate = () => {
                       px: 4,
                     }}
                   >
-                    RESET
+                    Reset
                   </Button>
                 </Stack>
               </Box>
@@ -504,6 +508,37 @@ const PartyByDate = () => {
                       backgroundColor: "#c9f5cc",
                       color: "#1b5e20",
                     },
+
+                     "& .MuiDataGrid-columnHeaderTitle": {
+                            color: colors.blueAccent[900],
+                            fontWeight: 600,
+                          },
+                          "& .MuiTablePagination-root": {
+                            color: colors.blueAccent[900],
+                          },
+                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                          "& .MuiTablePagination-root": {
+                            color: "#fff",
+                          },
+
+                          "& .MuiTablePagination-selectLabel": {
+                            color: "#fff",
+                          },
+
+                          "& .MuiTablePagination-displayedRows": {
+                            color: "#fff",
+                          },
+
+                          /* Dropdown icon */
+                          "& .MuiTablePagination-selectIcon": {
+                            color: "#fff",
+                          },
+
+                          /* Left & Right arrow buttons */
+                          "& .MuiTablePagination-actions button": {
+                            color: "#fff",
+                          },
+
                   }}
                 >
                   <DataGrid

@@ -50,6 +50,7 @@ import toast from "react-hot-toast";
 //   SubordinateAppraisalPayload,
 // } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
+import { breadcrumbStyles } from "../../../Theme";
 
 const EditHSNMaster = () => {
   const navigate = useNavigate();
@@ -194,20 +195,16 @@ const EditHSNMaster = () => {
 
   return (
     <>
-      <React.Fragment
-        sx={{
-          p: 2,
-          height: "100vh",
-        }}
-      >
-        {/* BREADCRUMBS */}
+      <React.Fragment> 
+              <Box sx={{ height: "100vh", overflow: "auto" }}>
+        
         <Paper
           elevation={0}
           sx={{
             mx: 2,
             mt: 2,
             mb: 1,
-            p: 2,
+            p: 1,
             borderRadius: 3,
             border: "1px solid #E5E7EB",
             background: "#fff",
@@ -224,21 +221,29 @@ const EditHSNMaster = () => {
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-
+ <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  {mode === "A"
+                    ? "New HSN Master"
+                    : mode === "E"
+                      ? "Edit HSN Master"
+                      : "View HSN Master"}
+                </Typography>
               <Breadcrumbs
-                separator={<NavigateNextIcon fontSize="small" color="primary" />}
-                aria-label="breadcrumb"
+             separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                             sx={breadcrumbStyles.separator}
               >
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
+                   sx={breadcrumbStyles.item}
                   onClick={() =>
                     navigate("/Apps/TR316/HSN%20Category")
                   }
@@ -247,15 +252,7 @@ const EditHSNMaster = () => {
                 </Typography>
 
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
+                   sx={breadcrumbStyles.item}
                   onClick={() => navigate(-1)}
                 >
                   {mode === "E"
@@ -264,11 +261,7 @@ const EditHSNMaster = () => {
                 </Typography>
 
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#6B7280",
-                    fontWeight: 600,
-                  }}
+                   sx={breadcrumbStyles.active}
                 >
                   {mode === "A"
                     ? "New"
@@ -278,7 +271,7 @@ const EditHSNMaster = () => {
                 </Typography>
               </Breadcrumbs>
             </Box>
-
+    </Box>
             <Box display="flex" gap={1}>
               <Tooltip title="Close">
                 <IconButton
@@ -318,7 +311,7 @@ const EditHSNMaster = () => {
             elevation={0}
             sx={{
               m: 2,
-              p: 3,
+              p: 2,
               borderRadius: 3,
               border: "1px solid #E5E7EB",
               background: "#fff",
@@ -345,6 +338,35 @@ const EditHSNMaster = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+                      {/* ----- CARD HEADER ----- */}
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <Box
+                                            sx={{
+                                              width: 32,
+                                              height: 32,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 16 }}>🏷️</Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#0D94885"
+                                            >
+                                             HSN Master
+                                            </Typography>
+                  
+                                            <Typography variant="body2" color="text.secondary">
+                                              Manage HSN codes, GST classifications, and product tax categories.
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -700,6 +722,7 @@ const EditHSNMaster = () => {
         ) : (
           false
         )}
+        </Box>
       </React.Fragment>
     </>
   );

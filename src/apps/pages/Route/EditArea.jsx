@@ -324,7 +324,7 @@ const EditArea = () => {
             sx={{
               mx: 2,
               mt: 1,
-              p: 3,
+              p: 2,
               borderRadius: 3,
               border: "1px solid #E5E7EB",
               background: "#fff",
@@ -351,7 +351,7 @@ const EditArea = () => {
                 <Typography
                   variant="h6"
                   fontWeight={700}
-                  color="#4F46E5"
+                  color="#0D94885"
                 >
                   Route
                 </Typography>

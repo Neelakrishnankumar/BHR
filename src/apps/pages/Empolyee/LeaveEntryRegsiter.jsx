@@ -30,7 +30,9 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
-import { tokens } from "../../../Theme";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import { DataGrid } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -78,6 +80,8 @@ const LeaveEntryRegister = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let params = useParams();
+  console.log(params, "--find params ");
+  
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
@@ -255,22 +259,47 @@ const LeaveEntryRegister = () => {
   }
   return (
     <React.Fragment>
-        <Box sx={{ height: "100vh", overflow: "auto" }}>
-            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-              <Box sx={{ p: 2, borderRadius: 3 }}>
-                <Paper sx={{ borderRadius: 3 }}>
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+             <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+              <Box sx={{ p: 1.5, borderRadius: 3, }}>
+       <Paper sx={{ borderRadius: 3 }}>
           <Box
             display="flex"
             alignItems="center"
             justifyContent="space-between"
-            p={2}
+            p={1.5}
           >
             <Box>
-              <Breadcrumbs maxItems={3} aria-label="breadcrumb">
+                   
+                                          <Typography
+                                            sx={{
+                                              fontSize: 20,
+                                              fontWeight: 700,
+                                              color: "#111827",
+                                              // mb: 0.2,
+                                              px: 1,
+                                              py: 0.2,
+                                            }}
+                                          >
+                                            Edit Leave Enquiry
+                                          </Typography>
+              <Breadcrumbs
+                           maxItems={3}
+                           aria-label="breadcrumb"
+                             separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                             sx={breadcrumbStyles.separator}
+                         >
+                           <Typography
+                               sx={breadcrumbStyles.item}
+                             onClick={() => {
+                              navigate(`/Apps/TR213/Leave%20Type`);
+
+                             }}
+                           >
+                             {`Leave Type`}
+                           </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default", margin: "10px" }}
+                     sx={breadcrumbStyles.active}
                 >
                   Leave Enquiry Report ({state.LeaveType || ""})
                 </Typography>
@@ -311,7 +340,7 @@ const LeaveEntryRegister = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
           <Formik
@@ -343,6 +372,46 @@ const LeaveEntryRegister = () => {
                   setRows([]);
                 }}
               >
+                  {/* ----- CARD HEADER ----- */}
+                                                  <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1.5}
+                  mb={1}
+                  // sx={{ px: 2, pt: 2 }}
+                >
+                  {/* ICON */}
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      backgroundColor: "#EFF6FF",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography sx={{ fontSize: 18 }}>
+                      📝
+                    </Typography>
+                  </Box>
+                
+                  {/* TITLE + SUBTITLE */}
+                  <Box>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={700}
+                      color="#0D94885"
+                    >
+                     Leave Enquiry
+                    </Typography>
+                
+                    <Typography variant="body2" color="text.secondary">
+                     Manage leave types, categories, and leave policies.
+                    </Typography>
+                  </Box>
+                </Box>
                 <Box>
                   <Box
                     display="grid"

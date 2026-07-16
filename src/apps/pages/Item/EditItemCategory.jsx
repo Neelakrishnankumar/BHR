@@ -269,7 +269,8 @@ const EditItemCategory = () => {
                     py: 0.2,
                   }}
                 >
-                  Item Category
+                  {mode == "A" ? "New Item Category" : "Edit Item Category"}
+             
                 </Typography>
 
                 <Breadcrumbs
@@ -367,9 +368,9 @@ const EditItemCategory = () => {
                 <Typography
                   variant="h6"
                   fontWeight={700}
-                  color="#4F46E5"
+                  color="#0D94885"
                 >
-                  {mode === "A" ? "New Item Category" : "Edit Item Category"}
+                   Item Category
                 </Typography>
 
                 <Typography
