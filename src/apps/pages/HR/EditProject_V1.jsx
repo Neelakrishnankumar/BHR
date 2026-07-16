@@ -80,7 +80,7 @@ import {
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -3013,16 +3013,41 @@ const Editproject_V1 = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
-            <Paper sx={{ borderRadius: 3 }}>
-              <Box display="flex" justifyContent="space-between" p={2}>
+         <Paper
+                  elevation={0}
+                  sx={{
+                    mx: 2,
+                    mt: 1,
+                    mb: 1,
+                    p: 1,
+                    borderRadius: 3,
+                    border: "1px solid #E5E7EB",
+                    bgcolor: "#fff",
+                  }}
+                >
+              <Box display="flex" justifyContent="space-between">
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   {broken && !rtl && (
                     <IconButton onClick={() => toggleSidebar()}>
                       <MenuOutlinedIcon />
                     </IconButton>
                   )}
+
+                    <Box>
+                                  <Typography
+                                    sx={{
+                                      fontSize: 20,
+                                      fontWeight: 700,
+                                      color: "#111827",
+                                      // mb: 0.2,
+                                      px: 1,
+                                      py: 0.2,
+                                    }}
+                                  >
+                                    {mode === "A"
+                                      ? `New ${getBusinessCaption("ProjectTitle", "Project")}`
+                                      : `Edit ${getBusinessCaption("ProjectTitle", "Project")}`}{" "}
+                                  </Typography>
                   <Box
                     display={isNonMobile ? "flex" : "none"}
                     borderRadius="3px"
@@ -3031,66 +3056,81 @@ const Editproject_V1 = () => {
                     <Breadcrumbs
                       maxItems={3}
                       aria-label="breadcrumb"
-                      separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                      separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                         sx={breadcrumbStyles.separator}
                     >
                       <Typography
-                        variant="h5"
-                        color="#0000D1"
-                        sx={{ cursor: "default" }}
+                       sx={
+                                               show == "0"
+                                                 ? breadcrumbStyles.active
+                                                 : breadcrumbStyles.item
+                                             }
                         onClick={() => setScreen(0)}
                       >
                         {getBusinessCaption("ProjectTitle", "Project")}
                       </Typography>
                       {show == "1" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                         sx={
+                                                 show == "1"
+                                                   ? breadcrumbStyles.active
+                                                   : breadcrumbStyles.item
+                                               }
                         >
                           Units
                         </Typography>
                       )}
                       {show == "3" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                         sx={
+                                                 show == "3"
+                                                   ? breadcrumbStyles.active
+                                                   : breadcrumbStyles.item
+                                               }
                         >
                           Units
                         </Typography>
                       )}
                       {show == "2" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                          sx={
+                                                  show == "2"
+                                                    ? breadcrumbStyles.active
+                                                    : breadcrumbStyles.item
+                                                }
                         >
                           List Of Documents
                         </Typography>
                       )}
                       {show == "4" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                        sx={
+                                                show == "4"
+                                                  ? breadcrumbStyles.active
+                                                  : breadcrumbStyles.item
+                                              }
                         >
                           Staff Mapping ({data.Project})
                         </Typography>
                       )}
                       {show == "6" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                         sx={
+                                                 show == "6"
+                                                   ? breadcrumbStyles.active
+                                                   : breadcrumbStyles.item
+                                               }
                         >
                           Time Table({data.Project})
                         </Typography>
                       )}
                       {show == "5" && (
                         <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
+                         sx={
+                                                 show == "5"
+                                                   ? breadcrumbStyles.active
+                                                   : breadcrumbStyles.item
+                                               }
                         >
                           Units/Area ({data.Project})
                         </Typography>
@@ -3098,7 +3138,7 @@ const Editproject_V1 = () => {
                     </Breadcrumbs>
                   </Box>
                 </Box>
-
+ </Box>
                 <Box display="flex">
                   {/* {mode !== "A" ? (
                             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -3158,7 +3198,7 @@ const Editproject_V1 = () => {
                 </Box>
               </Box>
             </Paper>
-          </Box>
+          {/* </Box> */}
           {/* ═══════════════════════════════════════════════════════════════
                 SHOW = "0"  —  Header form
                 FIX: onSubmit now routes correctly:
@@ -3256,7 +3296,7 @@ const Editproject_V1 = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               {getBusinessCaption("ProjectTitle", "Project")}
                             </Typography>
@@ -4087,7 +4127,7 @@ const Editproject_V1 = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Units
                             </Typography>
@@ -4358,7 +4398,7 @@ const Editproject_V1 = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               List Of Documents
                             </Typography>
@@ -4703,7 +4743,7 @@ const Editproject_V1 = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Staff Mapping
                             </Typography>
@@ -5174,7 +5214,7 @@ const Editproject_V1 = () => {
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
-                              color="#4F46E5"
+                              color="#0D94885"
                             >
                               Units / Area
                             </Typography>
@@ -5353,7 +5393,7 @@ const Editproject_V1 = () => {
              </Box>
             </Box>
           ) : null}
-        </Box>
+        {/* </Box> */}
       </Box>
     </React.Fragment>
   );

@@ -167,32 +167,41 @@ const Holidaylist = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : null}
-
-       <Box sx={{ height: "100vh", overflow: "auto" }}>
-              <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                <Box sx={{ p: 2, borderRadius: 3 }}>
-                  <Paper sx={{ borderRadius: 3 }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
+ <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+         <Box sx={{ p: 1.5, borderRadius: 3, }}>
+  <Paper sx={{ borderRadius: 3 }}>
+    
+    {/* MAIN HEADER ROW */}
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      p={2}
+    >
+      
+      {/* LEFT SIDE */}
+      <Box display="flex" alignItems="center">
+        {broken && !rtl && (
+          <IconButton onClick={() => toggleSidebar()}>
+            <MenuOutlinedIcon />
+          </IconButton>
+        )}
               <Breadcrumbs
                 maxItems={3}
                 aria-label="breadcrumb"
                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                 sx={{ 
+              cursor: "default",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#111827",
+              // mb: 0.2,
+              px: 1,
+              py: 0.2,
+            }}
 
                 >
                   Holiday List
@@ -200,7 +209,7 @@ const Holidaylist = () => {
 
               </Breadcrumbs>
             </Box>
-          </Box>
+          {/* </Box> */}
 
           <Box display="flex">
             <Tooltip title="Close">
@@ -220,7 +229,7 @@ const Holidaylist = () => {
       {!getLoading ? (
           <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
           <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-        <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+        <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 1 }}>
           <Formik
             initialValues={InitialValue}
             validationSchema={validationSchema}
@@ -260,7 +269,7 @@ const Holidaylist = () => {
                                           📋
                                         </Box>
                                         <Box>
-                                          <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                                          <Typography variant="h6" fontWeight={700} color="#0D94885">
                                             Holiday List
                                           </Typography>
                                           <Typography variant="caption" color="text.secondary">

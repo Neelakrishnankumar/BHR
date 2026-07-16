@@ -242,7 +242,15 @@ export default function ResetPartyOrder({ open, onClose, rowData, EmployeeID, Co
                                         >
 
                                             <LoadingButton
-                                                color="secondary"
+                                                 sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                                                 variant="contained"
                                                 type="submit"
                                             // loading={isLoading}
@@ -252,11 +260,19 @@ export default function ResetPartyOrder({ open, onClose, rowData, EmployeeID, Co
                                             {" "}
 
                                             <Button
-                                                color="warning"
+                                               sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
                                                 variant="contained"
                                                 onClick={onClose}
                                             >
-                                                Cancel
+                                                Back
                                             </Button>
                                         </Box>
                                     </form>

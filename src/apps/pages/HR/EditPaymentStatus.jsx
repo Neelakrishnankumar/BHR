@@ -38,6 +38,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import * as Yup from "yup";
+import { breadcrumbStyles } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditAdvancePayment = () => {
@@ -190,7 +191,7 @@ const EditAdvancePayment = () => {
           mx: 2,
           mt: 2,
           mb: 1,
-          p: 2,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
           background: "#fff",
@@ -208,26 +209,30 @@ const EditAdvancePayment = () => {
               </IconButton>
             )}
 
+
+ <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  {mode === "A"
+                  ? "Add Advance Payment"
+                  : "View Advance Payment"}
+                </Typography>
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
-              separator={
-                <NavigateNextIcon
-                  fontSize="small"
-                  color="primary"
-                />
-              }
+                 separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                 sx={breadcrumbStyles.separator}
             >
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
+               sx={breadcrumbStyles.item}
                 onClick={() => {
                   navigate("/Apps/TR321/Party");
                 }}
@@ -236,15 +241,7 @@ const EditAdvancePayment = () => {
               </Typography>
 
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
+                     sx={breadcrumbStyles.item}
                 onClick={() => {
                   navigate(-1);
                 }}
@@ -253,11 +250,7 @@ const EditAdvancePayment = () => {
               </Typography>
 
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#6B7280",
-                  fontWeight: 600,
-                }}
+                     sx={breadcrumbStyles.active}
               >
                 {mode === "A"
                   ? "Add Advance"
@@ -265,7 +258,7 @@ const EditAdvancePayment = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-
+    </Box>
           <Box display="flex" gap={1}>
             <Tooltip title="Close">
               <IconButton
@@ -353,7 +346,7 @@ const EditAdvancePayment = () => {
                       <Typography
                         variant="subtitle1"
                         fontWeight={700}
-                        color="#4F46E5"
+                        color="#0D94885"
                       >
                         Advance Payment
                       </Typography>
@@ -402,7 +395,11 @@ const EditAdvancePayment = () => {
                       helperText={touched.paymentdate && errors.paymentdate}
                       InputProps={{
                         readOnly: mode === "V" ? true : false,
+                     
                       }}
+                        InputLabelProps={{
+    shrink: true,
+  }}
                     //required
                     //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
@@ -448,6 +445,7 @@ const EditAdvancePayment = () => {
                       error={!!touched.Amount && !!errors.Amount}
                       helperText={touched.Amount && errors.Amount}
                       autoFocus
+                      
                       InputProps={{
                         readOnly: mode === "V" ? true : false,
                         inputProps: {
@@ -587,6 +585,7 @@ const EditAdvancePayment = () => {
                           Fnsave(values, "harddelete");
                         }}
                         sx={{
+                          textTransform: "none",
                           px: 4,
                           borderRadius: 2,
                           textTransform: "none",
@@ -599,7 +598,11 @@ const EditAdvancePayment = () => {
                         Delete
                       </Button>
                     ) : (
-                      <Button color="error" variant="contained" disabled={true}>
+                      <Button 
+                      sx={{
+                         textTransform: "none",
+                      }}
+                      color="error" variant="contained" disabled={true}>
                         Delete
                       </Button>
                     )}
@@ -616,7 +619,7 @@ const EditAdvancePayment = () => {
                         },
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </form>

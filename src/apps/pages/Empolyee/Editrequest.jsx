@@ -3216,7 +3216,7 @@ const Editrequests = () => {
                   sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                 sx={breadcrumbStyles.item}
+                 sx={show == "0" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     onClick={() => {
                       setScreen(0);
                     }}

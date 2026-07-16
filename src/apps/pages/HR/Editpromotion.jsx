@@ -90,7 +90,7 @@ import {
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -910,27 +910,46 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
+        <Paper
+                elevation={0}
+                sx={{
+                  mx: 2,
+                  mt: 1,
+                  mb: 1,
+                  p: 1,
+                  borderRadius: 3,
+                  border: "1px solid #E5E7EB",
+                  bgcolor: "#fff",
+                }}
+              >
+        <Box display="flex" justifyContent="space-between" >
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+               <Box>
+                            <Typography
+                              sx={{
+                                fontSize: 20,
+                                fontWeight: 700,
+                                color: "#111827",
+                                // mb: 0.2,
+                                px: 1,
+                                py: 0.2,
+                              }}
+                            >
+                              Edit Promotion
+                            </Typography>
             <Breadcrumbs
               maxItems={3}
               aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                sx={breadcrumbStyles.separator}
             >
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{
-                  cursor: "default",
-                  marginLeft: "10px",
-                  fontSize: "17px",
-                }}
+                  sx={breadcrumbStyles.item}
                 onClick={() => {
                   navigate("/Apps/TR378/Academic%20Year");
                 }}
@@ -939,9 +958,7 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
               </Typography>
               <Typography
                 key={8646}
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                 sx={breadcrumbStyles.item}
                 onClick={() => {
                   navigate(
                     `/Apps/SecondarylistView/TR275/Project/${rowData.AcademicYearID}`,
@@ -952,9 +969,7 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
                 {`Standard/Activities(${rowData.MilestoneName})`}
               </Typography>
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
+                 sx={breadcrumbStyles.active}
                 onClick={() => setScreen(0)}
               >
                 Promotion
@@ -962,7 +977,7 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
               </Typography>
             </Breadcrumbs>
           </Box>
-
+    </Box>
           <Box display="flex">
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -978,8 +993,12 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
         </Box>
       </Paper>
 
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
+       <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+           
+                  <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+           
+           <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+             <Formik
           innerRef={formikRef}
           initialValues={{
             standard: null,
@@ -1025,6 +1044,35 @@ const [selectedPromotion, setSelectedPromotion] = useState(null);
             setFieldValue,
           }) => (
             <form onSubmit={handleSubmit}>
+                {/* ----- CARD HEADER ----- */}
+                                    <Box display="flex" alignItems="center" gap={1} mb={0.5} m={2}>
+                                      <Box
+                                        sx={{
+                                          width: 32,
+                                          height: 32,
+                                          borderRadius: "50%",
+                                          backgroundColor: "#EFF6FF",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <Typography sx={{ fontSize: 16 }}>📈</Typography>
+                                      </Box>
+                                      <Box>
+                                        <Typography
+                                          variant="subtitle1"
+                                          fontWeight={700}
+                                          color="#0D94885"
+                                        >
+                                         Promotion
+                                        </Typography>
+              
+                                        <Typography variant="body2" color="text.secondary">
+                                          Manage employee promotions, designation changes, and effective dates.
+                                        </Typography>
+                                      </Box>
+                                    </Box>
               <Box
                 padding={1}
                 height={dataGridHeightExplore}
@@ -1569,6 +1617,8 @@ setMarksDialogOpen(false);
           )}
         </Formik>
       </Paper>
+         </Box>
+                    </Box>
     </React.Fragment>
   );
 };

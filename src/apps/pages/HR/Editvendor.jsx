@@ -1269,7 +1269,7 @@ const Editvendor = () => {
           mx: 2,
           mt: 2,
           mb: 1,
-          p: 2,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
           bgcolor: "#fff",
@@ -1295,14 +1295,33 @@ const Editvendor = () => {
             )}
 
             <Box>
-            
+              <Typography
+                              sx={{
+                                fontSize: 20,
+                                fontWeight: 700,
+                                color: "#111827",
+                                // mb: 0.2,
+                                px: 1,
+                                py: 0.2,
+                              }}
+                            >
+                              {mode === "A"
+                                ? `New Party`
+                                : `Edit Party`}
+                            </Typography>
               {/* Breadcrumb */}
               <Breadcrumbs
-                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                sx={breadcrumbStyles.separator}
+               maxItems={3}
+                                 aria-label="breadcrumb"
+                                 separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                 sx={breadcrumbStyles.separator}
               >
                 <Typography
-                  sx={breadcrumbStyles.item}
+                 sx={
+                                        show == "0"
+                                          ? breadcrumbStyles.active
+                                          : breadcrumbStyles.item
+                                      }
                   onClick={() => {
                     setScreen(0);
                   }}
@@ -1399,7 +1418,7 @@ const Editvendor = () => {
                 backgroundColor: "#fff",
                 border: "1px solid #E5E7EB",
                 borderRadius: 3,
-                p: 3,
+                p: 2,
               }}
             >
               <Formik
@@ -1440,7 +1459,7 @@ const Editvendor = () => {
                         🏢
                       </Box>
                       <Box>
-                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        <Typography variant="h6" fontWeight={700} color="#0D94885">
                           Party
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -1818,7 +1837,7 @@ const Editvendor = () => {
                         📞
                       </Box>
                       <Box>
-                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        <Typography variant="h6" fontWeight={700} color="#0D94885">
                           Contact Details
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -2262,7 +2281,7 @@ const Editvendor = () => {
                         🏦
                       </Box>
                       <Box>
-                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        <Typography variant="h6" fontWeight={700} color="#0D94885">
                           Bank Details
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -2639,7 +2658,7 @@ const Editvendor = () => {
                             📝
                           </Box>
                           <Box>
-                            <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                            <Typography variant="h6" fontWeight={700} color="#0D94885">
                               Registration
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
@@ -2982,7 +3001,7 @@ const Editvendor = () => {
                             ⚙️
                           </Box>
                           <Box>
-                            <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                            <Typography variant="h6" fontWeight={700} color="#0D94885">
                               Default Settings
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
@@ -3231,7 +3250,7 @@ const Editvendor = () => {
                         📄
                       </Box>
                       <Box>
-                        <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        <Typography variant="h6" fontWeight={700} color="#0D94885">
                           List Of Documents
                         </Typography>
                         <Typography variant="caption" color="text.secondary">

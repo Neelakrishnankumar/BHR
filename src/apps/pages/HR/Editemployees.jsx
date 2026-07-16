@@ -66,7 +66,7 @@ import {
   ResignationPOST,
   getResignation,
   CustomisedCaptionGet,
-  ContractInvoice
+  ContractInvoice,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -121,7 +121,7 @@ import {
   PartySingleSelect,
 } from "../../../ui-components/global/Autocomplete";
 import Resizer from "react-image-file-resizer";
-import ContactsIcon from '@mui/icons-material/Contacts';
+import ContactsIcon from "@mui/icons-material/Contacts";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SOPfileUpload } from "../../../store/reducers/Imguploadreducer";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -130,9 +130,12 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { getConfig } from "../../../config";
 import SchoolContractInvoice from "../pdf/SchoolContractInvoice";
 import ContractCashMemo from "../pdf/ContractCashMemo";
-import CloseIcon from '@mui/icons-material/Close';
-import { fnImageUpload, fnFetchImage } from "../../../store/reducers/Imguploadreducer";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  fnImageUpload,
+  fnFetchImage,
+} from "../../../store/reducers/Imguploadreducer";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
@@ -145,7 +148,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 const Editemployee = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   var secondaryCurrentPage = parseInt(
-    sessionStorage.getItem("secondaryCurrentPage")
+    sessionStorage.getItem("secondaryCurrentPage"),
   );
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
@@ -164,9 +167,9 @@ const Editemployee = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
-  console.log("🚀 ~ Editemployee ~ is003Subscription:", is003Subscription)
-  const is00123Subscription = ["001", "002", "003"].some(code =>
-    SubscriptionCode?.endsWith(code)
+  console.log("🚀 ~ Editemployee ~ is003Subscription:", is003Subscription);
+  const is00123Subscription = ["001", "002", "003"].some((code) =>
+    SubscriptionCode?.endsWith(code),
   );
   console.log(SubscriptionCode, "codehr");
   const EMPID = sessionStorage.getItem("EmpId");
@@ -191,7 +194,7 @@ const Editemployee = () => {
 
       const calculatedHeight = Math.min(
         pageWidth * aspectRatio,
-        MAX_FOOTER_HEIGHT
+        MAX_FOOTER_HEIGHT,
       );
 
       setFooterHeight(calculatedHeight);
@@ -234,17 +237,14 @@ const Editemployee = () => {
     const day = parts[2];
 
     // validate month/day ranges
-    if (
-      (month && Number(month) > 12) ||
-      (day && Number(day) > 31)
-    ) {
+    if ((month && Number(month) > 12) || (day && Number(day) > 31)) {
       return;
     }
 
     handleChange(e);
   };
   const partyContactgetdata = useSelector(
-    (state) => state.formApi.partyContactgetdata
+    (state) => state.formApi.partyContactgetdata,
   );
   const navigate = useNavigate();
   let params = useParams();
@@ -268,59 +268,63 @@ const Editemployee = () => {
   const state = location.state || {};
   console.log(state, "emnployee");
   const screenname = state.screenName;
-  const designationType =
-    state.Classification ||
-    "";
+  const designationType = state.Classification || "";
   const isStudentClassification = designationType === "Student";
   const isLoading = useSelector((state) => state.formApi.loading);
   const ParentgetData = useSelector((state) => state.formApi.Partygetdata);
   console.log("ParentgetData", ParentgetData);
-  const ParentcontactgetData = useSelector((state) => state.formApi.Partycontactgetdata);
+  const ParentcontactgetData = useSelector(
+    (state) => state.formApi.Partycontactgetdata,
+  );
   console.log("ParentcontactgetData", ParentcontactgetData);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
-  const ResignationGetData = useSelector((state) => state.formApi.ResignationGetData);
+  const ResignationGetData = useSelector(
+    (state) => state.formApi.ResignationGetData,
+  );
   console.log("ResignationGetData", ResignationGetData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   const contactLoading = useSelector((state) => state.formApi.expgetLoading);
   const Inventorygrid1columns = useSelector(
-    (state) => state.formApi.Inventorygrid1columns
+    (state) => state.formApi.Inventorygrid1columns,
   );
   const Inventorygrid1rows = useSelector(
-    (state) => state.formApi.Inventorygrid1rows
+    (state) => state.formApi.Inventorygrid1rows,
   );
   const Inventorygrid2columns = useSelector(
-    (state) => state.formApi.Inventorygrid2columns
+    (state) => state.formApi.Inventorygrid2columns,
   );
   const Inventorygrid2rows = useSelector(
-    (state) => state.formApi.Inventorygrid2rows
+    (state) => state.formApi.Inventorygrid2rows,
   );
   const Inventorygrid3columns = useSelector(
-    (state) => state.formApi.Inventorygrid3columns
+    (state) => state.formApi.Inventorygrid3columns,
   );
   const Inventorygrid3rows = useSelector(
-    (state) => state.formApi.Inventorygrid3rows
+    (state) => state.formApi.Inventorygrid3rows,
   );
   // console.log("Inventorygrid1rows", Inventorygrid1rows);
   // console.log("Inventorygrid2rows", Inventorygrid2rows);
   // console.log("Inventorygrid3rows", Inventorygrid3rows);
-  const InventrygetData = useSelector(
-    (state) => state.formApi.InventrygetData
-  );
+  const InventrygetData = useSelector((state) => state.formApi.InventrygetData);
   const Inventoryloading = useSelector(
-    (state) => state.formApi.Inventoryloading
+    (state) => state.formApi.Inventoryloading,
   );
   console.log("InventrygetData", InventrygetData);
   const Inventorygrid1loading = useSelector(
-    (state) => state.formApi.Inventorygrid1loading
+    (state) => state.formApi.Inventorygrid1loading,
   );
   console.log(
     " ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
-    DataExplore
+    DataExplore,
   );
 
-  const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
-  const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
+  const SOPConfigGetdata = useSelector(
+    (state) => state.formApi.SOPConfigGetdata,
+  );
+  const SOPConfigGetLoading = useSelector(
+    (state) => state.formApi.SOPConfigGetloading,
+  );
 
   const [show, setScreen] = React.useState("0");
   useEffect(() => {
@@ -370,20 +374,20 @@ const Editemployee = () => {
   const BillableMonth = today.getMonth() + 1; // 0-based → +1
   const BillableYear = today.getFullYear();
 
-  //SPECIMEN 
-  const SpecimenGetdata = useSelector(
-    (state) => state.formApi.SpecimenGetdata
-  );
+  //SPECIMEN
+  const SpecimenGetdata = useSelector((state) => state.formApi.SpecimenGetdata);
   const SpecimenGetloading = useSelector(
-    (state) => state.formApi.SpecimenGetloading
+    (state) => state.formApi.SpecimenGetloading,
   );
   const SpecimenPostloading = useSelector(
-    (state) => state.formApi.SpecimenPostloading
+    (state) => state.formApi.SpecimenPostloading,
   );
 
-  const Invoiceheader = useSelector(state => state.formApi.InvoiceHeaderData);
-  const Invoicedetails = useSelector(state => state.formApi.InvoiceDetailData);
-  const PdfBaseUrl = useSelector(state => state.formApi.InvoiceBaseUrl);
+  const Invoiceheader = useSelector((state) => state.formApi.InvoiceHeaderData);
+  const Invoicedetails = useSelector(
+    (state) => state.formApi.InvoiceDetailData,
+  );
+  const PdfBaseUrl = useSelector((state) => state.formApi.InvoiceBaseUrl);
 
   const handleClosemodal = () => {
     setOpen(false);
@@ -410,7 +414,7 @@ const Editemployee = () => {
   const [openDocModal, setOpenDocModal] = useState(false); //Lis of document
   const [openItemServiceModal, setOpenItemServiceModal] = useState(false); //Item service
   const [openLocalityModal, setOpenLocalityModal] = useState(false); //Locality
-  const [openFunctionModal, setOpenFunctionModal] = useState(false); //Function 
+  const [openFunctionModal, setOpenFunctionModal] = useState(false); //Function
   const [openManagerModal, setOpenManagerModal] = useState(false); //Managers
   const [openItemCustodyModal, setOpenItemCustodyModal] = useState(false); // Itemcustody
   const [openCourseModal, setOpenCourseModal] = useState(false); // Course Attendance
@@ -457,21 +461,16 @@ const Editemployee = () => {
             },
             "base64",
             150,
-            150
+            150,
           );
-
         } catch (err) {
           console.log(err);
         }
       }
-      setImg(event.target.result)
-      setImgChanged(true)
-
-
+      setImg(event.target.result);
+      setImgChanged(true);
 
       //  dispatch(fnImageUpload(formData,recID,accessID));
-
-
     };
   }
 
@@ -498,10 +497,9 @@ const Editemployee = () => {
   //   }
   // };
 
-  const filteredRows =
-    (InventrygetData || []).filter((row) =>
-      selectionModel3.includes(String(row.ItemID))
-    );
+  const filteredRows = (InventrygetData || []).filter((row) =>
+    selectionModel3.includes(String(row.ItemID)),
+  );
   const [bottomRows, setBottomRows] = useState([]);
   const CompReportInitialValue = {
     code: Data.Code || "",
@@ -517,20 +515,11 @@ const Editemployee = () => {
     const idata = {
       CompanyID: CompanyID,
       EmployeeID: recID,
-      Sign1:
-        sign1 && sign1 !== ""
-          ? sign1
-          : SpecimenGetdata.EMP_SIGN1,
+      Sign1: sign1 && sign1 !== "" ? sign1 : SpecimenGetdata.EMP_SIGN1,
 
-      Sign2:
-        sign2 && sign2 !== ""
-          ? sign2
-          : SpecimenGetdata.EMP_SIGN2,
+      Sign2: sign2 && sign2 !== "" ? sign2 : SpecimenGetdata.EMP_SIGN2,
 
-      Sign3:
-        sign3 && sign3 !== ""
-          ? sign3
-          : SpecimenGetdata.EMP_SIGN3,
+      Sign3: sign3 && sign3 !== "" ? sign3 : SpecimenGetdata.EMP_SIGN3,
     };
 
     try {
@@ -625,7 +614,7 @@ const Editemployee = () => {
       PreparedBy: values.PreparedBy === true ? "Y" : "N",
       ReviewdBy: values.ReviewedBy === true ? "Y" : "N",
       ApprovedBY: values.ApprovedBy === true ? "Y" : "N",
-      TrainedBy: values.TrainedBy === true ? "Y" : "N"
+      TrainedBy: values.TrainedBy === true ? "Y" : "N",
     };
 
     try {
@@ -651,21 +640,18 @@ const Editemployee = () => {
     { ID: "NK", Name: "NK" },
   ];
 
-
   const baseUrl = store.getState().globalurl.imageUrl;
-  const [viewImage, setViewImage] = React.useState(
-    baseUrl + "Defaultimg.jpg"
-  );
+  const [viewImage, setViewImage] = React.useState(baseUrl + "Defaultimg.jpg");
   useEffect(() => {
     const vendor =
       is003Subscription === true &&
-        ParentgetData?.RecordID &&
-        ParentgetData.RecordID !== "0"
+      ParentgetData?.RecordID &&
+      ParentgetData.RecordID !== "0"
         ? {
-          RecordID: ParentgetData.RecordID,
-          Code: ParentgetData.Code,
-          Name: ParentgetData.Name,
-        }
+            RecordID: ParentgetData.RecordID,
+            Code: ParentgetData.Code,
+            Name: ParentgetData.Name,
+          }
         : null;
 
     setContractorData((prev) => ({
@@ -685,12 +671,12 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: accessID,
-        })
+        }),
       );
     }
   }, [Subscriptionlastthree, accessID, dispatch]);
   const Customisedcaptiondata = useSelector(
-    (state) => state.formApi.CustomisedCaptionGetData
+    (state) => state.formApi.CustomisedCaptionGetData,
   );
   // Ensure it's always an array
   const captionArray = Array.isArray(Customisedcaptiondata)
@@ -698,9 +684,7 @@ const Editemployee = () => {
     : Customisedcaptiondata?.data || [];
   console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
   const getBusinessCaption = (CaptionID, defaultCaption) => {
-    const match = captionArray?.find(
-      (item) => item.CAPTIONID === CaptionID
-    );
+    const match = captionArray?.find((item) => item.CAPTIONID === CaptionID);
 
     return match?.CAPTION || defaultCaption;
   };
@@ -708,9 +692,9 @@ const Editemployee = () => {
     if (InventrygetData) {
       setBottomRows(InventrygetData);
 
-      const preSelected = InventrygetData
-        .filter((row) => row.IsSelect === "Y")
-        .map((row) => row.ItemID);
+      const preSelected = InventrygetData.filter(
+        (row) => row.IsSelect === "Y",
+      ).map((row) => row.ItemID);
 
       setSelectionModel3(preSelected);
     }
@@ -720,8 +704,6 @@ const Editemployee = () => {
       setViewImage(baseUrl + Data.ImageName);
     }
   }, [Data?.ImageName]);
-
-
 
   useEffect(() => {
     console.log("-- calling valudation useeffect");
@@ -748,16 +730,16 @@ const Editemployee = () => {
         };
         if (!isStudentClassification) {
           Department: Yup.array()
-            .min(1, data.Employee.Department)  //FIXED
-            .required(data.Employee.Department)
+            .min(1, data.Employee.Department) //FIXED
+            .required(data.Employee.Department);
         }
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
         }
         if (!isStudentClassification) {
           Department: Yup.array()
-            .min(1, data.Employee.Department)  //FIXED
-            .required(data.Employee.Department)
+            .min(1, data.Employee.Department) //FIXED
+            .required(data.Employee.Department);
         }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
@@ -779,7 +761,7 @@ const Editemployee = () => {
               {
                 message: "Invalid Email Id",
                 excludeEmptyString: true, // ✅ avoids conflict with required
-              }
+              },
             ),
         };
 
@@ -874,7 +856,7 @@ const Editemployee = () => {
         }
 
         const schema2 = Yup.object().shape({
-          ...schemaFields5,   // ✅ IMPORTANT FIX
+          ...schemaFields5, // ✅ IMPORTANT FIX
         });
 
         setValidationSchema2(schema2);
@@ -913,9 +895,9 @@ const Editemployee = () => {
           ItemNumber: Yup.string().required(data.Itemcustody.ItemNumber),
           ItemName: Yup.string().trim().required(data.Itemcustody.ItemName),
           AssestID: Yup.string().required(data.Itemcustody.AssestID),
-          PurchaseReference: Yup.string().trim().required(
-            data.Itemcustody.PurchaseReference
-          ),
+          PurchaseReference: Yup.string()
+            .trim()
+            .required(data.Itemcustody.PurchaseReference),
           ItemValue: Yup.string().required(data.Itemcustody.ItemValue),
         });
         setValidationSchema6(schema6);
@@ -948,7 +930,9 @@ const Editemployee = () => {
         // });
         // setValidationSchema9(schema9);
         let schemaFields9 = {
-          project: Yup.object().required(data.ContractsIN.standardActivities).nullable(),
+          project: Yup.object()
+            .required(data.ContractsIN.standardActivities)
+            .nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
@@ -972,8 +956,6 @@ const Editemployee = () => {
           schemaFields9.project = Yup.object()
             .required(data.ContractsIN.project)
             .nullable();
-
-
         }
 
         // ✅ build schema
@@ -981,7 +963,9 @@ const Editemployee = () => {
 
         setValidationSchema9(schema9);
         let schemaFields23 = {
-          project: Yup.object().required(data.CourseAttendence.project).nullable(),
+          project: Yup.object()
+            .required(data.CourseAttendence.project)
+            .nullable(),
           shift: Yup.object().required(data.CourseAttendence.shift).nullable(),
         };
         // ✅ build schema
@@ -1005,7 +989,7 @@ const Editemployee = () => {
         };
         if (CompanyAutoCode === "N") {
           schemaFields2.localitycode = Yup.string().required(
-            data.Locality.localitycode
+            data.Locality.localitycode,
           );
         }
 
@@ -1019,10 +1003,12 @@ const Editemployee = () => {
           vendors: Yup.object().required(data.ItemServices.vendors).nullable(),
           servicedate: Yup.string().required(data.ItemServices.servicedate),
           returndate: Yup.string().required(data.ItemServices.returndate),
-          complaints: Yup.string().trim().required(data.ItemServices.complaints),
-          tentativecharge: Yup.string().trim().required(
-            data.ItemServices.tentativecharge
-          ),
+          complaints: Yup.string()
+            .trim()
+            .required(data.ItemServices.complaints),
+          tentativecharge: Yup.string()
+            .trim()
+            .required(data.ItemServices.tentativecharge),
         });
 
         setValidationSchema12(schema12);
@@ -1050,7 +1036,9 @@ const Editemployee = () => {
           name1: Yup.string().trim().required(data.PersonnelParent.name1),
           address: Yup.string().trim().required(data.PersonnelParent.address),
 
-          mobilenumber: Yup.string().required(data.PersonnelParent.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+          mobilenumber: Yup.string()
+            .required(data.PersonnelParent.mobilenumber)
+            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
 
           // emailid: Yup.string()
           //   .nullable()
@@ -1077,23 +1065,26 @@ const Editemployee = () => {
         const schema14 = Yup.object().shape(schemaFields14);
         setValidationSchema14(schema14);
 
-
-
         const schema17 = Yup.object().shape({
-          itemGroup: Yup.object().required(data.Itemcustody1.itemGroup).nullable(),
+          itemGroup: Yup.object()
+            .required(data.Itemcustody1.itemGroup)
+            .nullable(),
           items: Yup.object().required(data.Itemcustody1.items).nullable(),
           AssestID: Yup.string().required(data.Itemcustody1.AssestID),
-          PurchaseReference: Yup.string().trim().required(
-            data.Itemcustody1.PurchaseReference
-          ),
+          PurchaseReference: Yup.string()
+            .trim()
+            .required(data.Itemcustody1.PurchaseReference),
           ItemValue: Yup.string().required(data.Itemcustody1.ItemValue),
         });
         setValidationSchema17(schema17);
         const schema18 = Yup.object().shape({
-          itemgroups: Yup.object().required(data.Inventory.itemgroups).nullable(),
-          itemcategory: Yup.object().required(data.Inventory.itemcategory).nullable(),
+          itemgroups: Yup.object()
+            .required(data.Inventory.itemgroups)
+            .nullable(),
+          itemcategory: Yup.object()
+            .required(data.Inventory.itemcategory)
+            .nullable(),
           Grpitems: Yup.object().required(data.Inventory.Grpitems).nullable(),
-
         });
         setValidationSchema18(schema18);
       })
@@ -1183,7 +1174,7 @@ const Editemployee = () => {
 
   let imgbaseUrl = store.getState().globalurl.imageUrl;
 
-  const imageName = Data?.ImageName;   // SAFE ACCESS
+  const imageName = Data?.ImageName; // SAFE ACCESS
 
   if (mode === "A" || !imageName) {
     userimg = imgbaseUrl + "Defaultimg.jpg";
@@ -1191,21 +1182,15 @@ const Editemployee = () => {
     userimg = imgbaseUrl + imageName;
   }
 
-
   const renderProfilePhoto = (
     img,
     userimg,
     isImgChanged,
     imgUpload,
-    title = "Profile Photo"
+    title = "Profile Photo",
   ) => (
     <Box sx={{ width: 220, flexShrink: 0 }}>
-      <Typography
-        variant="body2"
-        fontWeight={600}
-        color="#2563EB"
-        mb={1}
-      >
+      <Typography variant="body2" fontWeight={600} color="#2563EB" mb={1}>
         {title}
       </Typography>
 
@@ -1253,13 +1238,7 @@ const Editemployee = () => {
           }}
         >
           ⤴ Change Photo
-
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={imgUpload}
-          />
+          <input hidden accept="image/*" type="file" onChange={imgUpload} />
         </Button>
       </Stack>
     </Box>
@@ -1335,9 +1314,9 @@ const Editemployee = () => {
   const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
-        RecordID: String(d.DeptID),
-        Name: d.DeptName,
-      }))
+          RecordID: String(d.DeptID),
+          Name: d.DeptName,
+        }))
       : [],
     Code: Data.Code,
     Name: Data.Name,
@@ -1393,7 +1372,7 @@ const Editemployee = () => {
   console.log(
     "🚀 ~ Editemployee ~ Data.Module:",
     initialValues.employeetype,
-    Data.EmpType
+    Data.EmpType,
   );
   // const [apiReturnValue, setApiReturnValue] = useState(null);
 
@@ -1618,8 +1597,8 @@ const Editemployee = () => {
       //DeptRecordID: selectLookupData.lookupRecordid,
       // DeptRecordID: isStudentClassification ? 0 : values.Department?.RecordID || 0,
       // DeptName: isStudentClassification ? "" : values.Department?.Name || "",
-      DeptRecordID: deptIds.join(","),   // "1,2,3"
-      DeptName: deptNames.join(","),     // "HR,Admin"
+      DeptRecordID: deptIds.join(","), // "1,2,3"
+      DeptName: deptNames.join(","), // "HR,Admin"
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
@@ -1653,7 +1632,7 @@ const Editemployee = () => {
     //  return;
     const data = await dispatch(
       // postData({ accessID, action, idata: saveData })
-      postData({ accessID: "TR027", action, idata: saveData })
+      postData({ accessID: "TR027", action, idata: saveData }),
     );
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
@@ -1667,15 +1646,17 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: accessID,
-        })
+        }),
       );
       setLoading(false);
       setEmployeeName(values?.Name);
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
-        navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
-      }
-      else if (values.delete === true) {
+        navigate(
+          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+          { state: { ...state } },
+        );
+      } else if (values.delete === true) {
         navigate(-1); // 👈 go back
       }
       // else {
@@ -1684,14 +1665,12 @@ const Editemployee = () => {
       //     `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`, { state: { ...state } });
       // }
       else {
-
         navigate(
           is00123Subscription
             ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
             : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
-          { state: { ...state } }
+          { state: { ...state } },
         );
-
       }
     } else {
       toast.error(data.payload.Msg);
@@ -1704,10 +1683,10 @@ const Editemployee = () => {
   /**************************************Skills***************** */
 
   const explorelistViewData = useSelector(
-    (state) => state.exploreApi.explorerowData
+    (state) => state.exploreApi.explorerowData,
   );
   const explorelistViewcolumn = useSelector(
-    (state) => state.exploreApi.explorecolumnData
+    (state) => state.exploreApi.explorecolumnData,
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
@@ -1723,7 +1702,6 @@ const Editemployee = () => {
 
   // **********ScreenChange Function*********
   const screenChange = (event) => {
-
     setScreen(event.target.value);
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
@@ -1731,7 +1709,7 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR027",
-        })
+        }),
       );
     }
     if (event.target.value == "1") {
@@ -1739,7 +1717,7 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR038",
-        })
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -1747,8 +1725,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Skills",
           `parentID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
@@ -1760,8 +1738,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Locality",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1772,8 +1750,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Function",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1783,7 +1761,7 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR126",
-        })
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -1791,17 +1769,18 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Manager",
           `parentID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "4" || event.target.value == "12") {
       dispatch(getDeployment({ HeaderID: recID }));
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR027",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR027",
+        }),
       );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1824,16 +1803,17 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Attachment",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "7") {
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR212",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR212",
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -1841,16 +1821,17 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "itemcustody",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "17") {
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR212",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR212",
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -1858,17 +1839,18 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "itemcustody",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     //ITEMSERVICES
     if (event.target.value == "14") {
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR309",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR309",
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -1876,8 +1858,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "itemservices",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1895,19 +1877,22 @@ const Editemployee = () => {
     //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
     // }
     if (event.target.value == "8") {
-
       dispatch(getDeployment({ HeaderID: recID }));
-      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(
+        EmployeeVendorGetController({
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
       dispatch(
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR244",
-        })
+        }),
       );
       const designationName =
-        Data?.DesignDesc ||
-        deploymentInitialValue?.Designation?.Name ||
-        "";
+        Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
       const isStudent = designationName === "Student";
       // const isStudent =
@@ -1921,19 +1906,30 @@ const Editemployee = () => {
       const filterCondition = isStudent
         ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
         : is003Subscription
-          ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}`   // ✅ Vendors removed
+          ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}` // ✅ Vendors removed
           : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
       console.log("filterCondition", filterCondition);
 
       dispatch(
-        fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
+        fetchExplorelitview(
+          "TR244",
+          Subscriptionlastthree,
+          "Contracts In",
+          filterCondition,
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "23") {
-
       dispatch(getDeployment({ HeaderID: recID }));
-      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(
+        EmployeeVendorGetController({
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
       // dispatch(
       //   CustomisedCaptionGet({
       //     Vertical: Subscriptionlastthree,
@@ -1941,15 +1937,18 @@ const Editemployee = () => {
       //   })
       // );
       const designationName =
-        Data?.DesignDesc ||
-        deploymentInitialValue?.Designation?.Name ||
-        "";
+        Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
       const isStudent = designationName === "Student";
-      const filterCondition =
-        `EmpID='${recID}'`;
+      const filterCondition = `EmpID='${recID}'`;
       dispatch(
-        fetchExplorelitview("TR369", Subscriptionlastthree, "EMPPROJECTATTENDANCE", filterCondition, "")
+        fetchExplorelitview(
+          "TR369",
+          Subscriptionlastthree,
+          "EMPPROJECTATTENDANCE",
+          filterCondition,
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1961,8 +1960,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Contracts Out",
           `EmployeeID='${recID}' AND Customer='Y' AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -1975,10 +1974,9 @@ const Editemployee = () => {
           "Employee Documents",
           // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_EMPRECID))`,
-          ""
-        )
+          "",
+        ),
       );
-
     }
     if (event.target.value == "9") {
       dispatch(geolocationData({ empID: recID }));
@@ -1986,12 +1984,18 @@ const Editemployee = () => {
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR027",
-        })
+        }),
       );
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "15") {
-      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(
+        EmployeeVendorGetController({
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
       // setShowContacts(false);
       // dispatch(
       //   fetchExplorelitview(
@@ -2006,15 +2010,28 @@ const Editemployee = () => {
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "16") {
-      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
-      dispatch(EmployeeVendorContactGet({ EmployeeID: recID, VendorID: ParentgetData.RecordID, CompanyID: CompanyID, action: "get" }));
+      dispatch(
+        EmployeeVendorGetController({
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
+      dispatch(
+        EmployeeVendorContactGet({
+          EmployeeID: recID,
+          VendorID: ParentgetData.RecordID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
     }
     if (event.target.value == "10") {
       dispatch(
         CustomisedCaptionGet({
           Vertical: Subscriptionlastthree,
           AccessID: "TR249",
-        })
+        }),
       );
       dispatch(
         fetchExplorelitview(
@@ -2022,8 +2039,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Leave Configuration",
           `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
       // dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
@@ -2047,8 +2064,7 @@ const Editemployee = () => {
     //   selectcelldata("", "A", "");
     // }
     if (event.target.value == "20") {
-      dispatch(
-        Inventryget({ data: { EmployeeID: recID } }));
+      dispatch(Inventryget({ data: { EmployeeID: recID } }));
       // Item Group
       dispatch(
         Inventorygrid1({
@@ -2057,7 +2073,7 @@ const Editemployee = () => {
           screenName: "Item Group",
           filter: `CompanyID=${CompanyID}`,
           any: "",
-        })
+        }),
       );
 
       // Item Category
@@ -2068,7 +2084,7 @@ const Editemployee = () => {
           screenName: "Item Category",
           filter: `CompanyID=${CompanyID}`,
           any: "",
-        })
+        }),
       );
 
       // // Item
@@ -2079,7 +2095,7 @@ const Editemployee = () => {
           screenName: "Item",
           filter: `CompanyID=${CompanyID}`,
           any: "",
-        })
+        }),
       );
 
       // Inventory
@@ -2095,10 +2111,8 @@ const Editemployee = () => {
       //       setInventoryRows(res.Data.rows);
       //     }
       //   });
-
     }
   };
-
 
   /******************Employee values assign a state variale******************** */
   const selectcelldata = (data, bMode, field) => {
@@ -2148,8 +2162,6 @@ const Editemployee = () => {
 
   /******************************save  Function********** */
   const fnProcess = async (values, resetForm, types, filter) => {
-
-
     console.log(values);
     var saveData = "";
     var type = "";
@@ -2198,7 +2210,15 @@ const Editemployee = () => {
     const data = await dispatch(postApidata("TR038", type, saveData));
     if (data.payload.Status == "Y") {
       setLoading(false);
-      dispatch(fetchExplorelitview("TR038", Subscriptionlastthree, "Skills", `parentID=${recID} AND CompanyID=${CompanyID}`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR038",
+          Subscriptionlastthree,
+          "Skills",
+          `parentID=${recID} AND CompanyID=${CompanyID}`,
+          "",
+        ),
+      );
       resetForm();
       toast.success(data.payload.Msg);
       // setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
@@ -2209,8 +2229,6 @@ const Editemployee = () => {
     }
   };
   //*********************Contact******************/
-
-
 
   const contactInitialvalues = {
     // Code: Data.Code,
@@ -2244,7 +2262,6 @@ const Editemployee = () => {
     IfscCode: DataExplore?.IfscCode || "",
     Branch: DataExplore?.Branch || "",
   };
-
 
   const fncontact = async (values, resetForm) => {
     console.log(values);
@@ -2352,9 +2369,25 @@ const Editemployee = () => {
   } else if (show == "2") {
     VISIBLE_FIELDS = ["slno", "Functions", "action"];
   } else if (show == "7") {
-    VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "ItemValue", "PurchaseReference", "AssestID", "action"];
+    VISIBLE_FIELDS = [
+      "slno",
+      "ItemNumber",
+      "ItemName",
+      "ItemValue",
+      "PurchaseReference",
+      "AssestID",
+      "action",
+    ];
   } else if (show == "17") {
-    VISIBLE_FIELDS = ["slno", "Itemgroup", "Item", "ItemValue", "PurchaseReference", "AssestID", "action"];
+    VISIBLE_FIELDS = [
+      "slno",
+      "Itemgroup",
+      "Item",
+      "ItemValue",
+      "PurchaseReference",
+      "AssestID",
+      "action",
+    ];
   } else if (show == "13") {
     VISIBLE_FIELDS = ["slno", "Locality", "Pincode", "action"];
   } else if (show == "14") {
@@ -2384,17 +2417,9 @@ const Editemployee = () => {
       "UnitRate",
       "action",
     ];
-  }
-  else if (show == "23") {
-    VISIBLE_FIELDS = [
-      "slno",
-      "ProjectName",
-      "Shift",
-      "Shift2",
-      "action",
-    ];
-  }
-  else if (show == "21") {
+  } else if (show == "23") {
+    VISIBLE_FIELDS = ["slno", "ProjectName", "Shift", "Shift2", "action"];
+  } else if (show == "21") {
     VISIBLE_FIELDS = [
       "slno",
       "Code",
@@ -2403,8 +2428,7 @@ const Editemployee = () => {
       // "Unit",
       "action",
     ];
-  }
-  else if (show == "15") {
+  } else if (show == "15") {
     VISIBLE_FIELDS = [
       "slno",
       "Party",
@@ -2431,17 +2455,9 @@ const Editemployee = () => {
       "EligibleDays",
       "action",
     ];
-  }
-  else if (show == "20") {
-    VISIBLE_FIELDS = [
-      "slno",
-      "Item",
-      "ItemCategory",
-      "ItemGroup",
-      "action",
-    ];
-  }
-  else {
+  } else if (show == "20") {
+    VISIBLE_FIELDS = ["slno", "Item", "ItemCategory", "ItemGroup", "action"];
+  } else {
     VISIBLE_FIELDS = [
       "slno",
       "EmployeeCode",
@@ -2473,7 +2489,7 @@ const Editemployee = () => {
   };
   const columns = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
-      VISIBLE_FIELDS.includes(column.field)
+      VISIBLE_FIELDS.includes(column.field),
     );
 
     if (VISIBLE_FIELDS.includes("slno")) {
@@ -2504,7 +2520,7 @@ const Editemployee = () => {
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
   const columns1 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
-      VISIBLE_FIELDS.includes(column.field)
+      VISIBLE_FIELDS.includes(column.field),
     );
     if (VISIBLE_FIELDS.includes("slno")) {
       const slnoColumn = {
@@ -2525,7 +2541,7 @@ const Editemployee = () => {
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
   const columns2 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
-      VISIBLE_FIELDS.includes(column.field)
+      VISIBLE_FIELDS.includes(column.field),
     );
     if (VISIBLE_FIELDS.includes("slno")) {
       const slnoColumn = {
@@ -2574,11 +2590,13 @@ const Editemployee = () => {
           }}
         >
           <GridToolbarQuickFilter />
-          <Tooltip title="ADD" >
-            <IconButton onClick={() => {
-              selectcelldata("", "A", "");
-              setOpenSkillModal(true);
-            }}>
+          <Tooltip title="ADD">
+            <IconButton
+              onClick={() => {
+                selectcelldata("", "A", "");
+                setOpenSkillModal(true);
+              }}
+            >
               <AddOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -2630,7 +2648,7 @@ const Editemployee = () => {
     setOpenFunctionModal(true);
   };
 
-  // Manager  
+  // Manager
   const handleManager = () => {
     setLevelLookup({
       levelfield: "",
@@ -2734,15 +2752,14 @@ const Editemployee = () => {
                 borderColor: "#D1D5DB",
               },
 
-              "& .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline":
-              {
+              "& .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#11B5AE",
               },
 
               "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
-                borderColor: "#11B5AE",
-              },
+                {
+                  borderColor: "#11B5AE",
+                },
             }}
           >
             <GridToolbarQuickFilter />
@@ -2750,13 +2767,14 @@ const Editemployee = () => {
 
           {/* ADD BUTTON */}
           {show != "21" && (
-            <Tooltip title="ADD"
+            <Tooltip
+              title="ADD"
               // onClick={() => {
               //   selectcelldata("", "A", "");
               //   setOpenManagerModal(true);
               // }}
               onClick={() => {
-               // setOpenContractPopup(true);
+                 setOpenManagerModal(true);
               }}
             >
               <IconButton
@@ -2873,7 +2891,7 @@ const Editemployee = () => {
     itemgroups: null,
     itemcategory: null,
     Grpitems: [],
-    SortOrder: ""
+    SortOrder: "",
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -2901,14 +2919,20 @@ const Editemployee = () => {
     address: "",
     locality: "",
     maplink: "",
-    ReferenceBy: ""
+    ReferenceBy: "",
   });
   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
     setLaoMode(mode);
 
     if (mode == "A") {
-      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(
+        EmployeeVendorGetController({
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+          action: "get",
+        }),
+      );
 
       setFunMgrRecID("");
       setFunEmpRecID("");
@@ -2951,7 +2975,7 @@ const Editemployee = () => {
         address: "",
         locality: "",
         maplink: "",
-        ReferenceBy: ""
+        ReferenceBy: "",
       });
       setItemServicesData({
         recordID: "",
@@ -2984,15 +3008,16 @@ const Editemployee = () => {
         unitrate: "",
         alertdate: "",
         renewalperiod: "",
-        vendor: is003Subscription === true &&
+        vendor:
+          is003Subscription === true &&
           ParentgetData?.RecordID &&
           ParentgetData.RecordID !== "0"
-          ? {
-            RecordID: ParentgetData.RecordID,
-            Code: ParentgetData.Code,
-            Name: ParentgetData.Name,
-          }
-          : null,
+            ? {
+                RecordID: ParentgetData.RecordID,
+                Code: ParentgetData.Code,
+                Name: ParentgetData.Name,
+              }
+            : null,
         Components: "",
         hsnCode: "",
         cgst: "",
@@ -3026,7 +3051,7 @@ const Editemployee = () => {
         itemgroups: null,
         itemcategory: null,
         Grpitems: [],
-        SortOrder: ""
+        SortOrder: "",
       });
     } else {
       console.log(rowData, "--rowData");
@@ -3075,15 +3100,15 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           itemGroup: rowData.ItemGroupID
             ? {
-              RecordID: rowData.ItemGroupID,
-              Itemgroup: rowData.Itemgroup,
-            }
+                RecordID: rowData.ItemGroupID,
+                Itemgroup: rowData.Itemgroup,
+              }
             : null,
           items: rowData.ItemID
             ? {
-              RecordID: rowData.ItemID,
-              Code: rowData.Item,
-            }
+                RecordID: rowData.ItemID,
+                Code: rowData.Item,
+              }
             : null,
           assestID: rowData.AssestID,
           itemValue: rowData.ItemValue,
@@ -3130,17 +3155,17 @@ const Editemployee = () => {
           servicecomments: rowData.Comments || "",
           vendors: rowData.PartyID
             ? {
-              RecordID: rowData.PartyID,
-              Code: rowData.PartyCode || "",
-              Name: rowData.PartyName || "",
-            }
+                RecordID: rowData.PartyID,
+                Code: rowData.PartyCode || "",
+                Name: rowData.PartyName || "",
+              }
             : null,
           items: rowData.ItemcustodyID
             ? {
-              RecordID: rowData.ItemcustodyID,
-              Code: rowData.ItemCode || rowData.Item || "",
-              Name: rowData.ItemName || "",
-            }
+                RecordID: rowData.ItemcustodyID,
+                Code: rowData.ItemCode || rowData.Item || "",
+                Name: rowData.ItemName || "",
+              }
             : null,
           // items: rowData.ItemID
           //   ? {
@@ -3170,17 +3195,17 @@ const Editemployee = () => {
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.VendorID
             ? {
-              RecordID: rowData.VendorID,
-              Code: rowData.VendorCode,
-              Name: rowData.VendorName,
-            }
+                RecordID: rowData.VendorID,
+                Code: rowData.VendorCode,
+                Name: rowData.VendorName,
+              }
             : null,
           Term: rowData.TermID
             ? {
-              RecordID: rowData.TermID,
-              Code: rowData.TermCode,
-              Name: rowData.Term,
-            }
+                RecordID: rowData.TermID,
+                Code: rowData.TermCode,
+                Name: rowData.Term,
+              }
             : null,
           // Components: Array.isArray(rowData?.CompanentsList)
           //   ? rowData.CompanentsList.map((d) => ({
@@ -3193,17 +3218,17 @@ const Editemployee = () => {
           Components:
             rowData.FSDetailID && rowData.Components
               ? rowData.FSDetailID.split(",").map((id, index) => ({
-                RecordID: id.trim(),
-                Name: rowData.Components.split(",")[index]?.trim() || "",
-              }))
+                  RecordID: id.trim(),
+                  Name: rowData.Components.split(",")[index]?.trim() || "",
+                }))
               : [],
           discount: rowData.Discount || "",
           project: rowData.ProjectID
             ? {
-              RecordID: rowData.ProjectID,
-              Code: rowData.ProjectCode,
-              Name: rowData.ProjectName,
-            }
+                RecordID: rowData.ProjectID,
+                Code: rowData.ProjectCode,
+                Name: rowData.ProjectName,
+              }
             : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
@@ -3212,17 +3237,17 @@ const Editemployee = () => {
           tds: rowData.Tds,
           shift: rowData.ShiftID
             ? {
-              RecordID: rowData.ShiftID,
-              Code: rowData.ShiftCode,
-              Name: rowData.ShiftName,
-            }
+                RecordID: rowData.ShiftID,
+                Code: rowData.ShiftCode,
+                Name: rowData.ShiftName,
+              }
             : null,
           shift2: rowData.ShiftID
             ? {
-              RecordID: rowData.ShiftID2,
-              Code: rowData.ShiftCode2,
-              Name: rowData.ShiftName2,
-            }
+                RecordID: rowData.ShiftID2,
+                Code: rowData.ShiftCode2,
+                Name: rowData.ShiftName2,
+              }
             : null,
         });
         setOpen(true);
@@ -3230,24 +3255,24 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           project: rowData.ProjectID
             ? {
-              RecordID: rowData.ProjectID,
-              Code: rowData.ProjectCode,
-              Name: rowData.ProjectName,
-            }
+                RecordID: rowData.ProjectID,
+                Code: rowData.ProjectCode,
+                Name: rowData.ProjectName,
+              }
             : null,
           shift: rowData.ShiftID
             ? {
-              RecordID: rowData.ShiftID,
-              Code: rowData.ShiftCode,
-              Name: rowData.ShiftName,
-            }
+                RecordID: rowData.ShiftID,
+                Code: rowData.ShiftCode,
+                Name: rowData.ShiftName,
+              }
             : null,
           shift2: rowData.ShiftID
             ? {
-              RecordID: rowData.ShiftID2,
-              Code: rowData.ShiftCode2,
-              Name: rowData.ShiftName2,
-            }
+                RecordID: rowData.ShiftID2,
+                Code: rowData.ShiftCode2,
+                Name: rowData.ShiftName2,
+              }
             : null,
         });
         setFlag("");
@@ -3270,10 +3295,10 @@ const Editemployee = () => {
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-              RecordID: rowData.LeaveTypeID,
-              Code: "",
-              Name: rowData.LeavePart,
-            }
+                RecordID: rowData.LeaveTypeID,
+                Code: "",
+                Name: rowData.LeavePart,
+              }
             : null,
           Year: rowData.Year,
         });
@@ -3281,24 +3306,24 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           itemgroups: rowData.ItemGroupID
             ? {
-              RecordID: rowData.ItemGroupID,
-              Code: rowData.ItemgroupCode,
-              Name: rowData.ItemGroupDesc,
-            }
+                RecordID: rowData.ItemGroupID,
+                Code: rowData.ItemgroupCode,
+                Name: rowData.ItemGroupDesc,
+              }
             : null,
           itemcategory: rowData.ItemCategoryID
             ? {
-              RecordID: rowData.ItemCategoryID,
-              Code: rowData.ItemCategoryCode,
-              Name: rowData.ItemCategoryDesc,
-            }
+                RecordID: rowData.ItemCategoryID,
+                Code: rowData.ItemCategoryCode,
+                Name: rowData.ItemCategoryDesc,
+              }
             : null,
           Grpitems: rowData.ItemID
             ? {
-              RecordID: rowData.ItemID,
-              Code: rowData.Code,
-              Name: rowData.Name,
-            }
+                RecordID: rowData.ItemID,
+                Code: rowData.Code,
+                Name: rowData.Name,
+              }
             : [],
           SortOrder: rowData.SortOrder,
         });
@@ -3358,7 +3383,6 @@ const Editemployee = () => {
           Code: rowData.ReferenceCode,
           Name: rowData.ReferenceName,
         });
-
       }
     }
     console.log(selectCellRowData, "Itemservices");
@@ -3424,11 +3448,17 @@ const Editemployee = () => {
     };
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR125", action, idata })
+      explorePostData({ accessID: "TR125", action, idata }),
     );
     if (response.payload.Status == "Y") {
       dispatch(
-        fetchExplorelitview("TR125", Subscriptionlastthree, "Function", `EmployeeID=${recID}`, "")
+        fetchExplorelitview(
+          "TR125",
+          Subscriptionlastthree,
+          "Function",
+          `EmployeeID=${recID}`,
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -3445,21 +3475,23 @@ const Editemployee = () => {
     // description: ParentgetData.Name,
     code1: ParentgetData.Code || "",
     name1: ParentgetData.Name || "",
-    locality: ParentgetData.LocalityID && ParentgetData.LocalityID !== "0"
-      ? {
-        RecordID: ParentgetData.LocalityID,
-        Code: ParentgetData.LocalityCode,
-        Name: ParentgetData.LocalityName,
-      }
-      : null,
+    locality:
+      ParentgetData.LocalityID && ParentgetData.LocalityID !== "0"
+        ? {
+            RecordID: ParentgetData.LocalityID,
+            Code: ParentgetData.LocalityCode,
+            Name: ParentgetData.LocalityName,
+          }
+        : null,
     ReferenceBy:
       ParentgetData.ReferenceID && ParentgetData.ReferenceID !== "0"
         ? {
-          RecordID: ParentgetData.ReferenceID,
-          Code: ParentgetData.ReferenceByName,
-          Name: ParentgetData.ReferenceByName,
-        }
-        : null, address: ParentgetData.Address || "",
+            RecordID: ParentgetData.ReferenceID,
+            Code: ParentgetData.ReferenceByName,
+            Name: ParentgetData.ReferenceByName,
+          }
+        : null,
+    address: ParentgetData.Address || "",
     maplink: ParentgetData.MapLocation || "",
     mobilenumber: ParentgetData.MobileNo || "",
     emailid: ParentgetData.EmailID || "",
@@ -3532,10 +3564,9 @@ const Editemployee = () => {
         Disable: values.disable ? "Y" : "N",
         Source: "Cloud",
         CreateBy: LoginID,
-        EmployeeID: recID
-      }
+        EmployeeID: recID,
+      },
     };
-
 
     try {
       const response = await dispatch(partypost(payload));
@@ -3544,7 +3575,13 @@ const Editemployee = () => {
         toast.success(response.payload.Msg);
         // navigate("/Apps/TR243/Party");
         // navigate(-1)
-        dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+        dispatch(
+          EmployeeVendorGetController({
+            EmployeeID: recID,
+            CompanyID: CompanyID,
+            action: "get",
+          }),
+        );
       } else {
         toast.error(response.payload.Msg);
       }
@@ -3593,8 +3630,10 @@ const Editemployee = () => {
       AadhatNo2: values.aadharcardnumber2,
       // ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
       // ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
-      ContactPersonIDProofImg1: ID1Image || ParentcontactgetData.ContactPersonIDProofImg1 || "",
-      ContactPersonIDProofImg2: ID2Image || ParentcontactgetData.ContactPersonIDProofImg2 || "",
+      ContactPersonIDProofImg1:
+        ID1Image || ParentcontactgetData.ContactPersonIDProofImg1 || "",
+      ContactPersonIDProofImg2:
+        ID2Image || ParentcontactgetData.ContactPersonIDProofImg2 || "",
     };
 
     try {
@@ -3604,8 +3643,14 @@ const Editemployee = () => {
         toast.success(response.payload.Msg);
         // setShowContacts(false)
         // navigate("/Apps/TR243/Party");
-        dispatch(EmployeeVendorContactGet({ EmployeeID: recID, VendorID: ParentgetData.RecordID, CompanyID: CompanyID, action: "get" }));
-
+        dispatch(
+          EmployeeVendorContactGet({
+            EmployeeID: recID,
+            VendorID: ParentgetData.RecordID,
+            CompanyID: CompanyID,
+            action: "get",
+          }),
+        );
       } else {
         toast.error(response.payload.Msg);
       }
@@ -3645,7 +3690,7 @@ const Editemployee = () => {
             },
             "base64",
             150,
-            150
+            150,
           );
         } catch (err) {
           console.log(err);
@@ -3684,7 +3729,7 @@ const Editemployee = () => {
             },
             "base64",
             150,
-            150
+            150,
           );
         } catch (err) {
           console.log(err);
@@ -3718,7 +3763,7 @@ const Editemployee = () => {
       CompanyID,
     };
     const response = await dispatch(
-      explorePostData({ accessID: "TR302", action, idata })
+      explorePostData({ accessID: "TR302", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
@@ -3728,8 +3773,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Locality",
           `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -3743,20 +3788,23 @@ const Editemployee = () => {
   };
   // *************** ITEMCUSTODY SCREEN SAVE FUNCTION *************** //
 
-  const itemcustodyInitialValue = useMemo(() => ({
-    code: Data.Code,
-    description: Data.Name,
-    imageurl: Data.ImageName
-      ? store.getState().globalurl.imageUrl + Data.ImageName
-      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    Disable: "N",
-    recordID: itemCustodyData.recordID || "",
-    ItemNumber: itemCustodyData.itemNO || "",
-    ItemName: itemCustodyData.itemName || "",
-    AssestID: itemCustodyData.assestID || "",
-    ItemValue: itemCustodyData.itemValue || "",
-    PurchaseReference: itemCustodyData.reference || "",
-  }), [Data, itemCustodyData]);
+  const itemcustodyInitialValue = useMemo(
+    () => ({
+      code: Data.Code,
+      description: Data.Name,
+      imageurl: Data.ImageName
+        ? store.getState().globalurl.imageUrl + Data.ImageName
+        : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+      Disable: "N",
+      recordID: itemCustodyData.recordID || "",
+      ItemNumber: itemCustodyData.itemNO || "",
+      ItemName: itemCustodyData.itemName || "",
+      AssestID: itemCustodyData.assestID || "",
+      ItemValue: itemCustodyData.itemValue || "",
+      PurchaseReference: itemCustodyData.reference || "",
+    }),
+    [Data, itemCustodyData],
+  );
 
   const empItemCustodyFn = async (values, resetForm, del) => {
     setLoading(true);
@@ -3780,12 +3828,18 @@ const Editemployee = () => {
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR212", action, idata })
+      explorePostData({ accessID: "TR212", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR212", Subscriptionlastthree, "ItemCustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview(
+          "TR212",
+          Subscriptionlastthree,
+          "ItemCustody",
+          `EmployeeID=${recID}`,
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -3848,7 +3902,7 @@ const Editemployee = () => {
       vendors: itemServicesData.vendors || null,
       items: itemServicesData.items || null,
     }),
-    [Data, itemServicesData]
+    [Data, itemServicesData],
   );
 
   const empItemServicesFn = async (values, resetForm, del) => {
@@ -3879,12 +3933,18 @@ const Editemployee = () => {
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR309", action, idata })
+      explorePostData({ accessID: "TR309", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR309", Subscriptionlastthree, "ItemServices", `EmployeeID=${recID}`, "")
+        fetchExplorelitview(
+          "TR309",
+          Subscriptionlastthree,
+          "ItemServices",
+          `EmployeeID=${recID}`,
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -4022,7 +4082,10 @@ const Editemployee = () => {
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
-      DueDate: BillingUnit === "OF" || BillingUnit === "TF" ? values.DueDate || "" : "",
+      DueDate:
+        BillingUnit === "OF" || BillingUnit === "TF"
+          ? values.DueDate || ""
+          : "",
       BillingUnits: values.BillingUnits,
       BillingType: values.BillingType,
       UnitRate: values.UnitRate,
@@ -4041,9 +4104,7 @@ const Editemployee = () => {
     //   Data.DesignationName === "Student" ||
     //   deploymentInitialValue?.Designation?.Name === "Student";
     const designationName =
-      Data?.DesignDesc ||
-      deploymentInitialValue?.Designation?.Name ||
-      "";
+      Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
     const isStudent = designationName === "Student";
 
@@ -4053,27 +4114,33 @@ const Editemployee = () => {
     const filterCondition = isStudent
       ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
       : is003Subscription
-        ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}`   // ✅ Vendors removed
+        ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}` // ✅ Vendors removed
         : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
     console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
-      explorePostData({ accessID: "TR244V1", action, idata })
+      explorePostData({ accessID: "TR244V1", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       show == "8"
         ? dispatch(
-          fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
-        )
-        : dispatch(
-          fetchExplorelitview(
-            "TR244",
-            Subscriptionlastthree,
-            "Contracts Out",
-            `EmployeeID='${recID}' AND Customer='Y'`,
-            ""
+            fetchExplorelitview(
+              "TR244",
+              Subscriptionlastthree,
+              "Contracts In",
+              filterCondition,
+              "",
+            ),
           )
-        );
+        : dispatch(
+            fetchExplorelitview(
+              "TR244",
+              Subscriptionlastthree,
+              "Contracts Out",
+              `EmployeeID='${recID}' AND Customer='Y'`,
+              "",
+            ),
+          );
 
       toast.success(response.payload.Msg);
       setOpenContractPopup(false);
@@ -4086,7 +4153,6 @@ const Editemployee = () => {
   };
 
   console.log(gelocData, "--geo");
-
 
   const CourseAttendenceInitialValue = {
     Code: Data.Code,
@@ -4113,22 +4179,25 @@ const Editemployee = () => {
     };
     console.log(idata, "--contract idata");
     const designationName =
-      Data?.DesignDesc ||
-      deploymentInitialValue?.Designation?.Name ||
-      "";
+      Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
     const isStudent = designationName === "Student";
 
-    const filterCondition =
-      `EmpID='${recID}'`;
+    const filterCondition = `EmpID='${recID}'`;
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR369", action, idata })
+      explorePostData({ accessID: "TR369", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR369", Subscriptionlastthree, "EMPPROJECTATTENDANCE", filterCondition, "")
+        fetchExplorelitview(
+          "TR369",
+          Subscriptionlastthree,
+          "EMPPROJECTATTENDANCE",
+          filterCondition,
+          "",
+        ),
       );
       toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -4140,7 +4209,6 @@ const Editemployee = () => {
   };
 
   const handleGenerate = async (values, resetForm, del) => {
-
     console.log(show, "--find show inside save ");
     const BillingUnit = values.BillingUnits || "";
     setLoading(true);
@@ -4208,7 +4276,10 @@ const Editemployee = () => {
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
-      DueDate: BillingUnit === "OF" || BillingUnit === "TF" ? values.DueDate || "" : "",
+      DueDate:
+        BillingUnit === "OF" || BillingUnit === "TF"
+          ? values.DueDate || ""
+          : "",
       BillingUnits: values.BillingUnits,
       BillingType: values.BillingType,
       UnitRate: values.UnitRate,
@@ -4227,9 +4298,7 @@ const Editemployee = () => {
     //   Data.DesignationName === "Student" ||
     //   deploymentInitialValue?.Designation?.Name === "Student";
     const designationName =
-      Data?.DesignDesc ||
-      deploymentInitialValue?.Designation?.Name ||
-      "";
+      Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
     const isStudent = designationName === "Student";
 
@@ -4240,29 +4309,35 @@ const Editemployee = () => {
     const filterCondition = isStudent
       ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
       : is003Subscription
-        ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}`   // ✅ Vendors removed
+        ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}` // ✅ Vendors removed
         : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
 
     const DetailID = contractorData.recordID || "";
     console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
-      explorePostData({ accessID: "TR244V1", action, idata })
+      explorePostData({ accessID: "TR244V1", action, idata }),
     );
     if (response.payload.Status == "Y") {
       // setLoading(false);
       show == "8"
         ? dispatch(
-          fetchExplorelitview("TR244", Subscriptionlastthree, "Contracts In", filterCondition, "")
-        )
-        : dispatch(
-          fetchExplorelitview(
-            "TR244",
-            Subscriptionlastthree,
-            "Contracts Out",
-            `EmployeeID='${recID}' AND Customer='Y'`,
-            ""
+            fetchExplorelitview(
+              "TR244",
+              Subscriptionlastthree,
+              "Contracts In",
+              filterCondition,
+              "",
+            ),
           )
-        );
+        : dispatch(
+            fetchExplorelitview(
+              "TR244",
+              Subscriptionlastthree,
+              "Contracts Out",
+              `EmployeeID='${recID}' AND Customer='Y'`,
+              "",
+            ),
+          );
 
       toast.success(response.payload.Msg);
       const res = await dispatch(
@@ -4272,12 +4347,14 @@ const Editemployee = () => {
           EmpRecID: recID,
           ProjectID: values?.project?.RecordID || 0,
           DetailID: DetailID,
-          CompanyID
-        })
+          CompanyID,
+        }),
       );
 
       if (res?.payload?.Status === "Y") {
-        toast.success(res?.payload?.Message || "Invoice Generated Successfully!");
+        toast.success(
+          res?.payload?.Message || "Invoice Generated Successfully!",
+        );
         setLoading(false);
         setFlag("P");
       } else {
@@ -4291,9 +4368,7 @@ const Editemployee = () => {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
-
   };
-
 
   //Geolocation
   const geolocationinitialvlues = {
@@ -4369,15 +4444,14 @@ const Editemployee = () => {
       headerName: "Item",
       width: 400,
       headerAlign: "center",
-      align: "left"
+      align: "left",
     },
     {
       field: "IsSelect",
       headerName: "Select",
       width: 30,
       hide: true,
-    }
-
+    },
   ];
   const Att1Column = [
     {
@@ -4396,10 +4470,8 @@ const Editemployee = () => {
       headerName: "Item Group",
       width: 250,
       headerAlign: "center",
-      align: "left"
-
-    }
-
+      align: "left",
+    },
   ];
   const Att2Column = [
     {
@@ -4418,10 +4490,8 @@ const Editemployee = () => {
       headerName: "Item Category",
       width: 250,
       headerAlign: "center",
-      align: "left"
-
-    }
-
+      align: "left",
+    },
   ];
   const Att3Column = [
     {
@@ -4440,10 +4510,8 @@ const Editemployee = () => {
       headerName: "Item",
       width: 250,
       headerAlign: "center",
-      align: "left"
-
-    }
-
+      align: "left",
+    },
   ];
   const InventoryinitialValue = {
     Code: Data.Code,
@@ -4453,20 +4521,18 @@ const Editemployee = () => {
     itemcategory: Invendata.itemcategory,
     Grpitems: Invendata.Grpitems,
     SortOrder: Invendata.SortOrder,
-
   };
   const Inventoryfnsave = async (values, resetForm, del) => {
     setLoading(true);
 
     const response = await dispatch(
-      Inventryget({ data: { EmployeeID: recID } })
+      Inventryget({ data: { EmployeeID: recID } }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       toast.success("Data fetched successfully");
       resetForm();
-    }
-    else {
+    } else {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
@@ -4484,8 +4550,7 @@ const Editemployee = () => {
     };
     const response = await dispatch(InventoryPostController(idata));
     if (response.payload.Status == "Y") {
-      dispatch(
-        Inventryget({ data: { EmployeeID: recID } }))
+      dispatch(Inventryget({ data: { EmployeeID: recID } }));
       toast.success(response.payload.Msg);
     }
     // else {
@@ -4501,14 +4566,13 @@ const Editemployee = () => {
             {errors.map((err, i) => (
               <div key={i}>{err}</div>
             ))}
-          </div>
+          </div>,
         );
       } else {
         toast.error(errors || "Something went wrong");
       }
     }
-
-  }
+  };
   //Leave Configuration
   const LCInitialValue = {
     Code: Data.Code,
@@ -4560,7 +4624,7 @@ const Editemployee = () => {
       LeavePart: "N",
     };
     const response = await dispatch(
-      explorePostData({ accessID: "TR249", action, idata })
+      explorePostData({ accessID: "TR249", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
@@ -4570,8 +4634,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "Leave Configuration",
           `EmployeeID='${recID}'AND CompanyID=${CompanyID}`,
-          ""
-        )
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -4641,11 +4705,17 @@ const Editemployee = () => {
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR126", action, idata })
+      explorePostData({ accessID: "TR126", action, idata }),
     );
     if (response.payload.Status == "Y") {
       dispatch(
-        fetchExplorelitview("TR126", Subscriptionlastthree, "Manager", `parentID=${recID}`, "")
+        fetchExplorelitview(
+          "TR126",
+          Subscriptionlastthree,
+          "Manager",
+          `parentID=${recID}`,
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -4674,61 +4744,63 @@ const Editemployee = () => {
       // deploymentData.DesignationID
       deploymentData.DesignationID && deploymentData.DesignationID !== "0"
         ? {
-          RecordID: deploymentData.DesignationID,
-          Code: deploymentData.DesignationCode,
-          Name: deploymentData.DesignationName,
-        }
+            RecordID: deploymentData.DesignationID,
+            Code: deploymentData.DesignationCode,
+            Name: deploymentData.DesignationName,
+          }
         : null,
     location:
       // deploymentData.LocationID
       deploymentData.LocationID && deploymentData.LocationID !== "0"
         ? {
-          RecordID: deploymentData.LocationID,
-          Code: deploymentData.LocationCode,
-          Name: deploymentData.LocationName,
-        }
+            RecordID: deploymentData.LocationID,
+            Code: deploymentData.LocationCode,
+            Name: deploymentData.LocationName,
+          }
         : null,
     gate:
       // deploymentData.StoregatemasterID
-      deploymentData.StoregatemasterID && deploymentData.StoregatemasterID !== "0"
+      deploymentData.StoregatemasterID &&
+      deploymentData.StoregatemasterID !== "0"
         ? {
-          RecordID: deploymentData.StoregatemasterID,
-          Code: deploymentData.StoregatemasterCode,
-          Name: deploymentData.StoregatemasterName,
-        }
+            RecordID: deploymentData.StoregatemasterID,
+            Code: deploymentData.StoregatemasterCode,
+            Name: deploymentData.StoregatemasterName,
+          }
         : null,
     project:
       deploymentData.DefaultProject && deploymentData.DefaultProject !== "0"
         ? {
-          RecordID: deploymentData.DefaultProject,
-          Code: deploymentData.ProjectCode,
-          Name: deploymentData.ProjectName,
-        }
+            RecordID: deploymentData.DefaultProject,
+            Code: deploymentData.ProjectCode,
+            Name: deploymentData.ProjectName,
+          }
         : null,
-    function: deploymentData.DefaultFunction && deploymentData.DefaultFunction !== "0"
-      ? {
-        RecordID: deploymentData.DefaultFunction,
-        Code: deploymentData.FunctionCode,
-        Name: deploymentData.FunctionName,
-      }
-      : null,
+    function:
+      deploymentData.DefaultFunction && deploymentData.DefaultFunction !== "0"
+        ? {
+            RecordID: deploymentData.DefaultFunction,
+            Code: deploymentData.FunctionCode,
+            Name: deploymentData.FunctionName,
+          }
+        : null,
     shift:
       // deploymentData.ShiftID
       deploymentData.ShiftID && deploymentData.ShiftID !== "0"
         ? {
-          RecordID: deploymentData.ShiftID,
-          Code: deploymentData.ShiftCode,
-          Name: deploymentData.ShiftName,
-        }
+            RecordID: deploymentData.ShiftID,
+            Code: deploymentData.ShiftCode,
+            Name: deploymentData.ShiftName,
+          }
         : null,
     shift2:
       // deploymentData.ShiftID2
       deploymentData.ShiftID2 && deploymentData.ShiftID2 !== "0"
         ? {
-          RecordID: deploymentData.ShiftID2,
-          Code: deploymentData.ShiftCode2,
-          Name: deploymentData.ShiftName2,
-        }
+            RecordID: deploymentData.ShiftID2,
+            Code: deploymentData.ShiftCode2,
+            Name: deploymentData.ShiftName2,
+          }
         : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -4765,8 +4837,8 @@ const Editemployee = () => {
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     costofemployee: deploymentData.CostOfBudget || 0,
     costofcompany: deploymentData.CostOfCompany || 0,
-    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00,
-    costofcompanyhour: deploymentData.CostOfCompanyHours || 0.00,
+    costofbudgethour: deploymentData.CostOfBudgetHours || 0.0,
+    costofcompanyhour: deploymentData.CostOfCompanyHours || 0.0,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
@@ -4882,10 +4954,11 @@ const Editemployee = () => {
       // dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
       dispatch(getDeployment({ HeaderID: recID }));
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR027",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR027",
+        }),
       );
     } else {
       toast.error(response.payload.Msg);
@@ -4899,20 +4972,21 @@ const Editemployee = () => {
     description: Data.Name,
     resignationdate: ResignationGetData.ResignationDate,
     resignationnote: ResignationGetData.ResignationNote,
-    exitinterviewby: ResignationGetData.ExitInterviewBy > 0
-      ? {
-        RecordID: ResignationGetData?.ExitInterviewBy || 0,
-        Code: ResignationGetData?.ExitInterviewByCode || "",
-        Name: ResignationGetData?.ExitInterviewByName || "",
-      }
-      : null,
+    exitinterviewby:
+      ResignationGetData.ExitInterviewBy > 0
+        ? {
+            RecordID: ResignationGetData?.ExitInterviewBy || 0,
+            Code: ResignationGetData?.ExitInterviewByCode || "",
+            Name: ResignationGetData?.ExitInterviewByName || "",
+          }
+        : null,
     exitinterviewdate: ResignationGetData.ExitInterviewDate,
     exitinterviewcomments: ResignationGetData.ExitInterviewComments,
     acceptedrelievingdate: ResignationGetData.AcceptedRelievingDate,
     actualrelievingdate: ResignationGetData.ActualRelievingDate,
     dateofsettlement: ResignationGetData.DateOfSettlement,
-    exitformalitiesacceptrd: ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
-
+    exitformalitiesacceptrd:
+      ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
   };
 
   //RESIGNATION_POST
@@ -4932,8 +5006,8 @@ const Editemployee = () => {
       AcceptedRelievingDate: values.acceptedrelievingdate,
       ActualRelievingDate: values.actualrelievingdate,
       DateOfSettlement: values.dateofsettlement,
-      ExitFormalitiesAccepted: values.exitformalitiesacceptrd === true ? "Y" : "N",
-
+      ExitFormalitiesAccepted:
+        values.exitformalitiesacceptrd === true ? "Y" : "N",
     };
 
     console.log(idata, "--resignation idata");
@@ -5028,10 +5102,11 @@ const Editemployee = () => {
     // return;
     if (response.payload.Status == "Y") {
       dispatch(getDeployment({ HeaderID: recID }));
-      dispatch(CustomisedCaptionGet({
-        Vertical: Subscriptionlastthree,
-        AccessID: "TR027",
-      })
+      dispatch(
+        CustomisedCaptionGet({
+          Vertical: Subscriptionlastthree,
+          AccessID: "TR027",
+        }),
       );
       toast.success(response.payload.Msg);
       // setTimeout(() => {
@@ -5101,7 +5176,7 @@ const Editemployee = () => {
     console.log("save" + JSON.stringify(idata));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR210", action, idata })
+      explorePostData({ accessID: "TR210", action, idata }),
     );
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
@@ -5112,8 +5187,8 @@ const Editemployee = () => {
           Subscriptionlastthree,
           "List of Documents",
           `EmployeeID=${recID}`,
-          ""
-        )
+          "",
+        ),
       );
       resetForm();
       // SetEmpLoaData({
@@ -5133,7 +5208,7 @@ const Editemployee = () => {
   const [uploading, setUploading] = useState(false);
 
   const changeHandler = async (event) => {
-    setUploading(true);   // Start loader
+    setUploading(true); // Start loader
 
     setSelectedFile(event.target.files[0]);
 
@@ -5144,12 +5219,12 @@ const Editemployee = () => {
     formData.append("type", "images");
 
     const fileData = await dispatch(fnFileUpload(formData));
-    var filePath = store.getState().globalurl.attachmentUrl + uploadFile
+    var filePath = store.getState().globalurl.attachmentUrl + uploadFile;
 
     console.log("fileData" + JSON.stringify(fileData));
     setUploadFile(fileData.payload.apiResponse);
 
-    setUploading(false);  // Stop loader
+    setUploading(false); // Stop loader
   };
   const fnViewFile = (values) => {
     const baseUrl = store.getState().globalurl.attachmentUrl;
@@ -5201,8 +5276,9 @@ const Editemployee = () => {
         }
         if (props === "Close") {
           // navigate("/Apps/TR027/Personnel");
-          navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`);
-
+          navigate(
+            `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+          );
         }
       } else {
         return;
@@ -5210,20 +5286,23 @@ const Editemployee = () => {
     });
   };
 
-  const itemcustody1InitialValue = useMemo(() => ({
-    code: Data.Code,
-    description: Data.Name,
-    imageurl: Data.ImageName
-      ? store.getState().globalurl.imageUrl + Data.ImageName
-      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    Disable: "N",
-    recordID: itemCustodyData1.recordID || "",
-    itemGroup: itemCustodyData1.itemGroup || null,
-    items: itemCustodyData1.items || null,
-    AssestID: itemCustodyData1.assestID || "",
-    ItemValue: itemCustodyData1.itemValue || "",
-    PurchaseReference: itemCustodyData1.reference || "",
-  }), [Data, itemCustodyData1]);
+  const itemcustody1InitialValue = useMemo(
+    () => ({
+      code: Data.Code,
+      description: Data.Name,
+      imageurl: Data.ImageName
+        ? store.getState().globalurl.imageUrl + Data.ImageName
+        : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+      Disable: "N",
+      recordID: itemCustodyData1.recordID || "",
+      itemGroup: itemCustodyData1.itemGroup || null,
+      items: itemCustodyData1.items || null,
+      AssestID: itemCustodyData1.assestID || "",
+      ItemValue: itemCustodyData1.itemValue || "",
+      PurchaseReference: itemCustodyData1.reference || "",
+    }),
+    [Data, itemCustodyData1],
+  );
 
   const empItemCustody1Fn = async (values, resetForm, del) => {
     setLoading(true);
@@ -5247,12 +5326,18 @@ const Editemployee = () => {
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR212", action, idata })
+      explorePostData({ accessID: "TR212", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR212", Subscriptionlastthree, "ItemCustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR212",
+          Subscriptionlastthree,
+          "ItemCustody",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -5269,35 +5354,201 @@ const Editemployee = () => {
 
   //For side menu
   const formSections = [
-    { value: 0, label: "Personnel", desc: "Basic details about the personnel", icon: "👤" },
-    { value: 5, label: "Contact", desc: "Phone, email and address details", icon: "📞" },
-    ...(is003Subscription && isStudentClassification ? [{ value: 15, label: "Parent", desc: "Parent / guardian details", icon: "👪" }] : []),
-    ...(initialValues.employeetype === "CI" ? [{ value: 8, label: getBusinessCaption("ContractIn", "Contract In"), desc: "Contract in details", icon: "📄" }] : []),
-    ...(is003Subscription && initialValues.employeetype === "CI" ? [{ value: 23, label: "Course Attendance", desc: "Attendance and course records", icon: "🎓" }] : []),
-    ...(initialValues.employeetype === "CO" ? [{ value: 11, label: "Contract Out", desc: "Contract out details", icon: "📄" }] : []),
-    ...(is003Subscription && isStudentClassification ? [{ value: 16, label: "Parent Contact Details", desc: "Parent contact information", icon: "☎️" }] : []),
-    { value: 1, label: getBusinessCaption("Skills", "Skills"), desc: "Skills and competency details", icon: "🛠️" },
-    { value: 4, label: getBusinessCaption("Deployment", "Deployment"), desc: "Deployment and assignment info", icon: "🚀" },
-    { value: 12, label: getBusinessCaption("Approvals", "Approvals"), desc: "Approval workflow details", icon: "✅" },
-    ...(!is003Subscription ? [{ value: 2, label: "Functions", desc: "Roles and functional access", icon: "⚙️" }] : []),
-    { value: 3, label: getBusinessCaption("Managers", "Managers"), desc: "Reporting manager details", icon: "👔" },
-    { value: 9, label: getBusinessCaption("Geolocation", "Geo Location"), desc: "Geo-fencing and location info", icon: "📍" },
-    { value: 10, label: getBusinessCaption("LeaveConfigurations", "Leave Configuration"), desc: "Leave types and configuration", icon: "🗓️" },
-    ...(!is003Subscription ? [{ value: 6, label: "List of Documents", desc: "Uploaded document list", icon: "📁" }] : []),
-    ...(!is003Subscription ? [{ value: 20, label: "Inventory", desc: "Assigned inventory items", icon: "📦" }] : []),
-    { value: 17, label: getBusinessCaption("ItemCustody", "Item Custody"), desc: "Items in custody", icon: "🔒" },
-    ...(!isStudentClassification ? [{ value: 14, label: getBusinessCaption("ItemServices", "Item Services"), desc: "Service records for items", icon: "🧰" }] : []),
-    ...(!is003Subscription ? [{ value: 13, label: "Locality", desc: "Local area information", icon: "🏘️" }] : []),
-    ...(!is003Subscription ? [{ value: 19, label: "SOP Configuration", desc: "Standard operating procedures", icon: "📋" }] : []),
-    ...(!is003Subscription ? [{ value: 18, label: "Specimen Sign", desc: "Specimen signature records", icon: "✍️" }] : []),
-    { value: 21, label: getBusinessCaption("Documents", "Documents"), desc: "Upload and manage documents", icon: "📑" },
-    ...(!isStudentClassification ? [{ value: 22, label: "Resignation", desc: "Resignation and exit details", icon: "🚪" }] : []),
+    {
+      value: 0,
+      label: "Personnel",
+      desc: "Basic details about the personnel",
+      icon: "👤",
+    },
+    {
+      value: 5,
+      label: "Contact",
+      desc: "Phone, email and address details",
+      icon: "📞",
+    },
+    ...(is003Subscription && isStudentClassification
+      ? [
+          {
+            value: 15,
+            label: "Parent",
+            desc: "Parent / guardian details",
+            icon: "👪",
+          },
+        ]
+      : []),
+    ...(initialValues.employeetype === "CI"
+      ? [
+          {
+            value: 8,
+            label: getBusinessCaption("ContractIn", "Contract In"),
+            desc: "Contract in details",
+            icon: "📄",
+          },
+        ]
+      : []),
+    ...(is003Subscription && initialValues.employeetype === "CI"
+      ? [
+          {
+            value: 23,
+            label: "Course Attendance",
+            desc: "Attendance and course records",
+            icon: "🎓",
+          },
+        ]
+      : []),
+    ...(initialValues.employeetype === "CO"
+      ? [
+          {
+            value: 11,
+            label: "Contract Out",
+            desc: "Contract out details",
+            icon: "📄",
+          },
+        ]
+      : []),
+    ...(is003Subscription && isStudentClassification
+      ? [
+          {
+            value: 16,
+            label: "Parent Contact Details",
+            desc: "Parent contact information",
+            icon: "☎️",
+          },
+        ]
+      : []),
+    {
+      value: 1,
+      label: getBusinessCaption("Skills", "Skills"),
+      desc: "Skills and competency details",
+      icon: "🛠️",
+    },
+    {
+      value: 4,
+      label: getBusinessCaption("Deployment", "Deployment"),
+      desc: "Deployment and assignment info",
+      icon: "🚀",
+    },
+    {
+      value: 12,
+      label: getBusinessCaption("Approvals", "Approvals"),
+      desc: "Approval workflow details",
+      icon: "✅",
+    },
+    ...(!is003Subscription
+      ? [
+          {
+            value: 2,
+            label: "Functions",
+            desc: "Roles and functional access",
+            icon: "⚙️",
+          },
+        ]
+      : []),
+    {
+      value: 3,
+      label: getBusinessCaption("Managers", "Managers"),
+      desc: "Reporting manager details",
+      icon: "👔",
+    },
+    {
+      value: 9,
+      label: getBusinessCaption("Geolocation", "Geo Location"),
+      desc: "Geo-fencing and location info",
+      icon: "📍",
+    },
+    {
+      value: 10,
+      label: getBusinessCaption("LeaveConfigurations", "Leave Configuration"),
+      desc: "Leave types and configuration",
+      icon: "🗓️",
+    },
+    ...(!is003Subscription
+      ? [
+          {
+            value: 6,
+            label: "List of Documents",
+            desc: "Uploaded document list",
+            icon: "📁",
+          },
+        ]
+      : []),
+    ...(!is003Subscription
+      ? [
+          {
+            value: 20,
+            label: "Inventory",
+            desc: "Assigned inventory items",
+            icon: "📦",
+          },
+        ]
+      : []),
+    {
+      value: 17,
+      label: getBusinessCaption("ItemCustody", "Item Custody"),
+      desc: "Items in custody",
+      icon: "🔒",
+    },
+    ...(!isStudentClassification
+      ? [
+          {
+            value: 14,
+            label: getBusinessCaption("ItemServices", "Item Services"),
+            desc: "Service records for items",
+            icon: "🧰",
+          },
+        ]
+      : []),
+    ...(!is003Subscription
+      ? [
+          {
+            value: 13,
+            label: "Locality",
+            desc: "Local area information",
+            icon: "🏘️",
+          },
+        ]
+      : []),
+    ...(!is003Subscription
+      ? [
+          {
+            value: 19,
+            label: "SOP Configuration",
+            desc: "Standard operating procedures",
+            icon: "📋",
+          },
+        ]
+      : []),
+    ...(!is003Subscription
+      ? [
+          {
+            value: 18,
+            label: "Specimen Sign",
+            desc: "Specimen signature records",
+            icon: "✍️",
+          },
+        ]
+      : []),
+    {
+      value: 21,
+      label: getBusinessCaption("Documents", "Documents"),
+      desc: "Upload and manage documents",
+      icon: "📑",
+    },
+    ...(!isStudentClassification
+      ? [
+          {
+            value: 22,
+            label: "Resignation",
+            desc: "Resignation and exit details",
+            icon: "🚪",
+          },
+        ]
+      : []),
   ];
 
-  const currentSection =
-    formSections.find(
-      (item) => String(item.value) === String(show)
-    ) || { label: "Personnel" };
+  const currentSection = formSections.find(
+    (item) => String(item.value) === String(show),
+  ) || { label: "Personnel" };
 
   function FormSectionsSidebar({
     show,
@@ -5336,11 +5587,7 @@ const Editemployee = () => {
           p={2}
           borderBottom="1px solid #E5E7EB"
         >
-          {open && (
-            <Typography fontWeight={700}>
-              Explore
-            </Typography>
-          )}
+          {open && <Typography fontWeight={700}>Explore</Typography>}
 
           <IconButton size="small" onClick={onToggle}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -5400,10 +5647,7 @@ const Editemployee = () => {
                         {item.label}
                       </Typography>
 
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                      >
+                      <Typography variant="caption" color="text.secondary">
                         {item.desc}
                       </Typography>
                     </Box>
@@ -5417,22 +5661,21 @@ const Editemployee = () => {
     );
   }
 
-
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
         <Paper
-                            elevation={0}
-                            sx={{
-                              mx: 2,
-                              mt: 1,
-                              mb: 1,
-                              p: 1,
-                              borderRadius: 3,
-                              border: "1px solid #E5E7EB",
-                              bgcolor: "#fff",
-                            }}
-                          >
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 1,
+            mb: 1,
+            p: 1,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
+          }}
+        >
           <Box
             display="flex"
             justifyContent="space-between"
@@ -5445,270 +5688,364 @@ const Editemployee = () => {
                 </IconButton>
               )}
 
-                <Box>
-                                                         <Typography
-                                                           sx={{
-                                                             fontSize: 20,
-                                                             fontWeight: 700,
-                                                             color: "#111827",
-                                                             // mb: 0.2,
-                                                                 px: 1,
-                                                   py: 0.2,
-                                                           }}
-                                                         >
-                                                           {mode === "A" ? "New Personnel" : "Edit Personnel"}
-                                                         </Typography>
-
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
-                <Breadcrumbs
-                  maxItems={3}
-                  aria-label="breadcrumb"
-                    separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                                      sx={breadcrumbStyles.separator}
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
                 >
-                  <Typography
-                    sx={show == "0" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    onClick={() => {
-                      // setScreen(1);
-                      setScreen(0);
-                    }}
+                  {mode === "A" ? "New Personnel" : "Edit Personnel"}
+                </Typography>
+
+                <Box
+                  display={isNonMobile ? "flex" : "none"}
+                  borderRadius="3px"
+                  alignItems="center"
+                >
+                  <Breadcrumbs
+                    maxItems={3}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                    sx={breadcrumbStyles.separator}
                   >
-                    {/* {mode === "E"
+                    <Typography
+                      sx={
+                        show == "0"
+                          ? breadcrumbStyles.active
+                          : breadcrumbStyles.item
+                      }
+                      onClick={() => {
+                        // setScreen(1);
+                        setScreen(0);
+                      }}
+                    >
+                      {/* {mode === "E"
                       ? `Personnel(${state.EmpName})`
                       : "Personnel(New)"} */}
-                    {/* {
+                      {/* {
                       mode === "E"
                         ? `Personnel(${state?.EmpName || Data?.Name})`
                         : "Personnel(New)"
                     } */}
-                    {
-                      mode === "E"
+                      {mode === "E"
                         ? `Personnel(${EmployeeName})`
-                        : "Personnel(New)"
-                    }
+                        : "Personnel(New)"}
+                    </Typography>
+                    {show == "5" ? (
+                      <Typography
+                        sx={
+                          show == "5"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Contact
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "1" ? (
+                      <Typography
+                        sx={
+                          show == "1"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Skills", "Skills")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "2" ? (
+                      <Typography
+                        sx={
+                          show == "2"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Functions
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "3" ? (
+                      <Typography
+                        sx={
+                          show == "3"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Managers", "Manager")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "4" ? (
+                      <Typography
+                        sx={
+                          show == "4"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Deployment", "Deployment")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "6" ? (
+                      <Typography
+                        sx={
+                          show == "6"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        List of Documents
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "7" ? (
+                      <Typography
+                        sx={
+                          show == "7"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("ItemCustody", "ItemCustody")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "17" ? (
+                      <Typography
+                        sx={
+                          show == "17"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("ItemCustody", "ItemCustody")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
 
-                  </Typography>
-                  {show == "5" ? (
-                    <Typography
-                      sx={show == "5" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Contact
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "1" ? (
-                    <Typography
-                      sx={show == "1" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Skills", "Skills")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "2" ? (
-                    <Typography
-                       sx={show == "2" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Functions
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "3" ? (
-                    <Typography
-                      sx={show == "3" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Managers", "Manager")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "4" ? (
-                    <Typography
-                       sx={show == "4" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Deployment", "Deployment")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "6" ? (
-                    <Typography
-                      sx={show == "6" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      List of Documents
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "7" ? (
-                    <Typography
-                      sx={show == "7" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("ItemCustody", "ItemCustody")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "17" ? (
-                    <Typography
-                     sx={show == "17" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("ItemCustody", "ItemCustody")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
+                    {show == "15" ? (
+                      <Typography
+                        sx={
+                          show == "15"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Parent
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "16" ? (
+                      <Typography
+                        sx={
+                          show == "16"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Parent Contact Details
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "20" ? (
+                      <Typography
+                        sx={
+                          show == "20"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Inventory
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "8" ? (
+                      <Typography
+                        sx={
+                          show == "8"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("ContractIn", "Contract In")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "23" ? (
+                      <Typography
+                        sx={
+                          show == "23"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Course Attendance
+                      </Typography>
+                    ) : (
+                      false
+                    )}
 
-                  {show == "15" ? (
-                    <Typography
-                      sx={show == "15" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Parent
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "16" ? (
-                    <Typography
-                      sx={show == "16" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Parent Contact Details
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "20" ? (
-                    <Typography
-                      sx={show == "20" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Inventory
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "8" ? (
-                    <Typography
-                      sx={show == "8" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("ContractIn", "Contract In")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "23" ? (
-                    <Typography
-                       sx={show == "23" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Course Attendance
-                    </Typography>
-                  ) : (
-                    false
-                  )}
+                    {show == "11" ? (
+                      <Typography
+                        sx={
+                          show == "11"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Contract Out
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "9" ? (
+                      <Typography
+                        sx={
+                          show == "9"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Geolocation", "Geo Location")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "10" ? (
+                      <Typography
+                        sx={
+                          show == "10"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {/* Leave Configuration */}
+                        {getBusinessCaption(
+                          "LeaveConfigurations",
+                          "Leave Configuration",
+                        )}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "12" ? (
+                      <Typography
+                        sx={
+                          show == "12"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Approvals", "Approvals")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "14" ? (
+                      <Typography
+                        sx={
+                          show == "14"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("ItemServices", "ItemServices")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "13" ? (
+                      <Typography
+                        sx={
+                          show == "13"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Locality
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "19" ? (
+                      <Typography
+                        sx={
+                          show == "19"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        SOP Configuration
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "18" ? (
+                      <Typography
+                        sx={
+                          show == "18"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Specimen Sign
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                    {show == "21" ? (
+                      <Typography
+                        sx={
+                          show == "21"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Documents", "Documents")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
 
-                  {show == "11" ? (
-                    <Typography
-                      sx={show == "11" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Contract Out
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "9" ? (
-                    <Typography
-                       sx={show == "9" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Geolocation", "Geo Location")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "10" ? (
-                    <Typography
-                      sx={show == "10" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {/* Leave Configuration */}
-                      {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "12" ? (
-                    <Typography
-                      sx={show == "12" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Approvals", "Approvals")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "14" ? (
-                    <Typography
-                      sx={show == "14" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("ItemServices", "ItemServices")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "13" ? (
-                    <Typography
-                      sx={show == "13" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Locality
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "19" ? (
-                    <Typography
-                       sx={show == "19" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      SOP Configuration
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "18" ? (
-                    <Typography
-                      sx={show == "18" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Specimen Sign
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                  {show == "21" ? (
-                    <Typography
-                      sx={show == "21" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      {getBusinessCaption("Documents", "Documents")}
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-
-
-
-                  {show == "22" ? (
-                    <Typography
-                      sx={show == "22" ? breadcrumbStyles.active : breadcrumbStyles.item}
-                    >
-                      Resignation
-                    </Typography>
-                  ) : (
-                    false
-                  )}
-                </Breadcrumbs>
+                    {show == "22" ? (
+                      <Typography
+                        sx={
+                          show == "22"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Resignation
+                      </Typography>
+                    ) : (
+                      false
+                    )}
+                  </Breadcrumbs>
+                </Box>
               </Box>
             </Box>
-             </Box>
             <Box display="flex">
               {/* RIGHT: sidebar - replaces Explore dropdown, same screenChange logic */}
               {/* {mode !== "A" && (
@@ -5794,15 +6131,16 @@ const Editemployee = () => {
           </Box>
         </Paper>
 
-
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-
-
-         
-
           {/* Personnel Form */}
           {show == "0" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: Form Sections sidebar */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -5813,51 +6151,116 @@ const Editemployee = () => {
                   onToggle={() => setSectionsOpen((p) => !p)}
                 />
               )}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 3,
+                  }}
+                >
                   <Formik
                     initialValues={initialValues}
                     enableReinitialize={true}
                     validationSchema={validationSchema}
                     onSubmit={(values) => fnSave(values, false)}
                   >
-                    {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue, resetForm }) => {
-
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      handleSubmit,
+                      setFieldValue,
+                      resetForm,
+                    }) => {
                       const handleSaveAndNext = async () => {
                         await fnSave(values, false);
-                        const idx = formSections.findIndex((s) => String(s.value) === String(show));
+                        const idx = formSections.findIndex(
+                          (s) => String(s.value) === String(show),
+                        );
                         const next = formSections[idx + 1];
-                        if (next) screenChange({ target: { value: next.value } });
+                        if (next)
+                          screenChange({ target: { value: next.value } });
                       };
 
                       return (
                         <form onSubmit={handleSubmit}>
-
                           {/* ===== MAIN BODY ===== */}
-                          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
-
+                          <Box
+                            display="flex"
+                            gap={3}
+                            alignItems="flex-start"
+                            flexWrap="wrap"
+                          >
                             {/* LEFT: one unified card */}
                             <Box
                               flex={1}
                               minWidth={0}
-                              sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, overflow: "hidden" }}
+                              sx={{
+                                backgroundColor: "#fff",
+                                border: "1px solid #E5E7EB",
+                                borderRadius: 3,
+                                overflow: "hidden",
+                              }}
                             >
                               {/* ----- Personnel Information ----- */}
-                              <Box sx={{ p: 3 }}>
-                                <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                                  <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <Typography sx={{ fontSize: 16 }}>👤</Typography>
+                              <Box sx={{ p: 1 }}>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                  mb={1}
+                                >
+                                  <Box
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#EEF2FF",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Typography sx={{ fontSize: 16 }}>
+                                      👤
+                                    </Typography>
                                   </Box>
-                                  <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                                    Personnel Information
-                                  </Typography>
-                                </Box>
-                                <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                                  Basic details about the personnel
-                                </Typography>
+                                  <Box>
+                                    <Typography
+                                      variant="subtitle1"
+                                      fontWeight={700}
+                                      color="#0D94885"
+                                    >
+                                      Personnel Information
+                                    </Typography>
 
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                    >
+                                      Basic details about the personnel
+                                    </Typography>
+                                  </Box>
+                                </Box>
                                 <Box display="flex" gap={3} flexWrap="wrap">
-                                  <Box flex={1} minWidth={300} display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2}>
+                                  <Box
+                                    flex={1}
+                                    minWidth={300}
+                                    display="grid"
+                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                    gap={2}
+                                  >
                                     <FormControl>
                                       <MultiFormikOptimizedAutocomplete
                                         sx={{
@@ -5872,46 +6275,147 @@ const Editemployee = () => {
                                           },
                                         }}
                                         name="Department"
-                                        label={<>Department<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                        label={
+                                          <>
+                                            Department
+                                            <span
+                                              style={{
+                                                color: "red",
+                                                fontSize: "20px",
+                                              }}
+                                            >
+                                              *
+                                            </span>
+                                          </>
+                                        }
                                         id="Department"
                                         value={values.Department}
-                                        onChange={(e, newValue) => setFieldValue("Department", newValue, true)}
-                                        isOptionEqualToValue={(option, value) => String(option.RecordID) === String(value.RecordID)}
-                                        error={!!touched.Department && !!errors.Department}
-                                        helperText={touched.Department && errors.Department}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: { AccessID: "2010", ScreenName: "Department", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" },
-                                        })}`}
+                                        onChange={(e, newValue) =>
+                                          setFieldValue(
+                                            "Department",
+                                            newValue,
+                                            true,
+                                          )
+                                        }
+                                        isOptionEqualToValue={(option, value) =>
+                                          String(option.RecordID) ===
+                                          String(value.RecordID)
+                                        }
+                                        error={
+                                          !!touched.Department &&
+                                          !!errors.Department
+                                        }
+                                        helperText={
+                                          touched.Department &&
+                                          errors.Department
+                                        }
+                                        url={`${listViewurl}?data=${JSON.stringify(
+                                          {
+                                            Query: {
+                                              AccessID: "2010",
+                                              ScreenName: "Department",
+                                              VerticalLicense:
+                                                Subscriptionlastthree,
+                                              Filter: `parentID=${CompanyID}`,
+                                              Any: "",
+                                            },
+                                          },
+                                        )}`}
                                       />
-                                      {touched.Department && errors.Department && (
-                                        <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>{errors.Department}</div>
-                                      )}
+                                      {touched.Department &&
+                                        errors.Department && (
+                                          <div
+                                            style={{
+                                              color: "red",
+                                              fontSize: "10px",
+                                              marginTop: "2px",
+                                            }}
+                                          >
+                                            {errors.Department}
+                                          </div>
+                                        )}
                                     </FormControl>
 
                                     {CompanyAutoCode == "Y" ? (
                                       <TextField
-                                        fullWidth variant="outlined" size="small" type="text" label="Code"
-                                        value={values.Code} id="Code" onBlur={handleBlur} onChange={handleChange} name="Code"
-                                        placeholder="Auto" sx={{ backgroundColor: "#ffffff" }}
-                                        inputProps={{ maxLength: 8 }} InputProps={{ readOnly: true }}
+                                        fullWidth
+                                        variant="outlined"
+                                        size="small"
+                                        type="text"
+                                        label="Code"
+                                        value={values.Code}
+                                        id="Code"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        name="Code"
+                                        placeholder="Auto"
+                                        sx={{ backgroundColor: "#ffffff" }}
+                                        inputProps={{ maxLength: 8 }}
+                                        InputProps={{ readOnly: true }}
                                         InputLabelProps={{ shrink: true }}
                                       />
                                     ) : (
                                       <TextField
-                                        fullWidth variant="outlined" size="small" type="text"
-                                        label={<>Code<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        value={values.Code} id="Code" onBlur={handleBlur} onChange={handleChange} name="Code"
-                                        error={!!touched.Code && !!errors.Code} helperText={touched.Code && errors.Code}
-                                        sx={{ backgroundColor: "#ffffff" }} autoFocus inputProps={{ maxLength: 8 }}
+                                        fullWidth
+                                        variant="outlined"
+                                        size="small"
+                                        type="text"
+                                        label={
+                                          <>
+                                            Code
+                                            <span
+                                              style={{
+                                                color: "red",
+                                                fontSize: "20px",
+                                              }}
+                                            >
+                                              *
+                                            </span>
+                                          </>
+                                        }
+                                        value={values.Code}
+                                        id="Code"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        name="Code"
+                                        error={!!touched.Code && !!errors.Code}
+                                        helperText={touched.Code && errors.Code}
+                                        sx={{ backgroundColor: "#ffffff" }}
+                                        autoFocus
+                                        inputProps={{ maxLength: 8 }}
                                         InputLabelProps={{ shrink: true }}
                                       />
                                     )}
 
                                     <TextField
-                                      select fullWidth variant="outlined" size="small"
-                                      label={<>Gender<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                      value={values.Gender} id="Gender" onBlur={handleBlur} onChange={handleChange} name="Gender"
-                                      error={!!touched.Gender && !!errors.Gender} helperText={touched.Gender && errors.Gender}
+                                      select
+                                      fullWidth
+                                      variant="outlined"
+                                      size="small"
+                                      label={
+                                        <>
+                                          Gender
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
+                                        </>
+                                      }
+                                      value={values.Gender}
+                                      id="Gender"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="Gender"
+                                      error={
+                                        !!touched.Gender && !!errors.Gender
+                                      }
+                                      helperText={
+                                        touched.Gender && errors.Gender
+                                      }
                                     >
                                       <MenuItem value="M">Male</MenuItem>
                                       <MenuItem value="F">Female</MenuItem>
@@ -5919,87 +6423,284 @@ const Editemployee = () => {
                                     </TextField>
 
                                     <TextField
-                                      name="dateofbirth" type="date" id="dateofbirth" label="Date of Birth" variant="outlined" size="small"
-                                      inputFormat="YYYY-MM-DD" value={values.dateofbirth} onBlur={handleBlur}
-                                      onChange={(e) => handleDateChange(e, handleChange)}
-                                      error={!!touched.dateofbirth && !!errors.dateofbirth} helperText={touched.dateofbirth && errors.dateofbirth}
+                                      name="dateofbirth"
+                                      type="date"
+                                      id="dateofbirth"
+                                      label="Date of Birth"
+                                      variant="outlined"
+                                      size="small"
+                                      inputFormat="YYYY-MM-DD"
+                                      value={values.dateofbirth}
+                                      onBlur={handleBlur}
+                                      onChange={(e) =>
+                                        handleDateChange(e, handleChange)
+                                      }
+                                      error={
+                                        !!touched.dateofbirth &&
+                                        !!errors.dateofbirth
+                                      }
+                                      helperText={
+                                        touched.dateofbirth &&
+                                        errors.dateofbirth
+                                      }
                                       InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="outlined" type="text"
-                                      label={<>Name<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                      value={values.Name} id="Name" onBlur={handleBlur}
-                                      onChange={(e) => { if (/^[a-zA-Z\s.]*$/.test(e.target.value)) handleChange(e); }}
-                                      name="Name" error={!!touched.Name && !!errors.Name} helperText={touched.Name && errors.Name}
-                                      sx={{ backgroundColor: "#ffffff" }} inputProps={{ maxLength: 90 }}
-                                    />
-
-                                    <TextField
-                                      name="joindate" type="date" id="joindate" label="Date of Joining" variant="outlined" size="small"
-                                      inputFormat="YYYY-MM-DD" value={values.joindate} onBlur={handleBlur}
-                                      onChange={(e) => handleDateChange(e, handleChange)}
-                                      error={!!touched.joindate && !!errors.joindate} helperText={touched.joindate && errors.joindate}
-                                      InputLabelProps={{ shrink: true }}
-                                    />
-
-                                    <TextField
-                                      fullWidth variant="outlined" type="password" size="small"
-                                      label={<>Password<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                      value={values.Password} id="Password" onBlur={handleBlur} onChange={handleChange} name="Password"
-                                      error={!!touched.Password && !!errors.Password} helperText={touched.Password && errors.Password}
+                                      fullWidth
+                                      variant="outlined"
+                                      type="text"
+                                      label={
+                                        <>
+                                          Name
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
+                                        </>
+                                      }
+                                      value={values.Name}
+                                      id="Name"
+                                      onBlur={handleBlur}
+                                      onChange={(e) => {
+                                        if (
+                                          /^[a-zA-Z\s.]*$/.test(e.target.value)
+                                        )
+                                          handleChange(e);
+                                      }}
+                                      name="Name"
+                                      error={!!touched.Name && !!errors.Name}
+                                      helperText={touched.Name && errors.Name}
                                       sx={{ backgroundColor: "#ffffff" }}
+                                      inputProps={{ maxLength: 90 }}
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
                                     />
 
                                     <TextField
-                                      name="confirmdate" type="date" id="confirmdate" label="Date of Confirmation" variant="outlined" size="small"
-                                      inputFormat="YYYY-MM-DD" value={values.confirmdate} onBlur={handleBlur}
-                                      onChange={(e) => handleDateChange(e, handleChange)}
-                                      error={!!touched.confirmdate && !!errors.confirmdate} helperText={touched.confirmdate && errors.confirmdate}
+                                      name="joindate"
+                                      type="date"
+                                      id="joindate"
+                                      label="Date of Joining"
+                                      variant="outlined"
+                                      size="small"
+                                      inputFormat="YYYY-MM-DD"
+                                      value={values.joindate}
+                                      onBlur={handleBlur}
+                                      onChange={(e) =>
+                                        handleDateChange(e, handleChange)
+                                      }
+                                      error={
+                                        !!touched.joindate && !!errors.joindate
+                                      }
+                                      helperText={
+                                        touched.joindate && errors.joindate
+                                      }
                                       InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="outlined" type="text" label="Job" placeholder="Enter job title"
-                                      value={values.Job} id="Job" onBlur={handleBlur} onChange={handleChange} name="Job"
-                                      error={!!touched.Job && !!errors.Job} helperText={touched.Job && errors.Job}
-                                      sx={{ backgroundColor: "#ffffff" }} size="small" inputProps={{ maxLength: 90 }}
+                                      fullWidth
+                                      variant="outlined"
+                                      type="password"
+                                      size="small"
+                                      label={
+                                        <>
+                                          Password
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
+                                        </>
+                                      }
+                                      value={values.Password}
+                                      id="Password"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="Password"
+                                      error={
+                                        !!touched.Password && !!errors.Password
+                                      }
+                                      helperText={
+                                        touched.Password && errors.Password
+                                      }
+                                      sx={{ backgroundColor: "#ffffff" }}
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
                                     />
 
                                     <TextField
-                                      fullWidth variant="outlined" type="text" label="Comments" placeholder="Enter comments"
-                                      value={values.Comm} id="Comm" onBlur={handleBlur} onChange={handleChange} name="Comm"
-                                      error={!!touched.Comm && !!errors.Comm} helperText={touched.Comm && errors.Comm}
-                                      size="small" inputProps={{ maxLength: 90 }}
+                                      name="confirmdate"
+                                      type="date"
+                                      id="confirmdate"
+                                      label="Date of Confirmation"
+                                      variant="outlined"
+                                      size="small"
+                                      inputFormat="YYYY-MM-DD"
+                                      value={values.confirmdate}
+                                      onBlur={handleBlur}
+                                      onChange={(e) =>
+                                        handleDateChange(e, handleChange)
+                                      }
+                                      error={
+                                        !!touched.confirmdate &&
+                                        !!errors.confirmdate
+                                      }
+                                      helperText={
+                                        touched.confirmdate &&
+                                        errors.confirmdate
+                                      }
+                                      InputLabelProps={{ shrink: true }}
                                     />
 
                                     <TextField
-                                      select fullWidth variant="outlined"
-                                      label={<>Type<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                      value={values.employeetype} id="employeetype" onBlur={handleBlur} onChange={handleChange} name="employeetype"
-                                      error={!!touched.employeetype && !!errors.employeetype} helperText={touched.employeetype && errors.employeetype} size="small"
+                                      fullWidth
+                                      variant="outlined"
+                                      type="text"
+                                      label="Job"
+                                      placeholder="Enter job title"
+                                      value={values.Job}
+                                      id="Job"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="Job"
+                                      error={!!touched.Job && !!errors.Job}
+                                      helperText={touched.Job && errors.Job}
+                                      sx={{ backgroundColor: "#ffffff" }}
+                                      size="small"
+                                      inputProps={{ maxLength: 90 }}
+                                    />
+
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      type="text"
+                                      label="Comments"
+                                      placeholder="Enter comments"
+                                      value={values.Comm}
+                                      id="Comm"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="Comm"
+                                      error={!!touched.Comm && !!errors.Comm}
+                                      helperText={touched.Comm && errors.Comm}
+                                      size="small"
+                                      inputProps={{ maxLength: 90 }}
+                                    />
+
+                                    <TextField
+                                      select
+                                      fullWidth
+                                      variant="outlined"
+                                      label={
+                                        <>
+                                          Type
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
+                                        </>
+                                      }
+                                      value={values.employeetype}
+                                      id="employeetype"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="employeetype"
+                                      error={
+                                        !!touched.employeetype &&
+                                        !!errors.employeetype
+                                      }
+                                      helperText={
+                                        touched.employeetype &&
+                                        errors.employeetype
+                                      }
+                                      size="small"
                                     >
-                                      <MenuItem value="PP">Probation Period</MenuItem>
+                                      <MenuItem value="PP">
+                                        Probation Period
+                                      </MenuItem>
                                       <MenuItem value="PM">Permanent</MenuItem>
-                                      <MenuItem value="CI">Contract In</MenuItem>
-                                      <MenuItem value="CO">Contract Out</MenuItem>
+                                      <MenuItem value="CI">
+                                        Contract In
+                                      </MenuItem>
+                                      <MenuItem value="CO">
+                                        Contract Out
+                                      </MenuItem>
                                       <MenuItem value="IN">Intern</MenuItem>
                                     </TextField>
 
                                     <TextField
-                                      fullWidth variant="outlined" type="number" label="Sort Order"
-                                      value={values.SortOrder} id="SortOrder" onBlur={handleBlur} onChange={handleChange} name="SortOrder"
-                                      error={!!touched.SortOrder && !!errors.SortOrder} helperText={touched.SortOrder && errors.SortOrder}
-                                      size="small" onWheel={(e) => e.target.blur()}
-                                      onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 8); }}
-                                      InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                      fullWidth
+                                      variant="outlined"
+                                      type="number"
+                                      label="Sort Order"
+                                      value={values.SortOrder}
+                                      id="SortOrder"
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      name="SortOrder"
+                                      error={
+                                        !!touched.SortOrder &&
+                                        !!errors.SortOrder
+                                      }
+                                      helperText={
+                                        touched.SortOrder && errors.SortOrder
+                                      }
+                                      size="small"
+                                      onWheel={(e) => e.target.blur()}
+                                      onInput={(e) => {
+                                        e.target.value = Math.max(
+                                          0,
+                                          parseInt(e.target.value),
+                                        )
+                                          .toString()
+                                          .slice(0, 8);
+                                      }}
+                                      InputProps={{
+                                        inputProps: {
+                                          style: { textAlign: "right" },
+                                        },
+                                      }}
                                     />
 
                                     <TextField
-                                      name="amount" type="text" id="amount" label="Basic Pay" placeholder="Enter basic pay" variant="outlined" size="small"
-                                      value={values.amount} onBlur={handleBlur} onChange={handleChange}
-                                      error={!!touched.amount && !!errors.amount} helperText={touched.amount && errors.amount}
-                                      InputProps={{ inputProps: { style: { textAlign: "right" }, min: 0, max: 24 } }}
+                                      name="amount"
+                                      type="text"
+                                      id="amount"
+                                      label="Basic Pay"
+                                      placeholder="Enter basic pay"
+                                      variant="outlined"
+                                      size="small"
+                                      value={values.amount}
+                                      onBlur={handleBlur}
+                                      onChange={handleChange}
+                                      error={
+                                        !!touched.amount && !!errors.amount
+                                      }
+                                      helperText={
+                                        touched.amount && errors.amount
+                                      }
+                                      InputProps={{
+                                        inputProps: {
+                                          style: { textAlign: "right" },
+                                          min: 0,
+                                          max: 24,
+                                        },
+                                      }}
                                     />
                                   </Box>
 
@@ -6010,11 +6711,9 @@ const Editemployee = () => {
                                       userimg,
                                       isImgChanged,
                                       imgUpload,
-                                      "Profile Photo"
+                                      "Profile Photo",
                                     )}
                                   </Box>
-
-
                                 </Box>
                               </Box>
 
@@ -6022,24 +6721,70 @@ const Editemployee = () => {
 
                               {/* ----- Permissions ----- */}
                               <Box sx={{ p: 3 }}>
-                                <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                                  <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <Typography sx={{ fontSize: 16 }}>🛡️</Typography>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                  mb={0.5}
+                                >
+                                  <Box
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#FEF3C7",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Typography sx={{ fontSize: 16 }}>
+                                      🛡️
+                                    </Typography>
                                   </Box>
-                                  <Typography variant="subtitle1" fontWeight={700} color="#D97706">
+                                  <Typography
+                                    variant="subtitle1"
+                                    fontWeight={700}
+                                    color="#D97706"
+                                  >
                                     Permissions
                                   </Typography>
                                 </Box>
-                                <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  mb={2}
+                                  ml={5.5}
+                                >
                                   Set permissions and access levels
                                 </Typography>
 
                                 <Box display="flex" flexWrap="wrap" gap={3}>
                                   {[
-                                    { name: "qualityassurance", label: getBusinessCaption("QualityAssurance", "Quality Assurance") },
-                                    { name: "scrummaster", label: getBusinessCaption("ScrumMaster", "Scrum Master") },
-                                    { name: "prjmanager", label: getBusinessCaption("ProjectManager", "Project Manager") },
-                                    ...(!is003Subscription ? [{ name: "CRMUser", label: "CRM User" }] : []),
+                                    {
+                                      name: "qualityassurance",
+                                      label: getBusinessCaption(
+                                        "QualityAssurance",
+                                        "Quality Assurance",
+                                      ),
+                                    },
+                                    {
+                                      name: "scrummaster",
+                                      label: getBusinessCaption(
+                                        "ScrumMaster",
+                                        "Scrum Master",
+                                      ),
+                                    },
+                                    {
+                                      name: "prjmanager",
+                                      label: getBusinessCaption(
+                                        "ProjectManager",
+                                        "Project Manager",
+                                      ),
+                                    },
+                                    ...(!is003Subscription
+                                      ? [{ name: "CRMUser", label: "CRM User" }]
+                                      : []),
                                     { name: "delete", label: "Delete" },
                                     { name: "checkbox", label: "Disable" },
                                   ].map((perm) => (
@@ -6047,9 +6792,18 @@ const Editemployee = () => {
                                       key={perm.name}
                                       control={
                                         <Field
-                                          type="checkbox" name={perm.name} id={perm.name}
-                                          onChange={handleChange} onBlur={handleBlur} as={Checkbox}
-                                          sx={{ color: "#D1D5DB", "&.Mui-checked": { color: "#4F46E5" } }}
+                                          type="checkbox"
+                                          name={perm.name}
+                                          id={perm.name}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          as={Checkbox}
+                                          sx={{
+                                            color: "#D1D5DB",
+                                            "&.Mui-checked": {
+                                              color: "#4F46E5",
+                                            },
+                                          }}
                                         />
                                       }
                                       label={perm.label}
@@ -6061,9 +6815,19 @@ const Editemployee = () => {
                               <Divider />
 
                               {/* ----- Bottom actions (inside the card) ----- */}
-                              <Box sx={{ p: 3, display: "flex", justifyContent: "flex-end", gap: 1.5 }}>
+                              <Box
+                                sx={{
+                                  p: 3,
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  gap: 1.5,
+                                }}
+                              >
                                 <Button
-                                  color="secondary" variant="contained" type="submit" disabled={loading}
+                                  color="secondary"
+                                  variant="contained"
+                                  type="submit"
+                                  disabled={loading}
                                   sx={{
                                     textTransform: "none",
                                     borderRadius: 2,
@@ -6078,11 +6842,17 @@ const Editemployee = () => {
                                   Save
                                 </Button>
                                 <Button
-                                  type="button" variant="contained"
+                                  type="button"
+                                  variant="contained"
                                   onClick={() => {
                                     is00123Subscription
-                                      ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state })
-                                      : navigate(`/Apps/TR027/Personnel`, { state });
+                                      ? navigate(
+                                          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                                          { state },
+                                        )
+                                      : navigate(`/Apps/TR027/Personnel`, {
+                                          state,
+                                        });
                                   }}
                                   sx={{
                                     px: 4,
@@ -6103,24 +6873,61 @@ const Editemployee = () => {
                                 >
                                   Save & Next
                                 </Button> */}
-
                               </Box>
                             </Box>
-
                           </Box>
 
                           {/* Popups - unchanged */}
-                          <Popup title="Department" openPopup={openDEPopup} setOpenPopup={setOpenDEPopup}>
-                            <Listviewpopup accessID="2010" screenName="Department" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                          <Popup
+                            title="Department"
+                            openPopup={openDEPopup}
+                            setOpenPopup={setOpenDEPopup}
+                          >
+                            <Listviewpopup
+                              accessID="2010"
+                              screenName="Department"
+                              childToParent={childToParent}
+                              filterName={"parentID"}
+                              filterValue={CompanyID}
+                            />
                           </Popup>
-                          <Popup title="Location" openPopup={openLOCATIONPopup} setOpenPopup={setOpenLOCATIONPopup}>
-                            <Listviewpopup accessID="2051" screenName="Location" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                          <Popup
+                            title="Location"
+                            openPopup={openLOCATIONPopup}
+                            setOpenPopup={setOpenLOCATIONPopup}
+                          >
+                            <Listviewpopup
+                              accessID="2051"
+                              screenName="Location"
+                              childToParent={childToParent}
+                              filterName={"parentID"}
+                              filterValue={CompanyID}
+                            />
                           </Popup>
-                          <Popup title="Gate" openPopup={openGATEPopup} setOpenPopup={setOpenGATEPopup}>
-                            <Listviewpopup accessID="2050" screenName="Gate" childToParent={childToParent} filterName={"parentID"} />
+                          <Popup
+                            title="Gate"
+                            openPopup={openGATEPopup}
+                            setOpenPopup={setOpenGATEPopup}
+                          >
+                            <Listviewpopup
+                              accessID="2050"
+                              screenName="Gate"
+                              childToParent={childToParent}
+                              filterName={"parentID"}
+                            />
                           </Popup>
-                          <Popup title="Designation" openPopup={opendesignPopup} setOpenPopup={setOpendesignPopup}>
-                            <Listviewpopup accessID="2047" screenName="Designation" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                          <Popup
+                            title="Designation"
+                            openPopup={opendesignPopup}
+                            setOpenPopup={setOpendesignPopup}
+                          >
+                            <Listviewpopup
+                              accessID="2047"
+                              screenName="Designation"
+                              childToParent={childToParent}
+                              filterName={"parentID"}
+                              filterValue={CompanyID}
+                            />
                           </Popup>
                         </form>
                       );
@@ -6129,11 +6936,19 @@ const Editemployee = () => {
                 </Paper>
               </Box>
             </Box>
-          ) : (false)}
+          ) : (
+            false
+          )}
 
           {/* Contact form */}
           {show == "5" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -6145,8 +6960,22 @@ const Editemployee = () => {
                 />
               )}
               {/* LEFT: Contact form */}
-              <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   {contactLoading ? <LinearProgress /> : null}
                   <Formik
                     initialValues={contactInitialvalues}
@@ -6171,206 +7000,258 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>📞</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                            Contact Information
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Phone, email and address details
-                        </Typography>
 
-                        {/* ----- FIELDS + PHOTO ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap">
-
-                          {/* Fields - 2 column grid */}
+                        <Box sx={{ p: 1 }}>
                           <Box
-                            flex={1}
-                            minWidth={300}
-                            display="grid"
-                            gridTemplateColumns="repeat(2, minmax(0,1fr))"
-                            gap={2}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
                           >
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Code"
-                              name="Code"
-                              value={values.Code}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Code"
-                              InputProps={{ readOnly: true }}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Name"
-                              name="Name"
-                              value={values.Name}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Name"
-                              InputProps={{ readOnly: true }}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="FatherName"
-                              name="FatherName"
-                              value={values.FatherName}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Father's Name"
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="number"
-                              id="phonenumber"
-                              name="phonenumber"
-                              value={values.phonenumber}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Phone No"
-                              error={touched.phonenumber && Boolean(errors.phonenumber)}
-                              helperText={touched.phonenumber && errors.phonenumber}
-                              onWheel={(e) => e.target.blur()}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="email"
-                              name="email"
-                              value={values.email}
-                              onBlur={handleBlur}
-                              onChange={(e) => {
-                                const value = e.target.value.toLowerCase().trim();
-                                handleChange({ target: { name: "email", value } });
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#EEF2FF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
-                              label={
-                                <>
-                                  Email Id
-                                  <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                </>
-                              }
-                              error={touched.email && Boolean(errors.email)}
-                              helperText={touched.email && errors.email}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="number"
-                              id="aadharcardnumber"
-                              name="aadharcardnumber"
-                              value={values.aadharcardnumber}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Aadhar Card No"
-                              onWheel={(e) => e.target.blur()}
-                              error={touched.aadharcardnumber && Boolean(errors.aadharcardnumber)}
-                              helperText={touched.aadharcardnumber && errors.aadharcardnumber}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="pfnumber"
-                              name="pfnumber"
-                              value={values.pfnumber}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="PF No"
-                              error={touched.pfnumber && Boolean(errors.pfnumber)}
-                              helperText={touched.pfnumber && errors.pfnumber}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="number"
-                              inputMode="numeric"
-                              id="esinumber"
-                              name="esinumber"
-                              value={values.esinumber}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="ESI No"
-                              onWheel={(e) => e.target.blur()}
-                              error={touched.esinumber && Boolean(errors.esinumber)}
-                              helperText={touched.esinumber && errors.esinumber}
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="permanentaddress"
-                              name="permanentaddress"
-                              multiline
-                              minRows={2}
-                              value={values.permanentaddress}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Permanent Address"
-                            />
-
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="localaddress"
-                              name="localaddress"
-                              multiline
-                              minRows={2}
-                              value={values.localaddress}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Local Address"
-                            />
+                            >
+                              <Typography sx={{ fontSize: 16 }}>📞</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Contact Information
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Phone, email and address details
+                              </Typography>
+                            </Box>
                           </Box>
+                          {/* ----- FIELDS + PHOTO ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap">
+                            {/* Fields - 2 column grid */}
+                            <Box
+                              flex={1}
+                              minWidth={300}
+                              display="grid"
+                              gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Code"
+                                name="Code"
+                                value={values.Code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                                InputProps={{ readOnly: true }}
+                              />
 
-                          {/* Photo column */}
-                          <Box sx={{ width: 220, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo"
-                            )}
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Name"
+                                name="Name"
+                                value={values.Name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                                InputProps={{ readOnly: true }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="FatherName"
+                                name="FatherName"
+                                value={values.FatherName}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Father's Name"
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                id="phonenumber"
+                                name="phonenumber"
+                                value={values.phonenumber}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Phone No"
+                                error={
+                                  touched.phonenumber &&
+                                  Boolean(errors.phonenumber)
+                                }
+                                helperText={
+                                  touched.phonenumber && errors.phonenumber
+                                }
+                                onWheel={(e) => e.target.blur()}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="email"
+                                name="email"
+                                value={values.email}
+                                onBlur={handleBlur}
+                                onChange={(e) => {
+                                  const value = e.target.value
+                                    .toLowerCase()
+                                    .trim();
+                                  handleChange({
+                                    target: { name: "email", value },
+                                  });
+                                }}
+                                label={
+                                  <>
+                                    Email Id
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                error={touched.email && Boolean(errors.email)}
+                                helperText={touched.email && errors.email}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                id="aadharcardnumber"
+                                name="aadharcardnumber"
+                                value={values.aadharcardnumber}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Aadhar Card No"
+                                onWheel={(e) => e.target.blur()}
+                                error={
+                                  touched.aadharcardnumber &&
+                                  Boolean(errors.aadharcardnumber)
+                                }
+                                helperText={
+                                  touched.aadharcardnumber &&
+                                  errors.aadharcardnumber
+                                }
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="pfnumber"
+                                name="pfnumber"
+                                value={values.pfnumber}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="PF No"
+                                error={
+                                  touched.pfnumber && Boolean(errors.pfnumber)
+                                }
+                                helperText={touched.pfnumber && errors.pfnumber}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                inputMode="numeric"
+                                id="esinumber"
+                                name="esinumber"
+                                value={values.esinumber}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="ESI No"
+                                onWheel={(e) => e.target.blur()}
+                                error={
+                                  touched.esinumber && Boolean(errors.esinumber)
+                                }
+                                helperText={
+                                  touched.esinumber && errors.esinumber
+                                }
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="permanentaddress"
+                                name="permanentaddress"
+                                multiline
+                                minRows={2}
+                                value={values.permanentaddress}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Permanent Address"
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="localaddress"
+                                name="localaddress"
+                                multiline
+                                minRows={2}
+                                value={values.localaddress}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Local Address"
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
-
                         </Box>
-
                         {/* ----- BANK DETAILS CARD ----- */}
                         <Box
                           sx={{
@@ -6381,15 +7262,39 @@ const Editemployee = () => {
                             p: 3,
                           }}
                         >
-                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                            <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#ECFDF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={0.5}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#ECFDF5",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
                               <Typography sx={{ fontSize: 16 }}>🏦</Typography>
                             </Box>
-                            <Typography variant="subtitle1" fontWeight={700} color="#059669">
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#059669"
+                            >
                               Bank Details
                             </Typography>
                           </Box>
-                          <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            mb={2}
+                            ml={5.5}
+                          >
                             Account and banking information
                           </Typography>
 
@@ -6423,8 +7328,13 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="Account Number"
-                              error={touched.AccountNumber && Boolean(errors.AccountNumber)}
-                              helperText={touched.AccountNumber && errors.AccountNumber}
+                              error={
+                                touched.AccountNumber &&
+                                Boolean(errors.AccountNumber)
+                              }
+                              helperText={
+                                touched.AccountNumber && errors.AccountNumber
+                              }
                               onWheel={(e) => e.target.blur()}
                             />
 
@@ -6439,7 +7349,9 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="IFSC Code"
-                              error={touched.IfscCode && Boolean(errors.IfscCode)}
+                              error={
+                                touched.IfscCode && Boolean(errors.IfscCode)
+                              }
                               helperText={touched.IfscCode && errors.IfscCode}
                             />
 
@@ -6459,9 +7371,13 @@ const Editemployee = () => {
                             />
                           </Box>
                         </Box>
-
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
-                        <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          mt={3}
+                          gap={1.5}
+                        >
                           <LoadingButton
                             color="secondary"
                             variant="contained"
@@ -6480,7 +7396,6 @@ const Editemployee = () => {
                           >
                             Save
                           </LoadingButton>
-
 
                           {YearFlag == "true" && (
                             <Button
@@ -6538,15 +7453,12 @@ const Editemployee = () => {
                           >
                             Back
                           </Button>
-
                         </Box>
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
-
             </Box>
           ) : (
             false
@@ -6554,8 +7466,13 @@ const Editemployee = () => {
 
           {/* Approval Form */}
           {show == "12" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -6569,7 +7486,15 @@ const Editemployee = () => {
 
               {/* RIGHT: Approvals form */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={deploymentInitialValue}
                     enableReinitialize={true}
@@ -6593,23 +7518,53 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#ECFDF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>✅</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#059669">
-                            Approvals
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Approval workflow details
-                        </Typography>
+                        <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#ECFDF5",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>✅</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Approvals
+                              </Typography>
 
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Approval workflow details
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
                         {/* ----- BASIC FIELDS ----- */}
                         <Box
                           display="grid"
@@ -6654,13 +7609,29 @@ const Editemployee = () => {
                             mb: 2,
                           }}
                         >
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Approval Levels
                           </Typography>
 
                           {/* Horizontal */}
-                          <Box display="flex" alignItems="center" gap={2} mb={2} flexWrap="wrap">
-                            <Box display="flex" alignItems="center" gap={1} minWidth={150}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={2}
+                            mb={2}
+                            flexWrap="wrap"
+                          >
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1}
+                              minWidth={150}
+                            >
                               <Field
                                 type="checkbox"
                                 id="Horizontal"
@@ -6668,7 +7639,9 @@ const Editemployee = () => {
                                 disabled
                                 as={Checkbox}
                               />
-                              <Typography variant="body2" fontWeight={500}>Horizontal</Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                Horizontal
+                              </Typography>
                             </Box>
                             <TextField
                               variant="outlined"
@@ -6685,20 +7658,50 @@ const Editemployee = () => {
                                 }
                               }}
                               label="Minimum managers to approve (0 for all managers)"
-                              sx={{ flex: 1, minWidth: 280, backgroundColor: "#fff" }}
+                              sx={{
+                                flex: 1,
+                                minWidth: 280,
+                                backgroundColor: "#fff",
+                              }}
                               InputProps={{
-                                inputProps: { style: { textAlign: "right" }, min: 0, max: 5 },
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                  min: 0,
+                                  max: 5,
+                                },
                               }}
                               onKeyDown={(e) => {
-                                const allowedKeys = ["0", "1", "2", "3", "4", "5", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-                                if (!allowedKeys.includes(e.key)) e.preventDefault();
+                                const allowedKeys = [
+                                  "0",
+                                  "1",
+                                  "2",
+                                  "3",
+                                  "4",
+                                  "5",
+                                  "Backspace",
+                                  "Delete",
+                                  "ArrowLeft",
+                                  "ArrowRight",
+                                ];
+                                if (!allowedKeys.includes(e.key))
+                                  e.preventDefault();
                               }}
                             />
                           </Box>
 
                           {/* Vertical */}
-                          <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-                            <Box display="flex" alignItems="center" gap={1} minWidth={150}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={2}
+                            flexWrap="wrap"
+                          >
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1}
+                              minWidth={150}
+                            >
                               <Field
                                 type="checkbox"
                                 id="Vertical"
@@ -6707,7 +7710,9 @@ const Editemployee = () => {
                                 name="Vertical"
                                 as={Checkbox}
                               />
-                              <Typography variant="body2" fontWeight={500}>Vertical</Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                Vertical
+                              </Typography>
                             </Box>
                             <TextField
                               variant="outlined"
@@ -6724,7 +7729,11 @@ const Editemployee = () => {
                                 }
                               }}
                               label="No of levels to approve (minimum level of 3)"
-                              sx={{ flex: 1, minWidth: 280, backgroundColor: "#fff" }}
+                              sx={{
+                                flex: 1,
+                                minWidth: 280,
+                                backgroundColor: "#fff",
+                              }}
                               InputProps={{
                                 inputProps: {
                                   readOnly: values.Vertical ? false : true,
@@ -6734,8 +7743,17 @@ const Editemployee = () => {
                                 },
                               }}
                               onKeyDown={(e) => {
-                                const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-                                if (!allowedKeys.includes(e.key)) e.preventDefault();
+                                const allowedKeys = [
+                                  "1",
+                                  "2",
+                                  "3",
+                                  "Backspace",
+                                  "Delete",
+                                  "ArrowLeft",
+                                  "ArrowRight",
+                                ];
+                                if (!allowedKeys.includes(e.key))
+                                  e.preventDefault();
                               }}
                             />
                           </Box>
@@ -6750,13 +7768,29 @@ const Editemployee = () => {
                             p: 2.5,
                           }}
                         >
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Auto Approval / Rejection
                           </Typography>
 
                           {/* Auto Approval */}
-                          <Box display="flex" alignItems="center" gap={2} mb={2} flexWrap="wrap">
-                            <Box display="flex" alignItems="center" gap={1} minWidth={150}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={2}
+                            mb={2}
+                            flexWrap="wrap"
+                          >
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1}
+                              minWidth={150}
+                            >
                               <Field
                                 type="checkbox"
                                 id="AutoApprovalYesOrNo"
@@ -6765,7 +7799,9 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 as={Checkbox}
                               />
-                              <Typography variant="body2" fontWeight={500}>Auto Approval</Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                Auto Approval
+                              </Typography>
                             </Box>
                             <TextField
                               variant="outlined"
@@ -6777,20 +7813,47 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="Tolerance days"
-                              sx={{ flex: 1, minWidth: 280, backgroundColor: "#fff" }}
+                              sx={{
+                                flex: 1,
+                                minWidth: 280,
+                                backgroundColor: "#fff",
+                              }}
                               InputProps={{
-                                inputProps: { style: { textAlign: "right" }, min: 1, max: 3 },
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                  min: 1,
+                                  max: 3,
+                                },
                               }}
                               onKeyDown={(e) => {
-                                const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-                                if (!allowedKeys.includes(e.key)) e.preventDefault();
+                                const allowedKeys = [
+                                  "1",
+                                  "2",
+                                  "3",
+                                  "Backspace",
+                                  "Delete",
+                                  "ArrowLeft",
+                                  "ArrowRight",
+                                ];
+                                if (!allowedKeys.includes(e.key))
+                                  e.preventDefault();
                               }}
                             />
                           </Box>
 
                           {/* Auto Rejection */}
-                          <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-                            <Box display="flex" alignItems="center" gap={1} minWidth={150}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={2}
+                            flexWrap="wrap"
+                          >
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1}
+                              minWidth={150}
+                            >
                               <Field
                                 type="checkbox"
                                 id="AutoRejectionYesOrNo"
@@ -6799,7 +7862,9 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 as={Checkbox}
                               />
-                              <Typography variant="body2" fontWeight={500}>Auto Rejection</Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                Auto Rejection
+                              </Typography>
                             </Box>
                             <TextField
                               variant="outlined"
@@ -6811,7 +7876,11 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               label="Tolerance days"
-                              sx={{ flex: 1, minWidth: 280, backgroundColor: "#fff" }}
+                              sx={{
+                                flex: 1,
+                                minWidth: 280,
+                                backgroundColor: "#fff",
+                              }}
                               InputProps={{
                                 inputProps: { style: { textAlign: "right" } },
                               }}
@@ -6820,8 +7889,12 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
-                        <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          mt={3}
+                          gap={1.5}
+                        >
                           {/* Save */}
                           {YearFlag == "true" ? (
                             <LoadingButton
@@ -6854,7 +7927,6 @@ const Editemployee = () => {
                               Save
                             </Button>
                           )}
-
 
                           {/* Delete */}
                           {YearFlag == "true" ? (
@@ -6901,7 +7973,6 @@ const Editemployee = () => {
                             </Button>
                           )}
 
-
                           {/* Cancel */}
                           <Button
                             variant="contained"
@@ -6921,28 +7992,52 @@ const Editemployee = () => {
                           >
                             Back
                           </Button>
-
-
-
                         </Box>
 
                         {/* Popups - unchanged */}
-                        <Popup title="Location" openPopup={openLOCATIONPopup} setOpenPopup={setOpenLOCATIONPopup}>
-                          <Listviewpopup accessID="2051" screenName="Location" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                        <Popup
+                          title="Location"
+                          openPopup={openLOCATIONPopup}
+                          setOpenPopup={setOpenLOCATIONPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2051"
+                            screenName="Location"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
                         </Popup>
-                        <Popup title="Gate" openPopup={openGATEPopup} setOpenPopup={setOpenGATEPopup}>
-                          <Listviewpopup accessID="2050" screenName="Gate" filterName={"parentID"} childToParent={childToParent} />
+                        <Popup
+                          title="Gate"
+                          openPopup={openGATEPopup}
+                          setOpenPopup={setOpenGATEPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2050"
+                            screenName="Gate"
+                            filterName={"parentID"}
+                            childToParent={childToParent}
+                          />
                         </Popup>
-                        <Popup title="Designation" openPopup={opendesignPopup} setOpenPopup={setOpendesignPopup}>
-                          <Listviewpopup accessID="2047" screenName="Designation" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                        <Popup
+                          title="Designation"
+                          openPopup={opendesignPopup}
+                          setOpenPopup={setOpendesignPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2047"
+                            screenName="Designation"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
                         </Popup>
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
-
             </Box>
           ) : (
             false
@@ -6950,8 +8045,13 @@ const Editemployee = () => {
 
           {/* Skill form*/}
           {show == "1" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -6964,13 +8064,26 @@ const Editemployee = () => {
               )}
 
               {/* RIGHT: Skills content */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={initialValues}
                     enableReinitialize={true}
                     validationSchema={validationSchema3}
-
                   >
                     {({
                       values,
@@ -6982,78 +8095,101 @@ const Editemployee = () => {
                     }) => (
                       <Box>
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>🛠️</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#D97706">
-                            {getBusinessCaption("Skills", "Skills")}
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Skills and competency details
-                        </Typography>
-
-                        {/* ----- Code/Name + Photo (separate column) ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
-
-                          {/* LEFT SIDE */}
+                        <Box sx={{ p: 1 }}>
                           <Box
-                            flex={1}
-                            minWidth={280}
                             display="flex"
-                            flexDirection="column"
-                            gap={2}
-                            mt={4}
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
                           >
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Code"
-                              name="Code"
-                              value={values.Code}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Code"
-                              inputProps={{ readOnly: true }}
-                              InputLabelProps={{
-                                shrink: true,
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
-                            />
+                            >
+                              <Typography sx={{ fontSize: 16 }}>🛠️</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                {getBusinessCaption("Skills", "Skills")}
+                              </Typography>
 
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Name"
-                              name="Name"
-                              value={values.Name}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Name"
-                              InputProps={{ readOnly: true }}
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Skills and competency details
+                              </Typography>
+                            </Box>
                           </Box>
+                          {/* ----- Code/Name + Photo (separate column) ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                            {/* LEFT SIDE */}
+                            <Box
+                              flex={1}
+                              minWidth={280}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                              mt={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Code"
+                                name="Code"
+                                value={values.Code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                                inputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
 
-                          {/* Photo column */}
-                          <Box sx={{ width: 220, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo"
-                            )}
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Name"
+                                name="Name"
+                                value={values.Name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                                InputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
-
                         </Box>
-
                         {/* ----- LIST OF SKILLS TABLE ----- */}
                         <Box
                           sx={{
@@ -7068,30 +8204,90 @@ const Editemployee = () => {
                             </Typography>
                           </Box> */}
 
-                          <Box sx={{ height: "40vh" }}>
+                          <Box
+                            sx={{
+                              height: "40vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
                             <DataGrid
                               sx={{
-                                "& .MuiDataGrid-root": { border: "none" },
-                                "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                                "& .MuiDataGrid-columnHeaders": {
-                                  backgroundColor: "#0D9488",
-                                  borderBottom: "none"
-                                },
-                                "& .MuiDataGrid-columnHeaderTitle": {
-                                  color: "#fff",
-                                  fontWeight: 700
-                                },
                                 "& .MuiDataGrid-footerContainer": {
-                                  borderTop: "1px solid #E5E7EB",
-                                  backgroundColor: "#0D9488",
-                                  height: "40px",
-                                  minHeight: '40px'
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
                                 },
-                                "& .MuiTablePagination-root": { color: "#fff" },
-                                "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                                "& .odd-row": { backgroundColor: "" },
-                                "& .even-row": { backgroundColor: "#F3F4F6" },
-                                "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
                               }}
                               rows={explorelistViewData}
                               columns={columns1}
@@ -7102,22 +8298,39 @@ const Editemployee = () => {
                               headerHeight={dataGridHeaderFooterHeight}
                               pageSize={pageSize1}
                               page={page1}
-                              onPageChange={(pageno) => handlePagechange1(pageno)}
-                              onPageSizeChange={(newPageSize) => setPageSize1(newPageSize)}
+                              onPageChange={(pageno) =>
+                                handlePagechange1(pageno)
+                              }
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize1(newPageSize)
+                              }
                               rowsPerPageOptions={[5, 10, 20]}
                               pagination
                               onCellClick={(params) => {
                                 const currentRow = params.row;
                                 const currentcellField = params.field;
-                                selectcelldata(currentRow, "E", currentcellField);
+                                selectcelldata(
+                                  currentRow,
+                                  "E",
+                                  currentcellField,
+                                );
                                 console.log(JSON.stringify(params));
-                                selectcelldata(currentRow, "E", currentcellField);
+                                selectcelldata(
+                                  currentRow,
+                                  "E",
+                                  currentcellField,
+                                );
                                 setOpenSkillModal(true);
                               }}
                               components={{ Toolbar: Custombar }}
-                              onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
                               componentsProps={{
-                                toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
                               }}
                             />
                           </Box>
@@ -7171,30 +8384,25 @@ const Editemployee = () => {
                           }}
                         >
                           <Typography variant="h6">
-                            {boMode === "A"
-                              ? "Add Skill"
-                              : "Edit Skill"}
+                            {boMode === "A" ? "Add Skill" : "Edit Skill"}
                           </Typography>
 
-                          <IconButton
-                            onClick={() => setOpenSkillModal(false)}
-                          >
+                          <IconButton onClick={() => setOpenSkillModal(false)}>
                             <CloseIcon />
                           </IconButton>
                         </DialogTitle>
 
                         {/* Body */}
 
-                        <DialogContent sx={{
-                          pt: 3, "&.MuiDialogContent-root": {
-                            paddingTop: "24px",
-                          },
-                        }}>
-                          <Box
-                            display="flex"
-                            flexDirection="column"
-                            gap={2}
-                          >
+                        <DialogContent
+                          sx={{
+                            pt: 3,
+                            "&.MuiDialogContent-root": {
+                              paddingTop: "24px",
+                            },
+                          }}
+                        >
+                          <Box display="flex" flexDirection="column" gap={2}>
                             <TextField
                               fullWidth
                               variant="outlined"
@@ -7217,14 +8425,8 @@ const Editemployee = () => {
                               value={values.Skills}
                               onBlur={handleBlur}
                               onChange={handleChange}
-                              error={
-                                touched.Skills &&
-                                Boolean(errors.Skills)
-                              }
-                              helperText={
-                                touched.Skills &&
-                                errors.Skills
-                              }
+                              error={touched.Skills && Boolean(errors.Skills)}
+                              helperText={touched.Skills && errors.Skills}
                               inputProps={{
                                 maxLength: 90,
                               }}
@@ -7253,13 +8455,9 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               error={
-                                touched.Comments &&
-                                Boolean(errors.Comments)
+                                touched.Comments && Boolean(errors.Comments)
                               }
-                              helperText={
-                                touched.Comments &&
-                                errors.Comments
-                              }
+                              helperText={touched.Comments && errors.Comments}
                               inputProps={{
                                 maxLength: 90,
                               }}
@@ -7277,16 +8475,10 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               error={
-                                touched.SortOrder &&
-                                Boolean(errors.SortOrder)
+                                touched.SortOrder && Boolean(errors.SortOrder)
                               }
-                              helperText={
-                                touched.SortOrder &&
-                                errors.SortOrder
-                              }
-                              onWheel={(e) =>
-                                e.target.blur()
-                              }
+                              helperText={touched.SortOrder && errors.SortOrder}
+                              onWheel={(e) => e.target.blur()}
                               inputProps={{
                                 style: {
                                   textAlign: "right",
@@ -7295,9 +8487,7 @@ const Editemployee = () => {
                               onInput={(e) => {
                                 e.target.value = Math.max(
                                   0,
-                                  parseInt(
-                                    e.target.value || 0
-                                  )
+                                  parseInt(e.target.value || 0),
                                 )
                                   .toString()
                                   .slice(0, 8);
@@ -7320,16 +8510,15 @@ const Editemployee = () => {
                             loading={loading}
                             variant="contained"
                             onClick={handleSubmit}
-                            sx={{
-                              px: 4,
-                              borderRadius: 2,
-                              textTransform: "none",
-                              color: "#fff",
-                              bgcolor: "#0D9488",
-                              "&:hover": {
-                                bgcolor: "#0F766E",
-                              },
-                            }}
+                           sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                           >
                             Save
                           </LoadingButton>
@@ -7380,34 +8569,29 @@ const Editemployee = () => {
                           <Button
                             variant="contained"
                             onClick={() => setOpenSkillModal(false)}
-                            sx={{
-                              px: 4,
-                              borderRadius: 2,
-                              textTransform: "none",
-                              color: "#fff",
-                              bgcolor: "#F97316",
-                              "&:hover": {
-                                bgcolor: "#EA580C",
-                              },
-                            }}
+                             sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </DialogActions>
 
                         <Popup
                           title="Process"
                           openPopup={openPROPopup}
-                          setOpenPopup={
-                            setOpenPROPopup
-                          }
+                          setOpenPopup={setOpenPROPopup}
                         >
                           <Listviewpopup
                             accessID="2001"
                             screenName="Process"
-                            childToParent={
-                              childToParent
-                            }
+                            childToParent={childToParent}
                             filterName="parentID"
                             filterValue={CompanyID}
                           />
@@ -7417,7 +8601,6 @@ const Editemployee = () => {
                   </Formik>
                 </Dialog>
               </Box>
-
             </Box>
           ) : (
             false
@@ -7425,7 +8608,13 @@ const Editemployee = () => {
 
           {/* Function Form */}
           {show == "2" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT SIDEBAR (KEEP SAME AS SKILL FORM) */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -7438,11 +8627,23 @@ const Editemployee = () => {
               )}
 
               {/* LEFT SIDE */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 {/* ================= TOP CARD ================= */}
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
-
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={functionInitialValue}
                     enableReinitialize={true}
@@ -7450,7 +8651,6 @@ const Editemployee = () => {
                     onSubmit={(values, { resetForm }) => {
                       setTimeout(() => {
                         empFunctionFn(values, resetForm, false);
-
                       }, 100);
                     }}
                   >
@@ -7469,37 +8669,57 @@ const Editemployee = () => {
                         //   setOpenFunctionModal(true);
                         // }}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenFunctionModal(true);
                         }}
                       >
                         {/* HEADER (same style as Skill) */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "50%",
-                            backgroundColor: "#E0E7FF",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                          }}>
+                         <Box sx={{ p: 1 }}>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                  mb={1}
+                                >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#E0E7FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <Typography sx={{ fontSize: 16 }}>⚙️</Typography>
                           </Box>
-
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+<Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
                             Function Details
                           </Typography>
-                        </Box>
+                       
 
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                        
+                        >
                           Function mapping and employee assignment
                         </Typography>
-
+ </Box>
+  </Box>
                         {/* ===== TOP SECTION (Code + Name + Photo) ===== */}
                         <Box display="flex" gap={3} flexWrap="wrap">
-
                           {/* LEFT: fields */}
                           <Box
                             flex={1}
@@ -7507,7 +8727,7 @@ const Editemployee = () => {
                             display="flex"
                             flexDirection="column"
                             gap={2}
-                            mt={3}
+                            mt={2}
                           >
                             <TextField
                               fullWidth
@@ -7535,38 +8755,104 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
-
                           </Box>
                         </Box>
-
+ </Box>
                         {/* ===== DATA GRID ===== */}
-                        <Box sx={{ height: "45vh", mt: 2 }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+
+                          <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                        <Box sx={{ height: "45vh",
+                            "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
-                            }}
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                        }}>
+                          <DataGrid
+                            sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             disableSelectionOnClick
@@ -7574,7 +8860,9 @@ const Editemployee = () => {
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
                             pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
                             rowsPerPageOptions={[5, 10, 20]}
                             pagination
                             onCellClick={(params) => {
@@ -7590,7 +8878,7 @@ const Editemployee = () => {
                             components={{ Toolbar: Employee }}
                           />
                         </Box>
-
+</Box>
                         {/* ===== FUNCTION LOOKUP (same logic, clean UI) ===== */}
                         <Dialog
                           open={openFunctionModal}
@@ -7598,9 +8886,7 @@ const Editemployee = () => {
                           fullWidth
                           maxWidth="sm"
                         >
-                          <DialogTitle>
-                            Function Details
-                          </DialogTitle>
+                          <DialogTitle>Function Details</DialogTitle>
 
                           <DialogContent
                             dividers
@@ -7609,12 +8895,12 @@ const Editemployee = () => {
                               pb: 2,
                             }}
                           >
-
                             <CheckinAutocomplete
                               name="functionLookup"
                               label={
                                 <span>
-                                  Function <span style={{ color: "red" }}>*</span>
+                                  Function{" "}
+                                  <span style={{ color: "red" }}>*</span>
                                 </span>
                               }
                               value={values.functionLookup}
@@ -7625,8 +8911,13 @@ const Editemployee = () => {
                                   Name: newValue.Name,
                                 });
                               }}
-                              error={!!touched.functionLookup && !!errors.functionLookup}
-                              helperText={touched.functionLookup && errors.functionLookup}
+                              error={
+                                !!touched.functionLookup &&
+                                !!errors.functionLookup
+                              }
+                              helperText={
+                                touched.functionLookup && errors.functionLookup
+                              }
                               url={`${listViewurl}?data=${JSON.stringify({
                                 Query: {
                                   AccessID: "2048",
@@ -7637,11 +8928,9 @@ const Editemployee = () => {
                                 },
                               })}`}
                             />
-
                           </DialogContent>
 
                           <DialogActions>
-
                             <LoadingButton
                               onClick={handleSubmit}
                               variant="contained"
@@ -7672,7 +8961,11 @@ const Editemployee = () => {
                                   confirmButtonText: "Confirm",
                                 }).then((result) => {
                                   if (result.isConfirmed) {
-                                    empFunctionFn(values, resetForm, "harddelete");
+                                    empFunctionFn(
+                                      values,
+                                      resetForm,
+                                      "harddelete",
+                                    );
                                   }
                                 });
                               }}
@@ -7697,7 +8990,7 @@ const Editemployee = () => {
 
                             <Button
                               type="reset"
-                              color="warning"
+                             
                               variant="contained"
                               onClick={() => setOpenFunctionModal(false)}
                               sx={{
@@ -7708,9 +9001,8 @@ const Editemployee = () => {
                                 "&:hover": { bgcolor: "#EA580C" },
                               }}
                             >
-                              Cancel
+                              Back
                             </Button>
-
                           </DialogActions>
                         </Dialog>
 
@@ -7753,7 +9045,6 @@ const Editemployee = () => {
                             Cancel
                           </Button>
                         </Box> */}
-
                       </form>
                     )}
                   </Formik>
@@ -7773,17 +9064,21 @@ const Editemployee = () => {
                     filterValue={CompanyID}
                   />
                 </Popup>
-
               </Box>
-
             </Box>
-          ) : false}
-
+          ) : (
+            false
+          )}
 
           {/* Managers */}
           {show == "3" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -7796,8 +9091,13 @@ const Editemployee = () => {
               )}
 
               {/* RIGHT SIDE */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 {/* ===== TOP CARD ===== */}
                 <Paper
                   elevation={0}
@@ -7805,40 +9105,72 @@ const Editemployee = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
                   <Formik
                     initialValues={managerInitialValue}
                     enableReinitialize={true}
                     validationSchema={validationSchema8}
-                  // onClick={() => {
-                  //   setOpenManagerModal(true);
-                  // }}
-
+                    // onClick={() => {
+                    //   setOpenManagerModal(true);
+                    // }}
                   >
                     {({ values, resetForm }) => (
-                      <form
-                      >
+                      <form>
                         <Box>
-
                           {/* HEADER */}
-                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                            <Typography sx={{ fontSize: 18 }}>👤</Typography>
-                            <Typography fontWeight={700} color="#1F2937">
-                              Manager Details
+                          <Box sx={{ p: 1 }}>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                  mb={1}
+                                >
+                                   <Box
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#EEF2FF",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                            <Typography sx={{ fontSize: 16 }}>👤</Typography>
+                          
+                                     </Box>                   
+                                  <Box>
+                                  
+                                     <Typography
+                                  variant="subtitle1"
+                                      fontWeight={700}
+                                      color="#0D94885"
+                                      >
+                              {getBusinessCaption("Managers", "Managers")}
                             </Typography>
-                          </Box>
+                        
 
-                          <Typography variant="body2" color="text.secondary" mb={2}>
-                            Manage reporting hierarchy and manager mapping
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            
+                          >
+                            Manage reporting hierarchy and {getBusinessCaption("Managers", "Managers")} mapping
                           </Typography>
-
+  </Box>
+    </Box>
                           {/* TOP SECTION */}
                           <Box display="flex" gap={3} flexWrap="wrap">
-
                             {/* LEFT FIELDS */}
-                            <Box flex={1} minWidth={300} display="flex" flexDirection="column" gap={2}>
+                            <Box
+                              flex={1}
+                              minWidth={300}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                            >
                               <TextField
                                 fullWidth
                                 size="small"
@@ -7865,15 +9197,20 @@ const Editemployee = () => {
                                 userimg,
                                 isImgChanged,
                                 imgUpload,
-                                "Profile Photo"
+                                "Profile Photo",
                               )}
                             </Box>
-
                           </Box>
-
+  </Box>
                           {/* LIST TABLE + COUNT */}
-                          <Box mt={3} sx={{ border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
-
+                          <Box
+                            mt={3}
+                            sx={{
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            }}
+                          >
                             {/* COUNT HEADER (FIXED - you asked missing one) */}
                             {/* <Box px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
                             <Typography fontWeight={700} variant="body2">
@@ -7881,31 +9218,90 @@ const Editemployee = () => {
                             </Typography>
                           </Box> */}
 
-                            <Box sx={{ height: "40vh" }}>
+                            <Box sx={{ 
+                              height: "40vh",
+                               "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                            >
                               <DataGrid
-                                sx={{
-                                  "& .MuiDataGrid-root": { border: "none" },
-                                  "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                                  "& .MuiDataGrid-columnHeaders": {
-                                    backgroundColor: "#0D9488",
-                                    borderBottom: "none"
-                                  },
-                                  "& .MuiDataGrid-columnHeaderTitle": {
-                                    color: "#fff",
-                                    fontWeight: 700
-                                  },
-                                  "& .MuiDataGrid-footerContainer": {
-                                    borderTop: "1px solid #E5E7EB",
-                                    backgroundColor: "#0D9488",
-                                    height: "40px",
-                                    minHeight: '40px'
-                                  },
-                                  "& .MuiTablePagination-root": { color: "#fff" },
-                                  "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                                  "& .odd-row": { backgroundColor: "" },
-                                  "& .even-row": { backgroundColor: "#F3F4F6" },
-                                  "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
-                                }}
+                               sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                                 rows={explorelistViewData}
                                 columns={columns2}
                                 loading={exploreLoading}
@@ -7915,13 +9311,15 @@ const Editemployee = () => {
                                 page={page2}
                                 pageSize={pageSize2}
                                 onPageChange={handlePagechange2}
-                                onPageSizeChange={(newPageSize) => setPageSize2(newPageSize)}
+                                onPageSizeChange={(newPageSize) =>
+                                  setPageSize2(newPageSize)
+                                }
                                 onCellClick={(params) => {
                                   selectCellRowDataMGR({
                                     rowData: params.row,
                                     mode: "E",
                                     field: params.field,
-                                    setFieldValue: () => { }
+                                    setFieldValue: () => {},
                                   });
                                   setOpenManagerModal(true);
                                 }}
@@ -7969,26 +9367,27 @@ const Editemployee = () => {
                       resetForm,
                       setFieldValue,
                     }) => (
-                      <form onSubmit={handleSubmit} onReset={() => {
-                        selectCellRowDataMGR({
-                          rowData: {},
-                          mode: "A",
-                          field: "",
-                          setFieldValue,
-                        });
-                        resetForm();
-
-                      }}>
-
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowDataMGR({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                            setFieldValue,
+                          });
+                          resetForm();
+                            setOpenManagerModal(true);
+                        }}
+                      
+                      >
                         <Dialog
                           open={openManagerModal}
                           onClose={() => setOpenManagerModal(false)}
                           fullWidth
                           maxWidth="sm"
                         >
-                          <DialogTitle>
-                            Manager Details
-                          </DialogTitle>
+                          <DialogTitle>Manager Details</DialogTitle>
 
                           <DialogContent
                             dividers
@@ -7997,7 +9396,6 @@ const Editemployee = () => {
                             }}
                           >
                             <Box display="flex" flexDirection="column" gap={2}>
-
                               <TextField
                                 select
                                 fullWidth
@@ -8022,7 +9420,8 @@ const Editemployee = () => {
                                 name="manager"
                                 label={
                                   <>
-                                    Manager <span style={{ color: "red" }}>*</span>
+                                    Manager{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.manager}
@@ -8087,12 +9486,10 @@ const Editemployee = () => {
                                 }
                                 label="Facility Manager"
                               />
-
                             </Box>
                           </DialogContent>
 
                           <DialogActions>
-
                             <LoadingButton
                               onClick={handleSubmit}
                               variant="contained"
@@ -8122,7 +9519,11 @@ const Editemployee = () => {
                                   showCancelButton: true,
                                 }).then((result) => {
                                   if (result.isConfirmed) {
-                                    mgrFunctionFn(values, resetForm, "harddelete");
+                                    mgrFunctionFn(
+                                      values,
+                                      resetForm,
+                                      "harddelete",
+                                    );
                                   }
                                 });
                               }}
@@ -8160,9 +9561,8 @@ const Editemployee = () => {
                                 },
                               }}
                             >
-                              Cancel
+                              Back
                             </Button>
-
                           </DialogActions>
                         </Dialog>
 
@@ -8197,27 +9597,52 @@ const Editemployee = () => {
                         </Box> */}
 
                         {/* POPUPS (UNCHANGED) */}
-                        <Popup title="Functions" openPopup={openFunPopup} setOpenPopup={setOpenFunPopup}>
-                          <Listviewpopup accessID="2048" screenName="Functions" childToParent={childToParent} filterName="CompanyID" filterValue={CompanyID} />
+                        <Popup
+                          title="Functions"
+                          openPopup={openFunPopup}
+                          setOpenPopup={setOpenFunPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2048"
+                            screenName="Functions"
+                            childToParent={childToParent}
+                            filterName="CompanyID"
+                            filterValue={CompanyID}
+                          />
                         </Popup>
 
-                        <Popup title="Designations" openPopup={openDesPopup} setOpenPopup={setOpenDesPopup}>
-                          <Listviewpopup accessID="2049" screenName="Designations" childToParent={childToParent} filterName="parentID" filterValue={`${CompanyID}' AND EmployeeID='${recID}`} />
+                        <Popup
+                          title="Designations"
+                          openPopup={openDesPopup}
+                          setOpenPopup={setOpenDesPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2049"
+                            screenName="Designations"
+                            childToParent={childToParent}
+                            filterName="parentID"
+                            filterValue={`${CompanyID}' AND EmployeeID='${recID}`}
+                          />
                         </Popup>
-
                       </form>
                     )}
                   </Formik>
                 </Paper>
-
               </Box>
-
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {/* Deployment Form */}
           {show == "4" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -8231,7 +9656,15 @@ const Editemployee = () => {
 
               {/* RIGHT: Deployment form */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={deploymentInitialValue}
                     enableReinitialize={true}
@@ -8256,26 +9689,62 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                         <Box sx={{ p: 1 }}>
+                                <Box
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                  mb={1}
+                                >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
                             <Typography sx={{ fontSize: 16 }}>🚀</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#2563EB">
-                            Deployment
+                                                 </Box>
+<Box>
+                          <Typography
+                             variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
+                            {getBusinessCaption("Deployment", "Deployment")}
                           </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Deployment and assignment info
+                    
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          
+                        >
+                           {getBusinessCaption("Deployment", "Deployment")} and assignment info
                         </Typography>
-
+</Box>
+  </Box>
                         {/* ----- Code/Name/Designation/Location/Gate + Photo ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
-                          <Box flex={1} minWidth={300} display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2}>
+                          <Box
+                            flex={1}
+                            minWidth={300}
+                            display="grid"
+                            gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                            gap={2}
+                          >
                             <TextField
                               fullWidth
                               variant="outlined"
@@ -8304,46 +9773,101 @@ const Editemployee = () => {
 
                             <CheckinAutocomplete
                               name="Designation"
-                              label={<span>Designation<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+                              label={
+                                <span>
+                                  Designation
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="outlined"
                               size="small"
                               id="Designation"
                               value={values.Designation}
-                              onChange={(newValue) => setFieldValue("Designation", newValue)}
-                              error={!!touched.Designation && !!errors.Designation}
-                              helperText={touched.Designation && errors.Designation}
+                              onChange={(newValue) =>
+                                setFieldValue("Designation", newValue)
+                              }
+                              error={
+                                !!touched.Designation && !!errors.Designation
+                              }
+                              helperText={
+                                touched.Designation && errors.Designation
+                              }
                               url={`${listViewurl}?data=${JSON.stringify({
-                                Query: { AccessID: "2047", ScreenName: "Designation", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" },
+                                Query: {
+                                  AccessID: "2047",
+                                  ScreenName: "Designation",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID=${CompanyID}`,
+                                  Any: "",
+                                },
                               })}`}
                             />
 
                             <CheckinAutocomplete
                               name="location"
-                              label={<span>Location<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+                              label={
+                                <span>
+                                  Location
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="outlined"
                               size="small"
                               id="location"
                               value={values.location}
-                              onChange={(newValue) => setFieldValue("location", newValue)}
+                              onChange={(newValue) =>
+                                setFieldValue("location", newValue)
+                              }
                               error={!!touched.location && !!errors.location}
                               helperText={touched.location && errors.location}
                               url={`${listViewurl}?data=${JSON.stringify({
-                                Query: { AccessID: "2051", ScreenName: "Location", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" },
+                                Query: {
+                                  AccessID: "2051",
+                                  ScreenName: "Location",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID=${CompanyID}`,
+                                  Any: "",
+                                },
                               })}`}
                             />
 
                             <CheckinAutocomplete
                               name="gate"
-                              label={<span>Gate<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+                              label={
+                                <span>
+                                  Gate
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="outlined"
                               size="small"
                               id="gate"
                               value={values.gate}
-                              onChange={(newValue) => setFieldValue("gate", newValue)}
+                              onChange={(newValue) =>
+                                setFieldValue("gate", newValue)
+                              }
                               error={!!touched.gate && !!errors.gate}
                               helperText={touched.gate && errors.gate}
                               url={`${listViewurl}?data=${JSON.stringify({
-                                Query: { AccessID: "2050", ScreenName: "Gate", VerticalLicense: Subscriptionlastthree, Filter: `parentID='${values.location ? values.location.RecordID : 0}'`, Any: "" },
+                                Query: {
+                                  AccessID: "2050",
+                                  ScreenName: "Gate",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID='${values.location ? values.location.RecordID : 0}'`,
+                                  Any: "",
+                                },
                               })}`}
                             />
                           </Box>
@@ -8355,33 +9879,85 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
                           </Box>
-
                         </Box>
-
+    </Box>
                         {/* ----- WORK LOCATION CARD ----- */}
-                        <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                        <Box
+                          sx={{
+                            backgroundColor: "#F9FAFB",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            p: 2.5,
+                            mb: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Work Location
                           </Typography>
                           <Box display="flex" flexWrap="wrap" gap={3}>
                             <FormControlLabel
-                              control={<Field type="checkbox" name="office" id="office" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="office"
+                                  id="office"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
                               label={SubscriptionCode ? "School" : "office"}
                             />
                             <FormControlLabel
-                              control={<Field type="checkbox" name="workfromhome" id="workfromhome" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
-                              label={SubscriptionCode ? "Online Class" : "Work From Home"}
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="workfromhome"
+                                  id="workfromhome"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label={
+                                SubscriptionCode
+                                  ? "Online Class"
+                                  : "Work From Home"
+                              }
                             />
                             <FormControlLabel
-                              control={<Field type="checkbox" name="hybrid" id="hybrid" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="hybrid"
+                                  id="hybrid"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
                               label="Hybrid"
                             />
                             {!SubscriptionCode && (
                               <FormControlLabel
-                                control={<Field type="checkbox" name="onsite" id="onsite" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                                control={
+                                  <Field
+                                    type="checkbox"
+                                    name="onsite"
+                                    id="onsite"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                  />
+                                }
                                 label="Onsite"
                               />
                             )}
@@ -8389,11 +9965,31 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ----- PROJECT DETAILS CARD ----- */}
-                        <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
-                            {is003Subscription === false ? "Project Details" : "Default Standard/Activities Details"}
+                        <Box
+                          sx={{
+                            backgroundColor: "#F9FAFB",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            p: 2.5,
+                            mb: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
+                            {is003Subscription === false
+                              ? "Project Details"
+                              : "Default Standard/Activities Details"}
                           </Typography>
-                          <Box display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2} mb={2}>
+                          <Box
+                            display="grid"
+                            gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                            gap={2}
+                            mb={2}
+                          >
                             <CheckinAutocomplete
                               id="project"
                               name="project"
@@ -8401,11 +9997,19 @@ const Editemployee = () => {
                               variant="outlined"
                               size="small"
                               value={values.project}
-                              onChange={(newValue) => setFieldValue("project", newValue)}
+                              onChange={(newValue) =>
+                                setFieldValue("project", newValue)
+                              }
                               error={!!touched.project && !!errors.project}
                               helperText={touched.project && errors.project}
                               url={`${listViewurl}?data=${JSON.stringify({
-                                Query: { AccessID: "2054", ScreenName: "Project", VerticalLicense: Subscriptionlastthree, Filter: `parentID='${CompanyID}'`, Any: "" },
+                                Query: {
+                                  AccessID: "2054",
+                                  ScreenName: "Project",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID='${CompanyID}'`,
+                                  Any: "",
+                                },
                               })}`}
                             />
 
@@ -8421,24 +10025,53 @@ const Editemployee = () => {
                               onBlur={handleBlur}
                               onChange={handleChange}
                             >
-                              <MenuItem value="Project">{getBusinessCaption("Project", "Project")}</MenuItem>
+                              <MenuItem value="Project">
+                                {getBusinessCaption("Project", "Project")}
+                              </MenuItem>
                               <MenuItem value="Marketing">Marketing</MenuItem>
                             </TextField>
                           </Box>
 
                           <Box display="flex" flexWrap="wrap" gap={3}>
                             <FormControlLabel
-                              control={<Field type="checkbox" name="Onsitedateflag" id="Onsitedateflag" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="Onsitedateflag"
+                                  id="Onsitedateflag"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
                               label="Allow Backlog Data Entry"
                             />
                             {!isStudentClassification && (
                               <FormControlLabel
-                                control={<Field type="checkbox" name="Geninvoice" id="Geninvoice" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                                control={
+                                  <Field
+                                    type="checkbox"
+                                    name="Geninvoice"
+                                    id="Geninvoice"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                  />
+                                }
                                 label="Generate Invoice"
                               />
                             )}
                             <FormControlLabel
-                              control={<Field type="checkbox" name="Essaccess" id="Essaccess" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="Essaccess"
+                                  id="Essaccess"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
                               label="Self Service Access"
                             />
                           </Box>
@@ -8446,18 +10079,51 @@ const Editemployee = () => {
 
                         {/* ----- SHIFT DETAILS CARD ----- */}
                         {is003Subscription === false && (
-                          <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                            <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                          <Box
+                            sx={{
+                              backgroundColor: "#F9FAFB",
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              p: 2.5,
+                              mb: 2,
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              fontWeight={700}
+                              color="text.secondary"
+                              mb={2}
+                            >
                               Shift Details
                             </Typography>
 
-                            <Box display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={3}>
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                              gap={3}
+                            >
                               {/* Shift 1 */}
-                              <Box display="flex" flexDirection="column" gap={2}>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                gap={2}
+                              >
                                 <CheckinAutocomplete
                                   id="shift"
                                   name="shift"
-                                  label={<span>Shift 1<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+                                  label={
+                                    <span>
+                                      Shift 1
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "20px",
+                                        }}
+                                      >
+                                        *
+                                      </span>
+                                    </span>
+                                  }
                                   variant="outlined"
                                   size="small"
                                   value={values.shift}
@@ -8465,16 +10131,43 @@ const Editemployee = () => {
                                   helperText={touched.shift && errors.shift}
                                   onChange={(newValue) => {
                                     setFieldValue("shift", newValue);
-                                    setFieldValue("Monday", newValue.Monday === "Y");
-                                    setFieldValue("Tuesday", newValue.Tuesday === "Y");
-                                    setFieldValue("Wednesday", newValue.Wednesday === "Y");
-                                    setFieldValue("Thursday", newValue.Thursday === "Y");
-                                    setFieldValue("Friday", newValue.Friday === "Y");
-                                    setFieldValue("Saturday", newValue.Saturday === "Y");
-                                    setFieldValue("Sunday", newValue.Sunday === "Y");
+                                    setFieldValue(
+                                      "Monday",
+                                      newValue.Monday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Tuesday",
+                                      newValue.Tuesday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Wednesday",
+                                      newValue.Wednesday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Thursday",
+                                      newValue.Thursday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Friday",
+                                      newValue.Friday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Saturday",
+                                      newValue.Saturday === "Y",
+                                    );
+                                    setFieldValue(
+                                      "Sunday",
+                                      newValue.Sunday === "Y",
+                                    );
                                   }}
                                   url={`${listViewurl}?data=${JSON.stringify({
-                                    Query: { AccessID: "2108", ScreenName: "Shift", VerticalLicense: Subscriptionlastthree, Filter: `CompanyID='${CompanyID}'`, Any: "" },
+                                    Query: {
+                                      AccessID: "2108",
+                                      ScreenName: "Shift",
+                                      VerticalLicense: Subscriptionlastthree,
+                                      Filter: `CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
                                   })}`}
                                 />
                                 <TextField
@@ -8484,7 +10177,10 @@ const Editemployee = () => {
                                   type="time"
                                   id="checkin"
                                   name="checkin"
-                                  value={values.shift?.ShiftStartTime || values.checkin}
+                                  value={
+                                    values.shift?.ShiftStartTime ||
+                                    values.checkin
+                                  }
                                   onBlur={handleBlur}
                                   onChange={handleChange}
                                   label="Shift Start Time 1"
@@ -8497,7 +10193,10 @@ const Editemployee = () => {
                                   type="time"
                                   id="checkout"
                                   name="checkout"
-                                  value={values.shift?.ShiftendTime || values.checkout}
+                                  value={
+                                    values.shift?.ShiftendTime ||
+                                    values.checkout
+                                  }
                                   onBlur={handleBlur}
                                   onChange={handleChange}
                                   label="Shift End Time 1"
@@ -8506,7 +10205,11 @@ const Editemployee = () => {
                               </Box>
 
                               {/* Shift 2 */}
-                              <Box display="flex" flexDirection="column" gap={2}>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                gap={2}
+                              >
                                 <CheckinAutocomplete
                                   id="shift2"
                                   name="shift2"
@@ -8514,9 +10217,17 @@ const Editemployee = () => {
                                   variant="outlined"
                                   size="small"
                                   value={values.shift2}
-                                  onChange={(newValue) => setFieldValue("shift2", newValue)}
+                                  onChange={(newValue) =>
+                                    setFieldValue("shift2", newValue)
+                                  }
                                   url={`${listViewurl}?data=${JSON.stringify({
-                                    Query: { AccessID: "2108", ScreenName: "Shift", VerticalLicense: Subscriptionlastthree, Filter: `CompanyID='${CompanyID}'`, Any: "" },
+                                    Query: {
+                                      AccessID: "2108",
+                                      ScreenName: "Shift",
+                                      VerticalLicense: Subscriptionlastthree,
+                                      Filter: `CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
                                   })}`}
                                 />
                                 <TextField
@@ -8526,7 +10237,10 @@ const Editemployee = () => {
                                   type="time"
                                   id="checkin2"
                                   name="checkin2"
-                                  value={values.shift2?.ShiftStartTime || values.checkin2}
+                                  value={
+                                    values.shift2?.ShiftStartTime ||
+                                    values.checkin2
+                                  }
                                   onBlur={handleBlur}
                                   onChange={handleChange}
                                   label="Shift Start Time 2"
@@ -8539,7 +10253,10 @@ const Editemployee = () => {
                                   type="time"
                                   id="checkout2"
                                   name="checkout2"
-                                  value={values.shift2?.ShiftendTime || values.checkout2}
+                                  value={
+                                    values.shift2?.ShiftendTime ||
+                                    values.checkout2
+                                  }
                                   onBlur={handleBlur}
                                   onChange={handleChange}
                                   label="Shift End Time 2"
@@ -8551,15 +10268,45 @@ const Editemployee = () => {
                         )}
 
                         {/* ----- WEEK OFF CARD ----- */}
-                        <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                        <Box
+                          sx={{
+                            backgroundColor: "#F9FAFB",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            p: 2.5,
+                            mb: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Week Off
                           </Typography>
                           <Box display="flex" flexWrap="wrap" gap={3}>
-                            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+                            {[
+                              "Monday",
+                              "Tuesday",
+                              "Wednesday",
+                              "Thursday",
+                              "Friday",
+                              "Saturday",
+                              "Sunday",
+                            ].map((day) => (
                               <FormControlLabel
                                 key={day}
-                                control={<Field type="checkbox" name={day} id={day} onChange={handleChange} onBlur={handleBlur} as={Checkbox} />}
+                                control={
+                                  <Field
+                                    type="checkbox"
+                                    name={day}
+                                    id={day}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                  />
+                                }
                                 label={day}
                               />
                             ))}
@@ -8567,37 +10314,163 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ----- CHECKIN & CHECKOUT OPTIONS CARD ----- */}
-                        <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                        <Box
+                          sx={{
+                            backgroundColor: "#F9FAFB",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            p: 2.5,
+                            mb: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Checkin & Checkout Options
                           </Typography>
                           <Box display="flex" flexWrap="wrap" gap={3}>
-                            <FormControlLabel control={<Field type="checkbox" name="biometric" id="biometric" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Biometric" />
-                            <FormControlLabel control={<Field type="checkbox" name="mobile" id="mobile" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Mobile Geofencing" />
-                            <FormControlLabel control={<Field type="checkbox" name="cloud" id="cloud" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Cloud Application" />
-                            <FormControlLabel control={<Field type="checkbox" name="managermanual" id="managermanual" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Manager Manual" />
-                            <FormControlLabel control={<Field type="checkbox" name="defaultpresent" id="defaultpresent" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Default Present" />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="biometric"
+                                  id="biometric"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Biometric"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="mobile"
+                                  id="mobile"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Mobile Geofencing"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="cloud"
+                                  id="cloud"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Cloud Application"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="managermanual"
+                                  id="managermanual"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Manager Manual"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="defaultpresent"
+                                  id="defaultpresent"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Default Present"
+                            />
                           </Box>
                         </Box>
 
                         {/* ----- MAIL CONFIRMATION CARD ----- */}
-                        <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5, mb: 2 }}>
-                          <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                        <Box
+                          sx={{
+                            backgroundColor: "#F9FAFB",
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            p: 2.5,
+                            mb: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            color="text.secondary"
+                            mb={2}
+                          >
                             Mail Confirmation
                           </Typography>
                           <Box display="flex" flexWrap="wrap" gap={3}>
-                            <FormControlLabel control={<Field type="checkbox" name="Taskmailescalation" id="Taskmailescalation" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Task Mail Escalation" />
-                            <FormControlLabel control={<Field type="checkbox" name="Requestmailescalation" id="Requestmailescalation" onChange={handleChange} onBlur={handleBlur} as={Checkbox} />} label="Request Mail Escalation" />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="Taskmailescalation"
+                                  id="Taskmailescalation"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Task Mail Escalation"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="Requestmailescalation"
+                                  id="Requestmailescalation"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="Request Mail Escalation"
+                            />
                           </Box>
                         </Box>
 
                         {/* ----- COSTING CARD ----- */}
                         {is003Subscription === false && (
-                          <Box sx={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 2, p: 2.5 }}>
-                            <Typography variant="body2" fontWeight={700} color="text.secondary" mb={2}>
+                          <Box
+                            sx={{
+                              backgroundColor: "#F9FAFB",
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              p: 2.5,
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              fontWeight={700}
+                              color="text.secondary"
+                              mb={2}
+                            >
                               Costing
                             </Typography>
-                            <Box display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2}>
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                              gap={2}
+                            >
                               <TextField
                                 fullWidth
                                 variant="outlined"
@@ -8609,8 +10482,13 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Cost to Company"
-                                error={!!touched.costofcompany && !!errors.costofcompany}
-                                helperText={touched.costofcompany && errors.costofcompany}
+                                error={
+                                  !!touched.costofcompany &&
+                                  !!errors.costofcompany
+                                }
+                                helperText={
+                                  touched.costofcompany && errors.costofcompany
+                                }
                                 inputProps={{ style: { textAlign: "right" } }}
                               />
                               <TextField
@@ -8624,8 +10502,14 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Cost to Budget"
-                                error={!!touched.costofemployee && !!errors.costofemployee}
-                                helperText={touched.costofemployee && errors.costofemployee}
+                                error={
+                                  !!touched.costofemployee &&
+                                  !!errors.costofemployee
+                                }
+                                helperText={
+                                  touched.costofemployee &&
+                                  errors.costofemployee
+                                }
                                 inputProps={{ style: { textAlign: "right" } }}
                               />
                               <TextField
@@ -8661,64 +10545,94 @@ const Editemployee = () => {
                         )}
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
-                        <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-
-
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          mt={3}
+                          gap={1.5}
+                        >
                           <Button
-                            color="secondary"
+                           
                             variant="contained"
                             type="submit"
                             disabled={isLoading}
                             sx={{
-                              textTransform: "none",
-                              borderRadius: 2,
-                              color: "#fff",
-                              px: 4,
-                              bgcolor: "#0D9488",
-                              "&:hover": {
-                                bgcolor: "#0F766E",
-                              },
-                            }}
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                           >
                             Save
                           </Button>
 
                           <Button
                             type="reset"
+                            color="warning"
                             variant="outlined"
                             onClick={() => setScreen(0)}
                             sx={{
-                              px: 4,
-                              borderRadius: 2,
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                 color: "#fff",
+                                "&:hover": { bgcolor: "#EA580C" },
                               color: "#fff",
-                              textTransform: "none",
-                              bgcolor: "#F97316",
-                              "&:hover": {
-                                bgcolor: "#EA580C",
-                              },
-                            }}
-
+                              }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
 
                         {/* Popups - unchanged */}
-                        <Popup title="Location" openPopup={openLOCATIONPopup} setOpenPopup={setOpenLOCATIONPopup}>
-                          <Listviewpopup accessID="2051" screenName="Location" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                        <Popup
+                          title="Location"
+                          openPopup={openLOCATIONPopup}
+                          setOpenPopup={setOpenLOCATIONPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2051"
+                            screenName="Location"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
                         </Popup>
-                        <Popup title="Gate" openPopup={openGATEPopup} setOpenPopup={setOpenGATEPopup}>
-                          <Listviewpopup accessID="2050" screenName="Gate" filterName={"parentID"} childToParent={childToParent} />
+                        <Popup
+                          title="Gate"
+                          openPopup={openGATEPopup}
+                          setOpenPopup={setOpenGATEPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2050"
+                            screenName="Gate"
+                            filterName={"parentID"}
+                            childToParent={childToParent}
+                          />
                         </Popup>
-                        <Popup title="Designation" openPopup={opendesignPopup} setOpenPopup={setOpendesignPopup}>
-                          <Listviewpopup accessID="2047" screenName="Designation" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                        <Popup
+                          title="Designation"
+                          openPopup={opendesignPopup}
+                          setOpenPopup={setOpendesignPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2047"
+                            screenName="Designation"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
                         </Popup>
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
           ) : (
             false
@@ -8726,7 +10640,13 @@ const Editemployee = () => {
 
           {/* Resignation */}
           {show == "22" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -8740,27 +10660,36 @@ const Editemployee = () => {
 
               {/* MAIN FORM */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 3,
-                  p: 3
-                }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   {/* HEADER */}
                   <Box display="flex" alignItems="center" gap={1} mb={2}>
-                    <Box sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "#FED7AA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#FED7AA",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       <Typography sx={{ fontSize: 20 }}>📤</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#1F2937"
+                      >
                         Resignation
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -8792,12 +10721,22 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                         }}
                       >
                         {/* Code, Description & Photo */}
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }} gap={2} mt={2} alignItems="start">
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+                          gap={2}
+                          mt={2}
+                          alignItems="start"
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -8829,16 +10768,24 @@ const Editemployee = () => {
                             userimg,
                             isImgChanged,
                             imgUpload,
-                            "Profile Photo"
+                            "Profile Photo",
                           )}
                         </Box>
 
                         {/* Resignation Details Section */}
-                        <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                        >
                           Resignation Details
                         </Typography>
 
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -8850,8 +10797,13 @@ const Editemployee = () => {
                             value={values.resignationdate}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.resignationdate && !!errors.resignationdate}
-                            helperText={touched.resignationdate && errors.resignationdate}
+                            error={
+                              !!touched.resignationdate &&
+                              !!errors.resignationdate
+                            }
+                            helperText={
+                              touched.resignationdate && errors.resignationdate
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
 
@@ -8866,19 +10818,31 @@ const Editemployee = () => {
                             value={values.resignationnote}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.resignationnote && !!errors.resignationnote}
-                            helperText={touched.resignationnote && errors.resignationnote}
+                            error={
+                              !!touched.resignationnote &&
+                              !!errors.resignationnote
+                            }
+                            helperText={
+                              touched.resignationnote && errors.resignationnote
+                            }
                             multiline
-
                           />
                         </Box>
 
                         {/* Exit Interview Section */}
-                        <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                        >
                           Exit Interview
                         </Typography>
 
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                        >
                           <CheckinAutocomplete
                             name="exitinterviewby"
                             label="Exit Interview By"
@@ -8888,8 +10852,13 @@ const Editemployee = () => {
                             onChange={(newValue) => {
                               setFieldValue("exitinterviewby", newValue);
                             }}
-                            error={!!touched.exitinterviewby && !!errors.exitinterviewby}
-                            helperText={touched.exitinterviewby && errors.exitinterviewby}
+                            error={
+                              !!touched.exitinterviewby &&
+                              !!errors.exitinterviewby
+                            }
+                            helperText={
+                              touched.exitinterviewby && errors.exitinterviewby
+                            }
                             url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                           />
 
@@ -8904,8 +10873,14 @@ const Editemployee = () => {
                             value={values.exitinterviewdate}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.exitinterviewdate && !!errors.exitinterviewdate}
-                            helperText={touched.exitinterviewdate && errors.exitinterviewdate}
+                            error={
+                              !!touched.exitinterviewdate &&
+                              !!errors.exitinterviewdate
+                            }
+                            helperText={
+                              touched.exitinterviewdate &&
+                              errors.exitinterviewdate
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
 
@@ -8920,19 +10895,33 @@ const Editemployee = () => {
                             value={values.exitinterviewcomments}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.exitinterviewcomments && !!errors.exitinterviewcomments}
-                            helperText={touched.exitinterviewcomments && errors.exitinterviewcomments}
+                            error={
+                              !!touched.exitinterviewcomments &&
+                              !!errors.exitinterviewcomments
+                            }
+                            helperText={
+                              touched.exitinterviewcomments &&
+                              errors.exitinterviewcomments
+                            }
                             multiline
                             rows={2}
                           />
                         </Box>
 
                         {/* Relieving Details Section */}
-                        <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                        >
                           Relieving Details
                         </Typography>
 
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }} gap={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+                          gap={2}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -8944,8 +10933,14 @@ const Editemployee = () => {
                             value={values.acceptedrelievingdate}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.acceptedrelievingdate && !!errors.acceptedrelievingdate}
-                            helperText={touched.acceptedrelievingdate && errors.acceptedrelievingdate}
+                            error={
+                              !!touched.acceptedrelievingdate &&
+                              !!errors.acceptedrelievingdate
+                            }
+                            helperText={
+                              touched.acceptedrelievingdate &&
+                              errors.acceptedrelievingdate
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
 
@@ -8960,8 +10955,14 @@ const Editemployee = () => {
                             value={values.actualrelievingdate}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.actualrelievingdate && !!errors.actualrelievingdate}
-                            helperText={touched.actualrelievingdate && errors.actualrelievingdate}
+                            error={
+                              !!touched.actualrelievingdate &&
+                              !!errors.actualrelievingdate
+                            }
+                            helperText={
+                              touched.actualrelievingdate &&
+                              errors.actualrelievingdate
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
 
@@ -8976,8 +10977,14 @@ const Editemployee = () => {
                             value={values.dateofsettlement}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.dateofsettlement && !!errors.dateofsettlement}
-                            helperText={touched.dateofsettlement && errors.dateofsettlement}
+                            error={
+                              !!touched.dateofsettlement &&
+                              !!errors.dateofsettlement
+                            }
+                            helperText={
+                              touched.dateofsettlement &&
+                              errors.dateofsettlement
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
                         </Box>
@@ -8996,7 +11003,12 @@ const Editemployee = () => {
                         </Box>
 
                         {/* Action Buttons */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          gap={2}
+                          mt={4}
+                        >
                           <Button
                             color="secondary"
                             variant="contained"
@@ -9031,7 +11043,7 @@ const Editemployee = () => {
                               },
                             }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -9039,9 +11051,6 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
-
-
             </Box>
           ) : (
             false
@@ -9049,8 +11058,13 @@ const Editemployee = () => {
 
           {/* List of Documents */}
           {show == "6" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -9063,8 +11077,13 @@ const Editemployee = () => {
               )}
 
               {/* RIGHT SIDE */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 {/* ================= CARD ================= */}
                 <Paper
                   elevation={0}
@@ -9072,10 +11091,9 @@ const Editemployee = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
-
                   <Formik
                     initialValues={AttachmentInitialValues}
                     validationSchema={validationSchema5}
@@ -9083,7 +11101,8 @@ const Editemployee = () => {
                     onSubmit={(values, { resetForm, setFieldValue }) => {
                       if (
                         values.renewal &&
-                        (!values.RenewalDate || values.RenewalDate === "00-00-0000")
+                        (!values.RenewalDate ||
+                          values.RenewalDate === "00-00-0000")
                       ) {
                         toast.error("Renewal Date is Required");
                         return;
@@ -9107,39 +11126,64 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenDocModal(true);
                         }}
                       >
-
                         {/* ================= HEADER ================= */}
-                        <Box display="flex" alignItems="center" gap={1} mb={2}>
+                     {/* ----- CARD HEADER ----- */}
+                        <Box sx={{ p: 1 }}>
                           <Box
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                              backgroundColor: "#E0E7FF",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
                           >
-                            <Typography sx={{ fontSize: 16 }}>📎</Typography>
-                          </Box>
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>📎</Typography>
+                     </Box>
+                            <Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
                             Document Attachment
                           </Typography>
-                        </Box>
+                    
 
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                      
+                        >
                           Manage employee documents and certificates
                         </Typography>
-
+    </Box>
+        </Box>
                         {/* ================= CODE + NAME ================= */}
-                        <Box display="flex" flexDirection="column" gap={2} mb={3}>
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          gap={2}
+                          mb={3}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -9162,33 +11206,102 @@ const Editemployee = () => {
                             InputProps={{ readOnly: true }}
                           />
                         </Box>
-
+    </Box>
                         {/* ================= TABLE ================= */}
-                        <Box sx={{ height: "45vh", mb: 3 }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                            <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                        <Box sx={{ 
+                          height: "50vh", 
+                      
+                            "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
-                            }}
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+
+                         }}>
+                          <DataGrid
+                         sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             loading={exploreLoading}
@@ -9197,7 +11310,9 @@ const Editemployee = () => {
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
                             pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
                             rowsPerPageOptions={[5, 10, 20]}
                             pagination
                             onCellClick={(params) => {
@@ -9209,12 +11324,21 @@ const Editemployee = () => {
                               });
                               setOpenDocModal(true);
                               setFieldValue("code", params.row.code || "");
-                              setFieldValue("description", params.row.description || "");
+                              setFieldValue(
+                                "description",
+                                params.row.description || "",
+                              );
 
-                              setFieldValue("LoaDescription", params.row.LoaDescription || "");
+                              setFieldValue(
+                                "LoaDescription",
+                                params.row.LoaDescription || "",
+                              );
 
                               //  CATEGORY FIX
-                              setFieldValue("category", params.row.category ?? "");
+                              setFieldValue(
+                                "category",
+                                params.row.category ?? "",
+                              );
 
                               //  PERSONAL / RENEWAL FIX (BOOLEAN SAFE)
                               setFieldValue("personal", !!params.row.personal);
@@ -9223,12 +11347,16 @@ const Editemployee = () => {
                               //  DATE FIX (IMPORTANT)
                               setFieldValue(
                                 "RenewalDate",
-                                params.row.RenewalDate && params.row.RenewalDate !== "00-00-0000"
+                                params.row.RenewalDate &&
+                                  params.row.RenewalDate !== "00-00-0000"
                                   ? params.row.RenewalDate.split("T")[0]
-                                  : ""
+                                  : "",
                               );
 
-                              setFieldValue("Attachment", params.row.Attachment || "");
+                              setFieldValue(
+                                "Attachment",
+                                params.row.Attachment || "",
+                              );
                             }}
                             components={{ Toolbar: Employee }}
                             loading={exploreLoading}
@@ -9237,7 +11365,7 @@ const Editemployee = () => {
                             }
                           />
                         </Box>
-
+</Box>
                         {/* ================= OTHER FIELDS ================= */}
                         <Dialog
                           open={openDocModal}
@@ -9247,8 +11375,8 @@ const Editemployee = () => {
                           PaperProps={{
                             sx: {
                               borderRadius: 2,
-                              overflow: "hidden"
-                            }
+                              overflow: "hidden",
+                            },
                           }}
                         >
                           <DialogTitle sx={{ borderBottom: "1px solid #eee" }}>
@@ -9257,16 +11385,14 @@ const Editemployee = () => {
 
                           {/* ✅ IMPORTANT: keep content inside Form */}
                           <form onSubmit={handleSubmit}>
-
                             <DialogContent
                               sx={{
                                 pt: 3,
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 2
+                                gap: 2,
                               }}
                             >
-
                               {/* DESCRIPTION (FIXED EDIT ISSUE) */}
                               <TextField
                                 fullWidth
@@ -9285,7 +11411,8 @@ const Editemployee = () => {
                                 size="small"
                                 label={
                                   <>
-                                    Category <span style={{ color: "red" }}>*</span>
+                                    Category{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 name="category"
@@ -9306,12 +11433,20 @@ const Editemployee = () => {
                               {/* CHECKBOX */}
                               <Box display="flex" gap={3}>
                                 <Box display="flex" alignItems="center">
-                                  <Field type="checkbox" name="personal" as={Checkbox} />
+                                  <Field
+                                    type="checkbox"
+                                    name="personal"
+                                    as={Checkbox}
+                                  />
                                   <FormLabel>Personal</FormLabel>
                                 </Box>
 
                                 <Box display="flex" alignItems="center">
-                                  <Field type="checkbox" name="renewal" as={Checkbox} />
+                                  <Field
+                                    type="checkbox"
+                                    name="renewal"
+                                    as={Checkbox}
+                                  />
                                   <FormLabel>Renewal Required</FormLabel>
                                 </Box>
                               </Box>
@@ -9325,10 +11460,11 @@ const Editemployee = () => {
                                 InputLabelProps={{ shrink: true }}
                                 name="RenewalDate"
                                 value={values.RenewalDate || ""}
-                                onChange={(e) => setFieldValue("RenewalDate", e.target.value)}
+                                onChange={(e) =>
+                                  setFieldValue("RenewalDate", e.target.value)
+                                }
                                 disabled={!values.renewal}
                               />
-
                             </DialogContent>
 
                             {/* FILE ACTIONS + BUTTONS INSIDE FORM (FIX SAVE ISSUE) */}
@@ -9338,10 +11474,9 @@ const Editemployee = () => {
                                 display: "flex",
                                 justifyContent: "space-between",
                                 px: 2,
-                                py: 1.5
+                                py: 1.5,
                               }}
                             >
-
                               {/* LEFT SIDE */}
                               <Box display="flex" gap={1}>
                                 <IconButton component="label" color="warning">
@@ -9388,7 +11523,11 @@ const Editemployee = () => {
                                   variant="contained"
                                   color="error"
                                   onClick={() =>
-                                    FnAttachment(values, resetForm, "harddelete")
+                                    FnAttachment(
+                                      values,
+                                      resetForm,
+                                      "harddelete",
+                                    )
                                   }
                                   sx={{
                                     px: 4,
@@ -9399,7 +11538,8 @@ const Editemployee = () => {
                                     boxShadow: "none",
                                     "&:hover": {
                                       bgcolor: "#B91C1C",
-                                      boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                      boxShadow:
+                                        "0 4px 10px rgba(220,38,38,0.25)",
                                     },
                                     "&:active": {
                                       bgcolor: "#991B1B",
@@ -9424,12 +11564,10 @@ const Editemployee = () => {
                                     },
                                   }}
                                 >
-                                  Cancel
+                                  Back
                                 </Button>
                               </Box>
-
                             </DialogActions>
-
                           </form>
                         </Dialog>
 
@@ -9482,16 +11620,15 @@ const Editemployee = () => {
                           </Button>
 
                         </Box> */}
-
                       </form>
                     )}
                   </Formik>
                 </Paper>
-
               </Box>
-
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {show == "7" ? (
             <Paper elevation={3} sx={{ margin: "10px" }}>
@@ -9576,7 +11713,7 @@ const Editemployee = () => {
                           userimg,
                           isImgChanged,
                           imgUpload,
-                          "Profile Photo"
+                          "Profile Photo",
                         )}
                       </Stack>
 
@@ -9666,10 +11803,12 @@ const Editemployee = () => {
                         />
                       </Box>
 
-                      <FormControl sx={{
-                        gap: formGap,
-                        marginTop: "20px"
-                      }}>
+                      <FormControl
+                        sx={{
+                          gap: formGap,
+                          marginTop: "20px",
+                        }}
+                      >
                         <TextField
                           fullWidth
                           variant="standard"
@@ -9737,10 +11876,7 @@ const Editemployee = () => {
                           focused
                           multiline
                           inputProps={{ maxLength: 90 }}
-
                         />
-
-
 
                         <TextField
                           fullWidth
@@ -9811,8 +11947,8 @@ const Editemployee = () => {
                           //inputProps={{ maxLength: 90 }}
                           InputProps={{
                             inputProps: {
-                              style: { maxLength: 90, textAlign: "right" }
-                            }
+                              style: { maxLength: 90, textAlign: "right" },
+                            },
                           }}
                         />
                         <TextField
@@ -9838,7 +11974,8 @@ const Editemployee = () => {
                             !!errors.PurchaseReference
                           }
                           helperText={
-                            touched.PurchaseReference && errors.PurchaseReference
+                            touched.PurchaseReference &&
+                            errors.PurchaseReference
                           }
                           sx={{
                             //gridColumn: "span 2",
@@ -9994,8 +12131,13 @@ const Editemployee = () => {
 
           {/* Item Services */}
           {show == "14" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -10008,8 +12150,13 @@ const Editemployee = () => {
               )}
 
               {/* RIGHT SECTION */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 {/* ================= MAIN CARD ================= */}
                 <Paper
                   elevation={0}
@@ -10017,10 +12164,9 @@ const Editemployee = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
-
                   <Formik
                     initialValues={itemservicesInitialValue}
                     enableReinitialize={true}
@@ -10048,25 +12194,55 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenItemServiceModal(true);
                         }}
                       >
-
                         {/* ================= HEADER ================= */}
-                        <Box mb={2}>
-                          <Typography variant="h6" fontWeight={700}>
-                            Item Services
+                       
+                         <Box
+                        display="flex"
+  alignItems="flex-start"
+  gap={1.5}
+  mb={1}
+                        >
+                          <Box
+                            sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EEF2FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+    }}
+                          >
+                            <Typography sx={{ fontSize: 18 }}>📋</Typography>
+                          </Box>
+                      <Box>
+    <Typography
+    variant="subtitle1"
+      fontWeight={700}
+      sx={{ color: "#0D94885", lineHeight: 1.2 }}
+    >
+                           Item Services
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                      
+
+                       <Typography variant="body2" color="text.secondary">
                             Manage service requests, vendor and item tracking
                           </Typography>
-                        </Box>
+                          </Box>
+  </Box>
 
                         {/* ================= CODE + NAME ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
-
                           {/* LEFT: fields */}
                           <Box
                             flex={1}
@@ -10102,38 +12278,108 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
-
                           </Box>
                         </Box>
 
                         {/* ================= DATA GRID ================= */}
-                        <Box sx={{ height: ItemdataGridHeight, mt: 3 }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                          <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                      
+                        <Box sx={{ 
+                          height: ItemdataGridHeight,
+
+                         "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
+                        
+                        >
+                          <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             disableSelectionOnClick
@@ -10175,7 +12421,7 @@ const Editemployee = () => {
                             }}
                           />
                         </Box>
-
+</Box>
                         {/* ================= ITEM SERVICE POPUP ================= */}
                         <Dialog
                           open={openItemServiceModal}
@@ -10183,9 +12429,7 @@ const Editemployee = () => {
                           fullWidth
                           maxWidth="md"
                         >
-                          <DialogTitle>
-                            Item Service Details
-                          </DialogTitle>
+                          <DialogTitle>Item Service Details</DialogTitle>
 
                           <DialogContent
                             dividers
@@ -10193,13 +12437,7 @@ const Editemployee = () => {
                               pt: "20px !important",
                             }}
                           >
-
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap={2}
-                            >
-
+                            <Box display="flex" flexDirection="column" gap={2}>
                               <ItemsLookup
                                 name="items"
                                 label={
@@ -10271,8 +12509,12 @@ const Editemployee = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 InputLabelProps={{ shrink: true }}
-                                error={!!touched.servicedate && !!errors.servicedate}
-                                helperText={touched.servicedate && errors.servicedate}
+                                error={
+                                  !!touched.servicedate && !!errors.servicedate
+                                }
+                                helperText={
+                                  touched.servicedate && errors.servicedate
+                                }
                               />
 
                               <TextField
@@ -10282,18 +12524,22 @@ const Editemployee = () => {
                                 name="complaints"
                                 label={
                                   <>
-                                    Complaints <span style={{ color: "red" }}>*</span>
+                                    Complaints{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.complaints}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={!!touched.complaints && !!errors.complaints}
-                                helperText={touched.complaints && errors.complaints}
+                                error={
+                                  !!touched.complaints && !!errors.complaints
+                                }
+                                helperText={
+                                  touched.complaints && errors.complaints
+                                }
                               />
 
                               <Grid container spacing={2}>
-
                                 <Grid item xs={6}>
                                   <TextField
                                     fullWidth
@@ -10309,8 +12555,13 @@ const Editemployee = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     InputLabelProps={{ shrink: true }}
-                                    error={!!touched.returndate && !!errors.returndate}
-                                    helperText={touched.returndate && errors.returndate}
+                                    error={
+                                      !!touched.returndate &&
+                                      !!errors.returndate
+                                    }
+                                    helperText={
+                                      touched.returndate && errors.returndate
+                                    }
                                   />
                                 </Grid>
 
@@ -10333,11 +12584,13 @@ const Editemployee = () => {
                                       }
                                     }}
                                     onBlur={(e) => {
-
                                       let val = e.target.value;
 
                                       if (val === "" || val === ".") {
-                                        setFieldValue("tentativecharge", "0.00");
+                                        setFieldValue(
+                                          "tentativecharge",
+                                          "0.00",
+                                        );
                                         return;
                                       }
 
@@ -10346,10 +12599,9 @@ const Editemployee = () => {
                                       if (!isNaN(num)) {
                                         setFieldValue(
                                           "tentativecharge",
-                                          num.toFixed(2)
+                                          num.toFixed(2),
                                         );
                                       }
-
                                     }}
                                     error={
                                       !!touched.tentativecharge &&
@@ -10368,13 +12620,11 @@ const Editemployee = () => {
                                     }}
                                   />
                                 </Grid>
-
                               </Grid>
 
                               {/* ================= EDIT MODE FIELDS ================= */}
                               {show == "14" && funMode === "E" && (
                                 <>
-
                                   <TextField
                                     fullWidth
                                     type="date"
@@ -10396,7 +12646,6 @@ const Editemployee = () => {
                                   />
 
                                   <Grid container spacing={2}>
-
                                     <Grid item xs={6}>
                                       <TextField
                                         fullWidth
@@ -10427,20 +12676,20 @@ const Editemployee = () => {
                                         label="Actual Charges"
                                         value={values.actualcharges}
                                         onChange={(e) => {
-
                                           const val = e.target.value;
 
                                           if (/^\d*\.?\d*$/.test(val)) {
                                             setFieldValue("actualcharges", val);
                                           }
-
                                         }}
                                         onBlur={(e) => {
-
                                           let val = e.target.value;
 
                                           if (val === "" || val === ".") {
-                                            setFieldValue("actualcharges", "0.00");
+                                            setFieldValue(
+                                              "actualcharges",
+                                              "0.00",
+                                            );
                                             return;
                                           }
 
@@ -10449,10 +12698,9 @@ const Editemployee = () => {
                                           if (!isNaN(num)) {
                                             setFieldValue(
                                               "actualcharges",
-                                              num.toFixed(2)
+                                              num.toFixed(2),
                                             );
                                           }
-
                                         }}
                                         error={
                                           !!touched.actualcharges &&
@@ -10471,7 +12719,6 @@ const Editemployee = () => {
                                         }}
                                       />
                                     </Grid>
-
                                   </Grid>
 
                                   <TextField
@@ -10496,18 +12743,14 @@ const Editemployee = () => {
                                       maxLength: 90,
                                     }}
                                   />
-
                                 </>
                               )}
-
                             </Box>
-
                           </DialogContent>
 
                           {/* ================= ACTION BUTTONS ================= */}
 
                           <DialogActions>
-
                             <LoadingButton
                               loading={loading}
                               variant="contained"
@@ -10540,19 +12783,14 @@ const Editemployee = () => {
                                   cancelButtonColor: "#d33",
                                   confirmButtonText: "Confirm",
                                 }).then((result) => {
-
                                   if (result.isConfirmed) {
-
                                     empItemServicesFn(
                                       values,
                                       resetForm,
-                                      "harddelete"
+                                      "harddelete",
                                     );
-
                                   }
-
                                 });
-
                               }}
                               sx={{
                                 px: 4,
@@ -10577,7 +12815,11 @@ const Editemployee = () => {
                               color="warning"
                               variant="contained"
                               onClick={() => {
-                                selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                                selectCellRowData({
+                                  rowData: {},
+                                  mode: "A",
+                                  field: "",
+                                });
                                 resetForm();
                                 setOpenItemServiceModal(false);
                               }}
@@ -10594,9 +12836,7 @@ const Editemployee = () => {
                             >
                               Back
                             </Button>
-
                           </DialogActions>
-
                         </Dialog>
 
                         {/* ================= EXISTING POPUPS ================= */}
@@ -10628,19 +12868,25 @@ const Editemployee = () => {
                             filterValue={CompanyID}
                           />
                         </Popup>
-
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {/* Parent Form - school login */}
           {show == "15" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -10651,8 +12897,22 @@ const Editemployee = () => {
                   onToggle={() => setSectionsOpen((p) => !p)}
                 />
               )}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={ParentInitialValue}
                     validationSchema={validationSchema14}
@@ -10662,19 +12922,19 @@ const Editemployee = () => {
                         Fnsave(values);
                       }, 100);
                     }}
-                  // onSubmit={(values, actions) => {
-                  //   actions.setTouched({
-                  //     code1: true,
-                  //     name1: true,
-                  //     mobilenumber: true,
-                  //     emailid: true,
-                  //     address: true,
-                  //   });
+                    // onSubmit={(values, actions) => {
+                    //   actions.setTouched({
+                    //     code1: true,
+                    //     name1: true,
+                    //     mobilenumber: true,
+                    //     emailid: true,
+                    //     address: true,
+                    //   });
 
-                  //   if (Object.keys(actions.errors || {}).length > 0) return;
+                    //   if (Object.keys(actions.errors || {}).length > 0) return;
 
-                  //   Fnsave(values);
-                  // }}
+                    //   Fnsave(values);
+                    // }}
                   >
                     {({
                       errors,
@@ -10686,11 +12946,15 @@ const Editemployee = () => {
                       handleSubmit,
                       setFieldValue,
                     }) => (
-                      <form
-                        onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit}>
                         {/* {JSON.stringify(errors)} */}
 
-                        <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1.5}
+                          mb={3}
+                        >
                           <Box
                             sx={{
                               width: 36,
@@ -10715,10 +12979,7 @@ const Editemployee = () => {
                               Parents Details
                             </Typography>
 
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                            >
+                            <Typography variant="body2" color="text.secondary">
                               Parent information and location details
                             </Typography>
                           </Box>
@@ -10758,7 +13019,7 @@ const Editemployee = () => {
                                 },
                               }}
                               InputProps={{ readOnly: true }}
-                            // autoFocus
+                              // autoFocus
                             />
                           ) : (
                             <TextField
@@ -10768,7 +13029,9 @@ const Editemployee = () => {
                               label={
                                 <>
                                   Code
-                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
                                     *
                                   </span>
                                 </>
@@ -10797,7 +13060,9 @@ const Editemployee = () => {
                             label={
                               <>
                                 Name
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -10825,7 +13090,9 @@ const Editemployee = () => {
                             label={
                               <>
                                 Contact Mobile Number
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -10841,14 +13108,18 @@ const Editemployee = () => {
                                 handleChange(e);
                               }
                             }}
-                            error={!!touched.mobilenumber && !!errors.mobilenumber}
-                            helperText={touched.mobilenumber && errors.mobilenumber}
+                            error={
+                              !!touched.mobilenumber && !!errors.mobilenumber
+                            }
+                            helperText={
+                              touched.mobilenumber && errors.mobilenumber
+                            }
                             inputProps={{ maxLength: 10 }}
                             sx={{ backgroundColor: "#ffffff" }}
                             InputProps={{
                               inputProps: {
-                                style: { textAlign: 'left' }
-                              }
+                                style: { textAlign: "left" },
+                              },
                             }}
                           />
                           <TextField
@@ -10859,7 +13130,9 @@ const Editemployee = () => {
                             label={
                               <>
                                 Email ID
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -10877,7 +13150,7 @@ const Editemployee = () => {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                               },
                             }}
-                          // autoFocus
+                            // autoFocus
                           />
 
                           <TextField
@@ -10888,7 +13161,9 @@ const Editemployee = () => {
                             label={
                               <>
                                 Address
-                                <span style={{ color: "red", fontSize: "20px" }}>
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
                                   *
                                 </span>
                               </>
@@ -10901,7 +13176,10 @@ const Editemployee = () => {
                             value={values.address}
                             onBlur={handleBlur}
                             onChange={(e) => {
-                              const value = e.target.value.replace(/\s{2,}/g, " "); // avoid double spaces
+                              const value = e.target.value.replace(
+                                /\s{2,}/g,
+                                " ",
+                              ); // avoid double spaces
                               setFieldValue("address", value);
                             }}
                             error={!!touched.address && !!errors.address}
@@ -10937,7 +13215,6 @@ const Editemployee = () => {
                         helperText={touched.locality && errors.locality}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"EmployeeID=${recID} AND CompanyID=${CompanyID}","Any":""}}`}
                       /> */}
-
 
                           <TextField
                             name="maplink"
@@ -10976,11 +13253,15 @@ const Editemployee = () => {
 
                           {/* panimage */}
                         </Box>
-                        <Box display="flex" justifyContent="end" padding={1} gap="20px">
-
+                        <Box
+                          display="flex"
+                          justifyContent="end"
+                          padding={1}
+                          gap="20px"
+                        >
                           {YearFlag == "true" ? (
                             <LoadingButton
-                              color="secondary"
+                              // color="secondary"
                               variant="contained"
                               type="submit"
                               loading={isLoading}
@@ -11033,7 +13314,33 @@ const Editemployee = () => {
           )}
 
           {show == "16" ? (
-            <Paper elevation={3} sx={{ margin: "10px" }}>
+              <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+              {/* LEFT: Document content */}
+              <Box flex={1} minWidth={0}>
+          <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
               <Formik
                 initialValues={parentcontactInitialValue}
                 onSubmit={(values, setSubmitting) => {
@@ -11055,6 +13362,48 @@ const Editemployee = () => {
                   setFieldValue,
                 }) => (
                   <form onSubmit={handleSubmit}>
+                      {/* ----- CARD HEADER ----- */}
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                          mb={0.5}
+                        >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 16 }}>📑</Typography>
+                          </Box>
+                          <Box>
+
+                         
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
+                            Parent Contact Details
+                          </Typography>
+                       
+
+                         <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          mb={1}
+                        
+                        >
+                          Parent contact information
+                        </Typography>
+                         </Box>
+                           </Box>
                     <Box
                       display="grid"
                       gap={formGap}
@@ -11069,27 +13418,34 @@ const Editemployee = () => {
                     >
                       {CompanyAutoCode == "Y" ? (
                         <TextField
-                          name="code"
+                         variant="outlined"
+                          size="small"
                           type="text"
                           id="code"
-                          label="Code"
-                          variant="standard"
-                          placeholder="Auto"
-                          focused
-                          // required
-                          value={values.code}
+                          name="code"
+                         value={values.code}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          
+                          label="Code"
+                           InputProps={{ readOnly: true }}
+                         InputLabelProps={{
+                                  shrink: true,
+                                }}
+                           placeholder="Auto"
+                          // focused
+                          // required
+                         
                           error={!!touched.code && !!errors.code}
                           helperText={touched.code && errors.code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                          InputProps={{ readOnly: true }}
-                        // autoFocus
+                          // sx={{
+                          //   backgroundColor: "#ffffff", // Set the background to white
+                          //   "& .MuiFilledInput-root": {
+                          //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          //   },
+                          // }}
+                        
+                          // autoFocus
                         />
                       ) : (
                         <TextField
@@ -11104,20 +13460,21 @@ const Editemployee = () => {
                               </span>
                             </>
                           }
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
+                          // focused
                           // required
                           value={values.code}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={!!touched.code && !!errors.code}
                           helperText={touched.code && errors.code}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          // sx={{
+                          //   backgroundColor: "#ffffff", // Set the background to white
+                          //   "& .MuiFilledInput-root": {
+                          //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          //   },
+                          // }}
                           autoFocus
                         />
                       )}
@@ -11133,19 +13490,20 @@ const Editemployee = () => {
                                    </span> */}
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                          size="small"
+                        // focused
                         value={values.name}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.name && !!errors.name}
                         helperText={touched.name && errors.name}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                        // sx={{
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        //   },
+                        // }}
                         InputProps={{
                           inputProps: {
                             readOnly: true,
@@ -11192,8 +13550,9 @@ const Editemployee = () => {
                             </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                          size="small"
+                        // focused
                         value={values.name1}
                         // required
                         onBlur={handleBlur}
@@ -11219,8 +13578,9 @@ const Editemployee = () => {
                       <TextField
                         name="name2"
                         label="Name"
-                        variant="standard"
-                        focused
+                       variant="outlined"
+                          size="small"
+                        // focused
                         value={values.name2}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -11255,9 +13615,10 @@ const Editemployee = () => {
                             </span>
                           </>
                         }
-                        variant="standard"
+                        variant="outlined"
+                          size="small"
                         // required
-                        focused
+                        // focused
                         value={values.emailid1}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -11285,8 +13646,9 @@ const Editemployee = () => {
                         type="text"
                         id="emailid2"
                         label="Email ID"
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                          size="small"
+                        // focused
                         value={values.emailid2}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -11310,8 +13672,9 @@ const Editemployee = () => {
                             </span>
                           </>
                         }
-                        variant="standard"
-                        focused
+                        variant="outlined"
+                          size="small"
+                        // focused
                         value={values.mobileno1}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -11332,8 +13695,9 @@ const Editemployee = () => {
                         type="tel"
                         id="mobileno2"
                         label="Mobile No"
-                        variant="standard"
-                        focused
+                       variant="outlined"
+                          size="small"
+                        // focused
                         inputProps={{ maxLength: 10 }}
                         value={values.mobileno2}
                         onBlur={handleBlur}
@@ -11348,7 +13712,8 @@ const Editemployee = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
+                          size="small"
                         type="number"
                         id="aadharcardnumber1"
                         name="aadharcardnumber1"
@@ -11356,7 +13721,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Aadhar Card No"
-                        focused
+                        // focused
                         // onWheel={(e) => e.target.blur()}
                         error={
                           touched.aadharcardnumber1 &&
@@ -11368,7 +13733,8 @@ const Editemployee = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
+                          size="small"
                         type="number"
                         id="aadharcardnumber2"
                         name="aadharcardnumber2"
@@ -11376,7 +13742,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Aadhar Card No"
-                        focused
+                        // focused
                         // onWheel={(e) => e.target.blur()}
                         error={
                           touched.aadharcardnumber2 &&
@@ -11425,15 +13791,17 @@ const Editemployee = () => {
                             //     : toast.error("Please Upload File");
                             // }}
                             onClick={() => {
-                              partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
+                              partyContactgetdata.ContactPersonIDProofImg1 ||
+                              ID1Image
                                 ? window.open(
-                                  ID1Image
-                                    ? store.getState().globalurl.attachmentUrl +
                                     ID1Image
-                                    : store.getState().globalurl.attachmentUrl +
-                                    partyContactgetdata.ContactPersonIDProofImg1,
-                                  "_blank"
-                                )
+                                      ? store.getState().globalurl
+                                          .attachmentUrl + ID1Image
+                                      : store.getState().globalurl
+                                          .attachmentUrl +
+                                          partyContactgetdata.ContactPersonIDProofImg1,
+                                    "_blank",
+                                  )
                                 : toast.error("Please Upload File");
                             }}
                           >
@@ -11467,15 +13835,17 @@ const Editemployee = () => {
                             size="small"
                             variant="contained"
                             onClick={() => {
-                              partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
+                              partyContactgetdata.ContactPersonIDProofImg2 ||
+                              ID2Image
                                 ? window.open(
-                                  ID2Image
-                                    ? store.getState().globalurl.attachmentUrl +
                                     ID2Image
-                                    : store.getState().globalurl.attachmentUrl +
-                                    partyContactgetdata.ContactPersonIDProofImg2,
-                                  "_blank"
-                                )
+                                      ? store.getState().globalurl
+                                          .attachmentUrl + ID2Image
+                                      : store.getState().globalurl
+                                          .attachmentUrl +
+                                          partyContactgetdata.ContactPersonIDProofImg2,
+                                    "_blank",
+                                  )
                                 : toast.error("Please Upload File");
                             }}
                           >
@@ -11489,13 +13859,14 @@ const Editemployee = () => {
                       display="flex"
                       justifyContent="flex-end"
                       padding={1}
+                      mt={3}
                       gap="20px"
                     >
                       {/* GSTimage */}
 
                       {YearFlag == "true" ? (
                         <LoadingButton
-                          color="secondary"
+                          // color="secondary"
                           variant="contained"
                           type="submit"
                           loading={isLoading}
@@ -11509,13 +13880,12 @@ const Editemployee = () => {
                               bgcolor: "#0F766E",
                             },
                           }}
-
                         >
                           Save
                         </LoadingButton>
                       ) : (
                         <Button
-                          color="secondary"
+                          // color="secondary"
                           variant="contained"
                           disabled={true}
                           sx={{
@@ -11548,7 +13918,7 @@ const Editemployee = () => {
                              )} */}
 
                       <Button
-                        color="warning"
+                        // color="warning"
                         variant="contained"
                         onClick={() => {
                           setScreen(0);
@@ -11570,15 +13940,21 @@ const Editemployee = () => {
                 )}
               </Formik>
             </Paper>
+               </Box>
+            </Box>
           ) : (
             false
           )}
 
           {/*Contracts In */}
           {show == "8" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* LEFT: shared Form Sections sidebar — same as Personnel */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -11590,8 +13966,22 @@ const Editemployee = () => {
                 />
               )}
               {/* RIGHT: Contract In content */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={ContractInitialValue}
                     enableReinitialize={true}
@@ -11616,27 +14006,62 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenContractPopup(true);
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>📄</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                            {getBusinessCaption("ContractIn", "Contract In")}
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Contract in details
-                        </Typography>
+          <Box
+  display="flex"
+  alignItems="flex-start"
+  gap={1.5}
+  mb={1}
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EEF2FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>📄</Typography>
+  </Box>
 
+  {/* TEXT CONTENT */}
+  <Box>
+    <Typography
+    variant="subtitle1"
+      fontWeight={700}
+      sx={{ color: "#0D94885", lineHeight: 1.2 }}
+    >
+      {getBusinessCaption("ContractIn", "Contract In")}
+    </Typography>
+
+    <Typography
+      variant="body2"
+      sx={{
+        color: "text.secondary",
+        fontSize: 13,
+        mt: 0.3,
+      }}
+    >
+      Contract in details
+    </Typography>
+  </Box>
+</Box>
                         {/* ----- Code/Name + Photo ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
-
+                        <Box display="flex" gap={3} flexWrap="wrap">
                           {/* LEFT SIDE */}
                           <Box
                             flex={1}
@@ -11644,7 +14069,7 @@ const Editemployee = () => {
                             display="flex"
                             flexDirection="column"
                             gap={2}
-                            mt={4}
+                            mt={2}
                           >
                             <TextField
                               fullWidth
@@ -11682,10 +14107,9 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
                           </Box>
-
                         </Box>
 
                         {/* ----- LIST OF CONTRACT IN TABLE ----- */}
@@ -11695,6 +14119,7 @@ const Editemployee = () => {
                             borderRadius: 2,
                             overflow: "hidden",
                             mb: 3,
+                            mt: 2
                           }}
                         >
                           {/* <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
@@ -11703,31 +14128,91 @@ const Editemployee = () => {
                             </Typography>
                           </Box> */}
 
-                          <Box sx={{ height: "40vh" }}>
-                            <DataGrid
-                              sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                          <Box 
+                           sx={{
+                              height: "40vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
+                          >
+                            <DataGrid
+                             sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                               rows={explorelistViewData}
                               columns={columns}
                               disableSelectionOnClick
@@ -11735,7 +14220,9 @@ const Editemployee = () => {
                               pageSize={pageSize}
                               rowHeight={dataGridRowHeight}
                               headerHeight={dataGridHeaderFooterHeight}
-                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
                               onCellClick={(params) => {
                                 selectCellRowData({
                                   rowData: params.row,
@@ -11744,26 +14231,26 @@ const Editemployee = () => {
                                   setFieldValue,
                                 });
                                 // setOpen(true);
-                              setOpenContractPopup(true);
+                                setOpenContractPopup(true);
                               }}
-                             rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            components={{ Toolbar: Employee }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{ Toolbar: Employee }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
                             />
                           </Box>
                         </Box>
@@ -11804,18 +14291,35 @@ const Editemployee = () => {
                                   justifyContent: "center",
                                 }}
                               >
-                                <Typography sx={{ fontSize: 20 }}>📄</Typography>
+                                <Typography sx={{ fontSize: 20 }}>
+                                  📄
+                                </Typography>
                               </Box>
                               <Box>
-                                <Typography variant="h6" fontWeight={700} color="#1F2937">
-                                  {getBusinessCaption("ContractIn", "Contract In")}
+                                <Typography
+                                  variant="h6"
+                                  fontWeight={700}
+                                  color="#1F2937"
+                                >
+                                  {getBusinessCaption(
+                                    "ContractIn",
+                                    "Contract In",
+                                  )}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                  {funMode === "A" ? "Add new contract" : "Edit contract details"}
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                >
+                                  {funMode === "A"
+                                    ? "Add new contract"
+                                    : "Edit contract details"}
                                 </Typography>
                               </Box>
                             </Box>
-                            <IconButton onClick={() => setOpenContractPopup(false)} size="small">
+                            <IconButton
+                              onClick={() => setOpenContractPopup(false)}
+                              size="small"
+                            >
                               <CloseIcon />
                             </IconButton>
                           </DialogTitle>
@@ -11831,15 +14335,30 @@ const Editemployee = () => {
                           >
                             <form>
                               {/* ----- DIVIDER ----- */}
-                              <Box sx={{ height: 1, backgroundColor: "#E5E7EB", my: 3 }} />
+                              <Box
+                                sx={{
+                                  height: 1,
+                                  backgroundColor: "#E5E7EB",
+                                  my: 3,
+                                }}
+                              />
 
                               {/* ----- CONTRACT DETAILS FIELDS ----- */}
                               <Box>
-                                <Typography variant="body2" fontWeight={700} color="#374151" mb={2.5}>
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={700}
+                                  color="#374151"
+                                  mb={2.5}
+                                >
                                   Contract Information
                                 </Typography>
 
-                                <Box display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2.5}>
+                                <Box
+                                  display="grid"
+                                  gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                  gap={2.5}
+                                >
                                   {/* Vendor */}
                                   {!is003Subscription && (
                                     <PartySingleSelect
@@ -11848,7 +14367,15 @@ const Editemployee = () => {
                                       label={
                                         <>
                                           Vendor
-                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            {" "}
+                                            *
+                                          </span>
                                         </>
                                       }
                                       variant="outlined"
@@ -11866,28 +14393,39 @@ const Editemployee = () => {
                                           Name: newValue.Name,
                                         });
                                       }}
-                                      error={!!touched.vendor && !!errors.vendor}
-                                      helperText={touched.vendor && errors.vendor}
+                                      error={
+                                        !!touched.vendor && !!errors.vendor
+                                      }
+                                      helperText={
+                                        touched.vendor && errors.vendor
+                                      }
                                       url={
-                                        Data.DesignationName === "Student" || Data?.Designation?.Name === "Student"
-                                          ? `${listViewurl}?data=${JSON.stringify({
-                                            Query: {
-                                              AccessID: "2133",
-                                              ScreenName: "Parent",
-                                              VerticalLicense: Subscriptionlastthree,
-                                              Filter: `parentID=${CompanyID}`,
-                                              Any: "",
-                                            },
-                                          })}`
-                                          : `${listViewurl}?data=${JSON.stringify({
-                                            Query: {
-                                              AccessID: "2100",
-                                              ScreenName: "Vendor",
-                                              VerticalLicense: Subscriptionlastthree,
-                                              Filter: `parentID=${CompanyID}`,
-                                              Any: "",
-                                            },
-                                          })}`
+                                        Data.DesignationName === "Student" ||
+                                        Data?.Designation?.Name === "Student"
+                                          ? `${listViewurl}?data=${JSON.stringify(
+                                              {
+                                                Query: {
+                                                  AccessID: "2133",
+                                                  ScreenName: "Parent",
+                                                  VerticalLicense:
+                                                    Subscriptionlastthree,
+                                                  Filter: `parentID=${CompanyID}`,
+                                                  Any: "",
+                                                },
+                                              },
+                                            )}`
+                                          : `${listViewurl}?data=${JSON.stringify(
+                                              {
+                                                Query: {
+                                                  AccessID: "2100",
+                                                  ScreenName: "Vendor",
+                                                  VerticalLicense:
+                                                    Subscriptionlastthree,
+                                                  Filter: `parentID=${CompanyID}`,
+                                                  Any: "",
+                                                },
+                                              },
+                                            )}`
                                       }
                                     />
                                   )}
@@ -11898,8 +14436,18 @@ const Editemployee = () => {
                                     name="project"
                                     label={
                                       <>
-                                        {getBusinessCaption("Project", "Project")}
-                                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        {getBusinessCaption(
+                                          "Project",
+                                          "Project",
+                                        )}
+                                        <span
+                                          style={{
+                                            color: "red",
+                                            fontSize: "20px",
+                                          }}
+                                        >
+                                          *
+                                        </span>
                                       </>
                                     }
                                     variant="outlined"
@@ -11916,8 +14464,12 @@ const Editemployee = () => {
                                         Name: newValue.Name,
                                       });
                                     }}
-                                    error={!!touched.project && !!errors.project}
-                                    helperText={touched.project && errors.project}
+                                    error={
+                                      !!touched.project && !!errors.project
+                                    }
+                                    helperText={
+                                      touched.project && errors.project
+                                    }
                                     url={`${listViewurl}?data=${JSON.stringify({
                                       Query: {
                                         AccessID: "2054",
@@ -11943,11 +14495,24 @@ const Editemployee = () => {
                                     label={
                                       <>
                                         Description
-                                        <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        <span
+                                          style={{
+                                            color: "red",
+                                            fontSize: "20px",
+                                          }}
+                                        >
+                                          {" "}
+                                          *
+                                        </span>
                                       </>
                                     }
-                                    error={!!touched.Description && !!errors.Description}
-                                    helperText={touched.Description && errors.Description}
+                                    error={
+                                      !!touched.Description &&
+                                      !!errors.Description
+                                    }
+                                    helperText={
+                                      touched.Description && errors.Description
+                                    }
                                   />
 
                                   {/* Billing Units */}
@@ -11959,7 +14524,14 @@ const Editemployee = () => {
                                     label={
                                       <span>
                                         Billing Units
-                                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        <span
+                                          style={{
+                                            color: "red",
+                                            fontSize: "20px",
+                                          }}
+                                        >
+                                          *
+                                        </span>
                                       </span>
                                     }
                                     value={values.BillingUnits}
@@ -11973,8 +14545,14 @@ const Editemployee = () => {
                                       }
                                     }}
                                     name="BillingUnits"
-                                    error={!!touched.BillingUnits && !!errors.BillingUnits}
-                                    helperText={touched.BillingUnits && errors.BillingUnits}
+                                    error={
+                                      !!touched.BillingUnits &&
+                                      !!errors.BillingUnits
+                                    }
+                                    helperText={
+                                      touched.BillingUnits &&
+                                      errors.BillingUnits
+                                    }
                                   >
                                     <MenuItem value="HS">Hours</MenuItem>
                                     <MenuItem value="DS">Days</MenuItem>
@@ -11993,7 +14571,8 @@ const Editemployee = () => {
                                   </TextField>
 
                                   {/* Term (conditional) */}
-                                  {(values.BillingUnits == "TF" || contractorData.units == "Term Fees") &&
+                                  {(values.BillingUnits == "TF" ||
+                                    contractorData.units == "Term Fees") &&
                                     isStudentClassification && (
                                       <>
                                         <CheckinAutocomplete
@@ -12009,10 +14588,14 @@ const Editemployee = () => {
                                               Code: newValue.Code,
                                               Name: newValue.Name,
                                               Header: newValue.HeaderID,
-                                              Term1DueDate: newValue.Term1DueDate,
-                                              Term2DueDate: newValue.Term2DueDate,
-                                              Term3DueDate: newValue.Term3DueDate,
-                                              Term4DueDate: newValue.Term4DueDate,
+                                              Term1DueDate:
+                                                newValue.Term1DueDate,
+                                              Term2DueDate:
+                                                newValue.Term2DueDate,
+                                              Term3DueDate:
+                                                newValue.Term3DueDate,
+                                              Term4DueDate:
+                                                newValue.Term4DueDate,
                                               FromDate: newValue.FromDate,
                                               ToDate: newValue.ToDate,
                                             });
@@ -12023,20 +14606,33 @@ const Editemployee = () => {
                                               newValue?.Term4DueDate ||
                                               "";
                                             setFieldValue("DueDate", dueDate);
-                                            setFieldValue("FromPeriod", newValue.FromDate);
-                                            setFieldValue("ToPeriod", newValue.ToDate);
+                                            setFieldValue(
+                                              "FromPeriod",
+                                              newValue.FromDate,
+                                            );
+                                            setFieldValue(
+                                              "ToPeriod",
+                                              newValue.ToDate,
+                                            );
                                           }}
-                                          error={!!touched.Term && !!errors.Term}
-                                          helperText={touched.Term && errors.Term}
-                                          url={`${listViewurl}?data=${JSON.stringify({
-                                            Query: {
-                                              AccessID: "2188",
-                                              ScreenName: "Term",
-                                              VerticalLicense: Subscriptionlastthree,
-                                              Filter: `CategoryType = 'T' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
-                                              Any: "",
+                                          error={
+                                            !!touched.Term && !!errors.Term
+                                          }
+                                          helperText={
+                                            touched.Term && errors.Term
+                                          }
+                                          url={`${listViewurl}?data=${JSON.stringify(
+                                            {
+                                              Query: {
+                                                AccessID: "2188",
+                                                ScreenName: "Term",
+                                                VerticalLicense:
+                                                  Subscriptionlastthree,
+                                                Filter: `CategoryType = 'T' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                                                Any: "",
+                                              },
                                             },
-                                          })}`}
+                                          )}`}
                                         />
 
                                         {/* Components for Term Fees */}
@@ -12048,36 +14644,60 @@ const Editemployee = () => {
                                           id="Components"
                                           value={values.Components || []}
                                           onChange={(e, newValue) => {
-                                            setFieldValue("Components", newValue);
-                                            const totalAmount = newValue.reduce(
-                                              (sum, item) => sum + Number(item.Amount || 0),
-                                              0
+                                            setFieldValue(
+                                              "Components",
+                                              newValue,
                                             );
-                                            const discount = Number(values.discount || 0);
+                                            const totalAmount = newValue.reduce(
+                                              (sum, item) =>
+                                                sum + Number(item.Amount || 0),
+                                              0,
+                                            );
+                                            const discount = Number(
+                                              values.discount || 0,
+                                            );
                                             const finalAmount =
-                                              totalAmount - (totalAmount * discount) / 100;
-                                            setFieldValue("UnitRate", finalAmount.toFixed(2));
+                                              totalAmount -
+                                              (totalAmount * discount) / 100;
+                                            setFieldValue(
+                                              "UnitRate",
+                                              finalAmount.toFixed(2),
+                                            );
                                           }}
-                                          isOptionEqualToValue={(option, value) =>
-                                            String(option.RecordID) === String(value.RecordID)
+                                          isOptionEqualToValue={(
+                                            option,
+                                            value,
+                                          ) =>
+                                            String(option.RecordID) ===
+                                            String(value.RecordID)
                                           }
-                                          error={!!touched.Components && !!errors.Components}
-                                          helperText={touched.Components && errors.Components}
-                                          url={`${listViewurl}?data=${JSON.stringify({
-                                            Query: {
-                                              AccessID: "2189",
-                                              ScreenName: "Components",
-                                              VerticalLicense: Subscriptionlastthree,
-                                              Filter: `HeaderID=${values?.Term?.Header}`,
-                                              Any: "",
+                                          error={
+                                            !!touched.Components &&
+                                            !!errors.Components
+                                          }
+                                          helperText={
+                                            touched.Components &&
+                                            errors.Components
+                                          }
+                                          url={`${listViewurl}?data=${JSON.stringify(
+                                            {
+                                              Query: {
+                                                AccessID: "2189",
+                                                ScreenName: "Components",
+                                                VerticalLicense:
+                                                  Subscriptionlastthree,
+                                                Filter: `HeaderID=${values?.Term?.Header}`,
+                                                Any: "",
+                                              },
                                             },
-                                          })}`}
+                                          )}`}
                                         />
                                       </>
                                     )}
 
                                   {/* Components for Annual Fees */}
-                                  {(values.BillingUnits == "AF" || contractorData.units == "Annual Fees") &&
+                                  {(values.BillingUnits == "AF" ||
+                                    contractorData.units == "Annual Fees") &&
                                     isStudentClassification && (
                                       <MultiFormikOptimizedAutocomplete
                                         sx={{ gridColumn: "span 2" }}
@@ -12086,22 +14706,36 @@ const Editemployee = () => {
                                         id="Components"
                                         value={values.Components}
                                         onChange={(e, newValue) =>
-                                          setFieldValue("Components", newValue, true)
+                                          setFieldValue(
+                                            "Components",
+                                            newValue,
+                                            true,
+                                          )
                                         }
                                         isOptionEqualToValue={(option, value) =>
-                                          String(option.RecordID) === String(value.RecordID)
+                                          String(option.RecordID) ===
+                                          String(value.RecordID)
                                         }
-                                        error={!!touched.Components && !!errors.Components}
-                                        helperText={touched.Components && errors.Components}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: {
-                                            AccessID: "2190",
-                                            ScreenName: "Components",
-                                            VerticalLicense: Subscriptionlastthree,
-                                            Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
-                                            Any: "",
+                                        error={
+                                          !!touched.Components &&
+                                          !!errors.Components
+                                        }
+                                        helperText={
+                                          touched.Components &&
+                                          errors.Components
+                                        }
+                                        url={`${listViewurl}?data=${JSON.stringify(
+                                          {
+                                            Query: {
+                                              AccessID: "2190",
+                                              ScreenName: "Components",
+                                              VerticalLicense:
+                                                Subscriptionlastthree,
+                                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                                              Any: "",
+                                            },
                                           },
-                                        })}`}
+                                        )}`}
                                       />
                                     )}
 
@@ -12116,21 +14750,37 @@ const Editemployee = () => {
                                     id="UnitRate"
                                     name="UnitRate"
                                     label={
-                                      values.BillingUnits === "OF" || values.BillingUnits === "TF" ? (
+                                      values.BillingUnits === "OF" ||
+                                      values.BillingUnits === "TF" ? (
                                         <span>
                                           Amount
-                                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
                                         </span>
                                       ) : (
                                         <span>
                                           Unit Rate
-                                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "20px",
+                                            }}
+                                          >
+                                            *
+                                          </span>
                                         </span>
                                       )
                                     }
                                     onChange={(e) => {
                                       const val = e.target.value;
-                                      if (/^\d*\.?\d{0,2}$/.test(val)) setFieldValue("UnitRate", val);
+                                      if (/^\d*\.?\d{0,2}$/.test(val))
+                                        setFieldValue("UnitRate", val);
                                     }}
                                     onBlur={(e) => {
                                       handleBlur(e);
@@ -12140,11 +14790,21 @@ const Editemployee = () => {
                                         return;
                                       }
                                       if (!val.includes(".")) val = `${val}.00`;
-                                      setFieldValue("UnitRate", Number(val).toFixed(2));
+                                      setFieldValue(
+                                        "UnitRate",
+                                        Number(val).toFixed(2),
+                                      );
                                     }}
-                                    error={!!touched.UnitRate && !!errors.UnitRate}
-                                    helperText={touched.UnitRate && errors.UnitRate}
-                                    inputProps={{ style: { textAlign: "right" }, maxLength: 90 }}
+                                    error={
+                                      !!touched.UnitRate && !!errors.UnitRate
+                                    }
+                                    helperText={
+                                      touched.UnitRate && errors.UnitRate
+                                    }
+                                    inputProps={{
+                                      style: { textAlign: "right" },
+                                      maxLength: 90,
+                                    }}
                                   />
 
                                   {/* Discount */}
@@ -12160,19 +14820,35 @@ const Editemployee = () => {
                                       name="discount"
                                       label="Discount in (%)"
                                       onChange={(e) => {
-                                        const discount = Number(e.target.value || 0);
-                                        setFieldValue("discount", e.target.value);
-                                        const totalAmount = (values.Components || []).reduce(
-                                          (sum, item) => sum + Number(item.Amount || 0),
-                                          0
+                                        const discount = Number(
+                                          e.target.value || 0,
+                                        );
+                                        setFieldValue(
+                                          "discount",
+                                          e.target.value,
+                                        );
+                                        const totalAmount = (
+                                          values.Components || []
+                                        ).reduce(
+                                          (sum, item) =>
+                                            sum + Number(item.Amount || 0),
+                                          0,
                                         );
                                         const finalAmount =
-                                          totalAmount - (totalAmount * discount) / 100;
-                                        setFieldValue("UnitRate", finalAmount.toFixed(2));
+                                          totalAmount -
+                                          (totalAmount * discount) / 100;
+                                        setFieldValue(
+                                          "UnitRate",
+                                          finalAmount.toFixed(2),
+                                        );
                                       }}
                                       onBlur={handleBlur}
-                                      error={!!touched.discount && !!errors.discount}
-                                      helperText={touched.discount && errors.discount}
+                                      error={
+                                        !!touched.discount && !!errors.discount
+                                      }
+                                      helperText={
+                                        touched.discount && errors.discount
+                                      }
                                       inputProps={{
                                         style: { textAlign: "right" },
                                         min: 0,
@@ -12191,7 +14867,14 @@ const Editemployee = () => {
                                     label={
                                       <span>
                                         Billing Type
-                                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        <span
+                                          style={{
+                                            color: "red",
+                                            fontSize: "20px",
+                                          }}
+                                        >
+                                          *
+                                        </span>
                                       </span>
                                     }
                                     value={values.BillingType}
@@ -12199,11 +14882,20 @@ const Editemployee = () => {
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     name="BillingType"
-                                    error={!!touched.BillingType && !!errors.BillingType}
-                                    helperText={touched.BillingType && errors.BillingType}
+                                    error={
+                                      !!touched.BillingType &&
+                                      !!errors.BillingType
+                                    }
+                                    helperText={
+                                      touched.BillingType && errors.BillingType
+                                    }
                                   >
-                                    <MenuItem value="CashMemo">Cash Memo</MenuItem>
-                                    <MenuItem value="GSTInvoice">GST Invoice</MenuItem>
+                                    <MenuItem value="CashMemo">
+                                      Cash Memo
+                                    </MenuItem>
+                                    <MenuItem value="GSTInvoice">
+                                      GST Invoice
+                                    </MenuItem>
                                   </TextField>
 
                                   {/* GST Fields (conditional) */}
@@ -12219,8 +14911,16 @@ const Editemployee = () => {
                                         label={
                                           <span>
                                             HSN Code
-                                            {values.BillingType !== "CashMemo" && (
-                                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            {values.BillingType !==
+                                              "CashMemo" && (
+                                              <span
+                                                style={{
+                                                  color: "red",
+                                                  fontSize: "20px",
+                                                }}
+                                              >
+                                                *
+                                              </span>
                                             )}
                                           </span>
                                         }
@@ -12228,7 +14928,8 @@ const Editemployee = () => {
                                         onBlur={handleBlur}
                                         onChange={(e) => {
                                           const val = e.target.value;
-                                          if (/^\d{0,8}$/.test(val)) setFieldValue("Hsn", val);
+                                          if (/^\d{0,8}$/.test(val))
+                                            setFieldValue("Hsn", val);
                                         }}
                                         error={!!touched.Hsn && !!errors.Hsn}
                                         helperText={touched.Hsn && errors.Hsn}
@@ -12257,8 +14958,12 @@ const Editemployee = () => {
                                             setFieldValue("Sgst", "0.00");
                                             return;
                                           }
-                                          if (!val.includes(".")) val = `${val}.00`;
-                                          setFieldValue("Sgst", Number(val).toFixed(2));
+                                          if (!val.includes("."))
+                                            val = `${val}.00`;
+                                          setFieldValue(
+                                            "Sgst",
+                                            Number(val).toFixed(2),
+                                          );
                                         }}
                                         error={!!touched.Sgst && !!errors.Sgst}
                                         helperText={touched.Sgst && errors.Sgst}
@@ -12282,7 +14987,8 @@ const Editemployee = () => {
                                         value={values.Gst}
                                         onChange={(e) => {
                                           const val = e.target.value;
-                                          if (/^\d*\.?\d{0,2}$/.test(val)) setFieldValue("Gst", val);
+                                          if (/^\d*\.?\d{0,2}$/.test(val))
+                                            setFieldValue("Gst", val);
                                         }}
                                         onBlur={(e) => {
                                           handleBlur(e);
@@ -12291,8 +14997,12 @@ const Editemployee = () => {
                                             setFieldValue("Gst", "0.00");
                                             return;
                                           }
-                                          if (!val.includes(".")) val = `${val}.00`;
-                                          setFieldValue("Gst", Number(val).toFixed(2));
+                                          if (!val.includes("."))
+                                            val = `${val}.00`;
+                                          setFieldValue(
+                                            "Gst",
+                                            Number(val).toFixed(2),
+                                          );
                                         }}
                                         error={!!touched.Gst && !!errors.Gst}
                                         helperText={touched.Gst && errors.Gst}
@@ -12325,8 +15035,12 @@ const Editemployee = () => {
                                             setFieldValue("Igst", "0.00");
                                             return;
                                           }
-                                          if (!val.includes(".")) val = `${val}.00`;
-                                          setFieldValue("Igst", Number(val).toFixed(2));
+                                          if (!val.includes("."))
+                                            val = `${val}.00`;
+                                          setFieldValue(
+                                            "Igst",
+                                            Number(val).toFixed(2),
+                                          );
                                         }}
                                         error={!!touched.Igst && !!errors.Igst}
                                         helperText={touched.Igst && errors.Igst}
@@ -12348,7 +15062,8 @@ const Editemployee = () => {
                                         value={values.TDS}
                                         onChange={(e) => {
                                           const val = e.target.value;
-                                          if (/^\d*\.?\d{0,2}$/.test(val)) setFieldValue("TDS", val);
+                                          if (/^\d*\.?\d{0,2}$/.test(val))
+                                            setFieldValue("TDS", val);
                                         }}
                                         onBlur={(e) => {
                                           handleBlur(e);
@@ -12357,8 +15072,12 @@ const Editemployee = () => {
                                             setFieldValue("TDS", "0.00");
                                             return;
                                           }
-                                          if (!val.includes(".")) val = `${val}.00`;
-                                          setFieldValue("TDS", Number(val).toFixed(2));
+                                          if (!val.includes("."))
+                                            val = `${val}.00`;
+                                          setFieldValue(
+                                            "TDS",
+                                            Number(val).toFixed(2),
+                                          );
                                         }}
                                         error={!!touched.TDS && !!errors.TDS}
                                         helperText={touched.TDS && errors.TDS}
@@ -12379,14 +15098,25 @@ const Editemployee = () => {
                                         label={
                                           <span>
                                             Shift 1
-                                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            <span
+                                              style={{
+                                                color: "red",
+                                                fontSize: "20px",
+                                              }}
+                                            >
+                                              *
+                                            </span>
                                           </span>
                                         }
                                         variant="outlined"
                                         size="small"
                                         value={values.shift}
-                                        error={!!touched.shift && !!errors.shift}
-                                        helperText={touched.shift && errors.shift}
+                                        error={
+                                          !!touched.shift && !!errors.shift
+                                        }
+                                        helperText={
+                                          touched.shift && errors.shift
+                                        }
                                         onChange={(newValue) => {
                                           if (!newValue) {
                                             setFieldValue("shift", null);
@@ -12398,15 +15128,18 @@ const Editemployee = () => {
                                             Name: newValue.Name,
                                           });
                                         }}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: {
-                                            AccessID: "2108",
-                                            ScreenName: "Shift",
-                                            VerticalLicense: Subscriptionlastthree,
-                                            Filter: `CompanyID=${CompanyID}`,
-                                            Any: "",
+                                        url={`${listViewurl}?data=${JSON.stringify(
+                                          {
+                                            Query: {
+                                              AccessID: "2108",
+                                              ScreenName: "Shift",
+                                              VerticalLicense:
+                                                Subscriptionlastthree,
+                                              Filter: `CompanyID=${CompanyID}`,
+                                              Any: "",
+                                            },
                                           },
-                                        })}`}
+                                        )}`}
                                       />
 
                                       <CheckinAutocomplete
@@ -12416,8 +15149,12 @@ const Editemployee = () => {
                                         variant="outlined"
                                         size="small"
                                         value={values.shift2}
-                                        error={!!touched.shift2 && !!errors.shift2}
-                                        helperText={touched.shift2 && errors.shift2}
+                                        error={
+                                          !!touched.shift2 && !!errors.shift2
+                                        }
+                                        helperText={
+                                          touched.shift2 && errors.shift2
+                                        }
                                         onChange={(newValue) => {
                                           if (!newValue) {
                                             setFieldValue("shift2", null);
@@ -12429,15 +15166,18 @@ const Editemployee = () => {
                                             Name: newValue.Name,
                                           });
                                         }}
-                                        url={`${listViewurl}?data=${JSON.stringify({
-                                          Query: {
-                                            AccessID: "2108",
-                                            ScreenName: "Shift2",
-                                            VerticalLicense: Subscriptionlastthree,
-                                            Filter: `CompanyID=${CompanyID}`,
-                                            Any: "",
+                                        url={`${listViewurl}?data=${JSON.stringify(
+                                          {
+                                            Query: {
+                                              AccessID: "2108",
+                                              ScreenName: "Shift2",
+                                              VerticalLicense:
+                                                Subscriptionlastthree,
+                                              Filter: `CompanyID=${CompanyID}`,
+                                              Any: "",
+                                            },
                                           },
-                                        })}`}
+                                        )}`}
                                       />
                                     </>
                                   )}
@@ -12458,14 +15198,22 @@ const Editemployee = () => {
                                       const { name, value } = e.target;
                                       setFieldValue(name, value);
                                       if (values.ToPeriod) {
-                                        const toDate = new Date(values.ToPeriod);
+                                        const toDate = new Date(
+                                          values.ToPeriod,
+                                        );
                                         const fromDate = new Date(value);
-                                        const diffDays = differenceInDays(toDate, fromDate);
-                                        setFieldValue("RenewableNotification", diffDays);
+                                        const diffDays = differenceInDays(
+                                          toDate,
+                                          fromDate,
+                                        );
+                                        setFieldValue(
+                                          "RenewableNotification",
+                                          diffDays,
+                                        );
                                         const alertDate = subDays(toDate, 1);
                                         setFieldValue(
                                           "NotificationAlertDate",
-                                          alertDate.toISOString().split("T")[0]
+                                          alertDate.toISOString().split("T")[0],
                                         );
                                       }
                                     }}
@@ -12491,17 +15239,29 @@ const Editemployee = () => {
                                       const formattedAlertDate = alertDate
                                         .toISOString()
                                         .split("T")[0];
-                                      setFieldValue("NotificationAlertDate", formattedAlertDate);
+                                      setFieldValue(
+                                        "NotificationAlertDate",
+                                        formattedAlertDate,
+                                      );
                                       if (values.FromPeriod) {
-                                        const fromDate = new Date(values.FromPeriod);
-                                        const diffDays = differenceInDays(toDate, fromDate);
-                                        setFieldValue("RenewableNotification", diffDays);
+                                        const fromDate = new Date(
+                                          values.FromPeriod,
+                                        );
+                                        const diffDays = differenceInDays(
+                                          toDate,
+                                          fromDate,
+                                        );
+                                        setFieldValue(
+                                          "RenewableNotification",
+                                          diffDays,
+                                        );
                                       }
                                     }}
                                   />
 
                                   {/* Due Date (conditional) */}
-                                  {(values.BillingUnits === "OF" || values.BillingUnits === "TF") && (
+                                  {(values.BillingUnits === "OF" ||
+                                    values.BillingUnits === "TF") && (
                                     <TextField
                                       fullWidth
                                       variant="outlined"
@@ -12539,7 +15299,8 @@ const Editemployee = () => {
                                       !!errors.NotificationAlertDate
                                     }
                                     helperText={
-                                      touched.NotificationAlertDate && errors.NotificationAlertDate
+                                      touched.NotificationAlertDate &&
+                                      errors.NotificationAlertDate
                                     }
                                     InputProps={{ readOnly: true }}
                                   />
@@ -12560,10 +15321,13 @@ const Editemployee = () => {
                                       !!errors.RenewableNotification
                                     }
                                     helperText={
-                                      touched.RenewableNotification && errors.RenewableNotification
+                                      touched.RenewableNotification &&
+                                      errors.RenewableNotification
                                     }
                                     InputProps={{ readOnly: true }}
-                                    inputProps={{ style: { textAlign: "right" } }}
+                                    inputProps={{
+                                      style: { textAlign: "right" },
+                                    }}
                                   />
                                 </Box>
                               </Box>
@@ -12582,86 +15346,104 @@ const Editemployee = () => {
                             }}
                           >
                             <Box>
-                              {funMode === "E" && is003Subscription && flag !== "P" && (
-                                ["OF", "TF"].includes(values?.BillingUnits || "") && (
+                              {funMode === "E" &&
+                                is003Subscription &&
+                                flag !== "P" &&
+                                ["OF", "TF"].includes(
+                                  values?.BillingUnits || "",
+                                ) && (
                                   <Button
                                     variant="outlined"
                                     size="small"
-                                    sx={{ textTransform: "none", borderRadius: 2 }}
-                                    onClick={() => handleGenerate(values, resetForm, "")}
+                                    sx={{
+                                      textTransform: "none",
+                                      borderRadius: 2,
+                                    }}
+                                    onClick={() =>
+                                      handleGenerate(values, resetForm, "")
+                                    }
                                   >
                                     Save & Generate
                                   </Button>
-                                )
-                              )}
+                                )}
 
-                              {is003Subscription && funMode === "E" && flag === "P" && (
-                                <PDFDownloadLink
-                                  document={
-                                    billingTypeForPrint === "CashMemo" ? (
-                                      <ContractCashMemo
-                                        invoice={Invoiceheader?.[0]}
-                                        detailData={Invoicedetails}
-                                        PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
-                                        logoUrl={"/Logo.png"}
-                                        headerUrl={"/Elitelogo.png"}
-                                        footerUrl={"/pdffooterimg.PNG"}
-                                        withannexure={false}
-                                        filters={{
-                                          Month: BillableMonth,
-                                          Year: BillableYear,
-                                          EmployeeID: recID,
-                                          baseUrl: baseurl1,
+                              {is003Subscription &&
+                                funMode === "E" &&
+                                flag === "P" && (
+                                  <PDFDownloadLink
+                                    document={
+                                      billingTypeForPrint === "CashMemo" ? (
+                                        <ContractCashMemo
+                                          invoice={Invoiceheader?.[0]}
+                                          detailData={Invoicedetails}
+                                          PdfBaseUrl={
+                                            PdfBaseUrl ||
+                                            "https://uaam.beyondexs.com/"
+                                          }
+                                          logoUrl={"/Logo.png"}
+                                          headerUrl={"/Elitelogo.png"}
+                                          footerUrl={"/pdffooterimg.PNG"}
+                                          withannexure={false}
+                                          filters={{
+                                            Month: BillableMonth,
+                                            Year: BillableYear,
+                                            EmployeeID: recID,
+                                            baseUrl: baseurl1,
+                                          }}
+                                          footerHeight={footerHeight}
+                                        />
+                                      ) : (
+                                        <SchoolContractInvoice
+                                          invoice={Invoiceheader?.[0]}
+                                          detailData={Invoicedetails}
+                                          PdfBaseUrl={
+                                            PdfBaseUrl ||
+                                            "https://uaam.beyondexs.com/"
+                                          }
+                                          logoUrl={"/Logo.png"}
+                                          headerUrl={"/Elitelogo.png"}
+                                          footerUrl={"/pdffooterimg.PNG"}
+                                          qrUrl={"/QRimg.PNG"}
+                                          signUrl={"/SIGN.png"}
+                                          withannexure={false}
+                                          filters={{
+                                            Month: BillableMonth,
+                                            Year: BillableYear,
+                                            EmployeeID: recID,
+                                            baseUrl: baseurl1,
+                                          }}
+                                          footerHeight={footerHeight}
+                                        />
+                                      )
+                                    }
+                                    fileName={`Invoice_Report_${Data.Name || ""}.pdf`}
+                                    style={{ textDecoration: "none" }}
+                                  >
+                                    {({ loading }) => (
+                                      <Button
+                                        variant="outlined"
+                                        disabled={loading}
+                                        size="small"
+                                        sx={{
+                                          textTransform: "none",
+                                          borderRadius: 2,
                                         }}
-                                        footerHeight={footerHeight}
-                                      />
-                                    ) : (
-                                      <SchoolContractInvoice
-                                        invoice={Invoiceheader?.[0]}
-                                        detailData={Invoicedetails}
-                                        PdfBaseUrl={PdfBaseUrl || "https://uaam.beyondexs.com/"}
-                                        logoUrl={"/Logo.png"}
-                                        headerUrl={"/Elitelogo.png"}
-                                        footerUrl={"/pdffooterimg.PNG"}
-                                        qrUrl={"/QRimg.PNG"}
-                                        signUrl={"/SIGN.png"}
-                                        withannexure={false}
-                                        filters={{
-                                          Month: BillableMonth,
-                                          Year: BillableYear,
-                                          EmployeeID: recID,
-                                          baseUrl: baseurl1,
-                                        }}
-                                        footerHeight={footerHeight}
-                                      />
-                                    )
-                                  }
-                                  fileName={`Invoice_Report_${Data.Name || ""}.pdf`}
-                                  style={{ textDecoration: "none" }}
-                                >
-                                  {({ loading }) => (
-                                    <Button
-                                      variant="outlined"
-                                      disabled={loading}
-                                      size="small"
-                                      sx={{ textTransform: "none", borderRadius: 2 }}
-                                    >
-                                      Print Invoice
-                                    </Button>
-                                  )}
-                                </PDFDownloadLink>
-                              )}
+                                      >
+                                        Print Invoice
+                                      </Button>
+                                    )}
+                                  </PDFDownloadLink>
+                                )}
                             </Box>
 
                             <Box display="flex" gap={1.5}>
-
                               {/* Save Button - ORIGINAL LOGIC */}
                               <LoadingButton
                                 color="primary"
                                 variant="contained"
                                 loading={isLoading}
                                 onClick={() => {
-                                  handleSubmit();  // ✅ ORIGINAL Formik submit
+                                  handleSubmit(); // ✅ ORIGINAL Formik submit
                                   setTimeout(() => {
                                     setOpen(false);
                                   }, 300);
@@ -12685,7 +15467,10 @@ const Editemployee = () => {
                                 <Button
                                   color="error"
                                   variant="outlined"
-                                  sx={{ textTransform: "none", borderRadius: 2 }}
+                                  sx={{
+                                    textTransform: "none",
+                                    borderRadius: 2,
+                                  }}
                                   onClick={() => {
                                     setOpenContractPopup(false);
                                     Swal.fire({
@@ -12697,7 +15482,11 @@ const Editemployee = () => {
                                       confirmButtonText: "Confirm",
                                     }).then((result) => {
                                       if (result.isConfirmed) {
-                                        contractSavefn(values, resetForm, "harddelete");  // ✅ ORIGINAL LOGIC
+                                        contractSavefn(
+                                          values,
+                                          resetForm,
+                                          "harddelete",
+                                        ); // ✅ ORIGINAL LOGIC
                                         setOpen(false);
                                       }
                                     });
@@ -12711,7 +15500,8 @@ const Editemployee = () => {
                                     boxShadow: "none",
                                     "&:hover": {
                                       bgcolor: "#B91C1C",
-                                      boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                      boxShadow:
+                                        "0 4px 10px rgba(220,38,38,0.25)",
                                     },
                                     "&:active": {
                                       bgcolor: "#991B1B",
@@ -12727,9 +15517,10 @@ const Editemployee = () => {
                                 variant="standard"
                                 onClick={() => setOpenContractPopup(false)}
                                 sx={{
-                                  px: 4,
+                                textTransform: "none",
                                   borderRadius: 2,
-                                  textTransform: "none",
+                                  color: "#fff",
+                                  px: 4,
                                   bgcolor: "#F97316",
                                   "&:hover": {
                                     bgcolor: "#EA580C",
@@ -12838,15 +15629,24 @@ const Editemployee = () => {
                           </LoadingButton>
                         </Box> */}
 
-                        <Popup title="vendor" openPopup={openvenPopup} setOpenPopup={setOpenvenPopup}>
-                          <Listviewpopup accessID="2100" screenName="Vendor" childToParent={childToParent} filterName={"parentID"} filterValue={CompanyID} />
+                        <Popup
+                          title="vendor"
+                          openPopup={openvenPopup}
+                          setOpenPopup={setOpenvenPopup}
+                        >
+                          <Listviewpopup
+                            accessID="2100"
+                            screenName="Vendor"
+                            childToParent={childToParent}
+                            filterName={"parentID"}
+                            filterValue={CompanyID}
+                          />
                         </Popup>
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
           ) : (
             false
@@ -13123,7 +15923,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Description"
                           focused
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
                         {/* <SingleFormikOptimizedAutocomplete
                        
@@ -13173,15 +15973,19 @@ const Editemployee = () => {
                           name="BillingUnits"
                           // required
                           focused
-                          error={!!touched.BillingUnits && !!errors.BillingUnits}
-                          helperText={touched.BillingUnits && errors.BillingUnits}
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                          error={
+                            !!touched.BillingUnits && !!errors.BillingUnits
+                          }
+                          helperText={
+                            touched.BillingUnits && errors.BillingUnits
+                          }
+                          // sx={{
+                          //   gridColumn: "span 2",
+                          //   backgroundColor: "#ffffff",
+                          //   "& .MuiInputBase-root": {
+                          //     backgroundColor: "",
+                          //   },
+                          // }}
                         >
                           <MenuItem value="HS">Hours</MenuItem>
                           <MenuItem value="DS">Days</MenuItem>
@@ -13271,11 +16075,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -13298,11 +16102,11 @@ const Editemployee = () => {
                           inputProps={{ maxLength: 25 }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -13324,11 +16128,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -13350,11 +16154,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(0, parseInt(e.target.value))
+                          //     .toString()
+                          //     .slice(0, 11);
+                          // }}
                         />
                         <TextField
                           name="FromPeriod"
@@ -13369,10 +16173,10 @@ const Editemployee = () => {
                           value={values.FromPeriod}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                          // helperText={touched.FromPeriod && errors.FromPeriod}
+                          //sx={{ background: "" }}
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
                         <TextField
                           name="ToPeriod"
@@ -13395,18 +16199,21 @@ const Editemployee = () => {
                               .split("T")[0];
                             console.log(
                               formattedAlertDate,
-                              "--formattedAlertDate"
+                              "--formattedAlertDate",
                             );
 
                             setFieldValue(
                               "NotificationAlertDate",
-                              formattedAlertDate
+                              formattedAlertDate,
                             );
 
                             // Case 2: If FromPeriod is selected, calculate difference in days
                             if (values.FromPeriod) {
                               const fromDate = new Date(values.FromPeriod);
-                              const diffDays = differenceInDays(toDate, fromDate);
+                              const diffDays = differenceInDays(
+                                toDate,
+                                fromDate,
+                              );
                               setFieldValue("RenewableNotification", diffDays); // or your target field
                             }
                           }}
@@ -13685,7 +16492,7 @@ const Editemployee = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
                   <Formik
@@ -13718,44 +16525,45 @@ const Editemployee = () => {
                         }}
                       >
                         {/* HEADER */}
-                        <Box
+                          <Box
                           display="flex"
                           alignItems="center"
-                          gap={1}
-                          mb={0.5}
+                          gap={1.5}
+                          mb={3}
                         >
-                          <Box
+                           <Box
                             sx={{
-                              width: 32,
-                              height: 32,
+                              width: 36,
+                              height: 36,
                               borderRadius: "50%",
-                              backgroundColor: "#EEF2FF",
+                              bgcolor: "#EFF6FF",
                               display: "flex",
-                              alignItems: "center",
                               justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: 18,
                             }}
                           >
                             📍
                           </Box>
-
+                          <Box>
                           <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
+                               variant="subtitle1"
+                              fontWeight={700}
+                              color="#0D94885"
                           >
-                            Geolocation
+                            {getBusinessCaption("Geolocation", "Geo Location")}
                           </Typography>
-                        </Box>
+                     
 
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          mb={3}
-                          ml={5}
+                        
                         >
                           Manage location coordinates and radius settings
                         </Typography>
-
+        </Box>
+                        </Box>
                         {/* BASIC DETAILS */}
                         <Box
                           sx={{
@@ -13781,11 +16589,7 @@ const Editemployee = () => {
                             gap={2}
                           >
                             {/* LEFT */}
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap={2}
-                            >
+                            <Box display="flex" flexDirection="column" gap={2}>
                               <TextField
                                 fullWidth
                                 variant="outlined"
@@ -13822,7 +16626,7 @@ const Editemployee = () => {
                                 userimg,
                                 isImgChanged,
                                 imgUpload,
-                                "Profile Photo"
+                                "Profile Photo",
                               )}
                             </Box>
                           </Box>
@@ -13868,11 +16672,7 @@ const Editemployee = () => {
                                 max: 180,
                                 style: { textAlign: "right" },
                                 onKeyDown: (e) => {
-                                  if (
-                                    ["e", "E", "+", "-"].includes(
-                                      e.key
-                                    )
-                                  ) {
+                                  if (["e", "E", "+", "-"].includes(e.key)) {
                                     e.preventDefault();
                                   }
                                 },
@@ -13925,8 +16725,6 @@ const Editemployee = () => {
                           mt={3}
                           gap={1.5}
                         >
-
-
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -13983,12 +16781,19 @@ const Editemployee = () => {
                 </Paper>
               </Box>
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {/* // Inventory Form */}
           {show == "20" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1, }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: Inventory form */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -14001,7 +16806,15 @@ const Editemployee = () => {
               )}
               {/* LEFT: Inventory form */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={InventoryinitialValue}
                     enableReinitialize={true}
@@ -14024,26 +16837,63 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#FFF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+ <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
                             <Typography sx={{ fontSize: 16 }}>📦</Typography>
+                            
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#C2410C">
+                           <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                           color="#0D94885"
+                          >
                             Inventory
                           </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                     
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                      >
                           Assigned inventory items
                         </Typography>
 
+   </Box>
+                          </Box>
                         {/* ----- Code/Name + Photo (separate column, matching reference image) ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={3}>
-                          <Box flex={1} minWidth={280} display="flex" flexDirection="column" gap={2}>
+                        <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                          <Box
+                            flex={1}
+                            minWidth={280}
+                            display="flex"
+                            flexDirection="column"
+                            gap={2}
+                          >
                             <TextField
                               fullWidth
                               variant="outlined"
@@ -14078,12 +16928,11 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
                           </Box>
-
                         </Box>
-
+  </Box>
                         {/* ----- LIST OF ITEMS (Top Table) - styled like reference, logic 100% unchanged ----- */}
                         <Box
                           sx={{
@@ -14093,42 +16942,119 @@ const Editemployee = () => {
                             mb: 3,
                           }}
                         >
-                          <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
+                          {/* <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            px={2}
+                            py={1.5}
+                            sx={{
+                              backgroundColor: "#F9FAFB",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
                             <Typography variant="body2" fontWeight={700}>
                               List of Items
                             </Typography>
-                          </Box>
+                          </Box> */}
 
-                          <Box height="50vh"
+                          <Box
                             sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
+                              height: "50vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
                                 borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
                                 color: "#fff",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": { color: "#fff", fontWeight: 700 },
-                              "& .MuiDataGrid-iconSeparator": { color: "#fff" },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
                           >
                             <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                               rows={filteredRows}
                               columns={AttColumn}
                               loading={Inventoryloading}
                               checkboxSelection
                               selectionModel={selectionModel3}
                               onSelectionModelChange={(newSelection) => {
-                                const newIds = newSelection.map((id) => String(id));
-                                const removedIds = selectionModel3.filter((id) => !newIds.includes(String(id)));
+                                const newIds = newSelection.map((id) =>
+                                  String(id),
+                                );
+                                const removedIds = selectionModel3.filter(
+                                  (id) => !newIds.includes(String(id)),
+                                );
                                 if (removedIds.length > 0) {
                                   Swal.fire({
                                     title: errorMsgData.Warningmsg.Remove,
@@ -14152,9 +17078,13 @@ const Editemployee = () => {
                               headerHeight={dataGridHeaderFooterHeight}
                               pageSize={pageSize}
                               page={page}
-                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
                               rowsPerPageOptions={[5, 10, 15, 20]}
-                              onPageChange={(pageno) => handlePagechange(pageno)}
+                              onPageChange={(pageno) =>
+                                handlePagechange(pageno)
+                              }
                               pagination
                               onCellClick={(params) => {
                                 selectCellRowData({
@@ -14165,12 +17095,19 @@ const Editemployee = () => {
                                 });
                               }}
                               components={{ Toolbar: Employee }}
-                              onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
                               getRowClassName={(params) =>
-                                params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
                               }
                               componentsProps={{
-                                toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
                               }}
                             />
                           </Box>
@@ -14179,29 +17116,117 @@ const Editemployee = () => {
                         {/* ----- 3-COLUMN GRID GROUP/CATEGORY/ITEMS - styled like reference, logic 100% unchanged ----- */}
                         <Box
                           display="grid"
-                          gridTemplateColumns={{ xs: "1fr", md: "repeat(2, 1fr)" }}
+                          gridTemplateColumns={{
+                            xs: "1fr",
+                            md: "repeat(2, 1fr)",
+                          }}
                           gap={2}
                         >
                           {/* Item Group */}
-                          <Box sx={{ border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
-                            <Box px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                              <Typography variant="body2" fontWeight={700}>List of Item Group :</Typography>
-                            </Box>
-                            <Box height="45vh"
+                          <Box
+                            sx={{
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Box
+                              px={2}
+                              py={1.5}
                               sx={{
-                                "& .MuiDataGrid-root": { border: "none" },
-                                "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                                "& .MuiDataGrid-columnHeaders": { backgroundColor: "#0D9488", borderBottom: "none" },
-                                "& .MuiDataGrid-columnHeaderTitle": { color: "#fff", fontWeight: 700 },
-                                "& .MuiDataGrid-footerContainer": { borderTop: "1px solid #E5E7EB", backgroundColor: "#0D9488", height: "auto", minHeight: 48 },
-                                "& .MuiTablePagination-root": { color: "#fff" },
-                                "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                                "& .odd-row": { backgroundColor: "" },
-                                "& .even-row": { backgroundColor: "#F3F4F6" },
-                                "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                                backgroundColor: "#F9FAFB",
+                                borderBottom: "1px solid #E5E7EB",
                               }}
                             >
-                              <DataGrid
+                              <Typography variant="body2" fontWeight={700}>
+                                List of Item Group :
+                              </Typography>
+                            </Box>
+                            <Box
+                            sx={{
+                              height: "45vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                                 rows={Inventorygrid1rows || []}
                                 columns={Att1Column || []}
                                 loading={Inventorygrid1loading}
@@ -14211,9 +17236,13 @@ const Editemployee = () => {
                                 headerHeight={dataGridHeaderFooterHeight}
                                 pageSize={pageSize}
                                 page={page}
-                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                onPageSizeChange={(newPageSize) =>
+                                  setPageSize(newPageSize)
+                                }
                                 rowsPerPageOptions={[5, 10, 15, 20]}
-                                onPageChange={(pageno) => handlePagechange(pageno)}
+                                onPageChange={(pageno) =>
+                                  handlePagechange(pageno)
+                                }
                                 pagination
                                 onCellClick={(params) => {
                                   selectCellRowData({
@@ -14228,7 +17257,9 @@ const Editemployee = () => {
                                 onSelectionModelChange={(ids) => {
                                   const selectedID = ids.slice(-1)[0];
                                   setSelectionModel([selectedID]);
-                                  const selectedRow = Inventorygrid1rows.find((row) => row.RecordID === selectedID);
+                                  const selectedRow = Inventorygrid1rows.find(
+                                    (row) => row.RecordID === selectedID,
+                                  );
                                   if (selectedRow) {
                                     dispatch(
                                       Inventorygrid2({
@@ -14237,41 +17268,133 @@ const Editemployee = () => {
                                         screenName: "Item Category",
                                         filter: `CompanyID=${CompanyID} AND ItemGroupID=${selectedRow.RecordID}`,
                                         any: "",
-                                      })
+                                      }),
                                     );
                                   }
                                 }}
-                                onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                                onStateChange={(stateParams) =>
+                                  setRowCount(stateParams.pagination.rowCount)
+                                }
                                 getRowClassName={(params) =>
-                                  params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                  params.indexRelativeToCurrentPage % 2 === 0
+                                    ? "odd-row"
+                                    : "even-row"
                                 }
                                 componentsProps={{
-                                  toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                  toolbar: {
+                                    showQuickFilter: true,
+                                    quickFilterProps: { debounceMs: 500 },
+                                  },
                                 }}
                               />
                             </Box>
                           </Box>
 
                           {/* Item Category */}
-                          <Box sx={{ border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
-                            <Box px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                              <Typography variant="body2" fontWeight={700}>List of Item Category :</Typography>
-                            </Box>
-                            <Box height="45vh"
+                          <Box
+                            sx={{
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Box
+                              px={2}
+                              py={1.5}
                               sx={{
-                                "& .MuiDataGrid-root": { border: "none" },
-                                "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                                "& .MuiDataGrid-columnHeaders": { backgroundColor: "#0D9488", borderBottom: "none" },
-                                "& .MuiDataGrid-columnHeaderTitle": { color: "#fff", fontWeight: 700 },
-                                "& .MuiDataGrid-footerContainer": { borderTop: "1px solid #E5E7EB", backgroundColor: "#0D9488", height: "auto", minHeight: 48 },
-                                "& .MuiTablePagination-root": { color: "#fff" },
-                                "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                                "& .odd-row": { backgroundColor: "" },
-                                "& .even-row": { backgroundColor: "#F3F4F6" },
-                                "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                                backgroundColor: "#F9FAFB",
+                                borderBottom: "1px solid #E5E7EB",
                               }}
                             >
-                              <DataGrid
+                              <Typography variant="body2" fontWeight={700}>
+                                List of Item Category :
+                              </Typography>
+                            </Box>
+                            <Box
+                            sx={{
+                              height: "45vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                                 rows={Inventorygrid2rows || []}
                                 columns={Att2Column || []}
                                 loading={exploreLoading}
@@ -14281,16 +17404,23 @@ const Editemployee = () => {
                                 headerHeight={dataGridHeaderFooterHeight}
                                 pageSize={pageSize}
                                 page={page}
-                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                onPageSizeChange={(newPageSize) =>
+                                  setPageSize(newPageSize)
+                                }
                                 rowsPerPageOptions={[5, 10, 15, 20]}
-                                onPageChange={(pageno) => handlePagechange(pageno)}
+                                onPageChange={(pageno) =>
+                                  handlePagechange(pageno)
+                                }
                                 pagination
                                 checkboxSelection
                                 selectionModel={selectionModel2}
                                 onSelectionModelChange={(ids) => {
-                                  const selectedIds = ids.map((id) => String(id));
+                                  const selectedIds = ids.map((id) =>
+                                    String(id),
+                                  );
                                   setSelectionModel2(selectedIds);
-                                  const commaSeparatedIds = selectedIds.join(",");
+                                  const commaSeparatedIds =
+                                    selectedIds.join(",");
                                   dispatch(
                                     Inventorygrid3({
                                       AccessID: "2153",
@@ -14298,7 +17428,7 @@ const Editemployee = () => {
                                       screenName: "Item",
                                       filter: `CompanyID=${CompanyID} AND ItemCategoryID IN (${commaSeparatedIds})`,
                                       any: "",
-                                    })
+                                    }),
                                   );
                                 }}
                                 onCellClick={(params) => {
@@ -14309,37 +17439,129 @@ const Editemployee = () => {
                                     setFieldValue,
                                   });
                                 }}
-                                onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                                onStateChange={(stateParams) =>
+                                  setRowCount(stateParams.pagination.rowCount)
+                                }
                                 getRowClassName={(params) =>
-                                  params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                  params.indexRelativeToCurrentPage % 2 === 0
+                                    ? "odd-row"
+                                    : "even-row"
                                 }
                                 componentsProps={{
-                                  toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                  toolbar: {
+                                    showQuickFilter: true,
+                                    quickFilterProps: { debounceMs: 500 },
+                                  },
                                 }}
                               />
                             </Box>
                           </Box>
 
                           {/* Items */}
-                          <Box sx={{ border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
-                            <Box px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                              <Typography variant="body2" fontWeight={700}>List of Items :</Typography>
-                            </Box>
-                            <Box height="45vh"
+                          <Box
+                            sx={{
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Box
+                              px={2}
+                              py={1.5}
                               sx={{
-                                "& .MuiDataGrid-root": { border: "none" },
-                                "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                                "& .MuiDataGrid-columnHeaders": { backgroundColor: "#0D9488", borderBottom: "none" },
-                                "& .MuiDataGrid-columnHeaderTitle": { color: "#fff", fontWeight: 700 },
-                                "& .MuiDataGrid-footerContainer": { borderTop: "1px solid #E5E7EB", backgroundColor: "#0D9488", height: "auto", minHeight: 48 },
-                                "& .MuiTablePagination-root": { color: "#fff" },
-                                "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                                "& .odd-row": { backgroundColor: "" },
-                                "& .even-row": { backgroundColor: "#F3F4F6" },
-                                "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                                backgroundColor: "#F9FAFB",
+                                borderBottom: "1px solid #E5E7EB",
                               }}
                             >
-                              <DataGrid
+                              <Typography variant="body2" fontWeight={700}>
+                                List of Items :
+                              </Typography>
+                            </Box>
+                             <Box
+                            sx={{
+                              height: "45vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                                 rows={Inventorygrid3rows || []}
                                 columns={Att3Column || []}
                                 loading={exploreLoading}
@@ -14349,15 +17571,23 @@ const Editemployee = () => {
                                 headerHeight={dataGridHeaderFooterHeight}
                                 pageSize={pageSize}
                                 page={page}
-                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                onPageSizeChange={(newPageSize) =>
+                                  setPageSize(newPageSize)
+                                }
                                 rowsPerPageOptions={[5, 10, 15, 20]}
-                                onPageChange={(pageno) => handlePagechange(pageno)}
+                                onPageChange={(pageno) =>
+                                  handlePagechange(pageno)
+                                }
                                 pagination
                                 checkboxSelection
                                 onSelectionModelChange={(ids) => {
-                                  const newSelected = ids.map((id) => String(id));
+                                  const newSelected = ids.map((id) =>
+                                    String(id),
+                                  );
                                   setSelectionModel3((prev) => {
-                                    const merged = [...new Set([...prev, ...newSelected])];
+                                    const merged = [
+                                      ...new Set([...prev, ...newSelected]),
+                                    ];
                                     return merged;
                                   });
                                 }}
@@ -14369,12 +17599,19 @@ const Editemployee = () => {
                                     setFieldValue,
                                   });
                                 }}
-                                onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                                onStateChange={(stateParams) =>
+                                  setRowCount(stateParams.pagination.rowCount)
+                                }
                                 getRowClassName={(params) =>
-                                  params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                  params.indexRelativeToCurrentPage % 2 === 0
+                                    ? "odd-row"
+                                    : "even-row"
                                 }
                                 componentsProps={{
-                                  toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                  toolbar: {
+                                    showQuickFilter: true,
+                                    quickFilterProps: { debounceMs: 500 },
+                                  },
                                 }}
                               />
                             </Box>
@@ -14382,9 +17619,12 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ----- BOTTOM ACTION BUTTONS ----- */}
-                        <Box display="flex" justifyContent="flex-end" mt={3} gap={1.5}>
-
-
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          mt={3}
+                          gap={1.5}
+                        >
                           <Button
                             color="secondary"
                             variant="contained"
@@ -14401,7 +17641,7 @@ const Editemployee = () => {
                               },
                             }}
                           >
-                            SAVE
+                            Save
                           </Button>
 
                           <Button
@@ -14420,15 +17660,12 @@ const Editemployee = () => {
                           >
                             Back
                           </Button>
-
                         </Box>
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
-
             </Box>
           ) : (
             false
@@ -14455,8 +17692,13 @@ const Editemployee = () => {
               )}
 
               {/* LEFT SIDE */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 {/* ================= MAIN CARD ================= */}
                 <Paper
                   elevation={0}
@@ -14464,10 +17706,9 @@ const Editemployee = () => {
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3
+                    p: 1,
                   }}
                 >
-
                   <Formik
                     initialValues={LCInitialValue}
                     validationSchema={validationSchema7}
@@ -14486,43 +17727,63 @@ const Editemployee = () => {
                       handleChange,
                       handleSubmit,
                       resetForm,
-                      setFieldValue
+                      setFieldValue,
                     }) => (
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenLeaveModal(true);
                         }}
                       >
-
                         {/* ================= HEADER ================= */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "50%",
-                            backgroundColor: "#E0E7FF",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                          }}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1.5}
+                          mb={3}
+                        >
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              bgcolor: "#EFF6FF",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: 18,
+                            }}
+                          >
                             <Typography sx={{ fontSize: 16 }}>🏖️</Typography>
                           </Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                            Leave Configuration
+                            <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#0D94885"
+                            >
+                            {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
                           </Typography>
-                        </Box>
+                
 
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Manage employee leave configuration details
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                        
+                        >
+                          Manage employee {getBusinessCaption("LeaveConfigurations", "Leave Configuration")} details
                         </Typography>
-
+                                </Box>
+        </Box>
                         {/* ================= TOP SECTION (Code + Name + Photo) ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
-
                           {/* LEFT FIELDS */}
                           <Box
                             flex={1}
@@ -14530,9 +17791,8 @@ const Editemployee = () => {
                             display="flex"
                             flexDirection="column"
                             gap={2}
-                            mt={3}
+                            mt={1}
                           >
-
                             <TextField
                               fullWidth
                               size="small"
@@ -14559,38 +17819,107 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
-
                           </Box>
                         </Box>
 
                         {/* ================= DATA GRID ================= */}
-                        <Box sx={{ height: "45vh", mt: 2 }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                       
+                           <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                        <Box 
+                        sx={{ height: "45vh",
+                            "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
-                            }}
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+
+                        }}
+                        >
+                          <DataGrid
+                            sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             loading={exploreLoading}
@@ -14600,7 +17929,9 @@ const Editemployee = () => {
                             headerHeight={dataGridHeaderFooterHeight}
                             pageSize={pageSize}
                             page={page}
-                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
                             rowsPerPageOptions={[5, 10, 15, 20]}
                             onPageChange={(pageno) => handlePagechange(pageno)}
                             pagination
@@ -14609,7 +17940,7 @@ const Editemployee = () => {
                                 rowData: params.row,
                                 mode: "E",
                                 field: params.field,
-                                setFieldValue
+                                setFieldValue,
                               });
                               setOpenLeaveModal(true);
                             }}
@@ -14619,7 +17950,7 @@ const Editemployee = () => {
                             }
                           />
                         </Box>
-
+</Box>
                         {/* ================= FORM FIELDS ================= */}
                         <Dialog
                           open={openLeaveModal}
@@ -14641,10 +17972,14 @@ const Editemployee = () => {
                             }}
                           >
                             <Typography variant="h6">
-                              {funMode === "A" ? "Add Leave Configuration" : "Edit Leave Configuration"}
+                              {funMode === "A"
+                                ? "Add Leave Configuration"
+                                : "Edit Leave Configuration"}
                             </Typography>
 
-                            <IconButton onClick={() => setOpenLeaveModal(false)}>
+                            <IconButton
+                              onClick={() => setOpenLeaveModal(false)}
+                            >
                               <CloseIcon />
                             </IconButton>
                           </DialogTitle>
@@ -14666,7 +18001,8 @@ const Editemployee = () => {
                                 name="leavetype"
                                 label={
                                   <>
-                                    Leave Type <span style={{ color: "red" }}>*</span>
+                                    Leave Type{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.leavetype}
@@ -14677,8 +18013,12 @@ const Editemployee = () => {
                                     Name: newValue.Name,
                                   });
                                 }}
-                                error={!!touched.leavetype && !!errors.leavetype}
-                                helperText={touched.leavetype && errors.leavetype}
+                                error={
+                                  !!touched.leavetype && !!errors.leavetype
+                                }
+                                helperText={
+                                  touched.leavetype && errors.leavetype
+                                }
                                 url={`${listViewurl}?data=${JSON.stringify({
                                   Query: {
                                     AccessID: "2092",
@@ -14699,7 +18039,10 @@ const Editemployee = () => {
                                 value={values.totaldays}
                                 onBlur={(e) => {
                                   handleBlur(e);
-                                  setFieldValue("totaldays", formatTwoDecimals(e.target.value));
+                                  setFieldValue(
+                                    "totaldays",
+                                    formatTwoDecimals(e.target.value),
+                                  );
                                 }}
                                 onChange={handleChange}
                               />
@@ -14715,7 +18058,7 @@ const Editemployee = () => {
                                   handleBlur(e);
                                   setFieldValue(
                                     "availableleave",
-                                    formatTwoDecimals(e.target.value)
+                                    formatTwoDecimals(e.target.value),
                                   );
                                 }}
                                 onChange={handleChange}
@@ -14727,7 +18070,7 @@ const Editemployee = () => {
                                 label="Balance Days"
                                 value={formatTwoDecimals(
                                   Number(values.totaldays) -
-                                  Number(values.availableleave)
+                                    Number(values.availableleave),
                                 )}
                                 InputProps={{
                                   readOnly: true,
@@ -14820,7 +18163,7 @@ const Editemployee = () => {
                                   },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
                             </Box>
                           </DialogActions>
@@ -14866,20 +18209,25 @@ const Editemployee = () => {
                           </Button>
 
                         </Box> */}
-
                       </form>
                     )}
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {/* Locality Form */}
           {show == "13" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -14892,29 +18240,43 @@ const Editemployee = () => {
               )}
 
               {/* LEFT SIDE - MAIN FORM */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={2}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+              >
                 {/* HEADER CARD */}
-                <Paper elevation={0} sx={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 3,
-                  p: 3
-                }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <Box sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "#FEE2E2",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#FEE2E2",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       <Typography sx={{ fontSize: 20 }}>📍</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#1F2937"
+                      >
                         Locality Details
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -14942,18 +18304,27 @@ const Editemployee = () => {
                       handleSubmit,
                       handleChange,
                       resetForm,
-                      setFieldValue
+                      setFieldValue,
                     }) => (
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenLocalityModal(true);
                         }}
                       >
                         {/* Code & Name Fields */}
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2} mt={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                          mt={2}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -14986,38 +18357,100 @@ const Editemployee = () => {
                         </Box>
 
                         {/* Data Grid Section */}
-                        <Box sx={{
-                          height: "45vh",
-                          mt: 3,
-                          backgroundColor: "#F9FAFB",
-                          borderRadius: 2,
-                          border: "1px solid #E5E7EB",
-                          p: 1
-                        }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                        <Box
+                           sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 4
+                          }}
+                        >
+                          <Box 
+                           sx={{
+                              height: "55vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
+                          >
+                          <DataGrid
+                           sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             disableSelectionOnClick
@@ -15025,7 +18458,9 @@ const Editemployee = () => {
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
                             pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
                             onCellClick={(params) => {
                               selectCellRowData({
                                 rowData: params.row,
@@ -15056,7 +18491,7 @@ const Editemployee = () => {
                             }
                           />
                         </Box>
-
+  </Box>
                         {/* Additional Fields */}
                         <Dialog
                           open={openLocalityModal}
@@ -15089,7 +18524,12 @@ const Editemployee = () => {
                               overflowY: "auto",
                             }}
                           >
-                            <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="1fr 1fr"
+                              gap={2}
+                              mt={1}
+                            >
                               <TextField
                                 fullWidth
                                 size="small"
@@ -15106,8 +18546,13 @@ const Editemployee = () => {
                                 value={values.localitycode}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                error={!!touched.localitycode && !!errors.localitycode}
-                                helperText={touched.localitycode && errors.localitycode}
+                                error={
+                                  !!touched.localitycode &&
+                                  !!errors.localitycode
+                                }
+                                helperText={
+                                  touched.localitycode && errors.localitycode
+                                }
                                 InputProps={{
                                   readOnly: CompanyAutoCode === "Y",
                                 }}
@@ -15126,8 +18571,13 @@ const Editemployee = () => {
                                 value={values.localityname}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                error={!!touched.localityname && !!errors.localityname}
-                                helperText={touched.localityname && errors.localityname}
+                                error={
+                                  !!touched.localityname &&
+                                  !!errors.localityname
+                                }
+                                helperText={
+                                  touched.localityname && errors.localityname
+                                }
                               />
 
                               <TextField
@@ -15144,8 +18594,12 @@ const Editemployee = () => {
                                     handleChange(e);
                                   }
                                 }}
-                                error={!!touched.LCpincode && !!errors.LCpincode}
-                                helperText={touched.LCpincode && errors.LCpincode}
+                                error={
+                                  !!touched.LCpincode && !!errors.LCpincode
+                                }
+                                helperText={
+                                  touched.LCpincode && errors.LCpincode
+                                }
                                 inputProps={{ maxLength: 6 }}
                               />
                             </Box>
@@ -15193,7 +18647,11 @@ const Editemployee = () => {
                                     confirmButtonText: "Confirm",
                                   }).then((result) => {
                                     if (result.isConfirmed) {
-                                      FnLocalilty(values, resetForm, "harddelete");
+                                      FnLocalilty(
+                                        values,
+                                        resetForm,
+                                        "harddelete",
+                                      );
                                     }
                                   });
                                 }}
@@ -15285,7 +18743,6 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
           ) : (
             false
@@ -15293,8 +18750,13 @@ const Editemployee = () => {
 
           {/* //Item custody  */}
           {show == "17" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: Sidebar */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -15307,15 +18769,20 @@ const Editemployee = () => {
               )}
 
               {/* LEFT MAIN */}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 <Paper
                   elevation={0}
                   sx={{
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
                   <Formik
@@ -15341,38 +18808,63 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenItemCustodyModal(true);
-
                         }}
                       >
-
                         {/* ================= HEADER ================= */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "50%",
-                            backgroundColor: "#E0E7FF",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                          }}>
+                         <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
                             <Typography sx={{ fontSize: 16 }}>📦</Typography>
-                          </Box>
+                        </Box>
+                            <Box>
 
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
                             Item Custody Details
                           </Typography>
-                        </Box>
+                   
 
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                        
+                        >
                           Manage employee item allocation and tracking
                         </Typography>
-
+     </Box>
+          </Box>
                         {/* ================= CODE + NAME ================= */}
-                        <Box display="flex" flexDirection="column" gap={2} mb={3}>
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          gap={2}
+                          mb={3}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -15391,32 +18883,102 @@ const Editemployee = () => {
                             InputProps={{ readOnly: true }}
                           />
                         </Box>
-
+     </Box>
                         {/* ================= TABLE (STYLED) ================= */}
-                        <Box sx={{ height: "45vh", mb: 3, border: "1px solid #E5E7EB", borderRadius: 2, overflow: "hidden" }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                       <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                        <Box
+                          sx={{
+                              height: "55vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
+                        >
+                          <DataGrid
+                           sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             loading={exploreLoading}
@@ -15456,7 +19018,7 @@ const Editemployee = () => {
                             }}
                           />
                         </Box>
-
+</Box>
                         {/* ================= FORM FIELDS (MODERN STYLE) ================= */}
                         <Dialog
                           open={openItemCustodyModal}
@@ -15464,9 +19026,7 @@ const Editemployee = () => {
                           fullWidth
                           maxWidth="sm"
                         >
-                          <DialogTitle>
-                            Item Custody Details
-                          </DialogTitle>
+                          <DialogTitle>Item Custody Details</DialogTitle>
 
                           <DialogContent
                             dividers
@@ -15475,12 +19035,12 @@ const Editemployee = () => {
                             }}
                           >
                             <Box display="flex" flexDirection="column" gap={2}>
-
                               <ItemGroupLookup
                                 name="itemGroup"
                                 label={
                                   <>
-                                    Item Group <span style={{ color: "red" }}>*</span>
+                                    Item Group{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 variant="outlined"
@@ -15488,11 +19048,18 @@ const Editemployee = () => {
                                 value={values.itemGroup}
                                 onChange={(newValue) => {
                                   setFieldValue("itemGroup", newValue);
-                                  setFieldValue("itemGroupID", newValue?.RecordID);
+                                  setFieldValue(
+                                    "itemGroupID",
+                                    newValue?.RecordID,
+                                  );
                                   setFieldValue("items", null);
                                 }}
-                                error={!!touched.itemGroup && !!errors.itemGroup}
-                                helperText={touched.itemGroup && errors.itemGroup}
+                                error={
+                                  !!touched.itemGroup && !!errors.itemGroup
+                                }
+                                helperText={
+                                  touched.itemGroup && errors.itemGroup
+                                }
                                 url={`${listViewurl}?data=${JSON.stringify({
                                   Query: {
                                     AccessID: "2144",
@@ -15508,7 +19075,8 @@ const Editemployee = () => {
                                 name="items"
                                 label={
                                   <>
-                                    Items <span style={{ color: "red" }}>*</span>
+                                    Items{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 variant="outlined"
@@ -15535,7 +19103,8 @@ const Editemployee = () => {
                                 size="small"
                                 label={
                                   <>
-                                    Item Value <span style={{ color: "red" }}>*</span>
+                                    Item Value{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.ItemValue}
@@ -15549,8 +19118,12 @@ const Editemployee = () => {
                                   const num = parseFloat(e.target.value || 0);
                                   setFieldValue("ItemValue", num.toFixed(2));
                                 }}
-                                error={!!touched.ItemValue && !!errors.ItemValue}
-                                helperText={touched.ItemValue && errors.ItemValue}
+                                error={
+                                  !!touched.ItemValue && !!errors.ItemValue
+                                }
+                                helperText={
+                                  touched.ItemValue && errors.ItemValue
+                                }
                                 InputProps={{
                                   inputProps: {
                                     style: { textAlign: "right" },
@@ -15564,7 +19137,8 @@ const Editemployee = () => {
                                 name="AssestID"
                                 label={
                                   <>
-                                    Asset ID <span style={{ color: "red" }}>*</span>
+                                    Asset ID{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.AssestID}
@@ -15580,26 +19154,31 @@ const Editemployee = () => {
                                 name="PurchaseReference"
                                 label={
                                   <>
-                                    Purchase Reference <span style={{ color: "red" }}>*</span>
+                                    Purchase Reference{" "}
+                                    <span style={{ color: "red" }}>*</span>
                                   </>
                                 }
                                 value={values.PurchaseReference}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={!!touched.PurchaseReference && !!errors.PurchaseReference}
-                                helperText={touched.PurchaseReference && errors.PurchaseReference}
+                                error={
+                                  !!touched.PurchaseReference &&
+                                  !!errors.PurchaseReference
+                                }
+                                helperText={
+                                  touched.PurchaseReference &&
+                                  errors.PurchaseReference
+                                }
                               />
-
                             </Box>
                           </DialogContent>
 
                           <DialogActions>
-
                             <LoadingButton
                               type="submit"
                               variant="contained"
                               loading={isLoading}
-                              onClick={(handleSubmit)}
+                              onClick={handleSubmit}
                               sx={{
                                 textTransform: "none",
                                 borderRadius: 2,
@@ -15614,9 +19193,6 @@ const Editemployee = () => {
                               Save
                             </LoadingButton>
 
-
-
-
                             {funMode === "E" && (
                               <Button
                                 variant="contained"
@@ -15630,7 +19206,11 @@ const Editemployee = () => {
                                     confirmButtonText: "Confirm",
                                   }).then((result) => {
                                     if (result.isConfirmed) {
-                                      empItemCustody1Fn(values, resetForm, "harddelete");
+                                      empItemCustody1Fn(
+                                        values,
+                                        resetForm,
+                                        "harddelete",
+                                      );
                                     }
                                   });
                                 }}
@@ -15643,7 +19223,8 @@ const Editemployee = () => {
                                   boxShadow: "none",
                                   "&:hover": {
                                     bgcolor: "#B91C1C",
-                                    boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                    boxShadow:
+                                      "0 4px 10px rgba(220,38,38,0.25)",
                                   },
                                   "&:active": {
                                     bgcolor: "#991B1B",
@@ -15653,7 +19234,6 @@ const Editemployee = () => {
                                 Delete
                               </Button>
                             )}
-
 
                             <Button
                               variant="contained"
@@ -15669,9 +19249,8 @@ const Editemployee = () => {
                                 },
                               }}
                             >
-                              Cancel
+                              Back
                             </Button>
-
                           </DialogActions>
                         </Dialog>
 
@@ -15756,13 +19335,20 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
             </Box>
-          ) : false}
+          ) : (
+            false
+          )}
 
           {/* Specimen sign */}
           {show == "18" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: Sidebar */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -15776,30 +19362,39 @@ const Editemployee = () => {
 
               {/* MAIN FORM */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 3,
-                  p: 3
-                }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   {SpecimenGetloading && <LinearProgress />}
                   {SpecimenPostloading && <LinearProgress />}
 
                   {/* HEADER */}
                   <Box display="flex" alignItems="center" gap={1} mb={2}>
-                    <Box sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "#DBEAFE",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#DBEAFE",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       <Typography sx={{ fontSize: 20 }}>📋</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#1F2937"
+                      >
                         Specimen Signatures
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -15828,7 +19423,12 @@ const Editemployee = () => {
                     }) => (
                       <form onSubmit={handleSubmit}>
                         {/* Code & Name */}
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2} mt={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                          mt={2}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -15863,18 +19463,28 @@ const Editemployee = () => {
                         </Box>
 
                         {/* Signature Upload Sections */}
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }} gap={2} mt={3}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{
+                            xs: "1fr",
+                            md: "repeat(3, 1fr)",
+                          }}
+                          gap={2}
+                          mt={3}
+                        >
                           {/* Prepared By */}
-                          <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 1,
-                            p: 2,
-                            border: "1px solid #E5E7EB",
-                            borderRadius: 2,
-                            backgroundColor: "#F9FAFB"
-                          }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: 1,
+                              p: 2,
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              backgroundColor: "#F9FAFB",
+                            }}
+                          >
                             <Typography variant="subtitle2" fontWeight={700}>
                               Prepared By
                             </Typography>
@@ -15900,9 +19510,12 @@ const Editemployee = () => {
                                 if (sign1 || SpecimenGetdata.EMP_SIGN1) {
                                   window.open(
                                     sign1
-                                      ? store.getState().globalurl.SOPUploadUrl + sign1
-                                      : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN1,
-                                    "_blank"
+                                      ? store.getState().globalurl
+                                          .SOPUploadUrl + sign1
+                                      : store.getState().globalurl
+                                          .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN1,
+                                    "_blank",
                                   );
                                 } else {
                                   toast.error("Please upload file");
@@ -15911,25 +19524,32 @@ const Editemployee = () => {
                             >
                               View Image
                             </Button>
-                            <Box sx={{
-                              width: 150,
-                              height: 150,
-                              borderRadius: 2,
-                              overflow: "hidden",
-                              backgroundColor: "#fff",
-                              border: "1px solid #E5E7EB",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center"
-                            }}>
-                              {sign1Preview || sign1 || SpecimenGetdata.EMP_SIGN1 ? (
+                            <Box
+                              sx={{
+                                width: 150,
+                                height: 150,
+                                borderRadius: 2,
+                                overflow: "hidden",
+                                backgroundColor: "#fff",
+                                border: "1px solid #E5E7EB",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              {sign1Preview ||
+                              sign1 ||
+                              SpecimenGetdata.EMP_SIGN1 ? (
                                 <img
                                   src={
                                     sign1Preview
                                       ? sign1Preview
                                       : sign1
-                                        ? store.getState().globalurl.SOPUploadUrl + sign1
-                                        : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN1
+                                        ? store.getState().globalurl
+                                            .SOPUploadUrl + sign1
+                                        : store.getState().globalurl
+                                            .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN1
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -15938,7 +19558,12 @@ const Editemployee = () => {
                                   }}
                                 />
                               ) : (
-                                <Typography variant="caption" color="error" align="center" sx={{ p: 1 }}>
+                                <Typography
+                                  variant="caption"
+                                  color="error"
+                                  align="center"
+                                  sx={{ p: 1 }}
+                                >
                                   No image uploaded
                                 </Typography>
                               )}
@@ -15946,16 +19571,18 @@ const Editemployee = () => {
                           </Box>
 
                           {/* Reviewed By */}
-                          <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 1,
-                            p: 2,
-                            border: "1px solid #E5E7EB",
-                            borderRadius: 2,
-                            backgroundColor: "#F9FAFB"
-                          }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: 1,
+                              p: 2,
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              backgroundColor: "#F9FAFB",
+                            }}
+                          >
                             <Typography variant="subtitle2" fontWeight={700}>
                               Reviewed By
                             </Typography>
@@ -15981,9 +19608,12 @@ const Editemployee = () => {
                                 if (sign2 || SpecimenGetdata.EMP_SIGN2) {
                                   window.open(
                                     sign2
-                                      ? store.getState().globalurl.SOPUploadUrl + sign2
-                                      : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN2,
-                                    "_blank"
+                                      ? store.getState().globalurl
+                                          .SOPUploadUrl + sign2
+                                      : store.getState().globalurl
+                                          .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN2,
+                                    "_blank",
                                   );
                                 } else {
                                   toast.error("Please upload file");
@@ -15992,25 +19622,32 @@ const Editemployee = () => {
                             >
                               View Image
                             </Button>
-                            <Box sx={{
-                              width: 150,
-                              height: 150,
-                              borderRadius: 2,
-                              overflow: "hidden",
-                              backgroundColor: "#fff",
-                              border: "1px solid #E5E7EB",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center"
-                            }}>
-                              {sign2Preview || sign2 || SpecimenGetdata.EMP_SIGN2 ? (
+                            <Box
+                              sx={{
+                                width: 150,
+                                height: 150,
+                                borderRadius: 2,
+                                overflow: "hidden",
+                                backgroundColor: "#fff",
+                                border: "1px solid #E5E7EB",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              {sign2Preview ||
+                              sign2 ||
+                              SpecimenGetdata.EMP_SIGN2 ? (
                                 <img
                                   src={
                                     sign2Preview
                                       ? sign2Preview
                                       : sign2
-                                        ? store.getState().globalurl.SOPUploadUrl + sign2
-                                        : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN2
+                                        ? store.getState().globalurl
+                                            .SOPUploadUrl + sign2
+                                        : store.getState().globalurl
+                                            .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN2
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -16019,7 +19656,12 @@ const Editemployee = () => {
                                   }}
                                 />
                               ) : (
-                                <Typography variant="caption" color="error" align="center" sx={{ p: 1 }}>
+                                <Typography
+                                  variant="caption"
+                                  color="error"
+                                  align="center"
+                                  sx={{ p: 1 }}
+                                >
                                   No image uploaded
                                 </Typography>
                               )}
@@ -16027,16 +19669,18 @@ const Editemployee = () => {
                           </Box>
 
                           {/* Approved By */}
-                          <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 1,
-                            p: 2,
-                            border: "1px solid #E5E7EB",
-                            borderRadius: 2,
-                            backgroundColor: "#F9FAFB"
-                          }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: 1,
+                              p: 2,
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              backgroundColor: "#F9FAFB",
+                            }}
+                          >
                             <Typography variant="subtitle2" fontWeight={700}>
                               Approved By
                             </Typography>
@@ -16062,9 +19706,12 @@ const Editemployee = () => {
                                 if (sign3 || SpecimenGetdata.EMP_SIGN3) {
                                   window.open(
                                     sign3
-                                      ? store.getState().globalurl.SOPUploadUrl + sign3
-                                      : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN3,
-                                    "_blank"
+                                      ? store.getState().globalurl
+                                          .SOPUploadUrl + sign3
+                                      : store.getState().globalurl
+                                          .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN3,
+                                    "_blank",
                                   );
                                 } else {
                                   toast.error("Please upload file");
@@ -16073,25 +19720,32 @@ const Editemployee = () => {
                             >
                               View Image
                             </Button>
-                            <Box sx={{
-                              width: 150,
-                              height: 150,
-                              borderRadius: 2,
-                              overflow: "hidden",
-                              backgroundColor: "#fff",
-                              border: "1px solid #E5E7EB",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center"
-                            }}>
-                              {sign3Preview || sign3 || SpecimenGetdata.EMP_SIGN3 ? (
+                            <Box
+                              sx={{
+                                width: 150,
+                                height: 150,
+                                borderRadius: 2,
+                                overflow: "hidden",
+                                backgroundColor: "#fff",
+                                border: "1px solid #E5E7EB",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              {sign3Preview ||
+                              sign3 ||
+                              SpecimenGetdata.EMP_SIGN3 ? (
                                 <img
                                   src={
                                     sign3Preview
                                       ? sign3Preview
                                       : sign3
-                                        ? store.getState().globalurl.SOPUploadUrl + sign3
-                                        : store.getState().globalurl.SOPUploadUrl + SpecimenGetdata.EMP_SIGN3
+                                        ? store.getState().globalurl
+                                            .SOPUploadUrl + sign3
+                                        : store.getState().globalurl
+                                            .SOPUploadUrl +
+                                          SpecimenGetdata.EMP_SIGN3
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -16100,7 +19754,12 @@ const Editemployee = () => {
                                   }}
                                 />
                               ) : (
-                                <Typography variant="caption" color="error" align="center" sx={{ p: 1 }}>
+                                <Typography
+                                  variant="caption"
+                                  color="error"
+                                  align="center"
+                                  sx={{ p: 1 }}
+                                >
                                   No image uploaded
                                 </Typography>
                               )}
@@ -16109,7 +19768,12 @@ const Editemployee = () => {
                         </Box>
 
                         {/* Action Buttons */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          gap={2}
+                          mt={4}
+                        >
                           <LoadingButton
                             color="secondary"
                             variant="contained"
@@ -16143,7 +19807,7 @@ const Editemployee = () => {
                               },
                             }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -16151,8 +19815,6 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
-
             </Box>
           ) : (
             false
@@ -16160,8 +19822,13 @@ const Editemployee = () => {
 
           {/* // SOP CONFIGURATION */}
           {show == "19" ? (
-
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {/* RIGHT: Sidebar*/}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -16175,29 +19842,38 @@ const Editemployee = () => {
 
               {/* MAIN FORM */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 3,
-                  p: 3
-                }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   {SOPConfigGetLoading && <LinearProgress />}
 
                   {/* HEADER */}
                   <Box display="flex" alignItems="center" gap={1} mb={2}>
-                    <Box sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "#D1FAE5",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#D1FAE5",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       <Typography sx={{ fontSize: 20 }}>⚙️</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={700}
+                        color="#1F2937"
+                      >
                         SOP Configuration
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -16225,12 +19901,24 @@ const Editemployee = () => {
                       resetForm,
                       setFieldValue,
                     }) => (
-                      <form onSubmit={handleSubmit} onReset={() => {
-                        selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                        resetForm();
-                      }}>
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
+                          resetForm();
+                        }}
+                      >
                         {/* Code & Description */}
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2} mt={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                          mt={2}
+                        >
                           <TextField
                             fullWidth
                             size="small"
@@ -16267,16 +19955,24 @@ const Editemployee = () => {
                             userimg,
                             isImgChanged,
                             imgUpload,
-                            "Profile Photo"
+                            "Profile Photo",
                           )}
                         </Box>
 
                         {/* Roles and Responsibilities */}
-                        <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                        >
                           Roles and Responsibilities
                         </Typography>
 
-                        <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
+                        <Box
+                          display="grid"
+                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                          gap={2}
+                        >
                           <Box display="flex" alignItems="center" gap={2}>
                             <Field
                               type="checkbox"
@@ -16325,7 +20021,12 @@ const Editemployee = () => {
                         </Box>
 
                         {/* Action Buttons */}
-                        <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          gap={2}
+                          mt={4}
+                        >
                           {YearFlag === "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -16346,7 +20047,11 @@ const Editemployee = () => {
                               Save
                             </LoadingButton>
                           ) : (
-                            <Button color="secondary" variant="contained" disabled >
+                            <Button
+                              color="secondary"
+                              variant="contained"
+                              disabled
+                            >
                               Save
                             </Button>
                           )}
@@ -16374,8 +20079,6 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
-
             </Box>
           ) : (
             false
@@ -16383,7 +20086,13 @@ const Editemployee = () => {
 
           {/* Document */}
           {show == "21" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {mode !== "A" && (
                 <FormSectionsSidebar
                   show={show}
@@ -16395,7 +20104,15 @@ const Editemployee = () => {
               )}
               {/* LEFT: Document content */}
               <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
                   <Formik
                     initialValues={DocumentMasterInitialValue}
                     enableReinitialize={true}
@@ -16411,23 +20128,54 @@ const Editemployee = () => {
                       resetForm,
                     }) => (
                       <form onSubmit={handleSubmit}>
-
                         {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                         <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
                             <Typography sx={{ fontSize: 16 }}>📑</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
                             {getBusinessCaption("Documents", "Documents")}
                           </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                         
+                        >
                           Upload and manage documents
                         </Typography>
-
+        </Box>
+                </Box>
                         {/* ----- Code/Name + Photo (separate column) ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap" mb={3}>
-                          <Box flex={1} minWidth={280} display="flex" flexDirection="column" gap={2}>
+                          <Box
+                            flex={1}
+                            minWidth={280}
+                            display="flex"
+                            flexDirection="column"
+                            gap={2}
+                          >
                             <TextField
                               fullWidth
                               variant="outlined"
@@ -16464,12 +20212,11 @@ const Editemployee = () => {
                               userimg,
                               isImgChanged,
                               imgUpload,
-                              "Profile Photo"
+                              "Profile Photo",
                             )}
                           </Box>
-
                         </Box>
-
+        </Box>
                         {/* ----- LIST OF DOCUMENTS TABLE ----- */}
                         <Box
                           sx={{
@@ -16478,38 +20225,109 @@ const Editemployee = () => {
                             overflow: "hidden",
                           }}
                         >
-                          <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                            <Typography variant="body2" fontWeight={700}>
-                              List of Documents ({explorelistViewData?.length || 0})
-                            </Typography>
-                          </Box>
-
-                          <Box height={dataGridHeightExplore}
+                          {/* <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            px={2}
+                            py={1.5}
                             sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
-                                borderBottom: "none"
+                              backgroundColor: "#F9FAFB",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="body2" fontWeight={700}>
+                              List of Documents (
+                              {explorelistViewData?.length || 0})
+                            </Typography>
+                          </Box> */}
+
+                          <Box
+                            height={dataGridHeightExplore}
+                             sx={{
+                             
+                              "& .MuiDataGrid-root": {
+                                border: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: '40px'
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
                           >
                             <DataGrid
+                            sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                               rows={explorelistViewData}
                               columns={columns}
                               disableSelectionOnClick
@@ -16517,24 +20335,38 @@ const Editemployee = () => {
                               rowHeight={dataGridRowHeight}
                               headerHeight={dataGridHeaderFooterHeight}
                               pageSize={pageSize}
-                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
                               rowsPerPageOptions={[5, 10, 20]}
                               pagination
                               components={{ Toolbar: Employee }}
-                              onStateChange={(stateParams) => setRowCount(stateParams.pagination.rowCount)}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
                               loading={exploreLoading}
                               componentsProps={{
-                                toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
                               }}
                               getRowClassName={(params) =>
-                                params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
                               }
                             />
                           </Box>
                         </Box>
 
                         {/* ----- ACTIONS GUIDE + CANCEL ----- */}
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mt={3}>
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          mt={3}
+                        >
                           <Box>
                             <Typography fontWeight={600} fontSize={14} mb={1}>
                               Actions Guide
@@ -16547,11 +20379,22 @@ const Editemployee = () => {
                           </Box>
 
                           <Button
+                          type="reset"
                             variant="outlined"
                             onClick={() => setScreen("0")}
-                            sx={{ textTransform: "none", borderRadius: 2 }}
+                             sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        color: "#fff",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                          color: "#fff",
+                        },
+                      }}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </form>
@@ -16559,9 +20402,6 @@ const Editemployee = () => {
                   </Formik>
                 </Paper>
               </Box>
-
-
-
             </Box>
           ) : (
             false
@@ -16569,7 +20409,13 @@ const Editemployee = () => {
 
           {/* COURSE ATTENDANCE */}
           {show == "23" ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
               {mode !== "A" && (
                 <FormSectionsSidebar
                   show={show}
@@ -16579,14 +20425,20 @@ const Editemployee = () => {
                   onToggle={() => setSectionsOpen((p) => !p)}
                 />
               )}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
                 <Paper
                   elevation={0}
                   sx={{
                     backgroundColor: "#fff",
                     border: "1px solid #E5E7EB",
                     borderRadius: 3,
-                    p: 3,
+                    p: 1,
                   }}
                 >
                   <Formik
@@ -16613,35 +20465,58 @@ const Editemployee = () => {
                       <form
                         onSubmit={handleSubmit}
                         onReset={() => {
-                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          selectCellRowData({
+                            rowData: {},
+                            mode: "A",
+                            field: "",
+                          });
                           resetForm();
                           setOpenCourseModal(true);
                         }}
                       >
                         {/* ================= HEADER ================= */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                        <Box
+                        display="flex"
+  alignItems="flex-start"
+  gap={1.5}
+  mb={1}
+                        >
                           <Box
                             sx={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                              backgroundColor: "#E0E7FF",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EEF2FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+    }}
                           >
-                            <Typography sx={{ fontSize: 16 }}>📋</Typography>
+                            <Typography sx={{ fontSize: 18 }}>📋</Typography>
                           </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                      <Box>
+    <Typography
+    variant="subtitle1"
+      fontWeight={700}
+      sx={{ color: "#0D94885", lineHeight: 1.2 }}
+    >
                             Course Attendance
                           </Typography>
-                        </Box>
+                      
 
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
+                        <Typography
+                          variant="body2"
+      sx={{
+        color: "text.secondary",
+        fontSize: 13,
+        mt: 0.3,
+      }}
+                        >
                           Manage Course Attendance information and details
                         </Typography>
-
+                          </Box>
+  </Box>
                         {/* ================= TOP SECTION (Code + Name + Photo) ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
                           <Box
@@ -16650,7 +20525,7 @@ const Editemployee = () => {
                             display="flex"
                             flexDirection="column"
                             gap={2}
-                            mt={3}
+                            mt={1}
                           >
                             <TextField
                               fullWidth
@@ -16699,31 +20574,100 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ================= DATA GRID (full width) ================= */}
-                        <Box sx={{ height: "45vh", mt: 2 }}>
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-root": { border: "none" },
-                              "& .MuiDataGrid-cell": { borderBottom: "1px solid #F3F4F6" },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: "#0D9488",
+                         <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2
+                          }}
+                        >
+                          <Box 
+                           sx={{
+                              height: "45vh",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
                                 borderBottom: "none",
                               },
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: "#fff",
-                                fontWeight: 700,
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
                               },
                               "& .MuiDataGrid-footerContainer": {
-                                borderTop: "1px solid #E5E7EB",
-                                backgroundColor: "#0D9488",
-                                height: "40px",
-                                minHeight: "40px",
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
                               },
-                              "& .MuiTablePagination-root": { color: "#fff" },
-                              "& .MuiCheckbox-root": { color: "#69a7a1 !important" },
-                              "& .odd-row": { backgroundColor: "" },
-                              "& .even-row": { backgroundColor: "#F3F4F6" },
-                              "& .MuiDataGrid-virtualScroller": { paddingBottom: "8px" },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
                             }}
+                          >
+                          <DataGrid
+                           sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
                             rows={explorelistViewData}
                             columns={columns}
                             disableSelectionOnClick
@@ -16731,7 +20675,9 @@ const Editemployee = () => {
                             pageSize={pageSize}
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
-                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
                             onCellClick={(params) => {
                               selectCellRowData({
                                 rowData: params.row,
@@ -16763,7 +20709,7 @@ const Editemployee = () => {
                             }}
                           />
                         </Box>
-
+</Box>
                         {/* ================= FORM FIELDS (POPUP) ================= */}
                         <Dialog
                           open={openCourseModal}
@@ -16785,10 +20731,14 @@ const Editemployee = () => {
                             }}
                           >
                             <Typography variant="h6">
-                              {funMode === "A" ? "Add Course Attendance" : "Edit Course Attendance"}
+                              {funMode === "A"
+                                ? "Add Course Attendance"
+                                : "Edit Course Attendance"}
                             </Typography>
 
-                            <IconButton onClick={() => setOpenCourseModal(false)}>
+                            <IconButton
+                              onClick={() => setOpenCourseModal(false)}
+                            >
                               <CloseIcon />
                             </IconButton>
                           </DialogTitle>
@@ -16812,7 +20762,11 @@ const Editemployee = () => {
                                 label={
                                   <>
                                     {getBusinessCaption("Project", "Project")}
-                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
                                   </>
                                 }
                                 variant="outlined"
@@ -16847,7 +20801,11 @@ const Editemployee = () => {
                                 label={
                                   <span>
                                     Shift 1
-                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
                                   </span>
                                 }
                                 variant="outlined"
@@ -16865,7 +20823,10 @@ const Editemployee = () => {
                                     Name: newValue.Name,
                                   });
                                   console.log(newValue, "--newvalue shift");
-                                  console.log(newValue.RecordID, "shift RecordID");
+                                  console.log(
+                                    newValue.RecordID,
+                                    "shift RecordID",
+                                  );
                                 }}
                                 url={`${listViewurl}?data=${JSON.stringify({
                                   Query: {
@@ -16897,7 +20858,10 @@ const Editemployee = () => {
                                     Name: newValue.Name,
                                   });
                                   console.log(newValue, "--newvalue shift2");
-                                  console.log(newValue.RecordID, "shift2 RecordID");
+                                  console.log(
+                                    newValue.RecordID,
+                                    "shift2 RecordID",
+                                  );
                                 }}
                                 url={`${listViewurl}?data=${JSON.stringify({
                                   Query: {
@@ -16920,19 +20884,17 @@ const Editemployee = () => {
                               justifyContent: "flex-end",
                             }}
                           >
-
                             <Box display="flex" gap={1}>
-
-
                               <LoadingButton
-                                color="secondary"
+                                
                                 variant="contained"
                                 loading={isLoading}
                                 onClick={handleSubmit}
                                 sx={{
-                                  px: 4,
-                                  borderRadius: 2,
                                   textTransform: "none",
+                                  borderRadius: 2,
+                                  color: "#fff",
+                                  px: 4,
                                   bgcolor: "#0D9488",
                                   "&:hover": {
                                     bgcolor: "#0F766E",
@@ -16945,19 +20907,19 @@ const Editemployee = () => {
                                 variant="contained"
                                 onClick={() => setOpenCourseModal(false)}
                                 sx={{
-                                  px: 4,
+                                textTransform: "none",
                                   borderRadius: 2,
-                                  textTransform: "none",
+                                  color: "#fff",
+                                  px: 4,
                                   bgcolor: "#F97316",
                                   "&:hover": {
                                     bgcolor: "#EA580C",
                                   },
                                 }}
                               >
-                                Cancel
+                                Back
                               </Button>
                             </Box>
-
 
                             <Button
                               variant="contained"
@@ -16972,7 +20934,11 @@ const Editemployee = () => {
                                   confirmButtonText: "Confirm",
                                 }).then((result) => {
                                   if (result.isConfirmed) {
-                                    courseAttendanceSaveFn(values, resetForm, "harddelete");
+                                    courseAttendanceSaveFn(
+                                      values,
+                                      resetForm,
+                                      "harddelete",
+                                    );
                                     setOpenCourseModal(false);
                                   }
                                 });
@@ -16994,8 +20960,6 @@ const Editemployee = () => {
                             >
                               Delete
                             </Button>
-
-
                           </DialogActions>
                         </Dialog>
 
@@ -17053,7 +21017,6 @@ const Editemployee = () => {
           ) : (
             false
           )}
-
         </Box>
       </Box>
     </React.Fragment>

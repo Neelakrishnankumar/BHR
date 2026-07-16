@@ -301,7 +301,7 @@ const EditRoute = () => {
             elevation={0}
             sx={{
               m: 2,
-              p: 3,
+              p: 2,
               borderRadius: 3,
               border: "1px solid #E5E7EB",
               background: "#fff",
@@ -328,7 +328,7 @@ const EditRoute = () => {
                 <Typography
                   variant="h6"
                   fontWeight={700}
-                  color="#4F46E5"
+                  color="#0D94885"
                 >
                   {state.Screenname}
                 </Typography>

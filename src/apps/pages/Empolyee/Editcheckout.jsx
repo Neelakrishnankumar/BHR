@@ -423,7 +423,7 @@ const Editcheckout = () => {
             backgroundColor: "#fff",
             border: "1px solid #E5E7EB",
             borderRadius: 3,
-            p: 3,
+            p: 1,
             m: 2,
           }}
         >
@@ -449,26 +449,35 @@ const Editcheckout = () => {
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
-                <Box mb={3}>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography sx={{ fontSize: 18 }}>📋</Typography>
-
-                    <Typography
-                      fontWeight={700}
-                      color="#1F2937"
-                    >
-                      Check Out Details
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    mt={0.5}
-                  >
-                    Record employee check-out information
-                  </Typography>
-                </Box>
+                  {/* ----- CARD HEADER ----- */}
+                                     <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+                                       <Box
+                                         sx={{
+                                           width: 32,
+                                           height: 32,
+                                           borderRadius: "50%",
+                                           backgroundColor: "#EFF6FF",
+                                           display: "flex",
+                                           alignItems: "center",
+                                           justifyContent: "center",
+                                         }}
+                                       >
+                                         <Typography sx={{ fontSize: 16 }}>📋</Typography>
+                                       </Box>
+                                       <Box>
+                                         <Typography
+                                           variant="subtitle1"
+                                           fontWeight={700}
+                                           color="#0D94885"
+                                         >
+                                           Check Out Details
+                                         </Typography>
+               
+                                         <Typography variant="body2" color="text.secondary">
+                                           Record employee check-out information
+                                         </Typography>
+                                       </Box>
+                                     </Box>
 
                 <Box
                   display="grid"

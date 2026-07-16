@@ -2536,8 +2536,8 @@ const EditemployeePayroll = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            px={3}
-            py={2}
+            px={2}
+            py={1}
           >
             {/* Left Side */}
             <Box display="flex" alignItems="center" gap={2}>
@@ -2569,7 +2569,7 @@ const EditemployeePayroll = () => {
                    separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
                 >
                   <Typography
-                     sx={breadcrumbStyles.item}
+                     sx={show == "0" ? breadcrumbStyles.active : breadcrumbStyles.item}
                     onClick={() => setScreen(0)}
                   >
                     {mode === "E"

@@ -343,7 +343,7 @@ const EditOrder = () => {
           mx: 2,
           mt: 2,
           mb: 1,
-          p: 2,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #E5E7EB",
           bgcolor: "#fff",
@@ -527,7 +527,7 @@ const EditOrder = () => {
                       🧾
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                      <Typography variant="h6" fontWeight={700} color="#0D94885">
                         {params.OrderType === "O" ? "Order" : "Quotation"}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">

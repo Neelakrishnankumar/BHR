@@ -66,7 +66,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import store from "../../../index";
 import { useTheme } from "@emotion/react";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
@@ -626,16 +626,40 @@ const Editoverhead = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                  <Box sx={{ p: 2, borderRadius: 3 }}>
-   <Paper sx={{ borderRadius: 3 }}>
-                <Box display="flex" justifyContent="space-between" p={2}>
+ <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 1,
+            mb: 1,
+            p: 1,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
+          }}
+        >
+                <Box display="flex" justifyContent="space-between">
             <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+                 <Box>
+                            <Typography
+                              sx={{
+                                fontSize: 20,
+                                fontWeight: 700,
+                                color: "#111827",
+                                // mb: 0.2,
+                                px: 1,
+                                py: 0.2,
+                              }}
+                            >
+                              {mode === "A"
+                                ? `New Overhead`
+                                : `Edit Overhead`}
+                            </Typography>
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -644,12 +668,15 @@ const Editoverhead = () => {
               <Breadcrumbs
                 maxItems={3}
                 aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                    sx={breadcrumbStyles.separator}
               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                sx={
+                                     show == "0"
+                                        ? breadcrumbStyles.active
+                                        : breadcrumbStyles.item
+                                    } 
                   onClick={() => {
                     setScreen(0);
                   }}
@@ -658,9 +685,11 @@ const Editoverhead = () => {
                 </Typography>
                 {show == "1" ? (
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                    sx={
+                                         show == "1"
+                                            ? breadcrumbStyles.active
+                                            : breadcrumbStyles.item
+                                        } 
                   >
                     Additional Expense
                   </Typography>
@@ -671,7 +700,7 @@ const Editoverhead = () => {
               </Breadcrumbs>
             </Box>
           </Box>
-
+ </Box>
           <Box display="flex">
             {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -703,7 +732,7 @@ const Editoverhead = () => {
           </Box>
         </Box>
       </Paper>
-   </Box>
+
       {show == "0" && !getLoading ? (
             <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
               {/* LEFT: Form Sections sidebar */}
@@ -763,7 +792,7 @@ const Editoverhead = () => {
                           <Typography sx={{ fontSize: 16 }}>💰</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Overhead
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -1295,7 +1324,7 @@ const Editoverhead = () => {
                           <Typography sx={{ fontSize: 16 }}>🧾</Typography>
                         </Box>
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#4F46E5">
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
                             Additional Expense
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -1778,7 +1807,7 @@ const Editoverhead = () => {
         false
       )}
            </Box>
-            </Box>
+         
             
     </React.Fragment >
   );

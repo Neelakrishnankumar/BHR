@@ -258,8 +258,8 @@ const Editshift = () => {
         <React.Fragment>
             {getLoading ? <LinearProgress /> : null}
    <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-          <Box sx={{ p: 2, borderRadius: 3 }}>
+        <Box sx={{ p: 2, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{borderRadius: 3,mb: 2 }}>
             <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
@@ -279,9 +279,15 @@ const Editshift = () => {
                                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                             >
                                 <Typography
-                                    variant="h5"
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
+                                   sx={{ 
+              cursor: "default",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#111827",
+              // mb: 0.2,
+              px: 1,
+              py: 0.2,
+            }}
 
                                 >
                                     {getBusinessCaption("Shift", "Shift")}
@@ -321,7 +327,7 @@ const Editshift = () => {
                                    backgroundColor: "#fff",
                                    border: "1px solid #E5E7EB",
                                    borderRadius: 3,
-                                   p: 3,
+                                   p: 1
                                  }}
                                >
                     <Formik
@@ -369,13 +375,13 @@ const Editshift = () => {
                                                           <Typography
                                                             variant="subtitle1"
                                                             fontWeight={700}
-                                                            color="#4F46E5"
+                                                            color="#0D94885"
                                                           >
-                                                            Shift
+                                                            {getBusinessCaption("Shift", "Shift")}
                                                           </Typography>
                               
                                                           <Typography variant="body2" color="text.secondary">
-                                                            View and manage shift assignments
+                                                            View and manage  {getBusinessCaption("Shift", "Shift")} assignments
                                                           </Typography>
                                                         </Box>
                                                       </Box>  

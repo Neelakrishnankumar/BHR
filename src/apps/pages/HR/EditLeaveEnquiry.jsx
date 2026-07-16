@@ -354,7 +354,7 @@ const EditLeaveEnquiry = () => {
                          mx: 2,
                          mt: 1,
                          mb: 1,
-                         p: 1,
+                       
                          borderRadius: 3,
                          border: "1px solid #E5E7EB",
                          bgcolor: "#fff",
