@@ -5815,6 +5815,29 @@ const Editemployee = () => {
               )}
               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                 <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                    <Box display="flex" alignItems="center" gap={1} mb={2}>
+                                   <Box sx={{
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#cac7c4",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center"
+                                    }}>
+                                    <Typography sx={{ fontSize: 20 }}>👤</Typography>
+                                   </Box>
+                                  <Box>
+                                     <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                                      Personnel Information
+                                    </Typography>
+                                  
+                                    <Typography variant="caption" color="text.secondary">
+                                      Basic details about the personnel
+                                    </Typography>
+                                  </Box>
+                                </Box>
+
                   <Formik
                     initialValues={initialValues}
                     enableReinitialize={true}
@@ -5836,26 +5859,10 @@ const Editemployee = () => {
                           {/* ===== MAIN BODY ===== */}
                           <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
 
-                            {/* LEFT: one unified card */}
-                            <Box
-                              flex={1}
-                              minWidth={0}
-                              sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, overflow: "hidden" }}
-                            >
+                            
                               {/* ----- Personnel Information ----- */}
                               <Box sx={{ p: 3 }}>
-                                <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                                  <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <Typography sx={{ fontSize: 16 }}>👤</Typography>
-                                  </Box>
-                                  <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                                    Personnel Information
-                                  </Typography>
-                                </Box>
-                                <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                                  Basic details about the personnel
-                                </Typography>
-
+                              
                                 <Box display="flex" gap={3} flexWrap="wrap">
                                   <Box flex={1} minWidth={300} display="grid" gridTemplateColumns="repeat(2, minmax(0,1fr))" gap={2}>
                                     <FormControl>
@@ -6058,7 +6065,7 @@ const Editemployee = () => {
                                 </Box>
                               </Box>
 
-                              <Divider />
+                              {/* <Divider /> */}
 
                               {/* ----- Bottom actions (inside the card) ----- */}
                               <Box sx={{ p: 3, display: "flex", justifyContent: "flex-end", gap: 1.5 }}>
@@ -6105,7 +6112,7 @@ const Editemployee = () => {
                                 </Button> */}
 
                               </Box>
-                            </Box>
+                          
 
                           </Box>
 
@@ -6147,6 +6154,30 @@ const Editemployee = () => {
               {/* LEFT: Contact form */}
               <Box flex={1} minWidth={0}>
                 <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                    {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1} mb={2}>
+                            <Box sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "50%",
+                              backgroundColor: "#cac7c4",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center"
+                            }}>
+                              <Typography sx={{ fontSize: 20 }}>📞</Typography>
+                            </Box>
+                             <Box>
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                              Contact Information
+                            </Typography>
+                       
+                            <Typography variant="caption" color="text.secondary">
+                              Phone, email and address details
+                            </Typography>
+                            </Box>
+                        </Box>
+
                   {contactLoading ? <LinearProgress /> : null}
                   <Formik
                     initialValues={contactInitialvalues}
@@ -6175,18 +6206,7 @@ const Editemployee = () => {
                           resetForm();
                         }}
                       >
-                        {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>📞</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                            Contact Information
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Phone, email and address details
-                        </Typography>
+                      
 
                         {/* ----- FIELDS + PHOTO ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap">
@@ -6966,6 +6986,30 @@ const Editemployee = () => {
               {/* RIGHT: Skills content */}
               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                 <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                    {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1} mb={2}>
+                              <Box sx={{
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#cac7c4",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center"
+                                    }}>
+                            <Typography sx={{ fontSize: 20 }}>🛠️</Typography>
+                          </Box>
+                          <Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                            {getBusinessCaption("Skills", "Skills")}
+                          </Typography>
+                       
+                        <Typography variant="body2" color="text.secondary">
+                          Skills and competency details
+                        </Typography>
+                        </Box>
+                         </Box>
+
                   <Formik
                     initialValues={initialValues}
                     enableReinitialize={true}
@@ -6981,18 +7025,7 @@ const Editemployee = () => {
                       handleSubmit,
                     }) => (
                       <Box>
-                        {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>🛠️</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#D97706">
-                            {getBusinessCaption("Skills", "Skills")}
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Skills and competency details
-                        </Typography>
+                      
 
                         {/* ----- Code/Name + Photo (separate column) ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
@@ -7324,7 +7357,6 @@ const Editemployee = () => {
                               px: 4,
                               borderRadius: 2,
                               textTransform: "none",
-                              color: "#fff",
                               bgcolor: "#0D9488",
                               "&:hover": {
                                 bgcolor: "#0F766E",
@@ -7336,33 +7368,34 @@ const Editemployee = () => {
 
                           {YearFlag == "true" ? (
                             <Button
-                              disabled={boMode == "A"}
-                              onClick={() => {
-                                Swal.fire({
-                                  title: errorMsgData.Warningmsg.Delete,
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonText: "Confirm",
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    fnProcess(values, resetForm, "harddelete");
-                                    setOpenSkillModal(false);
-                                  }
-                                });
-                              }}
-                              sx={{
-                                px: 4,
-                                borderRadius: 2,
-                                textTransform: "none",
-                                color: "#fff",
-                                bgcolor: "#DC2626",
-                                "&:hover": {
-                                  bgcolor: "#B91C1C",
-                                },
-                              }}
-                            >
-                              Delete
-                            </Button>
+  disabled={boMode === "A"}
+  onClick={() => {
+    Swal.fire({
+      title: errorMsgData.Warningmsg.Delete,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fnProcess(values, resetForm, "harddelete");
+        setOpenSkillModal(false);
+      }
+    });
+  }}
+  variant="contained"
+  sx={{
+    px: 4,
+    borderRadius: 2,
+    textTransform: "none",
+    bgcolor: "#DC2626",
+    color: "#fff",
+    "&:hover": {
+      bgcolor: "#B91C1C",
+    },
+  }}
+>
+  Delete
+</Button>
                           ) : (
                             <Button
                               variant="contained"
@@ -7371,6 +7404,7 @@ const Editemployee = () => {
                                 px: 4,
                                 borderRadius: 2,
                                 textTransform: "none",
+                                color:"#ffff",
                               }}
                             >
                               Delete
@@ -11592,6 +11626,30 @@ const Editemployee = () => {
               {/* RIGHT: Contract In content */}
               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
                 <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                   {/* ----- CARD HEADER ----- */}
+                       <Box display="flex" alignItems="center" gap={1} mb={2}>
+                                   <Box sx={{
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#cac7c4",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center"
+                                    }}>
+                            <Typography sx={{ fontSize: 20 }}>📄</Typography>
+                          </Box>
+                          <Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            {getBusinessCaption("ContractIn", "Contract In")}
+                          </Typography>
+                       
+                        <Typography variant="body2" color="text.secondary">
+                          Contract in details
+                        </Typography>
+                        </Box>
+                         </Box>
+
                   <Formik
                     initialValues={ContractInitialValue}
                     enableReinitialize={true}
@@ -11621,18 +11679,7 @@ const Editemployee = () => {
                           setOpenContractPopup(true);
                         }}
                       >
-                        {/* ----- CARD HEADER ----- */}
-                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                          <Box sx={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Typography sx={{ fontSize: 16 }}>📄</Typography>
-                          </Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
-                            {getBusinessCaption("ContractIn", "Contract In")}
-                          </Typography>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={2} ml={5.5}>
-                          Contract in details
-                        </Typography>
+                       
 
                         {/* ----- Code/Name + Photo ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
