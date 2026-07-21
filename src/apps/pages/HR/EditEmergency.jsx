@@ -51,6 +51,7 @@ import {
 import * as Yup from "yup";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
 import store from "../../..";
+import { breadcrumbStyles } from "../../../Theme";
 // import CryptoJS from "crypto-js";
 const EditEmergency = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -86,7 +87,7 @@ const EditEmergency = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [emergencyImage, setEmergencyImage] = useState("");
   const [emergencyvideo, setEmergencyvideo] = useState("");
-    const [emergencyaudio, setEmergencyaudio] = useState("");
+  const [emergencyaudio, setEmergencyaudio] = useState("");
 
   console.log("🚀 ~ EditEmergency ~ emergencyImage:", emergencyImage);
   console.log("🚀 ~ EditEmergency ~ emergencyvideo:", emergencyvideo);
@@ -99,7 +100,7 @@ const EditEmergency = () => {
     setButtonValue(mode === "A" ? "Y" : data?.SchoolorSpecific || "Y");
     setEmergencyImage(mode === "A" ? "" : data?.Attachment || "");
     setEmergencyvideo(mode === "A" ? "" : data?.Video || "");
-    setEmergencyaudio (mode === "A" ? "" : data?.Audio || "");
+    setEmergencyaudio(mode === "A" ? "" : data?.Audio || "");
   }, [location.key, mode]);
 
   useEffect(() => {
@@ -293,11 +294,12 @@ const EditEmergency = () => {
 
     let category = "";
 
- if (
-  fileType.startsWith("image/") || // covers jpeg, png, jpg, webp
-  fileType === "application/pdf" ||
-  fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-) {
+    if (
+      fileType.startsWith("image/") || // covers jpeg, png, jpg, webp
+      fileType === "application/pdf" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
       category = "images";
     } else if (fileType.startsWith("video/")) {
       category = "videos";
@@ -387,240 +389,469 @@ const EditEmergency = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       {imageLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-            >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  // navigate("/Apps/TR243/Party");
-                  navigate("/Apps/TR383/Academic%20Year");
-                }}
-              >
-                {`Academic Year(${state.AcademicYear || ""})`}
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  // navigate("/Apps/TR243/Party");
-                  navigate(
-                    `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
-                    {
-                      state: { ...state },
-                    },
-                  );
-                }}
-              >
-                {`Event Category(${state.BreadCrumb1 || ""})`}
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  // navigate("/Apps/TR243/Party");
-                  navigate(
-                    `/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`,
-                    {
-                      state: { ...state },
-                    },
-                  );
-                }}
-              >
-                {mode === "E" || mode === "V"
-                  ? `Event(${state.BreadCrumb2 || ""})`
-                  : "Events"}
-              </Typography>
-
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-              >
-                {mode === "E"
-                  ? "Edit Emergency Event"
-                  : mode === "V"
-                    ? "View Emergency Event"
-                    : "Add Emergency Event"}
-              </Typography>
-            </Breadcrumbs>
-          </Box>
-
-          <Box display="flex">
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Paper>
-
-      {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={InitialValue}
-            onSubmit={(values, setSubmitting) => {
-              setTimeout(() => {
-                Fnsave(values);
-              }, 100);
-            }}
-            validationSchema={validationSchema}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-              setFieldTouched,
-            }) => {
-              const handleChipClick = (item) => {
-                const currentValues = values.NotifyClasses || [];
-
-                if (currentValues.includes(item)) {
-                  setFieldValue(
-                    "NotifyClasses",
-                    currentValues.filter((val) => val !== item),
-                  );
-                } else {
-                  setFieldValue("NotifyClasses", [...currentValues, item]);
-                }
-              };
-              return (
-                <form onSubmit={handleSubmit}>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={3}
-                    padding={3}
-                  >
-                    {/* TOP ROW */}
-                    <Box
-                      display="grid"
-                      gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
-                      gap={2}
+      {/* <Box sx={{ height: "100vh", overflow: "auto" }}> */}
+        {/* <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}> */}
+          {/* <Box sx={{ p: 2, borderRadius: 3 }}> */}
+            <Paper  elevation={0}
+           sx={{
+             mx: 2,
+             mt: 1,
+             mb: 1,
+             p: 1,
+             borderRadius: 3,
+             border: "1px solid #E5E7EB",
+             bgcolor: "#fff",
+           }}>
+              <Box display="flex" justifyContent="space-between">
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  {broken && !rtl && (
+                    <IconButton onClick={() => toggleSidebar()}>
+                      <MenuOutlinedIcon />
+                    </IconButton>
+                  )}
+                  <Box>
+                          <Typography
+                                       sx={{
+                                         fontSize: 20,
+                                         fontWeight: 700,
+                                         color: "#111827",
+                                         // mb: 0.2,
+                                             px: 1,
+                               py: 0.2,
+                                       }}
+                                     >
+                                         {mode === "E"
+                        ? "Edit Emergency"
+                        : mode === "V"
+                          ? "View Emergency"
+                          : "Add Emergency"}
+                                     </Typography>
+             
+                <Breadcrumbs
+  maxItems={2}
+  aria-label="breadcrumb"
+  separator={
+    <NavigateNextIcon
+      sx={{
+        fontSize: 18,
+        color: "#94A3B8",
+        margin: "0 4px",
+      }}
+    />
+  }
+>
+                    <Typography
+                        sx={breadcrumbStyles.item}
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate("/Apps/TR383/Academic%20Year");
+                      }}
                     >
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        focused
-                        name="EmergencyTitle"
-                        // label="Emergency Type"
-                        label={
-                          <>
-                            Emergency Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        value={values.EmergencyTitle}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.EmergencyTitle && !!errors.EmergencyTitle
-                        }
-                        helperText={
-                          touched.EmergencyTitle && errors.EmergencyTitle
-                        }
-                      />
+                      {`Academic Year(${state.AcademicYear || ""})`}
+                    </Typography>
+                    <Typography
+                        // sx={breadcrumbStyles.item}
+                        sx={
+                          {
+                             cursor: "pointer",
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 2,
+    fontSize: 13,
+    fontWeight: 600,
+    color: "#475569",
+    transition: "all 0.25s ease",
+    display: "inline-flex",
+    alignItems: "center",
 
-                      <TextField
-                        fullWidth
-                        select
-                        variant="standard"
-                        focused
-                        name="Priority"
-                        // label="Priority"
-                        label={
-                          <>
-                            Priority
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
+    "&:hover": {
+      color: "#fff",
+      background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+    },
+                          }
                         }
-                        id="Priority"
-                        value={values.Priority}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Priority && !!errors.Priority}
-                        helperText={touched.Priority && errors.Priority}
-                      >
-                        <MenuItem value="High">High</MenuItem>
-                        <MenuItem value="Critical">Critical</MenuItem>
-                        <MenuItem value="Medium">Medium</MenuItem>
-                      </TextField>
-                    </Box>
-
-                    {/* WHO IS THIS ABOUT */}
-                    <Box>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mb: 1,
-                          fontWeight: 600,
-                          color: "#6B7280",
-                        }}
-                      >
-                        Who is this about?
-                      </Typography>
-
-                      <ButtonGroup
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                          "& .MuiButton-root": {
-                            py: 1.2,
-                            fontWeight: 600,
-                            borderRadius: 0,
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate(
+                          `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
+                          {
+                            state: { ...state },
                           },
-                        }}
-                      >
-                        <Button
-                          color={buttonValue === "Y" ? "error" : "inherit"}
-                          onClick={() => handleButtonClick("Y")}
-                        >
-                          Whole School / Class
-                        </Button>
+                        );
+                      }}
+                    >
+                      {`Event Category(${state.BreadCrumb1 || ""})`}
+                    </Typography>
+                    <Typography
+                     sx={
+                          {
+                             cursor: "pointer",
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 2,
+    fontSize: 13,
+    fontWeight: 600,
+    color: "#475569",
+    transition: "all 0.25s ease",
+    display: "inline-flex",
+    alignItems: "center",
 
-                        <Button
-                          color={buttonValue === "N" ? "error" : "inherit"}
-                          onClick={() => handleButtonClick("N")}
-                        >
-                          Specific Student
-                        </Button>
-                      </ButtonGroup>
-                    </Box>
+    "&:hover": {
+      color: "#fff",
+      background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+    },
+                          }
+                        }
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate(
+                          `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
+                          {
+                            state: { ...state },
+                          },
+                        );
+                      }}
+                      //  sx={breadcrumbStyles.item}
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate(
+                          `/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`,
+                          {
+                            state: { ...state },
+                          },
+                        );
+                      }}
+                    >
+                      {mode === "E" || mode === "V"
+                        ? `Event(${state.BreadCrumb2 || ""})`
+                        : "Events"}
+                    </Typography>
 
-                    {/* CLASS CHIPS */}
-                    {buttonValue === "Y" ? (
-                      <Box>
-                        {/* <Typography
+                    <Typography
+                         sx={{
+           px: 1.5,
+    py: 0.5,
+    borderRadius: 2,
+    fontSize: 13,
+    fontWeight: 700,
+    color: "#fff",
+    background: "linear-gradient(135deg, #0D9488, #14B8A6)",
+    boxShadow: "0 2px 8px rgba(13,148,136,0.4)",             }}
+                      onClick={() => {
+                        // navigate("/Apps/TR243/Party");
+                        navigate(
+                          `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
+                          {
+                            state: { ...state },
+                          },
+                        );
+                      }}
+                      // sx={breadcrumbStyles.active}
+                    >
+                      {mode === "E"
+                        ? "Edit Emergency Event"
+                        : mode === "V"
+                          ? "View Emergency Event"
+                          : "Add Emergency Event"}
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+     </Box>
+                <Box display="flex">
+                  <Tooltip title="Close">
+                    <IconButton onClick={() => fnLogOut("Close")} color="error">
+                      <ResetTvIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Logout">
+                    <IconButton
+                      color="error"
+                      onClick={() => fnLogOut("Logout")}
+                    >
+                      <LogoutOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Paper>
+          {/* </Box> */}
+          {!getLoading ? (
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={3}
+                  sx={{
+                    margin: "10px",
+                    backgroundColor: "#ffff",
+                    border: "1px solid #b9bcc0",
+                    borderRadius: 3,
+                  }}
+                >
+                  <Formik
+                    initialValues={InitialValue}
+                    onSubmit={(values, setSubmitting) => {
+                      setTimeout(() => {
+                        Fnsave(values);
+                      }, 100);
+                    }}
+                    validationSchema={validationSchema}
+                    enableReinitialize={true}
+                  >
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      isSubmitting,
+                      values,
+                      handleSubmit,
+                      setFieldValue,
+                      setFieldTouched,
+                    }) => {
+                      const handleChipClick = (item) => {
+                        const currentValues = values.NotifyClasses || [];
+
+                        if (currentValues.includes(item)) {
+                          setFieldValue(
+                            "NotifyClasses",
+                            currentValues.filter((val) => val !== item),
+                          );
+                        } else {
+                          setFieldValue("NotifyClasses", [
+                            ...currentValues,
+                            item,
+                          ]);
+                        }
+                      };
+                      return (
+                        <form onSubmit={handleSubmit}>
+                          {/* ----- CARD HEADER ----- */}
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1.5}
+                            mb={1}
+                            sx={{ px: 2, pt: 2 }}
+                          >
+                            {/* ICON */}
+                            <Box
+                              sx={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: "50%",
+                                backgroundColor: "#EFF6FF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 18 }}>🆘</Typography>
+                            </Box>
+
+                            {/* TITLE + SUBTITLE */}
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Emergency
+                              </Typography>
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Handle emergency alerts and critical situations
+                                promptly
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            gap={3}
+                            padding={3}
+                          >
+                            {/* TOP ROW */}
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={
+                                isNonMobile ? "1fr 1fr" : "1fr"
+                              }
+                              gap={2}
+                            >
+                              <TextField
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                focused
+                                name="EmergencyTitle"
+                                // label="Emergency Type"
+                                label={
+                                  <>
+                                    Emergency Type
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                value={values.EmergencyTitle}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.EmergencyTitle &&
+                                  !!errors.EmergencyTitle
+                                }
+                                helperText={
+                                  touched.EmergencyTitle &&
+                                  errors.EmergencyTitle
+                                }
+                              />
+
+                              <TextField
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                                fullWidth
+                                select
+                                variant="outlined"
+                                size="small"
+                                focused
+                                name="Priority"
+                                // label="Priority"
+                                label={
+                                  <>
+                                    Priority
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                id="Priority"
+                                value={values.Priority}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.Priority && !!errors.Priority}
+                                helperText={touched.Priority && errors.Priority}
+                              >
+                                <MenuItem value="High">High</MenuItem>
+                                <MenuItem value="Critical">Critical</MenuItem>
+                                <MenuItem value="Medium">Medium</MenuItem>
+                              </TextField>
+                            </Box>
+
+                            {/* WHO IS THIS ABOUT */}
+                            <Box>
+                              <Typography
+                                variant="subtitle2"
+                                sx={{
+                                  mb: 1,
+                                  fontWeight: 600,
+                                  color: "#6B7280",
+                                }}
+                              >
+                                Who is this about?
+                              </Typography>
+
+                              <ButtonGroup
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                  "& .MuiButton-root": {
+                                    py: 1.2,
+                                    fontWeight: 600,
+                                    borderRadius: 0,
+                                  },
+                                }}
+                              >
+                                <Button
+                                  color={
+                                    buttonValue === "Y" ? "error" : "inherit"
+                                  }
+                                  onClick={() => handleButtonClick("Y")}
+                                >
+                                  Whole School / Class
+                                </Button>
+
+                                <Button
+                                  color={
+                                    buttonValue === "N" ? "error" : "inherit"
+                                  }
+                                  onClick={() => handleButtonClick("N")}
+                                >
+                                  Specific Student
+                                </Button>
+                              </ButtonGroup>
+                            </Box>
+
+                            {/* CLASS CHIPS */}
+                            {buttonValue === "Y" ? (
+                              <Box>
+                                {/* <Typography
                                                     variant="subtitle2"
                                                     sx={{
                                                         mb: 1,
@@ -631,7 +862,7 @@ const EditEmergency = () => {
                                                     Notify Classes
                                                 </Typography> */}
 
-                        {/* <Box
+                                {/* <Box
                                                     display="flex"
                                                     flexWrap="wrap"
                                                     gap={1}
@@ -670,376 +901,590 @@ const EditEmergency = () => {
                                                         );
                                                     })}
                                                 </Box> */}
-                        <EventsmultiSelect
-                          id="Standard1"
-                          name="Standard1"
-                          label={
-                            <>
-                              Standard/Activities
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          value={values.Standard1}
-                          onChange={(event, newValue) => {
-                            setFieldValue("Standard1", newValue);
-                            // setFieldTouched("Standard1", true);
-                          }}
-                          error={!!touched.Standard1 && !!errors.Standard1}
-                          helperText={touched.Standard1 && errors.Standard1}
-                          InputLabelProps={{
-                            shrink: true, // ✅ prevents overlap
-                          }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2183",
-                              ScreenName: "Standard",
-                              VerticalLicense: "003",
-                              Filter: `CompanyID='${CompanyID}'`,
-                              Any: "",
-                            },
-                          })}`}
-                        />
-                      </Box>
-                    ) : (
-                      <Box
-                        display="grid"
-                        gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
-                        gap={2}
-                      >
-                        <PartySingleSelect
-                          id="Standard"
-                          name="Standard"
-                          label={
-                            <>
-                              Standard/Activities
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          value={values.Standard}
-                          onChange={(newValue) => {
-                            setFieldValue("Standard", newValue);
-                            setFieldValue("Student", null);
-                          }}
-                          error={!!touched.Standard && !!errors.Standard}
-                          helperText={touched.Standard && errors.Standard}
-                          focused
-                          InputLabelProps={{
-                            shrink: true, // ✅ prevents overlap
-                          }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2183",
-                              ScreenName: "Standard",
-                              VerticalLicense: "003",
-                              Filter: `CompanyID='${CompanyID}'`,
-                              Any: "",
-                            },
-                          })}`}
-                        />
+                                <EventsmultiSelect
+                                  sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                      backgroundColor: "#fff",
+                                      borderRadius: "6px",
 
-                        <PartySingleSelect
-                          id="Student"
-                          name="Student"
-                          label={
-                            <>
-                              Student
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          value={values.Student}
-                          onChange={(newValue) => {
-                            setFieldValue("Student", newValue);
-                            // setFieldTouched("Student", true);
-                          }}
-                          error={!!touched.Student && !!errors.Student}
-                          helperText={touched.Student && errors.Student}
-                          InputLabelProps={{
-                            shrink: true, // ✅ prevents overlap
-                          }}
-                          url={`${listViewurl}?data=${JSON.stringify({
-                            Query: {
-                              AccessID: "2182",
-                              ScreenName: "Student",
-                              VerticalLicense: "003",
-                              Filter: `CompanyID='${CompanyID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
-                              Any: "",
-                            },
-                          })}`}
-                        />
-                      </Box>
-                    )}
+                                      "& fieldset": {
+                                        borderColor: "#d1d5db", // 👈 light grey border
+                                      },
+                                      "&:hover fieldset": {
+                                        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      },
+                                      "&.Mui-focused fieldset": {
+                                        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                        borderWidth: "1px",
+                                      },
+                                    },
 
-                    {/* MESSAGE */}
-                    <TextField
-                      fullWidth
-                      multiline
-                      variant="standard"
-                      focused
-                      rows={2}
-                      name="Message"
-                      // label="Message"
-                      label={
-                        <>
-                          Message
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      placeholder="Describe the emergency clearly"
-                      value={values.Message}
-                      onChange={handleChange}
-                      error={!!touched.Message && !!errors.Message}
-                      helperText={touched.Message && errors.Message}
-                    />
+                                    "& .MuiInputLabel-root": {
+                                      color: "#6b7280", // label grey
+                                    },
+                                    "& .MuiInputLabel-root.Mui-focused": {
+                                      color: "#6b7280", // keep same on focus
+                                    },
+                                  }}
+                                  id="Standard1"
+                                  name="Standard1"
+                                  label={
+                                    <>
+                                      Standard/Activities
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "20px",
+                                        }}
+                                      >
+                                        *
+                                      </span>
+                                    </>
+                                  }
+                                  variant="outlined"
+                                  size="small"
+                                  focused
+                                  value={values.Standard1}
+                                  onChange={(event, newValue) => {
+                                    setFieldValue("Standard1", newValue);
+                                    // setFieldTouched("Standard1", true);
+                                  }}
+                                  error={
+                                    !!touched.Standard1 && !!errors.Standard1
+                                  }
+                                  helperText={
+                                    touched.Standard1 && errors.Standard1
+                                  }
+                                  InputLabelProps={{
+                                    shrink: true, // ✅ prevents overlap
+                                  }}
+                                  url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                      AccessID: "2183",
+                                      ScreenName: "Standard",
+                                      VerticalLicense: "003",
+                                      Filter: `CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
+                                  })}`}
+                                />
+                              </Box>
+                            ) : (
+                              <Box
+                                display="grid"
+                                gridTemplateColumns={
+                                  isNonMobile ? "1fr 1fr" : "1fr"
+                                }
+                                gap={2}
+                              >
+                                <PartySingleSelect
+                                  sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                      backgroundColor: "#fff",
+                                      borderRadius: "6px",
 
-                    {/* ACTION + CONTACT */}
-                    <Box
-                      display="grid"
-                      gridTemplateColumns={isNonMobile ? "1fr 1fr" : "1fr"}
-                      gap={2}
-                    >
-                      <TextField
-                        fullWidth
-                        name="ActionRequired"
-                        variant="standard"
-                        focused
-                        label="Action Required"
-                        placeholder="eg. Stay home, await notice"
-                        value={values.ActionRequired}
-                        onChange={handleChange}
-                      />
+                                      "& fieldset": {
+                                        borderColor: "#d1d5db", // 👈 light grey border
+                                      },
+                                      "&:hover fieldset": {
+                                        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      },
+                                      "&.Mui-focused fieldset": {
+                                        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                        borderWidth: "1px",
+                                      },
+                                    },
 
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        focused
-                        name="ContactPersonAndNumber"
-                        // label="Contact Person & Number"
-                        label={
-                          <>
-                            Contact Person & Number
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        placeholder="eg. Ramesh- 8596748596"
-                        value={values.ContactPersonAndNumber}
-                        onChange={handleChange}
-                        error={
-                          !!touched.ContactPersonAndNumber &&
-                          !!errors.ContactPersonAndNumber
-                        }
-                        helperText={
-                          touched.ContactPersonAndNumber &&
-                          errors.ContactPersonAndNumber
-                        }
-                      />
-                    </Box>
+                                    "& .MuiInputLabel-root": {
+                                      color: "#6b7280", // label grey
+                                    },
+                                    "& .MuiInputLabel-root.Mui-focused": {
+                                      color: "#6b7280", // keep same on focus
+                                    },
+                                  }}
+                                  id="Standard"
+                                  name="Standard"
+                                  label={
+                                    <>
+                                      Standard/Activities
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "20px",
+                                        }}
+                                      >
+                                        *
+                                      </span>
+                                    </>
+                                  }
+                                  variant="outlined"
+                                  value={values.Standard}
+                                  onChange={(newValue) => {
+                                    setFieldValue("Standard", newValue);
+                                    setFieldValue("Student", null);
+                                  }}
+                                  error={
+                                    !!touched.Standard && !!errors.Standard
+                                  }
+                                  helperText={
+                                    touched.Standard && errors.Standard
+                                  }
+                                  focused
+                                  InputLabelProps={{
+                                    shrink: true, // ✅ prevents overlap
+                                  }}
+                                  url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                      AccessID: "2183",
+                                      ScreenName: "Standard",
+                                      VerticalLicense: "003",
+                                      Filter: `CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
+                                  })}`}
+                                />
 
-                    <Box
-                      display="grid"
-                      gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
-                      gap={2}
-                    >
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mb: 1,
-                            fontWeight: 600,
-                            color: "#6B7280",
-                          }}
-                        >
-                          Attach Emergency
-                        </Typography>
+                                <PartySingleSelect
+                                  sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                      backgroundColor: "#fff",
+                                      borderRadius: "6px",
 
-                        <Box
-                          component="label"
-                          sx={{
-                            border: "1px dashed #D1D5DB",
-                            borderRadius: "10px",
-                            backgroundColor: "#F9FAFB",
-                            height: "56px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            transition: "0.2s",
-                            "&:hover": {
-                              backgroundColor: "#F3F4F6",
-                            },
-                          }}
-                        >
-                          <input
-                            hidden
-                            type="file"
-                            accept="image/*,video/*,audio/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            // accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            // onChange={(event) => {
-                            //     const file = event.currentTarget.files[0];
-                            //     setFieldValue("SyllabusFile", file);
-                            // }}
-                            onChange={getFileChange}
-                          />
+                                      "& fieldset": {
+                                        borderColor: "#d1d5db", // 👈 light grey border
+                                      },
+                                      "&:hover fieldset": {
+                                        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      },
+                                      "&.Mui-focused fieldset": {
+                                        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                        borderWidth: "1px",
+                                      },
+                                    },
 
-                          <Typography fontSize="14px" color="#6B7280">
-                            Click to upload file
-                          </Typography>
-                        </Box>
+                                    "& .MuiInputLabel-root": {
+                                      color: "#6b7280", // label grey
+                                    },
+                                    "& .MuiInputLabel-root.Mui-focused": {
+                                      color: "#6b7280", // keep same on focus
+                                    },
+                                  }}
+                                  id="Student"
+                                  name="Student"
+                                  label={
+                                    <>
+                                      Student
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "20px",
+                                        }}
+                                      >
+                                        *
+                                      </span>
+                                    </>
+                                  }
+                                  variant="outlined"
+                                  size="small"
+                                  focused
+                                  value={values.Student}
+                                  onChange={(newValue) => {
+                                    setFieldValue("Student", newValue);
+                                    // setFieldTouched("Student", true);
+                                  }}
+                                  error={!!touched.Student && !!errors.Student}
+                                  helperText={touched.Student && errors.Student}
+                                  InputLabelProps={{
+                                    shrink: true, // ✅ prevents overlap
+                                  }}
+                                  url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                      AccessID: "2182",
+                                      ScreenName: "Student",
+                                      VerticalLicense: "003",
+                                      Filter: `CompanyID='${CompanyID}' AND ProjectID='${values?.Standard?.RecordID ? values?.Standard?.RecordID : ""}'`,
+                                      Any: "",
+                                    },
+                                  })}`}
+                                />
+                              </Box>
+                            )}
 
-                        <Button
-                          // size="small"
-                          variant="contained"
-                          component={"a"}
-                          sx={{
-                            marginTop: "10px",
-                            width: "100%",
-                          }}
-                          onClick={() => {
-                            data?.Attachment || emergencyImage
-                              ? window.open(
-                                  emergencyImage
-                                    ? store.getState().globalurl.attachmentUrl +
-                                        emergencyImage
-                                    : store.getState().globalurl.attachmentUrl +
-                                        data?.Attachment,
-                                  "_blank",
-                                )
-                              : data?.Video || emergencyvideo
-                                ? window.open(
-                                    emergencyvideo
-                                      ? store.getState().globalurl
-                                          .videoAttachmentUrl + emergencyvideo
-                                      : store.getState().globalurl
-                                          .videoAttachmentUrl + data?.Video,
-                                    "_blank",
-                                  )
-                                : data?.Audio || emergencyaudio
-                                  ? window.open(
-                                      emergencyaudio
-                                        ? store.getState().globalurl
-                                            .audioAttachmentUrl + emergencyaudio
-                                        : store.getState().globalurl
-                                            .audioAttachmentUrl + data?.Audio,
-                                      "_blank",
-                                    )
-                                  : toast.error("Please Upload File");
-                          }}
-                        >
-                          View Uploaded File
-                        </Button>
-                      </Box>
-                    </Box>
-                    {/* NOTIFY OPTIONS */}
-                    <Box>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mb: 2,
-                          fontWeight: 600,
-                          color: "#6B7280",
-                        }}
-                      >
-                        Notify Via
-                      </Typography>
-
-                      <Box display="flex" flexDirection="column" gap={1.5}>
-                        {[
-                          {
-                            label: "Mail",
-                            field: "Email",
-                          },
-                          {
-                            label: "WhatsApp",
-                            field: "WhatsApp",
-                          },
-                          {
-                            label: "SMS",
-                            field: "SMS",
-                          },
-                          {
-                            label: "Acknowledgement Required",
-                            field: "Acknowledgement",
-                          },
-                        ].map((item) => (
-                          <Box
-                            key={item.field}
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            sx={{
-                              borderBottom: "1px solid #E5E7EB",
-                              pb: 1,
-                            }}
-                          >
-                            <Typography fontSize="14px">
-                              {item.label}
-                            </Typography>
-
-                            <Switch
-                              color="error"
-                              checked={values[item.field]}
-                              onChange={(e) =>
-                                setFieldValue(item.field, e.target.checked)
+                            {/* MESSAGE */}
+                            <TextField
+                              fullWidth
+                              multiline
+                              variant="outlined"
+                              size="small"
+                              focused
+                              rows={2}
+                              name="Message"
+                              // label="Message"
+                              label={
+                                <>
+                                  Message
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </>
                               }
-                            />
-                          </Box>
-                        ))}
-                      </Box>
-                    </Box>
+                              placeholder="Describe the emergency clearly"
+                              value={values.Message}
+                              onChange={handleChange}
+                              error={!!touched.Message && !!errors.Message}
+                              helperText={touched.Message && errors.Message}
+                              sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
 
-                    {/* BUTTONS */}
-                    <Box
-                      display="flex"
-                      justifyContent="flex-end"
-                      gap={2}
-                      mt={2}
-                    >
-                      <LoadingButton
-                        color="error"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                        disabled={mode === "V" || imageLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                      <Button
-                        startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
-                        variant="outlined"
-                        color="warning"
-                        onClick={() =>
-                          navigate(
-                            `/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`,
-                            { state: { ...state } },
-                          )
-                        }
-                      >
-                        Back To Events List
-                      </Button>
-                    </Box>
-                  </Box>
-                </form>
-              );
-            }}
-          </Formik>
-        </Paper>
-      ) : (
-        false
-      )}
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
+                            />
+
+                            {/* ACTION + CONTACT */}
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={
+                                isNonMobile ? "1fr 1fr" : "1fr"
+                              }
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                name="ActionRequired"
+                                variant="outlined"
+                                size="small"
+                                focused
+                                label="Action Required"
+                                placeholder="eg. Stay home, await notice"
+                                value={values.ActionRequired}
+                                onChange={handleChange}
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                focused
+                                name="ContactPersonAndNumber"
+                                // label="Contact Person & Number"
+                                label={
+                                  <>
+                                    Contact Person & Number
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                placeholder="eg. Ramesh- 8596748596"
+                                value={values.ContactPersonAndNumber}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.ContactPersonAndNumber &&
+                                  !!errors.ContactPersonAndNumber
+                                }
+                                helperText={
+                                  touched.ContactPersonAndNumber &&
+                                  errors.ContactPersonAndNumber
+                                }
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                              />
+                            </Box>
+
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={isNonMobile ? "1fr" : "1fr"}
+                              gap={2}
+                            >
+                              <Box>
+                                <Typography
+                                  variant="subtitle2"
+                                  sx={{
+                                    mb: 1,
+                                    fontWeight: 600,
+                                    color: "#6B7280",
+                                  }}
+                                >
+                                  Attach Emergency
+                                </Typography>
+
+                                <Box
+                                  component="label"
+                                  sx={{
+                                    border: "1px dashed #D1D5DB",
+                                    borderRadius: "10px",
+                                    backgroundColor: "#F9FAFB",
+                                    height: "56px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                    transition: "0.2s",
+                                    "&:hover": {
+                                      backgroundColor: "#F3F4F6",
+                                    },
+                                  }}
+                                >
+                                  <input
+                                    hidden
+                                    type="file"
+                                    accept="image/*,video/*,audio/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    // accept="image/*,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    // onChange={(event) => {
+                                    //     const file = event.currentTarget.files[0];
+                                    //     setFieldValue("SyllabusFile", file);
+                                    // }}
+                                    onChange={getFileChange}
+                                  />
+
+                                  <Typography fontSize="14px" color="#6B7280">
+                                    Click to upload file
+                                  </Typography>
+                                </Box>
+
+                                <Button
+                                  // size="small"
+                                  variant="contained"
+                                  component={"a"}
+                                  sx={{
+                                    marginTop: "10px",
+                                    width: "100%",
+                                  }}
+                                  onClick={() => {
+                                    data?.Attachment || emergencyImage
+                                      ? window.open(
+                                          emergencyImage
+                                            ? store.getState().globalurl
+                                                .attachmentUrl + emergencyImage
+                                            : store.getState().globalurl
+                                                .attachmentUrl +
+                                                data?.Attachment,
+                                          "_blank",
+                                        )
+                                      : data?.Video || emergencyvideo
+                                        ? window.open(
+                                            emergencyvideo
+                                              ? store.getState().globalurl
+                                                  .videoAttachmentUrl +
+                                                  emergencyvideo
+                                              : store.getState().globalurl
+                                                  .videoAttachmentUrl +
+                                                  data?.Video,
+                                            "_blank",
+                                          )
+                                        : data?.Audio || emergencyaudio
+                                          ? window.open(
+                                              emergencyaudio
+                                                ? store.getState().globalurl
+                                                    .audioAttachmentUrl +
+                                                    emergencyaudio
+                                                : store.getState().globalurl
+                                                    .audioAttachmentUrl +
+                                                    data?.Audio,
+                                              "_blank",
+                                            )
+                                          : toast.error("Please Upload File");
+                                  }}
+                                >
+                                  View Uploaded File
+                                </Button>
+                              </Box>
+                            </Box>
+                            {/* NOTIFY OPTIONS */}
+                            <Box>
+                              <Typography
+                                variant="subtitle2"
+                                sx={{
+                                  mb: 2,
+                                  fontWeight: 600,
+                                  color: "#6B7280",
+                                }}
+                              >
+                                Notify Via
+                              </Typography>
+
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                gap={1.5}
+                              >
+                                {[
+                                  {
+                                    label: "Mail",
+                                    field: "Email",
+                                  },
+                                  {
+                                    label: "WhatsApp",
+                                    field: "WhatsApp",
+                                  },
+                                  {
+                                    label: "SMS",
+                                    field: "SMS",
+                                  },
+                                  {
+                                    label: "Acknowledgement Required",
+                                    field: "Acknowledgement",
+                                  },
+                                ].map((item) => (
+                                  <Box
+                                    key={item.field}
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    sx={{
+                                      borderBottom: "1px solid #E5E7EB",
+                                      pb: 1,
+                                    }}
+                                  >
+                                    <Typography fontSize="14px">
+                                      {item.label}
+                                    </Typography>
+
+                                    <Switch
+                                      color="error"
+                                      checked={values[item.field]}
+                                      onChange={(e) =>
+                                        setFieldValue(
+                                          item.field,
+                                          e.target.checked,
+                                        )
+                                      }
+                                    />
+                                  </Box>
+                                ))}
+                              </Box>
+                            </Box>
+
+                            {/* BUTTONS */}
+                            <Box
+                              display="flex"
+                              justifyContent="flex-end"
+                              gap={2}
+                              mt={2}
+                            >
+                              <LoadingButton
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                                variant="contained"
+                                type="submit"
+                                loading={isLoading}
+                                disabled={mode === "V" || imageLoading}
+                              >
+                                Save
+                              </LoadingButton>
+                              <Button
+                                startIcon={<ArrowBack sx={{ fontSize: 14 }} />}
+                                variant="outlined"
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  color: "#ffff",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                    color: "#ffff",
+                                  },
+                                }}
+                                onClick={() =>
+                                  navigate(
+                                    `/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.leaderID}/Events/${params.secondaryAccessID}/${params.parentID2}/E`,
+                                    { state: { ...state } },
+                                  )
+                                }
+                              >
+                                Back To Events List
+                              </Button>
+                            </Box>
+                          </Box>
+                        </form>
+                      );
+                    }}
+                  </Formik>
+                </Paper>
+              </Box>
+            </Box>
+          ) : (
+            false
+          )}
+        {/* </Box>
+      </Box> */}
     </React.Fragment>
   );
 };

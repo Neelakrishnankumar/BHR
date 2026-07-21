@@ -175,7 +175,10 @@ const Editoverheadtype = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+              <Box sx={{ height: "100vh", overflow: "auto" }}>
+                     <Box sx={{backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                      <Box sx={{ p: 1.5, borderRadius: 3, }}>
+               <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -194,9 +197,15 @@ const Editoverheadtype = () => {
                                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                             >
                                 <Typography
-                                    variant="h5"
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
+                                    sx={{ 
+              cursor: "default",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#111827",
+              // mb: 0.2,
+              px: 1,
+              py: 0.2,
+            }}
 
                                 >
                                     Overhead Type
@@ -220,10 +229,31 @@ const Editoverheadtype = () => {
                     </Box>
                 </Box>
             </Paper>
-
+       </Box>
             {!getLoading ? (
-
-                <Paper elevation={3} sx={{ margin: "10px" }}>
+    <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+                 <Box
+                               flex={1}
+                               minWidth={0}
+                               display="flex"
+                               flexDirection="column"
+                               gap={3}
+                             >
+                               <Paper
+                                 elevation={0}
+                                 sx={{
+                                   backgroundColor: "#fff",
+                                   border: "1px solid #E5E7EB",
+                                   borderRadius: 3,
+                                   p: 3,
+                                 }}
+                               >
                     <Formik
                         initialValues={initialValue}
                         onSubmit={(values, { resetForm }) => {
@@ -244,6 +274,40 @@ const Editoverheadtype = () => {
                             handleSubmit,
                         }) => (
                             <form onSubmit={handleSubmit}>
+                                   {/* ----- CARD HEADER ----- */}
+                                                        <Box
+                                                          display="flex"
+                                                          alignItems="center"
+                                                          gap={1}
+                                                          mb={0.5}
+                                                        >
+                                                          <Box
+                                                            sx={{
+                                                              width: 32,
+                                                              height: 32,
+                                                              borderRadius: "50%",
+                                                              backgroundColor: "#EFF6FF",
+                                                              display: "flex",
+                                                              alignItems: "center",
+                                                              justifyContent: "center",
+                                                            }}
+                                                          >
+                                                            <Typography sx={{ fontSize: 16 }}>💰</Typography>
+                                                          </Box>
+                                                          <Box>
+                                                            <Typography
+                                                              variant="subtitle1"
+                                                              fontWeight={700}
+                                                              color="#0D94885"
+                                                            >
+                                                              Overhead Type
+                                                            </Typography>
+                                
+                                                            <Typography variant="body2" color="text.secondary">
+                                                              Manage overhead expense categories
+                                                            </Typography>
+                                                          </Box>
+                                                        </Box>
                                 <Box
                                     display="grid"
                                     gap={formGap}
@@ -263,7 +327,8 @@ const Editoverheadtype = () => {
                                             id="code"
                                             label="Code"
                                             placeholder="Auto"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             value={values.code}
                                             onBlur={handleBlur}
@@ -271,6 +336,30 @@ const Editoverheadtype = () => {
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
                                             InputProps={{ readOnly: true }}
+                                             sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                                         // autoFocus
                                         />
                                     ) : (
@@ -283,7 +372,8 @@ const Editoverheadtype = () => {
                                                     Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                                 </>
                                             }
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // required
                                             value={values.code}
@@ -292,6 +382,30 @@ const Editoverheadtype = () => {
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
                                             autoFocus
+                                             sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                                         />
                                     )}
                                     <TextField
@@ -303,7 +417,8 @@ const Editoverheadtype = () => {
                                                 Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                             </>
                                         }
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         value={values.name}
                                         onBlur={handleBlur}
@@ -322,6 +437,30 @@ const Editoverheadtype = () => {
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}
                                         autoFocus={CompanyAutoCode == "Y"}
+                                         sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                                     // required
                                     />
                                     <TextField
@@ -329,7 +468,8 @@ const Editoverheadtype = () => {
                                         type="number"
                                         id="sortorder"
                                         label="Sort Order"
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         value={values.sortorder}
                                         onBlur={handleBlur}
@@ -348,6 +488,30 @@ const Editoverheadtype = () => {
                                                 .toString()
                                                 .slice(0, 8);
                                         }}
+                                         sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                                     />
                                     {/* <FormControl
                     focused
@@ -398,11 +562,19 @@ const Editoverheadtype = () => {
                                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
                                     <LoadingButton
                                         variant="contained"
-                                        color="secondary"
+                                         sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                         type="submit"
                                         loading={loading}
                                     >
-                                        SAVE
+                                        Save
                                     </LoadingButton>
                                     {/* {mode == "E" ? (
                                         <Button
@@ -433,21 +605,33 @@ const Editoverheadtype = () => {
                                     )} */}
                                     <Button
                                         variant="contained"
-                                        color="warning"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                                         onClick={() => {
                                             navigate(-1);
                                         }}
                                     >
-                                        CANCEL
+                                        Back
                                     </Button>
                                 </Box>
                             </form>
                         )}
                     </Formik>
                 </Paper>
+                 </Box>
+                            </Box>
             ) : (
                 false
             )}
+                </Box>
+                  </Box>
         </React.Fragment>
     );
 };

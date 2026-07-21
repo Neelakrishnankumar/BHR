@@ -41,6 +41,8 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import { breadcrumbStyles } from "../../../Theme";
+
 // import {
 //   ManagerAppraisalPayload,
 //   PeerAppraisalPayload,
@@ -186,60 +188,107 @@ const EditRoute = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 1,
+            mb: 1,
+            p: 1,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            bgcolor: "#fff",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            {/* Left */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
+                <IconButton
+                  onClick={() => toggleSidebar()}
+                  sx={{
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 2,
+                  }}
+                >
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  {state.Screenname}
+                </Typography>
+
                 <Breadcrumbs
-                  maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    // onClick={() => navigate("/Apps/TR323/Route")}
+                    sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate("/Apps/TR323/Route", {
                         state: {
                           ...state,
                           Screennameroute: state.Screenname,
-                        }
+                        },
                       });
                     }}
                   >
-                    {mode === "E" ? `List Of ${state.Screenname}
-                    (${state.BreadCrumb1})` : `List Of  ${state.Routescreen}`}
+                    {mode === "E"
+                      ? `List Of ${state.Screenname} (${state.BreadCrumb1})`
+                      : `List Of ${state.Routescreen}`}
                   </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+
+                  <Typography sx={breadcrumbStyles.active}>
+                    {mode === "A"
+                      ? "New"
+                      : mode === "E"
+                        ? "Edit"
+                        : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
             </Box>
 
+            {/* Right */}
             <Box display="flex">
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -248,7 +297,51 @@ const EditRoute = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper
+            elevation={0}
+            sx={{
+              m: 2,
+              p: 2,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
+
+            <Box display="flex" alignItems="center" gap={1} mb={5}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  backgroundColor: "#EFF6FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                }}
+              >
+                🛣️
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  color="#0D94885"
+                >
+                  {state.Screenname}
+                </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  Manage route details and route master information
+                </Typography>
+              </Box>
+            </Box>
+
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -270,129 +363,96 @@ const EditRoute = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+
+                  {/* ================= GRID ================= */}
                   <Box
                     display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                    gap={2.5}
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    {CompanyAutoCode == "Y" ? (
+
+                    {/* CODE */}
+                    {CompanyAutoCode === "Y" ? (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label="Code"
-                        placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
                       />
                     ) : (
                       <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
                         name="Code"
-                        type="text"
-                        id="Code"
                         label={
                           <>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            Code <span style={{ color: "red" }}>*</span>
                           </>
                         }
-                        variant="standard"
-                        focused
-                        // required
                         value={values.Code}
-                        onBlur={handleBlur}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         error={!!touched.Code && !!errors.Code}
                         helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
                       />
                     )}
+
+                    {/* DESCRIPTION */}
                     <TextField
+                      fullWidth
+                      size="small"
+                      variant="outlined"
                       name="Description"
-                      type="text"
-                      id="Description"
                       label={
-                        <span>
-                          Route Description{" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
+                        <>
+                          Route Description <span style={{ color: "red" }}>*</span>
+                        </>
                       }
-                      variant="standard"
-                      focused
                       value={values.Description}
-                      onBlur={handleBlur}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       error={!!touched.Description && !!errors.Description}
                       helperText={touched.Description && errors.Description}
-                      autoFocus
                     />
+
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth
-                      variant="standard"
-                      type="number"
+                      size="small"
+                      variant="outlined"
+                      name="Sortorder"
                       label="Sort Order"
+                      type="number"
                       value={values.Sortorder}
-                      id="Sortorder"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="Sortorder"
-                      // error={!!touched.Sortorder && !!errors.Sortorder}
-                      // helperText={touched.Sortorder && errors.Sortorder}
-
-                      sx={{ background: "" }}
-                      focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
+                        e.target.value = Math.max(
+                          0,
+                          parseInt(e.target.value || 0)
+                        )
                           .toString()
                           .slice(0, 8);
                       }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
-                          //readOnly: mode == "V",
                         },
                       }}
                     />
 
-                    {/* CHECKBOX */}
-                    <Box>
+                    {/* CHECKBOX SECTION */}
+                    <Box display="flex" alignItems="center" gap={3} sx={{ mt: 1 }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -402,14 +462,8 @@ const EditRoute = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -419,47 +473,57 @@ const EditRoute = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
+
                   </Box>
-                  {/* BUTTONS */}
+
+                  {/* ================= BUTTONS ================= */}
                   <Box
                     display="flex"
                     justifyContent="flex-end"
-                    padding={1}
                     gap={2}
+                    mt={4}
                   >
                     <LoadingButton
+                      loading={isLoading}
                       type="submit"
                       variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
+
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
+
                 </Form>
               )}
             </Formik>
           </Paper>
-        ) : (
-          false
-        )}
+        ) : false}
       </React.Fragment>
     </>
   );

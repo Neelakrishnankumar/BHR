@@ -45,6 +45,7 @@ import { LoadingButton } from "@mui/lab";
 import toast from "react-hot-toast";
 import { AppraisalAutocompletePayload } from "./SkillGlowAutocomplete";
 import { fetchListview } from "../../../store/reducers/Listviewapireducer";
+import { breadcrumbStyles } from "../../../Theme";
 
 const CreateAppraisalSkill = () => {
   const navigate = useNavigate();
@@ -354,105 +355,231 @@ const CreateAppraisalSkill = () => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 1,
+          mb: 1,
+          p: 1,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          bgcolor: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          {/* Left */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
+
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  // mb: 0.2,
+                      px: 1,
+        py: 0.2,
+                }}
+              >
+                {mode === "A" ? "New Appraisal" : "Edit Appraisal"}
+              </Typography>
+
               <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                 sx={breadcrumbStyles.separator}
+                // sx={{
+                //   "& .MuiBreadcrumbs-separator": {
+                //     color: "#9CA3AF",
+                //   },
+                // }}
               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
-                  }}
-                >
-                  List of Assessment Type ({state.BreadCrumb1})
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
-                      { state: { ...state } }
-                    );
-                  }}
-
-                >
-                  {/* {params.parentID2 === "AP" ?
-                    "List of Appraisal Category" :
-                    params.parentID2 === "CL" ?
-                      "List of Compliance Category" :
-                      params.parentID2 === "SV" ?
-                        "List of Survey Category" :
-                        params.parentID2 === "FB" ?
-                          "List of Feedback Category" :
-                          "List of Assessment Category"
-                  } */}
-                  List of Category
-                  ({state.BreadCrumb2})
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  {params.parentID2 === "AP" ?
-                    "List of Appraisal" :
-                    params.parentID2 === "CL" ?
-                      "List of Compliance" :
-                      params.parentID2 === "SV" ?
-                        "List of Survey" :
-                        params.parentID2 === "FB" ?
-                          "List of Feedback" :
-                          "List of Assessment"
+                  onClick={() =>
+                    navigate("/Apps/TR299/List%20Of%20Assessment%20Type")
                   }
-                  {/* List of Assessment */}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                             sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
                 >
-                  {mode == "A" ? "New" : "Edit"}
+                List of Assessment Type ({state.BreadCrumb1})
+                </Typography>
+
+                <Typography
+                  onClick={() =>
+                    navigate(
+                      `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
+                      {
+                        state: { ...state },
+                      }
+                    )
+                  }
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                             sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
+                >
+                  List of Category ({state.BreadCrumb2})
+                </Typography>
+
+                <Typography
+                  onClick={() => navigate(-1)}
+                  // sx={{
+                  //   cursor: "pointer",
+                  //   color: "#6B7280",
+                  //   fontWeight: 700,
+                  //   "&:hover": {
+                  //     color: "#14B8A6",
+                  //   },
+                  // }}
+                  sx={breadcrumbStyles.item}
+      //                 sx={{
+      //   cursor: "pointer",
+      //   px: 1.5,
+      //   py: 0.5,
+      //   borderRadius: 2,
+      //   fontWeight: 600,
+      //   fontSize: 13,
+      //   color: "#475569",
+      //   transition: "all 0.25s ease",
+      //   "&:hover": {
+      //     color: "#fff",
+      //     background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      //     boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+      //   },
+      // }}
+                >
+                  {params.parentID2 === "AP"
+                    ? "Appraisal"
+                    : params.parentID2 === "CL"
+                      ? "Compliance"
+                      : params.parentID2 === "SV"
+                        ? "Survey"
+                        : params.parentID2 === "FB"
+                          ? "Feedback"
+                          : "Assessment"}
+                </Typography>
+
+                <Typography
+                  // sx={{
+                  //   color: "#14B8A6",
+                  //   fontWeight: 700,
+                  // }}
+                  sx={breadcrumbStyles.active}
+    //               sx={{
+    //   px: 1.5,
+    //   py: 0.5,
+    //   borderRadius: 2,
+    //   fontWeight: 700,
+    //   fontSize: 13,
+    //   color: "#fff",
+    //   background: "linear-gradient(135deg, #0D9488, #14B8A6)",
+    //   boxShadow: "0 2px 8px rgba(13,148,136,0.4)",
+    // }}
+                >
+                  {mode === "A" ? "New" : "Edit"}
                 </Typography>
               </Breadcrumbs>
             </Box>
           </Box>
 
-          <Box display="flex">
+          {/* Right */}
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  // border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
+                <ResetTvIcon color="error" />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  // border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
+                <LogoutOutlinedIcon color="error" />
               </IconButton>
             </Tooltip>
           </Box>
         </Box>
       </Paper>
+
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            mx: 1,
+            mt: 2,
+          }}
+        >
           <Formik
             initialValues={initialValues}
             onSubmit={(values, { resetForm }) => {
@@ -475,11 +602,42 @@ const CreateAppraisalSkill = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 {/* {JSON.stringify(errors)} */}
+
+                <Box mb={3}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography 
+                   sx={{ fontSize: 18 }}
+                    >🎯</Typography>
+
+                    <Typography
+                    variant="subtitle1" fontWeight={700} color="#0D94885"
+                      // sx={{
+                      //   fontSize: "18px",
+                      //   fontWeight: 700,
+                      //   color: "#1F2937",
+                      // }}
+                    >
+                      Appraisal Skill Details
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    Manage appraisal skill information, evaluation criteria, and skill configuration.
+                  </Typography>
+                </Box>
+
                 <Box
                   display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  gridTemplateColumns={{
+                    xs: "1fr",
+                    md: "repeat(2,1fr)",
+                  }}
+                  gap={3}
+                  mt={2}
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",
@@ -490,7 +648,8 @@ const CreateAppraisalSkill = () => {
                   {CompanyAutoCode === "Y" ? (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Code"
                       placeholder="Auto"
@@ -499,7 +658,6 @@ const CreateAppraisalSkill = () => {
                       onChange={handleChange}
                       id="Code"
                       name="Code"
-                      focused
                       error={!!touched.Code && !!errors.Code}
                       helperText={touched.Code && errors.Code}
                       sx={{
@@ -513,7 +671,8 @@ const CreateAppraisalSkill = () => {
                   ) : (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label={
                         <>
@@ -529,7 +688,6 @@ const CreateAppraisalSkill = () => {
                       onChange={handleChange}
                       id="Code"
                       name="Code"
-                      focused
                       error={!!touched.Code && !!errors.Code}
                       helperText={touched.Code && errors.Code}
                       sx={{
@@ -544,7 +702,8 @@ const CreateAppraisalSkill = () => {
 
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     label={
                       <>
@@ -560,7 +719,6 @@ const CreateAppraisalSkill = () => {
                     onChange={handleChange}
                     id="Name"
                     name="Name"
-                    focused
                     error={!!touched.Name && !!errors.Name}
                     helperText={touched.Name && errors.Name}
                     sx={{
@@ -630,7 +788,8 @@ const CreateAppraisalSkill = () => {
                   /> */}
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     // label="Duration (In Days)"
                     label={
@@ -647,7 +806,6 @@ const CreateAppraisalSkill = () => {
                     onChange={handleChange}
                     id="Duration"
                     name="Duration"
-                    focused
                     error={!!touched.Duration && !!errors.Duration}
                     helperText={touched.Duration && errors.Duration}
                     sx={{
@@ -664,7 +822,8 @@ const CreateAppraisalSkill = () => {
                   />
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     // label="Mininum Score"
                     label={
@@ -681,7 +840,6 @@ const CreateAppraisalSkill = () => {
                     onChange={handleChange}
                     id="Minimumscore"
                     name="Minimumscore"
-                    focused
                     error={!!touched.Minimumscore && !!errors.Minimumscore}
                     helperText={touched.Minimumscore && errors.Minimumscore}
                     sx={{
@@ -708,8 +866,8 @@ const CreateAppraisalSkill = () => {
                         </span>
                       </>
                     }
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.Date}
                     onBlur={handleBlur}
@@ -760,7 +918,8 @@ const CreateAppraisalSkill = () => {
                       {/* NO OF QUESTION GROUP */}
                       <TextField
                         // fullWidth
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="number"
                         // label="No. Of Attempts Permitted"
                         label="No. Of Question Groups"
@@ -770,7 +929,6 @@ const CreateAppraisalSkill = () => {
                         onChange={handleChange}
                         id="NoOfQuestionGroup"
                         name="NoOfQuestionGroup"
-                        focused
                         error={
                           !!touched.NoOfQuestionGroup &&
                           !!errors.NoOfQuestionGroup
@@ -796,7 +954,8 @@ const CreateAppraisalSkill = () => {
 
                       <TextField
                         // fullWidth
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="number"
                         // label="No. Of Attempts Permitted"
                         label="No. Of Questions"
@@ -806,7 +965,6 @@ const CreateAppraisalSkill = () => {
                         onChange={handleChange}
                         id="TotalNoOfQuestion"
                         name="TotalNoOfQuestion"
-                        focused
                         error={
                           !!touched.TotalNoOfQuestion &&
                           !!errors.TotalNoOfQuestion
@@ -878,8 +1036,8 @@ const CreateAppraisalSkill = () => {
                     />
 
                     <TextField
-                      focused
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       label={
                         <>
                           Appraisal Type
@@ -941,7 +1099,8 @@ const CreateAppraisalSkill = () => {
                   )} */}
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="number"
                     label="Sort Order"
                     value={values.SortOrder}
@@ -952,7 +1111,6 @@ const CreateAppraisalSkill = () => {
                     // error={!!touched.SortOrder && !!errors.SortOrder}
                     // helperText={touched.SortOrder && errors.SortOrder}
                     sx={{ background: "" }}
-                    focused
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
                       e.target.value = Math.max(0, parseInt(e.target.value))
@@ -1017,6 +1175,15 @@ const CreateAppraisalSkill = () => {
                     variant="contained"
                     type="submit"
                     loading={isLoading}
+                    sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#0D9488",
+                      "&:hover": {
+                        bgcolor: "#0F766E",
+                      },
+                    }}
                   >
                     Save
                   </LoadingButton>
@@ -1051,8 +1218,18 @@ const CreateAppraisalSkill = () => {
                     variant="contained"
                     color="warning"
                     onClick={() => navigate(-1)}
+                    sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
+                    }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

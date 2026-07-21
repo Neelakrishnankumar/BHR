@@ -46,6 +46,7 @@ import { LoadingButton } from "@mui/lab";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import store from "../../..";
+import { breadcrumbStyles } from "../../../Theme";
 const CreateSession = () => {
   const navigate = useNavigate();
 
@@ -195,100 +196,57 @@ const CreateSession = () => {
           height: "100vh",
         }}
       >
-        {/* BACK BUTTON */}
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            mb: 1,
-          }}
-        >
-          <Button
-            variant="contained"
-            startIcon={<ArrowBack />}
-            onClick={() => navigate(-1)}
-            sx={{
-              backgroundColor: "lightgrey",
-              color: "black",
-              "&:hover": {
-                backgroundColor: "lightgrey",
-                color: "black",
-              },
-            }}
-          >
-            Back
-          </Button>
-        </Box> */}
-        {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
-                {/* <Breadcrumbs
-                  maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+  <Paper
+           elevation={0}
+           sx={{
+             mx: 2,
+             mt: 1,
+             mb: 1,
+             p: 1,
+             borderRadius: 3,
+             border: "1px solid #E5E7EB",
+             bgcolor: "#fff",
+           }}
+         >
+           <Box
+             display="flex"
+             justifyContent="space-between"
+             alignItems="center"
+           >
+             {/* Left */}
+             <Box display="flex" alignItems="center" gap={2}>
+               {broken && !rtl && (
+                 <IconButton
+                   onClick={() => toggleSidebar()}
+                   sx={{
+                     border: "1px solid #E5E7EB",
+                     borderRadius: 2,
+                   }}
+                 >
+                   <MenuOutlinedIcon />
+                 </IconButton>
+               )}
+   
+               <Box>
+                 <Typography
+                   sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
+                 >
+                   {mode === "A" ? "Session" : "Session"}
+                 </Typography>
+   
+                 <Breadcrumbs
+                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                    sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() =>
-                      navigate(`/Apps/TR278/List%20Of%20Categories`)
-                    }
-                  >
-                    List Of Category ({state.BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() =>
-                      navigate(
-                        `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.parentID2}`,
-                        {
-                          state: { ...state },
-                        }
-                      )
-                    }
-                  >
-                    List Of Assessment ({state.BreadCrumb2})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate(-1)}
-                  >
-                    List Of Session
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
-                  </Typography>
-                </Breadcrumbs> */}
-
-                <Breadcrumbs
-                  maxItems={2}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                  sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
                     }}
@@ -296,9 +254,7 @@ const CreateSession = () => {
                     List of Assessment Type ({state.BreadCrumb1})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                  sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate(
                         `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}`,
@@ -309,9 +265,7 @@ const CreateSession = () => {
                     List of Category ({state.BreadCrumb2})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                  sx={breadcrumbStyles.item}
                     onClick={() => {
                       navigate(
                         `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}/${params.accessID1}/${params.parentID2}`,
@@ -333,18 +287,14 @@ const CreateSession = () => {
                     ({state.BreadCrumb3})
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
+                   sx={breadcrumbStyles.item}
                     onClick={() => navigate(-1)}
                   >
                     List Of Session
                   </Typography>
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  //onClick={() => navigate(-1)}
+                  sx={breadcrumbStyles.active}
+               
                   >
                     {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
                   </Typography>
@@ -366,9 +316,32 @@ const CreateSession = () => {
             </Box>
           </Box>
         </Paper>
+
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
+        <Box
+                     display="flex"
+                     gap={3}
+                     alignItems="flex-start"
+                     flexWrap="wrap"
+                     sx={{ p: 1 }}
+                   >
+                     <Box
+                       flex={1}
+                       minWidth={0}
+                       display="flex"
+                       flexDirection="column"
+                       gap={3}
+                     >
+                       <Paper
+                         elevation={3}
+                         sx={{
+                           margin: "10px",
+                           backgroundColor: "#ffff",
+                           border: "1px solid #b9bcc0",
+                           borderRadius: 3,
+                         }}
+                       >
+                         <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
@@ -390,6 +363,47 @@ const CreateSession = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+                    {/* ----- CARD HEADER ----- */}
+                                            <Box
+                                              display="flex"
+                                              alignItems="center"
+                                              gap={1.5}
+                                              mb={1}
+                                              sx={{ px: 2, pt: 2 }}
+                                            >
+                                              {/* ICON */}
+                                              <Box
+                                                sx={{
+                                                  width: 36,
+                                                  height: 36,
+                                                  borderRadius: "50%",
+                                                  backgroundColor: "#EFF6FF",
+                                                  display: "flex",
+                                                  alignItems: "center",
+                                                  justifyContent: "center",
+                                                }}
+                                              >
+                                                <Typography sx={{ fontSize: 18 }}>🕒</Typography>
+                                              </Box>
+                  
+                                              {/* TITLE + SUBTITLE */}
+                                              <Box>
+                                                <Typography
+                                                  variant="subtitle1"
+                                                  fontWeight={700}
+                                                   color="#0D94885"
+                                                >
+                                                  Session
+                                                </Typography>
+                  
+                                                <Typography
+                                                  variant="body2"
+                                                  color="text.secondary"
+                                                >
+                                                 Manage and schedule assessment sessions for organized and timely evaluations
+                                                </Typography>
+                                              </Box>
+                                            </Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -404,7 +418,8 @@ const CreateSession = () => {
                     {/* TEXTFIELD */}
                     {CompanyAutoCode === "Y" ? (
                       <TextField
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="text"
                         name="Code"
                         label="Code"
@@ -418,16 +433,35 @@ const CreateSession = () => {
                         helperText={touched.Code && errors.Code}
                         //disabled={mode === "V"}
                         inputProps={{ readOnly: mode == "V" }}
-                        sx={{
-                          // backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                          sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       />
                     ) : (
                       <TextField
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         type="text"
                         name="Code"
                         label={
@@ -448,18 +482,37 @@ const CreateSession = () => {
                         helperText={touched.Code && errors.Code}
                         //disabled={mode === "V"}
                         inputProps={{ readOnly: mode == "V" }}
-                        sx={{
-                          // backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
+                          sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                         autoFocus
                       />
                     )}
 
                     <TextField
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       type="text"
                       name="Name"
                       label={
@@ -479,12 +532,30 @@ const CreateSession = () => {
                       error={!!touched.Name && !!errors.Name}
                       helperText={touched.Name && errors.Name}
                       //disabled={mode === "V"}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       inputProps={{ readOnly: mode == "V" }}
                       autoFocus={CompanyAutoCode == "Y"}
                     />
@@ -511,7 +582,8 @@ const CreateSession = () => {
                       id="ContentType"
                       // required
                       focused
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       value={values.ContentType}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -519,6 +591,30 @@ const CreateSession = () => {
                       select
                       error={!!touched.ContentType && !!errors.ContentType}
                       helperText={touched.ContentType && errors.ContentType}
+                        sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     // MenuProps={{
                     //   PaperProps: {
                     //     sx: {
@@ -537,7 +633,8 @@ const CreateSession = () => {
                     {/* SORT ORDER */}
 
                     <TextField
-                      variant="standard"
+                      variant="outlined"
+                        size="small"
                       name="SortOrder"
                       id="SortOrder"
                       type="number"
@@ -548,7 +645,30 @@ const CreateSession = () => {
                       // error={!!touched.SortOrder && !!errors.SortOrder}
                       // helperText={touched.SortOrder && errors.SortOrder}
                       //disabled={mode === "V"}
-                      sx={{ background: "" }}
+                        sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
@@ -686,6 +806,17 @@ const CreateSession = () => {
                               toast.error("Please Upload File");
                             }
                           }}
+                          sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  // bgcolor: "#F97316",
+                                 
+                                  // "&:hover": {
+                                  //   bgcolor: "#EA580C",
+                                   
+                                  // },
+                                }}
                         >
                           View
                         </Button>
@@ -693,29 +824,53 @@ const CreateSession = () => {
                     )}
 
                     <LoadingButton
-                      color={mode == "V" ? "error" : "secondary"}
+                      // color={mode == "V" ? "error" : "secondary"}
                       variant="contained"
                       type="submit"
                       loading={isLoading}
                       disabled={mode == "V" ? true : false}
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  color: mode == "V" ? "error" : "#ffff",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                    color: mode == "V" ? "error" : "#ffff"
+                                  },
+                                }}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
-                      color="warning"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                       onClick={() => navigate(-1)}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>
               )}
             </Formik>
           </Paper>
+            </Box>
+                      </Box>
         ) : (
           false
         )}
+        
       </React.Fragment>
     </>
   );

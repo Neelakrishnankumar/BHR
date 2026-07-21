@@ -21,6 +21,10 @@ import {
   Paper,
   Alert,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 // import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import * as Yup from "yup";
@@ -60,7 +64,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
@@ -83,6 +87,9 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { imageUpload } from "../../../store/reducers/Imguploadreducer";
 import { Code } from "@mui/icons-material";
 import { type } from "@testing-library/user-event/dist/type";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from '@mui/icons-material/Close';
 
 import {
   dataGridHeaderFooterHeight,
@@ -223,6 +230,121 @@ const EditemployeePayroll = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema1, setValidationSchema1] = useState(Yup.object());
 
+  const [sectionsOpen, setSectionsOpen] = useState(true);
+
+  const formSections = [
+    { value: "0", label: "Personnel", desc: "Basic details about the personnel", icon: "👤" },
+    { value: "1", label: "Allowances", desc: "Allowance components and values", icon: "➕" },
+    { value: "5", label: "Deductions", desc: "Deduction components and values", icon: "➖" },
+
+    { value: "3", label: "Attendance", desc: "Monthly attendance summary", icon: "🗓️" },
+    { value: "4", label: "Payroll Attendance", desc: "Payroll attendance and payslip", icon: "📄" },
+  ];
+
+  const currentSection =
+    formSections.find((item) => String(item.value) === String(show)) || { label: "Personnel" };
+
+  function FormSectionsSidebar({ show, screenChange, sections, open, onToggle }) {
+    return (
+      <Box
+        sx={{
+          width: open ? 250 : 70,
+          transition: "all .3s",
+          background: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          position: "sticky",
+          top: 10,
+          height: "calc(100vh - 20px)",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent={open ? "space-between" : "center"}
+          alignItems="center"
+          p={2}
+          borderBottom="1px solid #E5E7EB"
+        >
+          {open && <Typography fontWeight={700}>Explore</Typography>}
+          <IconButton size="small" onClick={onToggle}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+
+        <Stack spacing={0.5} p={1}>
+          {sections.map((item) => {
+            const active = String(show) === String(item.value);
+
+            return (
+              <Tooltip key={item.value} title={!open ? item.label : ""} placement="right">
+                <Box
+                  onClick={() => screenChange({ target: { value: item.value } })}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 1.25,
+                    cursor: "pointer",
+                    borderRadius: 2,
+                    bgcolor: active ? "#EEF2FF" : "transparent",
+                    "&:hover": {
+                      bgcolor: "#F3F4F6",
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      bgcolor: active ? "#E0E7FF" : "#F3F4F6",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+
+                  {open && (
+                    <Box>
+                      <Typography fontWeight={active ? 700 : 500} color={active ? "#4F46E5" : "inherit"}>
+                        {item.label}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {item.desc}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+            );
+          })}
+        </Stack>
+      </Box>
+    );
+  }
+
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+      "& fieldset": { borderColor: "#d1d5db" },
+      "&:hover fieldset": { borderColor: "#bfc4cc" },
+      "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+    },
+    "& .MuiInputLabel-root": { color: "#6b7280" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+  };
+
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -245,13 +367,13 @@ const EditemployeePayroll = () => {
         }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
-         let schemaFields1 = {
+        let schemaFields1 = {
           Deduction: Yup.object()
             .nullable()
             .required(data.Deduction.Deduction),
 
         };
-     
+
         const schema1 = Yup.object().shape(schemaFields1);
         setValidationSchema1(schema1);
 
@@ -1344,10 +1466,10 @@ const EditemployeePayroll = () => {
     recordID: "",
     value: "",
     Allowances: "",
-    Deduction:"",
+    Deduction: "",
     effectivevalue: "",
     sortOrder: "",
-    Type:""
+    Type: ""
   });
   const [otdata, setOtdata] = useState({
     RecordID: "",
@@ -1393,8 +1515,8 @@ const EditemployeePayroll = () => {
         effectivevalue: "",
         sortOrder: "",
         Allowances: "",
-        Deduction:"",
-        Type:""
+        Deduction: "",
+        Type: ""
       });
 
       setADLookupData(
@@ -1535,10 +1657,10 @@ const EditemployeePayroll = () => {
             ? {
               RecordID: rowData.SalaryComponentID,
               Name: rowData.Name,
-              
+
             }
             : null,
-            Deduction: rowData.SalaryComponentID
+          Deduction: rowData.SalaryComponentID
             ? {
               RecordID: rowData.SalaryComponentID,
               Name: rowData.Name,
@@ -2038,7 +2160,7 @@ const EditemployeePayroll = () => {
       SalaryComponentID: show == "1" ? values?.Allowances?.RecordID || 0 : values?.Deduction?.RecordID || 0,
       // SCName: ADLookupData ? ADLookupData.Name : "",
       // SCName: ADLookupData?.Name || "",
-       SCName: show == "1" ? values?.Allowances?.Name || "" : values?.Deduction?.Name || "",
+      SCName: show == "1" ? values?.Allowances?.Name || "" : values?.Deduction?.Name || "",
       SCType: values.type,
       SCCategory: show == "1" ? "A" : "D",
       Value: values.value || 0,
@@ -2399,190 +2521,170 @@ const EditemployeePayroll = () => {
             </Tooltip>
           </Box>
         </Box> */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 2,
+            mb: 2,
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+          }}
+        >
           <Box
             display="flex"
             justifyContent="space-between"
-            p={mode == "A" ? 2 : 1}
+            alignItems="center"
+            px={2}
+            py={1}
           >
-            <Box
-              display="flex"
-              // backgroundColor={colors.primary[400]}
-              borderRadius="3px"
-              alignItems={"center"}
-            >
+            {/* Left Side */}
+            <Box display="flex" alignItems="center" gap={2}>
               {broken && !rtl && (
                 <IconButton onClick={() => toggleSidebar()}>
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+
+ <Box>
+             
+                    <Typography
+                                           sx={{
+                                             fontSize: 20,
+                                             fontWeight: 700,
+                                             color: "#111827",
+                                             // mb: 0.2,
+                                                 px: 1,
+                                   py: 0.2,
+                                           }}
+                                         >
+                                           {mode === "A" ? "New Payroll" : "Edit Payroll"}
+                                         </Typography>
+              {isNonMobile && (
                 <Breadcrumbs
-                  maxItems={3}
+                 maxItems={3}
                   aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  sx={breadcrumbStyles.separator}
+                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
                 >
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      setScreen(0);
-                    }}
+                     sx={show == "0" ? breadcrumbStyles.active : breadcrumbStyles.item}
+                    onClick={() => setScreen(0)}
                   >
-                    {
-                      mode === "E"
-                        ? `Personnel(${state?.EmpName || Data?.Name})`
-                        : "Personnel(New)"
-                    }
-                    {/* Payroll */}
+                    {mode === "E"
+                      ? `Personnel (${state?.EmpName || Data?.Name})`
+                      : "Personnel (New)"}
                   </Typography>
-                  {show == "1" ? (
+
+                  {show == "1" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Allowances
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "5" ? (
+
+                  {show == "5" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       Deductions
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "2" ? (
+
+                  {show == "2" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.active}
                     >
                       Leave
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "6" ? (
+
+                  {show == "6" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                         sx={breadcrumbStyles.active}
                     >
                       OT
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "7" ? (
+
+                  {show == "7" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       Salary Advance
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "8" ? (
+
+                  {show == "8" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       On Duty
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "9" ? (
+
+                  {show == "9" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       Expense
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "3" ? (
+
+                  {show == "3" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       Attendance
                     </Typography>
-                  ) : (
-                    false
                   )}
-                  {show == "4" ? (
+
+                  {show == "4" && (
                     <Typography
-                      variant="h5"
-                      color="#0000D1"
-                      sx={{ cursor: "default" }}
+                        sx={breadcrumbStyles.active}
                     >
                       Payroll Attendance
                     </Typography>
-                  ) : (
-                    false
                   )}
                 </Breadcrumbs>
-              </Box>
-            </Box>
-            <Box display="flex">
-              {mode !== "A" && accessID == "TR027" ? (
-                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                  <InputLabel id="demo-select-small">Explore</InputLabel>
-                  <Select
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    value={show}
-                    label="Explore"
-                    onChange={screenChange}
-                  >
-                    {accessID == "TR027" && (
-                      <MenuItem value={0}>Personnel</MenuItem>
-                    )}
-                    {/* <MenuItem value={0}>Employee</MenuItem> */}
-                    <MenuItem value={1}>Allowances</MenuItem>
-                    <MenuItem value={5}>Deductions</MenuItem>
-                    {/* <MenuItem value={2}>Leave</MenuItem>
-                    <MenuItem value={6}>OT</MenuItem>
-                    <MenuItem value={8}>On Duty</MenuItem>
-                    <MenuItem value={7}>Salary Advance</MenuItem>
-                    <MenuItem value={9}>Expense</MenuItem>
-                    <MenuItem value={10}>Regularization</MenuItem> */}
-                    <MenuItem value={3}>Attendance</MenuItem>
-                    {accessID == "TR027" && (
-                      <MenuItem value={4}>Payroll Attendance</MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              ) : (
-                false
               )}
+            </Box>
+               </Box>
 
+            {/* Right Side */}
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                  //  width: 42,
+                 //   height: 42,
+                //    bgcolor: "#EEF2FF",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#E0E7FF",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+//width: 42,
+                   // height: 42,
+                 //   bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -2591,566 +2693,549 @@ const EditemployeePayroll = () => {
         </Paper>
 
         {show == "0" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              // onSubmit={handleFormSubmit}
-              initialValues={initialValues}
-              enableReinitialize={true}
-              validationSchema={basicSchema}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                setFieldValue,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    {!isNonMobile && (
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "150px" }}
-                        />
-                      </Stack>
-                    )}
-
-                    <FormControl sx={{ gap: formGap }}>
-                      {/* <Productautocomplete */}
-                      <MultiFormikOptimizedAutocomplete
-                        multiple
-                        disabled={mode == "E"}
-                        // sx={{ marginTop: "7px" }}
-                        name="Department"
-                        label="Department"
-                        variant="outlined"
-                        id="Department"
-                        value={values.Department}
-                        onChange={(e, newValue) => {
-                          setFieldValue("Department", newValue);
-                          console.log(newValue, "--newValue");
-                          console.log(newValue.RecordID, "////");
-                        }}
-                        isOptionEqualToValue={(option, value) =>
-                          String(option.RecordID) === String(value.RecordID)
-                        }
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${compID}","Any":""}}`}
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Code"
-                        value={values.Code}
-                        id="Code"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Code"
-                        placeholder="Auto"
-                        // error={!!touched.Code && !!errors.Code}
-                        // helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        required
-                        autoFocus
-                        inputProps={{ maxLength: 8 }}
-                      />
-
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Name"
-                        value={values.Name}
-                        id="Name"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Name"
-                        // error={!!touched.Name && !!errors.Name}
-                        // helperText={touched.Name && errors.Name}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                      // multiline
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="Password"
-                        label="Password"
-                        value={values.Password}
-                        id="Password"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Password"
-                        // error={!!touched.Password && !!errors.Password}
-                        // helperText={touched.Password && errors.Password}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                          marginTop: "3.5px"
-                        }}
-                        focused
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Job"
-                        value={values.Job}
-                        id="Job"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Job"
-                        error={!!touched.Job && !!errors.Job}
-                        helperText={touched.Job && errors.Job}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                      />
-
-                      <TextField
-                        disabled={mode == "E"}
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Type</span>}
-                        value={values.employeetype}
-                        id="employeetype"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="employeetype"
-                        required
-                        focused
-                        sx={{
-                          gridColumn: "span 2",
-                          // backgroundColor: "#ffffff",
-                          // "& .MuiInputBase-root": {
-                          //   backgroundColor: "",
-                          // },
-                        }}
-                      >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
-                        <MenuItem value="PM">Permanent</MenuItem>
-                        <MenuItem value="CI">Contracts In</MenuItem>
-                        <MenuItem value="CO">Contracts Out</MenuItem>
-                        <MenuItem value="IN">Intern</MenuItem>
-                      </TextField>
-                      <TextField
-                        disabled={mode == "E"}
-                        name="amount"
-                        type="text"
-                        id="amount"
-                        // label="Actual Salary"
-                        label="Basic Pay"
-                        variant="standard"
-                        focused
-                        value={values.amount}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.amount && !!errors.amount}
-                        helperText={touched.amount && errors.amount}
-                        // autoFocus
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right", marginTop: "1px" },
-                            min: 0,
-                            max: 24,
-                          },
-                        }}
-                      />
-
-                      {/* <Box>
-                        <MultiSelectDropdown
-                          disabled={mode == "E"}
-                          id="module"
-                          name="Module"
-                          data={fetchedData?.Data || []} // from API
-                          apiValue={Data.Module} // from API
-                          onChange={(val) => {
-                            console.log("Send this to API:", val);
-                            setApiReturnValue(val);
-                          }}
-                        />
-                      </Box> */}
-                      <Box>
-                        <Field
-                          disabled={mode == "E"}
-                          //  size="small"
-                          type="checkbox"
-                          name="qualityassurance"
-                          id="qualityassurance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Quality Assurance"
-                        />
-
-                        <FormLabel focused={false}>Quality Assurance</FormLabel>
-                        <Field
-                          disabled={mode == "E"}
-                          //  size="small"
-                          type="checkbox"
-                          name="scrummaster"
-                          id="scrummaster"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Scrum Master"
-                        />
-
-                        <FormLabel focused={false}>Scrum Master</FormLabel>
-                        <Field
-                          disabled={mode == "E"}
-                          //  size="small"
-                          type="checkbox"
-                          name="prjmanager"
-                          id="prjmanager"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Project Manager"
-                        />
-
-                        <FormLabel focused={false}>Project Manager</FormLabel>
-                      </Box>
-                      <Box>
-                        <Field
-                          disabled={mode == "E"}
-                          //  size="small"
-                          type="checkbox"
-                          name="delete"
-                          id="delete"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Delete"
-                        />
-
-                        <FormLabel focused={false}>Delete</FormLabel>
-                        <Field
-                          disabled={mode == "E"}
-                          //  size="small"
-                          type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
-
-                        <FormLabel focused={false}>Disable</FormLabel>
-                      </Box>
-                    </FormControl>
-
-                    <FormControl sx={{ gap: formGap }}>
-                      {isNonMobile && (
-                        <Stack
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && accessID == "TR027" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+                <Formik
+                  initialValues={initialValues}
+                  enableReinitialize={true}
+                  validationSchema={basicSchema}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      {/* ----- CARD HEADER ----- */}
+                                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Box
                           sx={{
-                            //    width: {sm:'100%',md:'100%',lg:'100%'},
-
-                            alignContent: "center",
-                            justifyContent: "center",
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
                             alignItems: "center",
-                            position: "relative",
-                            right: "0px",
+                            justifyContent: "center",
                           }}
                         >
-                          <Avatar
-                            variant="rounded"
-                            src={userimg}
-                            sx={{ width: "200px", height: "155px" }}
-                          />
-                        </Stack>
-                      )}
-                      <TextField
-                        disabled={mode == "E"}
-                        InputLabelProps={{ shrink: true }}   // ✅ FIX
-                        name="dateofbirth"
-                        type="date"
-                        id="dateofbirth"
-                        label="Date of Birth"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.dateofbirth}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.dateofbirth && !!errors.dateofbirth}
-                        helperText={touched.dateofbirth && errors.dateofbirth}
-                        sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        InputLabelProps={{ shrink: true }}   // ✅ FIX
-                        name="joindate"
-                        type="date"
-                        id="joindate"
-                        label="Date of Joining"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.joindate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.joindate && !!errors.joindate}
-                        helperText={touched.joindate && errors.joindate}
-                        sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        InputLabelProps={{ shrink: true }}   // ✅ FIX
-                        name="confirmdate"
-                        type="date"
-                        id="confirmdate"
-                        label="Date of Confirmation"
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.confirmdate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.confirmdate && !!errors.confirmdate}
-                        helperText={touched.confirmdate && errors.confirmdate}
-                        sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Comments"
-                        value={values.Comm}
-                        id="Comm"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
-                        // sx={{
-
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "", // Ensure the filled variant also has a white background
-                        //   }
-                        // }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                      // rows={2}
-                      />
-                      <TextField
-                        disabled={mode == "E"}
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        label="Sort Order"
-                        value={values.SortOrder}
-                        id="SortOrder"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="SortOrder"
-                        error={!!touched.SortOrder && !!errors.SortOrder}
-                        helperText={touched.SortOrder && errors.SortOrder}
-                        sx={{ background: "" }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                        onInput={(e) => {
-                          e.target.value = Math.max(0, parseInt(e.target.value))
-                            .toString()
-                            .slice(0, 8);
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
+                          <Typography sx={{ fontSize: 16 }}>👤</Typography>
+                        </Box>
+                           <Box>
+                        <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                          Personnel
+                        </Typography>
+                     
+                      <Typography variant="body2" color="text.secondary" >
+                        Basic details about the personnel
+                      </Typography>
+  </Box>
+                        </Box>
+                      <Box
+                        display="grid"
+                        gap="20px"
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
                           },
                         }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
-                    {YearFlag == "true" ? (
-                      <LoadingButton
-                        disabled={mode == "E"}
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={loading}
-                        onClick={() => {
-                          fnSave(values, false);
-                        }}
                       >
-                        Save
-                      </LoadingButton>
-                    ) : (
-                      <Button
-                        // disabled={mode == "E"}
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" && mode == "E" ? (
-                      <Button
-                        disabled={mode == "E"}
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          Swal.fire({
-                            title: `Do you want Delete?`,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Confirm",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              fnSave(values, true);
-                            } else {
-                              return;
-                            }
-                          });
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    ) : // <Button
-                      //   color="error"
-                      //   variant="contained"
-                      //   disabled={true}
-                      // //  color="error"
-                      // >
-                      //   Delete
-                      // </Button>
-                      null}
-                    <Button
+                        {!isNonMobile && (
+                          <Stack
+                            sx={{
+                              alignContent: "center",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              position: "relative",
+                              right: "0px",
+                            }}
+                          >
+                            <Avatar
+                              variant="rounded"
+                              src={userimg}
+                              sx={{ width: "200px", height: "150px" }}
+                            />
+                          </Stack>
+                        )}
 
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        // navigate(`/Apps/TR027/Employees`);
-                        navigate(-1);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                  <Popup
-                    title="Department"
-                    openPopup={openDEPopup}
-                    setOpenPopup={setOpenDEPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2010"
-                      screenName="Department"
-                      childToParent={childToParent}
-                      filterName={"parentID"}
-                      filterValue={compID}
-                    />
-                  </Popup>
-                  <Popup
-                    title="Location"
-                    openPopup={openLOCATIONPopup}
-                    setOpenPopup={setOpenLOCATIONPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2051"
-                      screenName="Location"
-                      childToParent={childToParent}
-                      filterName={"parentID"}
-                      filterValue={compID}
-                    />
-                  </Popup>
-                  <Popup
-                    title="Gate"
-                    openPopup={openGATEPopup}
-                    setOpenPopup={setOpenGATEPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2050"
-                      screenName="Gate"
-                      childToParent={childToParent}
-                      filterName={"parentID"}
-                    // filterValue={locationLookup.locationRecordID}
-                    />
-                  </Popup>
-                  <Popup
-                    title="Designation"
-                    openPopup={opendesignPopup}
-                    setOpenPopup={setOpendesignPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2047"
-                      screenName="Designation"
-                      childToParent={childToParent}
-                      filterName={"parentID"}
-                      filterValue={compID}
-                    />
-                  </Popup>
-                </form>
-              )}
-            </Formik>
-          </Paper>
+                        {/* //sx={{ gap: formGap }} */}
+                        <FormControl sx={{ gap: "20px" }}>
+                          <MultiFormikOptimizedAutocomplete
+                            multiple
+                            disabled={mode == "E"}
+                            name="Department"
+                            label="Department"
+                            variant="outlined"
+                            id="Department"
+                            value={values.Department}
+                            onChange={(e, newValue) => {
+                              setFieldValue("Department", newValue);
+                              console.log(newValue, "--newValue");
+                              console.log(newValue.RecordID, "////");
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                              String(option.RecordID) === String(value.RecordID)
+                            }
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${compID}","Any":""}}`}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label="Code"
+                            value={values.Code}
+                            id="Code"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Code"
+                            placeholder="Auto"
+                            sx={textFieldSx}
+                            required
+                            autoFocus
+                            inputProps={{ maxLength: 8 }}
+                          />
+
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label="Name"
+                            value={values.Name}
+                            id="Name"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Name"
+                            sx={textFieldSx}
+                            inputProps={{ maxLength: 90 }}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="Password"
+                            label="Password"
+                            value={values.Password}
+                            id="Password"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Password"
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label="Job"
+                            value={values.Job}
+                            id="Job"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Job"
+                            error={!!touched.Job && !!errors.Job}
+                            helperText={touched.Job && errors.Job}
+                            sx={textFieldSx}
+                            inputProps={{ maxLength: 90 }}
+                          />
+
+                          <TextField
+                            disabled={mode == "E"}
+                            select
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            label={<span>Type</span>}
+                            value={values.employeetype}
+                            id="employeetype"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="employeetype"
+                            required
+                            sx={{ ...textFieldSx, gridColumn: "span 2" }}
+                          >
+                            <MenuItem value="PP">Prohibition Period</MenuItem>
+                            <MenuItem value="PM">Permanent</MenuItem>
+                            <MenuItem value="CI">Contracts In</MenuItem>
+                            <MenuItem value="CO">Contracts Out</MenuItem>
+                            <MenuItem value="IN">Intern</MenuItem>
+                          </TextField>
+                          <TextField
+                            disabled={mode == "E"}
+                            name="amount"
+                            type="text"
+                            id="amount"
+                            label="Basic Pay"
+                            variant="outlined"
+                            size="small"
+                            value={values.amount}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.amount && !!errors.amount}
+                            helperText={touched.amount && errors.amount}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                                min: 0,
+                                max: 24,
+                              },
+                            }}
+                            sx={textFieldSx}
+                          />
+
+                          <Box>
+                            <Field
+                              disabled={mode == "E"}
+                              type="checkbox"
+                              name="qualityassurance"
+                              id="qualityassurance"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Quality Assurance"
+                            />
+                            <FormLabel focused={false}>Quality Assurance</FormLabel>
+                            <Field
+                              disabled={mode == "E"}
+                              type="checkbox"
+                              name="scrummaster"
+                              id="scrummaster"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Scrum Master"
+                            />
+                            <FormLabel focused={false}>Scrum Master</FormLabel>
+                            <Field
+                              disabled={mode == "E"}
+                              type="checkbox"
+                              name="prjmanager"
+                              id="prjmanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Project Manager"
+                            />
+                            <FormLabel focused={false}>Project Manager</FormLabel>
+                          </Box>
+                          <Box>
+                            <Field
+                              disabled={mode == "E"}
+                              type="checkbox"
+                              name="delete"
+                              id="delete"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Delete"
+                            />
+                            <FormLabel focused={false}>Delete</FormLabel>
+                            <Field
+                              disabled={mode == "E"}
+                              type="checkbox"
+                              name="checkbox"
+                              id="checkbox"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Disable"
+                            />
+                            <FormLabel focused={false}>Disable</FormLabel>
+                          </Box>
+                        </FormControl>
+
+                        <FormControl sx={{ gap: "20px" }}>
+                          {isNonMobile && (
+                            <Stack
+                              sx={{
+                                alignContent: "center",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                position: "relative",
+                                right: "0px",
+                              }}
+                            >
+                              <Avatar
+                                variant="rounded"
+                                src={userimg}
+                                sx={{ width: "200px", height: "155px" }}
+                              />
+                            </Stack>
+                          )}
+                          <TextField
+                            disabled={mode == "E"}
+                            InputLabelProps={{ shrink: true }}
+                            name="dateofbirth"
+                            type="date"
+                            id="dateofbirth"
+                            label="Date of Birth"
+                            variant="outlined"
+                            size="small"
+                            inputFormat="YYYY-MM-DD"
+                            value={values.dateofbirth}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.dateofbirth && !!errors.dateofbirth}
+                            helperText={touched.dateofbirth && errors.dateofbirth}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            InputLabelProps={{ shrink: true }}
+                            name="joindate"
+                            type="date"
+                            id="joindate"
+                            label="Date of Joining"
+                            variant="outlined"
+                            size="small"
+                            inputFormat="YYYY-MM-DD"
+                            value={values.joindate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.joindate && !!errors.joindate}
+                            helperText={touched.joindate && errors.joindate}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            InputLabelProps={{ shrink: true }}
+                            name="confirmdate"
+                            type="date"
+                            id="confirmdate"
+                            label="Date of Confirmation"
+                            variant="outlined"
+                            size="small"
+                            inputFormat="YYYY-MM-DD"
+                            value={values.confirmdate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.confirmdate && !!errors.confirmdate}
+                            helperText={touched.confirmdate && errors.confirmdate}
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label="Comments"
+                            value={values.Comm}
+                            id="Comm"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="Comm"
+                            error={!!touched.Comm && !!errors.Comm}
+                            helperText={touched.Comm && errors.Comm}
+                            inputProps={{ maxLength: 90 }}
+                            multiline
+                            sx={textFieldSx}
+                          />
+                          <TextField
+                            disabled={mode == "E"}
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            label="Sort Order"
+                            value={values.SortOrder}
+                            id="SortOrder"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="SortOrder"
+                            error={!!touched.SortOrder && !!errors.SortOrder}
+                            helperText={touched.SortOrder && errors.SortOrder}
+                            onWheel={(e) => e.target.blur()}
+                            onInput={(e) => {
+                              e.target.value = Math.max(0, parseInt(e.target.value))
+                                .toString()
+                                .slice(0, 8);
+                            }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                            sx={textFieldSx}
+                          />
+                        </FormControl>
+                      </Box>
+                      <Box display="flex" justifyContent="end" gap="20px" mt={3}>
+                        {YearFlag == "true" ? (
+                          <LoadingButton
+                            disabled={mode == "E"}
+                           
+                            variant="contained"
+                            type="submit"
+                            loading={loading}
+                            onClick={() => {
+                              fnSave(values, false);
+                            }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": { bgcolor: "#0F766E" },
+                            }}
+                          >
+                            Save
+                          </LoadingButton>
+                        ) : (
+                          <Button
+                           
+                            variant="contained"
+                            disabled={true}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": { bgcolor: "#0F766E" },
+                            }}
+                          >
+                            Save
+                          </Button>
+                        )}
+                        {YearFlag == "true" && mode == "E" ? (
+                          <Button
+                            disabled={mode == "E"}
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              Swal.fire({
+                                title: `Do you want Delete?`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  fnSave(values, true);
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                            sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                          >
+                            Delete
+                          </Button>
+                        ) : null}
+                        <Button
+                          
+                          variant="contained"
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
+                    }}
+                        >
+                          Back
+                        </Button>
+                      </Box>
+                      <Popup
+                        title="Department"
+                        openPopup={openDEPopup}
+                        setOpenPopup={setOpenDEPopup}
+                      >
+                        <Listviewpopup
+                          accessID="2010"
+                          screenName="Department"
+                          childToParent={childToParent}
+                          filterName={"parentID"}
+                          filterValue={compID}
+                        />
+                      </Popup>
+                      <Popup
+                        title="Location"
+                        openPopup={openLOCATIONPopup}
+                        setOpenPopup={setOpenLOCATIONPopup}
+                      >
+                        <Listviewpopup
+                          accessID="2051"
+                          screenName="Location"
+                          childToParent={childToParent}
+                          filterName={"parentID"}
+                          filterValue={compID}
+                        />
+                      </Popup>
+                      <Popup
+                        title="Gate"
+                        openPopup={openGATEPopup}
+                        setOpenPopup={setOpenGATEPopup}
+                      >
+                        <Listviewpopup
+                          accessID="2050"
+                          screenName="Gate"
+                          childToParent={childToParent}
+                          filterName={"parentID"}
+                        />
+                      </Popup>
+                      <Popup
+                        title="Designation"
+                        openPopup={opendesignPopup}
+                        setOpenPopup={setOpendesignPopup}
+                      >
+                        <Listviewpopup
+                          accessID="2047"
+                          screenName="Designation"
+                          childToParent={childToParent}
+                          filterName={"parentID"}
+                          filterValue={compID}
+                        />
+                      </Popup>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
+
         {show == "11" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, mt: 2}}>
             <Formik
               initialValues={PayprocessInitialvalues}
               enableReinitialize={true}
@@ -3178,6 +3263,45 @@ const EditemployeePayroll = () => {
                     dispatch(resetTrackingData());
                   }}
                 >
+                    {/* ----- CARD HEADER ----- */}
+                                      <Box
+  display="flex"
+  alignItems="center"
+  gap={1.5}   // 👈 increase gap between icon and text
+  mb={0.5}
+  m="10px"
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,          // 👈 slightly bigger
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      mr: 0.5,            // 👈 extra spacing from text
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>💰</Typography>
+  </Box>
+
+  {/* TEXT */}
+  <Box>
+    <Typography
+      variant="subtitle1"
+      fontWeight={700}
+      color="#0D94885"
+    >
+      Payroll
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+      Salary processing, payslips, deductions & allowances
+    </Typography>
+  </Box>
+</Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -3259,7 +3383,8 @@ const EditemployeePayroll = () => {
                     />
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="month"
                       id="month"
                       name="month"
@@ -3269,6 +3394,31 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
+                       sx={{
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                      width: 530,
+                    }}
                     >
                       <MenuItem value={"1"}>January</MenuItem>
                       <MenuItem value={"2"}>February</MenuItem>
@@ -3303,7 +3453,8 @@ const EditemployeePayroll = () => {
                     /> */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       id="year"
                       name="year"
                       label="Year"
@@ -3312,6 +3463,32 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
+                           sx={{
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                      width: 530,
+                    }}
+
                     >
                       {yearOptions.map((year) => (
                         <MenuItem key={year} value={year.toString()}>
@@ -3326,19 +3503,30 @@ const EditemployeePayroll = () => {
                     padding={1}
                     gap="20px"
                   >
-                    <Button type="submit" variant="contained" color="secondary">
-                      APPLY
+                    <Button type="submit" variant="contained" 
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                    >
+                      Apply
                     </Button>
                     <Button
+                    sx={{ textTransform: "none" }} 
                       type="reset"
                       variant="contained"
                       color="primary"
                       onClick={() => attendaceProcessFnSave(values)}
                     >
-                      PROCESS
+                      Process
                     </Button>
-                    <Button type="reset" variant="contained" color="error">
-                      RESET
+                    <Button type="reset" variant="contained" color="error" sx={{ textTransform: "none" }} >
+                      Reset
                     </Button>
                     {/* <PDFDownloadLink
                       document={<RegisterOfWagesPDF data={sampleData} />}
@@ -3395,6 +3583,36 @@ const EditemployeePayroll = () => {
                           backgroundColor: "#D3D3D3",
                           color: "", // Color for even rows
                         },
+
+                           "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                       }}
                     >
                       <DataGrid
@@ -3450,950 +3668,892 @@ const EditemployeePayroll = () => {
           false
         )}
 
+        {/* Allowance */}
         {show == "1" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={AllDedInitialValues}
-              enableReinitialize={true}
-              validationSchema={validationSchema}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  AllDedFNsave(values, resetForm, false);
-                }, 100);
-              }}
-            >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-                setFieldValue,
-              }) => {
-                // const baseSalary = Number(Data?.Sal || 0);
-                const enteredValue = Number(values.value || 0);
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
 
-                // const effectiveValue = (baseSalary + enteredValue).toFixed(2);
-                return (
-                  <form
-                    onSubmit={handleSubmit}
-                    onReset={() => {
-                      selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                      resetForm();
-                    }}
-                  >
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      <FormControl sx={{ gap: formGap }}>
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="code"
-                          name="code"
-                          value={values.code}
-                          label="Code"
-                          focused
-                          //inputProps={{ readOnly: true }}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                        />
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+                <Formik
+                  initialValues={AllDedInitialValues}
+                  enableReinitialize={true}
+                  validationSchema={validationSchema}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      AllDedFNsave(values, resetForm, false);
+                      setOpenADPopup(false);
+                    }, 100);
+                  }}
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue,
+                  }) => {
+                    const enteredValue = Number(values.value || 0);
 
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="description"
-                          name="description"
-                          value={values.description}
-                          label="Name"
-                          focused
-                          inputProps={{ readOnly: true }}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                        />
-                      </FormControl>
-                      {/* <Stack
-                      sx={{
-                        //gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={values.imageurl}
-                        style={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack> */}
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
+                    return (
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenADPopup(true);
                         }}
                       >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                      <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          // rows={[]}
-                          // columns={[]}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          pageSize={pageSize}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                          }
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
-
-                      <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                        {/* <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={ADLookupData.adRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      /> */}
-                        <FormControl
-                          sx={{
-                            //gridColumn: "span 2",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <CheckinAutocomplete
-                            name="Allowances"
-                            label={
-                              <span>
-                                Allowances
-                                <span
-                                  style={{ color: "red", fontWeight: "bold" }}
-                                >
-                                  *
-                                </span>
-                              </span>
-                            }
-                            variant="outlined"
-                            id="Allowances"
-                            //  value={ADLookupData}
-                             value={values.Allowances}
-                            onChange={(newValue) => {
-                               setFieldValue("Allowances", newValue);
-                              setFieldValue("type", newValue ? newValue.Type : "");
-                              setFieldValue("salaryCategory", newValue ? newValue.Category : "");
-                              console.log(
-                                ADLookupData,
-                                "--ADLookupData Allowances",
-                              );
-
-                              console.log(
-                                newValue.RecordID,
-                                "Allowances RecordID",
-                              );
-
-                            //   setADLookupData({
-                            //     RecordID: newValue.RecordID,
-                            //     Type: newValue.Type,
-                            //     Name: newValue.Name,
-                            //     SalaryCategory: newValue.SalaryCategory,
-                            //   });
+                        {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
-                            error={!!touched.Allowances && !!errors.Allowances}
-                            helperText={touched.Allowances && errors.Allowances}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2082",
-                                ScreenName: "Allowances",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `SalaryCategory='A' AND CompanyID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A' AND CompanyID='${CompanyID}'","Any":""}}`}
-                          />
-                          {/* <TextField
-                          id="outlined-basic"
-                          label="Allowances"
-                          variant="standard"
-                          value={ADLookupData.adDesc}
-                          focused
-                          required
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                        />
+                          >
+                            <Typography sx={{ fontSize: 16 }}>➕</Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                             Allowances
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Allowance components and values
+                            </Typography>
+                          </Box>
+                        </Box>
 
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("AD")}
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
                         >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton> */}
-                        </FormControl>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="code"
+                            name="code"
+                            value={values.code}
+                            label="Code"
+                            inputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
+                          />
 
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="salaryCategory"
-                          name="salaryCategory"
-                          value={values.salaryCategory}
-                          label="Salary Category"
-                          focused
-                          inputProps={{ readOnly: true }}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="type"
-                          name="type"
-                          value={values.type}
-                          label="Type"
-                          focused
-                          inputProps={{ readOnly: true }}
-                          sx={{
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            },
-                          }}
-                        />
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="description"
+                            name="description"
+                            value={values.description}
+                            label="Name"
+                            inputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
+                          />
 
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="value"
-                          name="value"
-                          value={values.value}
-                          label="Value"
-                          //sx={{ background: "#fff6c3" }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff", // Set the background to white
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          //   }
-                          // }}
-                          focused
-                          // onChange={handleChange}
-                          // onBlur={handleBlur}
-                          // inputProps={{ readOnly: true }}
-                          onChange={(e) => {
-                            // allow only numbers + decimal
-                            const val = e.target.value;
-                            if (/^\d*\.?\d*$/.test(val)) {
-                              setFieldValue("value", val);
-                            }
-                          }}
-                          onBlur={(e) => {
-                            let val = e.target.value;
+                          {/* ----- LIST TABLE (full width) ----- */}
+                          <Box
+                            m="5px 0 0 0"
+                            height="60vh"
+                            width="100%"
+                            sx={{
+                              gridColumn: "span 2",
+                              "& .MuiDataGrid-root": { border: "none", width: "100%" },
+                              "& .MuiDataGrid-cell": { borderBottom: "none" },
+                              "& .name-column--cell": { color: colors.greenAccent[300] },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": { backgroundColor: "", color: "" },
+                              "& .even-row": { backgroundColor: "", color: "" },
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": { color: "#fff" },
+                              "& .MuiTablePagination-selectLabel": { color: "#fff" },
+                              "& .MuiTablePagination-displayedRows": { color: "#fff" },
+                              "& .MuiTablePagination-selectIcon": { color: "#fff" },
+                              "& .MuiTablePagination-actions button": { color: "#fff" },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                width: "100%",
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              pageSize={pageSize}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenADPopup(true);
+                              }}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                              }
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{ Toolbar: LeaveTool }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                              }}
+                            />
+                          </Box>
 
-                            if (val === "" || val === ".") {
-                              setFieldValue("value", "0.00");
-                              return;
-                            }
+                          {/* ================= ADD / EDIT POPUP ================= */}
+                          <Dialog
+                            open={openADPopup}
+                            onClose={() => setOpenADPopup(false)}
+                            maxWidth="md"
+                            fullWidth
+                            PaperProps={{ sx: { borderRadius: 3 } }}
+                          >
+                            <DialogTitle
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                borderBottom: "1px solid #E5E7EB",
+                              }}
+                            >
+                              <Typography variant="h6">
+                                {funMode === "A" ? "Add Allowance" : "Edit Allowance"}
+                              </Typography>
+                              <IconButton onClick={() => setOpenADPopup(false)}>
+                                <CloseIcon />
+                              </IconButton>
+                            </DialogTitle>
 
-                            const num = parseFloat(val);
-                            if (!isNaN(num)) {
-                              setFieldValue("value", num.toFixed(2)); // ✅ forces .00
-                            }
-                          }}
-                        />
+                            <DialogContent
+                              sx={{ pt: 3, "&.MuiDialogContent-root": { paddingTop: "24px" } }}
+                            >
+                              <Box display="grid" gridTemplateColumns="repeat(2,minmax(0,1fr))" gap={2}>
+                                <CheckinAutocomplete
+                                  name="Allowances"
+                                  label={
+                                    <span>
+                                      Allowances
+                                      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                                    </span>
+                                  }
+                                  variant="outlined"
+                                  id="Allowances"
+                                  value={values.Allowances}
+                                  onChange={(newValue) => {
+                                    setFieldValue("Allowances", newValue);
+                                    setFieldValue("type", newValue ? newValue.Type : "");
+                                    setFieldValue("salaryCategory", newValue ? newValue.Category : "");
+                                  }}
+                                  error={!!touched.Allowances && !!errors.Allowances}
+                                  helperText={touched.Allowances && errors.Allowances}
+                                  url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                      AccessID: "2082",
+                                      ScreenName: "Allowances",
+                                      VerticalLicense: Subscriptionlastthree,
+                                      Filter: `SalaryCategory='A' AND CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
+                                  })}`}
+                                />
 
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="effectivevalue"
-                          name="effectivevalue"
-                          // value={Number(Data.Sal) + Number(values.value)}
-                          value={enteredValue}
-                          label="Effective Value"
-                          focused
-                          inputProps={{ readOnly: true }}
-                          //sx={{ background: "#fff6c3" }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        // sx={{
-                        //   backgroundColor: '#ffffff', // Change to your desired background color
-                        //   '& .MuiFilledInput-root': {
-                        //     backgroundColor: '#f5f5f5', // For the filled variant
-                        //   },
-                        // }}
-                        />
-                        <TextField
-                          name="sortorder"
-                          type="number"
-                          id="sortorder"
-                          label="Sort Order"
-                          variant="standard"
-                          focused
-                          value={values.sortorder}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          //sx={{ background: "#fff6c3" }}
-                          onWheel={(e) => e.target.blur()}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        />
-                      </FormControl>
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="end"
-                      padding={1}
-                      gap={2}
-                    >
-                      {/* {YearFlag == "true" ? ( */}
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                      {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? ( */}
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          Swal.fire({
-                            title: `Do you want Delete?`,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Confirm",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              AllDedFNsave(values, resetForm, "harddelete");
-                            } else {
-                              return;
-                            }
-                          });
-                        }}
-                      >
-                        Delete
-                      </Button>
-                      {/* ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )} */}
-                      <Button
-                        type="reset"
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          setScreen(0);
-                          // navigate(`/Apps/TR333/Payroll`);
-                          // navigate("/Apps/TR027/Employee%20Payroll")
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Popup
-                        title="Allowance"
-                        openPopup={openADPopup}
-                        setOpenPopup={setOpenADPopup}
-                      >
-                        <Listviewpopup
-                          accessID="2082"
-                          screenName="Allowance"
-                          childToParent={childToParent}
-                          filterName={"SalaryCategory"}
-                          filterValue={"A"}
-                        />
-                      </Popup>
-                    </Box>
-                  </form>
-                );
-              }}
-            </Formik>
-          </Paper>
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="salaryCategory"
+                                  name="salaryCategory"
+                                  value={values.salaryCategory}
+                                  label="Salary Category"
+                                  inputProps={{ readOnly: true }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="type"
+                                  name="type"
+                                  value={values.type}
+                                  label="Type"
+                                  inputProps={{ readOnly: true }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="value"
+                                  name="value"
+                                  value={values.value}
+                                  label="Value"
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (/^\d*\.?\d*$/.test(val)) {
+                                      setFieldValue("value", val);
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    let val = e.target.value;
+                                    if (val === "" || val === ".") {
+                                      setFieldValue("value", "0.00");
+                                      return;
+                                    }
+                                    const num = parseFloat(val);
+                                    if (!isNaN(num)) {
+                                      setFieldValue("value", num.toFixed(2));
+                                    }
+                                  }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="effectivevalue"
+                                  name="effectivevalue"
+                                  value={enteredValue}
+                                  label="Effective Value"
+                                  inputProps={{ readOnly: true }}
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  name="sortorder"
+                                  type="number"
+                                  id="sortorder"
+                                  label="Sort Order"
+                                  value={values.sortorder}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  onWheel={(e) => e.target.blur()}
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                />
+                              </Box>
+                            </DialogContent>
+
+                            <DialogActions
+                              sx={{
+                                borderTop: "1px solid #E5E7EB",
+                                p: 2,
+                                justifyContent: "flex-end",
+                                gap: 2,
+                              }}
+                            >
+                              <LoadingButton
+                                loading={isLoading}
+                                variant="contained"
+                                color="success"
+                                onClick={handleSubmit}
+                                sx={{
+                                  minWidth: 110,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  fontWeight: 600,
+                                  boxShadow: "none",
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                              >
+                                Save
+                              </LoadingButton>
+
+                              <Button
+                                variant="contained"
+                                color="error"
+                                disabled={funMode === "A"}
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: `Do you want Delete?`,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      AllDedFNsave(values, resetForm, "harddelete");
+                                      setOpenADPopup(false);
+                                    }
+                                  });
+                                }}
+                                sx={{
+                                  minWidth: 110,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  fontWeight: 600,
+                                  boxShadow: "none",
+                                }}
+                              >
+                                Delete
+                              </Button>
+
+                              <Button
+                                variant="contained"
+                                onClick={() => setOpenADPopup(false)}
+                                sx={{
+                                  minWidth: 110,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  fontWeight: 600,
+                                  boxShadow: "none",
+                                  bgcolor: "#F97316",
+                                  color: "#fff",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
+                              >
+                                Back
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </Box>
+
+                        {/* <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                              selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                              resetForm();
+                              setOpenADPopup(true);
+                            }}
+                          >
+                            + Add Allowance
+                          </Button>
+                          <Button
+                            type="reset"
+                            color="warning"
+                            variant="contained"
+                            onClick={() => setScreen(0)}
+                          >
+                            Cancel
+                          </Button>
+                        </Box> */}
+                      </form>
+                    );
+                  }}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
-        {show == "5" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={AllDedInitialValues}
-              validationSchema={validationSchema1}
-              enableReinitialize={true}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  AllDedFNsave(values, resetForm, false);
-                }, 100);
-              }}
-            >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-                setFieldValue,
-              }) => {
-                // const baseSalary = Number(Data?.Sal || 0);
-                const enteredValue = Number(values.value || 0);
 
-                // const effectiveValue = (baseSalary - enteredValue).toFixed(2);
-                return (
-                  <form
-                    onSubmit={handleSubmit}
-                    onReset={() => {
-                      selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                      resetForm();
-                    }}
-                  >
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
+        {/* Deduction */}
+        {show == "5" ? (
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+                <Formik
+                  initialValues={AllDedInitialValues}
+                  validationSchema={validationSchema1}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      AllDedFNsave(values, resetForm, false);
+                      setOpenADPopup(false);
+                    }, 100);
+                  }}
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue,
+                  }) => {
+                    const enteredValue = Number(values.value || 0);
+
+                    return (
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenADPopup(true);
+                        }}
+                      >
+                        {/* ----- CARD HEADER ----- */}
+                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#FEF2F2",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 16 }}>➖</Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                             Deduction
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Deduction components and values
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="code"
+                            name="code"
+                            value={values.code}
+                            label="Code"
+                            inputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
+                          />
+
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="description"
+                            name="description"
+                            value={values.description}
+                            label="Description"
+                            inputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
+                          />
+
+                          {/* ----- LIST TABLE (full width) ----- */}
+                          <Box
+                            m="5px 0 0 0"
+                            height="60vh"
+                            width="100%"
+                            sx={{
+                              gridColumn: "span 2",
+                              "& .MuiDataGrid-root": { border: "none", width: "100%" },
+                              "& .MuiDataGrid-cell": { borderBottom: "none" },
+                              "& .name-column--cell": { color: colors.greenAccent[300] },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": { backgroundColor: "", color: "" },
+                              "& .even-row": { backgroundColor: "", color: "" },
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": { color: "#fff" },
+                              "& .MuiTablePagination-selectLabel": { color: "#fff" },
+                              "& .MuiTablePagination-displayedRows": { color: "#fff" },
+                              "& .MuiTablePagination-selectIcon": { color: "#fff" },
+                              "& .MuiTablePagination-actions button": { color: "#fff" },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                width: "100%",
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              pageSize={pageSize}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenADPopup(true);
+                              }}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                              }
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{ Toolbar: LeaveTool }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                              }}
+                            />
+                          </Box>
+
+                          {/* ================= ADD / EDIT POPUP ================= */}
+                          <Dialog
+                            open={openADPopup}
+                            onClose={() => setOpenADPopup(false)}
+                            maxWidth="md"
+                            fullWidth
+                            PaperProps={{ sx: { borderRadius: 3 } }}
+                          >
+                            <DialogTitle
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                borderBottom: "1px solid #E5E7EB",
+                              }}
+                            >
+                              <Typography variant="h6">
+                                {funMode === "A" ? "Add Deduction" : "Edit Deduction"}
+                              </Typography>
+                              <IconButton onClick={() => setOpenADPopup(false)}>
+                                <CloseIcon />
+                              </IconButton>
+                            </DialogTitle>
+
+                            <DialogContent
+                              sx={{ pt: 3, "&.MuiDialogContent-root": { paddingTop: "24px" } }}
+                            >
+                              <Box display="grid" gridTemplateColumns="repeat(2,minmax(0,1fr))" gap={2}>
+                                <CheckinAutocomplete
+                                  name="Deduction"
+                                  label={
+                                    <span>
+                                      Deductions
+                                      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                                    </span>
+                                  }
+                                  variant="outlined"
+                                  id="Deduction"
+                                  value={values.Deduction}
+                                  onChange={(newValue) => {
+                                    setFieldValue("Deduction", newValue);
+                                    setFieldValue("type", newValue ? newValue.Type : "");
+                                    setFieldValue("salaryCategory", newValue ? newValue.Category : "");
+                                  }}
+                                  error={!!touched.Deduction && !!errors.Deduction}
+                                  helperText={touched.Deduction && errors.Deduction}
+                                  url={`${listViewurl}?data=${JSON.stringify({
+                                    Query: {
+                                      AccessID: "2082",
+                                      ScreenName: "Deduction",
+                                      VerticalLicense: Subscriptionlastthree,
+                                      Filter: `SalaryCategory='D' AND CompanyID='${CompanyID}'`,
+                                      Any: "",
+                                    },
+                                  })}`}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="salaryCategory"
+                                  name="salaryCategory"
+                                  value={values.salaryCategory}
+                                  label="Salary Category"
+                                  inputProps={{ readOnly: true }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="type"
+                                  name="type"
+                                  value={values.type}
+                                  label="Type"
+                                  inputProps={{ readOnly: true }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="value"
+                                  name="value"
+                                  value={values.value}
+                                  label="Value"
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (/^\d*\.?\d*$/.test(val)) {
+                                      setFieldValue("value", val);
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    let val = e.target.value;
+                                    if (val === "" || val === ".") {
+                                      setFieldValue("value", "0.00");
+                                      return;
+                                    }
+                                    const num = parseFloat(val);
+                                    if (!isNaN(num)) {
+                                      setFieldValue("value", num.toFixed(2));
+                                    }
+                                  }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  type="text"
+                                  id="effectivevalue"
+                                  name="effectivevalue"
+                                  value={enteredValue}
+                                  label="Effective Value"
+                                  inputProps={{ readOnly: true }}
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                />
+
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  variant="outlined"
+                                  name="sortorder"
+                                  type="number"
+                                  id="sortorder"
+                                  label="Sort Order"
+                                  value={values.sortorder}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  onWheel={(e) => e.target.blur()}
+                                  InputProps={{ inputProps: { style: { textAlign: "right" } } }}
+                                />
+                              </Box>
+                            </DialogContent>
+
+                            <DialogActions
+                              sx={{
+                                borderTop: "1px solid #E5E7EB",
+                                p: 2,
+                                justifyContent: "flex-end",
+                                gap: 2,
+                              }}
+                            >
+                              <LoadingButton
+                                loading={isLoading}
+                                variant="contained"
+                                color="success"
+                                onClick={handleSubmit}
+                                sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
                         },
                       }}
-                    >
-                      <FormControl sx={{ gap: formGap }}>
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="code"
-                          name="code"
-                          value={values.code}
-                          label="Code"
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
+                              >
+                                Save
+                              </LoadingButton>
 
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="description"
-                          name="description"
-                          value={values.description}
-                          label="Description"
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
-                      </FormControl>
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                disabled={funMode === "A"}
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: `Do you want Delete?`,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      AllDedFNsave(values, resetForm, "harddelete");
+                                      setOpenADPopup(false);
+                                    }
+                                  });
+                                }}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  fontWeight: 600,
+                                  boxShadow: "none",
+                                }}
+                              >
+                                Delete
+                              </Button>
 
-                      <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          // rows={[]}
-                          // columns={[]}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                          }
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
+                              <Button
+                                variant="contained"
+                                onClick={() => setOpenADPopup(false)}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
+                              >
+                                Back
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </Box>
 
-                      <FormControl sx={{ gap: formGap }}>
-                        {/* <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={ADLookupData.adRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      /> */}
-                        <FormControl
-                          sx={{
-                            //gridColumn: "span 2",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          {/* <TextField
-                          id="outlined-basic"
-                          label="Deductions"
-                          variant="standard"
-                          value={ADLookupData.adDesc}
-                          focused
-                          required
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                        />
-
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("AD")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton> */}
-                          <CheckinAutocomplete
-                            name="Deduction"
-                            label={
-                              <span>
-                                Deductions
-                                <span
-                                  style={{ color: "red", fontWeight: "bold" }}
-                                >
-                                  *
-                                </span>
-                              </span>
-                            }
-                            variant="outlined"
-                            id="Deduction"
-                            // value={ADLookupData}
-                             value={values.Deduction}
-                            onChange={(newValue) => {
-                              setFieldValue("Deduction", newValue);
-                              setFieldValue("type", newValue ? newValue.Type : "");
-                              setFieldValue("salaryCategory", newValue ? newValue.Category : "");
-                              console.log(
-                                ADLookupData,
-                                "--ADLookupData Deduction",
-                              );
-
-                              console.log(
-                                newValue.RecordID,
-                                "Deduction RecordID",
-                              );
-
-                              // setADLookupData({
-                              //   RecordID: newValue.RecordID,
-                              //   Type: newValue.Type,
-                              //   Name: newValue.Name,
-                              //   SalaryCategory: newValue.SalaryCategory,
-                              // });
+                        {/* <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                              selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                              resetForm();
+                              setOpenADPopup(true);
                             }}
-                             error={!!touched.Deduction && !!errors.Deduction}
-                            helperText={touched.Deduction && errors.Deduction}
-                            url={`${listViewurl}?data=${JSON.stringify({
-                              Query: {
-                                AccessID: "2082",
-                                ScreenName: "Deduction",
-                                VerticalLicense: Subscriptionlastthree,
-                                Filter: `SalaryCategory='D' AND CompanyID='${CompanyID}'`,
-                                Any: "",
-                              },
-                            })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D' AND CompanyID='${CompanyID}'","Any":""}}`}
-                          />
-                        </FormControl>
-
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="salaryCategory"
-                          name="salaryCategory"
-                          value={values.salaryCategory}
-                          label="Salary Category"
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="type"
-                          name="type"
-                          value={values.type}
-                          label="Type"
-                          focused
-                          inputProps={{ readOnly: true }}
-                        />
-
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="value"
-                          name="value"
-                          value={values.value}
-                          label="Value"
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                          focused
-                          // onChange={handleChange}
-                          // onBlur={handleBlur}
-                          onChange={(e) => {
-                            // allow only numbers + decimal
-                            const val = e.target.value;
-                            if (/^\d*\.?\d*$/.test(val)) {
-                              setFieldValue("value", val);
-                            }
-                          }}
-                          onBlur={(e) => {
-                            let val = e.target.value;
-
-                            if (val === "" || val === ".") {
-                              setFieldValue("value", "0.00");
-                              return;
-                            }
-
-                            const num = parseFloat(val);
-                            if (!isNaN(num)) {
-                              setFieldValue("value", num.toFixed(2)); // ✅ forces .00
-                            }
-                          }}
-                        // inputProps={{ readOnly: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="effectivevalue"
-                          name="effectivevalue"
-                          // value={Number(Data.Sal) - Number(values.value)}
-                          value={enteredValue}
-                          label="Effective Value"
-                          focused
-                          inputProps={{ readOnly: true }}
-                          //sx={{ background: "#fff6c3" }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        />
-                        <TextField
-                          name="sortorder"
-                          type="number"
-                          id="sortorder"
-                          label="Sort Order"
-                          variant="standard"
-                          focused
-                          value={values.sortorder}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          //sx={{ background: "#fff6c3" }}
-                          onWheel={(e) => e.target.blur()}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        />
-                      </FormControl>
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="end"
-                      padding={1}
-                      gap={2}
-                    >
-                      {/* {YearFlag == "true" ? ( */}
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                      {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? ( */}
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          Swal.fire({
-                            title: `Do you want Delete?`,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Confirm",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              AllDedFNsave(values, resetForm, "harddelete");
-                            } else {
-                              return;
-                            }
-                          });
-                        }}
-                      >
-                        Delete
-                      </Button>
-                      {/* ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )} */}
-                      <Button
-                        type="reset"
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          setScreen(0);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Popup
-                        title="Deduction"
-                        openPopup={openADPopup}
-                        setOpenPopup={setOpenADPopup}
-                      >
-                        <Listviewpopup
-                          accessID="2082"
-                          screenName="Deduction"
-                          childToParent={childToParent}
-                          filterName={"SalaryCategory"}
-                          filterValue={"D"}
-                        />
-                      </Popup>
-                    </Box>
-                  </form>
-                );
-              }}
-            </Formik>
-          </Paper>
+                          >
+                            + Add Deduction
+                          </Button>
+                          <Button
+                            type="reset"
+                            color="warning"
+                            variant="contained"
+                            onClick={() => setScreen(0)}
+                          >
+                            Cancel
+                          </Button>
+                        </Box> */}
+                      </form>
+                    );
+                  }}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
@@ -4719,7 +4879,15 @@ const EditemployeePayroll = () => {
                   >
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
-                      color="secondary"
+                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                       variant="contained"
                       type="submit"
                       loading={isLoading}
@@ -4765,13 +4933,23 @@ const EditemployeePayroll = () => {
                     )} */}
                     <Button
                       type="reset"
-                      color="warning"
+                                        sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
                       variant="contained"
                       onClick={() => {
                         setScreen(0);
                       }}
                     >
-                      Cancel
+                      Back
                     </Button>
                     <Popup
                       title="Leave Type"
@@ -4794,6 +4972,7 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
+
         {show == "6" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -5158,6 +5337,7 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
+
         {show == "7" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -5683,6 +5863,7 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
+
         {show == "8" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -6103,6 +6284,7 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
+
         {show == "9" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -6468,524 +6650,592 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
+
+        {/* Attendance */}
         {show == "3" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={AttInitialvalues}
-              enableReinitialize={true}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  attendaceFnSave(values, resetForm);
-                }, 100);
-              }}
-            >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-                setFieldValue,
-              }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  onReset={() => {
-                    resetForm();
-                    dispatch(resetTrackingData());
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+                <Formik
+                  initialValues={AttInitialvalues}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      attendaceFnSave(values, resetForm);
+                    }, 100);
                   }}
                 >
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="code"
-                      name="code"
-                      value={values.code}
-                      label="Code"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    // sx={{
-                    //   backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                    //   '& .MuiFilledInput-root': {
-                    //     backgroundColor: '#f5f5f5 ', // For the filled variant
-                    //   },
-                    // }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="description"
-                      name="description"
-                      value={values.description}
-                      label="Description"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    />
-                    <Productautocomplete
-                      name="ProName"
-                      label="Project"
-                      id="ProName"
-                      value={values.ProName}
-                      onChange={(newValue) => {
-                        setFieldValue("ProName", newValue);
-                        console.log(newValue);
-                      }}
-                      //value={selectedProjectOptions}
-                      //onChange={handleSelectionProjectname}
-                      // defaultValue={selectedProjectName}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                        Query: {
-                          AccessID: "2054",
-                          ScreenName: "Project",
-                          VerticalLicense: Subscriptionlastthree,
-                          Filter: `parentID='${CompanyID}'`,
-                          Any: "",
-                        },
-                      })}`}
-                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
-                    />
-
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      label="Salary"
-                      value={values.Sal}
-                      id="Sal"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      name="Sal"
-                      error={!!touched.Sal && !!errors.Sal}
-                      helperText={touched.Sal && errors.Sal}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      focused
-                      onWheel={(e) => e.target.blur()}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                    />
-
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="month"
-                      id="month"
-                      name="month"
-                      label="Month"
-                      value={values.month}
-                      focused
-                      // sx={{ gridColumn: "span 2" }}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      select
-                    >
-                      <MenuItem value={"1"}>1</MenuItem>
-                      <MenuItem value={"2"}>2</MenuItem>
-                      <MenuItem value={"3"}>3</MenuItem>
-                      <MenuItem value={"4"}>4</MenuItem>
-                      <MenuItem value={"5"}>5</MenuItem>
-                      <MenuItem value={"6"}>6</MenuItem>
-                      <MenuItem value={"7"}>7</MenuItem>
-                      <MenuItem value={"8"}>8</MenuItem>
-                      <MenuItem value={"9"}>9</MenuItem>
-                      <MenuItem value={"10"}>10</MenuItem>
-                      <MenuItem value={"11"}>11</MenuItem>
-                      <MenuItem value={"12"}>12</MenuItem>
-                    </TextField>
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="year"
-                      name="year"
-                      label="Year"
-                      value={values.year}
-                      inputProps={{ min: "1900", max: "2100", step: "1" }}
-                      focused
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                    // sx={{ gridColumn: "span 2" }}
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
-                  >
-                    <Button type="submit" variant="contained" color="secondary">
-                      APPLY
-                    </Button>
-                    <Button
-                      onClick={() => attendaceProcessFnSave(values)}
-                      type="reset"
-                      variant="contained"
-                      color="primary"
-                    >
-                      PROCESS
-                    </Button>
-                    <Button type="reset" variant="contained" color="error">
-                      RESET
-                    </Button>
-                  </Box>
-
-                  <Box sx={{ gridColumn: "span 4" }}>
-                    <Box
-                      m="5px 0 0 0"
-                      padding={1}
-                      //height={dataGridHeight}
-                      height="50vh"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": {
-                          backgroundColor: "",
-                          color: "", // Color for odd rows
-                        },
-                        "& .even-row": {
-                          backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
-                        },
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue,
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        resetForm();
+                        dispatch(resetTrackingData());
                       }}
                     >
-                      <DataGrid
+                      {/* ----- CARD HEADER ----- */}
+                      <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 16 }}>🗓️</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Attendance
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Monthly attendance summary
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                         sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="code"
+                          name="code"
+                          value={values.code}
+                          label="Code"
+                          inputProps={{ readOnly: true }}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="description"
+                          name="description"
+                          value={values.description}
+                          label="Description"
+                          inputProps={{ readOnly: true }}
+                        />
+
+                        <Productautocomplete
+                          name="ProName"
+                          label="Project"
+                          id="ProName"
+                          value={values.ProName}
+                          onChange={(newValue) => {
+                            setFieldValue("ProName", newValue);
+                          }}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2054",
+                              ScreenName: "Project",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `parentID='${CompanyID}'`,
+                              Any: "",
+                            },
+                          })}`}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="number"
+                          label="Salary"
+                          value={values.Sal}
+                          id="Sal"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Sal"
+                          error={!!touched.Sal && !!errors.Sal}
+                          helperText={touched.Sal && errors.Sal}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                          onWheel={(e) => e.target.blur()}
+                          onInput={(e) => {
+                            e.target.value = Math.max(0, parseInt(e.target.value))
+                              .toString()
+                              .slice(0, 8);
+                          }}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="month"
+                          id="month"
+                          name="month"
+                          label="Month"
+                          value={values.month}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          select
+                        >
+                          <MenuItem value={"1"}>1</MenuItem>
+                          <MenuItem value={"2"}>2</MenuItem>
+                          <MenuItem value={"3"}>3</MenuItem>
+                          <MenuItem value={"4"}>4</MenuItem>
+                          <MenuItem value={"5"}>5</MenuItem>
+                          <MenuItem value={"6"}>6</MenuItem>
+                          <MenuItem value={"7"}>7</MenuItem>
+                          <MenuItem value={"8"}>8</MenuItem>
+                          <MenuItem value={"9"}>9</MenuItem>
+                          <MenuItem value={"10"}>10</MenuItem>
+                          <MenuItem value={"11"}>11</MenuItem>
+                          <MenuItem value={"12"}>12</MenuItem>
+                        </TextField>
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="number"
+                          id="year"
+                          name="year"
+                          label="Year"
+                          value={values.year}
+                          inputProps={{ min: "1900", max: "2100", step: "1" }}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                        />
+                      </Box>
+
+                      <Box
+                        display="flex"
+                        justifyContent="flex-end"
+                        gap={2}
+                        mt={4}
+                        pt={2}
+                        sx={{
+                          borderTop: "1px solid #E5E7EB",
+                        }}
+                      >
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                        >
+                          Apply
+                        </Button>
+
+                        <Button
+                          variant="contained"
+                          onClick={() => attendaceProcessFnSave(values)}
+                          sx={{
+                             textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                            fontWeight: 600,
+                            bgcolor: "#2563EB",
+                            color: "#fff",
+                            boxShadow: "none",
+                            "&:hover": {
+                              bgcolor: "#1D4ED8",
+                            },
+                          }}
+                        >
+                          Process
+                        </Button>
+
+                        <Button
+                          type="reset"
+                          variant="contained"
+                          sx={{
+                            textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                            fontWeight: 600,
+                            bgcolor: "#DC2626",
+                            color: "#fff",
+                            boxShadow: "none",
+                            "&:hover": {
+                              bgcolor: "#B91C1C",
+                            },
+                          }}
+                        >
+                          Reset
+                        </Button>
+
+                        <Button
+                          variant="contained"
+                          onClick={() => setScreen(0)}
+                                           sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
+                        >
+                          Back
+                        </Button>
+                      </Box>
+
+                      {/* ----- TABLE (full width) ----- */}
+                      <Box
+                        m="5px 0 0 0"
+                        height="55vh"
+                        width="100%"
+                        sx={{
+                          "& .MuiDataGrid-root": { border: "none", width: "100%" },
+                          "& .MuiDataGrid-cell": { borderBottom: "none" },
+                          "& .name-column--cell": { color: colors.greenAccent[300] },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
                           },
-                        }}
-                        // rows={explorelistViewData}
-                        // columns={columns}
-                        rows={AttendanceData}
-                        columns={AttColumn}
-                        disableSelectionOnClick
-                        getRowId={(row) => row.SLNO}
-                        rowHeight={dataGridRowHeight}
-                        headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
-                        }
-                        onCellClick={(params) => {
-                          selectCellRowData({
-                            rowData: params.row,
-                            mode: "E",
-                            field: params.field,
-                          });
-                        }}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                        components={{
-                          Toolbar: AttendanceTool,
-                        }}
-                        onStateChange={(stateParams) =>
-                          setRowCount(stateParams.pagination.rowCount)
-                        }
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
-                        loading={exploreLoading}
-                        componentsProps={{
-                          toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": { backgroundColor: "", color: "" },
+                          "& .even-row": { backgroundColor: "", color: "" },
+                          "& .MuiDataGrid-columnHeaderTitle": {
+                            color: colors.blueAccent[900],
+                            fontWeight: 600,
+                          },
+                          "& .MuiTablePagination-root": { color: "#fff" },
+                          "& .MuiTablePagination-selectLabel": { color: "#fff" },
+                          "& .MuiTablePagination-displayedRows": { color: "#fff" },
+                          "& .MuiTablePagination-selectIcon": { color: "#fff" },
+                          "& .MuiTablePagination-actions button": { color: "#fff" },
                         }}
-                      />
-                    </Box>
-                  </Box>
-                </form>
-              )}
-            </Formik>
-          </Paper>
+                      >
+                        <DataGrid
+                          sx={{
+                            width: "100%",
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={AttendanceData}
+                          columns={AttColumn}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.SLNO}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{ Toolbar: AttendanceTool }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                          }}
+                        />
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
 
+        {/* Payroll attendance */}
         {show == "4" ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
-            <Formik
-              initialValues={PAttInitialvalues}
-              enableReinitialize={true}
-              onSubmit={(values, { resetForm }) => {
-                setTimeout(() => {
-                  attFnSave(values, resetForm);
-                }, 100);
-              }}
-            >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-              }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  onReset={() => {
-                    resetForm();
-                    dispatch(resetTrackingData());
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper
+                elevation={0}
+                sx={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 3,
+                  p: 3,
+                }}
+              >
+                <Formik
+                  initialValues={PAttInitialvalues}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      attFnSave(values, resetForm);
+                    }, 100);
                   }}
                 >
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="code"
-                      name="code"
-                      value={values.code}
-                      label="Code"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    // sx={{ gridColumn: "span 2" }}
-                    />
-
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="description"
-                      name="description"
-                      value={values.description}
-                      label="Description"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    // sx={{ gridColumn: "span 2" }}
-                    />
-                    {/* <TextField
-                      fullWidth
-                      variant="standard"
-                      type="month"
-                      id="month"
-                      name="month"
-                      label="Month"
-                      value={values.month}
-                      focused
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      select
-                    >
-                      <MenuItem value={"1"}>January</MenuItem>
-                      <MenuItem value={"2"}>February</MenuItem>
-                      <MenuItem value={"3"}>March</MenuItem>
-                      <MenuItem value={"4"}>April</MenuItem>
-                      <MenuItem value={"5"}>May</MenuItem>
-                      <MenuItem value={"6"}>June</MenuItem>
-                      <MenuItem value={"7"}>July</MenuItem>
-                      <MenuItem value={"8"}>August</MenuItem>
-                      <MenuItem value={"9"}>September</MenuItem>
-                      <MenuItem value={"10"}>October</MenuItem>
-                      <MenuItem value={"11"}>November</MenuItem>
-                      <MenuItem value={"12"}>December</MenuItem>
-                    </TextField>
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="year"
-                      name="year"
-                      value={values.year}
-                      label="Year"
-                      focused
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                    // sx={{ gridColumn: "span 2" }}
-                    /> */}
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
-                  >
-                    {/* <Button type="submit" variant="contained" color="secondary">
-                      APPLY
-                    </Button> */}
-                    {/* <Button type="reset" variant="contained" color="primary">
-                PROCESS
-              </Button> */}
-                    {/* <Button type="reset" variant="contained" color="error">
-                      RESET
-                    </Button> */}
-                  </Box>
-
-                  <Box m="5px">
-                    <Box
-                      // padding={1}
-                      m="5px 0 0 0"
-                      height={dataGridHeightExplore}
-                      // height={dataGridHeight}
-                      // height="50vh"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": {
-                          backgroundColor: "",
-                          color: "", // Color for odd rows
-                        },
-                        "& .even-row": {
-                          backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
-                        },
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        resetForm();
+                        dispatch(resetTrackingData());
                       }}
                     >
-                      <DataGrid
+                      {/* ----- CARD HEADER ----- */}
+                      <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 16 }}>📄</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+                            Payroll Attendance
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Payroll attendance and payslip
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                         sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="code"
+                          name="code"
+                          value={values.code}
+                          label="Code"
+                          inputProps={{ readOnly: true }}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="description"
+                          name="description"
+                          value={values.description}
+                          label="Description"
+                          inputProps={{ readOnly: true }}
+                        />
+                      </Box>
+
+                      {/* ----- TABLE (full width) ----- */}
+                      <Box
+                        m="5px 0 0 0"
+                        height={dataGridHeightExplore}
+                        width="100%"
+                        sx={{
+                          "& .MuiDataGrid-root": { border: "none", width: "100%" },
+                          "& .MuiDataGrid-cell": { borderBottom: "none" },
+                          "& .name-column--cell": { color: colors.greenAccent[300] },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
                           },
-                        }}
-
-                        rows={explorelistViewData}
-                        columns={columns}
-                        // rows={empAttendanceData}
-                        // columns={column}
-                        disableSelectionOnClick
-                        getRowId={(row) => row.RecordID}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
-                        }
-                        rowHeight={dataGridRowHeight}
-                        headerHeight={dataGridHeaderFooterHeight}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                        loading={exploreLoading}
-                        // onCellClick={(params) => {
-                        //   const currentRow = params.row;
-                        //   const currentcellField = params.field;
-                        //     // selectcelldata(currentRow, "E", currentcellField);
-
-                        //   console.log(JSON.stringify(params));
-                        // }}
-                        components={{
-                          Toolbar: empAttendanceTool,
-                        }}
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
-                        componentsProps={{
-                          toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": { backgroundColor: "", color: "" },
+                          "& .even-row": { backgroundColor: "", color: "" },
+                          "& .MuiDataGrid-columnHeaderTitle": {
+                            color: colors.blueAccent[900],
+                            fontWeight: 600,
+                          },
+                          "& .MuiTablePagination-root": { color: "#fff" },
+                          "& .MuiTablePagination-selectLabel": { color: "#fff" },
+                          "& .MuiTablePagination-displayedRows": { color: "#fff" },
+                          "& .MuiTablePagination-selectIcon": { color: "#fff" },
+                          "& .MuiTablePagination-actions button": { color: "#fff" },
                         }}
-                      />
-                    </Box>
+                      >
+                        <DataGrid
+                          sx={{
+                            width: "100%",
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          loading={exploreLoading}
+                          components={{ Toolbar: empAttendanceTool }}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row"
+                          }
+                          componentsProps={{
+                            toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+                          }}
+                        />
+                      </Box>
 
+                      {/* ----- ACTIONS ----- */}
+                      <Box display="flex" justifyContent="space-between" alignItems="center" padding={1} mt={2}>
+                        <Chip
+                          icon={<PictureAsPdfIcon color="error" />}
+                          label="Download Payslip PDF"
+                          variant="outlined"
+                          sx={{
+                            px: 1,
+                            py: 2.5,
+                            borderColor: "#E5E7EB",
+                            "&:hover": { backgroundColor: "#F9FAFB" },
+                          }}
+                          clickable
+                        />
 
-                  </Box>
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-
-                      icon={<PictureAsPdfIcon color="error" />}
-                      label="Download Payslip PDF"
-                      variant="outlined"
-                    />
-                  </Box>
-                </form>
-              )}
-            </Formik>
-          </Paper>
+                        <Button
+                          type="reset"
+                          variant="contained"
+                          onClick={() => setScreen(0)}
+                       sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                   
+                                  },
+                                }}
+                        >
+                          Back
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         ) : (
           false
         )}
+
         {show == "10" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -7301,7 +7551,15 @@ const EditemployeePayroll = () => {
                   >
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
-                      color="secondary"
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                       variant="contained"
                       type="submit"
                       loading={isLoading}

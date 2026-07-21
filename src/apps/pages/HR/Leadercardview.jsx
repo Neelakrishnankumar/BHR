@@ -466,8 +466,9 @@ const LeaderCardView = () => {
 
       {/* Bottom Cancel button */}
       <Box display="flex" justifyContent="flex-end" mt={4}>
-        <Button variant="contained" color="warning" onClick={handleCancel}>
-          Cancel
+        <Button variant="contained" color="warning" onClick={handleCancel}
+        sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}>
+          Back
         </Button>
       </Box>
     </Box>

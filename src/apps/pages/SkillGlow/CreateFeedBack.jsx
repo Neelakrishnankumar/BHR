@@ -45,6 +45,7 @@ import { LoadingButton } from "@mui/lab";
 import toast from "react-hot-toast";
 import { AppraisalAutocompletePayload } from "./SkillGlowAutocomplete";
 import { fetchListview } from "../../../store/reducers/Listviewapireducer";
+import { breadcrumbStyles } from "../../../Theme";
 
 const CreateFeedBack = () => {
   const navigate = useNavigate();
@@ -147,7 +148,7 @@ const CreateFeedBack = () => {
             .nullable()
             .shape({
               RecordID: Yup.string().required(
-                data.ListofAssessment.DesignationID
+                data.ListofAssessment.DesignationID,
               ),
               Name: Yup.string().nullable(), // optional
             })
@@ -156,10 +157,10 @@ const CreateFeedBack = () => {
           //   data.ListofAssessment.AppraisalType
           // ),
           Permittedtimes: Yup.number().required(
-            data.ListofAssessment.Permittedtimes
+            data.ListofAssessment.Permittedtimes,
           ),
           Minimumscore: Yup.number().required(
-            data.ListofAssessment.Minimumscore
+            data.ListofAssessment.Minimumscore,
           ),
           Date: Yup.date().nullable().required(data.ListofAssessment.Date),
         });
@@ -168,7 +169,7 @@ const CreateFeedBack = () => {
           schema = schema.concat(
             Yup.object().shape({
               Code: Yup.string().required(data.ListofAssessment.Code),
-            })
+            }),
           );
         }
 
@@ -243,7 +244,9 @@ const CreateFeedBack = () => {
       FullyAutomatic: values.FullyAutomatic === true ? "Y" : "N",
     };
 
-    const response = await dispatch(postData({ accessID: "TR300", action, idata }));
+    const response = await dispatch(
+      postData({ accessID: "TR300", action, idata }),
+    );
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(-1);
@@ -309,9 +312,9 @@ const CreateFeedBack = () => {
     //Designation: Data.DesignationID || "",
     DesignationID: Data.DesignationID
       ? {
-        RecordID: Data.DesignationID,
-        Name: Data.DesignationName, // used for dropdown display
-      }
+          RecordID: Data.DesignationID,
+          Name: Data.DesignationName, // used for dropdown display
+        }
       : null,
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
@@ -326,9 +329,9 @@ const CreateFeedBack = () => {
           ScreenName: "Designation",
           Filter: `parentID='${CompanyID}'`,
           Any: "",
-          VerticalLicense: Subscriptionlastthree
+          VerticalLicense: Subscriptionlastthree,
         },
-      })
+      }),
     )}`;
   }, [CompanyID]);
 
@@ -351,46 +354,76 @@ const CreateFeedBack = () => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
-                  }}
-                >
-                  List of Assessment Type ({state.BreadCrumb1})
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
-                      { state: { ...state } }
-                    );
-                  }}
-
-                >
-                  {/* {params.parentID2 === "AP" ? 
+        <Paper
+           elevation={0}
+           sx={{
+             mx: 2,
+             mt: 1,
+             mb: 1,
+             p: 1,
+             borderRadius: 3,
+             border: "1px solid #E5E7EB",
+             bgcolor: "#fff",
+           }}
+         >
+           <Box
+             display="flex"
+             justifyContent="space-between"
+             alignItems="center"
+           >
+             {/* Left */}
+             <Box display="flex" alignItems="center" gap={2}>
+                  {broken && !rtl && (
+                    <IconButton onClick={() => toggleSidebar()}>
+                      <MenuOutlinedIcon />
+                    </IconButton>
+                  )}
+                <Box>
+                              <Typography
+                                sx={{
+                                  fontSize: 20,
+                                  fontWeight: 700,
+                                  color: "#111827",
+                                  // mb: 0.2,
+                                      px: 1,
+                        py: 0.2,
+                                }}
+                              >
+                                {mode === "A" ? "New Feedback" : "Edit Feedback"}
+                              </Typography>
+                    <Breadcrumbs
+                      maxItems={2}
+                      aria-label="breadcrumb"
+                        separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                       sx={breadcrumbStyles.separator}
+                      // separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                    >
+                      <Typography
+                        // variant="h5"
+                        // color="#0000D1"
+                        // sx={{ cursor: "default" }}
+       sx={breadcrumbStyles.item}
+                        onClick={() => {
+                          navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                        }}
+                      >
+                        List of Assessment Type ({state.BreadCrumb1})
+                      </Typography>
+                      <Typography
+                       onClick={() =>
+                    navigate(
+                      `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
+                      {
+                        state: { ...state },
+                      }
+                    )
+                  }
+                        // variant="h5"
+                        // color="#0000D1"
+                        // sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.item}
+                      >
+                        {/* {params.parentID2 === "AP" ? 
               "List of Appraisal Category" :
               params.parentID2 === "CL" ?
               "List of Compliance Category" :
@@ -400,175 +433,287 @@ const CreateFeedBack = () => {
               "List of Feedback Category" :
               "List of Assessment Category"  
               } */}
-                  List of Category
-                  ({state.BreadCrumb2})
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  {params.parentID2 === "AP" ?
-                    "List of Appraisal" :
-                    params.parentID2 === "CL" ?
-                      "List of Compliance" :
-                      params.parentID2 === "SV" ?
-                        "List of Survey" :
-                        params.parentID2 === "FB" ?
-                          "List of Feedback" :
-                          "List of Assessment"
-                  }
-                  {/* List of Assessment */}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                >
-                  {mode == "A" ? "New" : "Edit"}
-                </Typography>
-              </Breadcrumbs>
-            </Box>
-          </Box>
+                        List of Category ({state.BreadCrumb2})
+                      </Typography>
+                      <Typography
+                       onClick={() => navigate(-1)}
+                        // variant="h5"
+                        // color="#0000D1"
+                        // sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.item}
+                      >
+                        {params.parentID2 === "AP"
+                          ? "List of Appraisal"
+                          : params.parentID2 === "CL"
+                            ? "List of Compliance"
+                            : params.parentID2 === "SV"
+                              ? "List of Survey"
+                              : params.parentID2 === "FB"
+                                ? "List of Feedback"
+                                : "List of Assessment"}
+                        {/* List of Assessment */}
+                      </Typography>
+                      <Typography
+                        // variant="h5"
+                        // color="#0000D1"
+                        // sx={{ cursor: "default" }}
+       sx={breadcrumbStyles.active}
+                      >
+                        {mode == "A" ? "New" : "Edit"}
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                </Box>
 
-          <Box display="flex">
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Paper>
-      {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                AssessementSaveFn(values, resetForm);
-              }, 100);
-            }}
-            enableReinitialize={true}
-            validationSchema={validationSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
-              setFieldTouched,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                {/* {JSON.stringify(errors)} */}
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {/* {JSON.stringify(errors)} */}
-                  {CompanyAutoCode === "Y" ? (
-                    <TextField
-                      // fullWidth
-                      variant="standard"
-                      type="text"
-                      label="Code"
-                      placeholder="Auto"
-                      value={values.Code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      id="Code"
-                      name="Code"
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{ readOnly: true }}
-                    />
-                  ) : (
-                    <TextField
-                      // fullWidth
-                      variant="standard"
-                      type="text"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      //placeholder="Enter Your Skills Here......"
-                      value={values.Code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      id="Code"
-                      name="Code"
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
-                  )}
-
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="text"
-                    label={
-                      <>
-                        Name
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.Name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Name"
-                    name="Name"
-                    focused
-                    error={!!touched.Name && !!errors.Name}
-                    helperText={touched.Name && errors.Name}
+                <Box display="flex">
+                  <Tooltip title="Close">
+                    <IconButton onClick={() => fnLogOut("Close")} color="error">
+                      <ResetTvIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Logout">
+                    <IconButton
+                      color="error"
+                      onClick={() => fnLogOut("Logout")}
+                    >
+                      <LogoutOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Paper>
+         
+          {!getLoading ? (
+           <Paper
+                    elevation={0}
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 3,
+                      p: 3,
+                      mx: 1,
+                      mt: 2,
                     }}
-                    autoFocus={CompanyAutoCode == "Y"}
-                  />
-                  {/* <FormControl
+                  >
+                  <Formik
+                    initialValues={initialValues}
+                    onSubmit={(values, { resetForm }) => {
+                      setTimeout(() => {
+                        AssessementSaveFn(values, resetForm);
+                      }, 100);
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      setFieldValue,
+                      handleSubmit,
+                      setFieldTouched,
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        {/* {JSON.stringify(errors)} */}
+                        {/* ----- CARD HEADER ----- */}
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1.5}
+                          // mb={1}
+                          // sx={{ px: 2, pt: 2 }}
+                        >
+                          {/* ICON */}
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EFF6FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 18 }}>💬</Typography>
+                          </Box>
+
+                          {/* TITLE + SUBTITLE */}
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#0D94885"
+                            >
+                              Feedback
+                            </Typography>
+
+                            <Typography variant="body2" color="text.secondary">
+                              Gather opinions and suggestions to enhance
+                              performance and engagement
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          {/* {JSON.stringify(errors)} */}
+                          {CompanyAutoCode === "Y" ? (
+                            <TextField
+                              // fullWidth
+                              variant="outlined"
+                              size="small"
+                              type="text"
+                              label="Code"
+                              placeholder="Auto"
+                              value={values.Code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              id="Code"
+                              name="Code"
+                              focused
+                              error={!!touched.Code && !!errors.Code}
+                              helperText={touched.Code && errors.Code}
+                                 sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                              InputProps={{ readOnly: true }}
+                            />
+                          ) : (
+                            <TextField
+                              // fullWidth
+                              variant="outlined"
+                              size="small"
+                              type="text"
+                              label={
+                                <>
+                                  Code
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </>
+                              }
+                              //placeholder="Enter Your Skills Here......"
+                              value={values.Code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              id="Code"
+                              name="Code"
+                              focused
+                              error={!!touched.Code && !!errors.Code}
+                              helperText={touched.Code && errors.Code}
+                                  sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                              autoFocus
+                            />
+                          )}
+
+                          <TextField
+                            // fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label={
+                              <>
+                                Name
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </>
+                            }
+                            //placeholder="Enter Your Skills Here......"
+                            value={values.Name}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            id="Name"
+                            name="Name"
+                            focused
+                            error={!!touched.Name && !!errors.Name}
+                            helperText={touched.Name && errors.Name}
+                               sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            autoFocus={CompanyAutoCode == "Y"}
+                          />
+                          {/* <FormControl
                     focused
                     variant="standard"
                     sx={{ background: "#ffffff" }}
@@ -596,7 +741,7 @@ const CreateFeedBack = () => {
                       <MenuItem value={'Y/N'}>Yes or No</MenuItem>
                     </Select>
                   </FormControl> */}
-                  {/* <TextField
+                          {/* <TextField
                     // fullWidth
                     variant="standard"
                     type="number"
@@ -625,256 +770,405 @@ const CreateFeedBack = () => {
                     //   },
                     // }}
                   /> */}
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="number"
-                    // label="Duration (In Days)"
-                    label={
-                      <>
-                        Duration (In Days)
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.Duration}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Duration"
-                    name="Duration"
-                    focused
-                    error={!!touched.Duration && !!errors.Duration}
-                    helperText={touched.Duration && errors.Duration}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ",
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="text"
-                    // label="Mininum Score"
-                    label={
-                      <>
-                        Minimum Score
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.Minimumscore}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Minimumscore"
-                    name="Minimumscore"
-                    focused
-                    error={!!touched.Minimumscore && !!errors.Minimumscore}
-                    helperText={touched.Minimumscore && errors.Minimumscore}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
-                  <TextField
-                    name="Date"
-                    type="date"
-                    id="Date"
-                    label={
-                      <>
-                        Date
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.Date}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.Date && !!errors.Date}
-                    helperText={touched.Date && errors.Date}
-                    sx={{ background: "" }}
-                  // required
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  />
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="number"
-                    // label="No. Of Attempts Permitted"
-                    label={
-                      <>
-                        No. Of Attempts Permitted
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.Permittedtimes}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Permittedtimes"
-                    name="Permittedtimes"
-                    focused
-                    error={!!touched.Permittedtimes && !!errors.Permittedtimes}
-                    helperText={touched.Permittedtimes && errors.Permittedtimes}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
-
-                  {(mode == "E" || mode == "D") && (
-                    <>
-                      {/* NO OF QUESTION GROUP */}
-                      <TextField
-                        // fullWidth
-                        variant="standard"
-                        type="number"
-                        // label="No. Of Attempts Permitted"
-                        label="No. Of Question Groups"
-                        //placeholder="Enter Your Skills Here......"
-                        value={values.NoOfQuestionGroup}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        id="NoOfQuestionGroup"
-                        name="NoOfQuestionGroup"
-                        focused
-                        error={
-                          !!touched.NoOfQuestionGroup &&
-                          !!errors.NoOfQuestionGroup
-                        }
-                        helperText={
-                          touched.NoOfQuestionGroup && errors.NoOfQuestionGroup
-                        }
-                        disabled
-                        sx={{
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            //readOnly:true
-                          },
-                        }}
-                      />
-
-                      {/* TOTAL NO OF QUESTIONS */}
-
-                      <TextField
-                        // fullWidth
-                        variant="standard"
-                        type="number"
-                        // label="No. Of Attempts Permitted"
-                        label="No. Of Questions"
-                        //placeholder="Enter Your Skills Here......"
-                        value={values.TotalNoOfQuestion}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        id="TotalNoOfQuestion"
-                        name="TotalNoOfQuestion"
-                        focused
-                        error={
-                          !!touched.TotalNoOfQuestion &&
-                          !!errors.TotalNoOfQuestion
-                        }
-                        helperText={
-                          touched.TotalNoOfQuestion && errors.TotalNoOfQuestion
-                        }
-                        disabled
-                        sx={{
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            //readOnly:true
-                          },
-                        }}
-                      />
-                    </>
-                  )}
-                  {/* {AssessmentType === "Appraisal" ? ( */}
-                  <>
-                    <AppraisalAutocompletePayload
-                      name="DesignationID"
-                      label={
-                        <span>
-                          Designation{" "}
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </span>
-                      }
-                      id="DesignationID"
-                      value={values.DesignationID}
-                      // onChange={(newValue) =>
-                      //   setFieldValue("DesignationID", newValue)
-                      // }
-                      onChange={(newValue) =>
-                        setFieldValue(
-                          "DesignationID",
-                          newValue
-                            ? {
-                              RecordID: newValue.RecordID,
-                              Name: newValue.Name,
+                          <TextField
+                            // fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            // label="Duration (In Days)"
+                            label={
+                              <>
+                                Duration (In Days)
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </>
                             }
-                            : null
-                        )
-                      }
-                      onBlur={() => setFieldTouched("DesignationID", true)}
-                      error={!!touched.DesignationID && !!errors.DesignationID}
-                      helperText={touched.DesignationID && errors.DesignationID}
-                      //params={{ CompanyID: CompanyID }}
-                      //state={{ globalurl }}
-                      // url={(state, params) =>
-                      //   `${listViewurl}?data=${encodeURIComponent(
-                      //     JSON.stringify({
-                      //       Query: {
-                      //         AccessID: "2047",
-                      //         ScreenName: "Designation",
-                      //         Filter: `parentID='${CompanyID}'`,
-                      //         Any: "",
-                      //       },
-                      //     })
-                      //   )}`
-                      // }
-                      url={memoizedUrl}
-                    />
+                            //placeholder="Enter Your Skills Here......"
+                            value={values.Duration}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            id="Duration"
+                            name="Duration"
+                            focused
+                            error={!!touched.Duration && !!errors.Duration}
+                            helperText={touched.Duration && errors.Duration}
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
 
-                    {/* <TextField
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
+                          <TextField
+                            // fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            // label="Mininum Score"
+                            label={
+                              <>
+                                Minimum Score
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </>
+                            }
+                            //placeholder="Enter Your Skills Here......"
+                            value={values.Minimumscore}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            id="Minimumscore"
+                            name="Minimumscore"
+                            focused
+                            error={
+                              !!touched.Minimumscore && !!errors.Minimumscore
+                            }
+                            helperText={
+                              touched.Minimumscore && errors.Minimumscore
+                            }
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
+                          <TextField
+                            name="Date"
+                            type="date"
+                            id="Date"
+                            label={
+                              <>
+                                Date
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.Date}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.Date && !!errors.Date}
+                            helperText={touched.Date && errors.Date}
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            // required
+                            //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+                          <TextField
+                            // fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            // label="No. Of Attempts Permitted"
+                            label={
+                              <>
+                                No. Of Attempts Permitted
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </>
+                            }
+                            //placeholder="Enter Your Skills Here......"
+                            value={values.Permittedtimes}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            id="Permittedtimes"
+                            name="Permittedtimes"
+                            focused
+                            error={
+                              !!touched.Permittedtimes &&
+                              !!errors.Permittedtimes
+                            }
+                            helperText={
+                              touched.Permittedtimes && errors.Permittedtimes
+                            }
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
+
+                          {(mode == "E" || mode == "D") && (
+                            <>
+                              {/* NO OF QUESTION GROUP */}
+                              <TextField
+                                // fullWidth    variant="outlined"
+                                size="small"
+                                variant="standard"
+                                type="number"
+                                // label="No. Of Attempts Permitted"
+                                label="No. Of Question Groups"
+                                //placeholder="Enter Your Skills Here......"
+                                value={values.NoOfQuestionGroup}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                id="NoOfQuestionGroup"
+                                name="NoOfQuestionGroup"
+                                focused
+                                error={
+                                  !!touched.NoOfQuestionGroup &&
+                                  !!errors.NoOfQuestionGroup
+                                }
+                                helperText={
+                                  touched.NoOfQuestionGroup &&
+                                  errors.NoOfQuestionGroup
+                                }
+                                disabled
+                                    sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                    //readOnly:true
+                                  },
+                                }}
+                              />
+
+                              {/* TOTAL NO OF QUESTIONS */}
+
+                              <TextField
+                                // fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                // label="No. Of Attempts Permitted"
+                                label="No. Of Questions"
+                                //placeholder="Enter Your Skills Here......"
+                                value={values.TotalNoOfQuestion}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                id="TotalNoOfQuestion"
+                                name="TotalNoOfQuestion"
+                                focused
+                                error={
+                                  !!touched.TotalNoOfQuestion &&
+                                  !!errors.TotalNoOfQuestion
+                                }
+                                helperText={
+                                  touched.TotalNoOfQuestion &&
+                                  errors.TotalNoOfQuestion
+                                }
+                                disabled
+                                    sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                    //readOnly:true
+                                  },
+                                }}
+                              />
+                            </>
+                          )}
+                          {/* {AssessmentType === "Appraisal" ? ( */}
+                          <>
+                            <AppraisalAutocompletePayload
+                              name="DesignationID"
+                              label={
+                                <span>
+                                  Designation{" "}
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
+                              id="DesignationID"
+                              value={values.DesignationID}
+                              // onChange={(newValue) =>
+                              //   setFieldValue("DesignationID", newValue)
+                              // }
+                              onChange={(newValue) =>
+                                setFieldValue(
+                                  "DesignationID",
+                                  newValue
+                                    ? {
+                                        RecordID: newValue.RecordID,
+                                        Name: newValue.Name,
+                                      }
+                                    : null,
+                                )
+                              }
+                              onBlur={() =>
+                                setFieldTouched("DesignationID", true)
+                              }
+                              error={
+                                !!touched.DesignationID &&
+                                !!errors.DesignationID
+                              }
+                              helperText={
+                                touched.DesignationID && errors.DesignationID
+                              }
+                              //params={{ CompanyID: CompanyID }}
+                              //state={{ globalurl }}
+                              // url={(state, params) =>
+                              //   `${listViewurl}?data=${encodeURIComponent(
+                              //     JSON.stringify({
+                              //       Query: {
+                              //         AccessID: "2047",
+                              //         ScreenName: "Designation",
+                              //         Filter: `parentID='${CompanyID}'`,
+                              //         Any: "",
+                              //       },
+                              //     })
+                              //   )}`
+                              // }
+                              url={memoizedUrl}
+                            />
+
+                            {/* <TextField
                       focused
                       variant="standard"
                       label={
@@ -900,7 +1194,7 @@ const CreateFeedBack = () => {
                       <MenuItem value={"Subordinate"}>Subordinate</MenuItem>
                     </TextField> */}
 
-                    {/* <FormControl
+                            {/* <FormControl
                         focused
                         variant="standard"
                         sx={{ background: "#ffffff" }}
@@ -932,93 +1226,128 @@ const CreateFeedBack = () => {
                           <MenuItem value={"Peer"}>Peer</MenuItem>
                         </Select>
                       </FormControl> */}
-                  </>
-                  {/* ) : (
+                          </>
+                          {/* ) : (
                     false
                   )} */}
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    label="Sort Order"
-                    value={values.SortOrder}
-                    id="SortOrder"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="SortOrder"
-                    // error={!!touched.SortOrder && !!errors.SortOrder}
-                    // helperText={touched.SortOrder && errors.SortOrder}
-                    sx={{ background: "" }}
-                    focused
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            label="Sort Order"
+                            value={values.SortOrder}
+                            id="SortOrder"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="SortOrder"
+                            // error={!!touched.SortOrder && !!errors.SortOrder}
+                            // helperText={touched.SortOrder && errors.SortOrder}
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
 
-                  <Box>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="FullyAutomatic"
-                          checked={values.FullyAutomatic}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Fully Automatic"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="DeleteFlag"
-                          checked={values.DeleteFlag}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Delete"
-                    />
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
 
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="disable"
-                          checked={values.Disable}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Disable"
-                    // sx={{
-                    //   marginTop: "20px",
-                    //   "@media (max-width:500px)": {
-                    //     marginTop: 0,
-                    //   },
-                    // }}
-                    />
-                  </Box>
-                </Box>
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap={2}
-                >
-                  <LoadingButton
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    loading={isLoading}
-                  >
-                    Save
-                  </LoadingButton>
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                            focused
+                            onWheel={(e) => e.target.blur()}
+                            onInput={(e) => {
+                              e.target.value = Math.max(
+                                0,
+                                parseInt(e.target.value),
+                              )
+                                .toString()
+                                .slice(0, 8);
+                            }}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
 
-                  {/* {mode == "E" ? (
+                          <Box>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="FullyAutomatic"
+                                  checked={values.FullyAutomatic}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="Fully Automatic"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="DeleteFlag"
+                                  checked={values.DeleteFlag}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="Delete"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="disable"
+                                  checked={values.Disable}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="Disable"
+                              // sx={{
+                              //   marginTop: "20px",
+                              //   "@media (max-width:500px)": {
+                              //     marginTop: 0,
+                              //   },
+                              // }}
+                            />
+                          </Box>
+                        </Box>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          padding={1}
+                          gap={2}
+                        >
+                          <LoadingButton
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                          >
+                            Save
+                          </LoadingButton>
+
+                          {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -1044,21 +1373,33 @@ const CreateFeedBack = () => {
                     </Button>
                   ) : null} */}
 
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => navigate(-1)}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
-      ) : (
-        false
-      )}
+                          <Button
+                            variant="contained"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                            onClick={() => navigate(-1)}
+                          >
+                            Back
+                          </Button>
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Paper>
+           
+     
+          ) : (
+            false
+          )}
+     
     </React.Fragment>
   );
 };

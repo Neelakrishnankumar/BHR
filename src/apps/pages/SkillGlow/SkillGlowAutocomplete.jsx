@@ -124,8 +124,8 @@ export const AppraisalAutocompletePayload = ({
           {...paramsInput}
           label={label || "Select Option"}
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
+          size="small"
           InputProps={{
             ...paramsInput.InputProps,
             endAdornment: (

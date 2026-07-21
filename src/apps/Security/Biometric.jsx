@@ -31,7 +31,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import store from "../..";
 import { fileUpload, imageUpload } from "../../store/reducers/Imguploadreducer";
 import Resizer from "react-image-file-resizer";
-import { tokens } from "../../Theme";
+import { breadcrumbStyles, tokens } from "../../Theme";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -213,7 +213,12 @@ const Biometricconfiguration = () => {
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
                     Biometric Integration
                 </Typography> */}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+             <Box sx={{ height: "100vh", overflow: "auto" }}>
+                    <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+            
+            
+                      <Box sx={{borderRadius: 3,p: 1, }}>
+              <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -223,14 +228,19 @@ const Biometricconfiguration = () => {
                         )}
                         <Breadcrumbs
                             maxItems={3}
-                            aria-label="breadcrumb"
-                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                            separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                    sx={breadcrumbStyles.separator}
                         >
 
                             <Typography
-                                color="#0000D1"
-                                sx={{ cursor: "default" }}
-                                variant="h5"
+                               sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
 
                             >
                                 Biometric Integration
@@ -253,8 +263,13 @@ const Biometricconfiguration = () => {
                     </Box>
                 </Box>
             </Paper>
-            <Paper elevation={3} sx={{ margin: "10px" }}>
-                <Formik
+            </Box>
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 0 }}>
+               
+                      <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+               
+               <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                 <Formik
                     initialValues={initialvalues}
                     onSubmit={(values, setSubmitting, resetForm) => {
                         setTimeout(() => {
@@ -282,7 +297,45 @@ const Biometricconfiguration = () => {
                         resetForm
                     }) => (
                         <form onSubmit={handleSubmit}>
+     {/* ----- CARD HEADER ----- */}
+                                  <Box
+  display="flex"
+  alignItems="center"
+  gap={1.5}
+  mb={1}
+  sx={{ px: 2, pt: 2 }}
+>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography sx={{ fontSize: 18 }}>
+     🛂
+    </Typography>
+  </Box>
 
+  {/* TITLE + SUBTITLE */}
+  <Box>
+    <Typography
+      variant="subtitle1"
+      fontWeight={700}
+      color="#0D94885"
+    >
+    Biometric</Typography>
+
+    <Typography variant="body2" color="text.secondary">
+     intuitive for users
+    </Typography>
+  </Box>
+</Box>
                             {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
                             {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
 
@@ -316,12 +369,37 @@ const Biometricconfiguration = () => {
                                     type="text"
                                     id="appname"
                                     label="Application Name"
-                                    variant="standard"
+                                    variant="outlined"
+                                    size="small"
                                     focused
                                     value={Appname}
                                     onChange={(e) => setAppname(e.target.value)}
                                     autoFocus
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                     }}
                                 />
 
                                 <TextField
@@ -329,14 +407,39 @@ const Biometricconfiguration = () => {
                                     type="text"
                                     id="authorization"
                                     label="Authorization"
-                                    variant="standard"
+                                    variant="outlined"
+                                    size="small"
                                     focused
                                     value={author}
                                     onBlur={handleBlur}
                                     onChange={(e) => setauthor(e.target.value)}
                                     error={!!touched.authorization && !!errors.authorization}
                                     helperText={touched.authorization && errors.authorization}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                     }}
                                 />
 
                                 <TextField
@@ -344,14 +447,39 @@ const Biometricconfiguration = () => {
                                     type="text"
                                     id="apikey"
                                     label="API Key"
-                                    variant="standard"
+                                    variant="outlined"
+                                    size="small"
                                     focused
                                     value={Apikey}
                                     onBlur={handleBlur}
                                     onChange={(e) => setApikey(e.target.value)}
                                     error={!!touched.apikey && !!errors.apikey}
                                     helperText={touched.apikey && errors.apikey}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                     }}
                                 />
 
                                 <TextField
@@ -359,14 +487,39 @@ const Biometricconfiguration = () => {
                                     type="text"
                                     id="url"
                                     label="URL"
-                                    variant="standard"
+                                    variant="outlined"
+                                    size="small"
                                     focused
                                     value={Url}
                                     onBlur={handleBlur}
                                     onChange={(e) => setUrl(e.target.value)}
                                     error={!!touched.url && !!errors.url}
                                     helperText={touched.url && errors.url}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2",
+                                        "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                     }}
                                 />
 
                                 <TextField
@@ -375,12 +528,37 @@ const Biometricconfiguration = () => {
                                     id="input"
                                     label="Input"
                                     variant="outlined"
+                                    size="small"
                                     focused
                                     rows={3}
                                     multiline
                                     value={Input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2",
+"& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+                                     }}
                                 />
                                 {/* <TextField
                                         name="input"
@@ -412,7 +590,33 @@ const Biometricconfiguration = () => {
                                     }}
                                 >
                                     {/* Pulling Cycle Select */}
-                                    <FormControl fullWidth focused>
+                                    <FormControl 
+sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
+                                    fullWidth focused
+                                    >
                                         <InputLabel id="pulling">Pulling Cycle</InputLabel>
                                         <Select
                                             labelId="pulling"
@@ -422,7 +626,8 @@ const Biometricconfiguration = () => {
                                             onBlur={handleBlur}
                                             onChange={(e) => setpulling(e.target.value)}
                                             label="Pulling Cycle"
-                                        >
+
+  >
                                             <MenuItem value="D">Daily</MenuItem>
                                             <MenuItem value="H">Hourly</MenuItem>
                                         </Select>
@@ -435,12 +640,37 @@ const Biometricconfiguration = () => {
                                             type="time"
                                             id="time"
                                             label="Time"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             value={time}
                                             onBlur={handleBlur}
                                             onChange={(e) => settime(e.target.value)}
                                             focused
                                             fullWidth
+                                                                                    sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                                         />
                                     )}
                                 </Box>
@@ -456,7 +686,15 @@ const Biometricconfiguration = () => {
                             >
 
                                 <LoadingButton
-                                    color="secondary"
+                                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                     variant="contained"
                                     type="submit"
                                     loading={isLoading}
@@ -468,14 +706,22 @@ const Biometricconfiguration = () => {
 
 
                                 <Button
-                                    color={"warning"}
+                                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                                     variant="contained"
                                     onClick={() => resetForm()}
                                 // onClick={() => {
                                 //   navigate("/Apps/TR213/LeaveType");
                                 // }}
                                 >
-                                    Cancel
+                                    Back
                                 </Button>
                             </Box>
 
@@ -483,6 +729,10 @@ const Biometricconfiguration = () => {
                     )}
                 </Formik>
             </Paper>
+              </Box>
+                          </Box>
+                            </Box>
+                                        </Box>
             {/* </Box> */}
         </React.Fragment>
     );

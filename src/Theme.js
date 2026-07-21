@@ -349,7 +349,9 @@ export const tokens = (mode) => ({
           500: "#6870fa",
           600: "#868dfb",
           700: "#a4a9fc",
-          800: "#21B5B5",
+          // 800: "#21B5B5",
+          //  800: "#0D9488",
+           800: "#25adad",
           900: "#e1e2fe",
         },
         yellowAccent: {
@@ -468,3 +470,37 @@ export const  useMode = () =>  {
     return[theme,colorMode];
 }
 
+
+// Reusable breadcrumb styles (used in Assessment header, etc.)
+export const breadcrumbStyles = {
+  item: {
+    cursor: "pointer",
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 2,
+    fontWeight: 600,
+    fontSize: 13,
+    color: "#475569",
+    transition: "all 0.25s ease",
+    "&:hover": {
+      color: "#fff",
+      background: "linear-gradient(135deg, #14B8A6, #0EA5E9)",
+      boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+    },
+  },
+  active: {
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 2,
+    fontWeight: 700,
+    fontSize: 13,
+    color: "#fff",
+    background: "linear-gradient(135deg, #0D9488, #14B8A6)",
+    boxShadow: "0 2px 8px rgba(13,148,136,0.4)",
+  },
+  separator: {
+    "& .MuiBreadcrumbs-separator": {
+      color: "#9CA3AF",
+    },
+  },
+};

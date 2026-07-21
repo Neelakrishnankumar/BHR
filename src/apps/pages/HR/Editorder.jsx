@@ -37,6 +37,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { breadcrumbStyles } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditOrder = () => {
@@ -318,74 +319,66 @@ const EditOrder = () => {
     });
   };
 
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+      "& fieldset": { borderColor: "#d1d5db" },
+      "&:hover fieldset": { borderColor: "#bfc4cc" },
+      "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+    },
+    "& .MuiInputLabel-root": { color: "#6b7280" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+  };
+
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+
+      {/* BREADCRUMBS */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 1,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          bgcolor: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          {/* LEFT */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-            >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  // navigate("/Apps/TR243/Party");
-                  navigate("/Apps/TR321/Party");
-                }}
-              >
-                {`Party(${state.PartyName || ""})`}
-              </Typography>
 
-              {params.Type === "Leader" ? (
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  {`Lead(${state.LeadTitle || ""})`}
-                </Typography>
-              ) : null}
+            <Box>
+              {/* Page Title */}
               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  px: 1,
+                  py: 0.2,
                 }}
               >
-                {/* {mode === "E"
-                  ? `Order (${state.Code || ""} )`
-                  : `Order(New)` || ""} */}
-                {params.OrderType === "O"
-                  ? mode === "E"
-                    ? `Order (${state.Code || ""} )`
-                    : `Order(New)` || ""
-                  : mode === "E"
-                    ? `Quotation (${state.Code || ""} )`
-                    : `Quotation(New)` || ""}
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-              // onClick={() => {
-              //   navigate(-1);
-              // }}
-              >
-                {/* {mode === "A" ? "Add Order" : "Edit Order"} */}
                 {params.OrderType === "O"
                   ? mode === "A"
                     ? "Add Order"
@@ -394,17 +387,87 @@ const EditOrder = () => {
                     ? "Add Quotation"
                     : "Edit Quotation"}
               </Typography>
-            </Breadcrumbs>
+
+              {/* Breadcrumb */}
+              <Breadcrumbs
+                maxItems={4}
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                sx={breadcrumbStyles.separator}
+              >
+                <Typography
+                  sx={breadcrumbStyles.item}
+                  onClick={() => {
+                    navigate("/Apps/TR321/Party");
+                  }}
+                >
+                  {`Party (${state.PartyName || ""})`}
+                </Typography>
+
+                {params.Type === "Leader" ? (
+                  <Typography
+                    sx={breadcrumbStyles.item}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    {`Lead (${state.LeadTitle || ""})`}
+                  </Typography>
+                ) : null}
+
+                <Typography
+                  sx={breadcrumbStyles.item}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  {params.OrderType === "O"
+                    ? mode === "E"
+                      ? `Order (${state.Code || ""})`
+                      : "Order (New)"
+                    : mode === "E"
+                      ? `Quotation (${state.Code || ""})`
+                      : "Quotation (New)"}
+                </Typography>
+
+                <Typography sx={breadcrumbStyles.active}>
+                  {params.OrderType === "O"
+                    ? mode === "A"
+                      ? "Add Order"
+                      : "Edit Order"
+                    : mode === "A"
+                      ? "Add Quotation"
+                      : "Edit Quotation"}
+                </Typography>
+              </Breadcrumbs>
+            </Box>
           </Box>
 
+          {/* RIGHT */}
           <Box display="flex">
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -413,7 +476,16 @@ const EditOrder = () => {
       </Paper>
 
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            margin: "10px",
+          }}
+        >
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -421,7 +493,6 @@ const EditOrder = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
             enableReinitialize={true}
           >
             {({
@@ -435,17 +506,42 @@ const EditOrder = () => {
               setFieldValue,
             }) => {
               const netPayables =
-                Number(values.delivercharges || 0) +
-                Number(values.totalprice || 0);
+                Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
               return (
                 <form onSubmit={handleSubmit}>
+                  {/* ----- CARD HEADER ----- */}
+                  <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "#EFF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 18,
+                      }}
+                    >
+                      🧾
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" fontWeight={700} color="#0D94885">
+                        {params.OrderType === "O" ? "Order" : "Quotation"}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Order details and delivery information
+                      </Typography>
+                    </Box>
+                  </Box>
+
                   <Box
                     display="grid"
-                    gap={formGap}
+                    // gap={formGap}
+                    gap='20px'
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
@@ -456,22 +552,16 @@ const EditOrder = () => {
                       name="orderdate"
                       type="date"
                       id="orderdate"
-                      //label="Order Date"
-                      label={
-                        params.OrderType === "O"
-                          ? "Order Date"
-                          : "Quotation Date"
-                      }
-                      variant="standard"
-                      focused
+                      label={params.OrderType === "O" ? "Order Date" : "Quotation Date"}
+                      variant="outlined"
+                      size="small"
                       inputFormat="YYYY-MM-DD"
                       value={values.orderdate}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.orderdate && !!errors.orderdate}
                       helperText={touched.orderdate && errors.orderdate}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      sx={textFieldSx}
                     />
                     {CompanyAutoCode == "Y" ? (
                       <TextField
@@ -480,22 +570,15 @@ const EditOrder = () => {
                         id="orderno"
                         label="Order No"
                         placeholder="Auto"
-                        variant="standard"
-                        focused
-                        // required
+                        variant="outlined"
+                        size="small"
                         value={values.orderno}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.orderno && !!errors.orderno}
                         helperText={touched.orderno && errors.orderno}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
+                        sx={textFieldSx}
                       />
                     ) : (
                       <TextField
@@ -505,62 +588,38 @@ const EditOrder = () => {
                         label={
                           <>
                             Order No
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
                           </>
                         }
-                        variant="standard"
-                        focused
-                        // required
+                        variant="outlined"
+                        size="small"
                         value={values.orderno}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.orderno && !!errors.orderno}
                         helperText={touched.orderno && errors.orderno}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
+                        sx={textFieldSx}
                         autoFocus
                       />
                     )}
-                    {/* <TextField
-                                        name="orderno"
-                                        type="text"
-                                        id="orderno"
-                                        label="Order No"
-                                        placeholder="Auto"
-                                        variant="standard"
-                                        focused
-                                        required
-                                        value={values.orderno}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.orderno && !!errors.orderno}
-                                        helperText={touched.orderno && errors.orderno}
-                                        autoFocus
-                                    /> */}
                     <TextField
                       name="partyname"
                       type="text"
                       id="partyname"
                       label="Party Name"
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.partyname}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.partyname && !!errors.partyname}
                       helperText={touched.partyname && errors.partyname}
-                      autoFocus
                       InputProps={{
                         inputProps: {
                           readOnly: true,
                         },
                       }}
+                      sx={textFieldSx}
                     />
 
                     <TextField
@@ -570,25 +629,21 @@ const EditOrder = () => {
                       name="OrderType"
                       value={values.OrderType}
                       onBlur={handleBlur}
-                      // onChange={handleChange}
-                      // disabled={mode === "V"}
-                      // required
                       onChange={(e) => {
-                        handleChange(e); // update form state (Formik)
-                        sessionStorage.setItem("OrderType", e.target.value); // save to sessionStorage
+                        handleChange(e);
+                        sessionStorage.setItem("OrderType", e.target.value);
                       }}
-                      focused
-                      variant="standard"
-                      // InputProps={{
-                      //   readOnly: params.Type === "Party",
-                      // }}
+                      variant="outlined"
+                      size="small"
                       InputProps={{
                         readOnly: true,
                       }}
+                      sx={textFieldSx}
                     >
                       <MenuItem value="O">Order</MenuItem>
                       <MenuItem value="Q">Quotation</MenuItem>
                     </TextField>
+
                     {mode === "A" ? (
                       <>
                         <TextField
@@ -600,8 +655,8 @@ const EditOrder = () => {
                               ? "Tentative Deliver Date"
                               : "Targeted Order Date"
                           }
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.tentativedeliverdate}
                           onBlur={handleBlur}
@@ -611,14 +666,13 @@ const EditOrder = () => {
                             !!errors.tentativedeliverdate
                           }
                           helperText={
-                            touched.tentativedeliverdate &&
-                            errors.tentativedeliverdate
+                            touched.tentativedeliverdate && errors.tentativedeliverdate
                           }
+                          sx={textFieldSx}
                         />
 
                         <Box sx={{ marginTop: "20px" }}>
                           <Field
-                            //  size="small"
                             type="checkbox"
                             name="PurchaseCheckbox"
                             id="PurchaseCheckbox"
@@ -627,7 +681,6 @@ const EditOrder = () => {
                             as={Checkbox}
                             label="Purchase"
                           />
-
                           <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
@@ -642,13 +695,10 @@ const EditOrder = () => {
                           type="number"
                           id="delivercharges"
                           label="Deliver Charges"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.delivercharges}
-                          // onBlur={handleBlur}
-                          // onChange={handleChange}
                           onChange={(e) => {
-                            // allow only numbers + decimal
                             const val = e.target.value;
                             if (/^\d*\.?\d*$/.test(val)) {
                               setFieldValue("delivercharges", val);
@@ -656,38 +706,32 @@ const EditOrder = () => {
                           }}
                           onBlur={(e) => {
                             let val = e.target.value;
-
                             if (val === "" || val === ".") {
                               setFieldValue("delivercharges", "0.00");
                               return;
                             }
-
                             const num = parseFloat(val);
                             if (!isNaN(num)) {
-                              setFieldValue("delivercharges", num.toFixed(2)); // ✅ forces .00
+                              setFieldValue("delivercharges", num.toFixed(2));
                             }
                           }}
-                          error={
-                            !!touched.delivercharges && !!errors.delivercharges
-                          }
-                          helperText={
-                            touched.delivercharges && errors.delivercharges
-                          }
+                          error={!!touched.delivercharges && !!errors.delivercharges}
+                          helperText={touched.delivercharges && errors.delivercharges}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
                               readOnly: ViewStatus === "Paid" ? true : false,
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="totalprice"
                           type="number"
                           id="totalprice"
                           label="Total Price"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.totalprice}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -699,12 +743,12 @@ const EditOrder = () => {
                               readOnly: true,
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
                         <TextField
                           label="Net Payables"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={(
                             Number(values.delivercharges || 0) +
                             Number(values.totalprice || 0)
@@ -715,19 +759,19 @@ const EditOrder = () => {
                               style: { textAlign: "right" },
                             },
                           }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="tentativedeliverdate"
                           type="date"
                           id="tentativedeliverdate"
-                          //label="Tentative Deliver Date"
                           label={
                             params.OrderType === "O"
                               ? "Tentative Deliver Date"
                               : "Targeted Order Date"
                           }
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.tentativedeliverdate}
                           onBlur={handleBlur}
@@ -737,12 +781,12 @@ const EditOrder = () => {
                             !!errors.tentativedeliverdate
                           }
                           helperText={
-                            touched.tentativedeliverdate &&
-                            errors.tentativedeliverdate
+                            touched.tentativedeliverdate && errors.tentativedeliverdate
                           }
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
+                          sx={textFieldSx}
                         />
 
                         <TextField
@@ -752,22 +796,19 @@ const EditOrder = () => {
                           name="deliver"
                           value={values.deliver}
                           onBlur={handleBlur}
-                          // onChange={handleChange}
-                          // disabled={mode === "V"}
-                          // required
                           onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem("deliver", e.target.value); // save to sessionStorage
+                            handleChange(e);
+                            sessionStorage.setItem("deliver", e.target.value);
                           }}
-                          focused
-                          variant="standard"
+                          variant="outlined"
+                          size="small"
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
+                          sx={textFieldSx}
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
                           <MenuItem value="No">No</MenuItem>
-
                         </TextField>
                         <TextField
                           select
@@ -776,19 +817,16 @@ const EditOrder = () => {
                           name="paid"
                           value={values.paid}
                           onBlur={handleBlur}
-                          // onChange={handleChange}
-                          // disabled={mode === "V"}
-                          // required
                           onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem("paid", e.target.value); // save to sessionStorage
+                            handleChange(e);
+                            sessionStorage.setItem("paid", e.target.value);
                           }}
-                          focused
-                          variant="standard"
+                          variant="outlined"
+                          size="small"
                           InputProps={{
-                            // readOnly: ViewStatus === "Paid" ? true : false,
                             readOnly: true,
                           }}
+                          sx={textFieldSx}
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
                           <MenuItem value="No">No</MenuItem>
@@ -798,8 +836,8 @@ const EditOrder = () => {
                           type="date"
                           id="processdate"
                           label="Process Date"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.processdate}
                           onBlur={handleBlur}
@@ -811,14 +849,15 @@ const EditOrder = () => {
                               readOnly: true,
                             },
                           }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="paiddate"
                           type="date"
                           id="paiddate"
                           label="Paid Date"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.paiddate}
                           onBlur={handleBlur}
@@ -828,70 +867,63 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: true,
                           }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="deliverydate"
                           type="date"
                           id="deliverydate"
                           label="Delivery Date"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.deliverydate}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={
-                            !!touched.deliverydate && !!errors.deliverydate
-                          }
-                          helperText={
-                            touched.deliverydate && errors.deliverydate
-                          }
+                          error={!!touched.deliverydate && !!errors.deliverydate}
+                          helperText={touched.deliverydate && errors.deliverydate}
                           InputProps={{
                             inputProps: {
                               readOnly: true,
                             },
                           }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="deliveredby"
                           type="text"
                           id="deliveredby"
                           label="Delivered By"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.deliveredby}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={!!touched.deliveredby && !!errors.deliveredby}
                           helperText={touched.deliveredby && errors.deliveredby}
-                          // InputProps={{
-                          //     inputProps: {
-                          //         style: { textAlign: "right" },
-                          //     },
-                          // }}
-                          autoFocus
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="PartyBalance"
-                          // type="number"
                           type="text"
                           id="PartyBalance"
                           label="Balance Amount"
-                          variant="standard"
-                          focused
-                          // value={values.PartyBalance}
+                          variant="outlined"
+                          size="small"
                           value={Math.abs(Number(values.PartyBalance || 0)).toFixed(2)}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={
-                            !!touched.PartyBalance && !!errors.PartyBalance
-                          }
-                          helperText={
-                            touched.PartyBalance && errors.PartyBalance
-                          }
+                          error={!!touched.PartyBalance && !!errors.PartyBalance}
+                          helperText={touched.PartyBalance && errors.PartyBalance}
                           InputProps={{
                             readOnly: true,
                             inputProps: {
@@ -900,26 +932,22 @@ const EditOrder = () => {
                                 color:
                                   Number(values.PartyBalance) < 0
                                     ? "#d32f2f"
-                                    : // ? "#db4f4a"
-                                    "#2e7d32", // red : green
+                                    : "#2e7d32",
                                 fontWeight: 600,
                               },
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="paidamount"
                           type="number"
                           id="paidamount"
                           label="Paid Amount"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.paidamount}
-                          // onBlur={handleBlur}
-                          // onChange={handleChange}
                           onChange={(e) => {
-                            // allow only numbers + decimal
                             const val = e.target.value;
                             if (/^\d*\.?\d*$/.test(val)) {
                               setFieldValue("paidamount", val);
@@ -927,47 +955,25 @@ const EditOrder = () => {
                           }}
                           onBlur={(e) => {
                             let val = e.target.value;
-
                             if (val === "" || val === ".") {
                               setFieldValue("paidamount", "0.00");
                               return;
                             }
-
                             const num = parseFloat(val);
                             if (!isNaN(num)) {
-                              setFieldValue("paidamount", num.toFixed(2)); // ✅ forces .00
+                              setFieldValue("paidamount", num.toFixed(2));
                             }
                           }}
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
-                            // readOnly: ViewStatus === "Paid" ? true : false, 
                             readOnly: true,
                             inputProps: {
                               style: { textAlign: "right" },
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
-                        {/* <TextField
-                          name="Tobepaid"
-                          type="number"
-                          id="Tobepaid"
-                          label="Paid Amount"
-                          variant="standard"
-                          focused
-                          value={values.Tobepaid}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.Tobepaid && !!errors.Tobepaid}
-                          helperText={touched.Tobepaid && errors.Tobepaid}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                          autoFocus
-                        /> */}
                         <TextField
                           select
                           label="Status"
@@ -975,60 +981,31 @@ const EditOrder = () => {
                           name="status"
                           value={values.status}
                           onBlur={handleBlur}
-                          // onChange={(e) => {
-                          //   handleChange(e);
-                          //   sessionStorage.setItem("status", e.target.value); // save to sessionStorage
-                          // }}
                           onChange={(e) => {
                             const selectedStatus = e.target.value;
-
-                            // Update status
                             handleChange(e);
                             sessionStorage.setItem("status", selectedStatus);
-
-                            // ✅ ONLY when Adjust From Advance → reset paid amount
                             if (selectedStatus === "Adjust From Advance") {
                               setFieldValue("paidamount", 0);
                             }
                           }}
-                          focused
-                          variant="standard"
+                          variant="outlined"
+                          size="small"
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
+                          sx={textFieldSx}
                         >
                           <MenuItem value="Created">Created</MenuItem>
                           <MenuItem value="Process">Confirm</MenuItem>
-                          <MenuItem value="Ready To Deliver">
-                            Ready for Delivery
-                          </MenuItem>
+                          <MenuItem value="Ready To Deliver">Ready for Delivery</MenuItem>
                           <MenuItem value="Picked">Picked</MenuItem>
-                          {/* <MenuItem value="Scheduled">Scheduled</MenuItem> */}
                           <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
-                          {/* COMMENTED AS PER NK ANNA - 06/03/2026 */}
-                          {/* UNCOMMENTED AS ON - 20/03/2026 */}
                           {ViewStatus === "Paid" && (
-                            <MenuItem value="Paid">Paid</MenuItem>)}
-                          {/* <MenuItem value="Adjust From Advance">
-                            Adjust From Advance
-                          </MenuItem> */}
+                            <MenuItem value="Paid">Paid</MenuItem>
+                          )}
                         </TextField>
-                        {/* <TextField
-                          name="paymentmode"
-                          type="text"
-                          id="paymentmode"
-                          label="Payment Mode"
-                          variant="standard"
-                          focused
-                          value={values.paymentmode}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.paymentmode && !!errors.paymentmode}
-                          helperText={touched.paymentmode && errors.paymentmode}
-                          autoFocus
-                          // disabled
-                        /> */}
 
                         <TextField
                           select
@@ -1038,20 +1015,17 @@ const EditOrder = () => {
                           value={values.paymentmode}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem(
-                              "paymentmode",
-                              e.target.value
-                            ); // save to sessionStorage
+                            handleChange(e);
+                            sessionStorage.setItem("paymentmode", e.target.value);
                           }}
                           error={!!touched.paymentmode && !!errors.paymentmode}
                           helperText={touched.paymentmode && errors.paymentmode}
-                          focused
-                          variant="standard"
+                          variant="outlined"
+                          size="small"
                           InputProps={{
-                            // readOnly: ViewStatus === "Paid" ? true : false,
                             readOnly: true,
                           }}
+                          sx={textFieldSx}
                         >
                           <MenuItem value="COD">Cash On Delivery</MenuItem>
                           <MenuItem value="UPI">UPI</MenuItem>
@@ -1063,99 +1037,81 @@ const EditOrder = () => {
                           type="text"
                           id="receivername"
                           label="Receiver Name"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.receivername}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={
-                            !!touched.receivername && !!errors.receivername
-                          }
-                          helperText={
-                            touched.receivername && errors.receivername
-                          }
-                          autoFocus
+                          error={!!touched.receivername && !!errors.receivername}
+                          helperText={touched.receivername && errors.receivername}
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                        // disabled
+                          sx={textFieldSx}
                         />
 
                         <TextField
                           name="mobilenumber"
                           id="mobilenumber"
                           label="Receiver Mobile Number"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.mobilenumber}
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value = e.target.value;
-                            // Only allow numbers and max 10 digits
                             if (/^\d{0,10}$/.test(value)) {
                               handleChange(e);
                             }
                           }}
-                          error={
-                            !!touched.mobilenumber && !!errors.mobilenumber
-                          }
-                          helperText={
-                            touched.mobilenumber && errors.mobilenumber
-                          }
+                          error={!!touched.mobilenumber && !!errors.mobilenumber}
+                          helperText={touched.mobilenumber && errors.mobilenumber}
                           inputProps={{ maxLength: 10 }}
-                          sx={{ backgroundColor: "#ffffff" }}
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="DeliveryComments"
                           type="text"
                           id="DeliveryComments"
                           label="Delivery Comments"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.DeliveryComments}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={
-                            !!touched.DeliveryComments &&
-                            !!errors.DeliveryComments
+                            !!touched.DeliveryComments && !!errors.DeliveryComments
                           }
                           helperText={
                             touched.DeliveryComments && errors.DeliveryComments
                           }
-                          autoFocus
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                        // disabled
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="PaidComments"
                           type="text"
                           id="PaidComments"
                           label="Paid Comments"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.PaidComments}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={
-                            !!touched.PaidComments && !!errors.PaidComments
-                          }
-                          helperText={
-                            touched.PaidComments && errors.PaidComments
-                          }
-                          autoFocus
+                          error={!!touched.PaidComments && !!errors.PaidComments}
+                          helperText={touched.PaidComments && errors.PaidComments}
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                        // disabled
+                          sx={textFieldSx}
                         />
                         <Box>
                           <Field
-                            //  size="small"
                             type="checkbox"
                             name="PurchaseCheckbox"
                             id="PurchaseCheckbox"
@@ -1165,7 +1121,6 @@ const EditOrder = () => {
                             label="Purchase"
                             disabled={ViewStatus === "Paid" ? true : false}
                           />
-
                           <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
@@ -1178,53 +1133,44 @@ const EditOrder = () => {
                           type="number"
                           id="delivercharges"
                           label="Deliver Charges"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.delivercharges}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={
-                            !!touched.delivercharges && !!errors.delivercharges
-                          }
-                          helperText={
-                            touched.delivercharges && errors.delivercharges
-                          }
+                          error={!!touched.delivercharges && !!errors.delivercharges}
+                          helperText={touched.delivercharges && errors.delivercharges}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="totalprice"
                           type="number"
                           id="totalprice"
                           label="Total Price"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={values.totalprice}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={!!touched.totalprice && !!errors.totalprice}
                           helperText={touched.totalprice && errors.totalprice}
-                          // InputProps={{
-                          //   inputProps: {
-                          //     style: { textAlign: "right" },
-                          //   },
-                          // }}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
                               readOnly: true,
                             },
                           }}
-                          autoFocus
+                          sx={textFieldSx}
                         />
                         <TextField
                           label="Net Payables"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           value={(
                             Number(values.delivercharges || 0) +
                             Number(values.totalprice || 0)
@@ -1235,14 +1181,15 @@ const EditOrder = () => {
                               style: { textAlign: "right" },
                             },
                           }}
+                          sx={textFieldSx}
                         />
                         <TextField
                           name="tentativedeliverdate"
                           type="date"
                           id="tentativedeliverdate"
                           label="Tentative Deliver Date"
-                          variant="standard"
-                          focused
+                          variant="outlined"
+                          size="small"
                           inputFormat="YYYY-MM-DD"
                           value={values.tentativedeliverdate}
                           onBlur={handleBlur}
@@ -1252,41 +1199,12 @@ const EditOrder = () => {
                             !!errors.tentativedeliverdate
                           }
                           helperText={
-                            touched.tentativedeliverdate &&
-                            errors.tentativedeliverdate
+                            touched.tentativedeliverdate && errors.tentativedeliverdate
                           }
+                          sx={textFieldSx}
                         />
-                        {/* <TextField
-                          select
-                          label="Status"
-                          id="status"
-                          name="status"
-                          value={values.status}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem("status", e.target.value); // save to sessionStorage
-                          }}
-                          focused
-                          variant="standard"
-                        >
-                          <MenuItem value="Created">Created</MenuItem>
-                          <MenuItem value="Process">Confirm</MenuItem>
-                          <MenuItem value="Ready To Deliver">
-                            Ready for Delivery
-                          </MenuItem>
-                          <MenuItem value="Picked">Picked</MenuItem>
-                          <MenuItem value="Scheduled">Scheduled</MenuItem>
-
-                          <MenuItem value="Delivered">Delivered</MenuItem>
-                          <MenuItem value="Paid">Paid</MenuItem>
-                          <MenuItem value="AdjustFromAdvance">
-                            Adjust From Advance
-                          </MenuItem>
-                        </TextField> */}
                         <Box>
                           <Field
-                            //  size="small"
                             type="checkbox"
                             name="PurchaseCheckbox"
                             id="PurchaseCheckbox"
@@ -1295,77 +1213,38 @@ const EditOrder = () => {
                             as={Checkbox}
                             label="Purchase"
                           />
-
                           <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
                     )}
-                    {/* <TextField
-                                        name="sortorder"
-                                        type="number"
-                                        id="sortorder"
-                                        label="Sort Order"
-                                        variant="standard"
-                                        focused
-                                        value={values.sortorder}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.sortorder && !!errors.sortorder}
-                                        helperText={touched.sortorder && errors.sortorder}
-                                        // sx={{ background: "#fff6c3" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
-                                        }}
-                                        onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
-                                        }}
-                                    />
-                                    <Box>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="disable"
-                                            id="disable"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Disable"
-                                        />
-
-                                        <FormLabel focused={false}>Disable</FormLabel>
-                                    </Box> */}
                   </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
-                  >
-                    {YearFlag == "true" &&
-                      (mode === "A" || params.OrderType === "O") ? (
+
+                  <Box display="flex" justifyContent="end" gap={2} mt={4}>
+                    {YearFlag == "true" && (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
-                        color="secondary"
                         variant="contained"
                         type="submit"
                         loading={isLoading}
                         disabled={ViewStatus === "Paid" ? true : false}
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#0D9488",
+                          "&:hover": { bgcolor: "#0F766E" },
+                        }}
                       >
                         Save
                       </LoadingButton>
                     ) : (
                       <Button
-                        color="secondary"
                         variant="contained"
                         disabled={true}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
                       >
                         Save
                       </Button>
-                    )}{" "}
+                    )}
                     {YearFlag === "true" &&
                       mode === "E" &&
                       params.OrderType === "Q" && (
@@ -1378,6 +1257,7 @@ const EditOrder = () => {
                               ORStatus: "Process",
                             })
                           }
+                          sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
                         >
                           Convert To Order
                         </Button>
@@ -1390,11 +1270,17 @@ const EditOrder = () => {
                           Fnsave(values, "harddelete");
                         }}
                         disabled={ViewStatus === "Paid" ? true : false}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
                       >
                         Delete
                       </Button>
                     ) : (
-                      <Button color="error" variant="contained" disabled={true}>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        disabled={true}
+                        sx={{ textTransform: "none", borderRadius: 2, px: 4 }}
+                      >
                         Delete
                       </Button>
                     )}
@@ -1402,40 +1288,17 @@ const EditOrder = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": { bgcolor: "#EA580C" },
+                      }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
-                  {/* <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                <LoadingButton 
-                    color="secondary" 
-                    variant="contained" 
-                    type="submit" 
-                    loading={isLoading}
-                >
-                    Save
-                </LoadingButton>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                            Fnsave(values,  "harddelete");
-                          }}
-                >
-                    Delete
-                </Button>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                          navigate("/Apps/TR133/Project");
-                        }}
-                >
-                    Cancel
-                </Button>
-                </Box> */}
                 </form>
               );
             }}

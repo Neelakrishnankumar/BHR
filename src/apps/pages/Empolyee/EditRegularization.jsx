@@ -13,7 +13,7 @@ import {
   MenuItem,
   Select,
   LinearProgress,
-  Paper,Breadcrumbs
+  Paper, Breadcrumbs
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -25,7 +25,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { postData,getFetchData, setReg } from "../../../store/reducers/Formapireducer";
+import { postData, getFetchData, setReg } from "../../../store/reducers/Formapireducer";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -33,7 +33,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 
- const Regularization = ({ onCancel }) => {
+const Regularization = ({ onCancel }) => {
   //const Regularization = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -52,11 +52,11 @@ import { formGap } from "../../../ui-components/utils";
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
- 
-const[getParams, setGetparams] = useState("");
-const currentDate = new Date().toISOString().split('T')[0];
-const location = useLocation();
-const passedData = location.state;  // Get the passed data
+
+  const [getParams, setGetparams] = useState("");
+  const currentDate = new Date().toISOString().split('T')[0];
+  const location = useLocation();
+  const passedData = location.state;  // Get the passed data
 
 
   useEffect(() => {
@@ -69,21 +69,21 @@ const passedData = location.state;  // Get the passed data
     Name: passedData.Name,
     CheckInDate: passedData.CheckInDate,
     CheckOutDate: passedData.CheckOutDate,
-    MonthDate:currentDate,
+    MonthDate: currentDate,
     //MonthDate: passedData.MonthDate,
     EmplyeeCheckInDateTime: passedData.EmplyeeCheckInDateTime,
     EmplyeeCheckOutDateTime: passedData.EmplyeeCheckOutDateTime,
-    Status: passedData.Status === "Present" 
-            ? "P"
-            : passedData.Status === "Absent"
-            ? "A"
-            : passedData.Status === "WeekOff"
-            ? "W"
-            : passedData.Status === "Irregular"
+    Status: passedData.Status === "Present"
+      ? "P"
+      : passedData.Status === "Absent"
+        ? "A"
+        : passedData.Status === "WeekOff"
+          ? "W"
+          : passedData.Status === "Irregular"
             ? "I"
             : passedData.Status === "Leave"
-            ? "L"
-            : "",
+              ? "L"
+              : "",
   };
 
 
@@ -96,8 +96,8 @@ const passedData = location.state;  // Get the passed data
     //     : mode === "E" && del
     //     ? "harddelete"
     //     : "update";
-     var isCheck = "N";
-    let action = "insert"; 
+    var isCheck = "N";
+    let action = "insert";
     if (values.disable == true) {
       isCheck = "Y";
     }
@@ -105,34 +105,34 @@ const passedData = location.state;  // Get the passed data
     const idata = {
       RecordID: recID,
       //RecordID: values.EmployeeID,
-      EmployeeID:params.id,
+      EmployeeID: params.id,
       RegularizationDate: values.MonthDate,
       //Name: values.Name,
-      CheckInDate:passedData.CheckInDate,
-      CheckOutDate: passedData.CheckOutDate,  
+      CheckInDate: passedData.CheckInDate,
+      CheckOutDate: passedData.CheckOutDate,
       //MonthDate: values.MonthDate,
       // CheckInTime: values.EmplyeeCheckInDateTime,
       // CheckOutTime: values.EmplyeeCheckOutDateTime,
       // CheckInTime: getTimeFromSplit(passedData.EmplyeeCheckInDateTime),
       // CheckOutTime: getTimeFromSplit(passedData.EmplyeeCheckOutDateTime),
-      CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "", 
-      CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "", 
+      CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "",
+      CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "",
       Status: values.Status,
       Remarks: values.remarks,
-      NewCheckInDate : values.CheckInDate,
+      NewCheckInDate: values.CheckInDate,
       NewCheckOutDate: values.CheckOutDate,
       NewCheckInTime: values.EmplyeeCheckInDateTime,
       // ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
       // : "",
-      NewCheckOutTime:  values.EmplyeeCheckOutDateTime,
+      NewCheckOutTime: values.EmplyeeCheckOutDateTime,
       // ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
       // : "",
       NewStatus: values.Status,
       RegularStatus: "",
-      ManagerComments:"",
-      AppliedStatus:"",
-      Source:"",
-      Reason:""
+      ManagerComments: "",
+      AppliedStatus: "",
+      Source: "",
+      Reason: ""
     };
     console.log(idata, "-idata");
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -143,7 +143,7 @@ const passedData = location.state;  // Get the passed data
       toast.error(response.payload.Msg);
     }
   };
-  
+
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
     //     if(props === 'Logout'){
@@ -177,58 +177,111 @@ const passedData = location.state;  // Get the passed data
   };
 
 
-  
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-      <Box display="flex" justifyContent="space-between" p={2}>
-      <Box display="flex" borderRadius="3px" alignItems="center">
+      <Paper
+        elevation={3}
+        sx={{
+          m: "10px",
+          borderRadius: 3,
+          background: "#fff",
+          border: "1px solid #E5E7EB",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          px={3}
+          py={2}
+        >
+          {/* Left Section */}
+          <Box display="flex" alignItems="center" gap={2}>
             {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  bgcolor: "#F3F4F6",
+                  border: "1px solid #E5E7EB",
+                  "&:hover": {
+                    bgcolor: "#E5E7EB",
+                  },
+                }}
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
 
+            <Box>
+              <Box display="flex" alignItems="center" gap={1}>
+
+                <Typography
+                  sx={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    color: "#1F2937",
+                  }}
                 >
                   Regularization
                 </Typography>
+              </Box>
 
-              </Breadcrumbs>
+
             </Box>
           </Box>
 
-          <Box display="flex">
+          {/* Right Section */}
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  //  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  // border: "1px solid #FECACA",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  //   bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  //  border: "1px solid #FECACA",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
           </Box>
-          </Box>
+        </Box>
       </Paper>
 
       {!getLoading ? (
-       <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 3,
+            mx: 1,
+            mt: 2,
+          }}
+        >
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -249,11 +302,40 @@ const passedData = location.state;  // Get the passed data
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
+
+                <Box mb={3}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography sx={{ fontSize: 22 }}>
+                      📝
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: "#1F2937",
+                      }}
+                    >
+                      Attendance Regularization
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    mt={0.5}
+                  >
+                    Update employee attendance details
+                  </Typography>
+                </Box>
+
                 <Box
                   display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  gridTemplateColumns={{
+                    xs: "1fr",
+                    md: "1fr 1fr",
+                  }}
+                  gap={3}
                   // gap="30px"
                   sx={{
                     "& > div": {
@@ -263,15 +345,15 @@ const passedData = location.state;  // Get the passed data
                 >
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="Name"
                     name="Name"
                     value={values.Name}
                     label="EmployeeName"
-                    focused
                     inputProps={{ readOnly: true }}
-                   //sx={{ gridColumn: "span 2" }}
+                  //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -279,15 +361,16 @@ const passedData = location.state;  // Get the passed data
                     type="date"
                     id="MonthDate"
                     label="Date"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.MonthDate}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.MonthDate && !!errors.MonthDate}
                     helperText={touched.MonthDate && errors.MonthDate}
-                   //sx={{ gridColumn: "span 2" }}
+                  //sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{shrink: true}}
                   />
 
                   <TextField
@@ -295,15 +378,16 @@ const passedData = location.state;  // Get the passed data
                     type="date"
                     id="CheckInDate"
                     label="Check In Date"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.CheckInDate}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.CheckInDate && !!errors.CheckInDate}
                     helperText={touched.CheckInDate && errors.CheckInDate}
-                   //sx={{ gridColumn: "span 2" }}
+                    InputLabelProps={{shrink: true}}
+                  //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -311,9 +395,10 @@ const passedData = location.state;  // Get the passed data
                     type="time"
                     id="EmplyeeCheckInDateTime"
                     label="Check In Time"
-                      inputFormat="HH:mm"
+                    inputFormat="HH:mm"
                     // inputFormat="HH:mm:aa"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     value={values.EmplyeeCheckInDateTime}
                     // value={
                     //   values.EmplyeeCheckInDateTime
@@ -322,8 +407,8 @@ const passedData = location.state;  // Get the passed data
                     // }
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    focused
-                   //sx={{ gridColumn: "span 2" }}
+                    InputLabelProps={{shrink: true}}
+                  //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -331,15 +416,16 @@ const passedData = location.state;  // Get the passed data
                     type="date"
                     id="CheckOutDate"
                     label="Check Out Date"
-                    variant="standard"
-                    focused
+                    variant="outlined"
+                    size="small"
                     inputFormat="YYYY-MM-DD"
                     value={values.CheckOutDate}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.CheckOutDate && !!errors.CheckOutDate}
                     helperText={touched.CheckOutDate && errors.CheckOutDate}
-                    //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    InputLabelProps={{shrink: true}}
+                  //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
                   />
 
                   <TextField
@@ -356,15 +442,15 @@ const passedData = location.state;  // Get the passed data
                     // }
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    focused
-                    //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
+                    InputLabelProps={{shrink: true}}
                   />
 
                   <FormControl
-                    focused
-                    variant="standard"
-                    //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
+                    variant="outlined"
+                    size="small"
+                  //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
                   >
                     <InputLabel id="Status">Status</InputLabel>
                     <Select
@@ -374,6 +460,7 @@ const passedData = location.state;  // Get the passed data
                       value={values.Status}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      label = "Type"
                     >
                       <MenuItem value="P">Present</MenuItem>
                       <MenuItem value="A">Absent</MenuItem>
@@ -384,7 +471,8 @@ const passedData = location.state;  // Get the passed data
                   </FormControl>
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     label="Remarks"
                     value={values.remarks}
@@ -394,10 +482,9 @@ const passedData = location.state;  // Get the passed data
                     name="remarks"
                     error={!!touched.remarks && !!errors.remarks}
                     helperText={touched.remarks && errors.remarks}
-                    focused
                     required
                     inputProps={{ maxLength: 90 }}
-                   
+          InputLabelProps={{shrink: true}}
                   />
                   {/* <Box>
                       <Field
@@ -414,52 +501,66 @@ const passedData = location.state;  // Get the passed data
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box> */}
                 </Box>
-                <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  gap={2}
+                  mt={4}
+                  pt={2}
+                  sx={{
+                    borderTop: "1px solid #E5E7EB",
+                  }}
+                >
                   {YearFlag == "true" ? (
                     <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
                       loading={isLoading}
+                      type="submit"
+                      variant="contained"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     >
                       Save
                     </LoadingButton>
                   ) : (
                     <Button
-                      color="secondary"
                       variant="contained"
-                      disabled={true}
+                      disabled
+                      sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     >
                       Save
                     </Button>
-                  )}{" "}
-                  {/* {YearFlag == "true" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Fnsave(values, "harddelete");
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  ) : (
-                    <Button color="error" variant="contained" disabled={true}>
-                      Delete
-                    </Button>
-                  )} */}
+                  )}
+
                   <Button
-                    color="warning"
-                    variant="contained"
-                    //onClick={onCancel}
-                    onClick={() => {
-                      // navigate(
-                      //   `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
-                      // );
-                      navigate(-1);
+                   
+                    onClick={() => navigate(-1)}
+                    sx={{
+                      px: 4,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      bgcolor: "#F97316",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#EA580C",
+                      },
                     }}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>

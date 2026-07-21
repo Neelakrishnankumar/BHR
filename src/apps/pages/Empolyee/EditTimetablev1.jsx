@@ -49,7 +49,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTheme } from "@mui/material";
-import { tokens } from "../../../Theme";
+import { breadcrumbStyles, tokens } from "../../../Theme";
 import {
   CheckinAutocomplete,
   SprintEmpAutocomplete1,
@@ -998,7 +998,7 @@ const EditTimetablev1 = () => {
               label="Cancel"
               className="textPrimary"
               onClick={handleCancelClick(id)}
-              color="inherit"
+              color="info"
             />,
           ];
         }
@@ -1008,13 +1008,13 @@ const EditTimetablev1 = () => {
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
-            color="inherit"
+            color="info"
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDeleteSubject(id)}
-            color="inherit"
+            color="error"
           />,
         ];
       },
@@ -1374,17 +1374,32 @@ const EditTimetablev1 = () => {
       {getLoading ? <LinearProgress /> : false}
 
       {/* Header */}
-      <Paper
-        elevation={3}
-        sx={{ margin: "0px 10px", background: "#F2F0F0", height: "50px" }}
-      >
-        <Box display="flex" justifyContent="space-between">
+          <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+              <Box sx={{ p: 1, borderRadius: 3 }}>
+                <Paper sx={{ borderRadius: 3 }}>
+        <Box display="flex" justifyContent="space-between"  p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
+            <Box>
+                            <Typography
+                              sx={{
+                                fontSize: 20,
+                                fontWeight: 700,
+                                color: "#111827",
+                                // mb: 0.2,
+                                px: 1,
+                                py: 0.2,
+                              }}
+                            >
+                              {mode === "A"
+                                ? `New Timetable`
+                                : `Edit Timetable`}{" "}
+                            </Typography>
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -1393,16 +1408,11 @@ const EditTimetablev1 = () => {
               <Breadcrumbs
                 maxItems={3}
                 aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                                 sx={breadcrumbStyles.separator}
+                               >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => {
                     is003Subscription
                       ? navigate("/Apps/TR133/Classes")
@@ -1412,13 +1422,7 @@ const EditTimetablev1 = () => {
                   List Of Classes ({rowData.BreadCrumb1 || ""})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => navigate(-1)}
                 >
                   {mode == "A"
@@ -1426,19 +1430,14 @@ const EditTimetablev1 = () => {
                     : `List Of Time Table (${rowData.BreadCrumb2})`}
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{
-                    cursor: "default",
-                    marginLeft: "10px",
-                    fontSize: "17px",
-                  }}
+                  sx={breadcrumbStyles.active}
                   onClick={() => navigate(-1)}
                 >
                   Timetable
                 </Typography>
               </Breadcrumbs>
             </Box>
+          </Box>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -1455,8 +1454,24 @@ const EditTimetablev1 = () => {
         </Box>
       </Paper>
 
+         </Box>
       {/* Main Content */}
-      <Paper elevation={3} sx={{ margin: "10px" }}>
+       <Box
+                     flex={1}
+                     minWidth={0}
+                     display="flex"
+                     flexDirection="column"
+                     gap={3}
+                   >
+                     <Paper
+                       elevation={0}
+                       sx={{
+                         backgroundColor: "#fff",
+                         border: "1px solid #E5E7EB",
+                         borderRadius: 3,
+                         p: 3,
+                       }}
+                     >
         <Formik
           initialValues={TimeTableInitialValue}
           validationSchema={validationSchema}
@@ -1475,6 +1490,40 @@ const EditTimetablev1 = () => {
             setTouched,
           }) => (
             <form onSubmit={handleSubmit}>
+                   {/* ----- CARD HEADER ----- */}
+                                      <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        gap={1}
+                                        mb={0.5}
+                                      >
+                                        <Box
+                                          sx={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: "50%",
+                                            backgroundColor: "#EFF6FF",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                          }}
+                                        >
+                                          <Typography sx={{ fontSize: 16 }}>📑</Typography>
+                                        </Box>
+                                        <Box>
+                                          <Typography
+                                            variant="subtitle1"
+                                            fontWeight={700}
+                                            color="#0D94885"
+                                          >
+                                            Timetable
+                                          </Typography>
+              
+                                          <Typography variant="body2" color="text.secondary">
+                                            Overview of the project schedule and timeline
+                                          </Typography>
+                                        </Box>
+                                      </Box>
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(4 , minMax(0,1fr))"
@@ -1491,13 +1540,38 @@ const EditTimetablev1 = () => {
                   type="text"
                   id="class"
                   label="Class"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
                   disabled={hasRows}
                   value={values.class}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  sx={{ gridColumn: "span 2" }}
+                     sx={{
+                       gridColumn: "span 2",
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                   inputProps={{ readOnly: true }}
                 />
 
@@ -1581,7 +1655,8 @@ const EditTimetablev1 = () => {
                   type="text"
                   id="description"
                   label="Description"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
                   value={values.description}
                   onBlur={handleBlur}
@@ -1591,7 +1666,32 @@ const EditTimetablev1 = () => {
                   }}
                   error={!!touched.description && !!errors.description}
                   helperText={touched.description && errors.description}
-                  sx={{ gridColumn: "span 2" }}
+                  
+                    sx={{
+                       gridColumn: "span 2",
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                 />
 
                 <TextField
@@ -1599,13 +1699,38 @@ const EditTimetablev1 = () => {
                   type="date"
                   id="assignedDate"
                   label="Created Date"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   disabled={hasRows}
                   focused
                   inputFormat="YYYY-MM-DD"
                   value={values.assignedDate}
                   sx={{ gridColumn: "span 2" }}
                   InputLabelProps={{ readOnly: true }}
+                    sx={{
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                              }}
                 />
 
                 <Box
@@ -1629,32 +1754,81 @@ const EditTimetablev1 = () => {
                   >
                     <Box
                       height="280px"
-                      sx={{
-                        "& .MuiDataGrid-root": { border: "none" },
-                        "& .MuiDataGrid-cell": { borderBottom: "none" },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": { backgroundColor: "", color: "" },
-                        "& .even-row": {
-                          backgroundColor: "#d0edec",
-                          color: "",
-                        },
-                      }}
+                    sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
+
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
                     >
                       <DataGrid
                         sx={{
@@ -1873,17 +2047,28 @@ const EditTimetablev1 = () => {
                       if (Object.keys(validationErrors).length > 0) return;
                       handleGenerateTimetable(values);
                     }}
-                    sx={{
-                      backgroundColor: "#27ae60",
-                      "&:hover": { backgroundColor: "#229954" },
-                      textTransform: "none",
-                      fontWeight: 600,
-                    }}
+                       sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                   >
-                    GENERATE
+                    Generate
                   </LoadingButton>
                   <Button
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     variant="contained"
                     startIcon={<ArrowBackIcon />}
                     onClick={() => navigate(-1)}
@@ -2090,7 +2275,8 @@ const EditTimetablev1 = () => {
           )}
         </Formik>
       </Paper>
-
+  </Box>
+           
       {/* Popover */}
       <Popover
         open={popoverOpen}
@@ -2187,6 +2373,8 @@ const EditTimetablev1 = () => {
           </Button>
         </Box>
       </Popover>
+        </Box>
+            </Box>
     </React.Fragment>
   );
 };

@@ -262,6 +262,20 @@ const initialState = {
   PublishEventstatus: "",
   PublishEventloading: false,
   PublishEventdata: {},
+//PROMOTION_mainlistview_GET
+  promotiongetstatus: "",
+  promotiongetloading: false,
+  promotiongetdata: [],
+
+//Promotion_STDACTIVITIES_GET
+ promotionSTDgetstatus : "",
+ promotionSTDgetloading : false,
+ promotionSTDgetdata : [],
+
+//PROMOTION_STUDENT_MARKS_GET
+  promotionstudmarksgetstatus: "",
+  promotionstudmarksgetloading: false,
+  promotionstudmarksgetdata: {},
 
   //TIMETABLE - TASK PROCESS
   TaskProcessstatus: "",
@@ -424,6 +438,54 @@ export const AttendanceProcess = createAsyncThunk(
     );
     return response.data;
   },
+);
+
+
+//PERSONNEL_COCURRICULAR_SCHOOL_POST
+export const CocurricularActivityPost = createAsyncThunk(
+  "CocurricularActivity/Post",
+  async ({ data,action }) => {
+    var url = store.getState().globalurl.CocurricularActivityPost;
+    const payload = {
+      action: action,
+      data: data,
+    };
+
+    console.log("Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    console.log("CocurricularActivityPost Response:", response);
+
+    return response.data;
+  }
+);
+//PERSONNEL_COCURRICULAR_SCHOOL_GET
+export const CocurricularActivityGet = createAsyncThunk(
+  "CocurricularActivity/Get",
+  async ({ data }) => {
+    var url = store.getState().globalurl.CocurricularActivityGet;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      " ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
 );
 
 export const costingBOMData = createAsyncThunk(
@@ -3088,6 +3150,141 @@ export const TimetableProcessController = createAsyncThunk(
     return response.data;
   }
 );
+
+//PROMOTION_MAIN_LISTVIEW_GET
+export const promototionGET = createAsyncThunk(
+  "PROMOTION_MAIN_LISTVIEW/GET",
+   async ({ ProjectID, CompanyID }) => {
+    var url = store.getState().globalurl.promotiongetUrl;
+console.log(url, "calling promotiongeturl");
+
+    const payload =
+    {
+    
+      ProjectID: ProjectID,
+      CompanyID: CompanyID,
+     
+    }
+    console.log(payload, "--promototionGET payload");
+    
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//PROMOTION_GETACADEMICPROJECTDATA
+export const promototionprojGET = createAsyncThunk(
+  "PROMOTION_GETACADEMICPROJECTDATA/GET",
+   async ({ ProjectID, CompanyID }) => {
+    var url = store.getState().globalurl.promotionstandardActUrl;
+console.log(url, "calling promototionprojGET");
+
+    const payload =
+    {
+    
+      ProjectID: ProjectID,
+      CompanyID: CompanyID,
+     
+    }
+    console.log(payload, "--promototionGET payload");
+    
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+
+
+//PROMOTION_UPDATE
+export const promotionupdate = createAsyncThunk(
+  "PROMOTION_UPDATE/Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.promotionupdateUrl;
+    const data = idata;
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//PROMOTION_STUDENT_MARKS_GET
+
+export const promototioStudMarksGET = createAsyncThunk(
+  "PROMOTION_STUDENT_MARKS/GET",
+  async ({ StudentID, ProjectID, CompanyID }) => {
+    var url = store.getState().globalurl.PromotionstudmarksGetUrl;
+
+    const payload =
+    {
+      StudentID: StudentID,
+      ProjectID: ProjectID,
+      CompanyID: CompanyID,
+     
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//PROMOTION_STUDENT_MARKS_POST
+
+export const promotionstudmarksupdate = createAsyncThunk(
+  "PROMOTION_STUDENT_MARKS_POST/Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.promotionstudentmarksPosturl;
+    const data = idata;
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+
 export const PublishEvent = createAsyncThunk(
   "PublishEvent/Post",
   async ({ data }) => {
@@ -3654,6 +3851,22 @@ export const getApiSlice = createSlice({
         state.invoiceAnalyticsError = action.payload || "Failed to fetch invoice analytics";
         state.invoiceAnalyticsData = null;
       })
+
+      
+      //PERSONNEL_COCURRICULAR_SCHOOL
+ .addCase(CocurricularActivityGet.pending, (state, action) => {
+        state.CocurriculargetData = {};
+        state.CocurriculargetDataLoading = true;
+      })
+      .addCase(CocurricularActivityGet.fulfilled, (state, action) => {
+        state.CocurriculargetData = action.payload;
+        state.CocurriculargetDataLoading = false;
+      })
+      .addCase(CocurricularActivityGet.rejected, (state, action) => {
+        state.CocurriculargetData = {};
+        state.CocurriculargetDataLoading = false;
+      })
+
       //SLOTS_GET_addcase
       .addCase(SlotGetfunction.pending, (state, action) => {
         state.slotStatus = "idle";
@@ -5412,6 +5625,66 @@ export const getApiSlice = createSlice({
         state.PartyResetstatus = "Error";
         state.PartyResetloading = false;
       })
+      //PROMOTION_MAIN_LISTVIEW_GET
+      .addCase(promototionGET.pending, (state, action) => {
+        state.promotiongetstatus = "idle";
+        state.promotiongetloading = true;
+        state.promotiongetdata = [];
+      })
+      .addCase(promototionGET.fulfilled, (state, action) => {
+        state.promotiongetstatus = "success";
+        state.promotiongetloading = false;
+        state.promotiongetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(promototionGET.rejected, (state, action) => {
+        state.promotiongetstatus = "Error";
+        state.promotiongetloading = false;
+         state.promotiongetdata = [];
+      })
+//PROMOTION_STDACTIVITIE_GET
+
+.addCase(promototionprojGET.pending, (state, action) => {
+        state.promotionSTDgetstatus = "idle";
+        state.promotionSTDgetloading = true;
+        state.promotionSTDgetdata = [];
+      })
+      .addCase(promototionprojGET.fulfilled, (state, action) => {
+        state.promotionSTDgetstatus = "success";
+        state.promotionSTDgetloading = false;
+        state.promotionSTDgetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(promototionprojGET.rejected, (state, action) => {
+        state.promotionSTDgetstatus = "Error";
+        state.promotionSTDgetloading = false;
+         state.promotionSTDgetdata = [];
+      })
+
+
+
+
+
+      //PROMOTION_STUDENT_MARKS_GET
+   .addCase(promototioStudMarksGET.pending, (state, action) => {
+        state.promotionstudmarksgetstatus = "idle";
+        state.promotionstudmarksgetloading = true;
+      })
+      .addCase(promototioStudMarksGET.fulfilled, (state, action) => {
+        state.promotionstudmarksgetstatus = "success";
+        state.promotionstudmarksgetloading = false;
+        state.promotionstudmarksgetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(promototioStudMarksGET.rejected, (state, action) => {
+        state.promotionstudmarksgetstatus = "Error";
+        state.promotionstudmarksgetloading = false;
+      })
+
+
       .addCase(TimetableProcessController.pending, (state, action) => {
         state.Timetableresetstatus = "idle";
         state.Timetableresetloading = true;

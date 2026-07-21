@@ -14,6 +14,11 @@
     "subjectskill": "Please select the Type",
     "Subject": "Please enter the Subject"
   },
+   "Cocurricularact": {
+    "Date": "Please enter the Date",
+    "Cocurricular": "Please select the Co-curricular Activity",
+    "Rating": "Please enter the Rating"
+  },
    "Timetable": {
     "Terms": "Please select the Term",
     "Slotgroup": "Please select the Slot Group"
@@ -593,5 +598,13 @@
     "Teacher": "Please select Non Teaching Staff",
     "terms": "Please select Term",
     "Slotgroup": "Please select Slot Group"   
+},
+"Users": {
+  "name": "Name is required",
+  "NameNoSpace": "Spaces are not allowed",
+  "password": "Password is required",
+  "comfirmpassword": "Confirm Password is required",
+  "passwordMatch": "Password and Confirm Password must match",
+  "usergroup": "User group is required"
 }
 }

@@ -100,7 +100,6 @@ export const Productautocomplete = ({
           label={props.label || "Select Options"}
           error={!!error}
           helperText={error}
-          focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -593,6 +592,91 @@ export const CheckinAutocomplete = ({
     // />
   );
 };
+
+//PROMOTION_PROJECT_GET_DATA
+export const PromotionprojAutocomplete = ({
+  value = null,
+  onChange,
+  url,
+  options: optionsProp,   // <-- new
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] =  useState(optionsProp || []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+
+  useEffect(() => {
+    // if options are passed directly, use them and skip the fetch
+    if (optionsProp) {
+      setOptions(optionsProp);
+      return;
+    }
+    if (!url) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+   fetchData();
+  }, [url, optionsProp]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name || ""}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="outlined"
+          size="small"
+          // focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
 //ITEM - HSN CATEGORY
 
 
@@ -652,8 +736,7 @@ export const HSNCategoryAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -729,8 +812,7 @@ export const HSNMasterAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -805,8 +887,8 @@ export const OrderItemAutocomplete = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
+          //focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -896,7 +978,7 @@ export const ProductautocompleteLevel = ({
           {...params}
           label={props.label || "Select Options"}
           {...props}
-          variant="standard"
+          variant="outlined"
           focused
           InputProps={{
             ...params.InputProps,
@@ -1649,8 +1731,12 @@ export function MultiFormikOptimizedAutocomplete({
     <Autocomplete
       sx={{
         "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+         "& .MuiOutlinedInput-root": {
+      borderRadius: "8px",
+      backgroundColor: "#fff",
+    },
       }}
-      size="small"
+     
       multiple={multiple}
       limitTags={1}
       open={open}
@@ -1659,7 +1745,6 @@ export function MultiFormikOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      variant="standard" // Set variant to "standard"
       focused
       isOptionEqualToValue={(option, value) =>
         option?.RecordID === value?.RecordID
@@ -1679,8 +1764,9 @@ export function MultiFormikOptimizedAutocomplete({
           {...params}
           label={label}
           error={errors}
-          variant="standard"
-          focused
+           variant="outlined"       // ⬅ was "standard"
+    size="small"
+          // focused
           helperText={helper}
           InputProps={{
             ...params.InputProps,
@@ -3136,7 +3222,7 @@ export const TimeSheetEmployeeautocomplete = ({
   //   },[options,defaultValue,onChange])
   return (
     <Autocomplete
-      // size="small"
+      size="small"
       fullWidth
       limitTags={1}
       options={options}
@@ -3148,7 +3234,8 @@ export const TimeSheetEmployeeautocomplete = ({
       renderInput={(params) => (
         <TextField
           focused
-          variant="standard"
+          variant="outlined"
+          size="small"
           {...params}
           label={props.label || "Select Options"}
           error={!!error}
@@ -3308,8 +3395,7 @@ export const ItemGroupLookup = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -3383,8 +3469,7 @@ export const ItemsLookup = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
+          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -3859,7 +3944,7 @@ export const PartySingleSelect = ({
           label={props.label || "Select Options"}
           // error={!!error}
           // helperText={error}
-          variant="standard"
+          variant="outlined"
           {...props}
           InputProps={{
             ...params.InputProps,
@@ -3938,7 +4023,7 @@ export const SettlementSingleSelect = ({
           label={props.label || "Select Options"}
           // error={!!error}
           // helperText={error}
-          variant="standard"
+          variant="outlined"
           {...props}
           InputProps={{
             ...params.InputProps,
@@ -4095,7 +4180,8 @@ export function EventsmultiSelect({
           {...params}
           label={label}
           // error={errors}
-          variant="standard"
+          variant="outlined"
+          size="small"
           focused
           // helperText={helper}
           error={Boolean(error)}
@@ -4252,7 +4338,8 @@ export function EventsSportsmultiSelect({
           {...params}
           label={label}
           // error={errors}
-          variant="standard"
+          variant="outlined"
+          size="small"
           focused
           // helperText={helper}
           error={Boolean(error)}

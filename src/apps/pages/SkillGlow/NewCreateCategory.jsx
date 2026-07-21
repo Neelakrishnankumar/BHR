@@ -44,11 +44,14 @@ import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
+import { breadcrumbStyles } from "../../../Theme";
 
 const NewCreateCategoryMain = () => {
   const navigate = useNavigate();
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const params = useParams();
+  console.log(params, "--find Params");
+  
   const { state } = useLocation();
   const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -58,7 +61,7 @@ const NewCreateCategoryMain = () => {
   const AssessmentType = params.parentID1;
   //const parentID2 = params.parentID2;
   const SkillAssTypeID = state.SkillAssTypeID;
-  console.log("🚀 ~ NewCreateCategoryMain ~ SkillAssTypeID:", SkillAssTypeID)
+  console.log("🚀 ~ NewCreateCategoryMain ~ SkillAssTypeID: & AssessmentType", SkillAssTypeID,AssessmentType)
   const screenName = params.screenName;
   const mode = params.Mode;
 
@@ -181,47 +184,106 @@ const NewCreateCategoryMain = () => {
   //   disable: Yup.boolean(),
   // });
 
+  const assessmentConfig = {
+  SK: {
+    icon: "🎯",
+    title: "Skill Assessment",
+    summary:
+      "Evaluate and track employee skills to identify strengths and areas for improvement",
+  },
+  AP: {
+    icon: "📈",
+    title: "Appraisal",
+    summary:
+      "Assess employee performance and growth to support career development",
+  },
+  CL: {
+    icon: "🛡️",
+    title: "Compliance",
+    summary:
+      "Ensure adherence to policies, standards, and regulatory requirements",
+  },
+  SV: {
+    icon: "📋",
+    title: "Survey",
+    summary:
+      "Collect feedback and insights to improve processes and decision-making",
+  },
+  FB: {
+    icon: "💬",
+    title: "Feedback",
+    summary:
+      "Gather opinions and suggestions to enhance performance and engagement",
+  },
+};
+      const current = assessmentConfig[AssessmentType] || assessmentConfig.SK;
+
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
+         <Paper
+                   elevation={0}
+                   sx={{
+                     mx: 2,
+                     mt: 1,
+                     mb: 1,
+                     p: 1,
+                     borderRadius: 3,
+                     border: "1px solid #E5E7EB",
+                     bgcolor: "#fff",
+                   }}
+                 >
+                   <Box
+                     display="flex"
+                     justifyContent="space-between"
+                     alignItems="center"
+                   >
+                     {/* Left */}
+                     <Box display="flex" alignItems="center" gap={2}>
+                       {broken && !rtl && (
+                         <IconButton
+                           onClick={() => toggleSidebar()}
+                           sx={{
+                             border: "1px solid #E5E7EB",
+                             borderRadius: 2,
+                           }}
+                         >
+                           <MenuOutlinedIcon />
+                         </IconButton>
+                       )}
+           
+                       <Box>
+                         <Typography
+                           sx={{
+                             fontSize: 20,
+                             fontWeight: 700,
+                             color: "#111827",
+                             // mb: 0.2,
+                                 px: 1,
+                   py: 0.2,
+                           }}
+                         >
+                           {mode === "A" ? "New Assesment" : "Edit Assessment"}
+                         </Typography>
+           
+                         <Breadcrumbs
+                           separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                            sx={breadcrumbStyles.separator}
+                    >
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+           sx={breadcrumbStyles.item}
                   onClick={() => navigate("/Apps/TR299/List%20Of%20Assessment%20Type")}
                 >
-                  List Of Assessment Type {(state.BreadCrumb1)}
+                  List Of Assessment Type ({(state.BreadCrumb1)})
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                       sx={breadcrumbStyles.item}
                   onClick={() => navigate(-1)}
                 >
                   List Of Category 
                 </Typography>
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                   sx={breadcrumbStyles.active}
                 >
                   {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                 </Typography>
@@ -243,10 +305,15 @@ const NewCreateCategoryMain = () => {
           </Box>
         </Box>
       </Paper>
-
+      
+  {/* </Box> */}
       {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
+             <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                       
+                              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                       
+                       <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                   <Formik
             initialValues={initialValues}
             onSubmit={(values, { resetForm }) => {
               setTimeout(() => {
@@ -267,6 +334,41 @@ const NewCreateCategoryMain = () => {
               setFieldTouched,
             }) => (
               <form onSubmit={handleSubmit}>
+
+              {/* ----- CARD HEADER ----- */}
+
+<Box display="flex" alignItems="center" gap={1.5} mb={1} sx={{ px: 2, pt: 2 }}>
+  {/* ICON */}
+  <Box
+    sx={{
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      backgroundColor: "#EFF6FF",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography  sx={{  width: 36, height: 36, borderRadius: "50%",
+  bgcolor: "#CCFBF1", // teal-100
+  display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {current.icon}
+    </Typography>
+  </Box>
+
+  {/* TITLE + SUBTITLE */}
+  <Box>
+    <Typography variant="subtitle1" fontWeight={700} color="#0D94885">
+      {current.title}
+    </Typography>
+
+    <Typography variant="body2" color="text.secondary">
+      {current.summary}
+    </Typography>
+  </Box>
+</Box>
+
                 <Box
                   display="grid"
                   gap={formGap}
@@ -281,7 +383,8 @@ const NewCreateCategoryMain = () => {
                   {CompanyAutoCode == "Y" ? (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       label="Code"
                       // label={
@@ -301,19 +404,38 @@ const NewCreateCategoryMain = () => {
                       focused
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       InputProps={{ readOnly: true }}
 
                     />
                   ) : (
                     <TextField
                       // fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="text"
                       //label="Code"
                       label={
@@ -333,19 +455,38 @@ const NewCreateCategoryMain = () => {
                       focused
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
+                       sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                       autoFocus
                     />
                   )}
 
                   <TextField
                     // fullWidth
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     type="text"
                     //label="Name"
                     label={
@@ -365,12 +506,30 @@ const NewCreateCategoryMain = () => {
                     focused
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
+                     sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   {/* <TextField
@@ -439,7 +598,8 @@ const NewCreateCategoryMain = () => {
 
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                      size="small"
                     type="number"
                     label="Sort Order"
                     value={values.sortOrder}
@@ -450,7 +610,30 @@ const NewCreateCategoryMain = () => {
                     // error={!!touched.sortOrder && !!errors.sortOrder}
                     // helperText={touched.sortOrder && errors.sortOrder}
 
-                    sx={{ background: "" }}
+                     sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
                     focused
                     onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
@@ -502,7 +685,15 @@ const NewCreateCategoryMain = () => {
                   gap={2}
                 >
                   <LoadingButton
-                    color="secondary"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
                     variant="contained"
                     type="submit"
                     loading={isLoading}
@@ -536,19 +727,33 @@ const NewCreateCategoryMain = () => {
                   ) : null} */}
                   <Button
                     variant="contained"
-                    color="warning"
+                    sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                 
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  
+                                  },
+                                }}
                     onClick={() => navigate(-1)}
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Box>
               </form>
             )}
           </Formik>
         </Paper>
+            </Box>
+                                    </Box>
       ) : (
         false
       )}
+          {/* </Box>
+                                  </Box> */}
     </React.Fragment>
   );
 };

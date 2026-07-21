@@ -54,6 +54,12 @@ const Edituser = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const SubscriptionID = sessionStorage.getItem("SubscriptionID");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
   console.log("SubscriptionID", SubscriptionID);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const [loading, setLoading] = useState(false);
@@ -90,14 +96,30 @@ const Edituser = () => {
         setErrorMsgData(data);
 
         const schema1 = Yup.object().shape({
-          name: Yup.string()
-            .required(data.Users.name)
-            .matches(/^\S+$/, data.Users.NameNoSpace),
-          password: Yup.string().required(data.Users.password),
-          comfirmpassword: Yup.string()
-            .required(data.Users.comfirmpassword)
-            .oneOf([Yup.ref("password"), null], "Password and Confirm Password must match"),
-          usergroup: Yup.object().required(data.Users.usergroup).nullable(),
+          // name: Yup.string()
+          //   .required(data.Users.name)
+          //   .matches(/^\S+$/, data.Users.NameNoSpace),
+          // password: Yup.string().required(data.Users.password),
+          // comfirmpassword: Yup.string()
+          //   .required(data.Users.comfirmpassword)
+          //   .oneOf([Yup.ref("password"), null], "Password and Confirm Password must match"),
+          // usergroup: Yup.object().required(data.Users.usergroup).nullable(),
+        name: Yup.string()
+    .required(data.Users.name)
+    .matches(/^\S+$/, data.Users.NameNoSpace),
+
+  password: Yup.string().required(data.Users.password),
+
+  comfirmpassword: Yup.string()
+    .required(data.Users.comfirmpassword)
+    .oneOf(
+      [Yup.ref("password"), null],
+      data.Users.passwordMatch
+    ),
+
+  usergroup: Yup.object()
+    .required(data.Users.usergroup)
+    .nullable(),
         });
         setValidationSchema(schema1);
       })
@@ -223,17 +245,49 @@ const Edituser = () => {
       }
     });
   };
+
+  const label =
+  Subscriptionlastthree === "003" ? "User Management" : "Users";
+
+const text =
+  mode === "E"
+    ? `${label}(${data.Name1})`
+    : `${label}(New)`;
+
+
   return (
     <React.Fragment>
-      {/* {getLoading ? <LinearProgress /> : false} */}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
+    <Paper
+           elevation={0}
+           sx={{
+             mx: 2,
+             mt: 1,
+             mb: 1,
+             p: 2,
+             borderRadius: 3,
+             border: "1px solid #E5E7EB",
+             bgcolor: "#fff",
+           }}
+         >
+           <Box
+             display="flex"
+             justifyContent="space-between"
+             alignItems="center"
+           >
+             {/* Left */}
+             <Box display="flex" alignItems="center" gap={2}>
+               {broken && !rtl && (
+                 <IconButton
+                   onClick={() => toggleSidebar()}
+                   sx={{
+                     border: "1px solid #E5E7EB",
+                     borderRadius: 2,
+                   }}
+                 >
+                   <MenuOutlinedIcon />
+                 </IconButton>
+               )}
+   
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -265,15 +319,20 @@ const Edituser = () => {
                   {`Subscriptions(${rowData.SubsName})`}
                 </Typography> */}
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                 sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
                   onClick={() => {
                     navigate(-1);
                   }}
                 >
-                  {mode === "E" ? `Users(${data.Name1})` : "Users(New)"}
-
+                  {/* {mode === "E" ? `Users(${data.Name1})` : "Users(New)"} */}
+                  {text}
                   {/* {`Users(${rowData.Users})`} */}
                 </Typography>
               </Breadcrumbs>
@@ -296,8 +355,11 @@ const Edituser = () => {
           </Box>
         </Box>
       </Paper>
-      {/* {!getLoading ? ( */}
-      <Paper elevation={3} sx={{ margin: "10px" }}>
+      
+
+               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
+               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+             <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
         {/* <Box m="20px"> */}
         <Formik
           initialValues={initialValue}
@@ -321,6 +383,33 @@ const Edituser = () => {
             setFieldValue
           }) => (
             <form onSubmit={handleSubmit}>
+
+ {/* Header */}
+                                      <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                                        <Box
+                                          sx={{
+                                            width: 36,
+                                            height: 36,
+                                            borderRadius: "50%",
+                                            backgroundColor: "#E0E7FF",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: 18,
+                                          }}
+                                        >
+                                          👥
+                                        </Box>
+                                        <Box>
+                                          <Typography variant="h6" fontWeight={700}  color="#0D94885">
+                                           {label}
+                                          </Typography>
+                                          <Typography variant="caption" color="text.secondary">
+                                            Create and manage user accounts, login credentials, and access permissions.
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(4 , minMax(0,1fr))"
@@ -338,9 +427,35 @@ const Edituser = () => {
                   id="code"
                   label="Code"
                   placeholder="Auto"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2",
+                    "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+
+                  }}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.code}
@@ -360,9 +475,35 @@ const Edituser = () => {
                     </>
                   }
 
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2",
+                     "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+
+                   }}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.name}
@@ -455,10 +596,35 @@ const Edituser = () => {
                       Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
                     </>
                   }
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
                   // required
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2",
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                   }}
                   onFocus={() => setFieldTouched("password", true)}
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -486,10 +652,35 @@ const Edituser = () => {
                       Confirm Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
                     </>
                   }
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
                   // required
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2", 
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                  }}
                   onFocus={() => setFieldTouched("comfirmpassword", true)}
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -515,9 +706,34 @@ const Edituser = () => {
                   type="text"
                   id="email"
                   label="Email"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2",
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                   }}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.email}
@@ -530,9 +746,34 @@ const Edituser = () => {
                   type="text"
                   id="comments"
                   label="Comments"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ 
+                    gridColumn: "span 2",
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                   }}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.comments}
@@ -545,7 +786,8 @@ const Edituser = () => {
                   type="number"
                   id="sortorder"
                   label="Sort Order"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                   focused
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -553,7 +795,31 @@ const Edituser = () => {
                   error={!!touched.sortorder && !!errors.sortorder}
                   helperText={touched.sortorder && errors.sortorder}
                   // autoFocus
-                  sx={{ gridColumn: "span 2", background: "" }}
+                  sx={{ 
+                    gridColumn: "span 2", 
+                     "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                   }}
                   onWheel={(e) => e.target.blur()}
                   InputProps={{
                     inputProps: {
@@ -583,40 +849,47 @@ const Edituser = () => {
                 mt="20px"
                 gap="20px"
               >
-                <Button variant="contained" color="secondary" type="submit">
-                  SAVE
+                <Button
+                 variant="contained"
+                  sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                     type="submit"
+                     >
+                  Save
                 </Button>
                 <Button
                   variant="contained"
-                  color="warning"
+                   sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                   onClick={() => {
                     navigate(-1);
                   }}
                 >
-                  CANCEL
+                  Back
                 </Button>
               </Box>
             </form>
           )}
         </Formik>
-        {/* <Popup
-          title="UserGroup"
-          openPopup={openUGPopup}
-          setOpenPopup={setOpenUGPopup}
-        >
-          <Listviewpopup
-            accessID="2039"
-            screenName="UserGroup"
-            childToParent={childToParent}
-            filterName={"CompanyID"}
-            filterValue={companyRecID}
-          />
-        </Popup> */}
-        {/* </Box> */}
+      
       </Paper>
-      {/* ) : (
-        false
-      )} */}
+       </Box>
+                        </Box>
+
     </React.Fragment>
   );
 };

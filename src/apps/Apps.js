@@ -235,6 +235,7 @@ import EditOtherEvents from "./pages/HR/EditOtherEvents";
 import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
 import Editpromotion from "./pages/HR/Editpromotion";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
+import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
 
 function App() {
@@ -911,7 +912,6 @@ function App() {
                     path="/:accessID/:screenName/EditSubject/:id/:Mode"
                     element={<Editdept />}
                   />
-                 
                   <Route
                     path="/:accessID/:screenName/EditTax Master/:id/:Mode"
                     element={<Edittaxmaster />}
@@ -1341,7 +1341,7 @@ function App() {
                   />
                    <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditPromotion/:id/:Mode"
-                    element={<Editpromotion />}
+                    element={<Editpromotion_v1 />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"

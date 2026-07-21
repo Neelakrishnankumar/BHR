@@ -21,6 +21,8 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Formik, Field, useFormikContext } from "formik";
@@ -30,6 +32,7 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
+import Swal from "sweetalert2";
 import { tokens } from "../../../Theme";
 import { DataGrid } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
@@ -48,8 +51,11 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { getConfig } from "../../../config";
 import { FaFileExcel } from "react-icons/fa";
 import LeavenquiryemExcel from "../pdf/LeavenquiryemExcel";
+import { useProSidebar } from "react-pro-sidebar";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 const EditLeaveEnquiry = () => {
+  const { toggleSidebar, broken, rtl } = useProSidebar();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -76,6 +82,7 @@ const EditLeaveEnquiry = () => {
   const location = useLocation();
   const state = location.state || {};
   const config = getConfig();
+  const [errorMsgData, setErrorMsgData] = useState(null);
   const baseurlUAAM = config.UAAM_URL;
    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
@@ -313,35 +320,98 @@ const EditLeaveEnquiry = () => {
       </GridToolbarContainer>
     );
   }
+
+      const fnLogOut = (props) => {
+  
+          Swal.fire({
+              title: errorMsgData.Warningmsg[props],
+              // text:data.payload.Msg,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: props,
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  if (props === "Logout") {
+                      navigate("/");
+                  }
+                  if (props === "Close") {
+                      navigate(-1);
+                  }
+              } else {
+                  return;
+              }
+          });
+      };
+
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Paper
-          elevation={3}
-          sx={{ height: "50px", margin: "10px 10px", background: "#F2F0F0" }}
-        >
+             <Paper
+                       elevation={0}
+                       sx={{
+                         mx: 2,
+                         mt: 1,
+                         mb: 1,
+                       
+                         borderRadius: 3,
+                         border: "1px solid #E5E7EB",
+                         bgcolor: "#fff",
+                       }}
+                     >
           <Box
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            p={2}
           >
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              <Box>
+            <Box display="flex" alignItems="center">
+         {broken && !rtl && (
+                              <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                              </IconButton>
+                            )}
                 <Breadcrumbs maxItems={3} aria-label="breadcrumb">
                   <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default", margin: "10px" }}
+                     sx={{
+                                             fontSize: 20,
+                                             fontWeight: 700,
+                                             color: "#111827",
+                                             // mb: 0.2,
+                                             px: 1,
+                                             py: 0.2,
+                                           }}
+                                      
                   >
                     {`Leave Enquiry (${state?.Employee ?? ""})`}
                   </Typography>
                 </Breadcrumbs>
-              </Box>
+        
             </Box>
+                  {/* RIGHT SIDE */}
+                  <Box display="flex" gap={1}>
+                    <Tooltip title="Close">
+                      <IconButton onClick={() => fnLogOut("Close")} color="error">
+                        <ResetTvIcon />
+                      </IconButton>
+                    </Tooltip>
+            
+                    <Tooltip title="Logout">
+                      <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                        <LogoutOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
           </Box>
         </Paper>
-
-        <Paper elevation={3} sx={{ margin: "10px" }}>
+     
+                 <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                              
+                                     <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                              
+              <Paper elevation={3} sx={{ margin: "5px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+      
           <Formik
             initialValues={{
               FromDate: "",
@@ -366,6 +436,47 @@ const EditLeaveEnquiry = () => {
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit} onReset={resetForm}>
+                  
+                                                {/* ----- CARD HEADER ----- */}
+                                                                                <Box
+                                                display="flex"
+                                                alignItems="center"
+                                                gap={1.5}
+                                                mb={1}
+                                                sx={{ px: 2, pt: 2 }}
+                                              >
+                                                {/* ICON */}
+                                                <Box
+                                                  sx={{
+                                                    width: 36,
+                                                    height: 36,
+                                                    borderRadius: "50%",
+                                                    backgroundColor: "#EFF6FF",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                  }}
+                                                >
+                                                  <Typography sx={{ fontSize: 18 }}>
+                                                    📧
+                                                  </Typography>
+                                                </Box>
+                                              
+                                                {/* TITLE + SUBTITLE */}
+                                                <Box>
+                                                  <Typography
+                                                    variant="subtitle1"
+                                                    fontWeight={700}
+                                                   color="#0D94885"
+                                                  >
+                                                  Leave Enquiry
+                                                  </Typography>
+                                              
+                                                  <Typography variant="body2" color="text.secondary">
+                                                   Handle all personnel enquiries and responses
+                                                  </Typography>
+                                                </Box>
+                                              </Box>
                 <Box p={1}>
                   {/* 🔹 FORM GRID */}
                   <Box
@@ -390,7 +501,8 @@ const EditLeaveEnquiry = () => {
                         name="FromDate"
                         type="date"
                         label="From Date"
-                        variant="standard"
+                        variant="outlined"
+                    size="small"
                         InputLabelProps={{ shrink: true }}
                         focused
                         value={values.FromDate}
@@ -398,7 +510,31 @@ const EditLeaveEnquiry = () => {
                         onChange={handleChange}
                         error={!!touched.FromDate && !!errors.FromDate}
                         helperText={touched.FromDate && errors.FromDate}
-                      />
+                                          sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
+                     />
 
                       {/* TO DATE */}
                       <TextField
@@ -406,7 +542,8 @@ const EditLeaveEnquiry = () => {
                         name="ToDate"
                         type="date"
                         label="To Date"
-                        variant="standard"
+                        variant="outlined"
+                    size="small"
                         InputLabelProps={{ shrink: true }}
                         focused
                         value={values.ToDate}
@@ -419,13 +556,36 @@ const EditLeaveEnquiry = () => {
                             values.FromDate ||
                             new Date().toISOString().split("T")[0],
                         }}
+                                             sx={{
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
+  }}
                       />
 
                       {/* LEAVE TYPE */}
                       <MultiFormikOptimizedAutocomplete
                         multiple
                         fullWidth
-                        sx={{ mt: 1 }}
                         id="leavetype"
                         name="leavetype"
                         label="Leave Type"
@@ -487,16 +647,37 @@ const EditLeaveEnquiry = () => {
                     justifyContent="flex-end"
                     alignItems={{ xs: "stretch", sm: "center" }}
                   >
-                    <Button variant="contained" color="secondary" type="submit">
-                      APPLY
+                    <Button
+                    variant="contained" 
+                    type="submit"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+
+                    >
+                      Apply
                     </Button>
 
                     <Button
                       variant="contained"
-                      color="warning"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
                       onClick={() => navigate(-1)}
                     >
-                      CANCEL
+                      Back
                     </Button>
 
                     {rows.length > 0 && (
@@ -554,39 +735,80 @@ const EditLeaveEnquiry = () => {
                   <Box
                     m="5px 0 0 0"
                     height="500px"
-                    sx={{
-                      "& .MuiDataGrid-root": {
-                        // border: "none",
-                      },
-                      "& .MuiDataGrid-cell": {
-                        // borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        // borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        // borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        backgroundColor: "#d0edec",
-                        color: "", // Color for even rows
-                      },
-                    }}
+                     sx={{
+                     "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .cell-negative-status": {
+                color: colors.redAccent[500],
+                fontWeight: 600,
+              },
+              "& .cell-positive-status": {
+                color: colors.greenAccent[400],
+                fontWeight: 600,
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+                "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // backgroundColor: "#25adad",
+                      borderBottom: "none",
+                    },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "none",
+                backgroundColor: colors.blueAccent[800],
+                // borderColor: "#d0edec",
+                // backgroundColor: "",
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.greenAccent[200]} !important`,
+              },
+              "& .odd-row": {
+                backgroundColor: "",
+                color: "", // Color for odd rows
+              },
+              "& .even-row": {
+                // backgroundColor: "#d0edec",
+                  backgroundColor: "",
+                color: "", // Color for even rows
+              },
+
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600
+                              },
+                   "& .MuiTablePagination-root": { color: colors.blueAccent[900],},
+                   /* ✅ PAGINATION STYLES (WHITE COLOR) */
+  "& .MuiTablePagination-root": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-selectLabel": {
+    color: "#fff",
+  },
+
+  "& .MuiTablePagination-displayedRows": {
+    color: "#fff",
+  },
+
+  /* Dropdown icon */
+  "& .MuiTablePagination-selectIcon": {
+    color: "#fff",
+  },
+
+  /* Left & Right arrow buttons */
+  "& .MuiTablePagination-actions button": {
+    color: "#fff",
+  },
+                
+                  }}
                   >
                     <DataGrid
                       sx={{
@@ -641,6 +863,11 @@ const EditLeaveEnquiry = () => {
           </Formik>
         </Paper>
       </Box>
+       </Box>
+         
+             </Box>                  
+                            
+                                                      
     </React.Fragment>
   );
 };

@@ -280,19 +280,48 @@ const CreateCandidates = () => {
         }}
       >
         {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
+        <Paper
+               elevation={0}
+               sx={{
+                 mx: 2,
+                 mt: 1,
+                 mb: 2,
+                 p: 1,
+                 borderRadius: 3,
+                 border: "1px solid #E5E7EB",
+                 bgcolor: "#fff",
+               }}
+             >
+           <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  {/* Left */}
+                  <Box display="flex" alignItems="center" gap={2}>
+                    {broken && !rtl && (
+                      <IconButton
+                        onClick={() => toggleSidebar()}
+                        sx={{
+                          border: "1px solid #E5E7EB",
+                          borderRadius: 2,
+                        }}
+                      >
+                        <MenuOutlinedIcon />
+                      </IconButton>
+                    )}
+        
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontSize: 22,
+                          fontWeight: 700,
+                          color: "#111827",
+                          mb: 0.5,
+                        }}
+                      >
+                        {mode === "A" ? "New Assessment" : "Edit Assessment"}
+                      </Typography>
                 <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"

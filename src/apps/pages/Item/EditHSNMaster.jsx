@@ -50,6 +50,7 @@ import toast from "react-hot-toast";
 //   SubordinateAppraisalPayload,
 // } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
+import { breadcrumbStyles } from "../../../Theme";
 
 const EditHSNMaster = () => {
   const navigate = useNavigate();
@@ -165,7 +166,7 @@ const EditHSNMaster = () => {
         }
         if (props === "Close") {
           navigate(`/Apps/Secondarylistview/HSN/${params.accessID}/${screenName}/${params.parentID2}/${params.parentID1}`,
-            {state :state}
+            { state: state }
           );
         }
       } else {
@@ -194,70 +195,110 @@ const EditHSNMaster = () => {
 
   return (
     <>
-      <React.Fragment
-        sx={{
-          p: 2,
-          height: "100vh",
-        }}
-      >
-        {/* BREADCRUMBS */}
-        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
+      <React.Fragment> 
+              <Box sx={{ height: "100vh", overflow: "auto" }}>
+        
+        <Paper
+          elevation={0}
+          sx={{
+            mx: 2,
+            mt: 2,
+            mb: 1,
+            p: 1,
+            borderRadius: 3,
+            border: "1px solid #E5E7EB",
+            background: "#fff",
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box display="flex" alignItems="center" gap={1}>
               {broken && !rtl && (
                 <IconButton onClick={() => toggleSidebar()}>
                   <MenuOutlinedIcon />
                 </IconButton>
               )}
-              <Box
-                display={isNonMobile ? "flex" : "none"}
-                borderRadius="3px"
-                alignItems="center"
-              >
-                <Breadcrumbs
-                  maxItems={3}
-                  aria-label="breadcrumb"
-                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+ <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
                 >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category")}
-                  >
-                    List Of HSN Category
-                    ({state.BreadCrumb1})
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate(-1)}
-                  >
+                  {mode === "A"
+                    ? "New HSN Master"
+                    : mode === "E"
+                      ? "Edit HSN Master"
+                      : "View HSN Master"}
+                </Typography>
+              <Breadcrumbs
+             separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                             sx={breadcrumbStyles.separator}
+              >
+                <Typography
+                   sx={breadcrumbStyles.item}
+                  onClick={() =>
+                    navigate("/Apps/TR316/HSN%20Category")
+                  }
+                >
+                  List Of HSN Category ({state.BreadCrumb1})
+                </Typography>
 
-                    {mode === "E" ?
-                      `List Of HSN Master
-                    (${state.BreadCrumb2})` : "List Of HSN Master"}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                  >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
+                <Typography
+                   sx={breadcrumbStyles.item}
+                  onClick={() => navigate(-1)}
+                >
+                  {mode === "E"
+                    ? `List Of HSN Master (${state.BreadCrumb2})`
+                    : "List Of HSN Master"}
+                </Typography>
+
+                <Typography
+                   sx={breadcrumbStyles.active}
+                >
+                  {mode === "A"
+                    ? "New"
+                    : mode === "E"
+                      ? "Edit"
+                      : "View"}
+                </Typography>
+              </Breadcrumbs>
             </Box>
-
-            <Box display="flex">
+    </Box>
+            <Box display="flex" gap={1}>
               <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <IconButton
+                  onClick={() => fnLogOut("Close")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <ResetTvIcon />
                 </IconButton>
               </Tooltip>
+
               <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <IconButton
+                  onClick={() => fnLogOut("Logout")}
+                  sx={{
+                    bgcolor: "#FEF2F2",
+                    color: "#DC2626",
+                    "&:hover": {
+                      bgcolor: "#FEE2E2",
+                    },
+                  }}
+                >
                   <LogoutOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -266,7 +307,16 @@ const EditHSNMaster = () => {
         </Paper>
 
         {!getLoading ? (
-          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper
+            elevation={0}
+            sx={{
+              m: 2,
+              p: 2,
+              borderRadius: 3,
+              border: "1px solid #E5E7EB",
+              background: "#fff",
+            }}
+          >
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
@@ -288,6 +338,35 @@ const EditHSNMaster = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+                      {/* ----- CARD HEADER ----- */}
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <Box
+                                            sx={{
+                                              width: 32,
+                                              height: 32,
+                                              borderRadius: "50%",
+                                              backgroundColor: "#EFF6FF",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <Typography sx={{ fontSize: 16 }}>🏷️</Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography
+                                              variant="subtitle1"
+                                              fontWeight={700}
+                                              color="#0D94885"
+                                            >
+                                             HSN Master
+                                            </Typography>
+                  
+                                            <Typography variant="body2" color="text.secondary">
+                                              Manage HSN codes, GST classifications, and product tax categories.
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                   <Box
                     display="grid"
                     gap={formGap}
@@ -324,34 +403,35 @@ const EditHSNMaster = () => {
                       // autoFocus
                       />
                     ) : ( */}
-                      <TextField
-                        name="Code"
-                        type="text"
-                        id="Code"
-                        label={
-                          <>
-                            HSN Master Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        // required
-                        value={values.Code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Code && !!errors.Code}
-                        helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ",
-                          },
-                        }}
-                        autoFocus
-                      />
+                    <TextField
+                      name="Code"
+                      type="text"
+                      id="Code"
+                      label={
+                        <>
+                          HSN Master Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="outlined"
+                      size="small"
+                      //focused
+                      // required
+                      value={values.Code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        backgroundColor: "#ffffff",
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ",
+                        },
+                      }}
+                      autoFocus
+                    />
                     {/* )} */}
                     <TextField
                       name="Description"
@@ -370,8 +450,9 @@ const EditHSNMaster = () => {
                           </span>
                         </span>
                       }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
+                      //focused
                       value={values.Description}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -384,7 +465,7 @@ const EditHSNMaster = () => {
                       name="HSNCGST"
                       type="number"
                       id="HSNCGST"
-                      label ="CGST(In Percentage)"
+                      label="CGST(In Percentage)"
                       // label={
                       //   <span>
                       //     CGST(In Percentage)
@@ -396,30 +477,31 @@ const EditHSNMaster = () => {
                       //     </span>
                       //   </span>
                       // }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
+                      //focused
                       value={values.HSNCGST}
                       // onBlur={handleBlur}
                       // onChange={handleChange}
-                       onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("HSNCGST", val);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
-                          if (val === "" || val === ".") {
-                            setFieldValue("HSNCGST", "0.00");
-                            return;
-                          }
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
-                          const num = Number(val);
-                          setFieldValue("HSNCGST", num.toFixed(2));
-                        }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^\d*\.?\d{0,2}$/.test(val)) {
+                          setFieldValue("HSNCGST", val);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        handleBlur(e);
+                        let val = e.target.value;
+                        if (val === "" || val === ".") {
+                          setFieldValue("HSNCGST", "0.00");
+                          return;
+                        }
+                        if (!val.includes(".")) {
+                          val = `${val}.00`;
+                        }
+                        const num = Number(val);
+                        setFieldValue("HSNCGST", num.toFixed(2));
+                      }}
                       error={!!touched.HSNCGST && !!errors.HSNCGST}
                       helperText={touched.HSNCGST && errors.HSNCGST}
                       InputProps={{
@@ -444,30 +526,31 @@ const EditHSNMaster = () => {
                       //     </span>
                       //   </span>
                       // }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
+                      //focused
                       value={values.HSNSGST}
                       // onBlur={handleBlur}
                       // onChange={handleChange}
-                       onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("HSNSGST", val);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
-                          if (val === "" || val === ".") {
-                            setFieldValue("HSNSGST", "0.00");
-                            return;
-                          }
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
-                          const num = Number(val);
-                          setFieldValue("HSNSGST", num.toFixed(2));
-                        }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^\d*\.?\d{0,2}$/.test(val)) {
+                          setFieldValue("HSNSGST", val);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        handleBlur(e);
+                        let val = e.target.value;
+                        if (val === "" || val === ".") {
+                          setFieldValue("HSNSGST", "0.00");
+                          return;
+                        }
+                        if (!val.includes(".")) {
+                          val = `${val}.00`;
+                        }
+                        const num = Number(val);
+                        setFieldValue("HSNSGST", num.toFixed(2));
+                      }}
                       error={!!touched.HSNSGST && !!errors.HSNSGST}
                       helperText={touched.HSNSGST && errors.HSNSGST}
                       InputProps={{
@@ -492,30 +575,30 @@ const EditHSNMaster = () => {
                       //     </span>
                       //   </span>
                       // }
-                      variant="standard"
-                      focused
+                      variant="outlined"
+                      size="small"
                       value={values.HSNIGST}
                       // onBlur={handleBlur}
                       // onChange={handleChange}
                       onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("HSNIGST", val);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
-                          if (val === "" || val === ".") {
-                            setFieldValue("HSNIGST", "0.00");
-                            return;
-                          }
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
-                          const num = Number(val);
-                          setFieldValue("HSNIGST", num.toFixed(2));
-                        }}
+                        const val = e.target.value;
+                        if (/^\d*\.?\d{0,2}$/.test(val)) {
+                          setFieldValue("HSNIGST", val);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        handleBlur(e);
+                        let val = e.target.value;
+                        if (val === "" || val === ".") {
+                          setFieldValue("HSNIGST", "0.00");
+                          return;
+                        }
+                        if (!val.includes(".")) {
+                          val = `${val}.00`;
+                        }
+                        const num = Number(val);
+                        setFieldValue("HSNIGST", num.toFixed(2));
+                      }}
                       error={!!touched.HSNIGST && !!errors.HSNIGST}
                       helperText={touched.HSNIGST && errors.HSNIGST}
                       InputProps={{
@@ -527,7 +610,8 @@ const EditHSNMaster = () => {
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth
-                      variant="standard"
+                      variant="outlined"
+                      size="small"
                       type="number"
                       label="Sort Order"
                       value={values.Sortorder}
@@ -539,7 +623,7 @@ const EditHSNMaster = () => {
                       // helperText={touched.Sortorder && errors.Sortorder}
 
                       sx={{ background: "" }}
-                      focused
+                      //focused
                       onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
@@ -596,24 +680,39 @@ const EditHSNMaster = () => {
                   <Box
                     display="flex"
                     justifyContent="flex-end"
-                    padding={1}
                     gap={2}
+                    mt={4}
                   >
                     <LoadingButton
+                      loading={isLoading}
                       type="submit"
                       variant="contained"
-                      color="secondary"
-                      loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(-1)}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     >
-                      Cancel
+                      Back
                     </Button>
                   </Box>
                 </Form>
@@ -623,6 +722,7 @@ const EditHSNMaster = () => {
         ) : (
           false
         )}
+        </Box>
       </React.Fragment>
     </>
   );

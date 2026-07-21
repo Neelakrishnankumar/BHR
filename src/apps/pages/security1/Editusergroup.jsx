@@ -79,6 +79,13 @@ const Editusergroup = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const [pageSize, setPageSize] = React.useState(20);
 
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
+  console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+
   // console.log("🚀 ~ file: Editusergroup.jsx:65 ~ Editusergroup ~ Year:", Year)
 
   useEffect(() => {
@@ -276,7 +283,11 @@ const Editusergroup = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Screen Names</Typography>
+          <Typography sx={{
+            fontWeight: 700,
+            color: "#111827",
+          }}
+          >List of Screen Names</Typography>
         </Box>
         <Box
           sx={{
@@ -508,10 +519,22 @@ const Editusergroup = () => {
       toast.error(response.payload.Msg);
     }
   };
+
+
+    const label =
+  Subscriptionlastthree === "003" ? "Permission Management" : "User Group";
+
+const text =
+  mode === "E"
+    ? `${label}(${data.CompanyName})`
+    : `${label}(New)`;
   return (
     <React.Fragment>
       {/* {getLoading ? <LinearProgress /> : false} */}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box sx={{ height: "100vh", overflow: "auto" }}>
+                    <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                      <Box sx={{borderRadius: 3 }}>
+                        <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -529,27 +552,24 @@ const Editusergroup = () => {
                 aria-label="breadcrumb"
                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
-                {/* <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR099/User Rights");
-                  }}
-                >
-                  {`Company(${rowDatastate.UGCompany})`}
-                </Typography> */}
+              
                 <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
+                   sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+           py: 0.2,
+                   }}
                 // onClick={() => {
                 //   navigate(
                 //     `/Apps/Secondarylistview/TR095/Usergroups/${CompanyID}`
                 //   );
                 // }}
                 >
-                  {mode === "E" ? `User Group(${data.CompanyName})` : "User Group(New)"}
+{text}
+                  {/* {mode === "E" ? `User Group(${data.CompanyName})` : "User Group(New)"} */}
 
                 </Typography>
               </Breadcrumbs>
@@ -570,8 +590,11 @@ const Editusergroup = () => {
           </Box>
         </Box>
       </Paper>
+           </Box>
       {/* {!getLoading && data && rowData ? ( */}
-      <Paper elevation={3} sx={{ margin: "10px" }}>
+             <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+             <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+           <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
         <Box>
           <Formik
             initialValues={userGroupInitialValue}
@@ -594,6 +617,31 @@ const Editusergroup = () => {
               resetForm,
             }) => (
               <form onSubmit={handleSubmit}>
+                  {/* Header */}
+                                                      <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                                                        <Box
+                                                          sx={{
+                                                            width: 36,
+                                                            height: 36,
+                                                            borderRadius: "50%",
+                                                            backgroundColor: "#E0E7FF",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            fontSize: 18,
+                                                          }}
+                                                        >
+                                                          👥
+                                                        </Box>
+                                                        <Box>
+                                                          <Typography variant="h6" fontWeight={700} color="#0D94885">
+                                                           {label}
+                                                          </Typography>
+                                                          <Typography variant="caption" color="text.secondary">
+                                                            Manage user groups, roles, and access permissions.
+                                                          </Typography>
+                                                        </Box>
+                                                      </Box>
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(4 , minMax(0,1fr))"
@@ -614,9 +662,34 @@ const Editusergroup = () => {
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                     }}
                     InputProps={{ readOnly: true }}
                   />
                   <TextField
@@ -631,10 +704,35 @@ const Editusergroup = () => {
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     // required
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2",
+                       "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+                     }}
                     autoFocus
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
@@ -656,9 +754,35 @@ const Editusergroup = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Comments"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ 
+                      gridColumn: "span 2", 
+ "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
+
+                    }}
                   />
                   <TextField
                     name="sortOrder"
@@ -668,13 +792,36 @@ const Editusergroup = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Sort Order"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     onWheel={(e) => e.target.blur()}
                     sx={{
                       gridColumn: "span 2",
                       input: { textAlign: "right" },
                       background: "",
+                       "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#fff",
+                                  borderRadius: "6px",
+
+                                  "& fieldset": {
+                                    borderColor: "#d1d5db", // 👈 light grey border
+                                  },
+                                  "&:hover fieldset": {
+                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderWidth: "1px",
+                                  },
+                                },
+
+                                "& .MuiInputLabel-root": {
+                                  color: "#6b7280", // label grey
+                                },
+                                "& .MuiInputLabel-root.Mui-focused": {
+                                  color: "#6b7280", // keep same on focus
+                                },
                     }}
                   />
                   <Box sx={{ gridColumn: "span 2" }}>
@@ -728,6 +875,35 @@ const Editusergroup = () => {
                           backgroundColor: "#c4f5f2",
                           color: "", // Color for even rows
                         },
+                         "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                       }}
                     >
                       {rowData ? (
@@ -788,15 +964,32 @@ const Editusergroup = () => {
                 >
                   <LoadingButton
                     loading={isLoading}
-                    variant="contained"
-                    color="secondary"
                     type="submit"
+                    variant="contained"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                    
                   >
-                    SAVE
+                    Save
                   </LoadingButton>
                   <Button
                     variant="contained"
-                    color="warning"
+                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                     onClick={() => {
                       navigate(
                         -1
@@ -804,7 +997,8 @@ const Editusergroup = () => {
                       );
                     }}
                   >
-                    CANCEL
+                  Back
+
                   </Button>
                 </Box>
               </form>
@@ -823,6 +1017,10 @@ const Editusergroup = () => {
         </Popup> */}
         </Box>
       </Paper>
+       </Box>
+                        </Box>
+                          </Box>
+                            </Box>
       {/* ) : (
         "Loading..."
       )} */}

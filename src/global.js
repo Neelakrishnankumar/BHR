@@ -350,10 +350,17 @@ const initialState = {
   StandardstaffmapingGET: "",
   ActivityOccupancy:"",
   TaskProcessController:"",
+  promotiongetUrl: "",
+  promotionupdateUrl: "",
+  promotionstandardActUrl: "",
+  PromotionstudmarksGetUrl: "",
+  promotionstudentmarksPosturl: "",
   TaskSessionGet:"",
   TaskSessionUpdate:"",
   TermUrl: "",
-  PartySyncurl:""
+  CocurricularActivityPost: "",
+  CocurricularActivityGet: "" ,
+   PartySyncurl:""
 
 };
 
@@ -576,9 +583,17 @@ export const getUrlSlice = createSlice({
       state.StandardstaffmapingGET = APIurl + "StaffMappingGet.php";
       state.ActivityOccupancy = APIurl + "ActivityOccupancy.php";
       state.TaskProcessController = APIurl + "TaskProcessController.php";
+      state.promotiongetUrl = APIurl + "StudentPromotionGet.php";
+      state.promotionupdateUrl = APIurl + "PromotionStatusUpdate.php";
+      state.promotionstandardActUrl = APIurl + "getacademicprojectdata.php?";
+      state.PromotionstudmarksGetUrl = APIurl + "StudentMarksGet.php";
+      state.promotionstudentmarksPosturl = APIurl + "StudentMarksPost.php";
       state.TaskSessionGet = APIurl + "SessionGet.php";
       state.TaskSessionUpdate = APIurl + "SessionUpdate.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
+      state.CocurricularActivityPost = APIurl + "CocurricularActivityPost.php";
+      state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
+ 
       state.PartySyncurl = APIurl + "hrvendor_sync.php";
     },
 
@@ -587,6 +602,15 @@ export const getUrlSlice = createSlice({
 
 export const { initGlobalUrl } = getUrlSlice.actions;
 export default getUrlSlice.reducer;
+
+
+
+
+
+
+
+
+
 
 
 

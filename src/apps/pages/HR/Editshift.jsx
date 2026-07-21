@@ -257,8 +257,10 @@ const Editshift = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : null}
-
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+   <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 2, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{borderRadius: 3,mb: 2 }}>
+            <Paper sx={{ borderRadius: 3 }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -277,9 +279,15 @@ const Editshift = () => {
                                 separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                             >
                                 <Typography
-                                    variant="h5"
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
+                                   sx={{ 
+              cursor: "default",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#111827",
+              // mb: 0.2,
+              px: 1,
+              py: 0.2,
+            }}
 
                                 >
                                     {getBusinessCaption("Shift", "Shift")}
@@ -304,9 +312,24 @@ const Editshift = () => {
                     </Box>
                 </Box>
             </Paper>
-
+      </Box>
             {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
+                 <Box
+                               flex={1}
+                               minWidth={0}
+                               display="flex"
+                               flexDirection="column"
+                               gap={3}
+                             >
+                               <Paper
+                                 elevation={0}
+                                 sx={{
+                                   backgroundColor: "#fff",
+                                   border: "1px solid #E5E7EB",
+                                   borderRadius: 3,
+                                   p: 1
+                                 }}
+                               >
                     <Formik
                         initialValues={InitialValue}
                         onSubmit={(values, setSubmitting) => {
@@ -327,6 +350,41 @@ const Editshift = () => {
                             handleSubmit,
                         }) => (
                             <form onSubmit={handleSubmit}>
+
+                                 {/* ----- CARD HEADER ----- */}
+                                                      <Box
+                                                        display="flex"
+                                                        alignItems="center"
+                                                        gap={1}
+                                                        mb={0.5}
+                                                      >
+                                                        <Box
+                                                          sx={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            borderRadius: "50%",
+                                                            backgroundColor: "#EFF6FF",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                          }}
+                                                        >
+                                                          <Typography sx={{ fontSize: 16 }}>🕒</Typography>
+                                                        </Box>
+                                                        <Box>
+                                                          <Typography
+                                                            variant="subtitle1"
+                                                            fontWeight={700}
+                                                            color="#0D94885"
+                                                          >
+                                                            {getBusinessCaption("Shift", "Shift")}
+                                                          </Typography>
+                              
+                                                          <Typography variant="body2" color="text.secondary">
+                                                            View and manage  {getBusinessCaption("Shift", "Shift")} assignments
+                                                          </Typography>
+                                                        </Box>
+                                                      </Box>  
                                 <Box
                                     display="grid"
                                     gap={formGap}
@@ -346,7 +404,8 @@ const Editshift = () => {
                                             id="code"
                                             label="Code"
                                             placeholder="Auto"
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // required
                                             value={values.code}
@@ -355,12 +414,29 @@ const Editshift = () => {
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
                                             sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                                backgroundColor: "#ffffff", // Set the background to white
-                                                "& .MuiFilledInput-root": {
-                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                                }
-                                            }}
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                                             InputProps={{ readOnly: true }}
                                         // autoFocus
                                         />
@@ -374,7 +450,8 @@ const Editshift = () => {
                                                     Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
                                                 </>
                                             }
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             focused
                                             // required
                                             value={values.code}
@@ -383,12 +460,29 @@ const Editshift = () => {
                                             error={!!touched.code && !!errors.code}
                                             helperText={touched.code && errors.code}
                                             sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                                backgroundColor: "#ffffff", // Set the background to white
-                                                "& .MuiFilledInput-root": {
-                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                                }
-                                            }}
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
 
                                             autoFocus
                                         />
@@ -409,7 +503,8 @@ const Editshift = () => {
                                             </>
                                         }
                                         // label={getBusinessCaption("Description", "Description")}
-                                        variant="standard"
+                                        variant="outlined"
+                                        size="small"
                                         focused
                                         value={values.name}
                                         onBlur={handleBlur}
@@ -417,12 +512,29 @@ const Editshift = () => {
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}
                                         sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                                         // required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
@@ -438,8 +550,33 @@ const Editshift = () => {
                                         }}
                                     >
                                         <TextField
+                                         sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                                             fullWidth
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             type="time"
                                             id="starttime"
                                             name="starttime"
@@ -474,8 +611,33 @@ const Editshift = () => {
                                         }}
                                     >
                                         <TextField
+                                         sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
                                             fullWidth
-                                            variant="standard"
+                                            variant="outlined"
+                                            size="small"
                                             type="time"
                                             id="endtime"
                                             name="endtime"
@@ -501,6 +663,121 @@ const Editshift = () => {
                                         />
                                     </FormControl>
                                     {/* <Typography variant="h6">Week Off</Typography> */}
+                                
+                                    {/* <FormControl
+                                        focused
+                                        variant="standard"
+                                    //sx={{ gridColumn: "span 2" }}
+                                    >
+                                        <InputLabel variant="filled" id="weekoff">
+                                            {
+                                                <span>
+                                                    Weekoff <span style={{ color: "red", marginBottom: "2px" }}>*</span>
+                                                </span>
+                                            }
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-filled-label"
+                                            label=""
+                                            fullWidth
+                                            variant="standard"
+                                            type="text"
+                                            value={values.weekoff}
+                                            id="weekoff"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            name="weekoff"
+                                            required
+                                            focused
+                                        >
+                                            <MenuItem value="SD" >Sunday</MenuItem>
+                                            <MenuItem value="MD">Monday</MenuItem>
+                                            <MenuItem value="TD">Tuesday</MenuItem>
+                                            <MenuItem value="WD">Wednesday</MenuItem>
+                                            <MenuItem value="TH">Thursday</MenuItem>
+                                            <MenuItem value="FD">Friday</MenuItem>
+                                            <MenuItem value="SA">Saturday</MenuItem>
+                                        </Select>
+                                    </FormControl> */}
+                                    <TextField
+                                        name="sortorder"
+                                        type="number"
+                                        id="sortorder"
+                                        label="Sort Order"
+                                        variant="outlined"
+                                        size="small"
+                                        focused
+                                        value={values.sortorder}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.sortorder && !!errors.sortorder}
+                                        helperText={touched.sortorder && errors.sortorder}
+                                        sx={{ background: "" }}
+                                        InputProps={{
+                                            inputProps: {
+                                                style: { textAlign: "right" },
+                                            },
+                                        }}
+                                        onWheel={(e) => e.target.blur()}
+                                        onInput={(e) => {
+                                            e.target.value = Math.max(0, parseInt(e.target.value))
+                                                .toString()
+                                                .slice(0, 8);
+                                        }}
+                                         sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                                    />
+                                   
+ <Box>
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="delete"
+                                            id="delete"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Delete"
+                                        />
+
+                                        <FormLabel focused={false}>Delete</FormLabel>
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="disable"
+                                            id="disable"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Disable"
+                                        />
+
+                                        <FormLabel focused={false}>Disable</FormLabel>
+                                    </Box>
+
+                                </Box>
                                     <Box>
                                         <Typography variant="subtitle1" sx={{ mb: -1, fontWeight: 'bold' }}>
                                             Week Off
@@ -596,102 +873,21 @@ const Editshift = () => {
 
                                         <FormLabel focused={false}>Sun</FormLabel>
                                     </Box>
-                                    {/* <FormControl
-                                        focused
-                                        variant="standard"
-                                    //sx={{ gridColumn: "span 2" }}
-                                    >
-                                        <InputLabel variant="filled" id="weekoff">
-                                            {
-                                                <span>
-                                                    Weekoff <span style={{ color: "red", marginBottom: "2px" }}>*</span>
-                                                </span>
-                                            }
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-filled-label"
-                                            label=""
-                                            fullWidth
-                                            variant="standard"
-                                            type="text"
-                                            value={values.weekoff}
-                                            id="weekoff"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            name="weekoff"
-                                            required
-                                            focused
-                                        >
-                                            <MenuItem value="SD" >Sunday</MenuItem>
-                                            <MenuItem value="MD">Monday</MenuItem>
-                                            <MenuItem value="TD">Tuesday</MenuItem>
-                                            <MenuItem value="WD">Wednesday</MenuItem>
-                                            <MenuItem value="TH">Thursday</MenuItem>
-                                            <MenuItem value="FD">Friday</MenuItem>
-                                            <MenuItem value="SA">Saturday</MenuItem>
-                                        </Select>
-                                    </FormControl> */}
-                                    <TextField
-                                        name="sortorder"
-                                        type="number"
-                                        id="sortorder"
-                                        label="Sort Order"
-                                        variant="standard"
-                                        focused
-                                        value={values.sortorder}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.sortorder && !!errors.sortorder}
-                                        helperText={touched.sortorder && errors.sortorder}
-                                        sx={{ background: "" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
-                                        }}
-                                        onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
-                                        }}
-                                    />
-                                    <Box>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="delete"
-                                            id="delete"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Delete"
-                                        />
-
-                                        <FormLabel focused={false}>Delete</FormLabel>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="disable"
-                                            id="disable"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Disable"
-                                        />
-
-                                        <FormLabel focused={false}>Disable</FormLabel>
-                                    </Box>
-
-
-                                </Box>
 
 
 
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                                     {YearFlag == "true" ? (
                                         <LoadingButton
-                                            color="secondary"
+                                            sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                             variant="contained"
                                             type="submit"
                                             loading={loading}
@@ -700,7 +896,15 @@ const Editshift = () => {
                                         </LoadingButton>
                                     ) : (
                                         <Button
-                                            color="secondary"
+                                            sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                                             variant="contained"
                                             disabled={true}
                                         >
@@ -742,23 +946,35 @@ const Editshift = () => {
                                         null
                                     )} */}
                                     <Button
-                                        color="warning"
+                                        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                                         variant="contained"
                                         onClick={() => {
                                             navigate(-1);
                                         }}
                                     >
-                                        Cancel
+                                        Back
                                     </Button>
                                 </Box>
                             </form>
                         )}
                     </Formik>
                 </Paper>
+
+                 </Box>
+                     
             ) : (
                 false
             )}
-
+  </Box>
+    </Box>
         </React.Fragment>
     );
 };

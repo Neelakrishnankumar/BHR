@@ -22,6 +22,7 @@ import { Formik } from "formik";
 import { BlobProvider, pdf, PDFDownloadLink } from "@react-pdf/renderer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import EmailIcon from "@mui/icons-material/Email";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
@@ -35,10 +36,14 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import Swal from "sweetalert2";
+import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import ForumIcon from '@mui/icons-material/Forum';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import InputAdornment from "@mui/material/InputAdornment";
+import ClearIcon from "@mui/icons-material/Clear";
+
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -80,9 +85,12 @@ import {
 } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {
+  dataGridFooterHeight,
   dataGridHeaderFooterHeight,
+  dataGridHeaderHeight_v1,
   dataGridHeight,
   dataGridRowHeight,
+  dataGridRowHeight_v1,
 } from "../../ui-components/global/utils";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
@@ -676,10 +684,32 @@ const ListviewSecondary = () => {
   //       : [],
   //   [listViewcolumn]
   // );
+
+  const [search, setSearch] = React.useState("");
+ const avatarColors = ["#4F46E5", "#7C3AED", "#DB2777", "#DC2626", "#D97706", "#059669", "#0891B2", "#2563EB"];
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.toString().trim().split(" ");
+    return parts.length >= 2
+      ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+      : parts[0][0].toUpperCase();
+  };
+    const getAvatarColor = (name) => {
+    if (!name) return avatarColors[0];
+    return avatarColors[name.toString().charCodeAt(0) % avatarColors.length];
+  };
+   // Split "EMP00071 || aksa" into crgb(123, 104, 155)ame
+  const splitCodeName = (text) => {
+    if (!text) return { code: "", name: "" };
+    const parts = text.split("||").map((p) => p.trim());
+    return { code: parts[0] || "", name: parts[1] || parts[0] || "" };
+  };
+
   const columns = React.useMemo(
-    () =>
-      listViewcolumn.filter(filterByID)
-        ? [
+  () =>
+    listViewcolumn.filter(filterByID)
+      ? [
           {
             field: "slno",
             headerName: "SL#",
@@ -691,11 +721,77 @@ const ListviewSecondary = () => {
               params.api.getRowIndexRelativeToVisibleRows(params.id) +
               1,
           },
-          ...listViewcolumn.filter(filterByID),
+          ...listViewcolumn.filter(filterByID).map((col) => {
+            // 👇 Inject avatar rendering for Personnel column on TR027
+            if (col.field === "Personnel" && accessID === "TR027") {
+              return {
+                ...col,
+                renderCell: (params) => {
+                  const { name } = splitCodeName(params.value);
+                  return (
+                    <Box display="flex" alignItems="center" gap={1.5}>
+                      <Box
+                        sx={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: "50%",
+                          backgroundColor: getAvatarColor(name),
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Typography variant="caption" fontWeight={700} color="#fff" fontSize={11}>
+                          {getInitials(name)}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" noWrap>
+                        {name || "-"}
+                      </Typography>
+                    </Box>
+                  );
+                },
+              };
+            }
+            return col;
+          }),
         ]
-        : [],
-    [listViewcolumn, page, pageSize] // include page & pageSize as deps
+      : [],
+  [listViewcolumn, page, pageSize, accessID]
+);
+  // const columns = React.useMemo(
+  //   () =>
+  //     listViewcolumn.filter(filterByID)
+  //       ? [
+  //         {
+  //           field: "slno",
+  //           headerName: "SL#",
+  //           width: 50,
+  //           sortable: false,
+  //           filterable: false,
+  //           valueGetter: (params) =>
+  //             page * pageSize +
+  //             params.api.getRowIndexRelativeToVisibleRows(params.id) +
+  //             1,
+  //         },
+  //         ...listViewcolumn.filter(filterByID),
+          
+  //       ]
+  //       : [],
+  //   [listViewcolumn, page, pageSize] // include page & pageSize as deps
+  // );
+
+const filteredRows = React.useMemo(() => {
+  if (!search) return listViewData;
+  const s = search.toLowerCase();
+  return listViewData.filter((row) =>
+    columns.some((col) =>
+      String(row[col.field] ?? "").toLowerCase().includes(s)
+    )
   );
+}, [listViewData, search, columns]);
+
   var apprval = "";
   var hderName = `Production Card(${params.Number})`;
 
@@ -1034,21 +1130,89 @@ const ListviewSecondary = () => {
       }
     });
   };
-  function CustomToolbar(listViewData) {
-    function doesArrayContainNegative() {
-      for (var arr of listViewData) {
-        if (arr.Shortage < 0) return true;
-      }
-      return false;
+
+
+const exportToCsv = (rows, columns, fileName = "export") => {
+  if (!rows || rows.length === 0) {
+    toast.error("No data to export");
+    return;
+  }
+  
+
+  // Exclude hidden columns, SLNO (we generate our own SL# below), and any action/button column
+  const exportColumns = columns.filter((col) => {
+    if (!col.field || col.hide) return false;
+    if (col.type === "actions") return false;
+    const fieldLower = col.field.toLowerCase();
+    const headerLower = (col.headerName || "").toLowerCase();
+    if (fieldLower === "slno") return false;
+    if (fieldLower === "action" || fieldLower === "actions") return false;
+    if (headerLower === "action" || headerLower === "actions") return false;
+     
+    
+    return true;
+  });
+
+  const headers = ["SL#", ...exportColumns.map((col) => col.headerName || col.field)];
+
+  const csvRows = rows.map((row, index) => {
+    const rowValues = exportColumns.map((col) => {
+      let value = row[col.field];
+      if (value === null || value === undefined) value = "";
+      value = String(value).replace(/"/g, '""'); // escape quotes
+      return `"${value}"`;
+    });
+    return [index + 1, ...rowValues].join(",");
+  });
+
+  const csvContent = [headers.join(","), ...csvRows].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${fileName}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+// function CustomToolbar({ listViewData }) {
+function CustomToolbar() {
+  function doesArrayContainNegative() {
+    for (var arr of listViewData) {
+      if (arr.Shortage < 0) return true;
     }
+    return false;
+  }
     const [selectedFileExcel, setSelectedFileExcel] = React.useState(null);
 
     const [selectedFileName, setSelectedFileName] = useState("");
 
     const fileInputRef = React.useRef(null);
 
+
+
     return (
       <React.Fragment>
+           <Box
+                 key={location.key}
+                 sx={{
+                   display: "flex",
+                   flexDirection: "row",
+                   justifyContent: "space-between",
+                   alignItems: "center",
+                   backgroundColor: "#fff",
+                   border: "1px solid #E5E7EB",
+                   borderRadius: 3,
+                   p: 2,
+                    width: "100%",
+                   mb: 2,
+                 }}
+               >
+                <Box>
+
+               
         <input
           id="bulk-excel-input"
           type="file"
@@ -1091,13 +1255,15 @@ const ListviewSecondary = () => {
             e.target.value = null;
           }}
         />
-        <GridToolbarContainer
+        {/* <GridToolbarContainer */}
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
           }}
-        >
+        > */}
+
           {accessID == "TR008" || accessID == "TR054" ? (
             <Box display="flex" borderRadius="3px" alignItems="center">
               <Breadcrumbs
@@ -4715,6 +4881,8 @@ const ListviewSecondary = () => {
                     </Typography>
                   </Box>
                 )}
+
+                  </Box>
           <Box justifyContent="end" display="flex">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
@@ -4876,7 +5044,7 @@ const ListviewSecondary = () => {
                 )}
               </Formik>
             )} */}
-            <GridToolbarQuickFilter />
+            {/* <GridToolbarQuickFilter /> */}
 
             {/* Modal pop up for Timetable Versioning */}
             <Dialog
@@ -5018,7 +5186,25 @@ const ListviewSecondary = () => {
                   </LoadingButton>
                 </DialogActions>
             </Dialog>
-
+           
+  <Box
+           sx={{
+             display: "flex",
+             alignItems: "center",
+             gap: 1,
+             marginLeft: "auto",
+             flexWrap: "nowrap",
+           }}
+         >
+           {/* <Box
+             sx={{
+               display: "flex",
+               gap: 2,
+               alignItems: "center",
+               flexShrink: 0, // prevent shrinking
+               marginLeft: "auto", // push to right
+             }}
+           > */}
              {accessID === "TR368" && is003Subscription && (
               <Tooltip title="Timetable Versioning">
                 <IconButton onClick={() => setOpenTimetableModal(true)}>
@@ -5352,7 +5538,9 @@ const ListviewSecondary = () => {
                     </Tooltip>
                   ) : (
                     <Tooltip arrow title="Add">
-                      <IconButton>
+                       <IconButton
+                                                   sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
+                                                 >
                         <AddOutlinedIcon
                           onClick={() => {
                             navigate(
@@ -5384,24 +5572,131 @@ const ListviewSecondary = () => {
             ) : (
               false
             )}
-            <GridToolbarExport
+            <Tooltip arrow title="Export">
+                           <IconButton
+                             sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" }  }}
+                           onClick={() => exportToCsv(filteredRows, columns, screenName)}
+
+                           >
+                             <SaveAltIcon fontSize="small" />
+                           </IconButton>
+                         </Tooltip>
+            {/* <GridToolbarExport
               printOptions={{ disableToolbarButton: true }}
               csvOptions={{
                 fileName: `${screenName}`,
               }}
               slotProps={{ toolbar: { csvOptions: { allColumns: true } } }}
-            />
-
+            /> */}
+ </Box>
+    {/* </Box> */}
             <Tooltip arrow title="Logout">
               <IconButton onClick={() => fnLogOut("Logout")} color="error">
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
           </Box>
-        </GridToolbarContainer>
+        </Box>
+        {/* </GridToolbarContainer> */}
+   
+    {/* </Box> */}
       </React.Fragment >
     );
   }
+
+function CustomFooter({
+  page,
+  pageSize,
+  totalRows,
+  onPageChange,
+  onPageSizeChange,
+  rowsPerPageOptions = [5, 10, 15, 20],
+}) {
+  const totalPages = Math.ceil(totalRows / pageSize) || 1;
+  const secondaryCurrentPage  = page + 1; // DataGrid page is 0-based
+
+  const getPageNumbers = () => {
+    if (totalPages <= 6) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (secondaryCurrentPage  <= 5) return [...Array.from({ length: 5 }, (_, i) => i + 1), totalPages];
+    if (secondaryCurrentPage  >= totalPages - 4)
+      return [1, ...Array.from({ length: 5 }, (_, i) => totalPages - 4 + i)];
+    return [1, secondaryCurrentPage  - 1, secondaryCurrentPage , secondaryCurrentPage + 1, totalPages];
+  };
+
+  const pageNumbers = getPageNumbers();
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      px={2}
+      py={1}
+      flexWrap="wrap"
+      gap={2}
+      sx={{ backgroundColor: "#fff", borderTop: "1px solid #E5E7EB" }}
+    >
+      {/* Left: rows per page */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography variant="body2" color="text.secondary">Rows per page</Typography>
+        <TextField
+          select
+          size="small"
+          value={pageSize}
+          onChange={(e) => onPageSizeChange(parseInt(e.target.value, 10))}
+          sx={{ width: 80 }}
+        >
+          {rowsPerPageOptions.map((opt) => (
+            <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+          ))}
+        </TextField>
+        <Typography variant="body2" color="text.secondary">
+          {totalRows === 0 ? 0 : Math.min(page * pageSize + 1, totalRows)}-
+          {Math.min((page + 1) * pageSize, totalRows)} of {totalRows}
+        </Typography>
+      </Box>
+
+      {/* Right: numbered pagination */}
+      <Box display="flex" alignItems="center" gap={0.5}>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={secondaryCurrentPage === 1}
+          onClick={() => onPageChange(page - 1)}
+          sx={{ minWidth: 32 }}
+        >
+          {"<"}
+        </Button>
+
+        {pageNumbers.map((p, idx, arr) => (
+          <React.Fragment key={p}>
+            {idx > 0 && p - arr[idx - 1] > 1 && (
+              <Typography sx={{ px: 0.5 }}>...</Typography>
+            )}
+            <Button
+              variant={secondaryCurrentPage === p ? "contained" : "outlined"}
+              size="small"
+              onClick={() => onPageChange(p - 1)}
+              sx={{ minWidth: 32 }}
+            >
+              {p}
+            </Button>
+          </React.Fragment>
+        ))}
+
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={secondaryCurrentPage === totalPages}
+          onClick={() => onPageChange(page + 1)}
+          sx={{ minWidth: 32 }}
+        >
+          {">"}
+        </Button>
+      </Box>
+    </Box>
+  );
+}
 
   React.useEffect(() => {
     dispatch(fetchListview(accessID, Subscriptionlastthree, screenName, filter, "", compID));
@@ -5420,12 +5715,87 @@ const ListviewSecondary = () => {
   console.log("accessID:", accessID);
   console.log("Editable rows found:", hasEditable);
 
+
+const handlePageSizeChange = (newPageSize) => {
+  setPageSize(newPageSize);
+  setPage(0);                                  // reset to first page
+  sessionStorage.setItem("secondaryCurrentPage", 0);
+};
+
+
   return (
     <React.Fragment>
       <Box m="5px">
+ 
+
+<CustomToolbar/>
+         {/* <CustomToolbar listViewData={listViewData}/> */}
+         { accessID === "TR027" ? (
+                     <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={3}>
+                               <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: "#fff", border: "1px solid #E5E7EB" }}>
+                                 <Typography variant="body2" color="text.secondary">Total</Typography>
+                                 <Typography variant="h4" fontWeight={700} color="#4F46E5">{listViewData.length}</Typography>
+                               </Box>
+                             </Box>) : null}
+        {/* ONE card wraps search + grid + footer, like Image 1 */}
         <Box
-          m="5px 0 0 0"
-          padding={2}
+          sx={{
+            backgroundColor: "#fff",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            overflow: "hidden",   // <-- this is what rounds the header/footer corners
+          }}
+        >
+          {/* Search row, bordered off from the grid below it */}
+          <Box
+              p={1}
+              borderBottom="1px solid #F3F4F6"
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                placeholder="Search..."
+                size="small"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(0);
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: "#9CA3AF", fontSize: 20 }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: search && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSearch("");
+                          setPage(0);
+                        }}
+                      >
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  width: 280,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Box>
+                             
+        <Box
+          // m="5px 0 0 0"
+          // padding={2}
           // height="85vh"
           height={dataGridHeight}
           sx={{
@@ -5442,58 +5812,81 @@ const ListviewSecondary = () => {
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: colors.blueAccent[800],
-              // borderBottom: "none",
+              // backgroundColor: "#25adad",
+              borderBottom: "none",
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: colors.primary[400],
             },
             "& .MuiDataGrid-footerContainer": {
-              // borderTop: "none",
-              backgroundColor: colors.blueAccent[800],
+              borderTop: "none",
+               backgroundColor: "",
+              // backgroundColor: colors.blueAccent[800],
             },
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,
             },
             "& .odd-row": {
-              backgroundColor: "",
+              backgroundColor: "#ffff",
               color: "", // Color for odd rows
             },
             "& .even-row": {
               //backgroundColor: "#8BD2CE",
-              backgroundColor: "#d0edec",
+              backgroundColor: "#ffff",
               color: "", // Color for even rows
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+               color: colors.blueAccent[900],
+               fontWeight: 800
             },
           }}
         >
           <DataGrid
             sx={{
               "& .MuiDataGrid-footerContainer": {
-                height: dataGridHeaderFooterHeight,
-                minHeight: dataGridHeaderFooterHeight,
+                // height: dataGridHeaderFooterHeight,
+                // minHeight: dataGridHeaderFooterHeight,
+                 height: dataGridFooterHeight,
+                 minHeight: dataGridFooterHeight,
               },
             }}
             key={accessID}
-            rows={listViewData}
+            rows={filteredRows}
+            // rows={listViewData}
             columns={columns}
-            page={page}
+           
             disableSelectionOnClick
-            rowHeight={dataGridRowHeight}
-            headerHeight={dataGridHeaderFooterHeight}
+            rowHeight={dataGridRowHeight_v1}
+            headerHeight={dataGridHeaderHeight_v1}
             getRowId={(row) => row.RecordID}
             pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[5, 10, 20]}
+             page={page}
+onPageSizeChange={handlePageSizeChange}
+            // onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              rowsPerPageOptions={[5, 10, 15, 20]} 
             onPageChange={(pageno) => handlePagechange(pageno)}
-            components={{
-              Toolbar: () => CustomToolbar(listViewData),
-            }}
+            // components={{
+            //   Toolbar: () => CustomToolbar(listViewData),
+            // }}
             loading={loading}
-            componentsProps={{
-              toolbar: {
-                showQuickFilter: true,
-                quickFilterProps: { debounceMs: 500 },
-              },
-            }}
+            // componentsProps={{
+            //   toolbar: {
+            //     showQuickFilter: true,
+            //     quickFilterProps: { debounceMs: 500 },
+            //   },
+            // }}
+                      components={{ Footer: CustomFooter }}          // 👈 add this
+  componentsProps={{                              // 👈 and this
+    footer: {
+      page,
+      pageSize,
+      totalRows: filteredRows.length,
+      onPageChange: handlePagechange,
+      // onPageSizeChange: setPageSize,
+      onPageSizeChange: handlePageSizeChange,
+      rowsPerPageOptions: [5, 10, 15, 20],
+    },
+  }}
             // getRowClassName={(params) =>
             //   params.row.Rate > params.row.FixedRate ||
             //   params.row.RemarkRecordID == "24"||
@@ -6010,9 +6403,11 @@ const ListviewSecondary = () => {
             );
           })()}
         </Box>
+            </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
 
           <Typography fontWeight={600} fontSize={15} lineHeight={1}
+            mt={2}
             mb={-2} >
             {accessID === "TR371" || accessID === "TR373" || accessID === "TR399" ? null : "Actions Guide"}
           </Typography>

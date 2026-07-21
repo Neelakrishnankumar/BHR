@@ -63,6 +63,7 @@ import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 
+
 const Approval = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -272,17 +273,14 @@ const Approval = () => {
   };
   return (
     <React.Fragment>
-      {/* <Box m="10px">
-        <Typography
-          variant="h2"
-          fontSize="1.2rem"
-          fontWeight="bold"
-          marginBottom={3}
-        >
-          Approval
-        </Typography> */}
+  
       {getLoading ? <LinearProgress /> : null}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+     <Box sx={{ height: "100vh", overflow: "auto" }}>
+            <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+    
+    
+              <Box sx={{ borderRadius: 3, p: 2}}>
+      <Paper sx={{ borderRadius: 3 }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -296,9 +294,14 @@ const Approval = () => {
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
               <Typography
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                variant="h5"
+                sx={{
+                     fontSize: 20,
+                     fontWeight: 700,
+                     color: "#111827",
+                     // mb: 0.2,
+                         px: 1,
+                         py: 0.2,
+                   }}
               >
                 Approval
               </Typography>
@@ -319,8 +322,13 @@ const Approval = () => {
           </Box>
         </Box>
       </Paper>
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
+      </Box>
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+           
+                  <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+           
+           <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+             <Formik
           initialValues={initialvalues}
           onSubmit={(values, setSubmitting, resetForm) => {
             console.log(values, "8888888888");
@@ -350,9 +358,47 @@ const Approval = () => {
             resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
-              {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
-              {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
-
+              {/* ----- CARD HEADER ----- */}
+                                           <Box
+           display="flex"
+           alignItems="center"
+           gap={1.5}
+           mb={1}
+           sx={{ px: 2, pt: 2 }}
+         >
+           {/* ICON */}
+           <Box
+             sx={{
+               width: 36,
+               height: 36,
+               borderRadius: "50%",
+               backgroundColor: "#EFF6FF",
+               display: "flex",
+               alignItems: "center",
+               justifyContent: "center",
+             }}
+           >
+             <Typography sx={{ fontSize: 18 }}>
+              📝 
+             </Typography>
+           </Box>
+         
+           {/* TITLE + SUBTITLE */}
+           <Box>
+             <Typography
+               variant="subtitle1"
+               fontWeight={700}
+              color="#0D94885"
+             >
+               Approval
+             </Typography>
+         
+             <Typography variant="body2" color="text.secondary">
+               
+         Review and approve pending requests
+             </Typography>
+           </Box>
+         </Box>
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -851,7 +897,15 @@ const Approval = () => {
                 gap="20px"
               >
                 <LoadingButton
-                  color="secondary"
+                       sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
                   variant="contained"
                   type="submit"
                   loading={isLoading}
@@ -860,21 +914,33 @@ const Approval = () => {
                 </LoadingButton>
 
                 <Button
-                  color={"warning"}
+                  sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
                   variant="contained"
                   onClick={() => resetForm()}
                   // onClick={() => {
                   //   navigate("/Apps/TR213/LeaveType");
                   // }}
                 >
-                  Cancel
+                  Back
                 </Button>
               </Box>
             </form>
           )}
         </Formik>
       </Paper>
-      {/* </Box> */}
+       </Box>
+                    </Box>
+
+       </Box>
+                  </Box>
     </React.Fragment>
   );
 };

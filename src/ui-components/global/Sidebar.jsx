@@ -1104,23 +1104,23 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR328",
           },
 
-          //  {
-          //   name: "Audit",
-          //   id: 4346899,
-          //   url: "/Apps/TR260/EditAudit",
-          //   icon: (
-          //     <Tooltip title="Audit">
-          //       <ArtTrackIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR328",
-          // },
+           {
+            name: "Audit",
+            id: 43468919,
+            url: "/Apps/TR408/EditAudit",
+            icon: (
+              <Tooltip title="Audit">
+                <ArtTrackIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR408",
+          },
 
         ],
       },
@@ -1822,14 +1822,14 @@ const Sidebars = () => {
     >
       <Sidebar
         breakPoint="md"
-        backgroundColor="#F5F5F5"
+        backgroundColor="#ffff" //#F5F5F5
       >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            backgroundColor: "#F5F5F5",
+            backgroundColor: "#ffff",
             overflowY: "auto",
           }}
         >
@@ -1840,7 +1840,7 @@ const Sidebars = () => {
               justifyContent: "space-between",
               alignItems: "center",
               p: 2,
-              backgroundColor: "#F5F5F5",
+              backgroundColor: "#ffff",
               borderBottom: "1px solid #E5E7EB",
             }}
           >
@@ -1947,11 +1947,12 @@ const Sidebars = () => {
             sx={{
               borderTop: `1px solid ${colors.primary[300]}`,
               p: 1,
-              backgroundColor: colors.primary[400],
+              //backgroundColor: colors.primary[400],
+              backgroundColor: "#ffff", // Light gray background
             }}
           >
             {/* LOGOUT BUTTON */}
-            <ListItem disablePadding sx={{ mb: 0.5 }}>
+            <ListItem disablePadding sx={{ mb: 0.5, }}>
               <Tooltip title="Logout">
                 <ListItemButton
                   onClick={() => handleLogout()}

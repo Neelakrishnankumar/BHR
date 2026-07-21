@@ -81,34 +81,34 @@ const PartyByDate = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
 
 
-useEffect(() => {
-  // 🔥 Clear grid data when page loads
-  setRows([]);
-
-  // 🔥 Clear session stored sort also
-  sessionStorage.removeItem("partySort");
-
-  // 🔥 Clear when browser refresh / tab close
-  const handleUnload = () => {
+  useEffect(() => {
+    // 🔥 Clear grid data when page loads
     setRows([]);
+
+    // 🔥 Clear session stored sort also
     sessionStorage.removeItem("partySort");
-  };
 
-  window.addEventListener("beforeunload", handleUnload);
+    // 🔥 Clear when browser refresh / tab close
+    const handleUnload = () => {
+      setRows([]);
+      sessionStorage.removeItem("partySort");
+    };
 
-  return () => {
-    // 🔥 Clear when navigating away
-    setRows([]);
-    window.removeEventListener("beforeunload", handleUnload);
-  };
-}, []);
-useEffect(() => {
-  if (Array.isArray(PartyFilterData)) {
-    setRows(PartyFilterData);
-  } else {
-    setRows([]);
-  }
-}, [PartyFilterData]);
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      // 🔥 Clear when navigating away
+      setRows([]);
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
+  useEffect(() => {
+    if (Array.isArray(PartyFilterData)) {
+      setRows(PartyFilterData);
+    } else {
+      setRows([]);
+    }
+  }, [PartyFilterData]);
 
   function AttendanceTool() {
     return (
@@ -120,7 +120,7 @@ useEffect(() => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>Party Details</Typography>
+          <Typography fontWeight={700}>Party Details</Typography>
         </Box>
         <Box
           sx={{
@@ -254,24 +254,72 @@ useEffect(() => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
+      {/* HEADER */}
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 2,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          background: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box display="flex" alignItems="center" gap={1}>
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Aging Report</Typography>
+
+            <Typography
+              sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+            >
+              Aging Report
+            </Typography>
           </Box>
-          <Box display="flex">
+
+          <Box display="flex" gap={1}>
             <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <IconButton
+                onClick={() => fnLogOut("Close")}
+                sx={{
+                  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <IconButton
+                onClick={() => fnLogOut("Logout")}
+                sx={{
+                  bgcolor: "#FEF2F2",
+                  color: "#DC2626",
+                  "&:hover": {
+                    bgcolor: "#FEE2E2",
+                  },
+                }}
+              >
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -279,7 +327,16 @@ useEffect(() => {
         </Box>
       </Paper>
 
-      <Paper elevation={3} sx={{ margin: "10px" }}>
+      <Paper
+        elevation={0}
+        sx={{
+          backgroundColor: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+          p: 3,
+          margin: "10px",
+        }}
+      >
         <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
@@ -306,6 +363,32 @@ useEffect(() => {
                 resetForm();
               }}
             >
+              {/* ----- CARD HEADER ----- */}
+              <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                <Box
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    backgroundColor: "#EFF6FF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                  }}
+                >
+                  ⏳
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={700} color="#0D94885">
+                    Aging
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                     View outstanding balances and analyze receivables/payables by aging period.
+                  </Typography>
+                </Box>
+              </Box>
+
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -320,26 +403,20 @@ useEffect(() => {
                 <Stack direction="row" spacing={2}>
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     type="text"
                     id="partySort"
                     name="partySort"
                     label="Sort Party By"
                     value={values.partySort}
-                    focused
-                    // onChange={handleChange}
                     onChange={(e) => {
                       handleChange(e);
                       sessionStorage.setItem("partySort", e.target.value);
                     }}
                     onBlur={handleBlur}
                     select
-                    sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional: adjust if needed
-                      },
-                      width: 200,
-                    }}
+                    sx={{  width: 200 }}
                   >
                     <MenuItem value={"ByDays"}>By Days</MenuItem>
                     <MenuItem value={"ByAmount"}>By Amount</MenuItem>
@@ -352,51 +429,64 @@ useEffect(() => {
                   padding={1}
                   justifyContent="end"
                 >
-                  <Button type="submit" variant="contained" color="secondary">
-                    APPLY
+                  <Button
+                    type="submit"
+                    variant="contained"
+                     sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                  >
+                    Apply
                   </Button>
                   <Button
                     type="reset"
                     variant="contained"
                     color="error"
                     onClick={() => {
-                      // 1️⃣ Clear Formik field
                       setFieldValue("partySort", "");
-
-                      // 2️⃣ Clear sessionStorage
                       sessionStorage.removeItem("partySort");
-
-                      setRows([]); // Clear displayed data
+                      setRows([]);
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      borderRadius: 2,
+                      px: 4,
                     }}
                   >
-                    RESET
+                    Reset
                   </Button>
                 </Stack>
               </Box>
+
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
                   height="500px"
-                  // height={dataGridHeight}
                   marginTop={2}
                   sx={{
                     "& .MuiDataGrid-root": {
-                      // border: "none",
+                      border: "none",
                     },
                     "& .MuiDataGrid-cell": {
-                      // borderBottom: "none",
+                      borderBottom: "1px solid #F3F4F6",
                     },
                     "& .name-column--cell": {
                       color: colors.greenAccent[300],
                     },
                     "& .MuiDataGrid-columnHeaders": {
                       backgroundColor: colors.blueAccent[800],
-                      // borderBottom: "none",
+                      borderBottom: "none",
                     },
                     "& .MuiDataGrid-virtualScroller": {
                       backgroundColor: colors.primary[400],
                     },
                     "& .MuiDataGrid-footerContainer": {
-                      // borderTop: "none",
+                      borderTop: "none",
                       backgroundColor: colors.blueAccent[800],
                     },
                     "& .MuiCheckbox-root": {
@@ -404,20 +494,51 @@ useEffect(() => {
                     },
                     "& .odd-row": {
                       backgroundColor: "",
-                      color: "", // Color for odd rows
+                      color: "",
                     },
                     "& .even-row": {
                       backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
+                      color: "",
                     },
                     "& .weekoff-row": {
-                      backgroundColor: "#f2acb7", // light red
-                      color: "#b71c1c", // dark red text
+                      backgroundColor: "#f2acb7",
+                      color: "#b71c1c",
                     },
                     "& .holiday-row": {
-                      backgroundColor: "#c9f5cc", // light green
-                      color: "#1b5e20", // dark green text
+                      backgroundColor: "#c9f5cc",
+                      color: "#1b5e20",
                     },
+
+                     "& .MuiDataGrid-columnHeaderTitle": {
+                            color: colors.blueAccent[900],
+                            fontWeight: 600,
+                          },
+                          "& .MuiTablePagination-root": {
+                            color: colors.blueAccent[900],
+                          },
+                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                          "& .MuiTablePagination-root": {
+                            color: "#fff",
+                          },
+
+                          "& .MuiTablePagination-selectLabel": {
+                            color: "#fff",
+                          },
+
+                          "& .MuiTablePagination-displayedRows": {
+                            color: "#fff",
+                          },
+
+                          /* Dropdown icon */
+                          "& .MuiTablePagination-selectIcon": {
+                            color: "#fff",
+                          },
+
+                          /* Left & Right arrow buttons */
+                          "& .MuiTablePagination-actions button": {
+                            color: "#fff",
+                          },
+
                   }}
                 >
                   <DataGrid
@@ -429,7 +550,6 @@ useEffect(() => {
                     }}
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-                    // rows={PartyFilterData}
                     rows={rows}
                     columns={PartyFilterColumn}
                     disableSelectionOnClick
@@ -438,7 +558,7 @@ useEffect(() => {
                     page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -459,14 +579,6 @@ useEffect(() => {
                         ? "odd-row"
                         : "even-row"
                     }
-                    // getRowClassName={(params) => {
-                    //   const status = params.row.Status;
-                    //   if (status === "WeekOff") return "weekoff-row";
-                    //   if (status === "Holiday") return "holiday-row";
-                    //   return params.indexRelativeToCurrentPage % 2 === 0
-                    //     ? "odd-row"
-                    //     : "even-row";
-                    // }}
                   />
                 </Box>
               </Box>

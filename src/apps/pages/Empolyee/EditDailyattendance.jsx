@@ -345,7 +345,10 @@ const EditdailyAttendance = () => {
   };
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            
+       <Box sx={{ height: "100vh", overflow: "auto" }}>
+                <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                            <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -353,7 +356,16 @@ const EditdailyAttendance = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Daily Attendance</Typography>
+            <Typography 
+               sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
+            >Daily Attendance</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -370,8 +382,12 @@ const EditdailyAttendance = () => {
         </Box>
       </Paper>
 
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
+     <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
+        
+               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+        
+        <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+          <Formik
           initialValues={AttInitialvalues}
           enableReinitialize={true}
           onSubmit={(values, { resetForm }) => {
@@ -400,6 +416,50 @@ const EditdailyAttendance = () => {
                 dispatch(resetTrackingData());
               }}
             >
+
+
+                 {/* ----- CARD HEADER ----- */}
+                                                <Box
+                display="flex"
+                alignItems="center"
+                gap={1.5}
+                mb={1}
+                sx={{ px: 2, pt: 2 }}
+              >
+                {/* ICON */}
+                <Box
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    backgroundColor: "#EFF6FF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography sx={{ fontSize: 18 }}>
+                   📋
+                  </Typography>
+                </Box>
+              
+                {/* TITLE + SUBTITLE */}
+                <Box>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight={700}
+                     color="#0D94885"
+                  >
+                    Daily Attendance
+                  </Typography>
+              
+                  <Typography variant="body2" color="text.secondary">
+                   Daily Attendance Summary Report
+                  </Typography>
+                </Box>
+              </Box>
+
+
               <Box
                 display="grid"
                 gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -417,7 +477,8 @@ const EditdailyAttendance = () => {
                     type="date"
                     id="date"
                     label="Date"
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.date}
@@ -430,9 +491,28 @@ const EditdailyAttendance = () => {
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional: adjust if needed
-                      },
+                      "& .MuiOutlinedInput-root": {
+      backgroundColor: "#fff",
+      borderRadius: "6px",
+
+      "& fieldset": {
+        borderColor: "#d1d5db", // 👈 light grey border
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfc4cc", // 👈 slightly darker on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+        borderWidth: "1px",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "#6b7280", // label grey
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#6b7280", // keep same on focus
+    },
                       width: 200,
                     }}
                     inputProps={{ max: new Date().toISOString().split("T")[0] }}
@@ -525,11 +605,36 @@ const EditdailyAttendance = () => {
                   padding={1}
                   justifyContent="end"
                 >
-                  <Button type="submit" variant="contained" color="secondary">
-                    APPLY
+                  <Button
+                   type="submit" 
+                   variant="contained" 
+                   sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                   >
+                    Apply
                   </Button>
-                  <Button type="reset" variant="contained" color="error">
-                    RESET
+                  <Button 
+                  type="reset" 
+                  variant="contained" 
+                  color="error"
+                  sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        // bgcolor: "#0D9488",
+                        // "&:hover": {
+                        //   bgcolor: "#0F766E",
+                        // },
+                      }}
+                  >
+                    Reset
                   </Button>
                   {/* {rows?.length > 0 && (
                     <PDFDownloadLink
@@ -649,6 +754,35 @@ const EditdailyAttendance = () => {
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                   }}
                 >
                   <DataGrid
@@ -696,6 +830,10 @@ const EditdailyAttendance = () => {
           )}
         </Formik>
       </Paper>
+        </Box>
+                    </Box>
+           </Box>
+                    </Box>
     </React.Fragment>
   );
 };
