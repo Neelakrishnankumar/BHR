@@ -3002,6 +3002,23 @@ export const InvoiceAnalyticsget = createAsyncThunk(
     }
   }
 );
+export const PartySync = createAsyncThunk(
+  "Partysync/Analysis",
+  async (data) => {
+    const url = store.getState().globalurl.PartySyncurl;
+
+    console.log(data);
+
+    const response = await axios.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  }
+);
 export const TeacherOccupancyget = createAsyncThunk(
   "Mgr_Desk/TeacherOccupancy",
   async (payload, { rejectWithValue, getState }) => {
