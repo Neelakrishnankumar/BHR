@@ -1694,6 +1694,7 @@ export function MultiFormikOptimizedAutocomplete({
   multiple = true,
   errors,
   helper,
+   sx,  
   ...props
 }) {
   const [options, setOptions] = useState([]);
@@ -1728,13 +1729,33 @@ export function MultiFormikOptimizedAutocomplete({
 
   return (
     <Autocomplete
-      sx={{
-        "& .MuiAutocomplete-tag": { maxWidth: "90px" },
-         "& .MuiOutlinedInput-root": {
-      borderRadius: "8px",
-      backgroundColor: "#fff",
-    },
-      }}
+    //   sx={{
+    //     "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+    //      "& .MuiOutlinedInput-root": {
+    //   borderRadius: "8px",
+    //   backgroundColor: "#fff",
+    // },
+    //   }}
+     sx={[
+        {
+          "& .MuiAutocomplete-tag": { maxWidth: "70px" },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+            height: 40,
+            flexWrap: "nowrap",
+            overflow: "hidden",
+            paddingTop: "0px !important",
+            paddingBottom: "0px !important",
+            alignItems: "center",
+          },
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
+            padding: "0 4px !important",
+            minWidth: "30px !important",
+          },
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),   // 👈 merge caller's sx on top
+      ]}
      
       multiple={multiple}
       limitTags={1}
