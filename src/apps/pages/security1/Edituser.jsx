@@ -96,14 +96,30 @@ const Edituser = () => {
         setErrorMsgData(data);
 
         const schema1 = Yup.object().shape({
-          name: Yup.string()
-            .required(data.Users.name)
-            .matches(/^\S+$/, data.Users.NameNoSpace),
-          password: Yup.string().required(data.Users.password),
-          comfirmpassword: Yup.string()
-            .required(data.Users.comfirmpassword)
-            .oneOf([Yup.ref("password"), null], "Password and Confirm Password must match"),
-          usergroup: Yup.object().required(data.Users.usergroup).nullable(),
+          // name: Yup.string()
+          //   .required(data.Users.name)
+          //   .matches(/^\S+$/, data.Users.NameNoSpace),
+          // password: Yup.string().required(data.Users.password),
+          // comfirmpassword: Yup.string()
+          //   .required(data.Users.comfirmpassword)
+          //   .oneOf([Yup.ref("password"), null], "Password and Confirm Password must match"),
+          // usergroup: Yup.object().required(data.Users.usergroup).nullable(),
+        name: Yup.string()
+    .required(data.Users.name)
+    .matches(/^\S+$/, data.Users.NameNoSpace),
+
+  password: Yup.string().required(data.Users.password),
+
+  comfirmpassword: Yup.string()
+    .required(data.Users.comfirmpassword)
+    .oneOf(
+      [Yup.ref("password"), null],
+      data.Users.passwordMatch
+    ),
+
+  usergroup: Yup.object()
+    .required(data.Users.usergroup)
+    .nullable(),
         });
         setValidationSchema(schema1);
       })

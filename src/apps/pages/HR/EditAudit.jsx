@@ -67,9 +67,15 @@ const EditAudit = () => {
   const EmpId = sessionStorage.getItem("EmpId");
   const CompanyID = sessionStorage.getItem("compID");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-const company = sessionStorage.getItem("company");
+
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const company = sessionStorage.getItem("company");
 console.log(company, "--company");
 
+  const lastThree = SubscriptionCode?.slice(-3) || "";
+  const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+    ? lastThree
+    : "";
 
 
 const HeaderImg = sessionStorage.getItem("CompanyHeader");
@@ -128,6 +134,7 @@ useEffect(() => {
       Query: {
         AccessID: "2143",
         ScreenName: "User",
+         VerticalLicense: Subscriptionlastthree,
         Filter: `CompanyID=${CompanyID}`,
         Any: "",
       },
@@ -158,6 +165,7 @@ useEffect(() => {
       Query: {
         AccessID: "2117",
         ScreenName: "Employee",
+         VerticalLicense: Subscriptionlastthree,
         Filter: `CompanyID='${CompanyID}' GROUP BY RecordID`,
         Any: "",
       },
@@ -252,7 +260,11 @@ console.log(isEmployee,isUser, "---isUserisEmployee,isUser");
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>Audit</Typography>
+          <Typography
+           sx={{
+              fontWeight: 700,
+            }}
+          >List Of Audits </Typography>
         </Box>
         <Box
           sx={{
@@ -275,14 +287,15 @@ console.log(uservalue, "--uservalue");
 
   const AuditColumn = [
   { field: "SLNO", headerName: "SL#", width: 30,align: "right" },
-  { field: "Date", headerName: "Date", width: 120,align: "right" },
-  { field: "CompanyName", headerName: "Company", width: 200 },
+ {field: "Module",headerName: "Module",width: 150},
+  // { field: "CompanyName", headerName: "Company", width: 200 },
   { field: "ScreenName", headerName: "Screen Name", width: 200 },
-  { field: "Name", headerName: "Name", width: 200 },
+  { field: "Name", headerName: "User", width: 200 },
   // { field: "UserName", headerName: "User", width: 160 },
   // { field: "EmployeeName", headerName: "Employee", width: 160 },
   { field: "Activity", headerName: "Activity", width: 130 },
-  {field: "Module",headerName: "Module",width: 150},
+  
+   { field: "Date", headerName: "Date Time", width: 120,align: "right" },
 
 ];
  
@@ -484,6 +497,7 @@ console.log(isEmployee,isUser, "---isUserisEmployee,isUser");
       Query: {
         AccessID: proData ? "2024" : "2117", // or "2101" if you're using EMPLOYEETEAMS
         ScreenName: "Employee",
+        VerticalLicense: Subscriptionlastthree,
         Filter: employeeFilter,
         Any: "",
         CompId: "",
@@ -513,8 +527,19 @@ const getDiffInDays = (from, to) => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
+      <Paper
+                                elevation={0}
+                                sx={{
+                                  mx: 2,
+                                  mt: 1,
+                                  mb: 1,
+                                  p: 1,
+                                  borderRadius: 3,
+                                  border: "1px solid #E5E7EB",
+                                  bgcolor: "#fff",
+                                }}
+                              >
+        <Box display="flex" justifyContent="space-between" p={1}>
 
      
 
@@ -524,8 +549,22 @@ const getDiffInDays = (from, to) => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Audit</Typography>
+
+              <Box>
+                                                       <Typography
+                                                         sx={{
+                                                           fontSize: 20,
+                                                           fontWeight: 700,
+                                                           color: "#111827",
+                                                           // mb: 0.2,
+                                                               px: 1,
+                                                 py: 0.2,
+                                                         }}
+                                                       >
+                                                        Audit
+                                                        </Typography>
           </Box>
+                    </Box>
           <Box display="flex">
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -598,16 +637,18 @@ const getDiffInDays = (from, to) => {
   <Grid container spacing={2} alignItems="center">
 
     {/* From Date */}
-    <Grid item xs={12} sm={6} md={1.5}>
+    <Grid item xs={12} sm={6} md={2.2}>
        <TextField
   fullWidth
-  variant="standard"
+  variant="outlined"
+  size="small"
   type="date"
   id="fromdate"
   name="fromdate"
   label="From Date"
   value={values.fromdate}
-  focused
+   InputLabelProps={{ shrink: true }}
+  // focused
   onChange={(e) => {
     handleChange(e);
     sessionStorage.setItem("fromdate", e.target.value);
@@ -617,7 +658,7 @@ const getDiffInDays = (from, to) => {
     </Grid>
 
     {/* To Date */}
-    <Grid item xs={12} sm={6} md={1.5}>
+    <Grid item xs={12} sm={6} md={2.2}>
      
  <Dialog
   open={openDialog}
@@ -648,13 +689,15 @@ const getDiffInDays = (from, to) => {
 
 <TextField
   fullWidth
-  variant="standard"
+  variant="outlined"
+  size="small"
   type="date"
   id="todate"
   name="todate"
   label="To Date"
+   InputLabelProps={{ shrink: true }}
   value={values.todate}
-  focused
+  // focused
   onChange={(e) => {
     const selectedToDate = e.target.value;
 
@@ -729,7 +772,7 @@ const getDiffInDays = (from, to) => {
     </Grid> */}
 
     {/* User */}
-    <Grid item xs={12} sm={6} md={2}>
+    <Grid item xs={12} sm={6} md={2.2}>
     <MultiFormikOptimizedAutocomplete
                     // sx={{ width: 500 }}
                     name="user"
@@ -755,6 +798,7 @@ const getDiffInDays = (from, to) => {
                         Query: {
                           AccessID: "2143",
                           ScreenName: "User",
+                           VerticalLicense: Subscriptionlastthree,
                           Filter: `CompanyID=${CompanyID}`,
                           Any: "",
                         },
@@ -764,7 +808,7 @@ const getDiffInDays = (from, to) => {
     </Grid>
 
     {/* Employee */}
-    <Grid item xs={12} sm={6} md={2}>
+    <Grid item xs={12} sm={6} md={2.2}>
       <MultiFormikOptimizedAutocomplete
         fullWidth
         name="Employee"
@@ -796,8 +840,19 @@ const getDiffInDays = (from, to) => {
       gap={1}
       ml={10}
     >
-      <Button type="submit" variant="contained" color="secondary">
-        APPLY
+      <Button type="submit"
+       variant="contained"
+        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                      >
+        Apply
       </Button>
 
   {/* <Button 
@@ -807,7 +862,19 @@ const getDiffInDays = (from, to) => {
       </Button> */}
       <Button
        type="reset" 
-       variant="contained" color="error"
+       variant="contained" 
+       color="error"
+        sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        color: "#ffff",
+                        // bgcolor: "#0D9488",
+                        "&:hover": {
+                          color: "#ffff",
+                          // bgcolor: "#0F766E",
+                        },
+                      }}
         onClick={() => {
     resetForm();                 // ✅ Clear Formik values
     setFinalAuditData([]);       // ✅ Clear DataGrid
@@ -821,7 +888,7 @@ const getDiffInDays = (from, to) => {
     console.log("Form Reset Done");
   }}
        >
-        RESET
+        Reset
       </Button>
 
       {/* <PDFDownloadLink
@@ -866,7 +933,7 @@ const getDiffInDays = (from, to) => {
                 <Box
                   height="500px"
                   // height={dataGridHeight}
-                  marginTop={2}
+                  // marginTop={2}
                   sx={{
                     "& .MuiDataGrid-root": {
                       // border: "none",
@@ -892,13 +959,14 @@ const getDiffInDays = (from, to) => {
                       color: `${colors.greenAccent[200]} !important`,
                     },
                     "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
-                    },
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
                     "& .weekoff-row": {
                       backgroundColor: "#f2acb7", // light red
                       color: "#b71c1c", // dark red text
@@ -907,6 +975,31 @@ const getDiffInDays = (from, to) => {
                       backgroundColor: "#c9f5cc", // light green
                       color: "#1b5e20", // dark green text
                     },
+ "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                      /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
+
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
+                     /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
                   }}
                 >
                   <DataGrid

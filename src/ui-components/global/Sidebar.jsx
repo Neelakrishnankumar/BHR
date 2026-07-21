@@ -1104,23 +1104,23 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR328",
           },
 
-          //  {
-          //   name: "Audit",
-          //   id: 4346899,
-          //   url: "/Apps/TR260/EditAudit",
-          //   icon: (
-          //     <Tooltip title="Audit">
-          //       <ArtTrackIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR328",
-          // },
+           {
+            name: "Audit",
+            id: 43468919,
+            url: "/Apps/TR408/EditAudit",
+            icon: (
+              <Tooltip title="Audit">
+                <ArtTrackIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR408",
+          },
 
         ],
       },

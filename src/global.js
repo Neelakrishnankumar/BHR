@@ -355,9 +355,9 @@ const initialState = {
   promotionstandardActUrl: "",
   PromotionstudmarksGetUrl: "",
   promotionstudentmarksPosturl: "",
-
-    TermUrl: "",
-
+  TermUrl: "",
+  CocurricularActivityPost: "",
+  CocurricularActivityGet: ""
 };
 
 export const getUrlSlice = createSlice({
@@ -585,6 +585,9 @@ export const getUrlSlice = createSlice({
       state.PromotionstudmarksGetUrl = APIurl + "StudentMarksGet.php";
       state.promotionstudentmarksPosturl = APIurl + "StudentMarksPost.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
+      state.CocurricularActivityPost = APIurl + "CocurricularActivityPost.php";
+      state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
+ 
     },
 
   },

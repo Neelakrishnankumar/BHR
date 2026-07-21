@@ -67,6 +67,9 @@ import {
   getResignation,
   CustomisedCaptionGet,
   ContractInvoice,
+  CocurricularActivityGet,
+  CocurricularActivityPost,
+  resetTrackingData,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -90,7 +93,11 @@ import {
   GridToolbarExport,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
+  GridActionsCellItem
 } from "@mui/x-data-grid";
+import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
+import AddIcon from "@mui/icons-material/Add";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { LoadingButton } from "@mui/lab";
@@ -172,6 +179,7 @@ const Editemployee = () => {
     SubscriptionCode?.endsWith(code),
   );
   console.log(SubscriptionCode, "codehr");
+  const sliceSubscriptionCode = SubscriptionCode.slice(-3);
   const EMPID = sessionStorage.getItem("EmpId");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
@@ -269,7 +277,11 @@ const Editemployee = () => {
   console.log(state, "emnployee");
   const screenname = state.screenName;
   const designationType = state.Classification || "";
+  console.log(designationType, "---find designation type");
+  
   const isStudentClassification = designationType === "Student";
+  console.log(isStudentClassification, "--find isStudentClassification");
+  
   const isLoading = useSelector((state) => state.formApi.loading);
   const ParentgetData = useSelector((state) => state.formApi.Partygetdata);
   console.log("ParentgetData", ParentgetData);
@@ -368,6 +380,12 @@ const Editemployee = () => {
   const [validationSchema17, setValidationSchema17] = useState(null);
   const [validationSchema18, setValidationSchema18] = useState(null);
   const [validationSchema23, setValidationSchema23] = useState(null);
+     const [validationSchema24, setValidationSchema24] = useState(null);
+
+  const formikRef = useRef(null);
+  const [editingRecordID, setEditingRecordID] = useState(null);
+  const [isAddingActivity, setIsAddingActivity] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const today = new Date();
 
@@ -418,6 +436,7 @@ const Editemployee = () => {
   const [openManagerModal, setOpenManagerModal] = useState(false); //Managers
   const [openItemCustodyModal, setOpenItemCustodyModal] = useState(false); // Itemcustody
   const [openCourseModal, setOpenCourseModal] = useState(false); // Course Attendance
+  const [opencocurricular, setOpenCocurricular] = useState(false); // Course Attendance
 
   //IMAGE PREVIEW
   const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
@@ -876,6 +895,20 @@ const Editemployee = () => {
         });
 
         setValidationSchema22(schema22);
+
+        //cocurricular_school scenario
+         const schema24 = Yup.object().shape({
+          date: Yup.string().trim().required(data.Cocurricularact.Date),
+          cocurricular: Yup.object().required(data.Cocurricularact.Cocurricular).nullable(),
+          rating: Yup.number()
+            .typeError("Rating must be a number")
+            .required(data.Cocurricularact.Rating)
+            .min(1, "Rating must be at least 1")
+            .max(10, "Rating should be less than or equal to 10"),
+        });
+
+        setValidationSchema24(schema24);
+    
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -1743,6 +1776,19 @@ const Editemployee = () => {
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
+
+     if (event.target.value == "24") {
+      dispatch(fetchApidata(accessID, "get", recID));
+      dispatch(
+        CocurricularActivityGet({
+          data: {
+            EmployeeID: recID,
+            CompanyID: CompanyID,
+          },
+        })
+      );
+
+    }
     if (event.target.value == "2") {
       dispatch(
         fetchExplorelitview(
@@ -2603,6 +2649,77 @@ const Editemployee = () => {
         </Box>
       </GridToolbarContainer>
     );
+      function Custombar() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>{`List of ${getBusinessCaption("Skills", "Skills")}`}</Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton
+              onClick={() => {
+                selectcelldata("", "A", "");
+                setOpenSkillModal(true);
+              }}
+            >
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+  }
+   function CocurricularToolbar() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>{`List of Co-curricular Activities`}</Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton
+              onClick={() => {
+                selectcelldata("", "A", "");
+                setOpenCocurricular(true);
+              }}
+            >
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+
   }
   //  function Attachments() {
   //   return (
@@ -5376,6 +5493,17 @@ const Editemployee = () => {
           },
         ]
       : []),
+      ...(is003Subscription
+      ? [
+          {
+            value: 24,
+            label: "Co-curricular Activity",
+            desc: "Student co-curricular activities and participation",
+            icon: "📋",
+          },
+        ]
+      : []),
+
     ...(initialValues.employeetype === "CI"
       ? [
           {
@@ -5416,12 +5544,14 @@ const Editemployee = () => {
           },
         ]
       : []),
-    {
+
+          {
       value: 1,
       label: getBusinessCaption("Skills", "Skills"),
       desc: "Skills and competency details",
       icon: "🛠️",
-    },
+       },
+   
     {
       value: 4,
       label: getBusinessCaption("Deployment", "Deployment"),
@@ -5544,6 +5674,8 @@ const Editemployee = () => {
           },
         ]
       : []),
+ 
+
   ];
 
   const currentSection = formSections.find(
@@ -5661,6 +5793,224 @@ const Editemployee = () => {
     );
   }
 
+
+  //School related Cocurricular
+
+  const [rowModesModel, setRowModesModel] = React.useState({});
+  	const CocurriculargetData = useSelector((state) => state.formApi.CocurriculargetData);
+  const rows = CocurriculargetData?.EmployeeProcess || [];
+
+  const editingRow = editingRecordID
+    ? rows.find((r) => String(r.RecordID) === String(editingRecordID))
+    : null;
+
+  const refreshGrid = () => {
+    dispatch(
+      CocurricularActivityGet({
+        data: {
+          EmployeeID: recID,
+          CompanyID: CompanyID,
+        },
+      })
+    ).catch((err) => {
+      console.error(err);
+      toast.error("Failed to fetch updated data.");
+    });
+  };
+  const resetFormToAddMode = () => {
+    setEditingRecordID(null);
+    setIsEdit(false);
+    setIsAddingActivity(false);
+    formikRef.current?.resetForm({
+      values: {
+        date: "",
+        cocurricular: null,
+        cocurricularName: "",
+        comments: "",
+        rating: "",
+      },
+    });
+  };
+  
+   const getRatingColor = (rating) => {
+    const colors = [
+      "#9E9E9E", // 0 / empty
+      "#B71C1C", // 1
+      "#D32F2F", // 2
+      "#F4511E", // 3
+      "#FB8C00", // 4
+      "#302cf2", // 5
+      "#C0CA33", // 6
+      "#8E24AA",// 7
+      "#00ACC1", // 8
+      "#1E88E5", // 9   
+      "#43A047",  // 10
+    ];
+
+    return colors[Number(rating)] || "#9E9E9E";
+  };
+
+  const AttColumn2 = [
+
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      editable: false,
+      sortable: false,
+      filterable: false,
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Action",
+      width: 80,
+      cellClassName: "actions",
+      getActions: (params) => {
+        return [
+          <GridActionsCellItem
+            icon={<ModeEditOutlinedIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(params.row)}
+            color="info"
+            size="small"
+          />,
+        ];
+      },
+    },
+    {
+      field: "EPDate",
+      headerName: "Date",
+      headerAlign: "center",
+      width: 100,
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Co-Curricular Activity",
+      field: "CocurricularActivity",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
+      editable: false,
+    },
+    {
+      field: "Rating",
+      headerName: "Rating",
+      headerAlign: "center",
+      width: 90,
+      align: "right",
+      editable: false,
+      renderCell: (params) => (
+        <Typography
+          sx={{
+            color: getRatingColor(params.value),
+            fontWeight: 600,
+            fontSize: 14,
+            width: "100%",
+            textAlign: "right",
+          }}
+        >
+          {params.value ?? "-"}
+        </Typography>
+      ),
+    },
+    {
+      field: "Comments",
+      headerName: "Comments",
+      headerAlign: "center",
+      width: 150,
+      hide: false,
+      editable: false,
+    },
+
+  ];
+  const AttInitialvalues = {
+    date: "",
+    cocurricular: null,
+    cocurricularName: "",
+    comments: "",
+    rating: "",
+  };
+  const handleApplyClick = async (values) => {
+    const idata = {
+      RecordID: isEdit == true ? editingRecordID : "-1",
+      CocurricularRecordID: isAddingActivity
+        ? "-1"
+        : values.cocurricular?.RecordID || editingRow?.CocurricularRecordID || "",
+      Rating: values.rating ? String(values.rating) : "",
+      EPDate: values.date || "",
+      Comments: values.comments || "",
+      CompanyID: CompanyID,
+      EmployeeID: recID,
+      AddFlag: isAddingActivity ? "Y" : "N",
+      CocurricularName: isAddingActivity
+        ? values.cocurricularName || ""
+        : "",
+    };
+
+    try {
+      const result = await dispatch(
+        CocurricularActivityPost({
+          data: idata,
+          action: isEdit == true ? "update" : "insert",
+        })
+      ).unwrap();
+
+      if (result.Status === "Y") {
+        toast.success(
+          result.Msg || (isEdit ? "Updated successfully!" : "Saved successfully!")
+        );
+
+        refreshGrid();
+        resetFormToAddMode();
+      } else {
+        toast.error(result.Msg || "Something went wrong");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error occurred while saving.");
+    }
+  };
+
+
+  const toInputDate = (dateStr) => {
+    if (!dateStr) return "";
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return dateStr;
+    const [dd, mm, yyyy] = parts;
+    if (yyyy.length === 4) return `${yyyy}-${mm}-${dd}`; // already DD-MM-YYYY
+    return dateStr;
+  };
+  const handleEditClick = (row) => () => {
+    setEditingRecordID(row.RecordID);
+    setIsEdit(true);
+    console.log(isEdit, "isEditinedit");
+    setIsAddingActivity(false);
+    formikRef.current?.setValues({
+      date: toInputDate(row.EPDate),
+      cocurricular: row.CocurricularRecordID
+        ? { RecordID: row.CocurricularRecordID, Name: row.CocurricularActivity }
+        : null,
+      cocurricularName: "",
+      comments: row.Comments || "",
+      rating: row.Rating || "",
+    });
+  };
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
@@ -10078,7 +10428,8 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ----- SHIFT DETAILS CARD ----- */}
-                        {is003Subscription === false && (
+                        {/* {is003Subscription === false && ( */}
+                        {isStudentClassification === false && (
                           <Box
                             sx={{
                               backgroundColor: "#F9FAFB",
@@ -12877,6 +13228,583 @@ const Editemployee = () => {
           ) : (
             false
           )}
+
+          {/* CoCurricular form -- school login */}
+           {show == "24" ? (
+       <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+              {/* LEFT: shared Form Sections sidebar — same as Personnel */}
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+
+              {/* RIGHT: Skills content */}
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
+                  <Formik
+                    // innerRef={formikRef}
+                     initialValues={initialValues}
+                    // enableReinitialize={false}
+                    //   validationSchema={validationSchema24}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      handleSubmit,
+                      setFieldValue
+                    }) => (
+                      <Box>
+                        {/* ----- CARD HEADER ----- */}
+                        <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>🎨</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Co-Curricular Activity
+                              </Typography>
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Track student involvement in extracurricular programs
+                              </Typography>
+                            </Box>
+                          </Box>
+                          {/* ----- Code/Name + Photo (separate column) ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                            {/* LEFT SIDE */}
+                            <Box
+                              flex={1}
+                              minWidth={280}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                              mt={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Code"
+                                name="Code"
+                                value={values.Code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                                inputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Name"
+                                name="Name"
+                                value={values.Name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                                InputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
+                          </Box>
+                        </Box>
+                        {/* ----- LIST OF SKILLS TABLE ----- */}
+                        <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                          }}
+                        >
+                          {/* <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
+                            <Typography variant="body2" fontWeight={700}>
+                              List of {getBusinessCaption("Skills", "Skills")} ({explorelistViewData?.length || 0})
+                            </Typography>
+                          </Box> */}
+
+                          <Box
+                            sx={{
+                               height:"350px",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
+                             rowHeight={dataGridRowHeight}
+                                  headerHeight={dataGridHeaderFooterHeight}
+                                  rows={rows}
+                                  columns={AttColumn2}
+                                  disableSelectionOnClick
+                                  rowModesModel={rowModesModel}
+                                  getRowId={(row) => row.RecordID}
+                                  disableRowSelectionOnClick
+                                  experimentalFeatures={{ newEditingApi: true }}
+                                  onProcessRowUpdateError={(error) => {
+                                    console.error("Row update validation failed:", error.message);
+                                    toast.error(error.message);
+                                  }}
+                                  rowsPerPageOptions={[5, 10, 20]}
+                                  getRowClassName={(params) =>
+                                    params.indexRelativeToCurrentPage % 2 === 0
+                                      ? "odd-row"
+                                      : "even-row"
+                                  }
+                                   onCellClick={(params) => {
+                              selectCellRowData({
+                                rowData: params.row,
+                                mode: "E",
+                                field: params.field,
+                                setFieldValue,
+                              });
+                              setOpenCocurricular(true);
+                              
+                            }}
+                             components={{ Toolbar: CocurricularToolbar }}
+                                  pagination
+                                  pageSize={pageSize}
+                                  page={page}
+                                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                  onPageChange={(newPage) => setPage(newPage)}
+                            />
+                          </Box>
+                        </Box>
+                      </Box>
+                    )}
+                  </Formik>
+                </Paper>
+
+                {/* ----- ADD/EDIT SKILL FORM CARD ----- */}
+                <Dialog
+                  open={opencocurricular}
+                  onClose={() => setOpenCocurricular(false)}
+                  maxWidth="sm"
+                  fullWidth
+                  PaperProps={{
+                    sx: {
+                      borderRadius: 3,
+                    },
+                  }}
+                >
+                  <Formik
+                   innerRef={formikRef}
+                      initialValues={AttInitialvalues}
+                      enableReinitialize={false}
+                      validationSchema={validationSchema24}
+                      onSubmit={(values, { resetForm }) => {
+                        setTimeout(() => {
+                         handleApplyClick(values);
+                           setOpenCocurricular(false);
+                        }, 100);
+                      }}
+                       onReset={() => {
+                            resetFormToAddMode();
+                            dispatch(resetTrackingData());
+                          }}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      resetForm,
+                      handleSubmit,
+                      setFieldValue,
+                    }) => (
+                      <>
+                      <form
+                          onSubmit={handleSubmit}
+                         
+                        >
+                        {/* Header */}
+
+                        <DialogTitle
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            borderBottom: "1px solid #E5E7EB",
+                          }}
+                        >
+                          <Typography variant="h6">
+                            Co-Curricular Activity
+                          </Typography>
+
+                          <IconButton onClick={() => setOpenCocurricular(false)}>
+                            <CloseIcon />
+                          </IconButton>
+                        </DialogTitle>
+
+                        {/* Body */}
+
+                        <DialogContent
+                          sx={{
+                            pt: 3,
+                            "&.MuiDialogContent-root": {
+                              paddingTop: "24px",
+                            },
+                          }}
+                        >
+                           <Box display="flex" flexDirection="column" gap={formGap}>
+
+                                {/* <Typography variant="h5" sx={{ color: "#0000D1" }}>
+
+                                  {isEdit ? "Edit Activity" : "Add Activity"}
+                             </Typography> */}
+                               <TextField
+                               name="date"
+                                 type="date"
+                                  label={
+                                    <>
+                                      Date
+                                      <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                    </>
+                                  }
+                                  variant="outlined"
+                                  size="small"
+                                  // focused
+                                  InputLabelProps={{ shrink: true }}
+                                  value={values.date}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  error={!!touched.date && !!errors.date}
+                                 helperText={touched.date && errors.date}
+                                  fullWidth
+                                />
+
+                              <Box
+  display="flex"
+  alignItems="flex-end"
+  gap={1}
+  sx={{ width: "100%" }}
+>
+  {/* INPUT FIELD */}
+  <Box sx={{ flex: 1 }}>
+                                 {isAddingActivity ? (
+                                   <TextField
+                                      fullWidth
+                                      name="cocurricularName"
+                                      label={
+                                        <>
+                                          Co-curricular Activity
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      variant="outlined"
+                                      size="small"
+                                    //  focused
+                                      placeholder="Enter new activity name"
+                                      value={values.cocurricularName || ""}
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={!!touched.cocurricularName && !!errors.cocurricularName}
+                                      helperText={touched.cocurricularName && errors.cocurricularName}
+                                   />
+                                  ) : (
+                                   <CheckinAutocomplete
+                                      fullWidth
+                                      name="cocurricular"
+                                      label={
+                                        <>
+                                         Co-curricular Activity
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="cocurricular"
+                                      value={values.cocurricular}
+                                      onChange={(newValue) => setFieldValue("cocurricular", newValue)}
+                                      error={!!touched.cocurricular && !!errors.cocurricular}
+                                      helperText={touched.cocurricular && errors.cocurricular}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2207",
+                                            ScreenName: "Cocurricular Activity",
+                                            Filter: `CompanyID=${CompanyID}`,
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+                                  )}
+  </Box>
+                                  {isEdit == false && (
+                                     <Box
+      sx={{
+        width: 40,
+        height: 40,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        mb: "2px", // aligns with underline perfectly
+      }}
+    >
+                                    <Tooltip title={isAddingActivity ? "Choose from list" : "Add new activity"}>
+                                    <IconButton
+                                      color="primary"
+                                      onClick={() => {
+                                        setIsAddingActivity((prev) => !prev);
+                                       setFieldValue("cocurricular", null);
+                                        setFieldValue("cocurricularName", "");
+                                     }}
+                                    >
+                                      {isAddingActivity ? <ListAltOutlinedIcon /> : <AddIcon />}
+                                    </IconButton>
+                                  </Tooltip>
+                             </Box>
+  )}
+</Box>
+
+                                <TextField
+                                  name="comments"
+                                  type="text"
+                                  label="Comments"
+                                  variant="outlined"
+                                  size="small"
+                                  // focused
+                                  value={values.comments}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  error={!!touched.comments && !!errors.comments}
+                                  helperText={touched.comments && errors.comments}
+                                  fullWidth
+                                />
+                                <TextField
+                                  name="rating"
+                                  type="number"
+                                  label={
+                                   <>
+                                      Rating (1-10)
+                                      <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                    </>
+                                  }
+                                  variant="outlined"
+                                  size="small"
+                                  // focused
+                                  // inputProps={{ min: 1, max: 10 }}
+                                  value={values.rating}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  error={!!touched.rating && !!errors.rating}
+                                  helperText={touched.rating && errors.rating}
+                                  fullWidth
+                                  sx={{
+                                    "& .MuiInputBase-input": {
+                                      textAlign: "right",
+                                      color: getRatingColor(values.rating),
+                                      fontWeight: 700,
+                                      fontSize: 16
+                                    },
+                                  }}
+                                />
+                               
+                              </Box>
+                        </DialogContent>
+
+                        {/* Footer */}
+
+                        <DialogActions
+                          sx={{
+                            borderTop: "1px solid #E5E7EB",
+                            p: 2,
+                            justifyContent: "flex-end",
+                            gap: 1,
+                          }}
+                        >
+                           <Button
+                                    type="submit"
+                                    sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#0D9488",
+                        "&:hover": {
+                          bgcolor: "#0F766E",
+                        },
+                      }}
+                                    variant="contained"
+                                  // disabled={mode === "E"}
+                                  >
+                                   Save
+                                  </Button>
+                                  <Button
+                                     sx={{
+                        textTransform: "none",
+                        borderRadius: 2,
+                        px: 4,
+                        bgcolor: "#F97316",
+                        "&:hover": {
+                          bgcolor: "#EA580C",
+                        },
+                      }}
+                                   variant="contained"
+                                    onClick={() => {
+                                      navigate(-1);
+                                    }}
+                                  >
+                                    Back
+                                  </Button>
+                        </DialogActions>
+
+                        </form>
+                      </>
+                    )}
+                  </Formik>
+                </Dialog>
+              </Box>
+            </Box>
+        ) : (
+          false
+        )}
 
           {/* Parent Form - school login */}
           {show == "15" ? (

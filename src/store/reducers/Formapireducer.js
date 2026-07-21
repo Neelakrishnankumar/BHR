@@ -431,6 +431,54 @@ export const AttendanceProcess = createAsyncThunk(
   },
 );
 
+
+//PERSONNEL_COCURRICULAR_SCHOOL_POST
+export const CocurricularActivityPost = createAsyncThunk(
+  "CocurricularActivity/Post",
+  async ({ data,action }) => {
+    var url = store.getState().globalurl.CocurricularActivityPost;
+    const payload = {
+      action: action,
+      data: data,
+    };
+
+    console.log("Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    console.log("CocurricularActivityPost Response:", response);
+
+    return response.data;
+  }
+);
+//PERSONNEL_COCURRICULAR_SCHOOL_GET
+export const CocurricularActivityGet = createAsyncThunk(
+  "CocurricularActivity/Get",
+  async ({ data }) => {
+    var url = store.getState().globalurl.CocurricularActivityGet;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      " ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const costingBOMData = createAsyncThunk(
   "BOM/costing",
   async ({ HeaderRecordID, ProductRecordID }) => {
@@ -3730,6 +3778,22 @@ export const getApiSlice = createSlice({
         state.invoiceAnalyticsError = action.payload || "Failed to fetch invoice analytics";
         state.invoiceAnalyticsData = null;
       })
+
+      
+      //PERSONNEL_COCURRICULAR_SCHOOL
+ .addCase(CocurricularActivityGet.pending, (state, action) => {
+        state.CocurriculargetData = {};
+        state.CocurriculargetDataLoading = true;
+      })
+      .addCase(CocurricularActivityGet.fulfilled, (state, action) => {
+        state.CocurriculargetData = action.payload;
+        state.CocurriculargetDataLoading = false;
+      })
+      .addCase(CocurricularActivityGet.rejected, (state, action) => {
+        state.CocurriculargetData = {};
+        state.CocurriculargetDataLoading = false;
+      })
+
       //SLOTS_GET_addcase
       .addCase(SlotGetfunction.pending, (state, action) => {
         state.slotStatus = "idle";
