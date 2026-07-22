@@ -1410,7 +1410,7 @@ const EditEmergency = () => {
                                     </Typography>
 
                                     <Switch
-                                      color="error"
+                                      color="success"
                                       checked={values[item.field]}
                                       onChange={(e) =>
                                         setFieldValue(

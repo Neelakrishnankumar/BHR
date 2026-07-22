@@ -593,7 +593,6 @@ export const getUrlSlice = createSlice({
       state.TermUrl = APIurl + "TermVersioningPost.php";
       state.CocurricularActivityPost = APIurl + "CocurricularActivityPost.php";
       state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
- 
       state.PartySyncurl = APIurl + "hrvendor_sync.php";
     },
 

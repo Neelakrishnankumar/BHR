@@ -676,6 +676,29 @@ const Listview = () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+  const handleSync = async () => {
+  try {
+    const res = await dispatch(
+      PartySync({
+        accessid: "TR321",
+        action: "sync",
+      })
+    ).unwrap();
+
+    if (res.status === "success") {
+      dispatch(
+        fetchListview(
+          accessID,
+          Subscriptionlastthree,
+          screenName,
+          `CompanyId=${compID}`
+        )
+      )
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
   function CustomToolbar() {
     return (
       <Box
@@ -981,13 +1004,38 @@ const Listview = () => {
 
 
             {accessID === "TR321" && (
+              <>
               <Tooltip arrow title="Party Analytics">
                 <IconButton
                   onClick={() => navigate("/Apps/CRMPartyAnalytics")}
                 >
                   <AssessmentIcon />
                 </IconButton>
-              </Tooltip>)}
+              </Tooltip>
+            <Button
+                  startIcon={<AutorenewIcon />}
+                  // onClick={() =>
+                  //   dispatch(
+                  //     PartySync({
+                  //       accessid: "TR321",
+                  //       action: "sync",
+                  //     })
+                  //   )
+                  // }
+                  onClick={handleSync}
+                  sx={{
+                    backgroundColor: "#5B2EFF",
+                    color: "#fff",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#4B25D8",
+                    },
+                  }}
+                >
+                  Sync Process
+                </Button>
+              </>
+            )}
 
 
             {accessID === "TR315" && (

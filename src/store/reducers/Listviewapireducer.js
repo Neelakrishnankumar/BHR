@@ -144,6 +144,7 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
+import BallotIcon from '@mui/icons-material/Ballot';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -8442,6 +8443,21 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
+            {is003Subscription && params.row.Classification == "Student" && (
+            <Link
+              to={`/Apps/AcademicReport/${params.row.RecordID}`}
+              state={{
+                EmpName: params.row.Name,
+                Employee: params.row.Personnel,
+              }}
+            >
+              <Tooltip title="Academic Report">
+                <IconButton color="info" size="small">
+                  <BallotIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            )}
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
                 <Tooltip title="Staff Timetable">

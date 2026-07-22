@@ -290,7 +290,7 @@ const EditTermfeestructure = () => {
                     IGST: item.IGST || 0,
                     Amount: item.Amount || 0,
                     Fine: item.Fine || 0,
-                    ON: item.IsActive === "Y" || item.IsActive === true,
+                    Mandatory: item.IsActive === "Y" || item.IsActive === true,
                     SortOrder: item.SortOrder || 0,
                     isNew: false,
                 }));
@@ -437,7 +437,7 @@ useEffect(() => {
                     IGST: payload.IGST || 0,
                     Amount: payload.Amount || 0,
                     Fine: payload.Fine || 0,
-                    IsActive: payload.ON ? "Y" : "N",
+                    IsActive: payload.IsActive ? "Y" : "N",
                     SortOrder: payload.SortOrder || 0,
                     DetailID: isNew ? -1 : Number(payload.DetailID),
                 },
@@ -516,9 +516,36 @@ useEffect(() => {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ░░░░░░░░░░░░░░░░░ DATA GRID COLUMNS ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+// ─── Handle active/inactive checkbox toggle ────────────────────────────
+    const handleToggleActive = (id, checked) => (event) => {
+        event.stopPropagation();
+        setRows((prevRows) =>
+            prevRows.map((row) =>
+                row.id === id ? { ...row, Mandatory: checked } : row
+            )
+        );
+    };
     const TTColumns = [
         { field: "RecordID", headerName: "Record ID", width: 120, hide: true },
+        {
+            field: "Mandatory",
+            headerName: "Mandatory",
+            width: 80,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            headerAlign: "center",
+            align: "center",
+            hide: mode === "V",
+            renderCell: (params) => (
+                <Checkbox
+                    checked={params.row.Mandatory !== false}
+                    onChange={handleToggleActive(params.id, params.row.Mandatory === false)}
+                    onClick={(e) => e.stopPropagation()}
+                    color="success"
+                />
+            ),
+        },
         {
             headerName: "Component",
             field: "Component",
@@ -641,7 +668,7 @@ useEffect(() => {
                 IGST: Number(row.IGST || 0),
                 Amount: Number(row.Amount || 0),
                 Fine: Number(row.Fine || 0),
-                IsActive: row.ON !== false ? "Y" : "N",
+                IsActive: row.Mandatory !== false ? "Y" : "N",
                 SortOrder: row.SortOrder || idx + 1,
             }));
 
@@ -930,7 +957,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                             AccessID: "2054",
                                             ScreenName: "Standard",
                                             VerticalLicense: Subscriptionlastthree,
-                                            Filter: `parentID='${compID}'`,
+                                            Filter: `parentID='${compID}' AND AcademicYearID='${AcademicYearID}'`,
                                             Any: "",
                                         },
                                     })}`}

@@ -237,6 +237,7 @@ import Editpromotion from "./pages/HR/Editpromotion";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
+import StudentReports from "./pages/Empolyee/EditAcademicreport";
 
 function App() {
   //   useEffect(() => {
@@ -1636,7 +1637,10 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:type/EditDeposit/:id/:Mode"
                     element={<Editdepositcash />}
                   /> 
-                  
+                  <Route
+                   path="/AcademicReport/:id"
+                    element={<StudentReports />}
+                  />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}

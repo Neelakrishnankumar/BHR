@@ -3008,6 +3008,7 @@ export const customerorderanalysis = createAsyncThunk(
     return response.data;
   },
 );
+
 export const productorderanalysis = createAsyncThunk(
   "Product Order/Analysis",
   async ({ data }) => {

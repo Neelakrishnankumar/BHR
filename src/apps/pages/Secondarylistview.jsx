@@ -179,6 +179,7 @@ const ListviewSecondary = () => {
   const baseurlUAAM = config.UAAM_URL;
   console.log("baseurlUAAM", baseurlUAAM)
   const state = location.state || {};
+  console.log(state,"State");
   const storedStatus = sessionStorage.getItem("Status") || state.LEStatus
   // const storedStatus = "Close";
   console.log(state.LEStatus, sessionStorage.getItem("Status"), "storedStatus");
@@ -5069,12 +5070,13 @@ function CustomToolbar() {
 
                     {/* Source Term */}
                     <Grid item xs={5}>
-                      <Typography
+                      {/* <Typography
                           variant="body2"
                         >
                           Transfer From Term 
-                        </Typography>
+                        </Typography> */}
                        <CheckinAutocomplete
+                       label="Transfer From Term"
                           name="fromTerm"
                           variant="outlined"
                           value={fromTerm}
@@ -5091,9 +5093,10 @@ function CustomToolbar() {
 
                     {/* Target Term */}
                     <Grid item xs={5}>
-                      <Typography variant="body2">Transfer To Term </Typography>
+                      {/* <Typography variant="body2">Transfer To Term </Typography> */}
                      <CheckinAutocomplete
                        multiple
+                       label="Transfer To Term"
                         name="toTerm"
                         value={toTerm}
                         disabled={!fromTerm}
@@ -5108,7 +5111,8 @@ function CustomToolbar() {
                             AccessID: "2197",
                             ScreenName: "To Term",
                             VerticalLicense: "003",
-                            Filter: `AcademicYearID='${leaderID}'`,
+                            // Filter: `AcademicYearID='${leaderID}'`,
+                            Filter:`AcademicYearID='${leaderID}' AND CompanyID = '${CompId}' AND NOT EXISTS (SELECT 1 FROM TIMETABLEHDR WHERE TT_TERMID = RecordID AND TT_STD = '${state.projectID}')`,
                             Any: ""
                           }
                         }))}` : ""}

@@ -974,6 +974,7 @@ const Editproject = () => {
     // price: data.Price ?? 0.00,
     budget: data.Budget === "" ? "0.00" : data.Budget,
     scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+    Planned:data.PlannedCost === "" ? "0.00" : data.PlannedCost,
     actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
     price: data.Price === "" ? "0.00" : data.Price,
     OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
@@ -1028,7 +1029,7 @@ const Editproject = () => {
       Price: values.price || 0,
       Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
-      // Planned: values.Planned || 0,
+      Planned: values.Planned || 0,
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
@@ -1038,6 +1039,7 @@ const Editproject = () => {
       AcademicYearID: params.filtertype || 0,
       TentativeStartDate: values.TentativeStartDate || "",
       TentativeEndDate: values.TentativeEndDate || "",
+       SlotGroupID:0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -2949,6 +2951,52 @@ const Editproject = () => {
                                   },
                                 }}
                               />
+                               <TextField
+                                fullWidth
+                                disabled={mode == "V"}
+                                type="number"
+                                id="Planned"
+                                name="Planned"
+                                value={values.Planned}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Planned Cost"
+                                variant="outlined"
+                                size="small"
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                                focused
+                                InputProps={{
+                                  readOnly: true,
+                                  inputProps: {
+                                    style: {
+                                      textAlign: "right",
+                                    },
+                                  },
+                                }}
+                              />
                               <TextField
                                 fullWidth
                                 disabled={mode == "V"}
@@ -2995,6 +3043,7 @@ const Editproject = () => {
                                   },
                                 }}
                               />
+                             
                               <TextField
                                 disabled={mode == "V"}
                                 fullWidth

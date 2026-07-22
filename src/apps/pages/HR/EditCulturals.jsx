@@ -1400,7 +1400,7 @@ const EditCulturals = () => {
                                     </Typography>
 
                                     <Switch
-                                      color="primary"
+                                      color="success"
                                       checked={values[item.field]}
                                       onChange={(e) =>
                                         setFieldValue(

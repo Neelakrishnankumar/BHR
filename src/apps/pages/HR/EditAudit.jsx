@@ -289,13 +289,13 @@ console.log(uservalue, "--uservalue");
   { field: "SLNO", headerName: "SL#", width: 30,align: "right" },
  {field: "Module",headerName: "Module",width: 150},
   // { field: "CompanyName", headerName: "Company", width: 200 },
-  { field: "ScreenName", headerName: "Screen Name", width: 200 },
-  { field: "Name", headerName: "User", width: 200 },
+  { field: "ScreenName", headerName: "Screen Name", width: 350 },
+  { field: "Name", headerName: "User", width: 230 },
   // { field: "UserName", headerName: "User", width: 160 },
   // { field: "EmployeeName", headerName: "Employee", width: 160 },
   { field: "Activity", headerName: "Activity", width: 130 },
   
-   { field: "Date", headerName: "Date Time", width: 120,align: "right" },
+   { field: "Date", headerName: "Date & Time", width: 120,align: "right" },
 
 ];
  

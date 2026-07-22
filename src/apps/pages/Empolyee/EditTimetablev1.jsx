@@ -1935,6 +1935,7 @@ const EditTimetablev1 = () => {
                           </Typography>
                         </Box>
                         <Switch
+                        color="success"
                           checked={rules.noConsecutiveSameSubject}
                           onChange={() =>
                             handleRuleChange("noConsecutiveSameSubject")
@@ -1969,6 +1970,7 @@ const EditTimetablev1 = () => {
                           </Typography>
                         </Box>
                         <Switch
+                        color="success"
                           checked={rules.distributeEvenly}
                           onChange={() =>
                             handleRuleChange("distributeEvenly")

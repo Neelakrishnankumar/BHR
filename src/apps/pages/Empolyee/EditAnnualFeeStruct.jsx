@@ -14,6 +14,7 @@ import {
     Switch,
     FormControlLabel,
     FormControl,
+    Checkbox
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -105,13 +106,13 @@ const EditAnnualfeestructure = () => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-//    const AcademicYearID =
-//   !/\d{4}-\d{2}/.test(params.id2 || "")
-//     ? params.id2
-//     : !/\d{4}-\d{2}/.test(params.id4 || "")
-//     ? params.id4
-//     : "";
-   const AcademicYearID = params.parentID3 || 0;
+    //    const AcademicYearID =
+    //   !/\d{4}-\d{2}/.test(params.id2 || "")
+    //     ? params.id2
+    //     : !/\d{4}-\d{2}/.test(params.id4 || "")
+    //     ? params.id4
+    //     : "";
+    const AcademicYearID = params.parentID3 || 0;
     // ── Local state ────────────────────────────────────────────────────────────
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
@@ -131,7 +132,7 @@ const EditAnnualfeestructure = () => {
             })
             .then((data) => {
                 setErrorMsgData(data);
-                const schema = Yup.object().shape({                   
+                const schema = Yup.object().shape({
                     Standard: Yup.array()
                         .min(1, data.AnnualFees.Standard)
                         .required(data.AnnualFees.Standard),
@@ -167,7 +168,7 @@ const EditAnnualfeestructure = () => {
                 Amount: parseFloat(item.Amount || 0),
                 // GET response uses "Fine"; we store as Fine, send as FinePerDay on save
                 Fine: parseFloat(item.Fine || 0),
-                IsActive: item.IsActive || "Y",
+                Mandatory: item.IsActive == "Y" ? true : false,
             }));
             setRows([]);
             setTimeout(() => setRows(formattedRows), 0);
@@ -268,7 +269,7 @@ const EditAnnualfeestructure = () => {
                 Component: "",
                 Amount: 0,
                 Fine: 0,
-                IsActive: "Y",
+                Mandatory: "Y",
                 isNew: true,
             };
 
@@ -293,7 +294,14 @@ const EditAnnualfeestructure = () => {
             </GridToolbarContainer>
         );
     }
-
+    const handleToggleActive = (id, checked) => (event) => {
+        event.stopPropagation();
+        setRows((prevRows) =>
+            prevRows.map((row) =>
+                row.id === id ? { ...row, Mandatory: checked } : row
+            )
+        );
+    };
     // ─────────────────────────────────────────────────────────────────────────
     // DataGrid columns
     // ─────────────────────────────────────────────────────────────────────────
@@ -303,6 +311,25 @@ const EditAnnualfeestructure = () => {
             headerName: "Record ID",
             width: 100,
             hide: true,
+        },
+        {
+            field: "Mandatory",
+            headerName: "Mandatory",
+            width: 80,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            headerAlign: "center",
+            align: "center",
+            hide: mode === "V",
+            renderCell: (params) => (
+                <Checkbox
+                    checked={params.row.Mandatory !== false}
+                    onChange={handleToggleActive(params.id, params.row.Mandatory === false)}
+                    onClick={(e) => e.stopPropagation()}
+                    color="success"
+                />
+            ),
         },
         {
             headerName: "Component",
@@ -445,7 +472,7 @@ const EditAnnualfeestructure = () => {
             Component: row.Component || "",
             Amount: Number(row.Amount || 0),
             FinePerDay: Number(row.Fine || 0),   // Fine in GET → FinePerDay on save
-            IsActive: row.IsActive || "Y",
+            IsActive: row.Mandatory === false ? "N" : "Y",
         }));
 
         // TermsID: send comma-separated string from multi-select
@@ -505,7 +532,7 @@ const EditAnnualfeestructure = () => {
         }
     };
 
-  
+
     return (
         <React.Fragment>
             {getLoading && <LinearProgress />}
@@ -609,7 +636,7 @@ const EditAnnualfeestructure = () => {
                                     )}
                                 </FormControl>
                                 {/* Terms — multi-select */}
-                               
+
                                 {/* Applicable Standards — multi-select */}
                                 <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
                                     <MultiFormikOptimizedAutocomplete
@@ -819,7 +846,7 @@ const EditAnnualfeestructure = () => {
                                                 Send reminder 7 days before
                                             </Typography>
                                             <Typography variant="body2" sx={{ color: "#94a3b8" }}>
-                                                Via SMS &amp; email to parents
+                                                Via SMS & email to parents
                                             </Typography>
                                         </Box>
                                     </Box>

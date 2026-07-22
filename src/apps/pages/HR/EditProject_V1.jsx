@@ -2232,6 +2232,13 @@ const Editproject_V1 = () => {
             Code: data.SlotGroupCode,
           }
         : null,
+        hod:
+      data.ProjectOwnerID && data.ProjectOwnerID !== "0"
+        ? {
+            RecordID: data.ProjectOwnerID,
+            Name: data.ProjectOwnerName,
+          }
+        : null,
   };
 
   // ─── Fnsave (non-003 header save) ────────────────────────────────────────────
@@ -2274,6 +2281,8 @@ const Editproject_V1 = () => {
       TentativeStartDate: values.TentativeStartDate || "",
       TentativeEndDate: values.TentativeEndDate || "",
       SlotGroupID: values.slotGroup ? values.slotGroup.RecordID : 0 || 0,
+      ProjectOwnerID: values.hod ? values.hod.RecordID : 0 || 0,
+
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -3542,7 +3551,24 @@ const Editproject_V1 = () => {
                             helperText={touched.incharge && errors.incharge}
                             url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2111", ScreenName: "Project Incharge", VerticalLicense: Subscriptionlastthree, Filter: `parentID=${CompanyID}`, Any: "" } })}`}
                           />
-
+                          {is003Subscription === true ? (
+                            <CheckinAutocomplete
+                              disabled={mode == "V"}
+                              name="hod"
+                              label="HOD"
+                              variant="outlined"
+                              id="hod"
+                              value={values.hod}
+                              onChange={(newValue) => {
+                                setFieldValue("hod", {
+                                  RecordID: newValue.RecordID,
+                                  Code: newValue.Code,
+                                  Name: newValue.Name,
+                                });
+                              }}
+                              url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2206", ScreenName: "HOD", VerticalLicense: Subscriptionlastthree, Filter: `DesignationRank < '${values?.incharge?.DesignationRank}' AND parentID=${values?.incharge?.parentID}`, Any: "" } })}`}
+                            />
+                          ) : null}
                           {is003Subscription ? (
                             <CheckinAutocomplete
                               disabled={mode == "V"}
@@ -3564,6 +3590,7 @@ const Editproject_V1 = () => {
                               url={`${listViewurl}?data=${JSON.stringify({ Query: { AccessID: "2171", ScreenName: "Slot Group", VerticalLicense: Subscriptionlastthree, Filter: `CompanyID=${CompanyID}`, Any: "" } })}`}
                             />
                           ) : null}
+                          
                           {is003Subscription === false ? (
                             <CheckinAutocomplete
                               disabled={mode == "V"}
