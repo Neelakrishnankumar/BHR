@@ -129,6 +129,8 @@ const EditTermfeestructure = () => {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const location = useLocation();
     const rowData = location.state || {};
+    console.log(rowData, "--find rowData");
+    
     const [subjectid, setSubjectid] = useState(null);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -930,7 +932,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                             AccessID: "2054",
                                             ScreenName: "Standard",
                                             VerticalLicense: Subscriptionlastthree,
-                                            Filter: `parentID='${compID}'`,
+                                            Filter: `parentID='${compID}' AND AcademicYearID='${rowData.AcademicYearID}'`,
                                             Any: "",
                                         },
                                     })}`}
