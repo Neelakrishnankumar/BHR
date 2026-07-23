@@ -4079,7 +4079,7 @@ const Editemployee = () => {
   const ContractInitialValue = {
     Code: Data.Code,
     Name: Data.Name,
-    Discount: contractorData.Discount,
+    discount: contractorData.discount,
     Term: contractorData.Term || null,
     Components: contractorData.Components || [],
     FromPeriod: contractorData.fromperiod,
@@ -15516,6 +15516,7 @@ const Editemployee = () => {
                                               Code: newValue.Code,
                                               Name: newValue.Name,
                                               Header: newValue.HeaderID,
+                                              TermsID: newValue.TermsID,
                                               Term1DueDate:
                                                 newValue.Term1DueDate,
                                               Term2DueDate:
@@ -15614,7 +15615,7 @@ const Editemployee = () => {
                                                 ScreenName: "Components",
                                                 VerticalLicense:
                                                   Subscriptionlastthree,
-                                                Filter: `HeaderID=${values?.Term?.Header}`,
+                                                Filter: `HeaderID=${values?.Term?.Header} AND TermID=${values?.Term?.TermsID}`,
                                                 Any: "",
                                               },
                                             },

@@ -176,11 +176,14 @@ const Editpromotion_v1 = () => {
 
   console.log(promoterows, "---find promotiongetdata");
 
-  const [rows, setRows] = useState([]);// Pool grid (not yet promoted)
+  const [rows, setRows] = useState([]); // Pool grid (not yet promoted)
   const [selectionModel, setSelectionModel] = useState([]);
 
-    const [assignedRows, setAssignedRows] = useState([]); // "Already assigned" grid
-   const [selectionModelAssigned, setSelectionModelAssigned] = useState([]);
+  const [assignedRows, setAssignedRows] = useState([]); // "Already assigned" grid
+  const [selectionModelAssigned, setSelectionModelAssigned] = useState([]);
+
+  console.log(assignedRows, "--find assigned rows in promotion");
+
   //ASSESMENT_DIALOG_SECTION
 
   const promotionstudmarksgetloading = useSelector(
@@ -211,6 +214,31 @@ const Editpromotion_v1 = () => {
       setSelectionModel(selectedIds);
     }
   }, [promoterows]);
+
+  //   useEffect(() => {
+  //   if (promoterows.length > 0) {
+  //     const assigned = promoterows.filter((row) => row.IsPromoted === "Y");
+  //     const pool = promoterows.filter((row) => row.IsPromoted !== "Y");
+
+  //     setAssignedRows(assigned);
+  //     setRows(pool);
+  //     setSelectionModel([]);
+  //     setSelectionModelAssigned([]);
+  //   }
+  // }, [promoterows]);
+
+
+  //   useEffect(() => {
+  //   if (promoterows.length > 0) {
+  //     const assigned = promoterows.filter((row) => row.IsPromoted === "Y");
+  //     const pool = promoterows.filter((row) => row.IsPromoted !== "Y");
+
+  //     setAssignedRows(assigned);
+  //     setRows(pool);
+  //     setSelectionModel([]);
+  //     setSelectionModelAssigned([]);
+  //   }
+  // }, [promoterows]);
 
   //Marks_Assessment_GET
   useEffect(() => {
@@ -624,14 +652,12 @@ const Editpromotion_v1 = () => {
     }
   };
 
-
-    const alreadyAssignedRows = useMemo(
+  const alreadyAssignedRows = useMemo(
     () => rows.filter((row) => row.IsPromoted === "Y"),
     [rows],
   );
   console.log(alreadyAssignedRows, "--find alreadyAssignedRows");
-  
- 
+
   // Students not currently checked/selected in the grid
   const studentsRemainingInPool = useMemo(
     () => rows.length - selectionModel.length,
@@ -649,121 +675,121 @@ const Editpromotion_v1 = () => {
   };
 
   const processRowUpdateAssment = (newRow, oldRow) => {
-  const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
-  const updatedRow = { ...newRow, isNew };
+    const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
+    const updatedRow = { ...newRow, isNew };
 
-  setRowsAssmnt((prev) => {
-    const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
-    const updated = [...prev];
-    updated[index] = updatedRow;
-    return updated;
-  });
+    setRowsAssmnt((prev) => {
+      const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
+      const updated = [...prev];
+      updated[index] = updatedRow;
+      return updated;
+    });
 
-  // Track which rows were actually edited (keyed by RecordID so re-edits overwrite, not duplicate)
-  setEditedAssessmentRows((prev) => ({
-    ...prev,
-    [newRow.RecordID]: updatedRow,
-  }));
+    // Track which rows were actually edited (keyed by RecordID so re-edits overwrite, not duplicate)
+    setEditedAssessmentRows((prev) => ({
+      ...prev,
+      [newRow.RecordID]: updatedRow,
+    }));
 
-  // ❌ removed: savemarks(newRow) — no longer fire API per cell edit
-  return updatedRow;
-};
+    // ❌ removed: savemarks(newRow) — no longer fire API per cell edit
+    return updatedRow;
+  };
 
-const handleAssmntSave = async () => {
-  if (!rowsassmnt.length) {
-    toast.error("No records to save");
-    return;
-  }
-
-  const idata = rowsassmnt.map((row) => ({
-    RecordID: row.RecordID,
-    Marks: row.Marks || 0,
-    OutOfMarks: row.OutOfMarks || 0,
-  }));
-
-  console.log(idata, "--SAVE MARKS PAYLOAD (array of objects)");
-// return;
-
-  try {
-    const response = await dispatch(
-      promotionstudmarksupdate({ idata: { StudentMarks: idata } })
-    );
-
-    if (response.payload.Status === "Y") {
-      toast.success(response.payload.Msg);
-      setEditedAssessmentRows({}); // clear tracked edits
-      dispatch(
-        promototioStudMarksGET({
-          StudentID: marksDialogStudent?.RecordID,
-          ProjectID: rowData.projectID || recID,
-          CompanyID: CompanyID,
-        }),
-      );
-    } else {
-      toast.error(response.payload.Msg);
+  const handleAssmntSave = async () => {
+    if (!rowsassmnt.length) {
+      toast.error("No records to save");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Save failed");
-  }
-};
 
-// const handleAssmntSave = async () => {
-//   if (!rowsassmnt.length) {
-//     toast.error("No records to save");
-//     return;
-//   }
+    const idata = rowsassmnt.map((row) => ({
+      RecordID: row.RecordID,
+      Marks: row.Marks || 0,
+      OutOfMarks: row.OutOfMarks || 0,
+    }));
 
-//   const StudentMarks = rowsassmnt.map((row) => ({
-//     RecordID: String(row.RecordID),
-//     Marks: String(row.Marks || 0),
-//     OutOfMarks: String(row.OutOfMarks || 0),
-//   }));
+    console.log(idata, "--SAVE MARKS PAYLOAD (array of objects)");
+    // return;
 
-//   const payload = {
-//     StudentMarks, // ✅ matches API structure
-//   };
+    try {
+      const response = await dispatch(
+        promotionstudmarksupdate({ idata: { StudentMarks: idata } }),
+      );
 
-//   console.log(payload, "--FINAL PAYLOAD");
-// // return;
-//   try {
-//     const response = await dispatch(
-//       promotionstudmarksupdate(payload) // ✅ send wrapped object
-//     );
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        setEditedAssessmentRows({}); // clear tracked edits
+        dispatch(
+          promototioStudMarksGET({
+            StudentID: marksDialogStudent?.RecordID,
+            ProjectID: rowData.projectID || recID,
+            CompanyID: CompanyID,
+          }),
+        );
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Save failed");
+    }
+  };
 
-//     if (response.payload.Status === "Y") {
-//       toast.success(response.payload.Msg);
-//       setEditedAssessmentRows({});
+  // const handleAssmntSave = async () => {
+  //   if (!rowsassmnt.length) {
+  //     toast.error("No records to save");
+  //     return;
+  //   }
 
-//       dispatch(
-//         promototioStudMarksGET({
-//           StudentID: marksDialogStudent?.RecordID,
-//           ProjectID: rowData.projectID || recID,
-//           CompanyID: CompanyID,
-//         })
-//       );
-//     } else {
-//       toast.error(response.payload.Msg);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     toast.error("Save failed");
-//   }
-// };
-//   const processRowUpdateAssment = (newRow, oldRow) => {
-//     const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
-//     const updatedRow = { ...newRow, isNew };
+  //   const StudentMarks = rowsassmnt.map((row) => ({
+  //     RecordID: String(row.RecordID),
+  //     Marks: String(row.Marks || 0),
+  //     OutOfMarks: String(row.OutOfMarks || 0),
+  //   }));
 
-//     setRowsAssmnt((prev) => {
-//       const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
-//       const updated = [...prev];
-//       updated[index] = updatedRow;
-//       return updated;
-//     });
-//     // fire the save using the guaranteed-fresh newRow
-//     savemarks(newRow);
-//     return updatedRow;
-//   };
+  //   const payload = {
+  //     StudentMarks, // ✅ matches API structure
+  //   };
+
+  //   console.log(payload, "--FINAL PAYLOAD");
+  // // return;
+  //   try {
+  //     const response = await dispatch(
+  //       promotionstudmarksupdate(payload) // ✅ send wrapped object
+  //     );
+
+  //     if (response.payload.Status === "Y") {
+  //       toast.success(response.payload.Msg);
+  //       setEditedAssessmentRows({});
+
+  //       dispatch(
+  //         promototioStudMarksGET({
+  //           StudentID: marksDialogStudent?.RecordID,
+  //           ProjectID: rowData.projectID || recID,
+  //           CompanyID: CompanyID,
+  //         })
+  //       );
+  //     } else {
+  //       toast.error(response.payload.Msg);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Save failed");
+  //   }
+  // };
+  //   const processRowUpdateAssment = (newRow, oldRow) => {
+  //     const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
+  //     const updatedRow = { ...newRow, isNew };
+
+  //     setRowsAssmnt((prev) => {
+  //       const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
+  //       const updated = [...prev];
+  //       updated[index] = updatedRow;
+  //       return updated;
+  //     });
+  //     // fire the save using the guaranteed-fresh newRow
+  //     savemarks(newRow);
+  //     return updatedRow;
+  //   };
 
   const savemarks = async (row) => {
     try {
@@ -988,8 +1014,7 @@ const handleAssmntSave = async () => {
     );
   }
 
-
-   function AssignedToolbar() {
+  function AssignedToolbar() {
     return (
       <GridToolbarContainer
         sx={{
@@ -1004,21 +1029,49 @@ const handleAssmntSave = async () => {
       </GridToolbarContainer>
     );
   }
-  const handlePromote = async (values) => {
-    // if (selectionModel.length === 0) {
-    //   toast.error("Please select at least one student");
-    //   return;
-    // }
 
-    // if (!values.standard || !values.standard.RecordID) {
-    //   toast.error("Please select a Standard to promote to");
-    //   return;
-    // }
+  const handlePromote = (values) => {
+    if (selectionModel.length === 0) {
+      toast.error("Please select at least one student");
+      return;
+    }
+
+    if (!selectedPromotion) {
+      toast.error("Please select a Standard to promote to");
+      return;
+    }
 
     const selectedRows = rows.filter((row) =>
       selectionModel.includes(row.RecordID),
     );
-    console.log(selectedRows, "-selectedRows");
+    const remainingRows = rows.filter(
+      (row) => !selectionModel.includes(row.RecordID),
+    );
+
+    const promotedRows = selectedRows.map((row) => ({
+      ...row,
+      IsPromoted: "Y",
+      Status: "Promoted",
+    }));
+
+    setAssignedRows((prev) => [...prev, ...promotedRows]);
+    setRows(remainingRows);
+    setSelectionModel([]);
+  };
+
+  const handlePromoteProcess = async (values) => {
+    if (assignedRows.length === 0) {
+      toast.error("Please promote at least one student before processing");
+      return;
+    }
+
+    if (!selectedPromotion) {
+      toast.error("Please select a Standard to promote to");
+      return;
+    }
+
+    const assignedIds = new Set(assignedRows.map((r) => r.RecordID));
+    const combined = [...assignedRows]; // for latest Reason text
 
     const idata = {
       header: {
@@ -1026,21 +1079,52 @@ const handleAssmntSave = async () => {
         CompanyID: CompanyID?.toString(),
         PromotedStandardID: selectedPromotion?.RecordID?.toString(),
       },
-      data: rows.map((row) => ({
+      // data: promoterows.map((row) => ({
+      //   RecordID: row.RecordID?.toString(),
+      //   Reason:
+      //     combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+      //     row.Reason ||
+      //     "",
+      //   ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
+      //   StudentID: row.StudentID,
+      // })),
+
+      data: assignedRows.map((row) => ({
         RecordID: row.RecordID?.toString(),
-        Reason: row.Reason || "",
-        ispromoted: selectionModel.includes(row.RecordID) ? "Y" : "N",
+        Reason:
+          combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+          row.Reason ||
+          "",
+        ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
         StudentID: row.StudentID,
       })),
+      //     data: Object.values(
+      //   promoterows.reduce((acc, row) => {
+      //     // keep the latest — assigned status takes priority if duplicate StudentID
+      //     if (!acc[row.StudentID] || assignedIds.has(row.RecordID)) {
+      //       acc[row.StudentID] = {
+      //         RecordID: row.RecordID?.toString(),
+      //         Reason:
+      //           combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+      //           row.Reason ||
+      //           "",
+      //         ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
+      //         StudentID: row.StudentID,
+      //       };
+      //     }
+      //     return acc;
+      //   }, {}),
+      // ),
     };
+    console.log(idata, "total process button idata");
 
-    console.log(idata, "--idata in handlePromote");
     // return;
     try {
       const response = await dispatch(promotionupdate({ idata }));
       if (response.payload.Status == "Y") {
         toast.success(response.payload.Msg);
         setSelectionModel([]);
+        setSelectionModelAssigned([]);
         dispatch(
           promototionGET({
             ProjectID: rowData.projectID || recID,
@@ -1054,10 +1138,55 @@ const handleAssmntSave = async () => {
       toast.error("Error occurred while promoting students.");
     }
   };
+  // const handlePromoteProcess = async (values) => {
+  //   if (assignedRows.length === 0) {
+  //     toast.error("Please promote at least one student before processing");
+  //     return;
+  //   }
 
+  //   if (!selectedPromotion) {
+  //     toast.error("Please select a Standard to promote to");
+  //     return;
+  //   }
+
+  //   const idata = {
+  //     header: {
+  //       ProjectID: (rowData.projectID || recID)?.toString(),
+  //       CompanyID: CompanyID?.toString(),
+  //       PromotedStandardID: selectedPromotion?.RecordID?.toString(),
+  //     },
+  //     data: [...rows, ...assignedRows].map((row) => ({
+  //       RecordID: row.RecordID?.toString(),
+  //       Reason: row.Reason || "",
+  //       ispromoted: assignedRows.some((a) => a.RecordID === row.RecordID)
+  //         ? "Y"
+  //         : "N",
+  //       StudentID: row.StudentID,
+  //     })),
+  //   };
+
+  //   try {
+  //     const response = await dispatch(promotionupdate({ idata }));
+  //     if (response.payload.Status == "Y") {
+  //       toast.success(response.payload.Msg);
+  //       setSelectionModel([]);
+  //       setSelectionModelAssigned([]);
+  //       dispatch(
+  //         promototionGET({
+  //           ProjectID: rowData.projectID || recID,
+  //           CompanyID: CompanyID,
+  //         }),
+  //       );
+  //     } else {
+  //       toast.error(response.payload.Msg);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error occurred while promoting students.");
+  //   }
+  // };
 
   // ─── Unassign: move selected rows from the assigned grid -> pool grid ───────
-  const handleUnassign = async () => {
+  const handleUnassign = () => {
     if (selectionModelAssigned.length === 0) {
       toast.error("Please select at least one student to unassign");
       return;
@@ -1066,50 +1195,19 @@ const handleAssmntSave = async () => {
     const selectedRows = assignedRows.filter((row) =>
       selectionModelAssigned.includes(row.RecordID),
     );
+    const remainingAssigned = assignedRows.filter(
+      (row) => !selectionModelAssigned.includes(row.RecordID),
+    );
 
-    const idata = {
-      header: {
-        ProjectID: (rowData.projectID || recID)?.toString(),
-        CompanyID: CompanyID?.toString(),
-        PromotedStandardID: selectedPromotion?.RecordID?.toString() || "",
-      },
-      data: [...rows, ...assignedRows].map((row) => ({
-        RecordID: row.RecordID?.toString(),
-        Reason: row.Reason || "",
-        ispromoted: selectionModelAssigned.includes(row.RecordID)
-          ? "N"
-          : assignedRows.some((a) => a.RecordID === row.RecordID)
-            ? "Y"
-            : "N",
-        StudentID: row.StudentID,
-      })),
-    };
+    const unassignedRows = selectedRows.map((row) => ({
+      ...row,
+      IsPromoted: "N",
+      Status: "Not Promoted",
+    }));
 
-    try {
-      const response = await dispatch(promotionupdate({ idata }));
-      if (response.payload.Status == "Y") {
-        toast.success(response.payload.Msg);
-
-        // ---- LOCAL MOVE: assigned -> pool (no refetch needed) ----
-        const unassignedNow = selectedRows.map((row) => ({
-          ...row,
-          IsPromoted: "N",
-          Status: "Not Promoted",
-        }));
-
-        setRows((prev) => [...prev, ...unassignedNow]);
-        setAssignedRows((prev) =>
-          prev.filter(
-            (row) => !selectionModelAssigned.includes(row.RecordID),
-          ),
-        );
-        setSelectionModelAssigned([]);
-      } else {
-        toast.error(response.payload.Msg);
-      }
-    } catch (error) {
-      toast.error("Error occurred while unassigning students.");
-    }
+    setRows((prev) => [...prev, ...unassignedRows]);
+    setAssignedRows(remainingAssigned);
+    setSelectionModelAssigned([]);
   };
   return (
     <React.Fragment>
@@ -1301,27 +1399,28 @@ const handleAssmntSave = async () => {
                         effective dates.
                       </Typography>
                     </Box>
-                    
                   </Box>
-<Box
-  display="flex"
-  justifyContent="space-between"
-  alignItems="center"
-  margin={1}
-  sx={{
-    backgroundColor: "#e6f0f2",
-    border: "1px solid #c7dfe3",
-    borderRadius: "6px",
-    padding: "10px 16px",
-  }}
->
-  {/* LEFT SIDE */}
-  <Box display="flex" alignItems="center" gap={2}>
-    <Typography  sx={{ fontWeight: 600, color: "#0D9488",minWidth: 80 }}>
-      Promote to
-    </Typography>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    margin={1}
+                    sx={{
+                      backgroundColor: "#e6f0f2",
+                      border: "1px solid #c7dfe3",
+                      borderRadius: "6px",
+                      padding: "10px 16px",
+                    }}
+                  >
+                    {/* LEFT SIDE */}
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Typography
+                        sx={{ fontWeight: 600, color: "#0D9488", minWidth: 80 }}
+                      >
+                        Promote to
+                      </Typography>
                       <PromotionprojAutocomplete
-                        sx={{ minWidth: 220}}
+                        sx={{ minWidth: 220 }}
                         name="standard"
                         label={
                           <span>
@@ -1343,336 +1442,316 @@ const handleAssmntSave = async () => {
                         error={!!touched.standard && !!errors.standard}
                         helperText={touched.standard && errors.standard}
                       />
-                      </Box>
+                    </Box>
                     {/* RIGHT SIDE */}
-  <Typography
-    variant="body2"
-    sx={{ color: "#5f6b6d" }}
-  >
-    {studentsRemainingInPool} students remaining in Promotion
-  </Typography>
-
-</Box>
-<Box
-sx={{
-      border: "1px solid #d3d3d3", // grey border
-    borderRadius: "4px",
-    overflow: "hidden", // keeps border clean
-}}
->
-
-
+                    <Typography variant="body2" sx={{ color: "#5f6b6d" }}>
+                      {studentsRemainingInPool} students remaining in Promotion
+                    </Typography>
+                  </Box>
                   <Box
-                    padding={1}
-                     height={"40vh"}
-                    // height={dataGridHeightExplore}
-                    // sx={{
-                    //   "& .MuiDataGrid-columnHeaders": {
-                    //     backgroundColor: "#3a9e9e", // teal header to match image
-                    //     color: "#fff",
-                    //   },
-                    //   "& .MuiDataGrid-columnSeparator": { display: "none" },
-                    //   "& .MuiDataGrid-virtualScroller": {
-                    //     backgroundColor: colors.primary[400],
-                    //   },
-                    //   "& .MuiDataGrid-footerContainer": {
-                    //     backgroundColor: "#3a9e9e",
-                    //     color: "#fff",
-                    //   },
-
-                    //   "& .odd-row": { backgroundColor: "" },
-                    //   "& .even-row": { backgroundColor: "#d9f0ef" },
-                    //   //checkbox
-
-                    //   "& .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root": {
-                    //     backgroundColor: "#fff", // keep white even when checked
-                    //     //   border: "1px solid grey",  // keep same border
-                    //     color: "#3a9e9e", // tick color (optional)
-                    //   },
-                    // }}
-
                     sx={{
-                      "& .MuiDataGrid-root": {
-                        border: "none",
-                      },
-                      "& .cell-negative-status": {
-                        color: colors.redAccent[500],
-                        fontWeight: 600,
-                      },
-                      "& .cell-positive-status": {
-                        color: colors.greenAccent[400],
-                        fontWeight: 600,
-                      },
-                      "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        // backgroundColor: "#25adad",
-                        borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                        // borderColor: "#d0edec",
-                        // backgroundColor: "",
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        // backgroundColor: "#d0edec",
-                        backgroundColor: "",
-                        color: "", // Color for even rows
-                      },
+                      border: "1px solid #d3d3d3", // grey border
+                      borderRadius: "4px",
+                      overflow: "hidden", // keeps border clean
+                    }}
+                  >
+                    <Box
+                      padding={1}
+                      height={"40vh"}
+                      // height={dataGridHeightExplore}
+                      // sx={{
+                      //   "& .MuiDataGrid-columnHeaders": {
+                      //     backgroundColor: "#3a9e9e", // teal header to match image
+                      //     color: "#fff",
+                      //   },
+                      //   "& .MuiDataGrid-columnSeparator": { display: "none" },
+                      //   "& .MuiDataGrid-virtualScroller": {
+                      //     backgroundColor: colors.primary[400],
+                      //   },
+                      //   "& .MuiDataGrid-footerContainer": {
+                      //     backgroundColor: "#3a9e9e",
+                      //     color: "#fff",
+                      //   },
 
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        color: colors.blueAccent[900],
-                        fontWeight: 600,
-                      },
-                      "& .MuiTablePagination-root": {
-                        color: colors.blueAccent[900],
-                      },
-                      /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                      "& .MuiTablePagination-root": {
-                        color: "#fff",
-                      },
+                      //   "& .odd-row": { backgroundColor: "" },
+                      //   "& .even-row": { backgroundColor: "#d9f0ef" },
+                      //   //checkbox
 
-                      "& .MuiTablePagination-selectLabel": {
-                        color: "#fff",
-                      },
+                      //   "& .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root": {
+                      //     backgroundColor: "#fff", // keep white even when checked
+                      //     //   border: "1px solid grey",  // keep same border
+                      //     color: "#3a9e9e", // tick color (optional)
+                      //   },
+                      // }}
 
-                      "& .MuiTablePagination-displayedRows": {
-                        color: "#fff",
-                      },
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .cell-negative-status": {
+                          color: colors.redAccent[500],
+                          fontWeight: 600,
+                        },
+                        "& .cell-positive-status": {
+                          color: colors.greenAccent[400],
+                          fontWeight: 600,
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          // backgroundColor: "#25adad",
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                          // borderColor: "#d0edec",
+                          // backgroundColor: "",
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          // backgroundColor: "#d0edec",
+                          backgroundColor: "",
+                          color: "", // Color for even rows
+                        },
 
-                      /* Dropdown icon */
-                      "& .MuiTablePagination-selectIcon": {
-                        color: "#fff",
-                      },
+                        "& .MuiDataGrid-columnHeaderTitle": {
+                          color: colors.blueAccent[900],
+                          fontWeight: 600,
+                        },
+                        "& .MuiTablePagination-root": {
+                          color: colors.blueAccent[900],
+                        },
+                        /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                        "& .MuiTablePagination-root": {
+                          color: "#fff",
+                        },
 
-                      /* Left & Right arrow buttons */
-                      "& .MuiTablePagination-actions button": {
-                        color: "#fff",
-                      },
-                      "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount":
+                        "& .MuiTablePagination-selectLabel": {
+                          color: "#fff",
+                        },
+
+                        "& .MuiTablePagination-displayedRows": {
+                          color: "#fff",
+                        },
+
+                        /* Dropdown icon */
+                        "& .MuiTablePagination-selectIcon": {
+                          color: "#fff",
+                        },
+
+                        /* Left & Right arrow buttons */
+                        "& .MuiTablePagination-actions button": {
+                          color: "#fff",
+                        },
+                        "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount":
                         {
                           color: "#fff !important",
                           fontWeight: 500,
                         },
-                        
-                    }}
-                  >
-                    <DataGrid
-                      apiRef={apiRef}
-                      editMode="cell" // must be "cell", not "column"
-                      rows={rows}
-                      columns={promotecolumn1}
-                      loading={promotiongetloading}
-                      checkboxSelection
-                      selectionModel={selectionModel}
-                      onSelectionModelChange={(newSelection) => {
-                        console.log("Selected IDs:", newSelection); // debug
-                        setSelectionModel(newSelection);
                       }}
-                      processRowUpdate={processRowUpdate}
-                      getRowId={(row) => row.RecordID}
-                      isCellEditable={(params) => params.field === "Reason"}
-                      experimentalFeatures={{ newEditingApi: true }}
-                      onCellClick={handleCellClick}
-                      onCellEditStop={handleCellEditStop}
-                      onProcessRowUpdateError={(error) => {
-                        console.error(
-                          "Row update validation failed:",
-                          error.message,
-                        );
-                        toast.error(error.message);
-                      }}
-                      components={{ Toolbar: EditToolbar }}
-                      componentsProps={{ toolbar: { setRows } }}
-                      rowsPerPageOptions={[5, 10, 20]}
-                      getRowClassName={(params) =>
-                        params.indexRelativeToCurrentPage % 2 === 0
-                          ? "odd-row"
-                          : "even-row"
-                      }
-                      pagination
-                      pageSize={pageSize}
-                      page={page}
-                      onPageSizeChange={(newPageSize) =>
-                        setPageSize(newPageSize)
-                      }
-                      onPageChange={(newPage) => setPage(newPage)}
-                      sx={{
-                        "& .MuiDataGrid-footerContainer": {
-                          height: dataGridHeaderFooterHeight,
-                          minHeight: dataGridHeaderFooterHeight,
-                        },
-                      }}
-                      rowHeight={dataGridRowHeight}
-                      headerHeight={dataGridHeaderFooterHeight}
-                    />
+                    >
+                      <DataGrid
+                        apiRef={apiRef}
+                        editMode="cell" // must be "cell", not "column"
+                        rows={rows}
+                        columns={promotecolumn1}
+                        loading={promotiongetloading}
+                        checkboxSelection
+                        selectionModel={selectionModel}
+                        onSelectionModelChange={(newSelection) => {
+                          console.log("Selected IDs:", newSelection); // debug
+                          setSelectionModel(newSelection);
+                        }}
+                        processRowUpdate={processRowUpdate}
+                        getRowId={(row) => row.RecordID}
+                        isCellEditable={(params) => params.field === "Reason"}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        onCellClick={handleCellClick}
+                        onCellEditStop={handleCellEditStop}
+                        onProcessRowUpdateError={(error) => {
+                          console.error(
+                            "Row update validation failed:",
+                            error.message,
+                          );
+                          toast.error(error.message);
+                        }}
+                        components={{ Toolbar: EditToolbar }}
+                        componentsProps={{ toolbar: { setRows } }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        pagination
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onPageChange={(newPage) => setPage(newPage)}
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                      />
+                    </Box>
+
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between" // ✅ THIS FIXES SPACING
+                      gap={2}
+                      padding={1}
+                      sx={{ borderTop: "1px solid #eee" }}
+                    >
+                      <Typography sx={{ color: "#818486", fontWeight: 400 }}>
+                        {selectionModel.length} Selected
+                      </Typography>
+
+                      <Button
+                        variant="contained"
+                        disabled={
+                          selectionModel.length === 0 || !selectedPromotion
+                        }
+                        sx={{
+                          backgroundColor: "#f88e42",
+                          color: "#fff",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          px: 3,
+                          borderRadius: "6px",
+                          "&:hover": {
+                            backgroundColor: "#f88e42",
+                          },
+                        }}
+                        onClick={() => handlePromote(values)}
+                      >
+                        ▲ Promote to {selectedPromotion?.Name || ""}
+                      </Button>
+                    </Box>
                   </Box>
 
-                <Box
-  display="flex"
-  alignItems="center"
-  justifyContent="space-between"   // ✅ THIS FIXES SPACING
-  gap={2}
-  padding={1}
-
-  sx={{ borderTop: "1px solid #eee" }}
->
-                    <Typography
-                     
-                      sx={{ color: "#818486", fontWeight: 400 }}
-                    >
-                    {selectionModel.length}  Selected 
-                    </Typography>
-
-                  
-           
- <Button
-                 
-                     variant="contained"
-    disabled={selectionModel.length === 0 || !selectedPromotion}
-    sx={{
-      backgroundColor: "#f88e42",
-      color: "#fff",
-      textTransform: "none",
-      fontWeight: 600,
-      px: 3,
-      borderRadius: "6px",
-      "&:hover": {
-        backgroundColor: "#f88e42",
-      },
-    }}
-
- 
-                      onClick={() => handlePromote(values)}
-
-                    >
-                      ▲  Promote to {selectedPromotion?.Name || ""}
-                    </Button>
-     
- </Box>
-
-   </Box>  
-                 
                   <Box>
                     <Typography
                       variant="h4"
                       fontWeight={700}
-                      sx={{ px: 1,
-                        mt: 1
-                      }}
-                    
+                      sx={{ px: 1, mt: 1 }}
                     >
                       Already assigned
                     </Typography>
                     <Box
-sx={{
-      border: "1px solid #d3d3d3", // grey border
-    borderRadius: "4px",
-    overflow: "hidden", // keeps border clean
-}}
->
-         <Box
-                    padding={1}
-                    height={"40vh"}
-                    // height={dataGridHeightExplore}
-                     sx={{
-                      "& .MuiDataGrid-root": {
-                        border: "none",
-                      },
-                      "& .cell-negative-status": {
-                        color: colors.redAccent[500],
-                        fontWeight: 600,
-                      },
-                      "& .cell-positive-status": {
-                        color: colors.greenAccent[400],
-                        fontWeight: 600,
-                      },
-                      "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        // backgroundColor: "#25adad",
-                        borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                        // borderColor: "#d0edec",
-                        // backgroundColor: "",
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        // backgroundColor: "#d0edec",
-                        backgroundColor: "",
-                        color: "", // Color for even rows
-                      },
+                      sx={{
+                        border: "1px solid #d3d3d3", // grey border
+                        borderRadius: "4px",
+                        overflow: "hidden", // keeps border clean
+                      }}
+                    >
+                      <Box
+                        padding={1}
+                        height={"40vh"}
+                        // height={dataGridHeightExplore}
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .cell-negative-status": {
+                            color: colors.redAccent[500],
+                            fontWeight: 600,
+                          },
+                          "& .cell-positive-status": {
+                            color: colors.greenAccent[400],
+                            fontWeight: 600,
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            // backgroundColor: "#25adad",
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                            // borderColor: "#d0edec",
+                            // backgroundColor: "",
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            // backgroundColor: "#d0edec",
+                            backgroundColor: "",
+                            color: "", // Color for even rows
+                          },
 
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        color: colors.blueAccent[900],
-                        fontWeight: 600,
-                      },
-                      "& .MuiTablePagination-root": {
-                        color: colors.blueAccent[900],
-                      },
-                      /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                      "& .MuiTablePagination-root": {
-                        color: "#fff",
-                      },
+                          "& .MuiDataGrid-columnHeaderTitle": {
+                            color: colors.blueAccent[900],
+                            fontWeight: 600,
+                          },
+                          "& .MuiTablePagination-root": {
+                            color: colors.blueAccent[900],
+                          },
+                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                          "& .MuiTablePagination-root": {
+                            color: "#fff",
+                          },
 
-                      "& .MuiTablePagination-selectLabel": {
-                        color: "#fff",
-                      },
+                          "& .MuiTablePagination-selectLabel": {
+                            color: "#fff",
+                          },
 
-                      "& .MuiTablePagination-displayedRows": {
-                        color: "#fff",
-                      },
+                          "& .MuiTablePagination-displayedRows": {
+                            color: "#fff",
+                          },
 
-                      /* Dropdown icon */
-                      "& .MuiTablePagination-selectIcon": {
-                        color: "#fff",
-                      },
+                          /* Dropdown icon */
+                          "& .MuiTablePagination-selectIcon": {
+                            color: "#fff",
+                          },
 
-                      /* Left & Right arrow buttons */
-                      "& .MuiTablePagination-actions button": {
-                        color: "#fff",
-                      },
-                      "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount":
-                        {
-                          color: "#fff !important",
-                          fontWeight: 500,
-                        },
-                    }}
-                  >
-                    <DataGrid
+                          /* Left & Right arrow buttons */
+                          "& .MuiTablePagination-actions button": {
+                            color: "#fff",
+                          },
+                          "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount":
+                          {
+                            color: "#fff !important",
+                            fontWeight: 500,
+                          },
+                        }}
+                      >
+                        <DataGrid
                           editMode="cell"
                           rows={assignedRows}
                           columns={Alreadyassignedcolumn}
@@ -1710,11 +1789,9 @@ sx={{
                           rowHeight={dataGridRowHeight}
                           headerHeight={dataGridHeaderFooterHeight}
                         />
-                  </Box>
+                      </Box>
 
-
-
-   <Box
+                      <Box
                         display="flex"
                         alignItems="center"
                         justifyContent="space-between"
@@ -1745,52 +1822,99 @@ sx={{
                           Unassign Selected
                         </Button>
                       </Box>
+                    </Box>
 
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end", // 👉 moves to right end
+                        gap: 2,
+                        mt: 2,
+                      }}
+                      m={1}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: "#037960",
+                          color: "#fff",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          px: 3,
+                          borderRadius: "6px",
+                          "&:hover": {
+                            backgroundColor: "#037960",
+                          },
+                        }}
+                        //                      sx={{
+                        //   textTransform: "none",
+                        //   fontWeight: 600,
+                        //   borderRadius: "8px",
+                        //   px: 3,
+                        // }}
+                        onClick={() => handlePromoteProcess(values)}
+                      // onClick={handleProcess}
+                      >
+                        Process
+                      </Button>
 
-</Box>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 4,
+                          bgcolor: "#f94316",
 
+                          "&:hover": {
+                            bgcolor: "#f94316",
+
+                          },
+                        }}
+                        onClick={() => navigate(-1)}
+                      >
+                        Back
+                      </Button>
+                    </Box>
                   </Box>
 
                   <Dialog
-  open={marksDialogOpen}
-  onClose={() => setMarksDialogOpen(false)}
-  PaperProps={{
-    sx: {
-      width: "700px",
-      maxWidth: "90%",
-      padding: 1.5,
-      position: "relative", // ✅ important
-    },
-  }}
-  fullWidth
->
-  {/* ✅ CLOSE ICON */}
-  <IconButton
-    onClick={() => setMarksDialogOpen(false)}
-   sx={{
-    position: "absolute",
-    top: 7,
-    right: 7,
-    backgroundColor: "#EF4444", // 🔴 red background
-    color: "#fff",              // ⚪ white icon
-    borderRadius: 1.5,          // ≈ borderRadius 3 (MUI spacing: 1 = 8px)
-    width: 30,
-    height: 30,
-    zIndex: 10,
+                    open={marksDialogOpen}
+                    onClose={() => setMarksDialogOpen(false)}
+                    PaperProps={{
+                      sx: {
+                        width: "700px",
+                        maxWidth: "90%",
+                        padding: 1.5,
+                        position: "relative", // ✅ important
+                      },
+                    }}
+                    fullWidth
+                  >
+                    {/* ✅ CLOSE ICON */}
+                    <IconButton
+                      onClick={() => setMarksDialogOpen(false)}
+                      sx={{
+                        position: "absolute",
+                        top: 7,
+                        right: 7,
+                        backgroundColor: "#EF4444", // 🔴 red background
+                        color: "#fff", // ⚪ white icon
+                        borderRadius: 1.5, // ≈ borderRadius 3 (MUI spacing: 1 = 8px)
+                        width: 30,
+                        height: 30,
+                        zIndex: 10,
 
-    "&:hover": {
-      backgroundColor: "#DC2626", // darker red on hover
-    },
-  }}
-  >
-    <CloseIcon fontSize="small"/>
-  </IconButton>
+                        "&:hover": {
+                          backgroundColor: "#DC2626", // darker red on hover
+                        },
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
 
-  <Box
-     mt={2}
-     >
+                    <Box mt={2}>
                       <Box
-                   
                         width={"100%"}
                         // margin={1}
                         padding={1}
@@ -1843,13 +1967,12 @@ sx={{
                             color: "#fff",
                           },
                           "& .MuiDataGrid-footerContainer .MuiDataGrid-selectedRowCount":
-                            {
-                              color: "#fff !important",
-                              fontWeight: 500,
-                            },
+                          {
+                            color: "#fff !important",
+                            fontWeight: 500,
+                          },
                         }}
                       >
-                       
                         <DataGrid
                           sx={{
                             "& .MuiDataGrid-footerContainer": {
@@ -1907,7 +2030,7 @@ sx={{
                           //   onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                           //   onPageChange={(newPage) => setPage(newPage)}
 
-                        //   editMode="row"
+                          //   editMode="row"
                           disableSelectionOnClick
                           rowModesModel={rowModesModelAssesment}
                           onRowModesModelChange={
@@ -1965,20 +2088,20 @@ sx={{
                         mb={2}
                       >
                         <Button
-  sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-    variant="contained"
-   onClick={handleAssmntSave}
-  >
-    Save Marks
-  </Button>
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": {
+                              bgcolor: "#0F766E",
+                            },
+                          }}
+                          variant="contained"
+                          onClick={handleAssmntSave}
+                        >
+                          Save Marks
+                        </Button>
 
                         {/* <Button
                           sx={{

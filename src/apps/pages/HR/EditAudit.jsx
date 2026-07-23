@@ -78,12 +78,13 @@ console.log(company, "--company");
     : "";
 
 
+const config = getConfig();
+const baseurlUAAM = config.UAAM_URL;
 const HeaderImg = sessionStorage.getItem("CompanyHeader");
 const FooterImg = sessionStorage.getItem("CompanyFooter");
 
-console.log("HeaderImg", HeaderImg, FooterImg);
-const config = getConfig();
-const baseurlUAAM = config.UAAM_URL;
+
+console.log("HeaderImg", HeaderImg, FooterImg,baseurlUAAM);
 
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -295,7 +296,8 @@ console.log(uservalue, "--uservalue");
   // { field: "EmployeeName", headerName: "Employee", width: 160 },
   { field: "Activity", headerName: "Activity", width: 130 },
   
-   { field: "Date", headerName: "Date & Time", width: 120,align: "right" },
+   { field: "Date", headerName: "Date", width: 120,align: "right",hide: true },
+  { field: "DateTime", headerName: "Date & Time", width: 120,align: "right" },
 
 ];
  
@@ -436,6 +438,7 @@ console.log(isEmployee,isUser, "---isUserisEmployee,isUser");
     return {
       id: apiItem.RecordID ?? index + 1,
       SLNO: apiItem.SLNO ?? index + 1,
+      DateTime: apiItem.DateTime,
       Date: apiItem.Date,
       CompanyName: company,
       ScreenName: screen ? screen.Desc1 : apiItem.AccessID,
