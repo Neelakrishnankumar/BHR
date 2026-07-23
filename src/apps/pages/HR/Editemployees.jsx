@@ -6612,6 +6612,7 @@ const Editemployee = () => {
                                     gridTemplateColumns="repeat(2, minmax(0,1fr))"
                                     gap={2}
                                   >
+                                     {!isStudentClassification && (
                                     <FormControl>
                                       <MultiFormikOptimizedAutocomplete
                                         sx={{
@@ -6686,7 +6687,7 @@ const Editemployee = () => {
                                           </div>
                                         )}
                                     </FormControl>
-
+                                     )}
                                     {CompanyAutoCode == "Y" ? (
                                       <TextField
                                         fullWidth
