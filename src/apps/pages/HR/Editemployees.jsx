@@ -265,7 +265,7 @@ const Editemployee = () => {
   var parentID = params.filtertype;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-  // console.log(Data, "geteting Data");
+  console.log(Data,Data.Disable, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
@@ -1377,7 +1377,8 @@ const Editemployee = () => {
           : Data.Gender === "Others"
             ? "O"
             : "",
-    checkbox: Data.Disable === "Y" ? true : false,
+    // disable: Data.Disable === "Y" ? true : false,
+    disable:typeof Data.Disable === "boolean" ? Data.Disable: Data.Disable === "Y",
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -1635,7 +1636,7 @@ const Editemployee = () => {
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder || 0,
-      Disable: values.checkbox === true ? "Y" : "N",
+      Disable: values.disable === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
@@ -6611,6 +6612,7 @@ const Editemployee = () => {
                                     gridTemplateColumns="repeat(2, minmax(0,1fr))"
                                     gap={2}
                                   >
+                                     {!isStudentClassification && (
                                     <FormControl>
                                       <MultiFormikOptimizedAutocomplete
                                         sx={{
@@ -6685,7 +6687,7 @@ const Editemployee = () => {
                                           </div>
                                         )}
                                     </FormControl>
-
+                                     )}
                                     {CompanyAutoCode == "Y" ? (
                                       <TextField
                                         fullWidth
@@ -7109,7 +7111,89 @@ const Editemployee = () => {
                                   Set permissions and access levels
                                 </Typography>
 
-                                <Box display="flex" flexWrap="wrap" gap={3}>
+   <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="qualityassurance"
+                            id="qualityassurance"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Quality Assurance"
+                          />
+
+                          <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="scrummaster"
+                            id="scrummaster"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Scrum Master"
+                          />
+
+                          <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="prjmanager"
+                            id="prjmanager"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Project Manager"
+                          />
+
+                          <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
+
+                          {!is003Subscription && (
+                            <>
+                              <Field
+                                //  size="small"
+                                type="checkbox"
+                                name="CRMUser"
+                                id="CRMUser"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                as={Checkbox}
+                                label="CRM User"
+                              />
+
+                              <FormLabel focused={false}>CRM User</FormLabel>
+                            </>
+                          )}
+                        </Box>
+
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="delete"
+                            id="delete"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Delete"
+                          />
+
+                          <FormLabel focused={false}>Delete</FormLabel>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="disable"
+                            id="disable"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Disable"
+                          />
+
+                          <FormLabel focused={false}>Disable</FormLabel>
+                        </Box>
+                                {/* <Box display="flex" flexWrap="wrap" gap={3}>
                                   {[
                                     {
                                       name: "qualityassurance",
@@ -7159,7 +7243,7 @@ const Editemployee = () => {
                                       label={perm.label}
                                     />
                                   ))}
-                                </Box>
+                                </Box> */}
                               </Box>
 
                               <Divider />

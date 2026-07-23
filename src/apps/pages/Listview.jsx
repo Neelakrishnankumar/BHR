@@ -5566,6 +5566,22 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
+            ) : accessID == "TR026" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+
+           
+            <Chip
+              icon={<ManageAccountsIcon color="primary" />}
+              label="Activity"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
         ) : accessID == "TR243" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
