@@ -6568,6 +6568,36 @@ export const fetchListview =
               };
               listviewData.Data.columns.splice(2, 0, obj);
             }
+     if (AccessID == "TR026") {
+              const obj = {
+                field: "activity",
+                headerName: " ",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 60,
+                maxWidth: 60,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link>
+                      {params.row.SubjectSkill === "A" && (
+                        <Tooltip title="Activity">
+                          <IconButton color="info">
+                            <ManageAccountsIcon />
+                          </IconButton>
+                        </Tooltip>
+                            )}
+                      </Link>
+                    </Stack>
+                  );
+                },
+              };
+              listviewData.Data.columns.splice(2, 0, obj);
+            }
+
             listviewData.Data.columns.push(obj);
 
             dispatch(

@@ -770,7 +770,7 @@ const Editdept = () => {
                         label="subjectskill"
                       />
 
-                      <FormLabel focused={false}>Activities</FormLabel>
+                      <FormLabel focused={false}>Activitieshii</FormLabel>
                       </>)}
                       <Field
                         //  size="small"
