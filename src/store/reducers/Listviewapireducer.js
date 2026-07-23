@@ -1897,7 +1897,8 @@ export const fetchListview =
                       )}
                       {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
                         <Link
-                          to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                          // to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
+                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
                           state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
@@ -1905,6 +1906,8 @@ export const fetchListview =
                             MilestoneName: params.row.Name,
                             projectName: params.row.Project,
                             BreadCrumb1: params.row.Project,
+                            SlotGroupID:params.row.SlotGroupID,
+                            SlotGroupName:params.row.SlotGroupName
                           }}
                         >
                           <Tooltip title="Time Table">
@@ -9323,7 +9326,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {/* {(params.row.IsPublish === "Y" && params.row.Events !== "0") && ( */}
+            {(params.row.IsPublish === "Y" && params.row.Events !== "0") && (
 
             <Tooltip title="Publish Event Category">
               <IconButton
@@ -9334,6 +9337,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PublishedWithChangesOutlinedIcon />
               </IconButton>
             </Tooltip>
+            )}
             <PublishEventCategoryDialog
               open={publishDialog.open}
               onClose={() => setPublishDialog({ open: false, row: null })}

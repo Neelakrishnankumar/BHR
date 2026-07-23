@@ -207,7 +207,7 @@ const ListviewSecondary = () => {
 
     const idata = {
       CompanyID: compID, //586
-      StandardID: Type,  //773
+      StandardID: params.ID2,  //773
       FromTermID: fromTerm?.RecordID,
       ToTermID: toTerm.map((item) => item.RecordID),
     };
@@ -228,7 +228,7 @@ const ListviewSecondary = () => {
                 "TR368",
                 "003",
                 screenName,
-                `CompanyID='${compID}' AND StandardID='${Type || 0}'`,
+                `CompanyID='${compID}' AND StandardID='${params.ID2 || 0}'`,
                   "",
                 compID,
                 "003"
@@ -411,7 +411,7 @@ const ListviewSecondary = () => {
     filter = `CompanyID = '${compID}'`;
   }
   else if (accessID == "TR368") {
-    filter = `StandardID = '${Type}' AND CompanyID = '${compID}'`;
+    filter = `StandardID = '${params.ID2}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR377") {
     filter = `SlotGroupID = '${leaderID}' AND CompanyID = '${compID}'`;
@@ -1628,7 +1628,7 @@ function CustomToolbar() {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {screenName}
+                Time Table
               </Typography>
             </Breadcrumbs>
           ) : accessID == "TR386" ? (
@@ -5082,7 +5082,7 @@ function CustomToolbar() {
                           value={fromTerm}
                           onChange={(newValue) => setFromTerm(newValue)}
                          // url={`${listViewurl}?data={"Query":{"AccessID":"2196","ScreenName":"From Term","VerticalLicense":"003","Filter":"AcademicYearID='2' AND CompanyID='502' AND StandardID='551'","Any":""}}`}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2196","ScreenName":"From Term","VerticalLicense":"003","Filter":"AcademicYearID='${leaderID}' AND CompanyID='${compID}' AND StandardID='${Type}'","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2196","ScreenName":"From Term","VerticalLicense":"003","Filter":"AcademicYearID='${params.ID1}' AND CompanyID='${compID}' AND StandardID='${params.ID2}'","Any":""}}`}
                       />
                     </Grid>
 
@@ -5112,7 +5112,7 @@ function CustomToolbar() {
                             ScreenName: "To Term",
                             VerticalLicense: "003",
                             // Filter: `AcademicYearID='${leaderID}'`,
-                            Filter:`AcademicYearID='${leaderID}' AND CompanyID = '${CompId}' AND NOT EXISTS (SELECT 1 FROM TIMETABLEHDR WHERE TT_TERMID = RecordID AND TT_STD = '${state.projectID}')`,
+                            Filter:`AcademicYearID='${params.ID1}' AND CompanyID = '${compID}' AND NOT EXISTS (SELECT 1 FROM TIMETABLEHDR WHERE TT_TERMID = RecordID AND TT_STD = '${state.projectID}')`,
                             Any: ""
                           }
                         }))}` : ""}
