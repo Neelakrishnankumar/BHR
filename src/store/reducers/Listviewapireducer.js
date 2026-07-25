@@ -691,6 +691,7 @@ export const fetchListview =
         AccessID !== "TR291" &&
         AccessID !== "TR283" &&
         AccessID !== "TR026" &&
+        AccessID !== "TR401" &&
         AccessID !== "TR148"
       ) {
         if (
@@ -823,6 +824,7 @@ export const fetchListview =
           AccessID != "TR377" &&
           AccessID != "TR387" &&
           AccessID != "TR026" &&
+          AccessID != "TR401" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -1484,6 +1486,10 @@ export const fetchListview =
         );
       }
       else if (AccessID === "TR026" && screenName === "Subject") {
+        // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
+      }
+      else if (AccessID === "TR401" && screenName === "Subject") {
         // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
         filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
       }
@@ -8476,7 +8482,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {is003Subscription && params.row.Classification == "Student" && (
+            {/* {is003Subscription && params.row.Classification == "Student" && (
             <Link
               to={`/Apps/AcademicReport/${params.row.RecordID}`}
               state={{
@@ -8490,7 +8496,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            )}
+            )} */}
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
                 <Tooltip title="Staff Timetable">

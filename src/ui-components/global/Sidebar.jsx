@@ -1,3 +1,2030 @@
+// import * as React from "react";
+// import { useState } from "react";
+// import {
+//   Sidebar,
+//   Menu,
+//   MenuItem,
+//   ProSidebarProvider,
+//   useProSidebar,
+//   SubMenu,
+// } from "react-pro-sidebar";
+// import LockOpenIcon from "@mui/icons-material/LockOpen";
+// import ContactsIcon from '@mui/icons-material/Contacts';
+// import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
+// import SettingsIcon from "@mui/icons-material/Settings";
+// import TaskAltIcon from "@mui/icons-material/TaskAlt";
+// import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+// import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+// import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
+// import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+// import SafetyCheckIcon from "@mui/icons-material/SafetyCheck";
+// import FingerprintIcon from "@mui/icons-material/Fingerprint";
+// import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+// import ReceiptIcon from "@mui/icons-material/Receipt";
+// import RedoIcon from "@mui/icons-material/Redo";
+// import UndoIcon from "@mui/icons-material/Undo";
+// import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
+// import SubjectIcon from '@mui/icons-material/Subject';
+// import {
+//   Box,
+//   Avatar,
+//   IconButton,
+//   Typography,
+//   useTheme,
+//   Tooltip,
+//   ListItem,
+//   Button,
+//   Icon,
+//   Chip,
+//   Stack,
+//   Grid,
+//   Paper,
+//   Divider,
+// } from "@mui/material";
+// import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+// //import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+// import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+// import FactCheckRoundedIcon from "@mui/icons-material/FactCheckRounded";
+// import RecentActorsIcon from "@mui/icons-material/RecentActors";
+// import PaymentsIcon from "@mui/icons-material/Payments";
+// //import AttributionIcon from '@mui/icons-material/Attribution';
+// import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+// import ChecklistIcon from "@mui/icons-material/Checklist";
+// import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
+// import { useHref, Link } from "react-router-dom";
+// // import avatar from "../../assets/img/avatar.jpg";
+// import { tokens } from "../../Theme";
+// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import PriceCheckIcon from '@mui/icons-material/PriceCheck';
+// import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+// import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+// import { useNavigate } from "react-router-dom";
+// import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+// import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
+// import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+// import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
+// import CorporateFareOutlinedIcon from "@mui/icons-material/CorporateFareOutlined";
+// import StarBorderPurple500OutlinedIcon from "@mui/icons-material/StarBorderPurple500Outlined";
+// import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
+// import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
+// import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+// // import LgemsLogo from "../../assets/img/LgemsLogo.png";
+// // import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
+// import BackOfficelogo from "../../assets/img/Backoffceimage.png";
+// // import BackOfficelogoV1 from "../../assets/img/BackOfficeImg _V1.png";
+// import BackOfficelogoV1 from "../../assets/img/B2025-ATM01.png";
+// import List from "@mui/material/List";
+// import ListItemButton from "@mui/material/ListItemButton";
+// import ListItemIcon from "@mui/material/ListItemIcon";
+// import ListItemText from "@mui/material/ListItemText";
+// import Collapse from "@mui/material/Collapse";
+// import ExpandLess from "@mui/icons-material/ExpandLess";
+// import ExpandMore from "@mui/icons-material/ExpandMore";
+// import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+// import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+// import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
+// import BusinessIcon from "@mui/icons-material/Business";
+// import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+// import LanguageIcon from "@mui/icons-material/Language";
+// import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+// import AirlinesIcon from "@mui/icons-material/Airlines";
+// import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+// import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
+// import ColorLensIcon from "@mui/icons-material/ColorLens";
+// import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+// import GradeIcon from "@mui/icons-material/Grade";
+// import InventoryIcon from "@mui/icons-material/Inventory";
+// // import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+// import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+// import DescriptionIcon from "@mui/icons-material/Description";
+// import Diversity3Icon from "@mui/icons-material/Diversity3";
+// import GroupsIcon from '@mui/icons-material/Groups';
+// import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+// import CreditCardIcon from "@mui/icons-material/CreditCard";
+// import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
+// import StraightenOutlinedIcon from "@mui/icons-material/StraightenOutlined";
+// import { ReactComponent as UomIcon } from "../../assets/icon/uom.svg";
+// import { ReactComponent as ProformaInvoiceIcon } from "../../assets/icon/proformainvoice.svg";
+// import { ReactComponent as SupplierIcon } from "../../assets/icon/supplier.svg";
+// import { ReactComponent as CustomerIcon } from "../../assets/icon/customer.svg";
+// import { ReactComponent as MaterialIcon } from "../../assets/icon/material.svg";
+// import { ReactComponent as BatchIcon } from "../../assets/icon/batch.svg";
+// import { ReactComponent as ProductIcon } from "../../assets/icon/products.svg";
+// import { ReactComponent as SubstanceIcon } from "../../assets/icon/substance.svg";
+// import {
+//   Accessibility,
+//   Assessment,
+//   AttachMoney,
+//   Details,
+//   Hail,
+//   Psychology,
+// } from "@mui/icons-material";
+// import PersonIcon from "@mui/icons-material/Person";
+// import BatchPredictionIcon from "@mui/icons-material/BatchPrediction";
+// import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+// import FactoryIcon from "@mui/icons-material/Factory";
+// import SubtitlesOutlinedIcon from "@mui/icons-material/SubtitlesOutlined";
+// import StyleOutlinedIcon from "@mui/icons-material/StyleOutlined";
+// import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+// import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
+// import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+// import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
+// import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+// import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+// import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
+// import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
+// import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+// import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+
+// import SecurityIcon from '@mui/icons-material/Security';
+// import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+// import FenceIcon from "@mui/icons-material/Fence";
+// import { menuHeight } from "./utils";
+// import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+// import BadgeIcon from "@mui/icons-material/Badge";
+// import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+// import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+// import SummarizeIcon from '@mui/icons-material/Summarize';
+// import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+// import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+// import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
+// import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+// import store from "../..";
+// import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+// import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+// import ArtTrackIcon from '@mui/icons-material/ArtTrack';
+// import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
+// import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+// import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
+// import PermMediaIcon from '@mui/icons-material/PermMedia';
+// import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+// import { logout } from "../../store/reducers/LoginReducer";
+// import { useDispatch } from "react-redux";
+// import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
+// import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
+// import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+// import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+// import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
+// import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
+// import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+// import AppShortcutIcon from '@mui/icons-material/AppShortcut';
+// import EventNoteIcon from '@mui/icons-material/EventNote';
+// import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+// import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
+// // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+// // const is003Subscription = SubscriptionCode.endsWith("003");
+// // const is00123Subscription = ["001", "002", "003"].some(code =>
+// //   SubscriptionCode?.endsWith(code)
+// // );
+// import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
+
+// const getPersonnelMenu = (is00123Subscription) =>
+//   is00123Subscription
+//     ? {
+//       name: "Personnel",
+//       id: 5634,
+//       url: "./TR330/Classification",
+//       icon: (
+//         <Tooltip title="Classification">
+//           <PeopleAltIcon color="info" />
+//         </Tooltip>
+//       ),
+//       UGA_ADD: true,
+//       UGA_DEL: true,
+//       UGA_MOD: true,
+//       UGA_PRINT: true,
+//       UGA_PROCESS: true,
+//       UGA_VIEW: true,
+//       UGA_ACCESSIDS: "TR027",
+//     }
+//     : {
+//       name: "Personnel",
+//       id: 5634,
+//       url: "./TR027/Personnel",
+//       icon: (
+//         <Tooltip title="Personnel">
+//           <PeopleAltIcon color="info" />
+//         </Tooltip>
+//       ),
+//       UGA_ADD: true,
+//       UGA_DEL: true,
+//       UGA_MOD: true,
+//       UGA_PRINT: true,
+//       UGA_PROCESS: true,
+//       UGA_VIEW: true,
+//       UGA_ACCESSIDS: "TR027",
+//     };
+// const getProjectMenu = (is003Subscription) =>
+//   is003Subscription == true
+//     ? {
+
+//       name: "Project",
+//       id: 4346894,
+//       url: "./TR378/Academic Year",
+//       icon: (
+//         <Tooltip
+//           title="Project"
+//         >
+//           <SourceOutlinedIcon color="info" />
+//         </Tooltip>
+//       ),
+//       UGA_ADD: true,
+//       UGA_DEL: true,
+//       UGA_MOD: true,
+//       UGA_PRINT: true,
+//       UGA_PROCESS: true,
+//       UGA_VIEW: true,
+//       UGA_ACCESSIDS: "TR275",
+//     }
+//     : {
+//       name: "Project",
+//       id: 4346894,
+//       url: "./TR275/Project",
+//       icon: (
+//         <Tooltip
+//           title="Project"
+//         >
+//           <SourceOutlinedIcon color="info" />
+//         </Tooltip>
+//       ),
+//       UGA_ADD: true,
+//       UGA_DEL: true,
+//       UGA_MOD: true,
+//       UGA_PRINT: true,
+//       UGA_PROCESS: true,
+//       UGA_VIEW: true,
+//       UGA_ACCESSIDS: "TR275",
+//     };
+
+
+// const getFeedbackMenu = (is00123Subscription) =>
+//   is00123Subscription ? {
+//     // name: "Feedbacks/Complaints",
+//     name: "Escalation",
+//     url: "./TR391/Escalation",
+//     // id: 5594,
+//     icon: (
+//       <Tooltip title="Escalation">
+//         <FeedbackOutlinedIcon color="info" />
+//       </Tooltip>
+//     ),
+//     UGA_ADD: true,
+//     UGA_DEL: true,
+//     UGA_MOD: true,
+//     UGA_PRINT: true,
+//     UGA_PROCESS: true,
+//     UGA_VIEW: true,
+//     UGA_ACCESSIDS: "TR391",
+//   } : {}
+
+
+
+// const Item = ({ title, to, icon, selected, setSelected, isChild, state, Tooltipname }) => {
+//   const theme = useTheme();
+//   const navigate = useNavigate();
+
+//   const colors = tokens(theme.palette.mode);
+
+//   function cal() {
+//     setSelected(title);
+//     // navigate(to);
+//     navigate(to, { state });
+//   }
+
+//   return (
+//     <MenuItem
+//       style={{ marginLeft: isChild ? "-11px" : "" }}
+//       active={selected === title}
+//       icon={icon}
+//       //  icon={ <Tooltip title={Tooltipname || title}>
+//       //   <span> {icon} </span>
+//       // </Tooltip>}
+//       onClick={cal}
+//     >
+//       <Typography style={{ marginLeft: isChild ? "16px" : "" }}>
+//         {title}
+//       </Typography>
+//     </MenuItem>
+
+//   );
+// };
+
+// const Sidebars = () => {
+//   const theme = useTheme();
+//   const colors = tokens(theme.palette.mode);
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const [selected, setSelected] = useState("Product Category");
+//   // const ATMLogo = 'B2025-ATM01.png' 
+//   const [open, setOpen] = React.useState(false);
+
+//   // const companyLogo = sessionStorage.getItem("CompanyLogo");
+//   // console.log(companyLogo, "companyLogo");
+//   const firstLogin = sessionStorage.getItem("firstLogin");
+//   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+//   const is003Subscription = SubscriptionCode.endsWith("003");
+//   const is00123Subscription = ["001", "002", "003"].some(code =>
+//     SubscriptionCode?.endsWith(code)
+//   );
+
+//   console.log(is003Subscription, is00123Subscription, "is003Subscription");
+//   const restrictedMenus003 = ["Party", "Functions", "Aging Report", "Lead Enquiry", "Order Enquiry"];
+
+//   // const firstLogin = "Y";
+//   console.log(firstLogin, "firstLogin");
+//   const [logoSrc, setLogoSrc] = useState(null);
+
+//   React.useEffect(() => {
+//     const interval = setInterval(() => {
+//       // Always read latest values from sessionStorage
+//       const companyLogo = sessionStorage.getItem("CompanyLogo");
+//       const sessionLogo = sessionStorage.getItem("logoimage") || companyLogo;
+//       const newLogo = sessionLogo
+//         ? store.getState().globalurl.attachmentUrl + sessionLogo
+//         : BackOfficelogoV1;
+
+//       setLogoSrc((prev) => (prev !== newLogo ? newLogo : prev));
+//     }, 500);
+
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   // const handleClick = () => {
+//   //   setOpen(!open);
+//   // };
+
+//   const company = sessionStorage.getItem("company");
+//   const year = sessionStorage.getItem("year");
+//   const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
+//   console.log(Groupaccess, "--GroupAccess in sidebar console");
+
+
+
+//   const Modules = JSON.parse(sessionStorage.getItem("Modules")) || [];
+//   console.log(Modules, "Modules sidebar console");
+
+//   const handleLogout = () => {
+//     sessionStorage.clear(); // clear session only
+//     navigate("/");
+//   };
+//   const handleClicks = (item) => {
+//     let newData = { ...menu, [item]: !menu[item] };
+//     setMenu(newData);
+//   };
+//   const [menu, setMenu] = useState({});
+
+//   console.log(menu, "--+heloooooooooooooo menu");
+
+
+
+//   //handleMenu change as handleMenuWithStyling 
+//   const handleMenuWithStyling = (children, accessRow, isChild, parentMenuID = null) => {
+//     return children.map(
+//       ({
+//         children,
+//         name,
+//         url,
+//         icon,
+//         Tooltipname,
+//         id,
+//         UGA_ACCESSIDS,
+//         MenuID,
+//       }) => {
+//         const accessItem = accessRow.find(
+//           (item) => item.UGA_ACCESSID == UGA_ACCESSIDS
+//         );
+
+//         if (is003Subscription && name === "CRM") return null;
+//         if (!is003Subscription && (name === "Academic Year" || name === "Slot")) return null;
+//         if (restrictedMenus003.includes(name) && is003Subscription) return null;
+
+//         if (!children) {
+//           return accessRow.map(
+//             ({
+//               UGA_ADD,
+//               UGA_DEL,
+//               UGA_MOD,
+//               UGA_PRINT,
+//               UGA_PROCESS,
+//               UGA_VIEW,
+//               UGA_ACCESSID,
+//             }) => {
+//               if (
+//                 UGA_ACCESSID === UGA_ACCESSIDS &&
+//                 (UGA_ADD || UGA_DEL || UGA_MOD || UGA_PRINT || UGA_PROCESS || UGA_VIEW)
+//               ) {
+//                 const isActive = selected === (accessItem?.SM_CAPTION1 || name);
+
+//                 return (
+//                   <ListItem
+//                     disablePadding
+//                     key={id}
+//                     sx={{
+//                       px: 1.2,
+//                       mb: 0.6,
+//                     }}
+//                   >
+//                     <ListItemButton
+//                       onClick={() => {
+//                         setSelected(accessItem?.SM_CAPTION1 || name);
+//                         navigate(url, {
+//                           state: {
+//                             name: accessItem?.SM_CAPTION1 || name,
+//                             accessId: UGA_ACCESSIDS,
+//                             id: id,
+//                           },
+//                         });
+//                       }}
+//                       sx={{
+//                         borderRadius: 2,
+//                         py: 1,
+//                         pl: collapsed ? 0 : (isChild ? 3 : 2),
+//                         pr: collapsed ? 0 : 2,
+//                         justifyContent: collapsed ? "center" : "flex-start",
+//                         //color: isActive ? "#4F46E5" : colors.grey[700],
+//                         color: isActive ? "#4F46E5" : "#000000",
+//                         backgroundColor: isActive ? "#c6cbd8" : "transparent",
+//                         fontSize: 14,
+//                         fontWeight: isActive ? 600 : 500,
+//                         transition: "all 0.2s ease",
+//                         borderLeft: collapsed
+//                           ? "none"
+//                           : isActive
+//                             ? "3px solid #4F46E5"
+//                             : "3px solid transparent",
+//                         "&:hover": {
+//                           backgroundColor: isActive ? "#EEF2FF" : "#F3F4F6",
+//                           color: "#4F46E5",
+//                         },
+//                       }}
+//                     >
+//                       <ListItemIcon
+//                         sx={{
+//                           minWidth: 40,
+//                           color: isActive ? "#4F46E5" : "#000000",
+//                           display: "flex",
+//                           alignItems: "center",
+//                           justifyContent: "center",
+//                         }}
+//                       >
+//                         {icon}
+//                       </ListItemIcon>
+//                       {!collapsed && (
+//                         <ListItemText
+//                           primary={accessItem?.SM_CAPTION1 || name}
+//                           primaryTypographyProps={{
+//                             fontSize: 14,
+//                             fontWeight: "inherit",
+//                           }}
+//                         />
+//                       )}
+//                     </ListItemButton>
+//                   </ListItem>
+//                 );
+//               }
+//             }
+//           );
+//         }
+
+//         // Parent menu with children
+//         return Modules.map(({ PPD, SM_PMENU }) => {
+//           if (PPD && SM_PMENU === MenuID) {
+//             const isParentOpen = menu[name] || false;
+
+//             return (
+//               <div key={id}>
+//                 <ListItem
+//                   disableGutters
+//                   disablePadding
+//                   sx={{ px: 1.2, mb: 0.6 }}
+//                 >
+//                   <ListItemButton
+//                     onClick={() => handleClicks(name)}
+//                     sx={{
+//                       borderRadius: 2,
+//                       py: 1,
+//                       pl: collapsed ? 0 : 1.5,
+//                       pr: collapsed ? 0 : 1.5,
+//                       justifyContent: collapsed ? "center" : "flex-start",
+//                       //color: colors.grey[700],
+//                       color: "#000000",
+//                       fontSize: 14,
+//                       fontWeight: 500,
+//                       transition: "all 0.2s ease",
+//                       "&:hover": {
+//                         backgroundColor: "#F3F4F6",
+//                       },
+//                     }}
+//                   >
+//                     <ListItemIcon
+//                       sx={{
+//                         minWidth: collapsed ? "auto" : 40,
+//                         mr: collapsed ? 0 : 1,
+//                         color: "inherit",
+//                         justifyContent: "center",
+//                       }}
+//                     >
+//                       {icon}
+//                     </ListItemIcon>
+//                     {!collapsed && (
+//                       <>
+//                         <ListItemText
+//                           primary={name}
+//                           primaryTypographyProps={{
+//                             fontSize: 14,
+//                             fontWeight: 500,
+//                           }}
+//                         />
+//                         <Box sx={{ ml: "auto" }}>
+//                           {isParentOpen ? (
+//                             <ExpandMore
+//                               sx={{
+//                                 fontSize: 20,
+//                                 color: "#000000",
+//                               }}
+//                             />
+//                           ) : (
+//                             <ChevronRightOutlinedIcon
+//                               sx={{
+//                                 fontSize: 20,
+//                                 color: "#000000",
+//                               }}
+//                             />
+//                           )}
+//                         </Box>
+//                       </>
+//                     )}
+//                   </ListItemButton>
+//                 </ListItem>
+
+//                 <Collapse in={isParentOpen} timeout="auto" unmountOnExit>
+//                   <List component="div" disablePadding>
+//                     {handleMenuWithStyling(children, Groupaccess, false, MenuID)}
+//                   </List>
+//                 </Collapse>
+//               </div>
+//             );
+//           }
+//         });
+//       }
+//     );
+//   };
+
+//   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
+//   // const Expiryin = sessionStorage.getItem("Expiryin");
+//   const Expiryin = Number(sessionStorage.getItem("Expiryin")) || 0;
+//   console.log(Expiryin, "--in a sideBar Expiryin");
+//   const child = {
+//     data: [
+//       {
+//         name: "Setup",
+//         id: 4,
+//         MenuID: "HR600",
+//         Tooltipname: "Setup",
+//         icon: (
+//           <Tooltip title="Setup">
+//             <RecentActorsIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+
+//           {
+//             name: "Designation",
+//             id: 4578,
+//             url: "./TR122/Designation",
+//             icon: (
+//               <Tooltip
+//                 title="Designation"
+//               >
+//                 <PersonIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR122",
+//           },
+//           {
+//             name: "Department",
+//             id: 3456,
+//             url: "./TR026/Department",
+//             icon: (
+//               <Tooltip title="Department">
+//                 <DeveloperBoardIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR026",
+//           },
+//           ...(is003Subscription
+//             ? [
+//               {
+//                 name: "Subject",
+//                 id: 34566,
+//                 url: "./TR401/Subject",
+//                 icon: (
+//                   <Tooltip title="Subject">
+//                     <SubjectIcon color="info" />
+//                   </Tooltip>
+//                 ),
+//                 UGA_ADD: true,
+//                 UGA_DEL: true,
+//                 UGA_MOD: true,
+//                 UGA_PRINT: true,
+//                 UGA_PROCESS: true,
+//                 UGA_VIEW: true,
+//                 UGA_ACCESSIDS: "TR401",
+//               },
+//             ] : []),
+
+//           {
+//             name: "Slot",
+//             id: 474,
+//             url: "./TR376/Slot%20Group",
+//             icon: (
+//               <Tooltip title="Slot">
+//                 <HistoryToggleOffIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR376",
+//           },
+//           // {
+//           //   name: "Role",
+//           //   url: "./TR232/Role",
+//           //   id: 34578,
+//           //   icon: (
+//           //     <Tooltip title="Roles">
+//           //       <PeopleAltIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR232",
+//           // },
+
+//           // {
+//           //   name: "Personnel",
+//           //   // url: "./TR027/Personnel",
+//           //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
+//           //   id: 5634,
+//           //   icon: (
+//           //     <Tooltip title="Classification">
+//           //       <PeopleAltIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR027",
+//           // },
+//           getPersonnelMenu(is00123Subscription),
+
+//           // {
+//           //   name: is003Subscription ? "Standard" : "Project",
+//           //   id: 4346894,
+//           //   url: "./TR275/Project",
+//           //   icon: (
+//           //     <Tooltip title={is003Subscription ? "Standard" : "Project"}>
+//           //       <SourceOutlinedIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR275",
+//           // },
+//           // {
+
+//           //   name: "Project",
+//           //   id: 4346894,
+//           //   url: "./TR378/Academic Year",
+//           //   icon: (
+//           //     <Tooltip
+//           //       title="Project"
+//           //     >
+//           //       <SourceOutlinedIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR275",
+//           // },
+//           getProjectMenu(is003Subscription),
+
+//           {
+//             name: "Functions",
+//             id: 567,
+//             url: "./TR121/Functions",
+//             icon: (
+//               <Tooltip title="Functions">
+//                 <Diversity3Icon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR121",
+//           },
+//           // {
+//           //   name: "Party",
+//           //   id: 4346895,
+//           //   url: "./TR243/Party",
+//           //   icon: (
+//           //     <Tooltip title="Party">
+//           //       <PersonSearchIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR243",
+//           // },
+//           {
+//             name: "Shift",
+//             id: 45689,
+//             url: "./TR265/Shift",
+//             icon: (
+//               <Tooltip title="Shift">
+//                 <SafetyCheckIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR265",
+//           },
+
+//           {
+//             name: "Leave Type",
+//             id: 45680,
+//             url: "./TR213/Leave Type",
+//             icon: (
+//               <Tooltip title="Leave Type">
+//                 <Hail color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR213",
+//           },
+//           // {
+//           //   name: "Payroll",
+//           //   id: 46,
+//           //   url: "./TR027/Employee Payroll",
+//           //   icon: (
+//           //     <Tooltip title="Employees">
+//           //       <CurrencyRubleIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR027",
+//           // },
+//           {
+//             name: "Overhead Type",
+//             id: 47,
+//             url: "./TR292/Overhead Type",
+//             icon: (
+//               <Tooltip title="Overhead Type">
+//                 <SummarizeIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR292",
+//           },
+//           {
+//             name: "Overhead",
+//             id: 41,
+//             url: "./TR085/Overhead",
+//             icon: (
+//               <Tooltip title="Overhead">
+//                 <RequestQuoteOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR085",
+//           },
+
+//           {
+//             name: "Holiday List",
+//             id: 54668,
+//             url: "./TR218/Holiday List",
+//             icon: (
+//               <Tooltip title="Leave Type">
+//                 <FactCheckRoundedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR218",
+//           },
+
+//           {
+//             name: "Salary Component",
+//             id: 56796,
+//             url: "./TR205/Salary Component",
+//             icon: (
+//               <Tooltip title="Salary Component">
+//                 <AttachMoneyIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR205",
+//           },
+
+//           {
+//             name: "Payroll Policy",
+//             id: 4578,
+//             url: "./TR207/Payroll Policy",
+//             icon: (
+//               <Tooltip title="Payroll Policy">
+//                 <LocalPoliceOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR207",
+//           },
+//         ],
+//       },
+//       {
+//         name: "CRM",
+//         id: 33,
+//         MenuID: "CRM1800",
+//         Tooltipname: "CRM",
+//         icon: (
+//           <Tooltip title="CRM">
+//             <SupportAgentOutlinedIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+
+//           {
+//             name: "HSN",
+//             id: 43468,
+//             url: "./TR316/HSN Category",
+//             icon: (
+//               <Tooltip title="HSN">
+//                 <QrCodeScannerOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR316",
+//           },
+//           {
+//             name: "Item",
+//             id: 43468,
+//             url: "./TR315/Item Group",
+//             icon: (
+//               <Tooltip title="Item">
+//                 <InventoryOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR315",
+//           },
+
+//           {
+//             name: "Route",
+//             id: 43468,
+//             url: "./TR323/Route",
+//             icon: (
+//               <Tooltip title="Route">
+//                 <RouteOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR323",
+//           },
+//           {
+//             name: "Party",
+//             id: 434895,
+//             //  url: "./TR243/Party",
+//             url: "./TR321/Party",
+//             icon: (
+//               <Tooltip title="Party">
+//                 <PersonSearchIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR321",
+//           },
+//           {
+//             name: "Settlement",
+//             id: 434891,
+//             //  url: "./TR243/Party",
+//             url: "./TR380/Settlements",
+//             icon: (
+//               <Tooltip title="Settlement">
+//                 <CreditCardOffOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR380",
+//           },
+//           {
+//             name: "Aging Report",
+//             id: 434685,
+//             //  url: "./TR243/Party",
+//             url: "/Apps/Party/AgingReport",
+//             icon: (
+//               <Tooltip title="Aging Report">
+//                 <ScaleOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR343",
+//           },
+//           //  {
+//           //   name: "Lead",
+//           //   id: 4346895,
+//           //   //  url: "./TR243/Lead",
+//           //   url: "./TR321/Lead",
+//           //   icon: (
+//           //     <Tooltip title="Lead">
+//           //       <PersonSearchIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR321",
+//           // },
+//           {
+//             name: "Order Enquiry",
+//             id: 4346899,
+//             url: "./TR313/Order Enquiry",
+//             icon: (
+//               <Tooltip title="Order Enquiry">
+//                 <QueryStatsOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR313",
+//           },
+//           // {
+//           //   name: "Enquiry (DME)",
+//           //   id: 4346899,
+//           //   url: "./TR370/DMEnquiry",
+//           //   icon: (
+//           //     <Tooltip title="Digital Marketing Enquiry">
+//           //       <AppShortcutIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR370",
+//           // },
+//           {
+//             name: "Lead Enquiry",
+//             id: 4346899,
+//             url: "./TR328/Lead Enquiry",
+//             icon: (
+//               <Tooltip title="Lead Enquiry">
+//                 <QueryBuilderIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR328",
+//           },
+
+//            {
+//             name: "Audit",
+//             id: 43468919,
+//             url: "/Apps/TR408/EditAudit",
+//             icon: (
+//               <Tooltip title="Audit">
+//                 <ArtTrackIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR408",
+//           },
+
+//         ],
+//       },
+//       {
+//         name: "Transaction",
+//         id: 97659,
+//         MenuID: "TS1700",
+//         Tooltipname: "Transaction",
+//         icon: (
+//           <Tooltip title="Transaction">
+//             <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+//           {
+//             name: "Check In",
+//             id: 5486,
+//             url: "./TR123/Check In",
+//             icon: (
+//               <Tooltip title="Check In">
+//                 <ChecklistIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR123",
+//           },
+//           {
+//             name: "Check Out",
+//             id: 5589,
+//             url: "./TR124/Check Out",
+//             icon: (
+//               <Tooltip title="Check Out">
+//                 <ChecklistRtlIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR124",
+//           },
+//           {
+//             name: "Payroll Configuration",
+//             id: 47,
+//             url: "./TR027/Payroll Configuration",
+//             icon: (
+//               <Tooltip title="Payroll Configuration">
+//                 <PriceCheckIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR342",
+//           },
+//           {
+//             name: "Payroll",
+//             id: 46,
+//             url: "./TR333/Payroll",
+//             icon: (
+//               <Tooltip title="Payroll">
+//                 <CurrencyRubleIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR333",
+//           },
+//           {
+//             name: "Employee Request",
+//             id: 5846,
+//             url: "./TR257/Employee Request",
+//             icon: (
+//               <Tooltip title="Requests">
+//                 <PermContactCalendarIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR257",
+//           },
+
+//           // {
+//           //   name: "Approval",
+//           //   id: 5859,
+//           //   url: "./TR027/Approval",
+//           //   icon: (
+//           //     <Tooltip title="Approval">
+//           //       <TaskAltIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR258",
+//           // },
+//         ],
+//       },
+//       {
+//         name: is003Subscription ? "Academics" : "Agile",
+//         id: 45678,
+//         MenuID: "EM900",
+//         Tooltipname: is003Subscription ? "Academics" : "Agile",
+//         icon: (
+//           <Tooltip title={is003Subscription ? "Academics" : "Agile"}>
+//             <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+//           {
+//             name: "Admission",
+//             url: "./TR379/Admission",
+//             id: 5596,
+//             icon: (
+//               <Tooltip title="Admission">
+//                 <ContactsIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR379",
+//           },
+//           {
+//             name: "Attendance(D)",
+//             url: "/Apps/TR260/Editdailyattendance",
+//             id: 5590,
+//             icon: (
+//               <Tooltip title="Daily Attendance">
+//                 <AppRegistrationOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR260",
+//           },
+//           {
+//             name: "Attendance(M)",
+//             url: "/Apps/TR217/EditAttendance",
+//             id: 5580,
+//             icon: (
+//               <Tooltip title="Monthly Attendance">
+//                 {/* <AppRegistrationOutlinedIcon color="info" /> */}
+//                 <CalendarMonthOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR217",
+//           },
+//           {
+//             name: "Attendance Register",
+//             url: "/Apps/TR259/EditAttendanceHistory",
+//             id: 5591,
+//             icon: (
+//               <Tooltip title="Attendance Register">
+//                 <WorkHistoryOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR259",
+//           },
+
+//           getFeedbackMenu(is003Subscription),
+
+//           {
+//             name: "Timesheet",
+//             url: "/Apps/TR261/EditTimeSheet",
+//             id: 5592,
+//             icon: (
+//               <Tooltip title="Timesheet">
+//                 <PendingActionsOutlinedIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR261",
+//           },
+//           // {
+//           //   name: "Events",
+//           //   url: "/Apps/TR383/Academic Year",
+//           //   id: 5595,
+//           //   icon: (
+//           //     <Tooltip title="Events">
+//           //       <NotificationAddOutlinedIcon color="info" />
+//           //     </Tooltip>
+//           //   ),
+//           //   UGA_ADD: true,
+//           //   UGA_DEL: true,
+//           //   UGA_MOD: true,
+//           //   UGA_PRINT: true,
+//           //   UGA_PROCESS: true,
+//           //   UGA_VIEW: true,
+//           //   UGA_ACCESSIDS: "TR383",
+//           // },
+//           ...(is003Subscription
+//             ? [
+//               {
+//                 name: "Events",
+//                 url: "/Apps/TR383/Academic Year",
+//                 id: 5595,
+//                 icon: (
+//                   <Tooltip title="Events">
+//                     <NotificationAddOutlinedIcon color="info" />
+//                   </Tooltip>
+//                 ),
+//                 UGA_ADD: true,
+//                 UGA_DEL: true,
+//                 UGA_MOD: true,
+//                 UGA_PRINT: true,
+//                 UGA_PROCESS: true,
+//                 UGA_VIEW: true,
+//                 UGA_ACCESSIDS: "TR383",
+//               },
+//             ]
+//             : []),
+//           {
+//             name: "Invoice",
+//             // url: "/Apps/TR250/Invoice",
+//             // url: "/Apps/TR331/Invoice",
+//             url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+//             id: 88,
+//             icon: (
+//               <Tooltip title="Invoice">
+//                 <ReceiptIcon color="info" />
+//               </Tooltip>
+//             ),
+//             // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR331",
+//           },
+//         ],
+//       },
+
+
+//       // {
+//       //   name: "Assessment",
+//       //   id: 4578,
+//       //   MenuID: "ST1600",
+//       //   Tooltipname: "Assessment",
+//       //   icon: (
+//       //     <Tooltip title="Assessment">
+//       //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+//       //     </Tooltip>
+//       //   ),
+//       //   children: [
+//       //     {
+//       //       name: "Prepare",
+//       //       id: 5848,
+//       //       // url: "/Apps/SkillGlow/CategoryMain",
+//       //       url: "/Apps/TR278/List Of Categories",
+//       //       icon: (
+//       //         <Tooltip title="Prepare">
+//       //           <CategoryOutlinedIcon color="info" />
+//       //         </Tooltip>
+//       //       ),
+//       //       UGA_ADD: true,
+//       //       UGA_DEL: true,
+//       //       UGA_MOD: true,
+//       //       UGA_PRINT: true,
+//       //       UGA_PROCESS: true,
+//       //       UGA_VIEW: true,
+//       //       UGA_ACCESSIDS: "TR122",
+//       //     },
+//       //     {
+//       //       name: "Schedule",
+//       //       id: 5849,
+//       //       url: "/Apps/TR286/List of Employees",
+//       //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+//       //       icon: (
+//       //         <Tooltip title="Schedule">
+//       //           <BadgeIcon color="info" />
+//       //         </Tooltip>
+//       //       ),
+//       //       UGA_ADD: true,
+//       //       UGA_DEL: true,
+//       //       UGA_MOD: true,
+//       //       UGA_PRINT: true,
+//       //       UGA_PROCESS: true,
+//       //       UGA_VIEW: true,
+//       //       UGA_ACCESSIDS: "TR122",
+//       //     },
+//       //     {
+//       //       name: "Insights",
+//       //       id: 5849,
+//       //       //url: "/Apps/TR286/List of Employees",
+//       //       url: "/Apps/SkillGlow/SkillInsights",
+//       //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+//       //       icon: (
+//       //         <Tooltip title="Insights">
+//       //           <DashboardOutlinedIcon color="info" />
+//       //         </Tooltip>
+//       //       ),
+//       //       UGA_ADD: true,
+//       //       UGA_DEL: true,
+//       //       UGA_MOD: true,
+//       //       UGA_PRINT: true,
+//       //       UGA_PROCESS: true,
+//       //       UGA_VIEW: true,
+//       //       UGA_ACCESSIDS: "TR122",
+//       //     },
+
+//       //   ],
+//       // },
+
+//       {
+//         name: "Assessment",
+//         id: 4579,
+//         MenuID: "ST1609",
+//         Tooltipname: "Assessment",
+//         icon: (
+//           <Tooltip title="Assessment">
+//             <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         url: "/Apps/TR299/List Of Assessment Type",
+//         UGA_ADD: true,
+//         UGA_DEL: true,
+//         UGA_MOD: true,
+//         UGA_PRINT: true,
+//         UGA_PROCESS: true,
+//         UGA_VIEW: true,
+//         UGA_ACCESSIDS: "TR299",
+
+//       },
+//       {
+//         name: "Document",
+//         id: 43468,
+//         url: "./TR361/Document Category",
+//         icon: (
+//           <Tooltip title="Document">
+//             <FolderCopyIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         UGA_ADD: true,
+//         UGA_DEL: true,
+//         UGA_MOD: true,
+//         UGA_PRINT: true,
+//         UGA_PROCESS: true,
+//         UGA_VIEW: true,
+//         UGA_ACCESSIDS: "TR361",
+//       },
+//       {
+//         name: "Settings",
+//         id: 95689,
+//         MenuID: "ST1600",
+//         Tooltipname: "Settings",
+//         icon: (
+//           <Tooltip title="Settings">
+//             <SettingsIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+//           {
+//             name: "Company",
+//             id: 5846,
+//             url: "./configuration/E",
+//             icon: (
+//               <Tooltip title="Configuration">
+//                 <DisplaySettingsIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR014",
+//           },
+//           {
+//             name: "Approval",
+//             id: 58467,
+//             url: "./Approval",
+//             icon: (
+//               <Tooltip title="Approval">
+//                 <EventAvailableIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR258",
+//           },
+//           {
+//             name: "Biometric",
+//             id: 58467,
+//             url: "./Biometric",
+//             icon: (
+//               <Tooltip title="Biometric">
+//                 <FingerprintIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR344",
+//           },
+//           {
+//             name: "Geo Fencing",
+//             id: 58468,
+//             url: "./TR128/Location",
+//             icon: (
+//               <Tooltip title="Geofencing">
+//                 <FenceIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR345",
+//           },
+//           {
+//             name: "Academic Year",
+//             id: 58548,
+//             url: "./TR374/Academicyear",
+//             icon: (
+//               <Tooltip title="Academic Year">
+//                 <EventNoteIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR374",
+//           },
+//           {
+//             name: "Change Password",
+//             id: 5859,
+//             url: "./change Password",
+//             icon: (
+//               <Tooltip title="Change Password">
+//                 <LockOpenIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR253",
+//           },
+//         ],
+//       },
+//       {
+//         name: "Security",
+//         id: 989,
+//         MenuID: "SE100",
+//         Tooltipname: "Security",
+//         icon: (
+//           <Tooltip title="Security">
+//             <SecurityIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+//           {
+//             name: "User",
+//             id: 586,
+//             url: "./TR094/User",
+//             icon: (
+//               <Tooltip title="User">
+//                 <BadgeIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR094",
+//           },
+//           {
+//             name: "User Group",
+//             id: 5867,
+//             url: "./TR095/User Group",
+//             icon: (
+//               <Tooltip title="User Group">
+//                 <GroupsIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR095",
+//           },
+//         ],
+//       },
+//       // {
+//       //   name: "GSBD",
+//       //   id: 95654,
+//       //   MenuID: "SOP100",
+//       //   Tooltipname: "GSBD",
+//       //   icon: (
+//       //     <Tooltip title="GSBD">
+//       //       <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
+//       //     </Tooltip>
+//       //   ),
+//       //   children: [
+//       //     {
+//       //       name: "QC",
+//       //       id: 5843,
+//       //       url: "/Apps/TR336/List Of SOPs",
+//       //       icon: (
+//       //         <Tooltip title="List Of SOPs">
+//       //           <LibraryAddCheckOutlinedIcon color="info" />
+//       //         </Tooltip>
+//       //       ),
+//       //       UGA_ADD: true,
+//       //       UGA_DEL: true,
+//       //       UGA_MOD: true,
+//       //       UGA_PRINT: true,
+//       //       UGA_PROCESS: true,
+//       //       UGA_VIEW: true,
+//       //       UGA_ACCESSIDS: "TR336",
+//       //     },
+//       //     // {
+//       //     //   name: "QA",
+//       //     //   id: 5877,
+//       //     //   url: "/Apps/TR337/List Of SOPs",
+//       //     //   icon: (
+//       //     //     <Tooltip title="List Of SOPs">
+//       //     //       <IntegrationInstructionsOutlinedIcon color="info" />
+//       //     //     </Tooltip>
+//       //     //   ),
+//       //     //   UGA_ADD: true,
+//       //     //   UGA_DEL: true,
+//       //     //   UGA_MOD: true,
+//       //     //   UGA_PRINT: true,
+//       //     //   UGA_PROCESS: true,
+//       //     //   UGA_VIEW: true,
+//       //     //   UGA_ACCESSIDS: "TR337",
+//       //     // },
+
+//       //   ],
+//       // },
+//       {
+//         name: "Company",
+//         id: 95689,
+//         MenuID: "BC2000",
+//         Tooltipname: "Company",
+//         icon: (
+//           <Tooltip title="Company">
+//             <AssuredWorkloadIcon sx={{ color: "#651fff" }} />
+//           </Tooltip>
+//         ),
+//         children: [
+//           {
+//             name: "Company Details",
+//             id: 5846,
+//             url: "./ChangeyourPassword_2",
+//             icon: (
+//               <Tooltip title="Company Details">
+//                 <DisplaySettingsIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR346",
+//           },
+
+//           {
+//             name: "Logo & GST Upload",
+//             id: 58467,
+//             url: "./ChangeyourPassword_4",
+//             icon: (
+//               <Tooltip title="Logo & GST Upload">
+//                 <PermMediaIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR347",
+//           },
+//           {
+//             name: "Header & Footer Setup",
+//             id: 56667,
+//             url: "./ChangeyourPassword_5",
+//             icon: (
+//               <Tooltip title="Header & Footer Setup">
+//                 <SettingsOverscanIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR348",
+//           },
+//           {
+//             name: "Activate My Subscription",
+//             id: 5846,
+//             url: "./ChangeyourPassword_3",
+//             icon: (
+//               <Tooltip title="Activate My Subscription">
+//                 <UnsubscribeIcon color="info" />
+//               </Tooltip>
+//             ),
+//             UGA_ADD: true,
+//             UGA_DEL: true,
+//             UGA_MOD: true,
+//             UGA_PRINT: true,
+//             UGA_PROCESS: true,
+//             UGA_VIEW: true,
+//             UGA_ACCESSIDS: "TR349",
+//           },
+
+//         ],
+//       },
+//     ],
+//   };
+//   const filteredMenuData =
+//     firstLogin === "Y"
+//       ? []
+//       : child.data.filter((menu) => menu.name !== "Company");
+
+//   return (
+//     <Box
+//       sx={{
+//         position: "sticky",
+//         display: "flex",
+//         height: "100vh",
+//         top: 0,
+//         bottom: 0,
+//         zIndex: 7,
+//       }}
+//     >
+//       <Sidebar
+//         breakPoint="md"
+//         backgroundColor="#ffff" //#F5F5F5
+//       >
+//         <Box
+//           sx={{
+//             display: "flex",
+//             flexDirection: "column",
+//             height: "100%",
+//             backgroundColor: "#ffff",
+//             overflowY: "auto",
+//           }}
+//         >
+//           {/* ===== LOGO SECTION ===== */}
+//           <Box
+//             sx={{
+//               display: "flex",
+//               justifyContent: "space-between",
+//               alignItems: "center",
+//               p: 2,
+//               backgroundColor: "#ffff",
+//               borderBottom: "1px solid #E5E7EB",
+//             }}
+//           >
+//             {!collapsed ? (
+//               <>
+//                 {logoSrc && (
+//                   <img
+//                     src={logoSrc}
+//                     style={{
+//                       width: "170px",
+//                       height: "60px",
+//                       objectFit: "contain",
+//                       cursor: "pointer",
+//                       borderRadius: '10px'
+//                     }}
+//                     onClick={() =>
+//                       firstLogin === "Y"
+//                         ? navigate("/Apps/ChangeyourPassword_1")
+//                         : navigate("./HR")
+//                     }
+//                   />
+//                 )}
+//                 <IconButton
+//                   onClick={broken ? () => toggleSidebar() : () => collapseSidebar()}
+//                   sx={{ color: colors.grey[700] }}
+//                   size="small"
+//                 >
+//                   <ArrowBackIcon sx={{ fontSize: 20 }} />
+//                 </IconButton>
+//               </>
+//             ) : (
+//               <IconButton
+//                 onClick={() => collapseSidebar()}
+//                 sx={{ color: colors.grey[700], width: "100%" }}
+//                 size="small"
+//               >
+//                 <MenuOutlinedIcon sx={{ fontSize: 20 }} />
+//               </IconButton>
+//             )}
+//           </Box>
+
+//           {/* ===== COMPANY INFO BOX ===== */}
+          
+//           {!collapsed && (
+//             <Box
+//               sx={{
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 justifyContent: "space-between",
+//                 mx: 1.2,
+//                 my: 1.5,
+//                 p: 1.5,
+//                 borderRadius: 2,
+//                 backgroundColor: "#FFFFFF",   // White
+//                 border: "1px solid #E5E7EB",  // Light border
+//                 boxShadow: "0 1px 3px rgba(0,0,0,0.08)", // Optional
+//               }}
+//             >
+//               <Typography variant="body2" fontWeight={600} color="text.primary">
+//                 {company || "Company"}
+//               </Typography>
+//               <Box display="flex" justifyContent="space-between" alignItems="center">
+//                 <Typography variant="body2" fontWeight={500} color="text.secondary">
+//                   {year || "Year"}
+//                 </Typography>
+//                 <Tooltip title="Configuration">
+//                   <IconButton
+//                     size="small"
+//                     onClick={() => navigate("/Apps/ChangeyourPassword_1")}
+//                     sx={{ color: colors.blueAccent[500] }}
+//                   >
+//                     <InfoRoundedIcon sx={{ fontSize: 16 }} />
+//                   </IconButton>
+//                 </Tooltip>
+//               </Box>
+//             </Box>
+//           )}
+
+//           {/* ===== MENU LIST ===== */}
+//           <Box
+//             sx={{
+//               flex: 1,
+//               overflowY: "auto",
+//               px: 0.5,
+//               py: 1,
+//               "& ::-webkit-scrollbar": {
+//                 width: "6px",
+//               },
+//               "& ::-webkit-scrollbar-track": {
+//                 backgroundColor: "transparent",
+//               },
+//               "& ::-webkit-scrollbar-thumb": {
+//                 backgroundColor: colors.grey[400],
+//                 borderRadius: "3px",
+//               },
+//             }}
+//           >
+//             <List component="nav" disablePadding>
+//               {handleMenuWithStyling(filteredMenuData, Groupaccess, true)}
+//             </List>
+//           </Box>
+
+//           {/* ===== FOOTER SECTION ===== */}
+//           <Box
+//             sx={{
+//               borderTop: `1px solid ${colors.primary[300]}`,
+//               p: 1,
+//               //backgroundColor: colors.primary[400],
+//               backgroundColor: "#ffff", // Light gray background
+//             }}
+//           >
+//             {/* LOGOUT BUTTON */}
+//             <ListItem disablePadding sx={{ mb: 0.5, }}>
+//               <Tooltip title="Logout">
+//                 <ListItemButton
+//                   onClick={() => handleLogout()}
+//                   sx={{
+//                     mx: 1.2,
+//                     borderRadius: 2,
+//                     py: 1,
+//                     //color: colors.grey[700],
+//                     color: "#000000",
+//                     fontSize: 14,
+//                     fontWeight: 500,
+//                     transition: "all 0.2s ease",
+//                     "&:hover": {
+//                       backgroundColor: "#FEE2E2",
+//                       color: "#DC2626",
+//                     },
+//                   }}
+//                 >
+//                   <ListItemIcon
+//                     sx={{
+//                       minWidth: 40,
+//                       color: "#000000",
+//                     }}
+//                   >
+//                     <LogoutOutlinedIcon sx={{ fontSize: 20 }} />
+//                   </ListItemIcon>
+//                   {!collapsed && (
+//                     <ListItemText
+//                       primary="Logout"
+//                       primaryTypographyProps={{
+//                         fontSize: 14,
+//                         fontWeight: 500,
+//                       }}
+//                     />
+//                   )}
+//                 </ListItemButton>
+//               </Tooltip>
+//             </ListItem>
+
+//             {/* EXPIRY WARNING */}
+//             {Expiryin < 10 && !collapsed && (
+//               <Paper
+//                 elevation={0}
+//                 sx={{
+//                   mt: 1,
+//                   mx: 1.2,
+//                   p: 1.5,
+//                   backgroundColor: "#FEE2E2",
+//                   border: "1px solid #FECACA",
+//                   borderRadius: 2,
+//                 }}
+//               >
+//                 <Typography
+//                   variant="caption"
+//                   fontWeight={600}
+//                   color="#DC2626"
+//                   display="block"
+//                   textAlign="center"
+//                 >
+//                   ⚠ Expires in {Expiryin} days
+//                 </Typography>
+//               </Paper>
+//             )}
+//           </Box>
+//         </Box>
+//       </Sidebar>
+//     </Box>
+//   );
+// };
+
+// export default Sidebars;
 import * as React from "react";
 import { useState } from "react";
 import {
@@ -178,6 +2205,9 @@ import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined
 //   SubscriptionCode?.endsWith(code)
 // );
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 const getPersonnelMenu = (is00123Subscription) =>
   is00123Subscription
@@ -279,6 +2309,75 @@ const getFeedbackMenu = (is00123Subscription) =>
   } : {}
 
 
+// Flattens the nested menu tree into a searchable list of leaf items,
+// mirroring the exact same access rules used in handleMenuWithStyling:
+// - leaf items need a matching Groupaccess row with at least one UGA_* flag true
+// - parent items are only descended into if a Modules row marks them visible
+//   (PPD && SM_PMENU === MenuID), same as the render path does.
+const flattenAdminMenuItems = (
+  items,
+  accessRow,
+  modules,
+  is003Subscription,
+  restrictedMenus003
+) => {
+  let result = [];
+
+  items.forEach((item) => {
+    if (!item || !item.name) return; // guards against getFeedbackMenu() returning {}
+
+    const { children, name, url, icon, id, UGA_ACCESSIDS, MenuID } = item;
+    const accessItem = accessRow.find((a) => a.UGA_ACCESSID == UGA_ACCESSIDS);
+
+    if (is003Subscription && name === "CRM") return;
+    if (!is003Subscription && (name === "Academic Year" || name === "Slot")) return;
+    if (restrictedMenus003.includes(name) && is003Subscription) return;
+
+    if (!children) {
+      const hasAccess = accessRow.some(
+        (a) =>
+          a.UGA_ACCESSID === UGA_ACCESSIDS &&
+          (a.UGA_ADD ||
+            a.UGA_DEL ||
+            a.UGA_MOD ||
+            a.UGA_PRINT ||
+            a.UGA_PROCESS ||
+            a.UGA_VIEW)
+      );
+
+      if (hasAccess && url) {
+        result.push({
+          id,
+          name: accessItem?.SM_CAPTION1 || name,
+          url,
+          icon,
+          accessId: UGA_ACCESSIDS,
+        });
+      }
+      return;
+    }
+
+    // Parent with children - only descend if a Modules row marks this
+    // MenuID as visible, same condition the renderer uses.
+    const isParentVisible = modules.some(
+      (m) => m.PPD && m.SM_PMENU === MenuID
+    );
+
+    if (isParentVisible) {
+      result = result.concat(
+        flattenAdminMenuItems(
+          children,
+          accessRow,
+          modules,
+          is003Subscription,
+          restrictedMenus003
+        )
+      );
+    }
+  });
+
+  return result;
+};
 
 const Item = ({ title, to, icon, selected, setSelected, isChild, state, Tooltipname }) => {
   const theme = useTheme();
@@ -630,7 +2729,7 @@ const Sidebars = () => {
               {
                 name: "Subject",
                 id: 34566,
-                url: "./TR026/Subject",
+                url: "./TR401/Subject",
                 icon: (
                   <Tooltip title="Subject">
                     <SubjectIcon color="info" />
@@ -663,81 +2762,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR376",
           },
-          // {
-          //   name: "Role",
-          //   url: "./TR232/Role",
-          //   id: 34578,
-          //   icon: (
-          //     <Tooltip title="Roles">
-          //       <PeopleAltIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR232",
-          // },
-
-          // {
-          //   name: "Personnel",
-          //   // url: "./TR027/Personnel",
-          //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
-          //   id: 5634,
-          //   icon: (
-          //     <Tooltip title="Classification">
-          //       <PeopleAltIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR027",
-          // },
           getPersonnelMenu(is00123Subscription),
-
-          // {
-          //   name: is003Subscription ? "Standard" : "Project",
-          //   id: 4346894,
-          //   url: "./TR275/Project",
-          //   icon: (
-          //     <Tooltip title={is003Subscription ? "Standard" : "Project"}>
-          //       <SourceOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR275",
-          // },
-          // {
-
-          //   name: "Project",
-          //   id: 4346894,
-          //   url: "./TR378/Academic Year",
-          //   icon: (
-          //     <Tooltip
-          //       title="Project"
-          //     >
-          //       <SourceOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR275",
-          // },
           getProjectMenu(is003Subscription),
 
           {
@@ -757,23 +2782,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR121",
           },
-          // {
-          //   name: "Party",
-          //   id: 4346895,
-          //   url: "./TR243/Party",
-          //   icon: (
-          //     <Tooltip title="Party">
-          //       <PersonSearchIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR243",
-          // },
           {
             name: "Shift",
             id: 45689,
@@ -809,23 +2817,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR213",
           },
-          // {
-          //   name: "Payroll",
-          //   id: 46,
-          //   url: "./TR027/Employee Payroll",
-          //   icon: (
-          //     <Tooltip title="Employees">
-          //       <CurrencyRubleIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR027",
-          // },
           {
             name: "Overhead Type",
             id: 47,
@@ -1034,24 +3025,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR343",
           },
-          //  {
-          //   name: "Lead",
-          //   id: 4346895,
-          //   //  url: "./TR243/Lead",
-          //   url: "./TR321/Lead",
-          //   icon: (
-          //     <Tooltip title="Lead">
-          //       <PersonSearchIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR321",
-          // },
           {
             name: "Order Enquiry",
             id: 4346899,
@@ -1069,23 +3042,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR313",
           },
-          // {
-          //   name: "Enquiry (DME)",
-          //   id: 4346899,
-          //   url: "./TR370/DMEnquiry",
-          //   icon: (
-          //     <Tooltip title="Digital Marketing Enquiry">
-          //       <AppShortcutIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR370",
-          // },
           {
             name: "Lead Enquiry",
             id: 4346899,
@@ -1220,24 +3176,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR257",
           },
-
-          // {
-          //   name: "Approval",
-          //   id: 5859,
-          //   url: "./TR027/Approval",
-          //   icon: (
-          //     <Tooltip title="Approval">
-          //       <TaskAltIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR258",
-          // },
         ],
       },
       {
@@ -1340,23 +3278,6 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR261",
           },
-          // {
-          //   name: "Events",
-          //   url: "/Apps/TR383/Academic Year",
-          //   id: 5595,
-          //   icon: (
-          //     <Tooltip title="Events">
-          //       <NotificationAddOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR383",
-          // },
           ...(is003Subscription
             ? [
               {
@@ -1380,8 +3301,6 @@ const Sidebars = () => {
             : []),
           {
             name: "Invoice",
-            // url: "/Apps/TR250/Invoice",
-            // url: "/Apps/TR331/Invoice",
             url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
             id: 88,
             icon: (
@@ -1389,7 +3308,6 @@ const Sidebars = () => {
                 <ReceiptIcon color="info" />
               </Tooltip>
             ),
-            // UGA_ACCESSIDS: is003Subscription ? "TR331" : "TR366",
             UGA_ADD: true,
             UGA_DEL: true,
             UGA_MOD: true,
@@ -1400,78 +3318,6 @@ const Sidebars = () => {
           },
         ],
       },
-
-
-      // {
-      //   name: "Assessment",
-      //   id: 4578,
-      //   MenuID: "ST1600",
-      //   Tooltipname: "Assessment",
-      //   icon: (
-      //     <Tooltip title="Assessment">
-      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-      //     </Tooltip>
-      //   ),
-      //   children: [
-      //     {
-      //       name: "Prepare",
-      //       id: 5848,
-      //       // url: "/Apps/SkillGlow/CategoryMain",
-      //       url: "/Apps/TR278/List Of Categories",
-      //       icon: (
-      //         <Tooltip title="Prepare">
-      //           <CategoryOutlinedIcon color="info" />
-      //         </Tooltip>
-      //       ),
-      //       UGA_ADD: true,
-      //       UGA_DEL: true,
-      //       UGA_MOD: true,
-      //       UGA_PRINT: true,
-      //       UGA_PROCESS: true,
-      //       UGA_VIEW: true,
-      //       UGA_ACCESSIDS: "TR122",
-      //     },
-      //     {
-      //       name: "Schedule",
-      //       id: 5849,
-      //       url: "/Apps/TR286/List of Employees",
-      //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-      //       icon: (
-      //         <Tooltip title="Schedule">
-      //           <BadgeIcon color="info" />
-      //         </Tooltip>
-      //       ),
-      //       UGA_ADD: true,
-      //       UGA_DEL: true,
-      //       UGA_MOD: true,
-      //       UGA_PRINT: true,
-      //       UGA_PROCESS: true,
-      //       UGA_VIEW: true,
-      //       UGA_ACCESSIDS: "TR122",
-      //     },
-      //     {
-      //       name: "Insights",
-      //       id: 5849,
-      //       //url: "/Apps/TR286/List of Employees",
-      //       url: "/Apps/SkillGlow/SkillInsights",
-      //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-      //       icon: (
-      //         <Tooltip title="Insights">
-      //           <DashboardOutlinedIcon color="info" />
-      //         </Tooltip>
-      //       ),
-      //       UGA_ADD: true,
-      //       UGA_DEL: true,
-      //       UGA_MOD: true,
-      //       UGA_PRINT: true,
-      //       UGA_PROCESS: true,
-      //       UGA_VIEW: true,
-      //       UGA_ACCESSIDS: "TR122",
-      //     },
-
-      //   ],
-      // },
-
       {
         name: "Assessment",
         id: 4579,
@@ -1671,54 +3517,6 @@ const Sidebars = () => {
           },
         ],
       },
-      // {
-      //   name: "GSBD",
-      //   id: 95654,
-      //   MenuID: "SOP100",
-      //   Tooltipname: "GSBD",
-      //   icon: (
-      //     <Tooltip title="GSBD">
-      //       <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
-      //     </Tooltip>
-      //   ),
-      //   children: [
-      //     {
-      //       name: "QC",
-      //       id: 5843,
-      //       url: "/Apps/TR336/List Of SOPs",
-      //       icon: (
-      //         <Tooltip title="List Of SOPs">
-      //           <LibraryAddCheckOutlinedIcon color="info" />
-      //         </Tooltip>
-      //       ),
-      //       UGA_ADD: true,
-      //       UGA_DEL: true,
-      //       UGA_MOD: true,
-      //       UGA_PRINT: true,
-      //       UGA_PROCESS: true,
-      //       UGA_VIEW: true,
-      //       UGA_ACCESSIDS: "TR336",
-      //     },
-      //     // {
-      //     //   name: "QA",
-      //     //   id: 5877,
-      //     //   url: "/Apps/TR337/List Of SOPs",
-      //     //   icon: (
-      //     //     <Tooltip title="List Of SOPs">
-      //     //       <IntegrationInstructionsOutlinedIcon color="info" />
-      //     //     </Tooltip>
-      //     //   ),
-      //     //   UGA_ADD: true,
-      //     //   UGA_DEL: true,
-      //     //   UGA_MOD: true,
-      //     //   UGA_PRINT: true,
-      //     //   UGA_PROCESS: true,
-      //     //   UGA_VIEW: true,
-      //     //   UGA_ACCESSIDS: "TR337",
-      //     // },
-
-      //   ],
-      // },
       {
         name: "Company",
         id: 95689,
@@ -1808,6 +3606,50 @@ const Sidebars = () => {
     firstLogin === "Y"
       ? []
       : child.data.filter((menu) => menu.name !== "Company");
+
+  // ===== SEARCH =====
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showResults, setShowResults] = useState(false);
+
+  const allMenuItems = React.useMemo(
+    () =>
+      flattenAdminMenuItems(
+        filteredMenuData,
+        Groupaccess,
+        Modules,
+        is003Subscription,
+        restrictedMenus003
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [firstLogin, is003Subscription]
+  );
+
+  const filteredResults = React.useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    return allMenuItems.filter((item) =>
+      item.name?.toLowerCase().includes(searchTerm.trim().toLowerCase())
+    );
+  }, [searchTerm, allMenuItems]);
+
+  const handleSearchNavigate = (item) => {
+    if (!item) return;
+    setSelected(item.name);
+    navigate(item.url, {
+      state: {
+        name: item.name,
+        accessId: item.accessId,
+        id: item.id,
+      },
+    });
+    setSearchTerm("");
+    setShowResults(false);
+  };
+
+  const handleSearchIconClick = () => {
+    if (filteredResults.length > 0) {
+      handleSearchNavigate(filteredResults[0]);
+    }
+  };
 
   return (
     <Box
@@ -1917,6 +3759,76 @@ const Sidebars = () => {
                 </Tooltip>
               </Box>
             </Box>
+          )}
+
+          {/* ===== SEARCH BAR ===== */}
+          {!collapsed && (
+            <ClickAwayListener onClickAway={() => setShowResults(false)}>
+              <Box sx={{ position: "relative", mx: 1.2, mb: 1.5 }}>
+                <Paper
+                  component="form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSearchIconClick();
+                  }}
+                  sx={{
+                    p: "2px 6px",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "6px",
+                    border: "1px solid #E5E7EB",
+                  }}
+                  elevation={0}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1, fontSize: 14 }}
+                    placeholder="Search menu..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setShowResults(true);
+                    }}
+                    onFocus={() => setShowResults(true)}
+                  />
+                  <IconButton size="small" onClick={handleSearchIconClick}>
+                    <SearchIcon fontSize="small" />
+                  </IconButton>
+                </Paper>
+
+                {showResults && searchTerm.trim() && (
+                  <Paper
+                    sx={{
+                      position: "absolute",
+                      zIndex: 20,
+                      width: "100%",
+                      maxHeight: 260,
+                      overflowY: "auto",
+                      mt: "2px",
+                    }}
+                  >
+                    {filteredResults.length > 0 ? (
+                      <List dense disablePadding>
+                        {filteredResults.map((item) => (
+                          <ListItemButton
+                            key={`${item.id}-${item.url}`}
+                            onClick={() => handleSearchNavigate(item)}
+                          >
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.name} />
+                          </ListItemButton>
+                        ))}
+                      </List>
+                    ) : (
+                      <Box p={1.5}>
+                        <Typography variant="body2" color="text.secondary">
+                          No matching menu found
+                        </Typography>
+                      </Box>
+                    )}
+                  </Paper>
+                )}
+              </Box>
+            </ClickAwayListener>
           )}
 
           {/* ===== MENU LIST ===== */}

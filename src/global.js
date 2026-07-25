@@ -360,8 +360,8 @@ const initialState = {
   TermUrl: "",
   CocurricularActivityPost: "",
   CocurricularActivityGet: "" ,
-   PartySyncurl:""
-
+   PartySyncurl:"",
+  Standardwisestudentget: "",
 };
 
 export const getUrlSlice = createSlice({
@@ -594,6 +594,7 @@ export const getUrlSlice = createSlice({
       state.CocurricularActivityPost = APIurl + "CocurricularActivityPost.php";
       state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
       state.PartySyncurl = APIurl + "hrvendor_sync.php";
+      state.Standardwisestudentget = APIurl + "Standardwisestudentget.php";
     },
 
   },
