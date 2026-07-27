@@ -1350,12 +1350,13 @@ const Editemployee = () => {
   //   })
   //   .filter(id => id !== null);
 
-  const initialValues = {
+
+ const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
-        RecordID: String(d.DeptID),
-        Name: d.DeptName,
-      }))
+          RecordID: String(d.DeptID),
+          Name: d.DeptName,
+        }))
       : [],
     Code: Data.Code,
     Name: Data.Name,
@@ -1384,7 +1385,8 @@ const Editemployee = () => {
             ? "O"
             : "",
     // disable: Data.Disable === "Y" ? true : false,
-    disable: typeof Data.Disable === "boolean" ? Data.Disable : Data.Disable === "Y",
+    disable:
+      typeof Data.Disable === "boolean" ? Data.Disable : Data.Disable === "Y",
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -1404,11 +1406,10 @@ const Editemployee = () => {
     //     .map(v => v.trim())
     //     .filter(v => v !== "")
     //   : []
-
+ 
     // moduleSelect: mode === "E" ? Data.Module : ""
     //  moduleSelect:moduleIDs,
   };
-
   console.log(
     "🚀 ~ Editemployee ~ Data.Module:",
     initialValues.employeetype,
@@ -1611,9 +1612,9 @@ const Editemployee = () => {
     }
   };
   // **********Save Function*****************
-  const fnSave = async (values, del) => {
+   const fnSave = async (values, del) => {
     setLoading(true);
-
+ 
     let action =
       mode === "A" && !del
         ? "insert"
@@ -1627,11 +1628,11 @@ const Editemployee = () => {
     const deptIds = isStudentClassification
       ? [0]
       : values.Department?.map((d) => d.RecordID) || [];
-
+ 
     const deptNames = isStudentClassification
       ? [""]
       : values.Department?.map((d) => d.Name) || [];
-
+ 
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
@@ -1715,10 +1716,11 @@ const Editemployee = () => {
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
-
+ 
       setLoading(false);
     }
   };
+
 
   /**************************************Skills***************** */
 
@@ -6579,7 +6581,7 @@ if (funMode === "E" && show == "8") {
 
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
           {/* Personnel Form */}
-          {show == "0" ? (
+              {show == "0" ? (
             <Box
               display="flex"
               gap={3}
@@ -6744,7 +6746,10 @@ if (funMode === "E" && show == "8") {
                                               true,
                                             )
                                           }
-                                          isOptionEqualToValue={(option, value) =>
+                                          isOptionEqualToValue={(
+                                            option,
+                                            value,
+                                          ) =>
                                             String(option.RecordID) ===
                                             String(value.RecordID)
                                           }
@@ -7218,7 +7223,13 @@ if (funMode === "E" && show == "8") {
                                     label="Quality Assurance"
                                   />
 
-                                  <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
+                                  <FormLabel focused={false}>
+                                    {" "}
+                                    {getBusinessCaption(
+                                      "QualityAssurance",
+                                      "Quality Assurance",
+                                    )}
+                                  </FormLabel>
                                   <Field
                                     //  size="small"
                                     type="checkbox"
@@ -7230,7 +7241,13 @@ if (funMode === "E" && show == "8") {
                                     label="Scrum Master"
                                   />
 
-                                  <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
+                                  <FormLabel focused={false}>
+                                    {" "}
+                                    {getBusinessCaption(
+                                      "ScrumMaster",
+                                      "Scrum Master",
+                                    )}
+                                  </FormLabel>
                                   <Field
                                     //  size="small"
                                     type="checkbox"
@@ -7242,7 +7259,12 @@ if (funMode === "E" && show == "8") {
                                     label="Project Manager"
                                   />
 
-                                  <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
+                                  <FormLabel focused={false}>
+                                    {getBusinessCaption(
+                                      "ProjectManager",
+                                      "Project Manager",
+                                    )}
+                                  </FormLabel>
 
                                   {!is003Subscription && (
                                     <>
@@ -7257,7 +7279,9 @@ if (funMode === "E" && show == "8") {
                                         label="CRM User"
                                       />
 
-                                      <FormLabel focused={false}>CRM User</FormLabel>
+                                      <FormLabel focused={false}>
+                                        CRM User
+                                      </FormLabel>
                                     </>
                                   )}
                                 </Box>
@@ -7376,12 +7400,12 @@ if (funMode === "E" && show == "8") {
                                   onClick={() => {
                                     is00123Subscription
                                       ? navigate(
-                                        `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
-                                        { state },
-                                      )
+                                          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                                          { state },
+                                        )
                                       : navigate(`/Apps/TR027/Personnel`, {
-                                        state,
-                                      });
+                                          state,
+                                        });
                                   }}
                                   sx={{
                                     px: 4,
@@ -7468,7 +7492,7 @@ if (funMode === "E" && show == "8") {
           ) : (
             false
           )}
-
+        
           {/* Contact form */}
           {show == "5" ? (
             <Box
@@ -16479,7 +16503,7 @@ if (funMode === "E" && show == "8") {
                             <Box>
                               {funMode === "E" &&
                                 is003Subscription &&
-                                flag !== "P" &&
+                                // flag !== "P" &&
                                 contractorData.Process == "N" &&
                                 ["OF", "TF"].includes(
                                   values?.BillingUnits || "",

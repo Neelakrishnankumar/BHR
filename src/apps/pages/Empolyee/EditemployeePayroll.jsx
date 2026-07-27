@@ -4036,6 +4036,7 @@ const EditemployeePayroll = () => {
                                 color="error"
                                 disabled={funMode === "A"}
                                 onClick={() => {
+                                   setOpenADPopup(false);
                                   Swal.fire({
                                     title: `Do you want Delete?`,
                                     icon: "warning",
@@ -4045,8 +4046,10 @@ const EditemployeePayroll = () => {
                                     confirmButtonText: "Confirm",
                                   }).then((result) => {
                                     if (result.isConfirmed) {
+                                      console.log("--hii");
+                                      
                                       AllDedFNsave(values, resetForm, "harddelete");
-                                      setOpenADPopup(false);
+                                     
                                     }
                                   });
                                 }}
@@ -4481,6 +4484,7 @@ const EditemployeePayroll = () => {
                                 color="error"
                                 disabled={funMode === "A"}
                                 onClick={() => {
+                                  setOpenADPopup(false);
                                   Swal.fire({
                                     title: `Do you want Delete?`,
                                     icon: "warning",
@@ -4491,7 +4495,7 @@ const EditemployeePayroll = () => {
                                   }).then((result) => {
                                     if (result.isConfirmed) {
                                       AllDedFNsave(values, resetForm, "harddelete");
-                                      setOpenADPopup(false);
+                                      
                                     }
                                   });
                                 }}

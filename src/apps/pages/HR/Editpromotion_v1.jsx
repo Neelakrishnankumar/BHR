@@ -103,6 +103,7 @@ import { useTheme } from "@emotion/react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import GradingIcon from '@mui/icons-material/Grading';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -202,6 +203,20 @@ const Editpromotion_v1 = () => {
   );
   const [rowsassmnt, setRowsAssmnt] = useState([]);
 
+
+
+
+
+
+
+
+
+    const promotionSTDgetdata = useSelector(
+    (state) => state.formApi.promotionSTDgetdata.data || [],
+  );
+  console.log(promotionSTDgetdata, "--find lookup promotionSTDgetdata");
+
+
   useEffect(() => {
     if (promoterows.length > 0) {
       setRows(promoterows);
@@ -212,33 +227,59 @@ const Editpromotion_v1 = () => {
         .map((row) => row.RecordID);
 
       setSelectionModel(selectedIds);
+
+
+  // const promotedOnly = promoterows
+  //   .filter((row) => row.Status === "Promoted")
+  //   .map((row) => ({
+  //     ...row,
+  //     Standard: row.PromotedStandardName || row.Standard || "", // ✅ adjust to whatever field name your API returns
+  //   }));
+
+const promotedOnly = promoterows
+  .filter((row) => row.Status === "Promoted")
+  .map((row) => {
+    const promotedStdId =
+      row.PromotedStandardID ?? row.StandardID ?? row.PromotedStandard ?? null;
+console.log(promotedStdId, "-find promotedStdId in promotedStdId");
+
+    const matchedStandard = promotionSTDgetdata.find(
+      (std) => String(std.RecordID) === String(promotedStdId),
+    );
+
+    return {
+      ...row,
+      Standard: matchedStandard?.Name || row.Standard || row.StandardName || "",
+    };
+  });
+
+
+
+setAssignedRows(promotedOnly);
+
+
     }
-  }, [promoterows]);
+  }, [promoterows, promotionSTDgetdata]);
 
-  //   useEffect(() => {
-  //   if (promoterows.length > 0) {
-  //     const assigned = promoterows.filter((row) => row.IsPromoted === "Y");
-  //     const pool = promoterows.filter((row) => row.IsPromoted !== "Y");
+// useEffect(() => {
+//   if (promoterows.length > 0) {
+//     const alreadyPromoted = promoterows
+//       .filter((row) => row.Status === "Promoted")
+//       .map((row) => ({
+//         ...row,
+//         Standard: row.PromotedStandardName || row.Standard || "", // ✅ use whatever field your API returns for the promoted standard name
+//       }));
 
-  //     setAssignedRows(assigned);
-  //     setRows(pool);
-  //     setSelectionModel([]);
-  //     setSelectionModelAssigned([]);
-  //   }
-  // }, [promoterows]);
+//     const pool = promoterows.filter((row) => row.Status !== "Promoted");
+
+//     setAssignedRows(alreadyPromoted);
+//     setRows(pool);
+//     setSelectionModel([]);
+//     setSelectionModelAssigned([]);
+//   }
+// }, [promoterows]);
 
 
-  //   useEffect(() => {
-  //   if (promoterows.length > 0) {
-  //     const assigned = promoterows.filter((row) => row.IsPromoted === "Y");
-  //     const pool = promoterows.filter((row) => row.IsPromoted !== "Y");
-
-  //     setAssignedRows(assigned);
-  //     setRows(pool);
-  //     setSelectionModel([]);
-  //     setSelectionModelAssigned([]);
-  //   }
-  // }, [promoterows]);
 
   //Marks_Assessment_GET
   useEffect(() => {
@@ -265,10 +306,7 @@ const Editpromotion_v1 = () => {
     }
   }, [Subscriptionlastthree, accessID, dispatch]);
 
-  const promotionSTDgetdata = useSelector(
-    (state) => state.formApi.promotionSTDgetdata.data || [],
-  );
-  console.log(promotionSTDgetdata, "--find lookup promotionSTDgetdata");
+
 
   const [selectedPromotion, setSelectedPromotion] = useState(null);
 
@@ -532,15 +570,32 @@ const Editpromotion_v1 = () => {
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [
-          <Tooltip title=" Mark Assessment">
+    
             <GridActionsCellItem
-              icon={<AddTaskIcon sx={{ color: "#3a9e9e" }} />}
-              label="Assessment"
+             icon={
+          <Tooltip title="Mark Assessment">
+            <AddTaskIcon sx={{ color: "#3a9e9e" }} />
+          </Tooltip>
+        }
+              label="Mark Assessment"
               className="textPrimary"
               color="inherit"
               onClick={handleEditClicknew(id)}
             />
-          </Tooltip>,
+            ,
+              <Tooltip title="Marksheet">
+             <GridActionsCellItem
+                          icon={
+                           <Tooltip title="Marksheet">
+                          <GradingIcon />
+                           </Tooltip>
+                          }
+                          label="Marksheet"
+                          className="textPrimary"
+                          // onClick={handleCancelClickTeach(id)}
+                          color="warning"
+                        />
+                        </Tooltip>,
         ];
       },
     },
@@ -593,7 +648,17 @@ const Editpromotion_v1 = () => {
       editable: false,
       headerAlign: "center",
     },
-
+ {
+    //    headerName: selectedPromotion
+    // ? `Standard (${selectedPromotion.Name})`
+    // : "Standard",
+    headerName: "Standard",
+  field: "Standard",
+      width: 250,
+      hide: false,
+      editable: false,
+      headerAlign: "center",
+    },
     {
       headerName: "Reason",
       field: "Reason",
@@ -725,13 +790,18 @@ const Editpromotion_v1 = () => {
             CompanyID: CompanyID,
           }),
         );
-      } else {
+        
+      }
+     
+      else {
         toast.error(response.payload.Msg);
       }
+ setMarksDialogOpen(false);
     } catch (error) {
       console.error(error);
       toast.error("Save failed");
     }
+    
   };
 
   // const handleAssmntSave = async () => {
@@ -825,6 +895,7 @@ const Editpromotion_v1 = () => {
   };
 
   function EditToolbarassesment(props) {
+    const { count } = props;
     // const { setRows, setRowModesModel } = props;
     // const handleClick = () => {
     //     const id = nanoid();
@@ -851,7 +922,7 @@ const Editpromotion_v1 = () => {
           fontWeight={700}
           sx={{ cursor: "default" }}
         >
-          List Of Assesments ({rowCount})
+          List Of Assesments ({count})
         </Typography>
 
         {/* <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
@@ -1030,114 +1101,228 @@ const Editpromotion_v1 = () => {
     );
   }
 
-  const handlePromote = (values) => {
-    if (selectionModel.length === 0) {
-      toast.error("Please select at least one student");
-      return;
-    }
+// const handlePromote = () => {
+//   if (!selectedPromotion) return;
 
-    if (!selectedPromotion) {
-      toast.error("Please select a Standard to promote to");
-      return;
-    }
+//   const selectedData = rows
+//     .filter((row) => selectionModel.includes(row.RecordID))
+//     .map((row) => ({
+//       ...row,
+//       Standard: selectedPromotion.Name, // ✅ add standard here
+//     }));
 
-    const selectedRows = rows.filter((row) =>
-      selectionModel.includes(row.RecordID),
-    );
-    const remainingRows = rows.filter(
-      (row) => !selectionModel.includes(row.RecordID),
-    );
+//   setAssignedRows((prev) => [...prev, ...selectedData]);
 
-    const promotedRows = selectedRows.map((row) => ({
+//   // remove from first grid
+//   setRows((prev) =>
+//     prev.filter((row) => !selectionModel.includes(row.RecordID))
+//   );
+
+//   setSelectionModel([]);
+// };
+
+// const handlePromote = () => {
+//   if (!selectedPromotion) return;
+// console.log(rows, "--rows in handlepromote");
+
+//   const selectedData = rows
+//     .filter((row) => selectionModel.includes(row.RecordID))
+//     .map((row) => ({
+//       ...row,
+//       Standard: selectedPromotion.Name,
+//       PromotedStandardID: selectedPromotion.RecordID, // ✅ store per-row, not just at header level
+//     }));
+
+//     console.log(selectedData, "--find selectedData n handlepromote");
+    
+//   setAssignedRows((prev) => [...prev, ...selectedData]);
+
+//   setRows((prev) =>
+//     prev.filter((row) => !selectionModel.includes(row.RecordID))
+//   );
+
+//   setSelectionModel([]);
+// };
+
+const handlePromote = () => {
+  if (!selectedPromotion) return;
+
+  const selectedData = rows
+    .filter(
+      (row) =>
+        selectionModel.includes(row.RecordID) &&
+        row.Status !== "Promoted", // ✅ block already-promoted rows from being re-added
+    )
+    .map((row) => ({
       ...row,
-      IsPromoted: "Y",
-      Status: "Promoted",
+      Standard: selectedPromotion.Name,
+      PromotedStandardID: selectedPromotion.RecordID,
     }));
 
-    setAssignedRows((prev) => [...prev, ...promotedRows]);
-    setRows(remainingRows);
-    setSelectionModel([]);
-  };
+  console.log(selectedData, "--find selectedData in handlepromote");
 
+  setAssignedRows((prev) => {
+    const existingIds = new Set(prev.map((r) => r.RecordID));
+    const newOnes = selectedData.filter((r) => !existingIds.has(r.RecordID)); // ✅ dedupe safety net
+    return [...prev, ...newOnes];
+  });
+
+  setRows((prev) =>
+    prev.filter((row) => !selectionModel.includes(row.RecordID)),
+  );
+
+  setSelectionModel([]);
+};
+  // const handlePromote = (values) => {
+  //   if (selectionModel.length === 0) {
+  //     toast.error("Please select at least one student");
+  //     return;
+  //   }
+
+  //   if (!selectedPromotion) {
+  //     toast.error("Please select a Standard to promote to");
+  //     return;
+  //   }
+
+  //   const selectedRows = rows.filter((row) =>
+  //     selectionModel.includes(row.RecordID),
+  //   );
+  //   const remainingRows = rows.filter(
+  //     (row) => !selectionModel.includes(row.RecordID),
+  //   );
+
+  //   const promotedRows = selectedRows.map((row) => ({
+  //     ...row,
+  //     IsPromoted: "Y",
+  //     Status: "Promoted",
+  //   }));
+
+  //   setAssignedRows((prev) => [...prev, ...promotedRows]);
+  //   setRows(remainingRows);
+  //   setSelectionModel([]);
+  // };
+
+  // const handlePromoteProcess = async (values) => {
+  //   if (assignedRows.length === 0) {
+  //     toast.error("Please promote at least one student before processing");
+  //     return;
+  //   }
+
+  //   if (!selectedPromotion) {
+  //     toast.error("Please select a Standard to promote to");
+  //     return;
+  //   }
+
+  //   const assignedIds = new Set(assignedRows.map((r) => r.RecordID));
+  //   const combined = [...assignedRows]; // for latest Reason text
+
+  //   const idata = {
+  //     header: {
+  //       ProjectID: (rowData.projectID || recID)?.toString(),
+  //       CompanyID: CompanyID?.toString(),
+  //       PromotedStandardID: selectedPromotion?.RecordID?.toString(),
+  //     },
+  //     // data: promoterows.map((row) => ({
+  //     //   RecordID: row.RecordID?.toString(),
+  //     //   Reason:
+  //     //     combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+  //     //     row.Reason ||
+  //     //     "",
+  //     //   ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
+  //     //   StudentID: row.StudentID,
+  //     // })),
+
+  //     data: assignedRows.map((row) => ({
+  //       RecordID: row.RecordID?.toString(),
+  //       Reason:
+  //         combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+  //         row.Reason ||
+  //         "",
+  //       ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
+  //       StudentID: row.StudentID,
+  //     })),
+  //     //     data: Object.values(
+  //     //   promoterows.reduce((acc, row) => {
+  //     //     // keep the latest — assigned status takes priority if duplicate StudentID
+  //     //     if (!acc[row.StudentID] || assignedIds.has(row.RecordID)) {
+  //     //       acc[row.StudentID] = {
+  //     //         RecordID: row.RecordID?.toString(),
+  //     //         Reason:
+  //     //           combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
+  //     //           row.Reason ||
+  //     //           "",
+  //     //         ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
+  //     //         StudentID: row.StudentID,
+  //     //       };
+  //     //     }
+  //     //     return acc;
+  //     //   }, {}),
+  //     // ),
+  //   };
+  //   console.log(idata, "total process button idata");
+
+  //   // return;
+  //   try {
+  //     const response = await dispatch(promotionupdate({ idata }));
+  //     if (response.payload.Status == "Y") {
+  //       toast.success(response.payload.Msg);
+  //       setSelectionModel([]);
+  //       setSelectionModelAssigned([]);
+  //       dispatch(
+  //         promototionGET({
+  //           ProjectID: rowData.projectID || recID,
+  //           CompanyID: CompanyID,
+  //         }),
+  //       );
+  //     } else {
+  //       toast.error(response.payload.Msg);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error occurred while promoting students.");
+  //   }
+  // };
   const handlePromoteProcess = async (values) => {
-    if (assignedRows.length === 0) {
-      toast.error("Please promote at least one student before processing");
-      return;
-    }
+  if (assignedRows.length === 0) {
+    toast.error("Please promote at least one student before processing");
+    return;
+  }
 
-    if (!selectedPromotion) {
-      toast.error("Please select a Standard to promote to");
-      return;
-    }
-
-    const assignedIds = new Set(assignedRows.map((r) => r.RecordID));
-    const combined = [...assignedRows]; // for latest Reason text
-
-    const idata = {
-      header: {
-        ProjectID: (rowData.projectID || recID)?.toString(),
-        CompanyID: CompanyID?.toString(),
-        PromotedStandardID: selectedPromotion?.RecordID?.toString(),
-      },
-      // data: promoterows.map((row) => ({
-      //   RecordID: row.RecordID?.toString(),
-      //   Reason:
-      //     combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
-      //     row.Reason ||
-      //     "",
-      //   ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
-      //   StudentID: row.StudentID,
-      // })),
-
-      data: assignedRows.map((row) => ({
-        RecordID: row.RecordID?.toString(),
-        Reason:
-          combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
-          row.Reason ||
-          "",
-        ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
-        StudentID: row.StudentID,
-      })),
-      //     data: Object.values(
-      //   promoterows.reduce((acc, row) => {
-      //     // keep the latest — assigned status takes priority if duplicate StudentID
-      //     if (!acc[row.StudentID] || assignedIds.has(row.RecordID)) {
-      //       acc[row.StudentID] = {
-      //         RecordID: row.RecordID?.toString(),
-      //         Reason:
-      //           combined.find((r) => r.RecordID === row.RecordID)?.Reason ||
-      //           row.Reason ||
-      //           "",
-      //         ispromoted: assignedIds.has(row.RecordID) ? "Y" : "N",
-      //         StudentID: row.StudentID,
-      //       };
-      //     }
-      //     return acc;
-      //   }, {}),
-      // ),
-    };
-    console.log(idata, "total process button idata");
-
-    // return;
-    try {
-      const response = await dispatch(promotionupdate({ idata }));
-      if (response.payload.Status == "Y") {
-        toast.success(response.payload.Msg);
-        setSelectionModel([]);
-        setSelectionModelAssigned([]);
-        dispatch(
-          promototionGET({
-            ProjectID: rowData.projectID || recID,
-            CompanyID: CompanyID,
-          }),
-        );
-      } else {
-        toast.error(response.payload.Msg);
-      }
-    } catch (error) {
-      toast.error("Error occurred while promoting students.");
-    }
+  const idata = {
+    header: {
+      ProjectID: (rowData.projectID || recID)?.toString(),
+      CompanyID: CompanyID?.toString(),
+    },
+    data: assignedRows.map((row) => ({
+      RecordID: row.RecordID?.toString(),
+      Reason: row.Reason || "",
+      ispromoted: "Y",
+      StudentID: row.StudentID,
+      PromotedStandardID: row.PromotedStandardID?.toString(), // ✅ per-row, matches what you promoted them to
+    })),
   };
+
+  console.log(idata, "total process button idata");
+
+  try {
+    const response = await dispatch(promotionupdate({ idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      setSelectionModel([]);
+      setSelectionModelAssigned([]);
+      // setAssignedRows([]); // clear the "already assigned" grid after successful process
+      dispatch(
+        promototionGET({
+          ProjectID: rowData.projectID || recID,
+          CompanyID: CompanyID,
+        }),
+      );
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  } catch (error) {
+    toast.error("Error occurred while promoting students.");
+  }
+};
   // const handlePromoteProcess = async (values) => {
   //   if (assignedRows.length === 0) {
   //     toast.error("Please promote at least one student before processing");
@@ -1563,9 +1748,17 @@ const Editpromotion_v1 = () => {
                           color: "#fff !important",
                           fontWeight: 500,
                         },
+                         "& .promoted-row": {
+    backgroundColor: "#e0f7fa", // light cyan
+    color: "#555",
+  },
+  "& .promoted-row:hover": {
+    backgroundColor: "#b2ebf2",
+  },
                       }}
                     >
                       <DataGrid
+    
                         apiRef={apiRef}
                         editMode="cell" // must be "cell", not "column"
                         rows={rows}
@@ -1579,7 +1772,11 @@ const Editpromotion_v1 = () => {
                         }}
                         processRowUpdate={processRowUpdate}
                         getRowId={(row) => row.RecordID}
-                        isCellEditable={(params) => params.field === "Reason"}
+                         isRowSelectable={(params) => params.row.Status !== "Promoted"}
+                        // isCellEditable={(params) => params.field === "Reason"}
+                        isCellEditable={(params) =>
+  params.field === "Reason" && params.row.Status !== "Promoted"
+}
                         experimentalFeatures={{ newEditingApi: true }}
                         onCellClick={handleCellClick}
                         onCellEditStop={handleCellEditStop}
@@ -1593,11 +1790,20 @@ const Editpromotion_v1 = () => {
                         components={{ Toolbar: EditToolbar }}
                         componentsProps={{ toolbar: { setRows } }}
                         rowsPerPageOptions={[5, 10, 20]}
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
+                        // getRowClassName={(params) =>
+                        //   params.indexRelativeToCurrentPage % 2 === 0
+                        //     ? "odd-row"
+                        //     : "even-row"
+                        // }
+                        getRowClassName={(params) => {
+  if (!params.row) return "";
+
+  const stripeClass =
+    params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row";
+  const promotedClass = params.row.Status === "Promoted" ? "promoted-row" : "";
+
+  return `${stripeClass} ${promotedClass}`.trim();
+}}
                         pagination
                         pageSize={pageSize}
                         page={page}
@@ -1749,15 +1955,25 @@ const Editpromotion_v1 = () => {
                             color: "#fff !important",
                             fontWeight: 500,
                           },
+
+                           "& .promoted-row": {
+    backgroundColor: "#e0f7fa", // light cyan
+    color: "#555",
+  },
+  "& .promoted-row:hover": {
+    backgroundColor: "#b2ebf2",
+  },
                         }}
                       >
                         <DataGrid
+                          key={selectedPromotion?.Name} 
                           editMode="cell"
                           rows={assignedRows}
                           columns={Alreadyassignedcolumn}
                           loading={promotiongetloading}
                           checkboxSelection
                           selectionModel={selectionModelAssigned}
+                          isRowSelectable={(params) => params.row.Status !== "Promoted"}
                           onSelectionModelChange={(newSelection) => {
                             console.log(
                               "Selected IDs (assigned):",
@@ -1768,11 +1984,20 @@ const Editpromotion_v1 = () => {
                           getRowId={(row) => row.RecordID}
                           components={{ Toolbar: AssignedToolbar }}
                           rowsPerPageOptions={[5, 10, 20]}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                          }
+                          // getRowClassName={(params) =>
+                          //   params.indexRelativeToCurrentPage % 2 === 0
+                          //     ? "odd-row"
+                          //     : "even-row"
+                          // }
+                               getRowClassName={(params) => {
+  if (!params.row) return "";
+
+  const stripeClass =
+    params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row";
+  const promotedClass = params.row.Status === "Promoted" ? "promoted-row" : "";
+
+  return `${stripeClass} ${promotedClass}`.trim();
+}}
                           pagination
                           pageSize={pageSize}
                           page={page}
@@ -2062,6 +2287,7 @@ const Editpromotion_v1 = () => {
                             toolbar: {
                               setRowsAssmnt,
                               setrowModesModelAssesment,
+                              count: rowsassmnt.length,
                             },
                           }}
                           rowsPerPageOptions={[5, 10, 20]}
