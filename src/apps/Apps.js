@@ -421,7 +421,11 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
-
+                  {/* /Apps/Secondarylistview/TR368/TimeTable/39/1034/54/Primary%20School%20(I-V) */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:ID1/:ID2/:SlotID/:Slotname/:TotalWeekSlots"
+                    element={<ListviewSecondary />}
+                  />
                   {/* SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
@@ -1610,10 +1614,15 @@ function App() {
                     path="/Secondarylistview/AnnexureForm2"
                     element={<AnnexureForm2 />}
                   />
-                  <Route
+                  {/* <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                     element={<EditTimetablev1 />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/:SlotID/:SlotName/:TotalWeekSlots/EditTimeTable/:id/:Mode"
+                    element={<EditTimetablev1 />}
                   />
+                  {/* /Apps/Secondarylistview/TR368/TimeTable/39/1034/54/Primary%20School%20(I-V)/EditTimeTable/-1/A */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditStandardSessions/:id/:Mode"
                     element={<EditStandardSessions />}

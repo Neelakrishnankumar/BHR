@@ -1883,6 +1883,7 @@ const Sidebars = () => {
           </Box>
 
           {/* ===== COMPANY INFO BOX ===== */}
+          
           {!collapsed && (
             <Box
               sx={{
