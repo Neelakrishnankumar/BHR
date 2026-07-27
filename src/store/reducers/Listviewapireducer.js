@@ -8604,6 +8604,17 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
   const handleDeleteTermFees = async (values) => {
+     Swal.fire({
+      title: "Do you want to Delete?",
+      // text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
     const payload = {
       HeaderID: values.RecordID,
       CompanyID: CompanyID,
@@ -8616,17 +8627,24 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
     if (response?.payload?.Status === "Y") {
       toast.success(response?.payload?.Msg);
-      // dispatch(
-      //   getFetchData({
-      //     accessID: "TR368v1",
-      //     get: "get",
-      //     recID: headerid,
-      //   })
-      // );      
+      dispatch(
+            fetchListview(
+              "TR387",
+              "003",
+              screenName,
+              `AcademicYearID = '${values.AcademicYearID}' AND AcadamicTypeID='${values.AcadamicTypeID}' AND CompanyID = '${CompanyID}'`,
+              "",
+              CompanyID,
+              "003"
+
+            )
+          ); 
     }
     else if (response?.payload?.Status == "N") {
       toast.error(response?.payload?.Msg);
     }
+    }
+    });
   };
   const handleGenerateTimetable = async (values) => {
     Swal.fire({
@@ -9466,6 +9484,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 AcademicYear: params.row.AcademicYear,
                 AcademicYearID: params.row.AcademicYearID,
                 AcademicType: params.row.AcademicType,
+                AcadamicTypeID:params.row.AcadamicTypeID
 
               }}
             >
