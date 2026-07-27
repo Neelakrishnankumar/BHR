@@ -94,7 +94,8 @@ export default function EditStandardSessions() {
                     TermID: TermID,
                     HeaderID: HeaderID,
                 })
-            );
+             );
+            // PID -1011, TID -161, TTHID -286
 
             if (response?.payload?.Status === "Y") {
                 setSessions(response?.payload?.data || []);
@@ -231,7 +232,7 @@ export default function EditStandardSessions() {
                                             navigate(`/Apps/SecondarylistView/TR275/Project/${params.YearID}`,{ state: { ...rowData } });
                                     }}
                                 >
-                                    List Of Standard/Activities ({rowData.BreadCrumb1 || ""})
+                                    List Of Standard/Activities ({rowData.Project || ""})
                                 </Typography>
                                 <Typography
                                     variant="h5"
@@ -245,7 +246,7 @@ export default function EditStandardSessions() {
                                 >
                                     {mode == "A"
                                         ? "List Of Time Table"
-                                        : `List Of Time Table (${rowData.BreadCrumb2 || ""})`}
+                                        : `List Of Time Table (${rowData.Description || ""})`}
                                 </Typography>
                                 <Typography
                                     variant="h5"

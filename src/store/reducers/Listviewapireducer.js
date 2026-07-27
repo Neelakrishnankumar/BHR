@@ -145,6 +145,7 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 import BallotIcon from '@mui/icons-material/Ballot';
+import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -619,46 +620,80 @@ export const fetchListview =
       const defaultFromDate = format(oneMonthBefore);
       const defaultToDate = format(today);
 
+      // const handlestdDelete = async (values) => {
+      //   const payload = {
+      //     ProjectId: values.RecordID,
+      //     CompanyID: values.CompanyID,
+      //   }
+      //   console.log(payload, "-- GENERATE PAYLOAD");
+      //   const response = await dispatch(
+      //     standardDelete(payload)
+      //   );
+      //   console.log(response, "-- generate response");
+
+      //   if (response?.payload?.Status === "Y") {
+      //     toast.success(response?.payload?.Msg);
+      //     dispatch(
+      //       fetchListview(
+      //         "TR275",
+      //         "003",
+      //         screenName,
+      //         `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+      //         "",
+
+
+      //       )
+      //     );
+      //     // dispatch(
+      //     //   getFetchData({
+      //     //     accessID: "TR368v1",
+      //     //     get: "get",
+      //     //     recID: headerid,
+      //     //   })
+      //     // );      
+      //   }
+      //   else if (response?.payload?.Status == "N") {
+      //     toast.error(response?.payload?.Msg);
+      //   }
+      // };
+
       const handlestdDelete = async (values) => {
-        const payload = {
-          ProjectId: values.RecordID,
-          CompanyID: values.CompanyID,
-        }
-        console.log(payload, "-- GENERATE PAYLOAD");
-        const response = await dispatch(
-          standardDelete(payload)
-        );
-        console.log(response, "-- generate response");
+        Swal.fire({
+          title: "Do you want to Delete?",
+          // text: "This action cannot be undone.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const payload = {
+              ProjectId: values.RecordID,
+              CompanyID: values.CompanyID,
+            };
+            console.log(payload, "-- GENERATE PAYLOAD");
+            const response = await dispatch(standardDelete(payload));
+            console.log(response, "-- generate response");
 
-        if (response?.payload?.Status === "Y") {
-          toast.success(response?.payload?.Msg);
-          dispatch(
-            fetchListview(
-              "TR275",
-              "003",
-              screenName,
-              `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
-              "",
-
-
-            )
-          );
-          // dispatch(
-          //   getFetchData({
-          //     accessID: "TR368v1",
-          //     get: "get",
-          //     recID: headerid,
-          //   })
-          // );      
-        }
-        else if (response?.payload?.Status == "N") {
-          toast.error(response?.payload?.Msg);
-        }
+            if (response?.payload?.Status === "Y") {
+              toast.success(response?.payload?.Msg);
+              dispatch(
+                fetchListview(
+                  "TR275",
+                  "003",
+                  screenName,
+                  `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+                  "",
+                ),
+              );
+            } else if (response?.payload?.Status == "N") {
+              toast.error(response?.payload?.Msg);
+            }
+          }
+        });
       };
-
-
-
-
 
       // const handlePDFGET = (ProjectID, EmployeeID) => {
       //   console.log("Dispatching with:", { ProjectID, EmployeeID });
@@ -1901,10 +1936,10 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
+                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
                         <Link
                           // to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
-                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
+                          to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
                           state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
@@ -1912,8 +1947,8 @@ export const fetchListview =
                             MilestoneName: params.row.Name,
                             projectName: params.row.Project,
                             BreadCrumb1: params.row.Project,
-                            SlotGroupID:params.row.SlotGroupID,
-                            SlotGroupName:params.row.SlotGroupName
+                            SlotGroupID: params.row.SlotGroupID,
+                            SlotGroupName: params.row.SlotGroupName
                           }}
                         >
                           <Tooltip title="Time Table">
@@ -1923,14 +1958,14 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
-                          <Tooltip title="Time Table">
-                             <span style={{ cursor: "pointer" }}>
-    <IconButton color="info" size="small" disabled>
-      <DatasetLinkedIcon />
-    </IconButton>
-  </span>
-                          </Tooltip>
+                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                        <Tooltip title="Time Table">
+                          <span style={{ cursor: "pointer" }}>
+                            <IconButton color="info" size="small" disabled>
+                              <DatasetLinkedIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
                       )}
 
                       {!isSeedEditable && (
@@ -2006,10 +2041,10 @@ export const fetchListview =
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
-                      
-     {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
+
+                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
                         <Link to={`./EditPromotion/${params.row.RecordID}/E`}
-                         state={{
+                          state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
                             projectID: params.row.RecordID,
@@ -2025,13 +2060,13 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                  {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
-                          <Tooltip title="Promotion">
-                            <IconButton color="info" size="small" disabled>
-                              <NextWeekIcon />
-                            </IconButton>
-                          </Tooltip>
-                   
+                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                        <Tooltip title="Promotion">
+                          <IconButton color="info" size="small" disabled>
+                            <NextWeekIcon />
+                          </IconButton>
+                        </Tooltip>
+
                       )}
 
 
@@ -6577,7 +6612,7 @@ export const fetchListview =
               };
               listviewData.Data.columns.splice(2, 0, obj);
             }
-     if (AccessID == "TR026") {
+            if (AccessID == "TR026") {
               const obj = {
                 field: "activity",
                 headerName: " ",
@@ -6592,13 +6627,13 @@ export const fetchListview =
                   return (
                     <Stack direction="row">
                       <Link>
-                      {params.row.SubjectSkill === "A" && (
-                        <Tooltip title="Activity">
-                          <IconButton color="info">
-                            <ManageAccountsIcon />
-                          </IconButton>
-                        </Tooltip>
-                            )}
+                        {params.row.SubjectSkill === "A" && (
+                          <Tooltip title="Activity">
+                            <IconButton color="info">
+                              <ManageAccountsIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Link>
                     </Stack>
                   );
@@ -7842,25 +7877,25 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               )}
             {(params.row.Description === "Non Teaching Staff") && (
-                <Tooltip title="Productivity Report">
-                  <IconButton
-                    color="info"
-                    size="small"
-                    onClick={() =>
-                      navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
-                        state: {
-                          ...state,
-                          BreadCrumb1: params.row.Description,
-                          Classification: params.row.Description,
-                          CompanyID: params.row.CompanyID,
-                        },
-                      })
-                    }
-                  >
-                    <SensorOccupiedIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title="Productivity Report">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Description,
+                        Classification: params.row.Description,
+                        CompanyID: params.row.CompanyID,
+                      },
+                    })
+                  }
+                >
+                  <SensorOccupiedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
 
@@ -8539,8 +8574,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const companygroupflag = sessionStorage.getItem("companygroupflag");
   const companygroup =
-    JSON.parse(sessionStorage.getItem("companygroup") || "[]"); 
-    console.log(companygroup, companygroupflag, "companygroupflag.....");
+    JSON.parse(sessionStorage.getItem("companygroup") || "[]");
+  console.log(companygroup, companygroupflag, "companygroupflag.....");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
@@ -8585,29 +8620,54 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     }
   };
   const handleGenerateTimetable = async (values) => {
-    const payload = {
-      HeaderID: values.RecordID,
-      CompanyID: CompanyID,
-    }
-    console.log(payload, "-- GENERATE PAYLOAD");
-    const response = await dispatch(
-      TimeTableDelete(payload)
-    );
-    console.log(response, "-- generate response");
+    Swal.fire({
+      title: "Do you want to Delete?",
+      // text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          HeaderID: values.RecordID,
+          CompanyID: CompanyID,
+        }
+        console.log(payload, "-- GENERATE PAYLOAD");
+        const response = await dispatch(
+          TimeTableDelete(payload)
+        );
+        console.log(response, "-- generate response");
 
-    if (response?.payload?.Status === "Y") {
-      toast.success(response?.payload?.Msg);
-      // dispatch(
-      //   getFetchData({
-      //     accessID: "TR368v1",
-      //     get: "get",
-      //     recID: headerid,
-      //   })
-      // );      
-    }
-    else if (response?.payload?.Status == "N") {
-      toast.error(response?.payload?.Msg);
-    }
+        if (response?.payload?.Status === "Y") {
+          toast.success(response?.payload?.Msg);
+          // dispatch(
+          //   getFetchData({
+          //     accessID: "TR368v1",
+          //     get: "get",
+          //     recID: headerid,
+          //   }) 
+          dispatch(
+            fetchListview(
+              "TR368",
+              "003",
+              screenName,
+              `CompanyID='${CompanyID}' AND StandardID='${values.StandardID || 0}'`,
+              "",
+              CompanyID,
+              "003"
+
+            )
+          );
+          // );      
+        }
+        else if (response?.payload?.Status == "N") {
+          toast.error(response?.payload?.Msg);
+        }
+      }
+    });
   };
   const handledeleteDeposit = async (values) => {
     try {
@@ -9097,7 +9157,42 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link> */}
-
+            {is003Subscription && (
+              //<Link
+              // to={`./EditStandardSessions/${params.row.StandardID}/E`}
+              // state={{
+              //   ProjectID: params.row.StandardID,
+              //   HeaderID: params.row.HeaderID,   // <-- confirm this field exists on params.row
+              //   TermID: params.row.TermID,       // <-- confirm this field exists on params.row
+              //   BreadCrumb1: params.row.Project,
+              //   BreadCrumb2: params.row.AcademicYear,
+              // }}
+              //>
+              <Tooltip title="Session">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR368/Timetable/${params.row.AcademicYearID}/${params.row.StandardID}/EditStandardSessions/${params.row.RecordID}/E`,
+                    {
+                      state: {
+                        ...state, ProjectID: params.row.StandardID,
+                        HeaderID: params.row.RecordID,
+                        TermID: params.row.TermID,
+                        BreadCrumb1: params.row.standardID,
+                        Project: params.row.Project,
+                        Description: params.row.Description,
+                        BreadCrumb2: params.row.AcademicYearID,
+                      }
+                    }
+                  )}
+                >
+                  <ViewTimelineIcon />
+                </IconButton>
+                {/* <IconButton color="info" size="small">
+                    <ViewTimelineIcon />
+                  </IconButton> */}
+              </Tooltip>
+              // </Link>
+            )}
             {params.row.IsProcess === "N" ? (
               <>
                 <Link
@@ -9364,15 +9459,15 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
             {(params.row.IsPublish === "Y" && params.row.Events !== "0") && (
 
-            <Tooltip title="Publish Event Category">
-              <IconButton
-                color="error"
-                size="small"
-                onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
-              >
-                <PublishedWithChangesOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Publish Event Category">
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
+                >
+                  <PublishedWithChangesOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             )}
             <PublishEventCategoryDialog
               open={publishDialog.open}

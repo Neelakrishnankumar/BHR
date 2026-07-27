@@ -3329,6 +3329,25 @@ export const PublishEvent = createAsyncThunk(
     return response.data;
   }
 );
+export const Contractprocess = createAsyncThunk(
+  "Contractprocess/Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.contractprocessurl;
+    const data = idata;
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const TaskSessionGet = createAsyncThunk(
   "TaskSessionGet/GET",
   async ({ ProjectID, TermID, HeaderID }) => {

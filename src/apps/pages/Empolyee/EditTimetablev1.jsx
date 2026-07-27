@@ -74,6 +74,7 @@ const EditTimetablev1 = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
+  console.log(params,"params")
   const dispatch = useDispatch();
   const recID = params.id;
   const compID = sessionStorage.getItem("compID");
@@ -1593,8 +1594,7 @@ useEffect(() => {
                     <>
                       Term
                       <span style={{ color: "red", fontSize: "20px" }}>
-                        {" "}
-                        *{" "}
+                        *
                       </span>
                     </>
                   }
@@ -1619,7 +1619,7 @@ useEffect(() => {
                       AccessID: "2169",
                       ScreenName: "Terms",
                       VerticalLicense: Subscriptionlastthree,
-                      Filter: `CompanyID='${compID}' AND AcademicYearID='${params.ID1}'`,
+                      Filter: `CompanyID='${compID}' AND AcademicYearID='${params.YearID}'`,
                       Any: "",
                     },
                   })}`}

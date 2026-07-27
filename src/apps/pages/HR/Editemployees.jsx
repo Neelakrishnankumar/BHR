@@ -70,6 +70,7 @@ import {
   CocurricularActivityGet,
   CocurricularActivityPost,
   resetTrackingData,
+  Contractprocess,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -145,6 +146,8 @@ import {
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 
 // ***********************************************
 //  Developer:Gowsalya
@@ -265,7 +268,7 @@ const Editemployee = () => {
   var parentID = params.filtertype;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-  console.log(Data,Data.Disable, "geteting Data");
+  console.log(Data, Data.Disable, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
@@ -278,10 +281,10 @@ const Editemployee = () => {
   const screenname = state.screenName;
   const designationType = state.Classification || "";
   console.log(designationType, "---find designation type");
-  
+
   const isStudentClassification = designationType === "Student";
   console.log(isStudentClassification, "--find isStudentClassification");
-  
+
   const isLoading = useSelector((state) => state.formApi.loading);
   const ParentgetData = useSelector((state) => state.formApi.Partygetdata);
   console.log("ParentgetData", ParentgetData);
@@ -359,6 +362,9 @@ const Editemployee = () => {
   const [openPROPopup, setOpenPROPopup] = useState(false);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [showContacts, setShowContacts] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [resetReason, setResetReason] = useState("");
+  const [resetReasonError, setResetReasonError] = useState(false);
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
@@ -380,7 +386,7 @@ const Editemployee = () => {
   const [validationSchema17, setValidationSchema17] = useState(null);
   const [validationSchema18, setValidationSchema18] = useState(null);
   const [validationSchema23, setValidationSchema23] = useState(null);
-     const [validationSchema24, setValidationSchema24] = useState(null);
+  const [validationSchema24, setValidationSchema24] = useState(null);
 
   const formikRef = useRef(null);
   const [editingRecordID, setEditingRecordID] = useState(null);
@@ -664,13 +670,13 @@ const Editemployee = () => {
   useEffect(() => {
     const vendor =
       is003Subscription === true &&
-      ParentgetData?.RecordID &&
-      ParentgetData.RecordID !== "0"
+        ParentgetData?.RecordID &&
+        ParentgetData.RecordID !== "0"
         ? {
-            RecordID: ParentgetData.RecordID,
-            Code: ParentgetData.Code,
-            Name: ParentgetData.Name,
-          }
+          RecordID: ParentgetData.RecordID,
+          Code: ParentgetData.Code,
+          Name: ParentgetData.Name,
+        }
         : null;
 
     setContractorData((prev) => ({
@@ -897,7 +903,7 @@ const Editemployee = () => {
         setValidationSchema22(schema22);
 
         //cocurricular_school scenario
-         const schema24 = Yup.object().shape({
+        const schema24 = Yup.object().shape({
           date: Yup.string().trim().required(data.Cocurricularact.Date),
           cocurricular: Yup.object().required(data.Cocurricularact.Cocurricular).nullable(),
           rating: Yup.number()
@@ -908,7 +914,7 @@ const Editemployee = () => {
         });
 
         setValidationSchema24(schema24);
-    
+
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -1347,9 +1353,9 @@ const Editemployee = () => {
   const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
-          RecordID: String(d.DeptID),
-          Name: d.DeptName,
-        }))
+        RecordID: String(d.DeptID),
+        Name: d.DeptName,
+      }))
       : [],
     Code: Data.Code,
     Name: Data.Name,
@@ -1378,7 +1384,7 @@ const Editemployee = () => {
             ? "O"
             : "",
     // disable: Data.Disable === "Y" ? true : false,
-    disable:typeof Data.Disable === "boolean" ? Data.Disable: Data.Disable === "Y",
+    disable: typeof Data.Disable === "boolean" ? Data.Disable : Data.Disable === "Y",
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
@@ -1778,7 +1784,7 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
 
-     if (event.target.value == "24") {
+    if (event.target.value == "24") {
       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         CocurricularActivityGet({
@@ -2650,43 +2656,43 @@ const Editemployee = () => {
         </Box>
       </GridToolbarContainer>
     );
-      function Custombar() {
-    return (
-      <GridToolbarContainer
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>{`List of ${getBusinessCaption("Skills", "Skills")}`}</Typography>
-          <Typography variant="h5">{`(${rowCount})`}</Typography>
-        </Box>
-        <Box
+    function Custombar() {
+      return (
+        <GridToolbarContainer
           sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
           }}
         >
-          <GridToolbarQuickFilter />
-          <Tooltip title="ADD">
-            <IconButton
-              onClick={() => {
-                selectcelldata("", "A", "");
-                setOpenSkillModal(true);
-              }}
-            >
-              <AddOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </GridToolbarContainer>
-    );
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography>{`List of ${getBusinessCaption("Skills", "Skills")}`}</Typography>
+            <Typography variant="h5">{`(${rowCount})`}</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <GridToolbarQuickFilter />
+            <Tooltip title="ADD">
+              <IconButton
+                onClick={() => {
+                  selectcelldata("", "A", "");
+                  setOpenSkillModal(true);
+                }}
+              >
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </GridToolbarContainer>
+      );
+    }
   }
-  }
-   function CocurricularToolbar() {
+  function CocurricularToolbar() {
     return (
       <GridToolbarContainer
         sx={{
@@ -2875,9 +2881,9 @@ const Editemployee = () => {
               },
 
               "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#11B5AE",
-                },
+              {
+                borderColor: "#11B5AE",
+              },
             }}
           >
             <GridToolbarQuickFilter />
@@ -2892,7 +2898,7 @@ const Editemployee = () => {
               //   setOpenManagerModal(true);
               // }}
               onClick={() => {
-                 setOpenManagerModal(true);
+                setOpenManagerModal(true);
               }}
             >
               <IconButton
@@ -2973,7 +2979,6 @@ const Editemployee = () => {
   });
 
   //Contractor
-
   const [contractorData, setContractorData] = useState({
     recordID: "",
     Description: "",
@@ -2997,7 +3002,11 @@ const Editemployee = () => {
     shift2: "",
     project: "",
     discount: "",
+    Invoicebillingdate: "",
+    Process: ""
   });
+  console.log(contractorData, "contractorData");
+
   const [courseAttendenceData, setCourseAttendenceData] = useState({
     recordID: "",
     shift: "",
@@ -3128,13 +3137,13 @@ const Editemployee = () => {
         renewalperiod: "",
         vendor:
           is003Subscription === true &&
-          ParentgetData?.RecordID &&
-          ParentgetData.RecordID !== "0"
+            ParentgetData?.RecordID &&
+            ParentgetData.RecordID !== "0"
             ? {
-                RecordID: ParentgetData.RecordID,
-                Code: ParentgetData.Code,
-                Name: ParentgetData.Name,
-              }
+              RecordID: ParentgetData.RecordID,
+              Code: ParentgetData.Code,
+              Name: ParentgetData.Name,
+            }
             : null,
         Components: "",
         hsnCode: "",
@@ -3147,6 +3156,8 @@ const Editemployee = () => {
         project: "",
         Term: "",
         discount: "",
+        Invoicebillingdate: "",
+        Process: ""
       });
       //  setOpen(true);
       setCourseAttendenceData({
@@ -3175,8 +3186,30 @@ const Editemployee = () => {
       console.log(rowData, "--rowData");
       console.log(rowData.Description, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
-
+if (funMode === "E" && show == "8") {
+    // fetch invoice data for this specific row
+    dispatch(
+      ContractInvoice({
+        BillableMonth: BillableMonth,
+        BillableYear: BillableYear,
+        EmpRecID: recID,
+        ProjectID: rowData?.ProjectID || 0,
+        DetailID: rowData?.RecordID,
+        CompanyID,
+      }),
+    )
+  }
       if (field == "action") {
+      //   dispatch(
+      //   ContractInvoice({
+      //     BillableMonth: BillableMonth,
+      //     BillableYear: BillableYear,
+      //     EmpRecID: recID,
+      //     ProjectID: rowData?.ProjectID || 0,
+      //     DetailID: rowData?.FSDetailID,
+      //     CompanyID,
+      //   }),
+      // );
         setFunEmpRecID(rowData.RecordID);
         // SetFunctionLookup({
         // RecordID: rowData.FunctionsID,
@@ -3218,15 +3251,15 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           itemGroup: rowData.ItemGroupID
             ? {
-                RecordID: rowData.ItemGroupID,
-                Itemgroup: rowData.Itemgroup,
-              }
+              RecordID: rowData.ItemGroupID,
+              Itemgroup: rowData.Itemgroup,
+            }
             : null,
           items: rowData.ItemID
             ? {
-                RecordID: rowData.ItemID,
-                Code: rowData.Item,
-              }
+              RecordID: rowData.ItemID,
+              Code: rowData.Item,
+            }
             : null,
           assestID: rowData.AssestID,
           itemValue: rowData.ItemValue,
@@ -3273,17 +3306,17 @@ const Editemployee = () => {
           servicecomments: rowData.Comments || "",
           vendors: rowData.PartyID
             ? {
-                RecordID: rowData.PartyID,
-                Code: rowData.PartyCode || "",
-                Name: rowData.PartyName || "",
-              }
+              RecordID: rowData.PartyID,
+              Code: rowData.PartyCode || "",
+              Name: rowData.PartyName || "",
+            }
             : null,
           items: rowData.ItemcustodyID
             ? {
-                RecordID: rowData.ItemcustodyID,
-                Code: rowData.ItemCode || rowData.Item || "",
-                Name: rowData.ItemName || "",
-              }
+              RecordID: rowData.ItemcustodyID,
+              Code: rowData.ItemCode || rowData.Item || "",
+              Name: rowData.ItemName || "",
+            }
             : null,
           // items: rowData.ItemID
           //   ? {
@@ -3310,20 +3343,22 @@ const Editemployee = () => {
           BillingType: rowData.BillingType,
           unitrate: rowData.UnitRate,
           alertdate: rowData.NotificationAlertDate,
+          Invoicebillingdate: rowData.BillingDate,
+          Process: rowData.ContractProcess,
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.VendorID
             ? {
-                RecordID: rowData.VendorID,
-                Code: rowData.VendorCode,
-                Name: rowData.VendorName,
-              }
+              RecordID: rowData.VendorID,
+              Code: rowData.VendorCode,
+              Name: rowData.VendorName,
+            }
             : null,
           Term: rowData.TermID
             ? {
-                RecordID: rowData.TermID,
-                Code: rowData.TermCode,
-                Name: rowData.Term,
-              }
+              RecordID: rowData.TermID,
+              Code: rowData.TermCode,
+              Name: rowData.Term,
+            }
             : null,
           // Components: Array.isArray(rowData?.CompanentsList)
           //   ? rowData.CompanentsList.map((d) => ({
@@ -3336,17 +3371,17 @@ const Editemployee = () => {
           Components:
             rowData.FSDetailID && rowData.Components
               ? rowData.FSDetailID.split(",").map((id, index) => ({
-                  RecordID: id.trim(),
-                  Name: rowData.Components.split(",")[index]?.trim() || "",
-                }))
+                RecordID: id.trim(),
+                Name: rowData.Components.split(",")[index]?.trim() || "",
+              }))
               : [],
           discount: rowData.Discount || "",
           project: rowData.ProjectID
             ? {
-                RecordID: rowData.ProjectID,
-                Code: rowData.ProjectCode,
-                Name: rowData.ProjectName,
-              }
+              RecordID: rowData.ProjectID,
+              Code: rowData.ProjectCode,
+              Name: rowData.ProjectName,
+            }
             : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
@@ -3355,17 +3390,17 @@ const Editemployee = () => {
           tds: rowData.Tds,
           shift: rowData.ShiftID
             ? {
-                RecordID: rowData.ShiftID,
-                Code: rowData.ShiftCode,
-                Name: rowData.ShiftName,
-              }
+              RecordID: rowData.ShiftID,
+              Code: rowData.ShiftCode,
+              Name: rowData.ShiftName,
+            }
             : null,
           shift2: rowData.ShiftID
             ? {
-                RecordID: rowData.ShiftID2,
-                Code: rowData.ShiftCode2,
-                Name: rowData.ShiftName2,
-              }
+              RecordID: rowData.ShiftID2,
+              Code: rowData.ShiftCode2,
+              Name: rowData.ShiftName2,
+            }
             : null,
         });
         setOpen(true);
@@ -3373,24 +3408,24 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           project: rowData.ProjectID
             ? {
-                RecordID: rowData.ProjectID,
-                Code: rowData.ProjectCode,
-                Name: rowData.ProjectName,
-              }
+              RecordID: rowData.ProjectID,
+              Code: rowData.ProjectCode,
+              Name: rowData.ProjectName,
+            }
             : null,
           shift: rowData.ShiftID
             ? {
-                RecordID: rowData.ShiftID,
-                Code: rowData.ShiftCode,
-                Name: rowData.ShiftName,
-              }
+              RecordID: rowData.ShiftID,
+              Code: rowData.ShiftCode,
+              Name: rowData.ShiftName,
+            }
             : null,
           shift2: rowData.ShiftID
             ? {
-                RecordID: rowData.ShiftID2,
-                Code: rowData.ShiftCode2,
-                Name: rowData.ShiftName2,
-              }
+              RecordID: rowData.ShiftID2,
+              Code: rowData.ShiftCode2,
+              Name: rowData.ShiftName2,
+            }
             : null,
         });
         setFlag("");
@@ -3413,10 +3448,10 @@ const Editemployee = () => {
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-                RecordID: rowData.LeaveTypeID,
-                Code: "",
-                Name: rowData.LeavePart,
-              }
+              RecordID: rowData.LeaveTypeID,
+              Code: "",
+              Name: rowData.LeavePart,
+            }
             : null,
           Year: rowData.Year,
         });
@@ -3424,24 +3459,24 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           itemgroups: rowData.ItemGroupID
             ? {
-                RecordID: rowData.ItemGroupID,
-                Code: rowData.ItemgroupCode,
-                Name: rowData.ItemGroupDesc,
-              }
+              RecordID: rowData.ItemGroupID,
+              Code: rowData.ItemgroupCode,
+              Name: rowData.ItemGroupDesc,
+            }
             : null,
           itemcategory: rowData.ItemCategoryID
             ? {
-                RecordID: rowData.ItemCategoryID,
-                Code: rowData.ItemCategoryCode,
-                Name: rowData.ItemCategoryDesc,
-              }
+              RecordID: rowData.ItemCategoryID,
+              Code: rowData.ItemCategoryCode,
+              Name: rowData.ItemCategoryDesc,
+            }
             : null,
           Grpitems: rowData.ItemID
             ? {
-                RecordID: rowData.ItemID,
-                Code: rowData.Code,
-                Name: rowData.Name,
-              }
+              RecordID: rowData.ItemID,
+              Code: rowData.Code,
+              Name: rowData.Name,
+            }
             : [],
           SortOrder: rowData.SortOrder,
         });
@@ -3596,18 +3631,18 @@ const Editemployee = () => {
     locality:
       ParentgetData.LocalityID && ParentgetData.LocalityID !== "0"
         ? {
-            RecordID: ParentgetData.LocalityID,
-            Code: ParentgetData.LocalityCode,
-            Name: ParentgetData.LocalityName,
-          }
+          RecordID: ParentgetData.LocalityID,
+          Code: ParentgetData.LocalityCode,
+          Name: ParentgetData.LocalityName,
+        }
         : null,
     ReferenceBy:
       ParentgetData.ReferenceID && ParentgetData.ReferenceID !== "0"
         ? {
-            RecordID: ParentgetData.ReferenceID,
-            Code: ParentgetData.ReferenceByName,
-            Name: ParentgetData.ReferenceByName,
-          }
+          RecordID: ParentgetData.ReferenceID,
+          Code: ParentgetData.ReferenceByName,
+          Name: ParentgetData.ReferenceByName,
+        }
         : null,
     address: ParentgetData.Address || "",
     maplink: ParentgetData.MapLocation || "",
@@ -4116,11 +4151,13 @@ const Editemployee = () => {
     TDS: contractorData.tds,
     UnitRate: contractorData.unitrate || "0.00",
     NotificationAlertDate: contractorData.alertdate,
+    Invoicebillingdate: contractorData.Invoicebillingdate,
     RenewableNotification: contractorData.renewalperiod || "",
     Description: contractorData.Description,
     project: contractorData.project || null,
     shift: contractorData.shift || null,
     shift2: contractorData.shift2 || null,
+    Process : contractorData.Process || ""
   };
   // console.log(contractorData, "--get a contractorData");
   console.log(Data.DesignationName, "--contract idata");
@@ -4200,6 +4237,7 @@ const Editemployee = () => {
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
+      BillingDate: values.Invoicebillingdate,
       DueDate:
         BillingUnit === "OF" || BillingUnit === "TF"
           ? values.DueDate || ""
@@ -4216,6 +4254,7 @@ const Editemployee = () => {
       ProjectID: values?.project?.RecordID || 0,
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
+      ContractProcess: contractorData?.Process || "",
     };
     console.log(idata, "--contract idata");
     // const isStudent =
@@ -4236,29 +4275,29 @@ const Editemployee = () => {
         : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
     console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
-      explorePostData({ accessID: "TR244V1", action, idata }),
+      explorePostData({ accessID: "TR244", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       show == "8"
         ? dispatch(
-            fetchExplorelitview(
-              "TR244",
-              Subscriptionlastthree,
-              "Contracts In",
-              filterCondition,
-              "",
-            ),
-          )
+          fetchExplorelitview(
+            "TR244",
+            Subscriptionlastthree,
+            "Contracts In",
+            filterCondition,
+            "",
+          ),
+        )
         : dispatch(
-            fetchExplorelitview(
-              "TR244",
-              Subscriptionlastthree,
-              "Contracts Out",
-              `EmployeeID='${recID}' AND Customer='Y'`,
-              "",
-            ),
-          );
+          fetchExplorelitview(
+            "TR244",
+            Subscriptionlastthree,
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            "",
+          ),
+        );
 
       toast.success(response.payload.Msg);
       setOpenContractPopup(false);
@@ -4394,6 +4433,7 @@ const Editemployee = () => {
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
+      BillingDate: values.Invoicebillingdate,
       DueDate:
         BillingUnit === "OF" || BillingUnit === "TF"
           ? values.DueDate || ""
@@ -4410,6 +4450,8 @@ const Editemployee = () => {
       ProjectID: values?.project?.RecordID || 0,
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
+      ContractProcess: "Y",
+
     };
     console.log(idata, "--contract idata");
     // const isStudent =
@@ -4433,31 +4475,32 @@ const Editemployee = () => {
     const DetailID = contractorData.recordID || "";
     console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
-      explorePostData({ accessID: "TR244V1", action, idata }),
+      explorePostData({ accessID: "TR244", action, idata }),
     );
     if (response.payload.Status == "Y") {
       // setLoading(false);
       show == "8"
         ? dispatch(
-            fetchExplorelitview(
-              "TR244",
-              Subscriptionlastthree,
-              "Contracts In",
-              filterCondition,
-              "",
-            ),
-          )
+          fetchExplorelitview(
+            "TR244",
+            Subscriptionlastthree,
+            "Contracts In",
+            filterCondition,
+            "",
+          ),
+        )
         : dispatch(
-            fetchExplorelitview(
-              "TR244",
-              Subscriptionlastthree,
-              "Contracts Out",
-              `EmployeeID='${recID}' AND Customer='Y'`,
-              "",
-            ),
-          );
+          fetchExplorelitview(
+            "TR244",
+            Subscriptionlastthree,
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            "",
+          ),
+        );
 
       toast.success(response.payload.Msg);
+      // setOpenContractPopup(false);
       const res = await dispatch(
         ContractInvoice({
           BillableMonth: BillableMonth,
@@ -4475,6 +4518,11 @@ const Editemployee = () => {
         );
         setLoading(false);
         setFlag("P");
+        setContractorData((prev) => ({
+          ...prev,
+          Process: "Y",
+        }));
+
       } else {
         toast.error(res?.payload?.Message || "Failed to Generate Invoice");
       }
@@ -4487,7 +4535,54 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const handleContractProcess = async (values,reason) => {
+    const designationName =
+      Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
+    const isStudent = designationName === "Student";
+    const filterCondition = isStudent
+      ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
+      : is003Subscription
+        ? `EmployeeID='${recID}' AND CompanyID=${CompanyID}` // ✅ Vendors removed
+        : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
+
+    const idata = {
+      ContractID: contractorData.recordID,
+      CompanyID: CompanyID,
+      ContractProcess: "N",
+      Reason: reason
+    };
+
+    setLoading(true);
+    try {
+      const response = await dispatch(Contractprocess({ idata }));
+
+      if (response.payload.Status == "Y") {
+        dispatch(
+          fetchExplorelitview(
+            "TR244",
+            Subscriptionlastthree,
+            "Contracts In",
+            filterCondition,
+            "",
+          ),
+        );
+
+        toast.success(response.payload.Msg || "Process reset successfully");
+
+        setContractorData((prev) => ({
+          ...prev,
+          Process: "N", // ✅ reset, so Save & Generate becomes available again
+        }));
+      } else {
+        toast.error(response.payload.Msg || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while resetting the process");
+    } finally {
+      setLoading(false);
+    }
+  };
   //Geolocation
   const geolocationinitialvlues = {
     Code: Data.Code,
@@ -4862,63 +4957,63 @@ const Editemployee = () => {
       // deploymentData.DesignationID
       deploymentData.DesignationID && deploymentData.DesignationID !== "0"
         ? {
-            RecordID: deploymentData.DesignationID,
-            Code: deploymentData.DesignationCode,
-            Name: deploymentData.DesignationName,
-          }
+          RecordID: deploymentData.DesignationID,
+          Code: deploymentData.DesignationCode,
+          Name: deploymentData.DesignationName,
+        }
         : null,
     location:
       // deploymentData.LocationID
       deploymentData.LocationID && deploymentData.LocationID !== "0"
         ? {
-            RecordID: deploymentData.LocationID,
-            Code: deploymentData.LocationCode,
-            Name: deploymentData.LocationName,
-          }
+          RecordID: deploymentData.LocationID,
+          Code: deploymentData.LocationCode,
+          Name: deploymentData.LocationName,
+        }
         : null,
     gate:
       // deploymentData.StoregatemasterID
       deploymentData.StoregatemasterID &&
-      deploymentData.StoregatemasterID !== "0"
+        deploymentData.StoregatemasterID !== "0"
         ? {
-            RecordID: deploymentData.StoregatemasterID,
-            Code: deploymentData.StoregatemasterCode,
-            Name: deploymentData.StoregatemasterName,
-          }
+          RecordID: deploymentData.StoregatemasterID,
+          Code: deploymentData.StoregatemasterCode,
+          Name: deploymentData.StoregatemasterName,
+        }
         : null,
     project:
       deploymentData.DefaultProject && deploymentData.DefaultProject !== "0"
         ? {
-            RecordID: deploymentData.DefaultProject,
-            Code: deploymentData.ProjectCode,
-            Name: deploymentData.ProjectName,
-          }
+          RecordID: deploymentData.DefaultProject,
+          Code: deploymentData.ProjectCode,
+          Name: deploymentData.ProjectName,
+        }
         : null,
     function:
       deploymentData.DefaultFunction && deploymentData.DefaultFunction !== "0"
         ? {
-            RecordID: deploymentData.DefaultFunction,
-            Code: deploymentData.FunctionCode,
-            Name: deploymentData.FunctionName,
-          }
+          RecordID: deploymentData.DefaultFunction,
+          Code: deploymentData.FunctionCode,
+          Name: deploymentData.FunctionName,
+        }
         : null,
     shift:
       // deploymentData.ShiftID
       deploymentData.ShiftID && deploymentData.ShiftID !== "0"
         ? {
-            RecordID: deploymentData.ShiftID,
-            Code: deploymentData.ShiftCode,
-            Name: deploymentData.ShiftName,
-          }
+          RecordID: deploymentData.ShiftID,
+          Code: deploymentData.ShiftCode,
+          Name: deploymentData.ShiftName,
+        }
         : null,
     shift2:
       // deploymentData.ShiftID2
       deploymentData.ShiftID2 && deploymentData.ShiftID2 !== "0"
         ? {
-            RecordID: deploymentData.ShiftID2,
-            Code: deploymentData.ShiftCode2,
-            Name: deploymentData.ShiftName2,
-          }
+          RecordID: deploymentData.ShiftID2,
+          Code: deploymentData.ShiftCode2,
+          Name: deploymentData.ShiftName2,
+        }
         : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -5093,10 +5188,10 @@ const Editemployee = () => {
     exitinterviewby:
       ResignationGetData.ExitInterviewBy > 0
         ? {
-            RecordID: ResignationGetData?.ExitInterviewBy || 0,
-            Code: ResignationGetData?.ExitInterviewByCode || "",
-            Name: ResignationGetData?.ExitInterviewByName || "",
-          }
+          RecordID: ResignationGetData?.ExitInterviewBy || 0,
+          Code: ResignationGetData?.ExitInterviewByCode || "",
+          Name: ResignationGetData?.ExitInterviewByName || "",
+        }
         : null,
     exitinterviewdate: ResignationGetData.ExitInterviewDate,
     exitinterviewcomments: ResignationGetData.ExitInterviewComments,
@@ -5486,73 +5581,73 @@ const Editemployee = () => {
     },
     ...(is003Subscription && isStudentClassification
       ? [
-          {
-            value: 15,
-            label: "Parent",
-            desc: "Parent / guardian details",
-            icon: "👪",
-          },
-        ]
+        {
+          value: 15,
+          label: "Parent",
+          desc: "Parent / guardian details",
+          icon: "👪",
+        },
+      ]
       : []),
-      ...(is003Subscription
+    ...(is003Subscription
       ? [
-          {
-            value: 24,
-            label: "Co-curricular Activity",
-            desc: "Student co-curricular activities and participation",
-            icon: "📋",
-          },
-        ]
+        {
+          value: 24,
+          label: "Co-curricular Activity",
+          desc: "Student co-curricular activities and participation",
+          icon: "📋",
+        },
+      ]
       : []),
 
     ...(initialValues.employeetype === "CI"
       ? [
-          {
-            value: 8,
-            label: getBusinessCaption("ContractIn", "Contract In"),
-            desc: "Contract in details",
-            icon: "📄",
-          },
-        ]
+        {
+          value: 8,
+          label: getBusinessCaption("ContractIn", "Contract In"),
+          desc: "Contract in details",
+          icon: "📄",
+        },
+      ]
       : []),
     ...(is003Subscription && initialValues.employeetype === "CI"
       ? [
-          {
-            value: 23,
-            label: "Course Attendance",
-            desc: "Attendance and course records",
-            icon: "🎓",
-          },
-        ]
+        {
+          value: 23,
+          label: "Course Attendance",
+          desc: "Attendance and course records",
+          icon: "🎓",
+        },
+      ]
       : []),
     ...(initialValues.employeetype === "CO"
       ? [
-          {
-            value: 11,
-            label: "Contract Out",
-            desc: "Contract out details",
-            icon: "📄",
-          },
-        ]
+        {
+          value: 11,
+          label: "Contract Out",
+          desc: "Contract out details",
+          icon: "📄",
+        },
+      ]
       : []),
     ...(is003Subscription && isStudentClassification
       ? [
-          {
-            value: 16,
-            label: "Parent Contact Details",
-            desc: "Parent contact information",
-            icon: "☎️",
-          },
-        ]
+        {
+          value: 16,
+          label: "Parent Contact Details",
+          desc: "Parent contact information",
+          icon: "☎️",
+        },
+      ]
       : []),
 
-          {
+    {
       value: 1,
       label: getBusinessCaption("Skills", "Skills"),
       desc: "Skills and competency details",
       icon: "🛠️",
-       },
-   
+    },
+
     {
       value: 4,
       label: getBusinessCaption("Deployment", "Deployment"),
@@ -5567,13 +5662,13 @@ const Editemployee = () => {
     },
     ...(!is003Subscription
       ? [
-          {
-            value: 2,
-            label: "Functions",
-            desc: "Roles and functional access",
-            icon: "⚙️",
-          },
-        ]
+        {
+          value: 2,
+          label: "Functions",
+          desc: "Roles and functional access",
+          icon: "⚙️",
+        },
+      ]
       : []),
     {
       value: 3,
@@ -5595,23 +5690,23 @@ const Editemployee = () => {
     },
     ...(!is003Subscription
       ? [
-          {
-            value: 6,
-            label: "List of Documents",
-            desc: "Uploaded document list",
-            icon: "📁",
-          },
-        ]
+        {
+          value: 6,
+          label: "List of Documents",
+          desc: "Uploaded document list",
+          icon: "📁",
+        },
+      ]
       : []),
     ...(!is003Subscription
       ? [
-          {
-            value: 20,
-            label: "Inventory",
-            desc: "Assigned inventory items",
-            icon: "📦",
-          },
-        ]
+        {
+          value: 20,
+          label: "Inventory",
+          desc: "Assigned inventory items",
+          icon: "📦",
+        },
+      ]
       : []),
     {
       value: 17,
@@ -5621,43 +5716,43 @@ const Editemployee = () => {
     },
     ...(!isStudentClassification
       ? [
-          {
-            value: 14,
-            label: getBusinessCaption("ItemServices", "Item Services"),
-            desc: "Service records for items",
-            icon: "🧰",
-          },
-        ]
+        {
+          value: 14,
+          label: getBusinessCaption("ItemServices", "Item Services"),
+          desc: "Service records for items",
+          icon: "🧰",
+        },
+      ]
       : []),
     ...(!is003Subscription
       ? [
-          {
-            value: 13,
-            label: "Locality",
-            desc: "Local area information",
-            icon: "🏘️",
-          },
-        ]
+        {
+          value: 13,
+          label: "Locality",
+          desc: "Local area information",
+          icon: "🏘️",
+        },
+      ]
       : []),
     ...(!is003Subscription
       ? [
-          {
-            value: 19,
-            label: "SOP Configuration",
-            desc: "Standard operating procedures",
-            icon: "📋",
-          },
-        ]
+        {
+          value: 19,
+          label: "SOP Configuration",
+          desc: "Standard operating procedures",
+          icon: "📋",
+        },
+      ]
       : []),
     ...(!is003Subscription
       ? [
-          {
-            value: 18,
-            label: "Specimen Sign",
-            desc: "Specimen signature records",
-            icon: "✍️",
-          },
-        ]
+        {
+          value: 18,
+          label: "Specimen Sign",
+          desc: "Specimen signature records",
+          icon: "✍️",
+        },
+      ]
       : []),
     {
       value: 21,
@@ -5667,15 +5762,15 @@ const Editemployee = () => {
     },
     ...(!isStudentClassification
       ? [
-          {
-            value: 22,
-            label: "Resignation",
-            desc: "Resignation and exit details",
-            icon: "🚪",
-          },
-        ]
+        {
+          value: 22,
+          label: "Resignation",
+          desc: "Resignation and exit details",
+          icon: "🚪",
+        },
+      ]
       : []),
- 
+
 
   ];
 
@@ -5798,7 +5893,7 @@ const Editemployee = () => {
   //School related Cocurricular
 
   const [rowModesModel, setRowModesModel] = React.useState({});
-  	const CocurriculargetData = useSelector((state) => state.formApi.CocurriculargetData);
+  const CocurriculargetData = useSelector((state) => state.formApi.CocurriculargetData);
   const rows = CocurriculargetData?.EmployeeProcess || [];
 
   const editingRow = editingRecordID
@@ -5832,8 +5927,8 @@ const Editemployee = () => {
       },
     });
   };
-  
-   const getRatingColor = (rating) => {
+
+  const getRatingColor = (rating) => {
     const colors = [
       "#9E9E9E", // 0 / empty
       "#B71C1C", // 1
@@ -6030,7 +6125,7 @@ const Editemployee = () => {
           <Box
             display="flex"
             justifyContent="space-between"
-            // p={mode == "A" ? 2 : 1}
+          // p={mode == "A" ? 2 : 1}
           >
             <Box display="flex" borderRadius="3px" alignItems="center">
               {broken && !rtl && (
@@ -6612,82 +6707,82 @@ const Editemployee = () => {
                                     gridTemplateColumns="repeat(2, minmax(0,1fr))"
                                     gap={2}
                                   >
-                                     {!isStudentClassification && (
-                                    <FormControl>
-                                      <MultiFormikOptimizedAutocomplete
-                                        sx={{
-                                          width: "100%",
-                                          "& .MuiOutlinedInput-root": {
-                                            borderRadius: "10px",
-                                            backgroundColor: "#fff",
-                                            minHeight: "40px",
-                                          },
-                                          "& .MuiInputLabel-root": {
-                                            fontSize: "14px",
-                                          },
-                                        }}
-                                        name="Department"
-                                        label={
-                                          <>
-                                            Department
-                                            <span
+                                    {!isStudentClassification && (
+                                      <FormControl>
+                                        <MultiFormikOptimizedAutocomplete
+                                          sx={{
+                                            width: "100%",
+                                            "& .MuiOutlinedInput-root": {
+                                              borderRadius: "10px",
+                                              backgroundColor: "#fff",
+                                              minHeight: "40px",
+                                            },
+                                            "& .MuiInputLabel-root": {
+                                              fontSize: "14px",
+                                            },
+                                          }}
+                                          name="Department"
+                                          label={
+                                            <>
+                                              Department
+                                              <span
+                                                style={{
+                                                  color: "red",
+                                                  fontSize: "20px",
+                                                }}
+                                              >
+                                                *
+                                              </span>
+                                            </>
+                                          }
+                                          id="Department"
+                                          value={values.Department}
+                                          onChange={(e, newValue) =>
+                                            setFieldValue(
+                                              "Department",
+                                              newValue,
+                                              true,
+                                            )
+                                          }
+                                          isOptionEqualToValue={(option, value) =>
+                                            String(option.RecordID) ===
+                                            String(value.RecordID)
+                                          }
+                                          error={
+                                            !!touched.Department &&
+                                            !!errors.Department
+                                          }
+                                          helperText={
+                                            touched.Department &&
+                                            errors.Department
+                                          }
+                                          url={`${listViewurl}?data=${JSON.stringify(
+                                            {
+                                              Query: {
+                                                AccessID: "2010",
+                                                ScreenName: "Department",
+                                                VerticalLicense:
+                                                  Subscriptionlastthree,
+                                                Filter: `parentID=${CompanyID}`,
+                                                Any: "",
+                                              },
+                                            },
+                                          )}`}
+                                        />
+                                        {touched.Department &&
+                                          errors.Department && (
+                                            <div
                                               style={{
                                                 color: "red",
-                                                fontSize: "20px",
+                                                fontSize: "10px",
+                                                marginTop: "2px",
                                               }}
                                             >
-                                              *
-                                            </span>
-                                          </>
-                                        }
-                                        id="Department"
-                                        value={values.Department}
-                                        onChange={(e, newValue) =>
-                                          setFieldValue(
-                                            "Department",
-                                            newValue,
-                                            true,
-                                          )
-                                        }
-                                        isOptionEqualToValue={(option, value) =>
-                                          String(option.RecordID) ===
-                                          String(value.RecordID)
-                                        }
-                                        error={
-                                          !!touched.Department &&
-                                          !!errors.Department
-                                        }
-                                        helperText={
-                                          touched.Department &&
-                                          errors.Department
-                                        }
-                                        url={`${listViewurl}?data=${JSON.stringify(
-                                          {
-                                            Query: {
-                                              AccessID: "2010",
-                                              ScreenName: "Department",
-                                              VerticalLicense:
-                                                Subscriptionlastthree,
-                                              Filter: `parentID=${CompanyID}`,
-                                              Any: "",
-                                            },
-                                          },
-                                        )}`}
-                                      />
-                                      {touched.Department &&
-                                        errors.Department && (
-                                          <div
-                                            style={{
-                                              color: "red",
-                                              fontSize: "10px",
-                                              marginTop: "2px",
-                                            }}
-                                          >
-                                            {errors.Department}
-                                          </div>
-                                        )}
-                                    </FormControl>
-                                     )}
+                                              {errors.Department}
+                                            </div>
+                                          )}
+                                      </FormControl>
+                                    )}
                                     {CompanyAutoCode == "Y" ? (
                                       <TextField
                                         fullWidth
@@ -7111,88 +7206,88 @@ const Editemployee = () => {
                                   Set permissions and access levels
                                 </Typography>
 
-   <Box>
-                          <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="qualityassurance"
-                            id="qualityassurance"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Quality Assurance"
-                          />
+                                <Box>
+                                  <Field
+                                    //  size="small"
+                                    type="checkbox"
+                                    name="qualityassurance"
+                                    id="qualityassurance"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                    label="Quality Assurance"
+                                  />
 
-                          <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
-                          <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="scrummaster"
-                            id="scrummaster"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Scrum Master"
-                          />
+                                  <FormLabel focused={false}> {getBusinessCaption("QualityAssurance", "Quality Assurance")}</FormLabel>
+                                  <Field
+                                    //  size="small"
+                                    type="checkbox"
+                                    name="scrummaster"
+                                    id="scrummaster"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                    label="Scrum Master"
+                                  />
 
-                          <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
-                          <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="prjmanager"
-                            id="prjmanager"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Project Manager"
-                          />
+                                  <FormLabel focused={false}> {getBusinessCaption("ScrumMaster", "Scrum Master")}</FormLabel>
+                                  <Field
+                                    //  size="small"
+                                    type="checkbox"
+                                    name="prjmanager"
+                                    id="prjmanager"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                    label="Project Manager"
+                                  />
 
-                          <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
+                                  <FormLabel focused={false}>{getBusinessCaption("ProjectManager", "Project Manager")}</FormLabel>
 
-                          {!is003Subscription && (
-                            <>
-                              <Field
-                                //  size="small"
-                                type="checkbox"
-                                name="CRMUser"
-                                id="CRMUser"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                as={Checkbox}
-                                label="CRM User"
-                              />
+                                  {!is003Subscription && (
+                                    <>
+                                      <Field
+                                        //  size="small"
+                                        type="checkbox"
+                                        name="CRMUser"
+                                        id="CRMUser"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        as={Checkbox}
+                                        label="CRM User"
+                                      />
 
-                              <FormLabel focused={false}>CRM User</FormLabel>
-                            </>
-                          )}
-                        </Box>
+                                      <FormLabel focused={false}>CRM User</FormLabel>
+                                    </>
+                                  )}
+                                </Box>
 
-                        <Box>
-                          <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="delete"
-                            id="delete"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Delete"
-                          />
+                                <Box>
+                                  <Field
+                                    //  size="small"
+                                    type="checkbox"
+                                    name="delete"
+                                    id="delete"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                    label="Delete"
+                                  />
 
-                          <FormLabel focused={false}>Delete</FormLabel>
-                          <Field
-                            //  size="small"
-                            type="checkbox"
-                            name="disable"
-                            id="disable"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Disable"
-                          />
+                                  <FormLabel focused={false}>Delete</FormLabel>
+                                  <Field
+                                    //  size="small"
+                                    type="checkbox"
+                                    name="disable"
+                                    id="disable"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                    label="Disable"
+                                  />
 
-                          <FormLabel focused={false}>Disable</FormLabel>
-                        </Box>
+                                  <FormLabel focused={false}>Disable</FormLabel>
+                                </Box>
                                 {/* <Box display="flex" flexWrap="wrap" gap={3}>
                                   {[
                                     {
@@ -7281,12 +7376,12 @@ const Editemployee = () => {
                                   onClick={() => {
                                     is00123Subscription
                                       ? navigate(
-                                          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
-                                          { state },
-                                        )
+                                        `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                                        { state },
+                                      )
                                       : navigate(`/Apps/TR027/Personnel`, {
-                                          state,
-                                        });
+                                        state,
+                                      });
                                   }}
                                   sx={{
                                     px: 4,
@@ -8944,15 +9039,15 @@ const Editemployee = () => {
                             loading={loading}
                             variant="contained"
                             onClick={handleSubmit}
-                           sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             Save
                           </LoadingButton>
@@ -9003,15 +9098,15 @@ const Editemployee = () => {
                           <Button
                             variant="contained"
                             onClick={() => setOpenSkillModal(false)}
-                             sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#F97316",
-                        "&:hover": {
-                          bgcolor: "#EA580C",
-                        },
-                      }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
                           >
                             Back
                           </Button>
@@ -9113,90 +9208,90 @@ const Editemployee = () => {
                         }}
                       >
                         {/* HEADER (same style as Skill) */}
-                         <Box sx={{ p: 1 }}>
-                                <Box
-                                  display="flex"
-                                  alignItems="center"
-                                  gap={1}
-                                  mb={1}
-                                >
+                        <Box sx={{ p: 1 }}>
                           <Box
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                              backgroundColor: "#E0E7FF",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Typography sx={{ fontSize: 16 }}>⚙️</Typography>
-                          </Box>
-<Box>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
-                          >
-                            Function Details
-                          </Typography>
-                       
-
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        
-                        >
-                          Function mapping and employee assignment
-                        </Typography>
- </Box>
-  </Box>
-                        {/* ===== TOP SECTION (Code + Name + Photo) ===== */}
-                        <Box display="flex" gap={3} flexWrap="wrap">
-                          {/* LEFT: fields */}
-                          <Box
-                            flex={1}
-                            minWidth={200}
                             display="flex"
-                            flexDirection="column"
-                            gap={2}
-                            mt={2}
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
                           >
-                            <TextField
-                              fullWidth
-                              size="small"
-                              variant="outlined"
-                              label="Code"
-                              value={values.code}
-                              InputProps={{ readOnly: true }}
-                            />
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#E0E7FF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>⚙️</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Function Details
+                              </Typography>
 
-                            <TextField
-                              fullWidth
-                              size="small"
-                              variant="outlined"
-                              label="Name"
-                              value={values.description}
-                              InputProps={{ readOnly: true }}
-                            />
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+
+                              >
+                                Function mapping and employee assignment
+                              </Typography>
+                            </Box>
                           </Box>
+                          {/* ===== TOP SECTION (Code + Name + Photo) ===== */}
+                          <Box display="flex" gap={3} flexWrap="wrap">
+                            {/* LEFT: fields */}
+                            <Box
+                              flex={1}
+                              minWidth={200}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                              mt={2}
+                            >
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="Code"
+                                value={values.code}
+                                InputProps={{ readOnly: true }}
+                              />
 
-                          {/* RIGHT: PHOTO */}
-                          <Box sx={{ width: 250, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo",
-                            )}
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="Name"
+                                value={values.description}
+                                InputProps={{ readOnly: true }}
+                              />
+                            </Box>
+
+                            {/* RIGHT: PHOTO */}
+                            <Box sx={{ width: 250, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
                         </Box>
- </Box>
                         {/* ===== DATA GRID ===== */}
 
-                          <Box
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -9205,114 +9300,115 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                        <Box sx={{ height: "45vh",
+                          <Box sx={{
+                            height: "45vh",
                             "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
 
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
 
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
 
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
 
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
 
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
-                        }}>
-                          <DataGrid
-                            sx={{
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}>
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenFunctionModal(true);
-                            }}
-                            loading={exploreLoading}
-                            components={{ Toolbar: Employee }}
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenFunctionModal(true);
+                              }}
+                              loading={exploreLoading}
+                              components={{ Toolbar: Employee }}
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ===== FUNCTION LOOKUP (same logic, clean UI) ===== */}
                         <Dialog
                           open={openFunctionModal}
@@ -9424,7 +9520,7 @@ const Editemployee = () => {
 
                             <Button
                               type="reset"
-                             
+
                               variant="contained"
                               onClick={() => setOpenFunctionModal(false)}
                               sx={{
@@ -9546,96 +9642,96 @@ const Editemployee = () => {
                     initialValues={managerInitialValue}
                     enableReinitialize={true}
                     validationSchema={validationSchema8}
-                    // onClick={() => {
-                    //   setOpenManagerModal(true);
-                    // }}
+                  // onClick={() => {
+                  //   setOpenManagerModal(true);
+                  // }}
                   >
                     {({ values, resetForm }) => (
                       <form>
                         <Box>
                           {/* HEADER */}
                           <Box sx={{ p: 1 }}>
-                                <Box
-                                  display="flex"
-                                  alignItems="center"
-                                  gap={1}
-                                  mb={1}
-                                >
-                                   <Box
-                                    sx={{
-                                      width: 32,
-                                      height: 32,
-                                      borderRadius: "50%",
-                                      backgroundColor: "#EEF2FF",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                            <Typography sx={{ fontSize: 16 }}>👤</Typography>
-                          
-                                     </Box>                   
-                                  <Box>
-                                  
-                                     <Typography
-                                  variant="subtitle1"
-                                      fontWeight={700}
-                                      color="#0D94885"
-                                      >
-                              {getBusinessCaption("Managers", "Managers")}
-                            </Typography>
-                        
-
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            
-                          >
-                            Manage reporting hierarchy and {getBusinessCaption("Managers", "Managers")} mapping
-                          </Typography>
-  </Box>
-    </Box>
-                          {/* TOP SECTION */}
-                          <Box display="flex" gap={3} flexWrap="wrap">
-                            {/* LEFT FIELDS */}
                             <Box
-                              flex={1}
-                              minWidth={300}
                               display="flex"
-                              flexDirection="column"
-                              gap={2}
+                              alignItems="center"
+                              gap={1}
+                              mb={1}
                             >
-                              <TextField
-                                fullWidth
-                                size="small"
-                                label="Code"
-                                value={values.code}
-                                InputProps={{ readOnly: true }}
-                                InputLabelProps={{ shrink: true }}
-                              />
+                              <Box
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  borderRadius: "50%",
+                                  backgroundColor: "#EEF2FF",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography sx={{ fontSize: 16 }}>👤</Typography>
 
-                              <TextField
-                                fullWidth
-                                size="small"
-                                label="Name"
-                                value={values.description}
-                                InputProps={{ readOnly: true }}
-                                InputLabelProps={{ shrink: true }}
-                              />
+                              </Box>
+                              <Box>
+
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight={700}
+                                  color="#0D94885"
+                                >
+                                  {getBusinessCaption("Managers", "Managers")}
+                                </Typography>
+
+
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+
+                                >
+                                  Manage reporting hierarchy and {getBusinessCaption("Managers", "Managers")} mapping
+                                </Typography>
+                              </Box>
                             </Box>
+                            {/* TOP SECTION */}
+                            <Box display="flex" gap={3} flexWrap="wrap">
+                              {/* LEFT FIELDS */}
+                              <Box
+                                flex={1}
+                                minWidth={300}
+                                display="flex"
+                                flexDirection="column"
+                                gap={2}
+                              >
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  label="Code"
+                                  value={values.code}
+                                  InputProps={{ readOnly: true }}
+                                  InputLabelProps={{ shrink: true }}
+                                />
 
-                            {/* RIGHT IMAGE */}
-                            <Box sx={{ width: 220, flexShrink: 0 }}>
-                              {renderProfilePhoto(
-                                img,
-                                userimg,
-                                isImgChanged,
-                                imgUpload,
-                                "Profile Photo",
-                              )}
+                                <TextField
+                                  fullWidth
+                                  size="small"
+                                  label="Name"
+                                  value={values.description}
+                                  InputProps={{ readOnly: true }}
+                                  InputLabelProps={{ shrink: true }}
+                                />
+                              </Box>
+
+                              {/* RIGHT IMAGE */}
+                              <Box sx={{ width: 220, flexShrink: 0 }}>
+                                {renderProfilePhoto(
+                                  img,
+                                  userimg,
+                                  isImgChanged,
+                                  imgUpload,
+                                  "Profile Photo",
+                                )}
+                              </Box>
                             </Box>
                           </Box>
-  </Box>
                           {/* LIST TABLE + COUNT */}
                           <Box
                             mt={3}
@@ -9652,9 +9748,9 @@ const Editemployee = () => {
                             </Typography>
                           </Box> */}
 
-                            <Box sx={{ 
+                            <Box sx={{
                               height: "40vh",
-                               "& .MuiDataGrid-root": {
+                              "& .MuiDataGrid-root": {
                                 border: "none",
                               },
                               "& .cell-negative-status": {
@@ -9730,12 +9826,12 @@ const Editemployee = () => {
                             }}
                             >
                               <DataGrid
-                               sx={{
-                                "& .MuiDataGrid-footerContainer": {
-                                  height: dataGridHeaderFooterHeight,
-                                  minHeight: dataGridHeaderFooterHeight,
-                                },
-                              }}
+                                sx={{
+                                  "& .MuiDataGrid-footerContainer": {
+                                    height: dataGridHeaderFooterHeight,
+                                    minHeight: dataGridHeaderFooterHeight,
+                                  },
+                                }}
                                 rows={explorelistViewData}
                                 columns={columns2}
                                 loading={exploreLoading}
@@ -9753,7 +9849,7 @@ const Editemployee = () => {
                                     rowData: params.row,
                                     mode: "E",
                                     field: params.field,
-                                    setFieldValue: () => {},
+                                    setFieldValue: () => { },
                                   });
                                   setOpenManagerModal(true);
                                 }}
@@ -9811,9 +9907,9 @@ const Editemployee = () => {
                             setFieldValue,
                           });
                           resetForm();
-                            setOpenManagerModal(true);
+                          setOpenManagerModal(true);
                         }}
-                      
+
                       >
                         <Dialog
                           open={openManagerModal}
@@ -10132,192 +10228,192 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-                         <Box sx={{ p: 1 }}>
-                                <Box
-                                  display="flex"
-                                  alignItems="center"
-                                  gap={1}
-                                  mb={1}
-                                >
+                        <Box sx={{ p: 1 }}>
                           <Box
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                              backgroundColor: "#EFF6FF",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
                           >
-                            <Typography sx={{ fontSize: 16 }}>🚀</Typography>
-                                                 </Box>
-<Box>
-                          <Typography
-                             variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
-                          >
-                            {getBusinessCaption("Deployment", "Deployment")}
-                          </Typography>
-                    
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          
-                        >
-                           {getBusinessCaption("Deployment", "Deployment")} and assignment info
-                        </Typography>
-</Box>
-  </Box>
-                        {/* ----- Code/Name/Designation/Location/Gate + Photo ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
-                          <Box
-                            flex={1}
-                            minWidth={300}
-                            display="grid"
-                            gridTemplateColumns="repeat(2, minmax(0,1fr))"
-                            gap={2}
-                          >
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="code"
-                              name="code"
-                              value={values.code}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Code"
-                            />
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#EFF6FF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>🚀</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                {getBusinessCaption("Deployment", "Deployment")}
+                              </Typography>
 
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="description"
-                              name="description"
-                              value={values.description}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Name"
-                            />
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
 
-                            <CheckinAutocomplete
-                              name="Designation"
-                              label={
-                                <span>
-                                  Designation
-                                  <span
-                                    style={{ color: "red", fontSize: "20px" }}
-                                  >
-                                    *
-                                  </span>
-                                </span>
-                              }
-                              variant="outlined"
-                              size="small"
-                              id="Designation"
-                              value={values.Designation}
-                              onChange={(newValue) =>
-                                setFieldValue("Designation", newValue)
-                              }
-                              error={
-                                !!touched.Designation && !!errors.Designation
-                              }
-                              helperText={
-                                touched.Designation && errors.Designation
-                              }
-                              url={`${listViewurl}?data=${JSON.stringify({
-                                Query: {
-                                  AccessID: "2047",
-                                  ScreenName: "Designation",
-                                  VerticalLicense: Subscriptionlastthree,
-                                  Filter: `parentID=${CompanyID}`,
-                                  Any: "",
-                                },
-                              })}`}
-                            />
-
-                            <CheckinAutocomplete
-                              name="location"
-                              label={
-                                <span>
-                                  Location
-                                  <span
-                                    style={{ color: "red", fontSize: "20px" }}
-                                  >
-                                    *
-                                  </span>
-                                </span>
-                              }
-                              variant="outlined"
-                              size="small"
-                              id="location"
-                              value={values.location}
-                              onChange={(newValue) =>
-                                setFieldValue("location", newValue)
-                              }
-                              error={!!touched.location && !!errors.location}
-                              helperText={touched.location && errors.location}
-                              url={`${listViewurl}?data=${JSON.stringify({
-                                Query: {
-                                  AccessID: "2051",
-                                  ScreenName: "Location",
-                                  VerticalLicense: Subscriptionlastthree,
-                                  Filter: `parentID=${CompanyID}`,
-                                  Any: "",
-                                },
-                              })}`}
-                            />
-
-                            <CheckinAutocomplete
-                              name="gate"
-                              label={
-                                <span>
-                                  Gate
-                                  <span
-                                    style={{ color: "red", fontSize: "20px" }}
-                                  >
-                                    *
-                                  </span>
-                                </span>
-                              }
-                              variant="outlined"
-                              size="small"
-                              id="gate"
-                              value={values.gate}
-                              onChange={(newValue) =>
-                                setFieldValue("gate", newValue)
-                              }
-                              error={!!touched.gate && !!errors.gate}
-                              helperText={touched.gate && errors.gate}
-                              url={`${listViewurl}?data=${JSON.stringify({
-                                Query: {
-                                  AccessID: "2050",
-                                  ScreenName: "Gate",
-                                  VerticalLicense: Subscriptionlastthree,
-                                  Filter: `parentID='${values.location ? values.location.RecordID : 0}'`,
-                                  Any: "",
-                                },
-                              })}`}
-                            />
+                              >
+                                {getBusinessCaption("Deployment", "Deployment")} and assignment info
+                              </Typography>
+                            </Box>
                           </Box>
+                          {/* ----- Code/Name/Designation/Location/Gate + Photo ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                            <Box
+                              flex={1}
+                              minWidth={300}
+                              display="grid"
+                              gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="code"
+                                name="code"
+                                value={values.code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                              />
 
-                          {/* Photo column */}
-                          <Box sx={{ width: 220, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo",
-                            )}
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="description"
+                                name="description"
+                                value={values.description}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                              />
+
+                              <CheckinAutocomplete
+                                name="Designation"
+                                label={
+                                  <span>
+                                    Designation
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                size="small"
+                                id="Designation"
+                                value={values.Designation}
+                                onChange={(newValue) =>
+                                  setFieldValue("Designation", newValue)
+                                }
+                                error={
+                                  !!touched.Designation && !!errors.Designation
+                                }
+                                helperText={
+                                  touched.Designation && errors.Designation
+                                }
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2047",
+                                    ScreenName: "Designation",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <CheckinAutocomplete
+                                name="location"
+                                label={
+                                  <span>
+                                    Location
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                size="small"
+                                id="location"
+                                value={values.location}
+                                onChange={(newValue) =>
+                                  setFieldValue("location", newValue)
+                                }
+                                error={!!touched.location && !!errors.location}
+                                helperText={touched.location && errors.location}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2051",
+                                    ScreenName: "Location",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID=${CompanyID}`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <CheckinAutocomplete
+                                name="gate"
+                                label={
+                                  <span>
+                                    Gate
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                size="small"
+                                id="gate"
+                                value={values.gate}
+                                onChange={(newValue) =>
+                                  setFieldValue("gate", newValue)
+                                }
+                                error={!!touched.gate && !!errors.gate}
+                                helperText={touched.gate && errors.gate}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2050",
+                                    ScreenName: "Gate",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID='${values.location ? values.location.RecordID : 0}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
                         </Box>
-    </Box>
                         {/* ----- WORK LOCATION CARD ----- */}
                         <Box
                           sx={{
@@ -10987,20 +11083,20 @@ const Editemployee = () => {
                           gap={1.5}
                         >
                           <Button
-                           
+
                             variant="contained"
                             type="submit"
                             disabled={isLoading}
                             sx={{
-                                textTransform: "none",
-                                borderRadius: 2,
-                                color: "#fff",
-                                px: 4,
-                                bgcolor: "#0D9488",
-                                "&:hover": {
-                                  bgcolor: "#0F766E",
-                                },
-                              }}
+                              textTransform: "none",
+                              borderRadius: 2,
+                              color: "#fff",
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
                           >
                             Save
                           </Button>
@@ -11011,14 +11107,14 @@ const Editemployee = () => {
                             variant="outlined"
                             onClick={() => setScreen(0)}
                             sx={{
-                                textTransform: "none",
-                                borderRadius: 2,
-                                px: 4,
-                                bgcolor: "#F97316",
-                                 color: "#fff",
-                                "&:hover": { bgcolor: "#EA580C" },
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
                               color: "#fff",
-                              }}
+                              "&:hover": { bgcolor: "#EA580C" },
+                              color: "#fff",
+                            }}
                           >
                             Back
                           </Button>
@@ -11571,7 +11667,7 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ================= HEADER ================= */}
-                     {/* ----- CARD HEADER ----- */}
+                        {/* ----- CARD HEADER ----- */}
                         <Box sx={{ p: 1 }}>
                           <Box
                             display="flex"
@@ -11591,59 +11687,59 @@ const Editemployee = () => {
                               }}
                             >
                               <Typography sx={{ fontSize: 16 }}>📎</Typography>
-                     </Box>
+                            </Box>
                             <Box>
 
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Document Attachment
+                              </Typography>
+
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+
+                              >
+                                Manage employee documents and certificates
+                              </Typography>
+                            </Box>
+                          </Box>
+                          {/* ================= CODE + NAME ================= */}
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            gap={2}
+                            mb={3}
                           >
-                            Document Attachment
-                          </Typography>
-                    
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Code"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              InputProps={{ readOnly: true }}
+                            />
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                      
-                        >
-                          Manage employee documents and certificates
-                        </Typography>
-    </Box>
-        </Box>
-                        {/* ================= CODE + NAME ================= */}
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          gap={2}
-                          mb={3}
-                        >
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Code"
-                            value={values.code}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            InputProps={{ readOnly: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Name"
-                            value={values.description}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            InputProps={{ readOnly: true }}
-                          />
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Name"
+                              value={values.description}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              InputProps={{ readOnly: true }}
+                            />
+                          </Box>
                         </Box>
-    </Box>
                         {/* ================= TABLE ================= */}
-                            <Box
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -11652,155 +11748,155 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                        <Box sx={{ 
-                          height: "50vh", 
-                      
+                          <Box sx={{
+                            height: "50vh",
+
                             "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
 
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
 
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
 
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
 
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
 
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
 
-                         }}>
-                          <DataGrid
-                         sx={{
+                          }}>
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            loading={exploreLoading}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenDocModal(true);
-                              setFieldValue("code", params.row.code || "");
-                              setFieldValue(
-                                "description",
-                                params.row.description || "",
-                              );
+                              rows={explorelistViewData}
+                              columns={columns}
+                              loading={exploreLoading}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenDocModal(true);
+                                setFieldValue("code", params.row.code || "");
+                                setFieldValue(
+                                  "description",
+                                  params.row.description || "",
+                                );
 
-                              setFieldValue(
-                                "LoaDescription",
-                                params.row.LoaDescription || "",
-                              );
+                                setFieldValue(
+                                  "LoaDescription",
+                                  params.row.LoaDescription || "",
+                                );
 
-                              //  CATEGORY FIX
-                              setFieldValue(
-                                "category",
-                                params.row.category ?? "",
-                              );
+                                //  CATEGORY FIX
+                                setFieldValue(
+                                  "category",
+                                  params.row.category ?? "",
+                                );
 
-                              //  PERSONAL / RENEWAL FIX (BOOLEAN SAFE)
-                              setFieldValue("personal", !!params.row.personal);
-                              setFieldValue("renewal", !!params.row.renewal);
+                                //  PERSONAL / RENEWAL FIX (BOOLEAN SAFE)
+                                setFieldValue("personal", !!params.row.personal);
+                                setFieldValue("renewal", !!params.row.renewal);
 
-                              //  DATE FIX (IMPORTANT)
-                              setFieldValue(
-                                "RenewalDate",
-                                params.row.RenewalDate &&
-                                  params.row.RenewalDate !== "00-00-0000"
-                                  ? params.row.RenewalDate.split("T")[0]
-                                  : "",
-                              );
+                                //  DATE FIX (IMPORTANT)
+                                setFieldValue(
+                                  "RenewalDate",
+                                  params.row.RenewalDate &&
+                                    params.row.RenewalDate !== "00-00-0000"
+                                    ? params.row.RenewalDate.split("T")[0]
+                                    : "",
+                                );
 
-                              setFieldValue(
-                                "Attachment",
-                                params.row.Attachment || "",
-                              );
-                            }}
-                            components={{ Toolbar: Employee }}
-                            loading={exploreLoading}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                          />
+                                setFieldValue(
+                                  "Attachment",
+                                  params.row.Attachment || "",
+                                );
+                              }}
+                              components={{ Toolbar: Employee }}
+                              loading={exploreLoading}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ================= OTHER FIELDS ================= */}
                         <Dialog
                           open={openDocModal}
@@ -12639,42 +12735,42 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ================= HEADER ================= */}
-                       
-                         <Box
-                        display="flex"
-  alignItems="flex-start"
-  gap={1.5}
-  mb={1}
+
+                        <Box
+                          display="flex"
+                          alignItems="flex-start"
+                          gap={1.5}
+                          mb={1}
                         >
                           <Box
                             sx={{
-      width: 36,
-      height: 36,
-      borderRadius: "50%",
-      backgroundColor: "#EEF2FF",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0,
-    }}
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
                           >
                             <Typography sx={{ fontSize: 18 }}>📋</Typography>
                           </Box>
-                      <Box>
-    <Typography
-    variant="subtitle1"
-      fontWeight={700}
-      sx={{ color: "#0D94885", lineHeight: 1.2 }}
-    >
-                           Item Services
-                          </Typography>
-                      
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              sx={{ color: "#0D94885", lineHeight: 1.2 }}
+                            >
+                              Item Services
+                            </Typography>
 
-                       <Typography variant="body2" color="text.secondary">
-                            Manage service requests, vendor and item tracking
-                          </Typography>
+
+                            <Typography variant="body2" color="text.secondary">
+                              Manage service requests, vendor and item tracking
+                            </Typography>
                           </Box>
-  </Box>
+                        </Box>
 
                         {/* ================= CODE + NAME ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
@@ -12719,7 +12815,7 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ================= DATA GRID ================= */}
-                          <Box
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -12728,135 +12824,135 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                      
-                        <Box sx={{ 
-                          height: ItemdataGridHeight,
 
-                         "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
+                          <Box sx={{
+                            height: ItemdataGridHeight,
 
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .cell-negative-status": {
+                              color: colors.redAccent[500],
+                              fontWeight: 600,
+                            },
+                            "& .cell-positive-status": {
+                              color: colors.greenAccent[400],
+                              fontWeight: 600,
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // backgroundColor: "#25adad",
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                              // borderColor: "#d0edec",
+                              // backgroundColor: "",
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              // backgroundColor: "#d0edec",
+                              backgroundColor: "",
+                              color: "", // Color for even rows
+                            },
 
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                              color: colors.blueAccent[900],
+                              fontWeight: 600,
+                            },
+                            "& .MuiTablePagination-root": {
+                              color: colors.blueAccent[900],
+                            },
+                            /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                            "& .MuiTablePagination-root": {
+                              color: "#fff",
+                            },
 
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#fff",
+                            },
 
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#fff",
+                            },
 
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
-                            }}
-                        
-                        >
-                          <DataGrid
+                            /* Dropdown icon */
+                            "& .MuiTablePagination-selectIcon": {
+                              color: "#fff",
+                            },
+
+                            /* Left & Right arrow buttons */
+                            "& .MuiTablePagination-actions button": {
+                              color: "#fff",
+                            },
+                          }}
+
+                          >
+                            <DataGrid
                               sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenItemServiceModal(true);
-                            }}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            components={{
-                              Toolbar: Employee,
-                            }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenItemServiceModal(true);
+                              }}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{
+                                Toolbar: Employee,
+                              }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ================= ITEM SERVICE POPUP ================= */}
                         <Dialog
                           open={openItemServiceModal}
@@ -13314,8 +13410,8 @@ const Editemployee = () => {
           )}
 
           {/* CoCurricular form -- school login */}
-           {show == "24" ? (
-       <Box
+          {show == "24" ? (
+            <Box
               display="flex"
               gap={3}
               alignItems="flex-start"
@@ -13352,9 +13448,9 @@ const Editemployee = () => {
                 >
                   <Formik
                     // innerRef={formikRef}
-                     initialValues={initialValues}
-                    // enableReinitialize={false}
-                    //   validationSchema={validationSchema24}
+                    initialValues={initialValues}
+                  // enableReinitialize={false}
+                  //   validationSchema={validationSchema24}
                   >
                     {({
                       values,
@@ -13478,7 +13574,7 @@ const Editemployee = () => {
 
                           <Box
                             sx={{
-                               height:"350px",
+                              height: "350px",
                               "& .MuiDataGrid-root": {
                                 border: "none",
                               },
@@ -13561,41 +13657,41 @@ const Editemployee = () => {
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                             rowHeight={dataGridRowHeight}
-                                  headerHeight={dataGridHeaderFooterHeight}
-                                  rows={rows}
-                                  columns={AttColumn2}
-                                  disableSelectionOnClick
-                                  rowModesModel={rowModesModel}
-                                  getRowId={(row) => row.RecordID}
-                                  disableRowSelectionOnClick
-                                  experimentalFeatures={{ newEditingApi: true }}
-                                  onProcessRowUpdateError={(error) => {
-                                    console.error("Row update validation failed:", error.message);
-                                    toast.error(error.message);
-                                  }}
-                                  rowsPerPageOptions={[5, 10, 20]}
-                                  getRowClassName={(params) =>
-                                    params.indexRelativeToCurrentPage % 2 === 0
-                                      ? "odd-row"
-                                      : "even-row"
-                                  }
-                                   onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenCocurricular(true);
-                              
-                            }}
-                             components={{ Toolbar: CocurricularToolbar }}
-                                  pagination
-                                  pageSize={pageSize}
-                                  page={page}
-                                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                  onPageChange={(newPage) => setPage(newPage)}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              rows={rows}
+                              columns={AttColumn2}
+                              disableSelectionOnClick
+                              rowModesModel={rowModesModel}
+                              getRowId={(row) => row.RecordID}
+                              disableRowSelectionOnClick
+                              experimentalFeatures={{ newEditingApi: true }}
+                              onProcessRowUpdateError={(error) => {
+                                console.error("Row update validation failed:", error.message);
+                                toast.error(error.message);
+                              }}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenCocurricular(true);
+
+                              }}
+                              components={{ Toolbar: CocurricularToolbar }}
+                              pagination
+                              pageSize={pageSize}
+                              page={page}
+                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onPageChange={(newPage) => setPage(newPage)}
                             />
                           </Box>
                         </Box>
@@ -13617,20 +13713,20 @@ const Editemployee = () => {
                   }}
                 >
                   <Formik
-                   innerRef={formikRef}
-                      initialValues={AttInitialvalues}
-                      enableReinitialize={false}
-                      validationSchema={validationSchema24}
-                      onSubmit={(values, { resetForm }) => {
-                        setTimeout(() => {
-                         handleApplyClick(values);
-                           setOpenCocurricular(false);
-                        }, 100);
-                      }}
-                       onReset={() => {
-                            resetFormToAddMode();
-                            dispatch(resetTrackingData());
-                          }}
+                    innerRef={formikRef}
+                    initialValues={AttInitialvalues}
+                    enableReinitialize={false}
+                    validationSchema={validationSchema24}
+                    onSubmit={(values, { resetForm }) => {
+                      setTimeout(() => {
+                        handleApplyClick(values);
+                        setOpenCocurricular(false);
+                      }, 100);
+                    }}
+                    onReset={() => {
+                      resetFormToAddMode();
+                      dispatch(resetTrackingData());
+                    }}
                   >
                     {({
                       values,
@@ -13643,76 +13739,76 @@ const Editemployee = () => {
                       setFieldValue,
                     }) => (
                       <>
-                      <form
+                        <form
                           onSubmit={handleSubmit}
-                         
+
                         >
-                        {/* Header */}
+                          {/* Header */}
 
-                        <DialogTitle
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            borderBottom: "1px solid #E5E7EB",
-                          }}
-                        >
-                          <Typography variant="h6">
-                            Co-Curricular Activity
-                          </Typography>
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="h6">
+                              Co-Curricular Activity
+                            </Typography>
 
-                          <IconButton onClick={() => setOpenCocurricular(false)}>
-                            <CloseIcon />
-                          </IconButton>
-                        </DialogTitle>
+                            <IconButton onClick={() => setOpenCocurricular(false)}>
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogTitle>
 
-                        {/* Body */}
+                          {/* Body */}
 
-                        <DialogContent
-                          sx={{
-                            pt: 3,
-                            "&.MuiDialogContent-root": {
-                              paddingTop: "24px",
-                            },
-                          }}
-                        >
-                           <Box display="flex" flexDirection="column" gap={formGap}>
+                          <DialogContent
+                            sx={{
+                              pt: 3,
+                              "&.MuiDialogContent-root": {
+                                paddingTop: "24px",
+                              },
+                            }}
+                          >
+                            <Box display="flex" flexDirection="column" gap={formGap}>
 
-                                {/* <Typography variant="h5" sx={{ color: "#0000D1" }}>
+                              {/* <Typography variant="h5" sx={{ color: "#0000D1" }}>
 
                                   {isEdit ? "Edit Activity" : "Add Activity"}
                              </Typography> */}
-                               <TextField
-                               name="date"
-                                 type="date"
-                                  label={
-                                    <>
-                                      Date
-                                      <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                    </>
-                                  }
-                                  variant="outlined"
-                                  size="small"
-                                  // focused
-                                  InputLabelProps={{ shrink: true }}
-                                  value={values.date}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.date && !!errors.date}
-                                 helperText={touched.date && errors.date}
-                                  fullWidth
-                                />
+                              <TextField
+                                name="date"
+                                type="date"
+                                label={
+                                  <>
+                                    Date
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                // focused
+                                InputLabelProps={{ shrink: true }}
+                                value={values.date}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.date && !!errors.date}
+                                helperText={touched.date && errors.date}
+                                fullWidth
+                              />
 
                               <Box
-  display="flex"
-  alignItems="flex-end"
-  gap={1}
-  sx={{ width: "100%" }}
->
-  {/* INPUT FIELD */}
-  <Box sx={{ flex: 1 }}>
-                                 {isAddingActivity ? (
-                                   <TextField
+                                display="flex"
+                                alignItems="flex-end"
+                                gap={1}
+                                sx={{ width: "100%" }}
+                              >
+                                {/* INPUT FIELD */}
+                                <Box sx={{ flex: 1 }}>
+                                  {isAddingActivity ? (
+                                    <TextField
                                       fullWidth
                                       name="cocurricularName"
                                       label={
@@ -13723,21 +13819,21 @@ const Editemployee = () => {
                                       }
                                       variant="outlined"
                                       size="small"
-                                    //  focused
+                                      //  focused
                                       placeholder="Enter new activity name"
                                       value={values.cocurricularName || ""}
                                       onChange={handleChange}
                                       onBlur={handleBlur}
                                       error={!!touched.cocurricularName && !!errors.cocurricularName}
                                       helperText={touched.cocurricularName && errors.cocurricularName}
-                                   />
+                                    />
                                   ) : (
-                                   <CheckinAutocomplete
+                                    <CheckinAutocomplete
                                       fullWidth
                                       name="cocurricular"
                                       label={
                                         <>
-                                         Co-curricular Activity
+                                          Co-curricular Activity
                                           <span style={{ color: "red", fontSize: "20px" }}> *</span>
                                         </>
                                       }
@@ -13760,124 +13856,124 @@ const Editemployee = () => {
                                       )}`}
                                     />
                                   )}
-  </Box>
-                                  {isEdit == false && (
-                                     <Box
-      sx={{
-        width: 40,
-        height: 40,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        mb: "2px", // aligns with underline perfectly
-      }}
-    >
-                                    <Tooltip title={isAddingActivity ? "Choose from list" : "Add new activity"}>
-                                    <IconButton
-                                      color="primary"
-                                      onClick={() => {
-                                        setIsAddingActivity((prev) => !prev);
-                                       setFieldValue("cocurricular", null);
-                                        setFieldValue("cocurricularName", "");
-                                     }}
-                                    >
-                                      {isAddingActivity ? <ListAltOutlinedIcon /> : <AddIcon />}
-                                    </IconButton>
-                                  </Tooltip>
-                             </Box>
-  )}
-</Box>
-
-                                <TextField
-                                  name="comments"
-                                  type="text"
-                                  label="Comments"
-                                  variant="outlined"
-                                  size="small"
-                                  // focused
-                                  value={values.comments}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.comments && !!errors.comments}
-                                  helperText={touched.comments && errors.comments}
-                                  fullWidth
-                                />
-                                <TextField
-                                  name="rating"
-                                  type="number"
-                                  label={
-                                   <>
-                                      Rating (1-10)
-                                      <span style={{ color: "red", fontSize: "20px" }}> *</span>
-                                    </>
-                                  }
-                                  variant="outlined"
-                                  size="small"
-                                  // focused
-                                  // inputProps={{ min: 1, max: 10 }}
-                                  value={values.rating}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.rating && !!errors.rating}
-                                  helperText={touched.rating && errors.rating}
-                                  fullWidth
-                                  sx={{
-                                    "& .MuiInputBase-input": {
-                                      textAlign: "right",
-                                      color: getRatingColor(values.rating),
-                                      fontWeight: 700,
-                                      fontSize: 16
-                                    },
-                                  }}
-                                />
-                               
-                              </Box>
-                        </DialogContent>
-
-                        {/* Footer */}
-
-                        <DialogActions
-                          sx={{
-                            borderTop: "1px solid #E5E7EB",
-                            p: 2,
-                            justifyContent: "flex-end",
-                            gap: 1,
-                          }}
-                        >
-                           <Button
-                                    type="submit"
+                                </Box>
+                                {isEdit == false && (
+                                  <Box
                                     sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-                                    variant="contained"
-                                  // disabled={mode === "E"}
-                                  >
-                                   Save
-                                  </Button>
-                                  <Button
-                                     sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#F97316",
-                        "&:hover": {
-                          bgcolor: "#EA580C",
-                        },
-                      }}
-                                   variant="contained"
-                                    onClick={() => {
-                                      navigate(-1);
+                                      width: 40,
+                                      height: 40,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      mb: "2px", // aligns with underline perfectly
                                     }}
                                   >
-                                    Back
-                                  </Button>
-                        </DialogActions>
+                                    <Tooltip title={isAddingActivity ? "Choose from list" : "Add new activity"}>
+                                      <IconButton
+                                        color="primary"
+                                        onClick={() => {
+                                          setIsAddingActivity((prev) => !prev);
+                                          setFieldValue("cocurricular", null);
+                                          setFieldValue("cocurricularName", "");
+                                        }}
+                                      >
+                                        {isAddingActivity ? <ListAltOutlinedIcon /> : <AddIcon />}
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Box>
+                                )}
+                              </Box>
+
+                              <TextField
+                                name="comments"
+                                type="text"
+                                label="Comments"
+                                variant="outlined"
+                                size="small"
+                                // focused
+                                value={values.comments}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.comments && !!errors.comments}
+                                helperText={touched.comments && errors.comments}
+                                fullWidth
+                              />
+                              <TextField
+                                name="rating"
+                                type="number"
+                                label={
+                                  <>
+                                    Rating (1-10)
+                                    <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                // focused
+                                // inputProps={{ min: 1, max: 10 }}
+                                value={values.rating}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.rating && !!errors.rating}
+                                helperText={touched.rating && errors.rating}
+                                fullWidth
+                                sx={{
+                                  "& .MuiInputBase-input": {
+                                    textAlign: "right",
+                                    color: getRatingColor(values.rating),
+                                    fontWeight: 700,
+                                    fontSize: 16
+                                  },
+                                }}
+                              />
+
+                            </Box>
+                          </DialogContent>
+
+                          {/* Footer */}
+
+                          <DialogActions
+                            sx={{
+                              borderTop: "1px solid #E5E7EB",
+                              p: 2,
+                              justifyContent: "flex-end",
+                              gap: 1,
+                            }}
+                          >
+                            <Button
+                              type="submit"
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                              variant="contained"
+                            // disabled={mode === "E"}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
+                              variant="contained"
+                              onClick={() => {
+                                navigate(-1);
+                              }}
+                            >
+                              Back
+                            </Button>
+                          </DialogActions>
 
                         </form>
                       </>
@@ -13886,9 +13982,9 @@ const Editemployee = () => {
                 </Dialog>
               </Box>
             </Box>
-        ) : (
-          false
-        )}
+          ) : (
+            false
+          )}
 
           {/* Parent Form - school login */}
           {show == "15" ? (
@@ -13934,19 +14030,19 @@ const Editemployee = () => {
                         Fnsave(values);
                       }, 100);
                     }}
-                    // onSubmit={(values, actions) => {
-                    //   actions.setTouched({
-                    //     code1: true,
-                    //     name1: true,
-                    //     mobilenumber: true,
-                    //     emailid: true,
-                    //     address: true,
-                    //   });
+                  // onSubmit={(values, actions) => {
+                  //   actions.setTouched({
+                  //     code1: true,
+                  //     name1: true,
+                  //     mobilenumber: true,
+                  //     emailid: true,
+                  //     address: true,
+                  //   });
 
-                    //   if (Object.keys(actions.errors || {}).length > 0) return;
+                  //   if (Object.keys(actions.errors || {}).length > 0) return;
 
-                    //   Fnsave(values);
-                    // }}
+                  //   Fnsave(values);
+                  // }}
                   >
                     {({
                       errors,
@@ -14031,7 +14127,7 @@ const Editemployee = () => {
                                 },
                               }}
                               InputProps={{ readOnly: true }}
-                              // autoFocus
+                            // autoFocus
                             />
                           ) : (
                             <TextField
@@ -14162,7 +14258,7 @@ const Editemployee = () => {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                               },
                             }}
-                            // autoFocus
+                          // autoFocus
                           />
 
                           <TextField
@@ -14326,7 +14422,7 @@ const Editemployee = () => {
           )}
 
           {show == "16" ? (
-              <Box
+            <Box
               display="flex"
               gap={3}
               alignItems="flex-start"
@@ -14344,7 +14440,7 @@ const Editemployee = () => {
               )}
               {/* LEFT: Document content */}
               <Box flex={1} minWidth={0}>
-          <Paper
+                <Paper
                   elevation={0}
                   sx={{
                     backgroundColor: "#fff",
@@ -14353,28 +14449,28 @@ const Editemployee = () => {
                     p: 1,
                   }}
                 >
-              <Formik
-                initialValues={parentcontactInitialValue}
-                onSubmit={(values, setSubmitting) => {
-                  setTimeout(() => {
-                    contactsave(values);
-                  }, 100);
-                }}
-                validationSchema={validationSchema13}
-                enableReinitialize={true}
-              >
-                {({
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  isSubmitting,
-                  values,
-                  handleSubmit,
-                  setFieldValue,
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                      {/* ----- CARD HEADER ----- */}
+                  <Formik
+                    initialValues={parentcontactInitialValue}
+                    onSubmit={(values, setSubmitting) => {
+                      setTimeout(() => {
+                        contactsave(values);
+                      }, 100);
+                    }}
+                    validationSchema={validationSchema13}
+                    enableReinitialize={true}
+                  >
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      isSubmitting,
+                      values,
+                      handleSubmit,
+                      setFieldValue,
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        {/* ----- CARD HEADER ----- */}
                         <Box
                           display="flex"
                           alignItems="center"
@@ -14396,524 +14492,524 @@ const Editemployee = () => {
                           </Box>
                           <Box>
 
-                         
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
-                          >
-                            Parent Contact Details
-                          </Typography>
-                       
 
-                         <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          mb={1}
-                        
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#0D94885"
+                            >
+                              Parent Contact Details
+                            </Typography>
+
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              mb={1}
+
+                            >
+                              Parent contact information
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          // gap="30px"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
                         >
-                          Parent contact information
-                        </Typography>
-                         </Box>
-                           </Box>
-                    <Box
-                      display="grid"
-                      gap={formGap}
-                      padding={1}
-                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                      // gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 2",
-                        },
-                      }}
-                    >
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                         variant="outlined"
-                          size="small"
-                          type="text"
-                          id="code"
-                          name="code"
-                         value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          
-                          label="Code"
-                           InputProps={{ readOnly: true }}
-                         InputLabelProps={{
-                                  shrink: true,
-                                }}
-                           placeholder="Auto"
-                          // focused
-                          // required
-                         
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
-                          // sx={{
-                          //   backgroundColor: "#ffffff", // Set the background to white
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          //   },
-                          // }}
-                        
-                          // autoFocus
-                        />
-                      ) : (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="outlined"
-                          size="small"
-                          // focused
-                          // required
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
-                          // sx={{
-                          //   backgroundColor: "#ffffff", // Set the background to white
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          //   },
-                          // }}
-                          autoFocus
-                        />
-                      )}
-                      <TextField
-                        name="name"
-                        type="text"
-                        id="name"
-                        label={
-                          <>
-                            Name
-                            {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              variant="outlined"
+                              size="small"
+                              type="text"
+                              id="code"
+                              name="code"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+
+                              label="Code"
+                              InputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              placeholder="Auto"
+                              // focused
+                              // required
+
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                            // sx={{
+                            //   backgroundColor: "#ffffff", // Set the background to white
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            //   },
+                            // }}
+
+                            // autoFocus
+                            />
+                          ) : (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              variant="outlined"
+                              size="small"
+                              // focused
+                              // required
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              // sx={{
+                              //   backgroundColor: "#ffffff", // Set the background to white
+                              //   "& .MuiFilledInput-root": {
+                              //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              //   },
+                              // }}
+                              autoFocus
+                            />
+                          )}
+                          <TextField
+                            name="name"
+                            type="text"
+                            id="name"
+                            label={
+                              <>
+                                Name
+                                {/* <span style={{ color: "red", fontSize: "20px" }}>
                                      *
                                    </span> */}
-                          </>
-                        }
-                        variant="outlined"
-                          size="small"
-                        // focused
-                        value={values.name}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.name && !!errors.name}
-                        helperText={touched.name && errors.name}
-                        // sx={{
-                        //   backgroundColor: "#ffffff", // Set the background to white
-                        //   "& .MuiFilledInput-root": {
-                        //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        //   },
-                        // }}
-                        InputProps={{
-                          inputProps: {
-                            readOnly: true,
-                          },
-                        }}
-                        // required
-                        autoFocus={CompanyAutoCode == "Y"}
-                      />
-                      <Box
-                        sx={{
-                          padding: 1.5,
-                          backgroundColor: "#b2dfdb", // light green
-                          borderRadius: 1,
-                          width: "100%",
-                        }}
-                      >
-                        <Typography variant="h5" fontWeight="bold">
-                          Contact Person 1
-                        </Typography>
-                      </Box>
-
-                      <Box
-                        sx={{
-                          padding: 1.5,
-                          backgroundColor: "#b2dfdb",
-                          borderRadius: 1,
-                          width: "100%",
-                        }}
-                      >
-                        <Typography variant="h5" fontWeight="bold">
-                          Contact Person 2
-                        </Typography>
-                      </Box>
-                      {/* </Box> */}
-
-                      {/* <Typography>Contact Person 2</Typography> */}
-                      <TextField
-                        name="name1"
-                        label={
-                          <>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="outlined"
-                          size="small"
-                        // focused
-                        value={values.name1}
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const input = e.target.value.toUpperCase();
-                        //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                        //     handleChange({
-                        //       target: {
-                        //         name: "name1",
-                        //         value: input,
-                        //       },
-                        //     });
-                        //   }
-                        // }}
-                        error={!!touched.name1 && !!errors.name1}
-                        helperText={touched.name1 && errors.name1}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        name="name2"
-                        label="Name"
-                       variant="outlined"
-                          size="small"
-                        // focused
-                        value={values.name2}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const input = e.target.value.toUpperCase();
-                        //   if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                        //     // This updates Formik value correctly
-                        //     handleChange({
-                        //       target: {
-                        //         name: "name2",
-                        //         value: input,
-                        //       },
-                        //     });
-                        //   }
-                        // }}
-                        error={!!touched.name2 && !!errors.name2}
-                        helperText={touched.name2 && errors.name2}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        name="emailid1"
-                        type="tel"
-                        id="emailid1"
-                        label={
-                          <>
-                            Email ID
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="outlined"
-                          size="small"
-                        // required
-                        // focused
-                        value={values.emailid1}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // onChange={(e) => {
-                        //   const value = e.target.value;
-                        //   // Only allow numbers and max 10 digits
-                        //   if (/^\d{0,10}$/.test(value)) {
-                        //     handleChange(e);
-                        //   }
-                        // }}
-                        error={!!touched.emailid1 && !!errors.emailid1}
-                        helperText={touched.emailid1 && errors.emailid1}
-                        // inputProps={{ maxLength: 10 }}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        autoFocus
-                      />
-
-                      <TextField
-                        name="emailid2"
-                        type="text"
-                        id="emailid2"
-                        label="Email ID"
-                        variant="outlined"
-                          size="small"
-                        // focused
-                        value={values.emailid2}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        name="mobileno1"
-                        type="tel"
-                        id="mobileno1"
-                        label={
-                          <>
-                            Mobile No
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="outlined"
-                          size="small"
-                        // focused
-                        value={values.mobileno1}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.mobileno1 && !!errors.mobileno1}
-                        helperText={touched.mobileno1 && errors.mobileno1}
-                        // required
-                        inputProps={{ maxLength: 10 }}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        name="mobileno2"
-                        type="tel"
-                        id="mobileno2"
-                        label="Mobile No"
-                       variant="outlined"
-                          size="small"
-                        // focused
-                        inputProps={{ maxLength: 10 }}
-                        value={values.mobileno2}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        autoFocus
-                      />
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                          size="small"
-                        type="number"
-                        id="aadharcardnumber1"
-                        name="aadharcardnumber1"
-                        value={values.aadharcardnumber1}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Aadhar Card No"
-                        // focused
-                        // onWheel={(e) => e.target.blur()}
-                        error={
-                          touched.aadharcardnumber1 &&
-                          Boolean(errors.aadharcardnumber1)
-                        }
-                        helperText={
-                          touched.aadharcardnumber1 && errors.aadharcardnumber1
-                        }
-                      />
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                          size="small"
-                        type="number"
-                        id="aadharcardnumber2"
-                        name="aadharcardnumber2"
-                        value={values.aadharcardnumber2}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Aadhar Card No"
-                        // focused
-                        // onWheel={(e) => e.target.blur()}
-                        error={
-                          touched.aadharcardnumber2 &&
-                          Boolean(errors.aadharcardnumber2)
-                        }
-                        helperText={
-                          touched.aadharcardnumber2 && errors.aadharcardnumber2
-                        }
-                      />
-                    </Box>
-                    <Grid container spacing={2}>
-                      {/* ID Proof (Left side – 50%) */}
-                      <Grid item xs={12} md={6}>
-                        <Box display="flex" alignItems="center" gap={2}>
-                          <Tooltip title="ID Proof">
-                            <IconButton
-                              size="small"
-                              color="warning"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input
-                                hidden
-                                accept="all/*"
-                                type="file"
-                                // onChange={getFilepanChange}
-                                onChange={getFileID1Change}
-                              />
-                              <PictureAsPdfOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Button
+                              </>
+                            }
+                            variant="outlined"
                             size="small"
-                            variant="contained"
-                            // onClick={() => {
-                            //   data.ContactPersonIDProofImg1 || ID1Image
-                            //     ? window.open(
-                            //         ID1Image
-                            //           ? store.getState().globalurl.attachmentUrl +
-                            //               ID1Image
-                            //           : store.getState().globalurl.attachmentUrl +
-                            //               data.ContactPersonIDProofImg1,
-                            //         "_blank"
-                            //       )
-                            //     : toast.error("Please Upload File");
+                            // focused
+                            value={values.name}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.name && !!errors.name}
+                            helperText={touched.name && errors.name}
+                            // sx={{
+                            //   backgroundColor: "#ffffff", // Set the background to white
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            //   },
                             // }}
-                            onClick={() => {
-                              partyContactgetdata.ContactPersonIDProofImg1 ||
-                              ID1Image
-                                ? window.open(
-                                    ID1Image
-                                      ? store.getState().globalurl
-                                          .attachmentUrl + ID1Image
-                                      : store.getState().globalurl
-                                          .attachmentUrl +
-                                          partyContactgetdata.ContactPersonIDProofImg1,
-                                    "_blank",
-                                  )
-                                : toast.error("Please Upload File");
+                            InputProps={{
+                              inputProps: {
+                                readOnly: true,
+                              },
+                            }}
+                            // required
+                            autoFocus={CompanyAutoCode == "Y"}
+                          />
+                          <Box
+                            sx={{
+                              padding: 1.5,
+                              backgroundColor: "#b2dfdb", // light green
+                              borderRadius: 1,
+                              width: "100%",
                             }}
                           >
-                            ID Proof View
-                          </Button>
-                        </Box>
-                      </Grid>
+                            <Typography variant="h5" fontWeight="bold">
+                              Contact Person 1
+                            </Typography>
+                          </Box>
 
-                      {/* GST Proof (Right side – 50%) */}
-                      <Grid item xs={12} md={6}>
-                        <Box display="flex" alignItems="center" gap={2}>
-                          <Tooltip title="ID Proof">
-                            <IconButton
-                              size="small"
-                              color="warning"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input
-                                hidden
-                                accept="all/*"
-                                type="file"
-                                // onChange={getFilegstChange}
-                                onChange={getFileID2Change}
-                              />
-                              <PictureAsPdfOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
+                          <Box
+                            sx={{
+                              padding: 1.5,
+                              backgroundColor: "#b2dfdb",
+                              borderRadius: 1,
+                              width: "100%",
+                            }}
+                          >
+                            <Typography variant="h5" fontWeight="bold">
+                              Contact Person 2
+                            </Typography>
+                          </Box>
+                          {/* </Box> */}
 
-                          <Button
+                          {/* <Typography>Contact Person 2</Typography> */}
+                          <TextField
+                            name="name1"
+                            label={
+                              <>
+                                Name
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
                             size="small"
-                            variant="contained"
-                            onClick={() => {
-                              partyContactgetdata.ContactPersonIDProofImg2 ||
-                              ID2Image
-                                ? window.open(
-                                    ID2Image
-                                      ? store.getState().globalurl
-                                          .attachmentUrl + ID2Image
-                                      : store.getState().globalurl
-                                          .attachmentUrl +
-                                          partyContactgetdata.ContactPersonIDProofImg2,
-                                    "_blank",
-                                  )
-                                : toast.error("Please Upload File");
+                            // focused
+                            value={values.name1}
+                            // required
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            // onChange={(e) => {
+                            //   const input = e.target.value.toUpperCase();
+                            //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
+                            //     handleChange({
+                            //       target: {
+                            //         name: "name1",
+                            //         value: input,
+                            //       },
+                            //     });
+                            //   }
+                            // }}
+                            error={!!touched.name1 && !!errors.name1}
+                            helperText={touched.name1 && errors.name1}
+                            sx={{
+                              backgroundColor: "#ffffff",
                             }}
-                          >
-                            ID Proof View
-                          </Button>
+                            autoFocus
+                          />
+                          <TextField
+                            name="name2"
+                            label="Name"
+                            variant="outlined"
+                            size="small"
+                            // focused
+                            value={values.name2}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            // onChange={(e) => {
+                            //   const input = e.target.value.toUpperCase();
+                            //   if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                            //     // This updates Formik value correctly
+                            //     handleChange({
+                            //       target: {
+                            //         name: "name2",
+                            //         value: input,
+                            //       },
+                            //     });
+                            //   }
+                            // }}
+                            error={!!touched.name2 && !!errors.name2}
+                            helperText={touched.name2 && errors.name2}
+                            sx={{
+                              backgroundColor: "#ffffff",
+                            }}
+                            autoFocus
+                          />
+                          <TextField
+                            name="emailid1"
+                            type="tel"
+                            id="emailid1"
+                            label={
+                              <>
+                                Email ID
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            // required
+                            // focused
+                            value={values.emailid1}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            // onChange={(e) => {
+                            //   const value = e.target.value;
+                            //   // Only allow numbers and max 10 digits
+                            //   if (/^\d{0,10}$/.test(value)) {
+                            //     handleChange(e);
+                            //   }
+                            // }}
+                            error={!!touched.emailid1 && !!errors.emailid1}
+                            helperText={touched.emailid1 && errors.emailid1}
+                            // inputProps={{ maxLength: 10 }}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            autoFocus
+                          />
+
+                          <TextField
+                            name="emailid2"
+                            type="text"
+                            id="emailid2"
+                            label="Email ID"
+                            variant="outlined"
+                            size="small"
+                            // focused
+                            value={values.emailid2}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            autoFocus
+                          />
+                          <TextField
+                            name="mobileno1"
+                            type="tel"
+                            id="mobileno1"
+                            label={
+                              <>
+                                Mobile No
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            // focused
+                            value={values.mobileno1}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.mobileno1 && !!errors.mobileno1}
+                            helperText={touched.mobileno1 && errors.mobileno1}
+                            // required
+                            inputProps={{ maxLength: 10 }}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            autoFocus
+                          />
+                          <TextField
+                            name="mobileno2"
+                            type="tel"
+                            id="mobileno2"
+                            label="Mobile No"
+                            variant="outlined"
+                            size="small"
+                            // focused
+                            inputProps={{ maxLength: 10 }}
+                            value={values.mobileno2}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            autoFocus
+                          />
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="aadharcardnumber1"
+                            name="aadharcardnumber1"
+                            value={values.aadharcardnumber1}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Aadhar Card No"
+                            // focused
+                            // onWheel={(e) => e.target.blur()}
+                            error={
+                              touched.aadharcardnumber1 &&
+                              Boolean(errors.aadharcardnumber1)
+                            }
+                            helperText={
+                              touched.aadharcardnumber1 && errors.aadharcardnumber1
+                            }
+                          />
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="aadharcardnumber2"
+                            name="aadharcardnumber2"
+                            value={values.aadharcardnumber2}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Aadhar Card No"
+                            // focused
+                            // onWheel={(e) => e.target.blur()}
+                            error={
+                              touched.aadharcardnumber2 &&
+                              Boolean(errors.aadharcardnumber2)
+                            }
+                            helperText={
+                              touched.aadharcardnumber2 && errors.aadharcardnumber2
+                            }
+                          />
                         </Box>
-                      </Grid>
-                    </Grid>
+                        <Grid container spacing={2}>
+                          {/* ID Proof (Left side – 50%) */}
+                          <Grid item xs={12} md={6}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                              <Tooltip title="ID Proof">
+                                <IconButton
+                                  size="small"
+                                  color="warning"
+                                  aria-label="upload picture"
+                                  component="label"
+                                >
+                                  <input
+                                    hidden
+                                    accept="all/*"
+                                    type="file"
+                                    // onChange={getFilepanChange}
+                                    onChange={getFileID1Change}
+                                  />
+                                  <PictureAsPdfOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
 
-                    <Box
-                      display="flex"
-                      justifyContent="flex-end"
-                      padding={1}
-                      mt={3}
-                      gap="20px"
-                    >
-                      {/* GSTimage */}
+                              <Button
+                                size="small"
+                                variant="contained"
+                                // onClick={() => {
+                                //   data.ContactPersonIDProofImg1 || ID1Image
+                                //     ? window.open(
+                                //         ID1Image
+                                //           ? store.getState().globalurl.attachmentUrl +
+                                //               ID1Image
+                                //           : store.getState().globalurl.attachmentUrl +
+                                //               data.ContactPersonIDProofImg1,
+                                //         "_blank"
+                                //       )
+                                //     : toast.error("Please Upload File");
+                                // }}
+                                onClick={() => {
+                                  partyContactgetdata.ContactPersonIDProofImg1 ||
+                                    ID1Image
+                                    ? window.open(
+                                      ID1Image
+                                        ? store.getState().globalurl
+                                          .attachmentUrl + ID1Image
+                                        : store.getState().globalurl
+                                          .attachmentUrl +
+                                        partyContactgetdata.ContactPersonIDProofImg1,
+                                      "_blank",
+                                    )
+                                    : toast.error("Please Upload File");
+                                }}
+                              >
+                                ID Proof View
+                              </Button>
+                            </Box>
+                          </Grid>
 
-                      {YearFlag == "true" ? (
-                        <LoadingButton
-                          // color="secondary"
-                          variant="contained"
-                          type="submit"
-                          loading={isLoading}
-                          sx={{
-                            textTransform: "none",
-                            borderRadius: 2,
-                            color: "#fff",
-                            px: 4,
-                            bgcolor: "#0D9488",
-                            "&:hover": {
-                              bgcolor: "#0F766E",
-                            },
-                          }}
+                          {/* GST Proof (Right side – 50%) */}
+                          <Grid item xs={12} md={6}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                              <Tooltip title="ID Proof">
+                                <IconButton
+                                  size="small"
+                                  color="warning"
+                                  aria-label="upload picture"
+                                  component="label"
+                                >
+                                  <input
+                                    hidden
+                                    accept="all/*"
+                                    type="file"
+                                    // onChange={getFilegstChange}
+                                    onChange={getFileID2Change}
+                                  />
+                                  <PictureAsPdfOutlinedIcon />
+                                </IconButton>
+                              </Tooltip>
+
+                              <Button
+                                size="small"
+                                variant="contained"
+                                onClick={() => {
+                                  partyContactgetdata.ContactPersonIDProofImg2 ||
+                                    ID2Image
+                                    ? window.open(
+                                      ID2Image
+                                        ? store.getState().globalurl
+                                          .attachmentUrl + ID2Image
+                                        : store.getState().globalurl
+                                          .attachmentUrl +
+                                        partyContactgetdata.ContactPersonIDProofImg2,
+                                      "_blank",
+                                    )
+                                    : toast.error("Please Upload File");
+                                }}
+                              >
+                                ID Proof View
+                              </Button>
+                            </Box>
+                          </Grid>
+                        </Grid>
+
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          padding={1}
+                          mt={3}
+                          gap="20px"
                         >
-                          Save
-                        </LoadingButton>
-                      ) : (
-                        <Button
-                          // color="secondary"
-                          variant="contained"
-                          disabled={true}
-                          sx={{
-                            px: 4,
-                            borderRadius: 2,
-                            textTransform: "none",
-                            bgcolor: "#F97316",
-                            "&:hover": {
-                              bgcolor: "#EA580C",
-                            },
-                          }}
-                        >
-                          Save
-                        </Button>
-                      )}
-                      {/* {YearFlag == "true" ? (
+                          {/* GSTimage */}
+
+                          {YearFlag == "true" ? (
+                            <LoadingButton
+                              // color="secondary"
+                              variant="contained"
+                              type="submit"
+                              loading={isLoading}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
+                          ) : (
+                            <Button
+                              // color="secondary"
+                              variant="contained"
+                              disabled={true}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
+                            >
+                              Save
+                            </Button>
+                          )}
+                          {/* {YearFlag == "true" ? (
                                <Button
                                  color="error"
                                  variant="contained"
@@ -14929,30 +15025,30 @@ const Editemployee = () => {
                                </Button>
                              )} */}
 
-                      <Button
-                        // color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          setScreen(0);
-                        }}
-                        sx={{
-                          px: 4,
-                          borderRadius: 2,
-                          textTransform: "none",
-                          bgcolor: "#F97316",
-                          "&:hover": {
-                            bgcolor: "#EA580C",
-                          },
-                        }}
-                      >
-                        Back
-                      </Button>
-                    </Box>
-                  </form>
-                )}
-              </Formik>
-            </Paper>
-               </Box>
+                          <Button
+                            // color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Paper>
+              </Box>
             </Box>
           ) : (
             false
@@ -15028,50 +15124,50 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
-          <Box
-  display="flex"
-  alignItems="flex-start"
-  gap={1.5}
-  mb={1}
->
-  {/* ICON */}
-  <Box
-    sx={{
-      width: 36,
-      height: 36,
-      borderRadius: "50%",
-      backgroundColor: "#EEF2FF",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0,
-    }}
-  >
-    <Typography sx={{ fontSize: 18 }}>📄</Typography>
-  </Box>
+                        <Box
+                          display="flex"
+                          alignItems="flex-start"
+                          gap={1.5}
+                          mb={1}
+                        >
+                          {/* ICON */}
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 18 }}>📄</Typography>
+                          </Box>
 
-  {/* TEXT CONTENT */}
-  <Box>
-    <Typography
-    variant="subtitle1"
-      fontWeight={700}
-      sx={{ color: "#0D94885", lineHeight: 1.2 }}
-    >
-      {getBusinessCaption("ContractIn", "Contract In")}
-    </Typography>
+                          {/* TEXT CONTENT */}
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              sx={{ color: "#0D94885", lineHeight: 1.2 }}
+                            >
+                              {getBusinessCaption("ContractIn", "Contract In")}
+                            </Typography>
 
-    <Typography
-      variant="body2"
-      sx={{
-        color: "text.secondary",
-        fontSize: 13,
-        mt: 0.3,
-      }}
-    >
-      Contract in details
-    </Typography>
-  </Box>
-</Box>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontSize: 13,
+                                mt: 0.3,
+                              }}
+                            >
+                              Contract in details
+                            </Typography>
+                          </Box>
+                        </Box>
                         {/* ----- Code/Name + Photo ----- */}
                         <Box display="flex" gap={3} flexWrap="wrap">
                           {/* LEFT SIDE */}
@@ -15140,8 +15236,8 @@ const Editemployee = () => {
                             </Typography>
                           </Box> */}
 
-                          <Box 
-                           sx={{
+                          <Box
+                            sx={{
                               height: "40vh",
                               "& .MuiDataGrid-root": {
                                 border: "none",
@@ -15219,7 +15315,7 @@ const Editemployee = () => {
                             }}
                           >
                             <DataGrid
-                             sx={{
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
@@ -15413,31 +15509,31 @@ const Editemployee = () => {
                                       }
                                       url={
                                         Data.DesignationName === "Student" ||
-                                        Data?.Designation?.Name === "Student"
+                                          Data?.Designation?.Name === "Student"
                                           ? `${listViewurl}?data=${JSON.stringify(
-                                              {
-                                                Query: {
-                                                  AccessID: "2133",
-                                                  ScreenName: "Parent",
-                                                  VerticalLicense:
-                                                    Subscriptionlastthree,
-                                                  Filter: `parentID=${CompanyID}`,
-                                                  Any: "",
-                                                },
+                                            {
+                                              Query: {
+                                                AccessID: "2133",
+                                                ScreenName: "Parent",
+                                                VerticalLicense:
+                                                  Subscriptionlastthree,
+                                                Filter: `parentID=${CompanyID}`,
+                                                Any: "",
                                               },
-                                            )}`
+                                            },
+                                          )}`
                                           : `${listViewurl}?data=${JSON.stringify(
-                                              {
-                                                Query: {
-                                                  AccessID: "2100",
-                                                  ScreenName: "Vendor",
-                                                  VerticalLicense:
-                                                    Subscriptionlastthree,
-                                                  Filter: `parentID=${CompanyID}`,
-                                                  Any: "",
-                                                },
+                                            {
+                                              Query: {
+                                                AccessID: "2100",
+                                                ScreenName: "Vendor",
+                                                VerticalLicense:
+                                                  Subscriptionlastthree,
+                                                Filter: `parentID=${CompanyID}`,
+                                                Any: "",
                                               },
-                                            )}`
+                                            },
+                                          )}`
                                       }
                                     />
                                   )}
@@ -15764,7 +15860,7 @@ const Editemployee = () => {
                                     name="UnitRate"
                                     label={
                                       values.BillingUnits === "OF" ||
-                                      values.BillingUnits === "TF" ? (
+                                        values.BillingUnits === "TF" ? (
                                         <span>
                                           Amount
                                           <span
@@ -15926,15 +16022,15 @@ const Editemployee = () => {
                                             HSN Code
                                             {values.BillingType !==
                                               "CashMemo" && (
-                                              <span
-                                                style={{
-                                                  color: "red",
-                                                  fontSize: "20px",
-                                                }}
-                                              >
-                                                *
-                                              </span>
-                                            )}
+                                                <span
+                                                  style={{
+                                                    color: "red",
+                                                    fontSize: "20px",
+                                                  }}
+                                                >
+                                                  *
+                                                </span>
+                                              )}
                                           </span>
                                         }
                                         value={values.Hsn}
@@ -16271,28 +16367,50 @@ const Editemployee = () => {
                                       }
                                     }}
                                   />
-
-                                  {/* Due Date (conditional) */}
-                                  {(values.BillingUnits === "OF" ||
-                                    values.BillingUnits === "TF") && (
+                                  {is003Subscription && (
                                     <TextField
                                       fullWidth
                                       variant="outlined"
                                       size="small"
-                                      name="DueDate"
+                                      name="Invoicebillingdate"
                                       type="date"
-                                      id="DueDate"
-                                      label="Due Date"
+                                      id="Invoicebillingdate"
+                                      label="Invoice Billing Date"
                                       InputLabelProps={{ shrink: true }}
-                                      value={values.DueDate}
+                                      value={values.Invoicebillingdate}
                                       onBlur={handleBlur}
                                       onChange={handleChange}
-                                      inputProps={{
-                                        min: values.FromPeriod || "",
-                                        max: values.ToPeriod || "",
-                                      }}
+                                      error={
+                                        !!touched.Invoicebillingdate &&
+                                        !!errors.Invoicebillingdate
+                                      }
+                                      helperText={
+                                        touched.Invoicebillingdate &&
+                                        errors.Invoicebillingdate
+                                      }
                                     />
                                   )}
+                                  {/* Due Date (conditional) */}
+                                  {(values.BillingUnits === "OF" ||
+                                    values.BillingUnits === "TF") && (
+                                      <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        size="small"
+                                        name="DueDate"
+                                        type="date"
+                                        id="DueDate"
+                                        label="Due Date"
+                                        InputLabelProps={{ shrink: true }}
+                                        value={values.DueDate}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        inputProps={{
+                                          min: values.FromPeriod || "",
+                                          max: values.ToPeriod || "",
+                                        }}
+                                      />
+                                    )}
 
                                   {/* Notification Alert Date */}
                                   <TextField
@@ -16362,15 +16480,21 @@ const Editemployee = () => {
                               {funMode === "E" &&
                                 is003Subscription &&
                                 flag !== "P" &&
+                                contractorData.Process == "N" &&
                                 ["OF", "TF"].includes(
                                   values?.BillingUnits || "",
                                 ) && (
                                   <Button
-                                    variant="outlined"
+                                    variant="standard"
                                     size="small"
                                     sx={{
                                       textTransform: "none",
                                       borderRadius: 2,
+                                      backgroundColor: "#1976d2",
+                                      color: "#fff",
+                                      "&:hover": {
+                                        backgroundColor: "#115293",
+                                      },
                                     }}
                                     onClick={() =>
                                       handleGenerate(values, resetForm, "")
@@ -16382,7 +16506,8 @@ const Editemployee = () => {
 
                               {is003Subscription &&
                                 funMode === "E" &&
-                                flag === "P" && (
+                                //  flag === "P" &&
+                                contractorData.Process == "Y" && (
                                   <PDFDownloadLink
                                     document={
                                       billingTypeForPrint === "CashMemo" ? (
@@ -16434,12 +16559,17 @@ const Editemployee = () => {
                                   >
                                     {({ loading }) => (
                                       <Button
-                                        variant="outlined"
+                                        variant="standard"
                                         disabled={loading}
                                         size="small"
                                         sx={{
                                           textTransform: "none",
                                           borderRadius: 2,
+                                          backgroundColor: "#1976d2",
+                                          color: "#fff",
+                                          "&:hover": {
+                                            backgroundColor: "#115293",
+                                          },
                                         }}
                                       >
                                         Print Invoice
@@ -16451,9 +16581,20 @@ const Editemployee = () => {
 
                             <Box display="flex" gap={1.5}>
                               {/* Save Button - ORIGINAL LOGIC */}
+                              {contractorData.Process == "Y" && (
+                                <Tooltip title="Unprocess"><IconButton color="info"
+                                onClick={() => {
+                                  setResetReason("");
+                                  setResetReasonError(false);
+                                  setResetDialogOpen(true);
+                                }}>
+                                <LockResetOutlinedIcon />
+                              </IconButton>
+                              </Tooltip>)}
                               <LoadingButton
                                 color="primary"
                                 variant="contained"
+                                disabled={contractorData.Process === "Y"}
                                 loading={isLoading}
                                 onClick={() => {
                                   handleSubmit(); // ✅ ORIGINAL Formik submit
@@ -16530,7 +16671,7 @@ const Editemployee = () => {
                                 variant="standard"
                                 onClick={() => setOpenContractPopup(false)}
                                 sx={{
-                                textTransform: "none",
+                                  textTransform: "none",
                                   borderRadius: 2,
                                   color: "#fff",
                                   px: 4,
@@ -16543,6 +16684,61 @@ const Editemployee = () => {
                                 Back
                               </Button>
                             </Box>
+                          </DialogActions>
+                        </Dialog>
+                        <Dialog
+                          open={resetDialogOpen}
+                          onClose={() => setResetDialogOpen(false)}
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle>Give a reason to Unprocess Contract</DialogTitle>
+                          <DialogContent>
+                            <TextField
+                            variant="standard"
+                              label={
+                                <>
+                                  Reason
+                                  <span style={{ color: "red", fontSize: "16px" }}>*</span>
+                                </>
+                              }
+                              fullWidth
+                              // multiline
+                              // minRows={3}
+                              value={resetReason}
+                              onChange={(e) => {
+                                setResetReason(e.target.value);
+                                if (e.target.value.trim()) setResetReasonError(false);
+                              }}
+                              error={resetReasonError}
+                              helperText={resetReasonError ? "Enter the Reason" : ""}
+                              sx={{ mt: 1 }}
+                              autoFocus
+                            />
+                          </DialogContent>
+                          <DialogActions>
+                           
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => {
+                                if (!resetReason.trim()) {
+                                  setResetReasonError(true);
+                                  return;
+                                }
+                                setResetDialogOpen(false);
+                                handleContractProcess(values, resetReason);
+                              }}
+                            >
+                              Save
+                            </Button>
+                             <Button
+                              variant="contained"
+                              color="warning"
+                              onClick={() => setResetDialogOpen(false)}
+                            >
+                              Cancel
+                            </Button>
                           </DialogActions>
                         </Dialog>
 
@@ -16936,7 +17132,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Description"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
                         {/* <SingleFormikOptimizedAutocomplete
                        
@@ -16992,13 +17188,13 @@ const Editemployee = () => {
                           helperText={
                             touched.BillingUnits && errors.BillingUnits
                           }
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiInputBase-root": {
-                          //     backgroundColor: "",
-                          //   },
-                          // }}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
                         >
                           <MenuItem value="HS">Hours</MenuItem>
                           <MenuItem value="DS">Days</MenuItem>
@@ -17088,11 +17284,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(0, parseInt(e.target.value))
-                          //     .toString()
-                          //     .slice(0, 11);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -17115,11 +17311,11 @@ const Editemployee = () => {
                           inputProps={{ maxLength: 25 }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(0, parseInt(e.target.value))
-                          //     .toString()
-                          //     .slice(0, 11);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -17141,11 +17337,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(0, parseInt(e.target.value))
-                          //     .toString()
-                          //     .slice(0, 11);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                         />
                         <TextField
                           // disabled={mode === "V"}
@@ -17167,11 +17363,11 @@ const Editemployee = () => {
                           }}
                           focused
                           onWheel={(e) => e.target.blur()}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(0, parseInt(e.target.value))
-                          //     .toString()
-                          //     .slice(0, 11);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                         />
                         <TextField
                           name="FromPeriod"
@@ -17186,10 +17382,10 @@ const Editemployee = () => {
                           value={values.FromPeriod}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                          // helperText={touched.FromPeriod && errors.FromPeriod}
-                          //sx={{ background: "" }}
-                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                        // helperText={touched.FromPeriod && errors.FromPeriod}
+                        //sx={{ background: "" }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                         />
                         <TextField
                           name="ToPeriod"
@@ -17538,13 +17734,13 @@ const Editemployee = () => {
                         }}
                       >
                         {/* HEADER */}
-                          <Box
+                        <Box
                           display="flex"
                           alignItems="center"
                           gap={1.5}
                           mb={3}
                         >
-                           <Box
+                          <Box
                             sx={{
                               width: 36,
                               height: 36,
@@ -17559,23 +17755,23 @@ const Editemployee = () => {
                             📍
                           </Box>
                           <Box>
-                          <Typography
-                               variant="subtitle1"
+                            <Typography
+                              variant="subtitle1"
                               fontWeight={700}
                               color="#0D94885"
-                          >
-                            {getBusinessCaption("Geolocation", "Geo Location")}
-                          </Typography>
-                     
+                            >
+                              {getBusinessCaption("Geolocation", "Geo Location")}
+                            </Typography>
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        
-                        >
-                          Manage location coordinates and radius settings
-                        </Typography>
-        </Box>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+
+                            >
+                              Manage location coordinates and radius settings
+                            </Typography>
+                          </Box>
                         </Box>
                         {/* BASIC DETAILS */}
                         <Box
@@ -17859,7 +18055,7 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ----- CARD HEADER ----- */}
- <Box sx={{ p: 1 }}>
+                        <Box sx={{ p: 1 }}>
                           <Box
                             display="flex"
                             alignItems="center"
@@ -17877,75 +18073,75 @@ const Editemployee = () => {
                                 justifyContent: "center",
                               }}
                             >
-                            <Typography sx={{ fontSize: 16 }}>📦</Typography>
-                            
-                          </Box>
-                           <Box>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                           color="#0D94885"
-                          >
-                            Inventory
-                          </Typography>
-                     
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                      >
-                          Assigned inventory items
-                        </Typography>
+                              <Typography sx={{ fontSize: 16 }}>📦</Typography>
 
-   </Box>
-                          </Box>
-                        {/* ----- Code/Name + Photo (separate column, matching reference image) ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
-                          <Box
-                            flex={1}
-                            minWidth={280}
-                            display="flex"
-                            flexDirection="column"
-                            gap={2}
-                          >
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Code"
-                              name="Code"
-                              value={values.Code}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Code"
-                            />
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Inventory
+                              </Typography>
 
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="Name"
-                              name="Name"
-                              value={values.Name}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Name"
-                            />
-                          </Box>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Assigned inventory items
+                              </Typography>
 
-                          {/* Photo column */}
-                          <Box sx={{ width: 220, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo",
-                            )}
+                            </Box>
+                          </Box>
+                          {/* ----- Code/Name + Photo (separate column, matching reference image) ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                            <Box
+                              flex={1}
+                              minWidth={280}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Code"
+                                name="Code"
+                                value={values.Code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Name"
+                                name="Name"
+                                value={values.Name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
                         </Box>
-  </Box>
                         {/* ----- LIST OF ITEMS (Top Table) - styled like reference, logic 100% unchanged ----- */}
                         <Box
                           sx={{
@@ -18156,90 +18352,90 @@ const Editemployee = () => {
                               </Typography>
                             </Box>
                             <Box
-                            sx={{
-                              height: "45vh",
-                              "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
-
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
-
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
-
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
-                            }}
-                          >
-                            <DataGrid
                               sx={{
+                                height: "45vh",
+                                "& .MuiDataGrid-root": {
+                                  border: "none",
+                                },
+                                "& .cell-negative-status": {
+                                  color: colors.redAccent[500],
+                                  fontWeight: 600,
+                                },
+                                "& .cell-positive-status": {
+                                  color: colors.greenAccent[400],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiDataGrid-cell": {
+                                  borderBottom: "none",
+                                },
+                                "& .name-column--cell": {
+                                  color: colors.greenAccent[300],
+                                },
+                                "& .MuiDataGrid-columnHeaders": {
+                                  backgroundColor: colors.blueAccent[800],
+                                  // backgroundColor: "#25adad",
+                                  borderBottom: "none",
+                                },
+                                "& .MuiDataGrid-virtualScroller": {
+                                  backgroundColor: colors.primary[400],
+                                },
                                 "& .MuiDataGrid-footerContainer": {
-                                  height: dataGridHeaderFooterHeight,
-                                  minHeight: dataGridHeaderFooterHeight,
+                                  borderTop: "none",
+                                  backgroundColor: colors.blueAccent[800],
+                                  // borderColor: "#d0edec",
+                                  // backgroundColor: "",
+                                },
+                                "& .MuiCheckbox-root": {
+                                  color: `${colors.greenAccent[200]} !important`,
+                                },
+                                "& .odd-row": {
+                                  backgroundColor: "",
+                                  color: "", // Color for odd rows
+                                },
+                                "& .even-row": {
+                                  // backgroundColor: "#d0edec",
+                                  backgroundColor: "",
+                                  color: "", // Color for even rows
+                                },
+
+                                "& .MuiDataGrid-columnHeaderTitle": {
+                                  color: colors.blueAccent[900],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiTablePagination-root": {
+                                  color: colors.blueAccent[900],
+                                },
+                                /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                                "& .MuiTablePagination-root": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-selectLabel": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-displayedRows": {
+                                  color: "#fff",
+                                },
+
+                                /* Dropdown icon */
+                                "& .MuiTablePagination-selectIcon": {
+                                  color: "#fff",
+                                },
+
+                                /* Left & Right arrow buttons */
+                                "& .MuiTablePagination-actions button": {
+                                  color: "#fff",
                                 },
                               }}
+                            >
+                              <DataGrid
+                                sx={{
+                                  "& .MuiDataGrid-footerContainer": {
+                                    height: dataGridHeaderFooterHeight,
+                                    minHeight: dataGridHeaderFooterHeight,
+                                  },
+                                }}
                                 rows={Inventorygrid1rows || []}
                                 columns={Att1Column || []}
                                 loading={Inventorygrid1loading}
@@ -18324,90 +18520,90 @@ const Editemployee = () => {
                               </Typography>
                             </Box>
                             <Box
-                            sx={{
-                              height: "45vh",
-                              "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
-
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
-
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
-
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
-                            }}
-                          >
-                            <DataGrid
                               sx={{
+                                height: "45vh",
+                                "& .MuiDataGrid-root": {
+                                  border: "none",
+                                },
+                                "& .cell-negative-status": {
+                                  color: colors.redAccent[500],
+                                  fontWeight: 600,
+                                },
+                                "& .cell-positive-status": {
+                                  color: colors.greenAccent[400],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiDataGrid-cell": {
+                                  borderBottom: "none",
+                                },
+                                "& .name-column--cell": {
+                                  color: colors.greenAccent[300],
+                                },
+                                "& .MuiDataGrid-columnHeaders": {
+                                  backgroundColor: colors.blueAccent[800],
+                                  // backgroundColor: "#25adad",
+                                  borderBottom: "none",
+                                },
+                                "& .MuiDataGrid-virtualScroller": {
+                                  backgroundColor: colors.primary[400],
+                                },
                                 "& .MuiDataGrid-footerContainer": {
-                                  height: dataGridHeaderFooterHeight,
-                                  minHeight: dataGridHeaderFooterHeight,
+                                  borderTop: "none",
+                                  backgroundColor: colors.blueAccent[800],
+                                  // borderColor: "#d0edec",
+                                  // backgroundColor: "",
+                                },
+                                "& .MuiCheckbox-root": {
+                                  color: `${colors.greenAccent[200]} !important`,
+                                },
+                                "& .odd-row": {
+                                  backgroundColor: "",
+                                  color: "", // Color for odd rows
+                                },
+                                "& .even-row": {
+                                  // backgroundColor: "#d0edec",
+                                  backgroundColor: "",
+                                  color: "", // Color for even rows
+                                },
+
+                                "& .MuiDataGrid-columnHeaderTitle": {
+                                  color: colors.blueAccent[900],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiTablePagination-root": {
+                                  color: colors.blueAccent[900],
+                                },
+                                /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                                "& .MuiTablePagination-root": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-selectLabel": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-displayedRows": {
+                                  color: "#fff",
+                                },
+
+                                /* Dropdown icon */
+                                "& .MuiTablePagination-selectIcon": {
+                                  color: "#fff",
+                                },
+
+                                /* Left & Right arrow buttons */
+                                "& .MuiTablePagination-actions button": {
+                                  color: "#fff",
                                 },
                               }}
+                            >
+                              <DataGrid
+                                sx={{
+                                  "& .MuiDataGrid-footerContainer": {
+                                    height: dataGridHeaderFooterHeight,
+                                    minHeight: dataGridHeaderFooterHeight,
+                                  },
+                                }}
                                 rows={Inventorygrid2rows || []}
                                 columns={Att2Column || []}
                                 loading={exploreLoading}
@@ -18490,91 +18686,91 @@ const Editemployee = () => {
                                 List of Items :
                               </Typography>
                             </Box>
-                             <Box
-                            sx={{
-                              height: "45vh",
-                              "& .MuiDataGrid-root": {
-                                border: "none",
-                              },
-                              "& .cell-negative-status": {
-                                color: colors.redAccent[500],
-                                fontWeight: 600,
-                              },
-                              "& .cell-positive-status": {
-                                color: colors.greenAccent[400],
-                                fontWeight: 600,
-                              },
-                              "& .MuiDataGrid-cell": {
-                                borderBottom: "none",
-                              },
-                              "& .name-column--cell": {
-                                color: colors.greenAccent[300],
-                              },
-                              "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: colors.blueAccent[800],
-                                // backgroundColor: "#25adad",
-                                borderBottom: "none",
-                              },
-                              "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: colors.primary[400],
-                              },
-                              "& .MuiDataGrid-footerContainer": {
-                                borderTop: "none",
-                                backgroundColor: colors.blueAccent[800],
-                                // borderColor: "#d0edec",
-                                // backgroundColor: "",
-                              },
-                              "& .MuiCheckbox-root": {
-                                color: `${colors.greenAccent[200]} !important`,
-                              },
-                              "& .odd-row": {
-                                backgroundColor: "",
-                                color: "", // Color for odd rows
-                              },
-                              "& .even-row": {
-                                // backgroundColor: "#d0edec",
-                                backgroundColor: "",
-                                color: "", // Color for even rows
-                              },
-
-                              "& .MuiDataGrid-columnHeaderTitle": {
-                                color: colors.blueAccent[900],
-                                fontWeight: 600,
-                              },
-                              "& .MuiTablePagination-root": {
-                                color: colors.blueAccent[900],
-                              },
-                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                              "& .MuiTablePagination-root": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-selectLabel": {
-                                color: "#fff",
-                              },
-
-                              "& .MuiTablePagination-displayedRows": {
-                                color: "#fff",
-                              },
-
-                              /* Dropdown icon */
-                              "& .MuiTablePagination-selectIcon": {
-                                color: "#fff",
-                              },
-
-                              /* Left & Right arrow buttons */
-                              "& .MuiTablePagination-actions button": {
-                                color: "#fff",
-                              },
-                            }}
-                          >
-                            <DataGrid
+                            <Box
                               sx={{
+                                height: "45vh",
+                                "& .MuiDataGrid-root": {
+                                  border: "none",
+                                },
+                                "& .cell-negative-status": {
+                                  color: colors.redAccent[500],
+                                  fontWeight: 600,
+                                },
+                                "& .cell-positive-status": {
+                                  color: colors.greenAccent[400],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiDataGrid-cell": {
+                                  borderBottom: "none",
+                                },
+                                "& .name-column--cell": {
+                                  color: colors.greenAccent[300],
+                                },
+                                "& .MuiDataGrid-columnHeaders": {
+                                  backgroundColor: colors.blueAccent[800],
+                                  // backgroundColor: "#25adad",
+                                  borderBottom: "none",
+                                },
+                                "& .MuiDataGrid-virtualScroller": {
+                                  backgroundColor: colors.primary[400],
+                                },
                                 "& .MuiDataGrid-footerContainer": {
-                                  height: dataGridHeaderFooterHeight,
-                                  minHeight: dataGridHeaderFooterHeight,
+                                  borderTop: "none",
+                                  backgroundColor: colors.blueAccent[800],
+                                  // borderColor: "#d0edec",
+                                  // backgroundColor: "",
+                                },
+                                "& .MuiCheckbox-root": {
+                                  color: `${colors.greenAccent[200]} !important`,
+                                },
+                                "& .odd-row": {
+                                  backgroundColor: "",
+                                  color: "", // Color for odd rows
+                                },
+                                "& .even-row": {
+                                  // backgroundColor: "#d0edec",
+                                  backgroundColor: "",
+                                  color: "", // Color for even rows
+                                },
+
+                                "& .MuiDataGrid-columnHeaderTitle": {
+                                  color: colors.blueAccent[900],
+                                  fontWeight: 600,
+                                },
+                                "& .MuiTablePagination-root": {
+                                  color: colors.blueAccent[900],
+                                },
+                                /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                                "& .MuiTablePagination-root": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-selectLabel": {
+                                  color: "#fff",
+                                },
+
+                                "& .MuiTablePagination-displayedRows": {
+                                  color: "#fff",
+                                },
+
+                                /* Dropdown icon */
+                                "& .MuiTablePagination-selectIcon": {
+                                  color: "#fff",
+                                },
+
+                                /* Left & Right arrow buttons */
+                                "& .MuiTablePagination-actions button": {
+                                  color: "#fff",
                                 },
                               }}
+                            >
+                              <DataGrid
+                                sx={{
+                                  "& .MuiDataGrid-footerContainer": {
+                                    height: dataGridHeaderFooterHeight,
+                                    minHeight: dataGridHeaderFooterHeight,
+                                  },
+                                }}
                                 rows={Inventorygrid3rows || []}
                                 columns={Att3Column || []}
                                 loading={exploreLoading}
@@ -18776,25 +18972,25 @@ const Editemployee = () => {
                             <Typography sx={{ fontSize: 16 }}>🏖️</Typography>
                           </Box>
 
-                            <Box>
+                          <Box>
                             <Typography
                               variant="subtitle1"
                               fontWeight={700}
                               color="#0D94885"
                             >
-                            {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
-                          </Typography>
-                
+                              {getBusinessCaption("LeaveConfigurations", "Leave Configuration")}
+                            </Typography>
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        
-                        >
-                          Manage employee {getBusinessCaption("LeaveConfigurations", "Leave Configuration")} details
-                        </Typography>
-                                </Box>
-        </Box>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+
+                            >
+                              Manage employee {getBusinessCaption("LeaveConfigurations", "Leave Configuration")} details
+                            </Typography>
+                          </Box>
+                        </Box>
                         {/* ================= TOP SECTION (Code + Name + Photo) ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
                           {/* LEFT FIELDS */}
@@ -18838,8 +19034,8 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ================= DATA GRID ================= */}
-                       
-                           <Box
+
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -18848,9 +19044,10 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                        <Box 
-                        sx={{ height: "45vh",
-                            "& .MuiDataGrid-root": {
+                          <Box
+                            sx={{
+                              height: "45vh",
+                              "& .MuiDataGrid-root": {
                                 border: "none",
                               },
                               "& .cell-negative-status": {
@@ -18924,46 +19121,46 @@ const Editemployee = () => {
                                 color: "#fff",
                               },
 
-                        }}
-                        >
-                          <DataGrid
-                            sx={{
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            loading={exploreLoading}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            page={page}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            rowsPerPageOptions={[5, 10, 15, 20]}
-                            onPageChange={(pageno) => handlePagechange(pageno)}
-                            pagination
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenLeaveModal(true);
-                            }}
-                            components={{ Toolbar: Employee }}
-                            onStateChange={(state) =>
-                              setRowCount(state.pagination.rowCount)
-                            }
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              loading={exploreLoading}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              page={page}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              rowsPerPageOptions={[5, 10, 15, 20]}
+                              onPageChange={(pageno) => handlePagechange(pageno)}
+                              pagination
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenLeaveModal(true);
+                              }}
+                              components={{ Toolbar: Employee }}
+                              onStateChange={(state) =>
+                                setRowCount(state.pagination.rowCount)
+                              }
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ================= FORM FIELDS ================= */}
                         <Dialog
                           open={openLeaveModal}
@@ -19083,7 +19280,7 @@ const Editemployee = () => {
                                 label="Balance Days"
                                 value={formatTwoDecimals(
                                   Number(values.totaldays) -
-                                    Number(values.availableleave),
+                                  Number(values.availableleave),
                                 )}
                                 InputProps={{
                                   readOnly: true,
@@ -19371,7 +19568,7 @@ const Editemployee = () => {
 
                         {/* Data Grid Section */}
                         <Box
-                           sx={{
+                          sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
                             overflow: "hidden",
@@ -19379,8 +19576,8 @@ const Editemployee = () => {
                             mt: 4
                           }}
                         >
-                          <Box 
-                           sx={{
+                          <Box
+                            sx={{
                               height: "55vh",
                               "& .MuiDataGrid-root": {
                                 border: "none",
@@ -19457,54 +19654,54 @@ const Editemployee = () => {
                               },
                             }}
                           >
-                          <DataGrid
-                           sx={{
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              console.log("Before:", openLocalityModal);
-                              setOpenLocalityModal(true);
-                            }}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            components={{ Toolbar: Employee }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                console.log("Before:", openLocalityModal);
+                                setOpenLocalityModal(true);
+                              }}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{ Toolbar: Employee }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                            />
+                          </Box>
                         </Box>
-  </Box>
                         {/* Additional Fields */}
                         <Dialog
                           open={openLocalityModal}
@@ -19831,7 +20028,7 @@ const Editemployee = () => {
                         }}
                       >
                         {/* ================= HEADER ================= */}
-                         <Box sx={{ p: 1 }}>
+                        <Box sx={{ p: 1 }}>
                           <Box
                             display="flex"
                             alignItems="center"
@@ -19849,56 +20046,56 @@ const Editemployee = () => {
                                 justifyContent: "center",
                               }}
                             >
-                            <Typography sx={{ fontSize: 16 }}>📦</Typography>
-                        </Box>
+                              <Typography sx={{ fontSize: 16 }}>📦</Typography>
+                            </Box>
                             <Box>
 
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Item Custody Details
+                              </Typography>
+
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+
+                              >
+                                Manage employee item allocation and tracking
+                              </Typography>
+                            </Box>
+                          </Box>
+                          {/* ================= CODE + NAME ================= */}
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            gap={2}
+                            mb={3}
                           >
-                            Item Custody Details
-                          </Typography>
-                   
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Code"
+                              value={values.code}
+                              InputProps={{ readOnly: true }}
+                            />
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        
-                        >
-                          Manage employee item allocation and tracking
-                        </Typography>
-     </Box>
-          </Box>
-                        {/* ================= CODE + NAME ================= */}
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          gap={2}
-                          mb={3}
-                        >
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Code"
-                            value={values.code}
-                            InputProps={{ readOnly: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Name"
-                            value={values.description}
-                            InputProps={{ readOnly: true }}
-                          />
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Name"
+                              value={values.description}
+                              InputProps={{ readOnly: true }}
+                            />
+                          </Box>
                         </Box>
-     </Box>
                         {/* ================= TABLE (STYLED) ================= */}
-                       <Box
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -19907,8 +20104,8 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                        <Box
-                          sx={{
+                          <Box
+                            sx={{
                               height: "55vh",
                               "& .MuiDataGrid-root": {
                                 border: "none",
@@ -19984,54 +20181,54 @@ const Editemployee = () => {
                                 color: "#fff",
                               },
                             }}
-                        >
-                          <DataGrid
-                           sx={{
+                          >
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            loading={exploreLoading}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenItemCustodyModal(true);
-                            }}
-                            components={{
-                              Toolbar: Employee,
-                            }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              loading={exploreLoading}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenItemCustodyModal(true);
+                              }}
+                              components={{
+                                Toolbar: Employee,
+                              }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ================= FORM FIELDS (MODERN STYLE) ================= */}
                         <Dialog
                           open={openItemCustodyModal}
@@ -20524,10 +20721,10 @@ const Editemployee = () => {
                                   window.open(
                                     sign1
                                       ? store.getState().globalurl
-                                          .SOPUploadUrl + sign1
+                                        .SOPUploadUrl + sign1
                                       : store.getState().globalurl
-                                          .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN1,
+                                        .SOPUploadUrl +
+                                      SpecimenGetdata.EMP_SIGN1,
                                     "_blank",
                                   );
                                 } else {
@@ -20551,18 +20748,18 @@ const Editemployee = () => {
                               }}
                             >
                               {sign1Preview ||
-                              sign1 ||
-                              SpecimenGetdata.EMP_SIGN1 ? (
+                                sign1 ||
+                                SpecimenGetdata.EMP_SIGN1 ? (
                                 <img
                                   src={
                                     sign1Preview
                                       ? sign1Preview
                                       : sign1
                                         ? store.getState().globalurl
-                                            .SOPUploadUrl + sign1
+                                          .SOPUploadUrl + sign1
                                         : store.getState().globalurl
-                                            .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN1
+                                          .SOPUploadUrl +
+                                        SpecimenGetdata.EMP_SIGN1
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -20622,10 +20819,10 @@ const Editemployee = () => {
                                   window.open(
                                     sign2
                                       ? store.getState().globalurl
-                                          .SOPUploadUrl + sign2
+                                        .SOPUploadUrl + sign2
                                       : store.getState().globalurl
-                                          .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN2,
+                                        .SOPUploadUrl +
+                                      SpecimenGetdata.EMP_SIGN2,
                                     "_blank",
                                   );
                                 } else {
@@ -20649,18 +20846,18 @@ const Editemployee = () => {
                               }}
                             >
                               {sign2Preview ||
-                              sign2 ||
-                              SpecimenGetdata.EMP_SIGN2 ? (
+                                sign2 ||
+                                SpecimenGetdata.EMP_SIGN2 ? (
                                 <img
                                   src={
                                     sign2Preview
                                       ? sign2Preview
                                       : sign2
                                         ? store.getState().globalurl
-                                            .SOPUploadUrl + sign2
+                                          .SOPUploadUrl + sign2
                                         : store.getState().globalurl
-                                            .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN2
+                                          .SOPUploadUrl +
+                                        SpecimenGetdata.EMP_SIGN2
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -20720,10 +20917,10 @@ const Editemployee = () => {
                                   window.open(
                                     sign3
                                       ? store.getState().globalurl
-                                          .SOPUploadUrl + sign3
+                                        .SOPUploadUrl + sign3
                                       : store.getState().globalurl
-                                          .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN3,
+                                        .SOPUploadUrl +
+                                      SpecimenGetdata.EMP_SIGN3,
                                     "_blank",
                                   );
                                 } else {
@@ -20747,18 +20944,18 @@ const Editemployee = () => {
                               }}
                             >
                               {sign3Preview ||
-                              sign3 ||
-                              SpecimenGetdata.EMP_SIGN3 ? (
+                                sign3 ||
+                                SpecimenGetdata.EMP_SIGN3 ? (
                                 <img
                                   src={
                                     sign3Preview
                                       ? sign3Preview
                                       : sign3
                                         ? store.getState().globalurl
-                                            .SOPUploadUrl + sign3
+                                          .SOPUploadUrl + sign3
                                         : store.getState().globalurl
-                                            .SOPUploadUrl +
-                                          SpecimenGetdata.EMP_SIGN3
+                                          .SOPUploadUrl +
+                                        SpecimenGetdata.EMP_SIGN3
                                   }
                                   style={{
                                     maxWidth: "100%",
@@ -21142,7 +21339,7 @@ const Editemployee = () => {
                     }) => (
                       <form onSubmit={handleSubmit}>
                         {/* ----- CARD HEADER ----- */}
-                         <Box sx={{ p: 1 }}>
+                        <Box sx={{ p: 1 }}>
                           <Box
                             display="flex"
                             alignItems="center"
@@ -21160,76 +21357,76 @@ const Editemployee = () => {
                                 justifyContent: "center",
                               }}
                             >
-                            <Typography sx={{ fontSize: 16 }}>📑</Typography>
-                          </Box>
+                              <Typography sx={{ fontSize: 16 }}>📑</Typography>
+                            </Box>
                             <Box>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={700}
-                            color="#0D94885"
-                          >
-                            {getBusinessCaption("Documents", "Documents")}
-                          </Typography>
-                
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                         
-                        >
-                          Upload and manage documents
-                        </Typography>
-        </Box>
-                </Box>
-                        {/* ----- Code/Name + Photo (separate column) ----- */}
-                        <Box display="flex" gap={3} flexWrap="wrap" mb={3}>
-                          <Box
-                            flex={1}
-                            minWidth={280}
-                            display="flex"
-                            flexDirection="column"
-                            gap={2}
-                          >
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="code"
-                              name="code"
-                              value={values.code}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Code"
-                              InputProps={{ readOnly: true }}
-                            />
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                {getBusinessCaption("Documents", "Documents")}
+                              </Typography>
 
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              type="text"
-                              id="name"
-                              name="name"
-                              value={values.name}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              label="Name"
-                              InputProps={{ readOnly: true }}
-                            />
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+
+                              >
+                                Upload and manage documents
+                              </Typography>
+                            </Box>
                           </Box>
+                          {/* ----- Code/Name + Photo (separate column) ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={3}>
+                            <Box
+                              flex={1}
+                              minWidth={280}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="code"
+                                name="code"
+                                value={values.code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                                InputProps={{ readOnly: true }}
+                              />
 
-                          {/* Photo column */}
-                          <Box sx={{ width: 220, flexShrink: 0 }}>
-                            {renderProfilePhoto(
-                              img,
-                              userimg,
-                              isImgChanged,
-                              imgUpload,
-                              "Profile Photo",
-                            )}
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={values.name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                                InputProps={{ readOnly: true }}
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
                           </Box>
                         </Box>
-        </Box>
                         {/* ----- LIST OF DOCUMENTS TABLE ----- */}
                         <Box
                           sx={{
@@ -21257,8 +21454,8 @@ const Editemployee = () => {
 
                           <Box
                             height={dataGridHeightExplore}
-                             sx={{
-                             
+                            sx={{
+
                               "& .MuiDataGrid-root": {
                                 border: "none",
                               },
@@ -21335,7 +21532,7 @@ const Editemployee = () => {
                             }}
                           >
                             <DataGrid
-                            sx={{
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
@@ -21392,20 +21589,20 @@ const Editemployee = () => {
                           </Box>
 
                           <Button
-                          type="reset"
+                            type="reset"
                             variant="outlined"
                             onClick={() => setScreen("0")}
-                             sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#F97316",
-                        color: "#fff",
-                        "&:hover": {
-                          bgcolor: "#EA580C",
-                          color: "#fff",
-                        },
-                      }}
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+                              color: "#fff",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                                color: "#fff",
+                              },
+                            }}
                           >
                             Back
                           </Button>
@@ -21489,47 +21686,47 @@ const Editemployee = () => {
                       >
                         {/* ================= HEADER ================= */}
                         <Box
-                        display="flex"
-  alignItems="flex-start"
-  gap={1.5}
-  mb={1}
+                          display="flex"
+                          alignItems="flex-start"
+                          gap={1.5}
+                          mb={1}
                         >
                           <Box
                             sx={{
-      width: 36,
-      height: 36,
-      borderRadius: "50%",
-      backgroundColor: "#EEF2FF",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0,
-    }}
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
                           >
                             <Typography sx={{ fontSize: 18 }}>📋</Typography>
                           </Box>
-                      <Box>
-    <Typography
-    variant="subtitle1"
-      fontWeight={700}
-      sx={{ color: "#0D94885", lineHeight: 1.2 }}
-    >
-                            Course Attendance
-                          </Typography>
-                      
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              sx={{ color: "#0D94885", lineHeight: 1.2 }}
+                            >
+                              Course Attendance
+                            </Typography>
 
-                        <Typography
-                          variant="body2"
-      sx={{
-        color: "text.secondary",
-        fontSize: 13,
-        mt: 0.3,
-      }}
-                        >
-                          Manage Course Attendance information and details
-                        </Typography>
+
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontSize: 13,
+                                mt: 0.3,
+                              }}
+                            >
+                              Manage Course Attendance information and details
+                            </Typography>
                           </Box>
-  </Box>
+                        </Box>
                         {/* ================= TOP SECTION (Code + Name + Photo) ================= */}
                         <Box display="flex" gap={3} flexWrap="wrap">
                           <Box
@@ -21587,7 +21784,7 @@ const Editemployee = () => {
                         </Box>
 
                         {/* ================= DATA GRID (full width) ================= */}
-                         <Box
+                        <Box
                           sx={{
                             border: "1px solid #E5E7EB",
                             borderRadius: 2,
@@ -21596,8 +21793,8 @@ const Editemployee = () => {
                             mt: 2
                           }}
                         >
-                          <Box 
-                           sx={{
+                          <Box
+                            sx={{
                               height: "45vh",
                               "& .MuiDataGrid-root": {
                                 border: "none",
@@ -21674,55 +21871,55 @@ const Editemployee = () => {
                               },
                             }}
                           >
-                          <DataGrid
-                           sx={{
+                            <DataGrid
+                              sx={{
                                 "& .MuiDataGrid-footerContainer": {
                                   height: dataGridHeaderFooterHeight,
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            pageSize={pageSize}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                                setFieldValue,
-                              });
-                              setOpenCourseModal(true);
-                            }}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            components={{
-                              Toolbar: Employee,
-                            }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                          />
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              pageSize={pageSize}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              onPageSizeChange={(newPageSize) =>
+                                setPageSize(newPageSize)
+                              }
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenCourseModal(true);
+                              }}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              components={{
+                                Toolbar: Employee,
+                              }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              loading={exploreLoading}
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                            />
+                          </Box>
                         </Box>
-</Box>
                         {/* ================= FORM FIELDS (POPUP) ================= */}
                         <Dialog
                           open={openCourseModal}
@@ -21899,7 +22096,7 @@ const Editemployee = () => {
                           >
                             <Box display="flex" gap={1}>
                               <LoadingButton
-                                
+
                                 variant="contained"
                                 loading={isLoading}
                                 onClick={handleSubmit}
@@ -21920,7 +22117,7 @@ const Editemployee = () => {
                                 variant="contained"
                                 onClick={() => setOpenCourseModal(false)}
                                 sx={{
-                                textTransform: "none",
+                                  textTransform: "none",
                                   borderRadius: 2,
                                   color: "#fff",
                                   px: 4,
