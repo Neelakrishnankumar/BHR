@@ -8670,90 +8670,117 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     });
   };
   const handledeleteDeposit = async (values) => {
-    try {
-      const action = "harddelete";
+    Swal.fire({
+      title: "Are you sure you want to delete this deposit?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const action = "harddelete";
 
-      const idata = {
-        RecordID: values?.RecordID,
-        DepositDate: values?.CurrentDate,
-        TransactionID: values?.transactionID,
-        CategoryID: values?.CategoryID,
-        EmployeeID: values?.EmployeeID,
-        Amount: Number(values?.Amount || 0),
-        AccountNo: values?.AccountNo,
-        IFSCCode: values?.IfscCode,
-        HolderName: values?.HolderName,
-        Attachment: values?.Attachment || "",
-        BalanceAmount: Number(values?.BalanceAmnt || 0),
-        BranchName: values?.BranchName,
-      };
+          const idata = {
+            RecordID: values?.RecordID,
+            DepositDate: values?.CurrentDate,
+            TransactionID: values?.transactionID,
+            CategoryID: values?.CategoryID,
+            EmployeeID: values?.EmployeeID,
+            Amount: Number(values?.Amount || 0),
+            AccountNo: values?.AccountNo,
+            IFSCCode: values?.IfscCode,
+            HolderName: values?.HolderName,
+            Attachment: values?.Attachment || "",
+            BalanceAmount: Number(values?.BalanceAmnt || 0),
+            BranchName: values?.BranchName,
+          };
 
-      console.log(idata, "-- DELETE PAYLOAD");
+          console.log(idata, "-- DELETE PAYLOAD");
 
-      const response = await dispatch(
-        postData({
-          accessID,
-          action,
-          idata,
-        })
-      );
+          const response = await dispatch(
+            postData({
+              accessID,
+              action,
+              idata,
+            })
+          );
 
-      console.log(response, "-- DELETE RESPONSE");
+          console.log(response, "-- DELETE RESPONSE");
 
-      const result = response?.payload;
+          const result = response?.payload;
 
-      if (result?.Status === "Y") {
-        toast.success(result?.Msg);
-      } else if (result?.Status === "N") {
-        toast.error(result?.Msg);
-      } else {
-        toast.error("Unexpected response received.");
+          if (result?.Status === "Y") {
+            toast.success(result?.Msg);
+          } else if (result?.Status === "N") {
+            toast.error(result?.Msg);
+          } else {
+            toast.error("Unexpected response received.");
+          }
+        } catch (error) {
+          console.error("Delete Deposit Error:", error);
+          toast.error("Failed to delete deposit.");
+        }
       }
-    } catch (error) {
-      console.error("Delete Deposit Error:", error);
-      toast.error("Failed to delete deposit.");
-    }
+    });
   };
+
   const handledeleteDebit = async (values) => {
-    try {
-      const action = "harddelete";
+    Swal.fire({
+      title: "Are you sure you want to delete this debit?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const action = "harddelete";
 
-      const idata = {
-        RecordID: values?.RecordID,
-        DebitDate: values.CurrentDate,
-        TransactionID: values.transactionID,
-        CategoryID: values.CategoryID || 0,
-        EmployeeID: values.EmployeeID || 0,
-        Description: values.Description,
-        Amount: Number(values.Amount),
-        BalanceAmount: Number(values.BalanceAmnt),
-      };
+          const idata = {
+            RecordID: values?.RecordID,
+            DebitDate: values.CurrentDate,
+            TransactionID: values.transactionID,
+            CategoryID: values.CategoryID || 0,
+            EmployeeID: values.EmployeeID || 0,
+            Description: values.Description,
+            Amount: Number(values.Amount),
+            BalanceAmount: Number(values.BalanceAmnt),
+          };
 
-      console.log(idata, "-- DELETE PAYLOAD");
+          console.log(idata, "-- DELETE PAYLOAD");
 
-      const response = await dispatch(
-        postData({
-          accessID,
-          action,
-          idata,
-        })
-      );
+          const response = await dispatch(
+            postData({
+              accessID,
+              action,
+              idata,
+            })
+          );
 
-      console.log(response, "-- DELETE RESPONSE");
+          console.log(response, "-- DELETE RESPONSE");
 
-      const result = response?.payload;
+          const result = response?.payload;
 
-      if (result?.Status === "Y") {
-        toast.success(result?.Msg);
-      } else if (result?.Status === "N") {
-        toast.error(result?.Msg);
-      } else {
-        toast.error("Unexpected response received.");
+          if (result?.Status === "Y") {
+            toast.success(result?.Msg);
+          } else if (result?.Status === "N") {
+            toast.error(result?.Msg);
+          } else {
+            toast.error("Unexpected response received.");
+          }
+        } catch (error) {
+          console.error("Delete Deposit Error:", error);
+          toast.error("Failed to delete deposit.");
+        }
       }
-    } catch (error) {
-      console.error("Delete Deposit Error:", error);
-      toast.error("Failed to delete deposit.");
-    }
+    });
   };
 
 
