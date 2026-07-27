@@ -5074,6 +5074,15 @@ export const fetchListview =
                             //       BreadCrumb1: params.row.Description,
                             //     }
                             //   :
+                              AccessID === "TR027"
+                              ? {
+                                  EmpName: params.row.Name,
+                                  Employee: params.row.Employee,
+                                  BreadCrumb1: params.row.Description,
+                                   Classification: params.row.Description,
+                                }
+                              :
+                         
                             AccessID === "TR128"
                               ? {
                                 LocationName: params.row.Name,
