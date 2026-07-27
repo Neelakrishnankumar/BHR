@@ -834,6 +834,24 @@ const Listview = () => {
             ) : (
               false
             )}
+             {(accessID == "TR331" || accessID == "TR366") && is003Subscription ? (
+              <Tooltip arrow title="Cash Management">
+                <IconButton>
+                  <AccountBalanceWalletIcon
+                    onClick={() => {
+                      navigate(`/Apps/Secondarylistview/TR398/Academic Year/T`, {
+                        // navigate(`/Apps/Secondarylistview/TR395/Cash Management Category/T`, {
+                        state: {
+                          ...rowData,
+                        },
+                      });
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              false
+            )}
             {/* <TextField
                size="small"
                placeholder="Search..."

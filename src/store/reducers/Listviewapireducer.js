@@ -9126,7 +9126,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   SlotGroupID: params.row.SlotGroupID,
                   GroupID: params.row.SlotGroupID,
                   HeaderID: params.row.RecordID,
-                  isprocess: params.row.IsProcess
+                  isprocess: params.row.IsProcess,
+                  AcademicYear: params.row.AcademicYear
                 }}
               >
                 <Tooltip title="Edit">

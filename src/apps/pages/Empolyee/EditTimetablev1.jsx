@@ -95,6 +95,7 @@ const EditTimetablev1 = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const rowData = location.state || {};
+  console.log(rowData,"state")
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -1427,7 +1428,7 @@ useEffect(() => {
                   sx={breadcrumbStyles.item}
                   onClick={() => {
                     is003Subscription
-                      ? navigate("/Apps/TR133/Classes")
+                      ? navigate(`/Apps/SecondarylistView/TR275/Project/${params.YearID}`, { state: { ...rowData } })
                       : navigate("/Apps/TR133/Project");
                   }}
                 >
