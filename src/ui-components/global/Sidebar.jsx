@@ -1883,7 +1883,7 @@
 //           </Box>
 
 //           {/* ===== COMPANY INFO BOX ===== */}
-          
+
 //           {!collapsed && (
 //             <Box
 //               sx={{
@@ -2163,7 +2163,7 @@ import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-
+import Groups3Icon from '@mui/icons-material/Groups3';
 import SecurityIcon from '@mui/icons-material/Security';
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
@@ -2286,7 +2286,47 @@ const getProjectMenu = (is003Subscription) =>
       UGA_VIEW: true,
       UGA_ACCESSIDS: "TR275",
     };
+const getHolidayMenu = (is003Subscription) =>
+  is003Subscription == true
+    ? {
 
+      name: "Holiday List",
+      id: 4346894,
+      url: "./TR411/Academic Year",
+      icon: (
+        <Tooltip
+          title="Holiday List"
+        >
+          <SourceOutlinedIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR218",
+    }
+    : {
+      name: "Holiday List",
+      id: 4346894,
+      url: "./TR218/Holiday List",
+      icon: (
+        <Tooltip
+          title="Holiday List"
+        >
+          <SourceOutlinedIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR218",
+    };
 
 const getFeedbackMenu = (is00123Subscription) =>
   is00123Subscription ? {
@@ -2851,24 +2891,25 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR085",
           },
-
-          {
-            name: "Holiday List",
-            id: 54668,
-            url: "./TR218/Holiday List",
-            icon: (
-              <Tooltip title="Leave Type">
-                <FactCheckRoundedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR218",
-          },
+          getHolidayMenu(is003Subscription),
+          // {
+          //   name: "Holiday List",
+          //   id: 54668,
+          //   // url: "./TR218/Holiday List",
+          //   url: "./TR411/Academic Year",
+          //   icon: (
+          //     <Tooltip title="Leave Type">
+          //       <FactCheckRoundedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR218",
+          // },
 
           {
             name: "Salary Component",
@@ -3060,7 +3101,7 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR328",
           },
 
-           {
+          {
             name: "Audit",
             id: 43468919,
             url: "/Apps/TR408/EditAudit",
@@ -3206,6 +3247,27 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR379",
           },
+          ...(is003Subscription
+            ? [
+              {
+                name: "Team Attendance",
+                url: "/Apps/Attendanceentry",
+                id: 5590,
+                icon: (
+                  <Tooltip title="Team Attendance">
+                    <Groups3Icon color="info" />
+                  </Tooltip>
+                ),
+                UGA_ADD: true,
+                UGA_DEL: true,
+                UGA_MOD: true,
+                UGA_PRINT: true,
+                UGA_PROCESS: true,
+                UGA_VIEW: true,
+                UGA_ACCESSIDS: "TR410",
+              },
+            ] : []),
+
           {
             name: "Attendance(D)",
             url: "/Apps/TR260/Editdailyattendance",
@@ -3725,7 +3787,7 @@ const Sidebars = () => {
           </Box>
 
           {/* ===== COMPANY INFO BOX ===== */}
-          
+
           {!collapsed && (
             <Box
               sx={{

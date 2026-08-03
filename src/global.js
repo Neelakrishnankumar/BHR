@@ -362,7 +362,14 @@ const initialState = {
   CocurricularActivityGet: "" ,
    PartySyncurl:"",
   Standardwisestudentget: "",
-  contractprocessurl:""
+  contractprocessurl:"",
+  AttendanceEntryLock:"",
+  AttendanceEntryLockGET:"",
+  AttendanceEntryLockGET: "",
+  AttendanceentryrGetUrl: "",
+  Teamattendancegeturl: "",
+  Teamattendanceposturl:""
+
 };
 
 export const getUrlSlice = createSlice({
@@ -596,7 +603,14 @@ export const getUrlSlice = createSlice({
       state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
       state.PartySyncurl = APIurl + "hrvendor_sync.php";
       state.Standardwisestudentget = APIurl + "Standardwisestudentget.php";
-      state.contractprocessurl = APIurl +"Contractprocesscontroller.php"
+      state.contractprocessurl = APIurl +"Contractprocesscontroller.php";
+      state.AttendanceEntryLock = APIurl + "AttendanceEntryResonLog.php";
+      state.AttendanceEntryLockGET = APIurl + "AttendanceEntryProcessGetController.php";
+      state.AttendanceEntryLockGET = APIurl + "AttendanceEntryProcessGetController.php";
+      state.AttendanceentryrGetUrl = APIurl + "AttendanceEntryGetController.php";
+      state.Teamattendancegeturl = APIurl + "teamattendanceget.php";
+      state.Teamattendanceposturl = APIurl + "teamattendancepost.php";
+
     },
 
   },

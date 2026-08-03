@@ -403,8 +403,11 @@ const styles = StyleSheet.create({
 const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
 
     const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;
-    const headerPath = filters?.HeaderImg
-        ? `${QR_BASE_URL}${filters.HeaderImg}`
+    // const headerPath = filters?.HeaderImg
+    //     ? `${QR_BASE_URL}${filters.HeaderImg}`
+    //     : null;
+    const headerPath = filters?.LogoImg
+        ? `${QR_BASE_URL}${filters.LogoImg}`
         : null;
     const footerPath = filters?.FooterImg
         ? `${QR_BASE_URL}${filters.FooterImg}`

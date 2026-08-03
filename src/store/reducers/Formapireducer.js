@@ -2343,8 +2343,43 @@ export const EventspostData = createAsyncThunk(
     return response.data;
   },
 );
-
-
+export const AttendanceEntryLog = createAsyncThunk(
+  "PostData/Attendance Entry Lock",
+  async ({ data }, thunkAPI) => {
+    try {
+      var url = store.getState().globalurl.AttendanceEntryLock;
+      console.log("get" + JSON.stringify(data));
+      const response = await axios.post(url, data, {
+        headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+      });
+      console.log("🚀 ~ response.data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  },
+);
+export const AttendanceEntryPost = createAsyncThunk(
+  "PostData/Attendance Entry",
+  async ({ AttendanceEntry }) => {
+    const url = store.getState().globalurl.Teamattendanceposturl;
+    const data = {
+      AttendanceEntry: AttendanceEntry,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
 export const ItemMainpostData = createAsyncThunk(
   "ItemMainpostData/post",
   async ({ action, idata }) => {

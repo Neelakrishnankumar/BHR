@@ -860,6 +860,7 @@ export const fetchListview =
           AccessID != "TR387" &&
           AccessID != "TR026" &&
           AccessID != "TR401" &&
+          AccessID != "TR218" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -2468,6 +2469,36 @@ export const fetchListview =
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Standard/Activities">
+                          <IconButton color="info" size="small">
+                            <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+             else if (AccessID == "TR411") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR218/Holiday List/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Holiday List">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
                           </IconButton>
@@ -7465,6 +7496,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const dispatch = useDispatch();
   const UserName = sessionStorage.getItem("UserName");
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const LogoImg = sessionStorage.getItem("CompanyLogo");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
@@ -7701,6 +7733,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <PayslipPdf
             data={data}
             filters={{
+              LogoImg: LogoImg,
               Imageurl: baseurlUAAM,
               HeaderImg: HeaderImg,
               FooterImg: FooterImg,
@@ -8526,7 +8559,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            {/* {is003Subscription && params.row.Classification == "Student" && (
+            {is003Subscription && params.row.Classification == "Student" && (
             <Link
               to={`/Apps/AcademicReport/${params.row.RecordID}`}
               state={{
@@ -8534,13 +8567,13 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 Employee: params.row.Personnel,
               }}
             >
-              <Tooltip title="Academic Report">
+              <Tooltip title="Analytics">
                 <IconButton color="info" size="small">
                   <BallotIcon />
                 </IconButton>
               </Tooltip>
             </Link>
-            )} */}
+            )}
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
                 <Tooltip title="Staff Timetable">

@@ -47,11 +47,15 @@ import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
+import { getConfig } from "../../../config";
+import AgingPdf from "../pdf/Agingreportpdf";
+import { fetchListview } from "../../../store/reducers/Listviewapireducer";
 const PartyByDate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
+  const state = location.state;
   const dispatch = useDispatch();
   const isManager = sessionStorage.getItem("isManager");
   var recID = params.id;
@@ -79,29 +83,76 @@ const PartyByDate = () => {
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
-
-
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  const [footerHeight, setFooterHeight] = useState(60);
+  const [isReady, setIsReady] = useState(false);
+  const [partySort, setPartySort] = useState("By Days");
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(location.search);
+  //   const partyId = searchParams.get("partyId");
+  //   console.log(partyId, "partyId")
+  //   if (partyId) {
+  //     dispatch(
+  //       fetchListview(
+  //         "TR310",
+  //         "003",
+  //         "Order",
+  //         `PartyRecordID='${partyId}' AND OrderType='O'`,
+  //         "",
+  //       ),
+  //     );
+  //   }
+  // }, [location.search, dispatch]);
   useEffect(() => {
-    // 🔥 Clear grid data when page loads
     setRows([]);
-
-    // 🔥 Clear session stored sort also
     sessionStorage.removeItem("partySort");
-
-    // 🔥 Clear when browser refresh / tab close
     const handleUnload = () => {
       setRows([]);
       sessionStorage.removeItem("partySort");
     };
-
     window.addEventListener("beforeunload", handleUnload);
-
     return () => {
-      // 🔥 Clear when navigating away
       setRows([]);
       window.removeEventListener("beforeunload", handleUnload);
     };
   }, []);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  console.log(HeaderImg, FooterImg, baseurlUAAM, "images");
+
+  useEffect(() => {
+    if (!FooterImg) return;
+
+    const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+    const img = new Image();
+    img.src = url;
+
+    img.onload = () => {
+      const aspectRatio = img.height / img.width;
+
+      const pageWidth = 595;
+      const MAX_FOOTER_HEIGHT = 80;
+
+      const calculatedHeight = Math.min(
+        pageWidth * aspectRatio,
+        MAX_FOOTER_HEIGHT
+      );
+
+      setFooterHeight(calculatedHeight);
+      setIsReady(true);
+    };
+  }, [FooterImg]);
+  useEffect(() => {
+    dispatch(
+      PartyBydateByamtFilter({
+        SortType: "ByDays",
+        CompanyID,
+      })
+    );
+  }, [dispatch]);
   useEffect(() => {
     if (Array.isArray(PartyFilterData)) {
       setRows(PartyFilterData);
@@ -109,7 +160,11 @@ const PartyByDate = () => {
       setRows([]);
     }
   }, [PartyFilterData]);
-
+  const currentDate = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
   function AttendanceTool() {
     return (
       <GridToolbarContainer
@@ -120,7 +175,9 @@ const PartyByDate = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography fontWeight={700}>Party Details</Typography>
+          <Typography fontWeight={700}>
+            Party Aging Details {partySort} as on {currentDate}
+          </Typography>
         </Box>
         <Box
           sx={{
@@ -185,6 +242,7 @@ const PartyByDate = () => {
       align: "center",
       headerAlign: "center",
     },
+
     {
       field: "DaysDiff",
       headerName: "Days",
@@ -216,10 +274,18 @@ const PartyByDate = () => {
         );
       },
     },
+
+    {
+      field: "PartyMobileNo",
+      headerName: "Mobile Number",
+      width: 150,
+      align: "right",
+      headerAlign: "center",
+    },
   ];
 
   const AttInitialvalues = {
-    partySort: sessionStorage.getItem("partySort") || "",
+    partySort: "ByDays",
   };
   const attendaceFnSave = async (values) => {
     dispatch(
@@ -281,13 +347,13 @@ const PartyByDate = () => {
 
             <Typography
               sx={{
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: "#111827",
-                    // mb: 0.2,
-                    px: 1,
-                    py: 0.2,
-                  }}
+                fontSize: 20,
+                fontWeight: 700,
+                color: "#111827",
+                // mb: 0.2,
+                px: 1,
+                py: 0.2,
+              }}
             >
               Aging Report
             </Typography>
@@ -384,7 +450,7 @@ const PartyByDate = () => {
                     Aging
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                     View outstanding balances and analyze receivables/payables by aging period.
+                    View outstanding balances and analyze receivables/payables by aging period.
                   </Typography>
                 </Box>
               </Box>
@@ -413,10 +479,14 @@ const PartyByDate = () => {
                     onChange={(e) => {
                       handleChange(e);
                       sessionStorage.setItem("partySort", e.target.value);
+                      const label =
+                        e.target.value === "ByDays" ? "By Days" : "By Amount";
+
+                      setPartySort(label);
                     }}
                     onBlur={handleBlur}
                     select
-                    sx={{  width: 200 }}
+                    sx={{ width: 200 }}
                   >
                     <MenuItem value={"ByDays"}>By Days</MenuItem>
                     <MenuItem value={"ByAmount"}>By Amount</MenuItem>
@@ -432,15 +502,15 @@ const PartyByDate = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                     sx={{
-                                  textTransform: "none",
-                                  borderRadius: 2,
-                                  px: 4,
-                                  bgcolor: "#0D9488",
-                                  "&:hover": {
-                                    bgcolor: "#0F766E",
-                                  },
-                                }}
+                    sx={{
+                      textTransform: "none",
+                      borderRadius: 2,
+                      px: 4,
+                      bgcolor: "#0D9488",
+                      "&:hover": {
+                        bgcolor: "#0F766E",
+                      },
+                    }}
                   >
                     Apply
                   </Button>
@@ -461,6 +531,34 @@ const PartyByDate = () => {
                   >
                     Reset
                   </Button>
+
+                  <PDFDownloadLink
+                    document={
+                      <AgingPdf
+                        data={PartyFilterData}
+                        filters={{
+                          PartySort: values.partySort,
+                          Imageurl: baseurlUAAM,
+                          HeaderImg: HeaderImg,
+                          FooterImg: FooterImg,
+                        }}
+                        footerHeight={footerHeight}
+                      />
+                    }
+                    fileName={`Aging_Report_${values?.partySort}.pdf`}
+                    style={{ color: "#d32f2f", cursor: "pointer" }}
+                  >
+                    {({ loading }) =>
+                      loading ? (
+                        <PictureAsPdfIcon
+                          sx={{ fontSize: 24, opacity: 0.5 }}
+                        />
+                      ) : (
+                        <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                      )
+                    }
+                  </PDFDownloadLink>
+
                 </Stack>
               </Box>
 
@@ -509,35 +607,35 @@ const PartyByDate = () => {
                       color: "#1b5e20",
                     },
 
-                     "& .MuiDataGrid-columnHeaderTitle": {
-                            color: colors.blueAccent[900],
-                            fontWeight: 600,
-                          },
-                          "& .MuiTablePagination-root": {
-                            color: colors.blueAccent[900],
-                          },
-                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
-                          "& .MuiTablePagination-root": {
-                            color: "#fff",
-                          },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      color: colors.blueAccent[900],
+                      fontWeight: 600,
+                    },
+                    "& .MuiTablePagination-root": {
+                      color: colors.blueAccent[900],
+                    },
+                    /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                    "& .MuiTablePagination-root": {
+                      color: "#fff",
+                    },
 
-                          "& .MuiTablePagination-selectLabel": {
-                            color: "#fff",
-                          },
+                    "& .MuiTablePagination-selectLabel": {
+                      color: "#fff",
+                    },
 
-                          "& .MuiTablePagination-displayedRows": {
-                            color: "#fff",
-                          },
+                    "& .MuiTablePagination-displayedRows": {
+                      color: "#fff",
+                    },
 
-                          /* Dropdown icon */
-                          "& .MuiTablePagination-selectIcon": {
-                            color: "#fff",
-                          },
+                    /* Dropdown icon */
+                    "& .MuiTablePagination-selectIcon": {
+                      color: "#fff",
+                    },
 
-                          /* Left & Right arrow buttons */
-                          "& .MuiTablePagination-actions button": {
-                            color: "#fff",
-                          },
+                    /* Left & Right arrow buttons */
+                    "& .MuiTablePagination-actions button": {
+                      color: "#fff",
+                    },
 
                   }}
                 >
@@ -558,7 +656,12 @@ const PartyByDate = () => {
                     page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => { }}
+                    onCellClick={(params) => {
+                      console.log("Full row object:", params.row);
+                      const partyRecordId = params.row.PartyID;
+                      console.log("Extracted PartyRecordID:", partyRecordId);
+                      navigate(`/Apps/Secondarylistview/TR310/Order/${partyRecordId}/Party/O`, { state: { ...state,PartyName:params.row.PartyName } });
+                    }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -582,6 +685,7 @@ const PartyByDate = () => {
                   />
                 </Box>
               </Box>
+
             </form>
           )}
         </Formik>

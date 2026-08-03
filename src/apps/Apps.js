@@ -238,6 +238,8 @@ import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
 import StudentReports from "./pages/Empolyee/EditAcademicreport";
+import EditAttendanceEntry from "./pages/Empolyee/EditAttendanceentry";
+import EditGeneral from "./pages/HR/EditGeneralevent";
 
 function App() {
   //   useEffect(() => {
@@ -784,7 +786,13 @@ function App() {
                     element={<LeaveType />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
+                    element={<Holidaylist />}
+                  />
+                   <Route
+                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
                   />
 
@@ -1028,6 +1036,11 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/E/EditEvent Category/:id/:Mode"
                     element={<EditEmergency />}
+                    // element={<EditOtherEvents />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/G/EditEvent Category/:id/:Mode"
+                    element={<EditGeneral />}
                     // element={<EditOtherEvents />}
                   />
                   {/* ACADEMMICS */}
@@ -1649,6 +1662,10 @@ function App() {
                   <Route
                    path="/AcademicReport/:id"
                     element={<StudentReports />}
+                  />
+                   <Route
+                   path="/Attendanceentry"
+                    element={<EditAttendanceEntry />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

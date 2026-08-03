@@ -749,6 +749,8 @@ const Listview = () => {
               ? `${screenName1}` :
               accessID == "TR378"
                 ? `${screenName1}` :
+                 accessID == "TR411"
+                ? `${screenName1}` :
                 accessID == "TR383"
                   ? `${screenName1}` :
                   accessID == "TR323"
@@ -5804,6 +5806,16 @@ const Listview = () => {
                 <Chip
                   icon={<SourceOutlinedIcon color="primary" />}
                   label="Standard/Activities"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />
+              </Box>
+            )
+             : accessID == "TR411" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                <Chip
+                  icon={<SourceOutlinedIcon color="primary" />}
+                  label="Holiday List"
                   variant="outlined"
                 // sx={{ marginLeft: "50px" }}
                 />

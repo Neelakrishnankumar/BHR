@@ -2962,7 +2962,7 @@ const Editproject_V1 = () => {
       desc: "Basic details about the Project",
       icon: "📁",
     },
-    ...(data?.RoutineTasks === "N" && is003Subscription
+    ...((data?.RoutineTasks === "N" || data?.RoutineTasks === null )&& is003Subscription
       ? ([
         {
           value: 4,

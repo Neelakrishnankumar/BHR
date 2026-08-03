@@ -1351,12 +1351,12 @@ const Editemployee = () => {
   //   .filter(id => id !== null);
 
 
- const initialValues = {
+  const initialValues = {
     Department: Array.isArray(Data.DeptRecordID)
       ? Data.DeptRecordID.map((d) => ({
-          RecordID: String(d.DeptID),
-          Name: d.DeptName,
-        }))
+        RecordID: String(d.DeptID),
+        Name: d.DeptName,
+      }))
       : [],
     Code: Data.Code,
     Name: Data.Name,
@@ -1406,7 +1406,7 @@ const Editemployee = () => {
     //     .map(v => v.trim())
     //     .filter(v => v !== "")
     //   : []
- 
+
     // moduleSelect: mode === "E" ? Data.Module : ""
     //  moduleSelect:moduleIDs,
   };
@@ -1612,9 +1612,9 @@ const Editemployee = () => {
     }
   };
   // **********Save Function*****************
-   const fnSave = async (values, del) => {
+  const fnSave = async (values, del) => {
     setLoading(true);
- 
+
     let action =
       mode === "A" && !del
         ? "insert"
@@ -1628,11 +1628,11 @@ const Editemployee = () => {
     const deptIds = isStudentClassification
       ? [0]
       : values.Department?.map((d) => d.RecordID) || [];
- 
+
     const deptNames = isStudentClassification
       ? [""]
       : values.Department?.map((d) => d.Name) || [];
- 
+
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
@@ -1716,7 +1716,7 @@ const Editemployee = () => {
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
- 
+
       setLoading(false);
     }
   };
@@ -2704,7 +2704,8 @@ const Editemployee = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>{`List of Co-curricular Activities`}</Typography>
+          {/* <Typography>{`List of Co-curricular Activities`}</Typography> */}
+          <Typography>{`List of Identified Skills`}</Typography> 
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -3188,30 +3189,30 @@ const Editemployee = () => {
       console.log(rowData, "--rowData");
       console.log(rowData.Description, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
-if (funMode === "E" && show == "8") {
-    // fetch invoice data for this specific row
-    dispatch(
-      ContractInvoice({
-        BillableMonth: BillableMonth,
-        BillableYear: BillableYear,
-        EmpRecID: recID,
-        ProjectID: rowData?.ProjectID || 0,
-        DetailID: rowData?.RecordID,
-        CompanyID,
-      }),
-    )
-  }
+      if (funMode === "E" && show == "8") {
+        // fetch invoice data for this specific row
+        dispatch(
+          ContractInvoice({
+            BillableMonth: BillableMonth,
+            BillableYear: BillableYear,
+            EmpRecID: recID,
+            ProjectID: rowData?.ProjectID || 0,
+            DetailID: rowData?.RecordID,
+            CompanyID,
+          }),
+        )
+      }
       if (field == "action") {
-      //   dispatch(
-      //   ContractInvoice({
-      //     BillableMonth: BillableMonth,
-      //     BillableYear: BillableYear,
-      //     EmpRecID: recID,
-      //     ProjectID: rowData?.ProjectID || 0,
-      //     DetailID: rowData?.FSDetailID,
-      //     CompanyID,
-      //   }),
-      // );
+        //   dispatch(
+        //   ContractInvoice({
+        //     BillableMonth: BillableMonth,
+        //     BillableYear: BillableYear,
+        //     EmpRecID: recID,
+        //     ProjectID: rowData?.ProjectID || 0,
+        //     DetailID: rowData?.FSDetailID,
+        //     CompanyID,
+        //   }),
+        // );
         setFunEmpRecID(rowData.RecordID);
         // SetFunctionLookup({
         // RecordID: rowData.FunctionsID,
@@ -4159,7 +4160,7 @@ if (funMode === "E" && show == "8") {
     project: contractorData.project || null,
     shift: contractorData.shift || null,
     shift2: contractorData.shift2 || null,
-    Process : contractorData.Process || ""
+    Process: contractorData.Process || ""
   };
   // console.log(contractorData, "--get a contractorData");
   console.log(Data.DesignationName, "--contract idata");
@@ -4537,7 +4538,7 @@ if (funMode === "E" && show == "8") {
       toast.error(response.payload.Msg);
     }
   };
-  const handleContractProcess = async (values,reason) => {
+  const handleContractProcess = async (values, reason) => {
     const designationName =
       Data?.DesignDesc || deploymentInitialValue?.Designation?.Name || "";
 
@@ -4799,13 +4800,14 @@ if (funMode === "E" && show == "8") {
     availableleave: LeaveCondata.availableleave,
     elligibledays: LeaveCondata.elligibledays,
     Year:
-      LeaveCondata.Year === "2024"
-        ? "2024"
-        : LeaveCondata.Year === "2025"
-          ? "2025"
-          : LeaveCondata.Year === "2026"
-            ? "2026"
-            : "",
+      LeaveCondata.Year
+      //  === "2024"
+      //   ? "2024"
+      //   : LeaveCondata.Year === "2025"
+      //     ? "2025"
+      //     : LeaveCondata.Year === "2026"
+      //       ? "2026"
+      //       : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -5595,8 +5597,9 @@ if (funMode === "E" && show == "8") {
       ? [
         {
           value: 24,
-          label: "Co-curricular Activity",
-          desc: "Student co-curricular activities and participation",
+          // label: "Co-Curricular Activity",
+          label: "Skill Identification",
+          desc: "Student skill identification and participation",
           icon: "📋",
         },
       ]
@@ -5642,13 +5645,15 @@ if (funMode === "E" && show == "8") {
         },
       ]
       : []),
-
+ ...(!is003Subscription ? [
     {
       value: 1,
       label: getBusinessCaption("Skills", "Skills"),
       desc: "Skills and competency details",
       icon: "🛠️",
     },
+    ]
+      : []),
 
     {
       value: 4,
@@ -5999,7 +6004,7 @@ if (funMode === "E" && show == "8") {
       editable: false,
     },
     {
-      headerName: "Co-Curricular Activity",
+      headerName: "Skills",
       field: "CocurricularActivity",
       width: 200,
       align: "left",
@@ -6043,6 +6048,8 @@ if (funMode === "E" && show == "8") {
     cocurricularName: "",
     comments: "",
     rating: "",
+    Code:Data.Code,
+    Name:Data.Name
   };
   const handleApplyClick = async (values) => {
     const idata = {
@@ -6581,7 +6588,7 @@ if (funMode === "E" && show == "8") {
 
         <Box sx={{ p: 1, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
           {/* Personnel Form */}
-              {show == "0" ? (
+          {show == "0" ? (
             <Box
               display="flex"
               gap={3}
@@ -7400,12 +7407,12 @@ if (funMode === "E" && show == "8") {
                                   onClick={() => {
                                     is00123Subscription
                                       ? navigate(
-                                          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
-                                          { state },
-                                        )
+                                        `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`,
+                                        { state },
+                                      )
                                       : navigate(`/Apps/TR027/Personnel`, {
-                                          state,
-                                        });
+                                        state,
+                                      });
                                   }}
                                   sx={{
                                     px: 4,
@@ -7492,7 +7499,7 @@ if (funMode === "E" && show == "8") {
           ) : (
             false
           )}
-        
+
           {/* Contact form */}
           {show == "5" ? (
             <Box
@@ -13472,8 +13479,8 @@ if (funMode === "E" && show == "8") {
                 >
                   <Formik
                     // innerRef={formikRef}
-                    initialValues={initialValues}
-                  // enableReinitialize={false}
+                    initialValues={AttInitialvalues}
+                    enableReinitialize={true}
                   //   validationSchema={validationSchema24}
                   >
                     {({
@@ -13513,7 +13520,7 @@ if (funMode === "E" && show == "8") {
                                 fontWeight={700}
                                 color="#0D94885"
                               >
-                                Co-Curricular Activity
+                                Skill Identification
                               </Typography>
 
                               <Typography
@@ -13778,7 +13785,7 @@ if (funMode === "E" && show == "8") {
                             }}
                           >
                             <Typography variant="h6">
-                              Co-Curricular Activity
+                              Skill Identification
                             </Typography>
 
                             <IconButton onClick={() => setOpenCocurricular(false)}>
@@ -13837,7 +13844,7 @@ if (funMode === "E" && show == "8") {
                                       name="cocurricularName"
                                       label={
                                         <>
-                                          Co-curricular Activity
+                                          Skill
                                           <span style={{ color: "red", fontSize: "20px" }}> *</span>
                                         </>
                                       }
@@ -13857,7 +13864,8 @@ if (funMode === "E" && show == "8") {
                                       name="cocurricular"
                                       label={
                                         <>
-                                          Co-curricular Activity
+                                          {/* Co-curricular Activity */}
+                                          Skill
                                           <span style={{ color: "red", fontSize: "20px" }}> *</span>
                                         </>
                                       }
@@ -16607,14 +16615,14 @@ if (funMode === "E" && show == "8") {
                               {/* Save Button - ORIGINAL LOGIC */}
                               {contractorData.Process == "Y" && (
                                 <Tooltip title="Unprocess"><IconButton color="info"
-                                onClick={() => {
-                                  setResetReason("");
-                                  setResetReasonError(false);
-                                  setResetDialogOpen(true);
-                                }}>
-                                <LockResetOutlinedIcon />
-                              </IconButton>
-                              </Tooltip>)}
+                                  onClick={() => {
+                                    setResetReason("");
+                                    setResetReasonError(false);
+                                    setResetDialogOpen(true);
+                                  }}>
+                                  <LockResetOutlinedIcon />
+                                </IconButton>
+                                </Tooltip>)}
                               <LoadingButton
                                 color="primary"
                                 variant="contained"
@@ -16719,7 +16727,7 @@ if (funMode === "E" && show == "8") {
                           <DialogTitle>Give a reason to Unprocess Contract</DialogTitle>
                           <DialogContent>
                             <TextField
-                            variant="standard"
+                              variant="standard"
                               label={
                                 <>
                                   Reason
@@ -16741,7 +16749,7 @@ if (funMode === "E" && show == "8") {
                             />
                           </DialogContent>
                           <DialogActions>
-                           
+
                             <Button
                               variant="contained"
                               color="secondary"
@@ -16756,7 +16764,7 @@ if (funMode === "E" && show == "8") {
                             >
                               Save
                             </Button>
-                             <Button
+                            <Button
                               variant="contained"
                               color="warning"
                               onClick={() => setResetDialogOpen(false)}
@@ -19311,7 +19319,7 @@ if (funMode === "E" && show == "8") {
                                 }}
                               />
 
-                              <TextField
+                              {/* <TextField
                                 select
                                 fullWidth
                                 size="small"
@@ -19323,7 +19331,25 @@ if (funMode === "E" && show == "8") {
                                 <MenuItem value="2024">2024</MenuItem>
                                 <MenuItem value="2025">2025</MenuItem>
                                 <MenuItem value="2026">2026</MenuItem>
-                              </TextField>
+                              </TextField> */}
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                id="Year"
+                                name="Year"
+                                label="Year"
+                                value={values.Year}
+                                inputProps={{ min: "1900", max: "2100", step: "1" }}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
                             </Box>
                           </DialogContent>
 
