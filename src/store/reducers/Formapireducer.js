@@ -262,17 +262,17 @@ const initialState = {
   PublishEventstatus: "",
   PublishEventloading: false,
   PublishEventdata: {},
-//PROMOTION_mainlistview_GET
+  //PROMOTION_mainlistview_GET
   promotiongetstatus: "",
   promotiongetloading: false,
   promotiongetdata: [],
 
-//Promotion_STDACTIVITIES_GET
- promotionSTDgetstatus : "",
- promotionSTDgetloading : false,
- promotionSTDgetdata : [],
+  //Promotion_STDACTIVITIES_GET
+  promotionSTDgetstatus: "",
+  promotionSTDgetloading: false,
+  promotionSTDgetdata: [],
 
-//PROMOTION_STUDENT_MARKS_GET
+  //PROMOTION_STUDENT_MARKS_GET
   promotionstudmarksgetstatus: "",
   promotionstudmarksgetloading: false,
   promotionstudmarksgetdata: {},
@@ -312,8 +312,14 @@ const initialState = {
   slotgetData: [],
   staffmappingGetData: {},
   staffmappingGetDataloading: false,
-  staffmappingStatus: ""
-
+  staffmappingStatus: "",
+  AnalyticsDashboardGetStatus: "",
+  AnalyticsDashboardGetLoading: false,
+  AnalyticsDashboardGetData: {},
+   BirthdayAnniversaryData: [],       // Data[] from the response
+  BirthdayAnniversaryCount: 0,       // Count from the response
+  BirthdayAnniversaryGetloading: false,
+  BirthdayAnniversaryError: null,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -444,7 +450,7 @@ export const AttendanceProcess = createAsyncThunk(
 //PERSONNEL_COCURRICULAR_SCHOOL_POST
 export const CocurricularActivityPost = createAsyncThunk(
   "CocurricularActivity/Post",
-  async ({ data,action }) => {
+  async ({ data, action }) => {
     var url = store.getState().globalurl.CocurricularActivityPost;
     const payload = {
       action: action,
@@ -2297,10 +2303,10 @@ export const TimeTablePostData = createAsyncThunk(
     const url = store.getState().globalurl.TermUrl;
 
     const data = {
-       CompanyID:CompanyID,
-       StandardID:StandardID,
-       FromTermID:FromTermID,
-       ToTermID:ToTermID,
+      CompanyID: CompanyID,
+      StandardID: StandardID,
+      FromTermID: FromTermID,
+      ToTermID: ToTermID,
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -2351,9 +2357,9 @@ export const AttendanceEntryLog = createAsyncThunk(
       console.log("get" + JSON.stringify(data));
       const response = await axios.post(url, data, {
         headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
-      },
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+        },
       });
       console.log("🚀 ~ response.data:", response.data);
       return response.data;
@@ -2369,6 +2375,38 @@ export const AttendanceEntryPost = createAsyncThunk(
     const data = {
       AttendanceEntry: AttendanceEntry,
     };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+export const AnalyticsDashboardGet = createAsyncThunk(
+  "GetData/Analytics Dashboard",
+  async ({ data }) => {
+    const url = store.getState().globalurl.Analyticsdashboardurl;
+
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+export const BirthdayAnniversaryGet = createAsyncThunk(
+  "GetData/Birthday Anniversary",
+  async ({ data }) => {
+    const url = store.getState().globalurl.BirthdayAnniversaryGet;
+
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -3104,7 +3142,7 @@ export const Standardwisestudentget = createAsyncThunk(
   "Standardwisestudent/Get",
   async ({ data }) => {
     var url = store.getState().globalurl.Standardwisestudentget;
- 
+
     console.log("get" + JSON.stringify(data));
     console.log(" ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -3130,8 +3168,8 @@ export const PartySync = createAsyncThunk(
     const response = await axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
     return response.data;
@@ -3210,19 +3248,19 @@ export const TimetableProcessController = createAsyncThunk(
 //PROMOTION_MAIN_LISTVIEW_GET
 export const promototionGET = createAsyncThunk(
   "PROMOTION_MAIN_LISTVIEW/GET",
-   async ({ ProjectID, CompanyID }) => {
+  async ({ ProjectID, CompanyID }) => {
     var url = store.getState().globalurl.promotiongetUrl;
-console.log(url, "calling promotiongeturl");
+    console.log(url, "calling promotiongeturl");
 
     const payload =
     {
-    
+
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-     
+
     }
     console.log(payload, "--promototionGET payload");
-    
+
     const response = await axios.post(url, payload, {
       headers: {
         Authorization:
@@ -3240,19 +3278,19 @@ console.log(url, "calling promotiongeturl");
 //PROMOTION_GETACADEMICPROJECTDATA
 export const promototionprojGET = createAsyncThunk(
   "PROMOTION_GETACADEMICPROJECTDATA/GET",
-   async ({ ProjectID, CompanyID }) => {
+  async ({ ProjectID, CompanyID }) => {
     var url = store.getState().globalurl.promotionstandardActUrl;
-console.log(url, "calling promototionprojGET");
+    console.log(url, "calling promototionprojGET");
 
     const payload =
     {
-    
+
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-     
+
     }
     console.log(payload, "--promototionGET payload");
-    
+
     const response = await axios.post(url, payload, {
       headers: {
         Authorization:
@@ -3302,7 +3340,7 @@ export const promototioStudMarksGET = createAsyncThunk(
       StudentID: StudentID,
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-     
+
     }
     const response = await axios.post(url, payload, {
       headers: {
@@ -3512,7 +3550,7 @@ export const staffmappingTeacherget = createAsyncThunk(
         {
           headers: {
             Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
 
           },
         }
@@ -3927,9 +3965,9 @@ export const getApiSlice = createSlice({
         state.invoiceAnalyticsData = null;
       })
 
-      
+
       //PERSONNEL_COCURRICULAR_SCHOOL
- .addCase(CocurricularActivityGet.pending, (state, action) => {
+      .addCase(CocurricularActivityGet.pending, (state, action) => {
         state.CocurriculargetData = {};
         state.CocurriculargetDataLoading = true;
       })
@@ -3963,8 +4001,49 @@ export const getApiSlice = createSlice({
         toast.error("Something Went Wrong");
       })
 
+      //ANALYTICS_DASHBOARD
+      .addCase(AnalyticsDashboardGet.pending, (state, action) => {
+        state.AnalyticsDashboardGetStatus = "idle";
+        state.AnalyticsDashboardGetLoading = true;
+        state.AnalyticsDashboardGetData = {};
+        state.msg = "Loading...";
+      })
+      .addCase(AnalyticsDashboardGet.fulfilled, (state, action) => {
+        state.AnalyticsDashboardGetStatus = "success";
+        state.AnalyticsDashboardGetLoading = false;
+        state.AnalyticsDashboardGetData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(AnalyticsDashboardGet.rejected, (state, action) => {
+        state.AnalyticsDashboardGetStatus = "Error";
+        state.AnalyticsDashboardGetLoading = false;
+        state.AnalyticsDashboardGetData = {};
+        toast.error("Something Went Wrong");
+      })
 
-
+      //Birthday
+      .addCase(BirthdayAnniversaryGet.pending, (state) => {
+        state.BirthdayAnniversaryGetloading = true;
+        state.BirthdayAnniversaryError = null;
+      })
+      .addCase(BirthdayAnniversaryGet.fulfilled, (state, action) => {
+        state.BirthdayAnniversaryGetloading = false;
+        // Response is { Status, Count, Data }. Guard against a failed
+        // Status or a missing Data array so the grid never breaks.
+        const payload = action.payload || {};
+        state.BirthdayAnniversaryData =
+          payload.Status === "Y" && Array.isArray(payload.Data)
+            ? payload.Data
+            : [];
+        state.BirthdayAnniversaryCount = payload.Count || 0;
+      })
+      .addCase(BirthdayAnniversaryGet.rejected, (state, action) => {
+        state.BirthdayAnniversaryGetloading = false;
+        state.BirthdayAnniversaryData = [];
+        state.BirthdayAnniversaryCount = 0;
+        state.BirthdayAnniversaryError =
+          action.error?.message || "Failed to load reminders";
+      })
       //COMPANY_TERMS_GET
       .addCase(companyTermsGet.pending, (state, action) => {
         state.companytermsStatus = "idle";
@@ -3972,1943 +4051,1957 @@ export const getApiSlice = createSlice({
         state.companytermsData = [];
         state.msg = "Loading...";
       })
-      .addCase(companyTermsGet.fulfilled, (state, action) => {
-        state.companytermsStatus = "success";
-        state.companytermsgetLoading = false;
-        state.companytermsData = action.payload.Data ? action.payload.Data : [];
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(companyTermsGet.rejected, (state, action) => {
-        state.companytermsStatus = "Error";
-        state.companytermsgetLoading = false;
-        state.companytermsData = [];
-        toast.error("Something Went Wrong");
-      })
+    .addCase(companyTermsGet.fulfilled, (state, action) => {
+      state.companytermsStatus = "success";
+      state.companytermsgetLoading = false;
+      state.companytermsData = action.payload.Data ? action.payload.Data : [];
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(companyTermsGet.rejected, (state, action) => {
+      state.companytermsStatus = "Error";
+      state.companytermsgetLoading = false;
+      state.companytermsData = [];
+      toast.error("Something Went Wrong");
+    })
 
-      //COMPANY_POLICY_GET
+    //COMPANY_POLICY_GET
 
-      .addCase(PolicyFetchData.pending, (state, action) => {
-        state.PolicyStatus = "idle";
-        state.PolicygetLoading = true;
-        state.PolicyData = {};
-        state.msg = "Loading...";
-      })
-      .addCase(PolicyFetchData.fulfilled, (state, action) => {
-        state.PolicyStatus = "success";
-        state.PolicygetLoading = false;
-        state.PolicyData = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(PolicyFetchData.rejected, (state, action) => {
-        state.PolicyStatus = "Error";
-        state.PolicygetLoading = false;
-        state.PolicyData = {};
-        toast.error("Something Went Wrong");
-      })
-      .addCase(ModuleUrl.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(ModuleUrl.fulfilled, (state, action) => {
-        state.status = "succeeded";
+    .addCase(PolicyFetchData.pending, (state, action) => {
+      state.PolicyStatus = "idle";
+      state.PolicygetLoading = true;
+      state.PolicyData = {};
+      state.msg = "Loading...";
+    })
+    .addCase(PolicyFetchData.fulfilled, (state, action) => {
+      state.PolicyStatus = "success";
+      state.PolicygetLoading = false;
+      state.PolicyData = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(PolicyFetchData.rejected, (state, action) => {
+      state.PolicyStatus = "Error";
+      state.PolicygetLoading = false;
+      state.PolicyData = {};
+      toast.error("Something Went Wrong");
+    })
+    .addCase(ModuleUrl.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(ModuleUrl.fulfilled, (state, action) => {
+      state.status = "succeeded";
 
-        // Store the API response (ensure your API returns an array)
-        state.data = action.payload || [];
-      })
-      .addCase(ModuleUrl.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-        state.data = [];
-      })
-      .addCase(InvoicePostExploreData.pending, (state, action) => {
-        state.Status = "idle";
-        state.loading = true;
-      })
-      .addCase(InvoicePostExploreData.fulfilled, (state, action) => {
-        if (action.meta.arg.idata.Disable == "Y") {
-          action.meta.arg.idata.Disable = true;
-        } else action.meta.arg.idata.Disable = false;
-        state.inviceEData = action.meta.arg.idata;
-        state.loading = false;
-      })
-      .addCase(InvoicePostExploreData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.loading = false;
-      })
+      // Store the API response (ensure your API returns an array)
+      state.data = action.payload || [];
+    })
+    .addCase(ModuleUrl.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+      state.data = [];
+    })
+    .addCase(InvoicePostExploreData.pending, (state, action) => {
+      state.Status = "idle";
+      state.loading = true;
+    })
+    .addCase(InvoicePostExploreData.fulfilled, (state, action) => {
+      if (action.meta.arg.idata.Disable == "Y") {
+        action.meta.arg.idata.Disable = true;
+      } else action.meta.arg.idata.Disable = false;
+      state.inviceEData = action.meta.arg.idata;
+      state.loading = false;
+    })
+    .addCase(InvoicePostExploreData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.loading = false;
+    })
 
-      .addCase(getFetchFeeData.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.msg = "Loading...";
-      })
-      .addCase(getFetchFeeData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(getFetchFeeData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        // toast.error("Something Went Wrong");
-      })
+    .addCase(getFetchFeeData.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.msg = "Loading...";
+    })
+    .addCase(getFetchFeeData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(getFetchFeeData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      // toast.error("Something Went Wrong");
+    })
 
 
-      .addCase(getFetchCashData.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.msg = "Loading...";
-      })
-      .addCase(getFetchCashData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(getFetchCashData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        // toast.error("Something Went Wrong");
-      })
-      .addCase(getFetchData_v1.pending, (state) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.msg = "Loading...";
-      })
+    .addCase(getFetchCashData.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.msg = "Loading...";
+    })
+    .addCase(getFetchCashData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(getFetchCashData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      // toast.error("Something Went Wrong");
+    })
+    .addCase(getFetchData_v1.pending, (state) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.msg = "Loading...";
+    })
 
-      .addCase(getFetchData_v1.fulfilled, (state, action) => {
-        console.log("API SUCCESS", action.payload);
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload?.Data || {};
-        state.Department = action.payload || [];
-        console.log(action.payload, "------getfetch department in formapi");
+    .addCase(getFetchData_v1.fulfilled, (state, action) => {
+      console.log("API SUCCESS", action.payload);
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload?.Data || {};
+      state.Department = action.payload || [];
+      console.log(action.payload, "------getfetch department in formapi");
 
-      })
+    })
 
-      .addCase(getFetchData_v1.rejected, (state) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        toast.error("Something Went Wrong");
-      })
-      .addCase(UnitFetchData.pending, (state) => {
-        state.UnitStatus = "idle";
-        state.UnitgetLoading = true;
-        state.Unitmsg = "Loading...";
-      })
- 
-      .addCase(UnitFetchData.fulfilled, (state, action) => {
-        state.UnitStatus = "success";
-        state.UnitgetLoading = false;
-        state.UnitData = action.payload || {};
-      })
- 
-      .addCase(UnitFetchData.rejected, (state) => {
-        state.UnitStatus = "Error";
-        state.UnitgetLoading = false;
-      })
-      .addCase(getFetchData.pending, (state) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.msg = "Loading...";
-      })
+    .addCase(getFetchData_v1.rejected, (state) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      toast.error("Something Went Wrong");
+    })
+    .addCase(UnitFetchData.pending, (state) => {
+      state.UnitStatus = "idle";
+      state.UnitgetLoading = true;
+      state.Unitmsg = "Loading...";
+    })
 
-      .addCase(getFetchData.fulfilled, (state, action) => {
-        console.log("API SUCCESS", action.payload);
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload?.Data || {};
-      })
+    .addCase(UnitFetchData.fulfilled, (state, action) => {
+      state.UnitStatus = "success";
+      state.UnitgetLoading = false;
+      state.UnitData = action.payload || {};
+    })
 
-      .addCase(getFetchData.rejected, (state) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        toast.error("Something Went Wrong");
-      })
-      .addCase(EventsgetData.pending, (state) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.msg = "Loading...";
-      })
+    .addCase(UnitFetchData.rejected, (state) => {
+      state.UnitStatus = "Error";
+      state.UnitgetLoading = false;
+    })
+    .addCase(getFetchData.pending, (state) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.msg = "Loading...";
+    })
 
-      .addCase(EventsgetData.fulfilled, (state, action) => {
-        console.log("API SUCCESS", action.payload);
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload?.Data || {};
-      })
+    .addCase(getFetchData.fulfilled, (state, action) => {
+      console.log("API SUCCESS", action.payload);
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload?.Data || {};
+    })
 
-      .addCase(EventsgetData.rejected, (state) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        toast.error("Something Went Wrong");
-      })
-      //PartyBank Details GET
+    .addCase(getFetchData.rejected, (state) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      toast.error("Something Went Wrong");
+    })
+    .addCase(EventsgetData.pending, (state) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.msg = "Loading...";
+    })
 
-      .addCase(PartyBankget.pending, (state, action) => {
-        state.partyBankgetstatus = "idle";
-        // state.partyBankgetloading = true;
-        state.partyBankgetdata = {};
-        // state.msg = "Loading..."
-      })
-      .addCase(PartyBankget.fulfilled, (state, action) => {
-        state.partyBankgetstatus = "success";
-        // state.partyBankgetloading = false;
-        state.partyBankgetdata = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(PartyBankget.rejected, (state, action) => {
-        state.partyBankgetstatus = "Error";
-        // state.partyBankgetloading = false;
-        state.partyBankgetdata = {};
-        // toast.error('Something Went Wrong')
-      })
+    .addCase(EventsgetData.fulfilled, (state, action) => {
+      console.log("API SUCCESS", action.payload);
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload?.Data || {};
+    })
 
-      .addCase(PartyContactget.pending, (state, action) => {
-        state.partyBankgetstatus = "idle";
-        state.partyContactgetdata = {};
-      })
-      .addCase(PartyContactget.fulfilled, (state, action) => {
-        state.partyBankgetstatus = "success";
-        state.partyContactgetdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(PartyContactget.rejected, (state, action) => {
-        state.partyBankgetstatus = "Error";
-        state.partyContactgetdata = {};
-      })
+    .addCase(EventsgetData.rejected, (state) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      toast.error("Something Went Wrong");
+    })
+    //PartyBank Details GET
 
-      //Partbank POST
-      .addCase(partyBankpostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(partyBankpostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        // if (action.meta.arg.idata.Disable == "Y") {
-        //   action.meta.arg.idata.Disable = true;
-        // } else action.meta.arg.idata.Disable = false;
+    .addCase(PartyBankget.pending, (state, action) => {
+      state.partyBankgetstatus = "idle";
+      // state.partyBankgetloading = true;
+      state.partyBankgetdata = {};
+      // state.msg = "Loading..."
+    })
+    .addCase(PartyBankget.fulfilled, (state, action) => {
+      state.partyBankgetstatus = "success";
+      // state.partyBankgetloading = false;
+      state.partyBankgetdata = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(PartyBankget.rejected, (state, action) => {
+      state.partyBankgetstatus = "Error";
+      // state.partyBankgetloading = false;
+      state.partyBankgetdata = {};
+      // toast.error('Something Went Wrong')
+    })
 
-        state.partyBankPostdata = action.meta.arg.idata;
-        console.log(action.meta.arg.idata, "--partyBankPostdata");
-      })
+    .addCase(PartyContactget.pending, (state, action) => {
+      state.partyBankgetstatus = "idle";
+      state.partyContactgetdata = {};
+    })
+    .addCase(PartyContactget.fulfilled, (state, action) => {
+      state.partyBankgetstatus = "success";
+      state.partyContactgetdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(PartyContactget.rejected, (state, action) => {
+      state.partyBankgetstatus = "Error";
+      state.partyContactgetdata = {};
+    })
 
-      .addCase(partyBankpostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
+    //Partbank POST
+    .addCase(partyBankpostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(partyBankpostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      // if (action.meta.arg.idata.Disable == "Y") {
+      //   action.meta.arg.idata.Disable = true;
+      // } else action.meta.arg.idata.Disable = false;
 
-      .addCase(partyContactData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(partyContactData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        // if (action.meta.arg.idata.Disable == "Y") {
-        //   action.meta.arg.idata.Disable = true;
-        // } else action.meta.arg.idata.Disable = false;
-        state.partyContactData = action.meta.arg.idata;
-        console.log(action.meta.arg.idata, "--partyBankPostdata");
-      })
-      .addCase(partyContactData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      //VENDOR - REGISTRATION
-      .addCase(VendorRegisterpostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(VendorRegisterpostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.partyContactData = action.meta.arg.idata;
-      })
-      .addCase(VendorRegisterpostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
+      state.partyBankPostdata = action.meta.arg.idata;
+      console.log(action.meta.arg.idata, "--partyBankPostdata");
+    })
 
-      //VENDOR - DEFAULT
-      .addCase(VendorDefaultPUTdata.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(VendorDefaultPUTdata.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.partyContactData = action.meta.arg.idata;
-      })
-      .addCase(VendorDefaultPUTdata.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      //ITEM MAIN - POST
-      .addCase(ItemMainpostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(ItemMainpostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(ItemMainpostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      //ITEM FLAG - POST
-      .addCase(ItemFlagPostdata.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(ItemFlagPostdata.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(ItemFlagPostdata.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      //ITEM FLAG - POST
-      .addCase(ItemFlagMenuPut.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(ItemFlagMenuPut.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(ItemFlagMenuPut.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      //ITEM STOCK - POST
-      .addCase(ItemStockMenuPut.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(ItemStockMenuPut.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(ItemStockMenuPut.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
+    .addCase(partyBankpostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-      //ORDER HEADER - PAYMENT UPDATE
-      .addCase(OHPaymentUpdateController.pending, (state, action) => {
-        state.OHPaymentPutstatus = "idle";
-        state.OHPaymentPutloading = true;
-      })
-      .addCase(OHPaymentUpdateController.fulfilled, (state, action) => {
-        state.OHPaymentPutstatus = "success";
-        state.OHPaymentPutloading = false;
-        state.OHPaymentPutdata = action.meta.arg.idata;
-      })
-      .addCase(OHPaymentUpdateController.rejected, (state, action) => {
-        state.OHPaymentPutstatus = "Error";
-        state.OHPaymentPutloading = false;
-      })
+    .addCase(partyContactData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(partyContactData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      // if (action.meta.arg.idata.Disable == "Y") {
+      //   action.meta.arg.idata.Disable = true;
+      // } else action.meta.arg.idata.Disable = false;
+      state.partyContactData = action.meta.arg.idata;
+      console.log(action.meta.arg.idata, "--partyBankPostdata");
+    })
+    .addCase(partyContactData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    //VENDOR - REGISTRATION
+    .addCase(VendorRegisterpostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(VendorRegisterpostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.partyContactData = action.meta.arg.idata;
+    })
+    .addCase(VendorRegisterpostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-      //PARTY - SORT FILTER GET
-      .addCase(PartyBydateByamtFilter.pending, (state, action) => {
-        state.PartyDateAndAmtFilterstatus = "idle";
-        state.PartyDateAndAmtFilterloading = true;
-      })
-      .addCase(PartyBydateByamtFilter.fulfilled, (state, action) => {
-        state.PartyDateAndAmtFilterstatus = "success";
-        state.PartyDateAndAmtFilterloading = false;
-        state.PartyDateAndAmtFilterdata = action.payload.Data
-          ? action.payload.Data
-          : [];
-      })
-      .addCase(PartyBydateByamtFilter.rejected, (state, action) => {
-        state.PartyDateAndAmtFilterstatus = "Error";
-        state.PartyDateAndAmtFilterloading = false;
-      })
+    //VENDOR - DEFAULT
+    .addCase(VendorDefaultPUTdata.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(VendorDefaultPUTdata.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.partyContactData = action.meta.arg.idata;
+    })
+    .addCase(VendorDefaultPUTdata.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    //ITEM MAIN - POST
+    .addCase(ItemMainpostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(ItemMainpostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(ItemMainpostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    //ITEM FLAG - POST
+    .addCase(ItemFlagPostdata.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(ItemFlagPostdata.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(ItemFlagPostdata.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    //ITEM FLAG - POST
+    .addCase(ItemFlagMenuPut.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(ItemFlagMenuPut.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(ItemFlagMenuPut.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    //ITEM STOCK - POST
+    .addCase(ItemStockMenuPut.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(ItemStockMenuPut.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(ItemStockMenuPut.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-      //PAYSLIP - GET
-      .addCase(paySlipGet.pending, (state, action) => {
-        state.paySlipstatus = "idle";
-        state.paySliploading = true;
-      })
-      .addCase(paySlipGet.fulfilled, (state, action) => {
-        state.paySlipstatus = "success";
-        state.paySliploading = false;
-        state.paySlipdata = action.payload.data
-          ? action.payload.data
-          : [];
-      })
-      .addCase(paySlipGet.rejected, (state, action) => {
-        state.paySlipstatus = "Error";
-        state.paySliploading = false;
-      })
-      //ORDER ITEM --> REPLACEMENT QTY - GET
-      .addCase(replacementQtyGet.pending, (state, action) => {
-        state.replacementQtyGetstatus = "idle";
-        state.replacementQtyGetloading = true;
-      })
-      .addCase(replacementQtyGet.fulfilled, (state, action) => {
-        state.replacementQtyGetstatus = "success";
-        state.replacementQtyGetloading = false;
-        state.replacementQtyGetdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(replacementQtyGet.rejected, (state, action) => {
-        state.replacementQtyGetstatus = "Error";
-        state.replacementQtyGetloading = false;
-      })
+    //ORDER HEADER - PAYMENT UPDATE
+    .addCase(OHPaymentUpdateController.pending, (state, action) => {
+      state.OHPaymentPutstatus = "idle";
+      state.OHPaymentPutloading = true;
+    })
+    .addCase(OHPaymentUpdateController.fulfilled, (state, action) => {
+      state.OHPaymentPutstatus = "success";
+      state.OHPaymentPutloading = false;
+      state.OHPaymentPutdata = action.meta.arg.idata;
+    })
+    .addCase(OHPaymentUpdateController.rejected, (state, action) => {
+      state.OHPaymentPutstatus = "Error";
+      state.OHPaymentPutloading = false;
+    })
 
-      //PARTY - SORT FILTER GET
-      .addCase(leaveenquiryget.pending, (state, action) => {
-        state.LeaveEntryRegstatus = "idle";
-        state.LeaveEntryRegloading = true;
-      })
-      .addCase(leaveenquiryget.fulfilled, (state, action) => {
-        state.LeaveEntryRegstatus = "success";
-        state.LeaveEntryRegloading = false;
-        state.LeaveEntryRegdata = action.payload.Data
-          ? action.payload.Data
-          : [];
-      })
-      .addCase(leaveenquiryget.rejected, (state, action) => {
-        state.LeaveEntryRegstatus = "Error";
-        state.LeaveEntryRegloading = false;
-      })
-      // Inventorygrid1
-      .addCase(Inventorygrid1.pending, (state) => {
-        state.Inventorygrid1loading = true;
-        state.Inventorygrid1status = "loading";
-      })
+    //PARTY - SORT FILTER GET
+    .addCase(PartyBydateByamtFilter.pending, (state, action) => {
+      state.PartyDateAndAmtFilterstatus = "idle";
+      state.PartyDateAndAmtFilterloading = true;
+    })
+    .addCase(PartyBydateByamtFilter.fulfilled, (state, action) => {
+      state.PartyDateAndAmtFilterstatus = "success";
+      state.PartyDateAndAmtFilterloading = false;
+      state.PartyDateAndAmtFilterdata = action.payload.Data
+        ? action.payload.Data
+        : [];
+    })
+    .addCase(PartyBydateByamtFilter.rejected, (state, action) => {
+      state.PartyDateAndAmtFilterstatus = "Error";
+      state.PartyDateAndAmtFilterloading = false;
+    })
 
-      .addCase(Inventorygrid1.fulfilled, (state, action) => {
-        state.Inventorygrid1loading = false;
-        state.Inventorygrid1status = "success";
+    //PAYSLIP - GET
+    .addCase(paySlipGet.pending, (state, action) => {
+      state.paySlipstatus = "idle";
+      state.paySliploading = true;
+    })
+    .addCase(paySlipGet.fulfilled, (state, action) => {
+      state.paySlipstatus = "success";
+      state.paySliploading = false;
+      state.paySlipdata = action.payload.data
+        ? action.payload.data
+        : [];
+    })
+    .addCase(paySlipGet.rejected, (state, action) => {
+      state.paySlipstatus = "Error";
+      state.paySliploading = false;
+    })
+    //ORDER ITEM --> REPLACEMENT QTY - GET
+    .addCase(replacementQtyGet.pending, (state, action) => {
+      state.replacementQtyGetstatus = "idle";
+      state.replacementQtyGetloading = true;
+    })
+    .addCase(replacementQtyGet.fulfilled, (state, action) => {
+      state.replacementQtyGetstatus = "success";
+      state.replacementQtyGetloading = false;
+      state.replacementQtyGetdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(replacementQtyGet.rejected, (state, action) => {
+      state.replacementQtyGetstatus = "Error";
+      state.replacementQtyGetloading = false;
+    })
 
-        state.Inventorygrid1columns =
-          action.payload?.Data?.columns || [];
+    //PARTY - SORT FILTER GET
+    .addCase(leaveenquiryget.pending, (state, action) => {
+      state.LeaveEntryRegstatus = "idle";
+      state.LeaveEntryRegloading = true;
+    })
+    .addCase(leaveenquiryget.fulfilled, (state, action) => {
+      state.LeaveEntryRegstatus = "success";
+      state.LeaveEntryRegloading = false;
+      state.LeaveEntryRegdata = action.payload.Data
+        ? action.payload.Data
+        : [];
+    })
+    .addCase(leaveenquiryget.rejected, (state, action) => {
+      state.LeaveEntryRegstatus = "Error";
+      state.LeaveEntryRegloading = false;
+    })
+    // Inventorygrid1
+    .addCase(Inventorygrid1.pending, (state) => {
+      state.Inventorygrid1loading = true;
+      state.Inventorygrid1status = "loading";
+    })
 
-        state.Inventorygrid1rows =
-          action.payload?.Data?.rows || [];
-      })
+    .addCase(Inventorygrid1.fulfilled, (state, action) => {
+      state.Inventorygrid1loading = false;
+      state.Inventorygrid1status = "success";
 
-      .addCase(Inventorygrid1.rejected, (state) => {
-        state.Inventorygrid1loading = false;
-        state.Inventorygrid1status = "error";
-      })
-      // Inventorygrid2
-      .addCase(Inventorygrid2.pending, (state) => {
-        state.Inventorygrid2loading = true;
-        state.Inventorygrid2status = "loading";
-      })
+      state.Inventorygrid1columns =
+        action.payload?.Data?.columns || [];
 
-      .addCase(Inventorygrid2.fulfilled, (state, action) => {
-        state.Inventorygrid2loading = false;
-        state.Inventorygrid2status = "success";
+      state.Inventorygrid1rows =
+        action.payload?.Data?.rows || [];
+    })
 
-        state.Inventorygrid2columns =
-          action.payload?.Data?.columns || [];
+    .addCase(Inventorygrid1.rejected, (state) => {
+      state.Inventorygrid1loading = false;
+      state.Inventorygrid1status = "error";
+    })
+    // Inventorygrid2
+    .addCase(Inventorygrid2.pending, (state) => {
+      state.Inventorygrid2loading = true;
+      state.Inventorygrid2status = "loading";
+    })
 
-        state.Inventorygrid2rows =
-          action.payload?.Data?.rows || [];
-      })
+    .addCase(Inventorygrid2.fulfilled, (state, action) => {
+      state.Inventorygrid2loading = false;
+      state.Inventorygrid2status = "success";
 
-      .addCase(Inventorygrid2.rejected, (state) => {
-        state.Inventorygrid2loading = false;
-        state.Inventorygrid2status = "error";
-      })
-      // Inventorygrid3
-      .addCase(Inventorygrid3.pending, (state) => {
-        state.Inventorygrid3loading = true;
-        state.Inventorygrid3status = "loading";
-      })
+      state.Inventorygrid2columns =
+        action.payload?.Data?.columns || [];
 
-      .addCase(Inventorygrid3.fulfilled, (state, action) => {
-        state.Inventorygrid3loading = false;
-        state.Inventorygrid3status = "success";
+      state.Inventorygrid2rows =
+        action.payload?.Data?.rows || [];
+    })
 
-        state.Inventorygrid3columns =
-          action.payload?.Data?.columns || [];
+    .addCase(Inventorygrid2.rejected, (state) => {
+      state.Inventorygrid2loading = false;
+      state.Inventorygrid2status = "error";
+    })
+    // Inventorygrid3
+    .addCase(Inventorygrid3.pending, (state) => {
+      state.Inventorygrid3loading = true;
+      state.Inventorygrid3status = "loading";
+    })
 
-        state.Inventorygrid3rows =
-          action.payload?.Data?.rows || [];
-      })
+    .addCase(Inventorygrid3.fulfilled, (state, action) => {
+      state.Inventorygrid3loading = false;
+      state.Inventorygrid3status = "success";
 
-      .addCase(Inventorygrid3.rejected, (state) => {
-        state.Inventorygrid3loading = false;
-        state.Inventorygrid3status = "error";
-      })
+      state.Inventorygrid3columns =
+        action.payload?.Data?.columns || [];
 
-      .addCase(EmployeeVendorGetController.pending, (state, action) => {
-        state.Partygetstatus = "idle";
-        state.Partygetloading = true;
-      })
-      .addCase(EmployeeVendorGetController.fulfilled, (state, action) => {
-        state.Partygetstatus = "success";
-        state.Partygetloading = false;
-        state.Partygetdata = action.payload.Data
-          ? action.payload.Data
-          : [];
-      })
-      .addCase(EmployeeVendorGetController.rejected, (state, action) => {
-        state.Partygetstatus = "Error";
-        state.Partygetloading = false;
-      })
+      state.Inventorygrid3rows =
+        action.payload?.Data?.rows || [];
+    })
 
-      .addCase(EmployeeVendorContactGet.pending, (state, action) => {
-        state.Partycontactgetstatus = "idle";
-        state.Partycontactgetloading = true;
-      })
-      .addCase(EmployeeVendorContactGet.fulfilled, (state, action) => {
-        state.Partycontactgetstatus = "success";
-        state.Partycontactgetloading = false;
-        state.Partycontactgetdata = action.payload.Data
-          ? action.payload.Data
-          : [];
-      })
-      .addCase(EmployeeVendorContactGet.rejected, (state, action) => {
-        state.Partycontactgetstatus = "Error";
-        state.Partycontactgetloading = false;
-      })
+    .addCase(Inventorygrid3.rejected, (state) => {
+      state.Inventorygrid3loading = false;
+      state.Inventorygrid3status = "error";
+    })
 
-      //SprintGet
-      .addCase(sprintGetData.pending, (state, action) => {
-        state.sprintgetstatus = "idle";
-        // state.sprintloading = true;
-        state.sprintget = {};
-        // state.msg =  "Loading..."
-      })
-      .addCase(sprintGetData.fulfilled, (state, action) => {
-        state.sprintgetstatus = "success";
-        // state.sprintloading = false;
-        state.sprintget = action.payload.Data
-          ? action.payload.Data.headerData
-          : {};
-        state.sprintPPget = action.payload.Data.detailData;
-        // state.msg =  action.payload.Msg
-        console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
-      })
+    .addCase(EmployeeVendorGetController.pending, (state, action) => {
+      state.Partygetstatus = "idle";
+      state.Partygetloading = true;
+    })
+    .addCase(EmployeeVendorGetController.fulfilled, (state, action) => {
+      state.Partygetstatus = "success";
+      state.Partygetloading = false;
+      state.Partygetdata = action.payload.Data
+        ? action.payload.Data
+        : [];
+    })
+    .addCase(EmployeeVendorGetController.rejected, (state, action) => {
+      state.Partygetstatus = "Error";
+      state.Partygetloading = false;
+    })
 
-      .addCase(sprintGetData.rejected, (state, action) => {
-        state.sprintgetstatus = "Error";
-        // state.sprintloading = false;
-        state.sprintget = [];
-        //  toast.error('Something Went Wrong')
-      })
-      //Sprint PP GET
-      .addCase(sprintprojectplanGetData.pending, (state, action) => {
-        // state.sprintgetstatus = "idle";
-        state.sprintloading = true;
-        state.sprintPPget = [];
-        // state.msg =  "Loading..."
-      })
-      .addCase(sprintprojectplanGetData.fulfilled, (state, action) => {
-        // state.sprintgetstatus = "success";
-        state.sprintloading = false;
-        state.sprintPPget = action.payload.Data ? action.payload.Data : [];
-        // state.msg =  action.payload.Msg
-        console.log(
-          state.sprintPPget,
-          "--sprintprojectplanGetData state.sprintPPget",
-        );
-      })
-      .addCase(sprintprojectplanGetData.rejected, (state, action) => {
-        // state.sprintgetstatus = "Error";
-        state.sprintloading = false;
-        state.sprintPPget = [];
-        //  toast.error('Something Went Wrong')
-      })
+    .addCase(EmployeeVendorContactGet.pending, (state, action) => {
+      state.Partycontactgetstatus = "idle";
+      state.Partycontactgetloading = true;
+    })
+    .addCase(EmployeeVendorContactGet.fulfilled, (state, action) => {
+      state.Partycontactgetstatus = "success";
+      state.Partycontactgetloading = false;
+      state.Partycontactgetdata = action.payload.Data
+        ? action.payload.Data
+        : [];
+    })
+    .addCase(EmployeeVendorContactGet.rejected, (state, action) => {
+      state.Partycontactgetstatus = "Error";
+      state.Partycontactgetloading = false;
+    })
 
-      .addCase(getSettingsData.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.Data = {};
-        state.msg = "Loading...";
-      })
-      .addCase(getSettingsData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(getSettingsData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.Data = {};
-        toast.error("Something Went Wrong");
-      })
-      .addCase(getBiometricData.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.Data = {};
-        state.msg = "Loading...";
-      })
-      .addCase(getBiometricData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(getBiometricData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.Data = {};
-        toast.error("Something Went Wrong");
-      })
+    //SprintGet
+    .addCase(sprintGetData.pending, (state, action) => {
+      state.sprintgetstatus = "idle";
+      // state.sprintloading = true;
+      state.sprintget = {};
+      // state.msg =  "Loading..."
+    })
+    .addCase(sprintGetData.fulfilled, (state, action) => {
+      state.sprintgetstatus = "success";
+      // state.sprintloading = false;
+      state.sprintget = action.payload.Data
+        ? action.payload.Data.headerData
+        : {};
+      state.sprintPPget = action.payload.Data.detailData;
+      // state.msg =  action.payload.Msg
+      console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
+    })
 
-      //settings approals get
-
-      .addCase(setttingsApprovalsData.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.Data = {};
-        state.msg = "Loading...";
-      })
-      .addCase(setttingsApprovalsData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(setttingsApprovalsData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.Data = {};
-        toast.error("Something Went Wrong");
-      })
-
-      .addCase(CustomisedCaptionGet.pending, (state, action) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.CustomisedCaptionGetData = {};
-        state.msg = "Loading..."
-      })
-      .addCase(CustomisedCaptionGet.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.CustomisedCaptionGetData = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
-      })
-      .addCase(CustomisedCaptionGet.rejected, (state, action) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.CustomisedCaptionGetData = {};
-        toast.error('Something Went Wrong')
-      })
-      // .addCase(Regularizationdata.pending, (state, action) => {
-      //   state.Status = "idle";
-      //   state.regularizationLoading = true;
-      //   state.Data = {};
-      //   state.msg =  "Loading..."
-      // })
-      // .addCase(Regularizationdata.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.regularizationLoading = false;
-      //   state.Data = action.payload.Data ? action.payload.Data : {} ;
-      //   // state.msg =  action.payload.Msg
-      // })
-      // .addCase(Regularizationdata.rejected, (state, action) => {
-      //   state.Status = "Error";
-      //   state.regularizationLoading = false;
-      //   state.Data = {};
+    .addCase(sprintGetData.rejected, (state, action) => {
+      state.sprintgetstatus = "Error";
+      // state.sprintloading = false;
+      state.sprintget = [];
       //  toast.error('Something Went Wrong')
-      // })
-      .addCase(postData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(postData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        // if (action.meta.arg.idata.Disable == "Y") {
-        //   action.meta.arg.idata.Disable = true;
-        // } else action.meta.arg.idata.Disable = false;
+    })
+    //Sprint PP GET
+    .addCase(sprintprojectplanGetData.pending, (state, action) => {
+      // state.sprintgetstatus = "idle";
+      state.sprintloading = true;
+      state.sprintPPget = [];
+      // state.msg =  "Loading..."
+    })
+    .addCase(sprintprojectplanGetData.fulfilled, (state, action) => {
+      // state.sprintgetstatus = "success";
+      state.sprintloading = false;
+      state.sprintPPget = action.payload.Data ? action.payload.Data : [];
+      // state.msg =  action.payload.Msg
+      console.log(
+        state.sprintPPget,
+        "--sprintprojectplanGetData state.sprintPPget",
+      );
+    })
+    .addCase(sprintprojectplanGetData.rejected, (state, action) => {
+      // state.sprintgetstatus = "Error";
+      state.sprintloading = false;
+      state.sprintPPget = [];
+      //  toast.error('Something Went Wrong')
+    })
 
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(postData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      .addCase(EventspostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(EventspostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        // if (action.meta.arg.idata.Disable == "Y") {
-        //   action.meta.arg.idata.Disable = true;
-        // } else action.meta.arg.idata.Disable = false;
+    .addCase(getSettingsData.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.Data = {};
+      state.msg = "Loading...";
+    })
+    .addCase(getSettingsData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(getSettingsData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      state.Data = {};
+      toast.error("Something Went Wrong");
+    })
+    .addCase(getBiometricData.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.Data = {};
+      state.msg = "Loading...";
+    })
+    .addCase(getBiometricData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(getBiometricData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      state.Data = {};
+      toast.error("Something Went Wrong");
+    })
 
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(EventspostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
+    //settings approals get
 
-      //Timetable versioning
-        .addCase(TimeTablePostData.pending, (state, action) => {
-          state.Status = "loading";
-          state.postLoading = true;
-        })
-        .addCase(TimeTablePostData.fulfilled, (state, action) => {
-          state.Status = "success";
-          state.postLoading = false;
-          state.Data = action.payload;
-        })
-        .addCase(TimeTablePostData.rejected, (state, action) => {
-          state.Status = "Error";
-          state.postLoading = false;
-        })
+    .addCase(setttingsApprovalsData.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.Data = {};
+      state.msg = "Loading...";
+    })
+    .addCase(setttingsApprovalsData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.Data = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(setttingsApprovalsData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      state.Data = {};
+      toast.error("Something Went Wrong");
+    })
 
-      //settingspost
+    .addCase(CustomisedCaptionGet.pending, (state, action) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.CustomisedCaptionGetData = {};
+      state.msg = "Loading..."
+    })
+    .addCase(CustomisedCaptionGet.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.CustomisedCaptionGetData = action.payload.Data ? action.payload.Data : {};
+      // state.msg =  action.payload.Msg
+    })
+    .addCase(CustomisedCaptionGet.rejected, (state, action) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      state.CustomisedCaptionGetData = {};
+      toast.error('Something Went Wrong')
+    })
+    // .addCase(Regularizationdata.pending, (state, action) => {
+    //   state.Status = "idle";
+    //   state.regularizationLoading = true;
+    //   state.Data = {};
+    //   state.msg =  "Loading..."
+    // })
+    // .addCase(Regularizationdata.fulfilled, (state, action) => {
+    //   state.Status = "success";
+    //   state.regularizationLoading = false;
+    //   state.Data = action.payload.Data ? action.payload.Data : {} ;
+    //   // state.msg =  action.payload.Msg
+    // })
+    // .addCase(Regularizationdata.rejected, (state, action) => {
+    //   state.Status = "Error";
+    //   state.regularizationLoading = false;
+    //   state.Data = {};
+    //  toast.error('Something Went Wrong')
+    // })
+    .addCase(postData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(postData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      // if (action.meta.arg.idata.Disable == "Y") {
+      //   action.meta.arg.idata.Disable = true;
+      // } else action.meta.arg.idata.Disable = false;
 
-      .addCase(SettingspostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
-      .addCase(SettingspostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-        // if (action.meta.arg.idata.Disable == "Y") {
-        //   action.meta.arg.idata.Disable = true;
-        // } else action.meta.arg.idata.Disable = false;
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(postData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    .addCase(EventspostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(EventspostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      // if (action.meta.arg.idata.Disable == "Y") {
+      //   action.meta.arg.idata.Disable = true;
+      // } else action.meta.arg.idata.Disable = false;
 
-        state.Data = action.meta.arg.idata;
-      })
-      .addCase(SettingspostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(EventspostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-      .addCase(explorePostData.pending, (state, action) => {
-        state.Status = "idle";
-        state.postLoading = true;
-      })
+    //Timetable versioning
+    .addCase(TimeTablePostData.pending, (state, action) => {
+      state.Status = "loading";
+      state.postLoading = true;
+    })
+    .addCase(TimeTablePostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      state.Data = action.payload;
+    })
+    .addCase(TimeTablePostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-      .addCase(explorePostData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.postLoading = false;
-      })
-      .addCase(explorePostData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.postLoading = false;
-      })
-      .addCase(dpConversionData.fulfilled, (state, action) => {
-        state.conversionData = action.payload;
-        // console.log("🚀 ~ file: Formapireducer.js:373 ~ .addCase ~ action:", action)
-      })
-      .addCase(stockGetData.fulfilled, (state, action) => {
-        state.materialStockData = action.payload;
-        // console.log("🚀 ~ file: Formapireducer.js:373 ~ .addCase ~ action:", action)
-      })
-      .addCase(getVersionBom.fulfilled, (state, action) => {
-        state.Status = "success";
+    //settingspost
 
-        state.exploreData = action.payload.Data ? action.payload.Data : "N";
-      })
-      .addCase(getVersionJobworkBom.fulfilled, (state, action) => {
-        state.Status = "success";
+    .addCase(SettingspostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
+    .addCase(SettingspostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+      // if (action.meta.arg.idata.Disable == "Y") {
+      //   action.meta.arg.idata.Disable = true;
+      // } else action.meta.arg.idata.Disable = false;
 
-        state.exploreData = action.payload.Data ? action.payload.Data : "N";
-      })
-      .addCase(hashtoken.fulfilled, (state, action) => {
-        state.Status = "success";
+      state.Data = action.meta.arg.idata;
+    })
+    .addCase(SettingspostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
 
-        state.hashtokenData = action.payload;
-      })
-      .addCase(getBomList.fulfilled, (state, action) => {
-        state.Status = "success";
+    .addCase(explorePostData.pending, (state, action) => {
+      state.Status = "idle";
+      state.postLoading = true;
+    })
 
-        state.exploreData = action.payload.Data;
-      })
-      .addCase(getDCTracking.pending, (state, action) => {
-        state.Status = "idle";
-        state.loading = true;
-      })
-      .addCase(getDCTracking.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.trackingData = action.payload.Data;
-        state.summeryData = action.payload.Summary;
-      })
-      .addCase(getDCTracking.rejected, (state, action) => {
-        state.Status = "Error";
-        state.loading = false;
-      })
-      .addCase(proPriceTracking.pending, (state, action) => {
-        state.Status = "idle";
-        state.loading = true;
-      })
-      .addCase(proPriceTracking.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.trackingData = action.payload.Data;
-      })
-      .addCase(proPriceTracking.rejected, (state, action) => {
-        state.Status = "Error";
-        state.loading = false;
-      })
-      /*Regularization*/
-      .addCase(setReg.pending, (state, action) => {
-        state.Status = "idle";
-        state.loading = true;
-      })
-      .addCase(setReg.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.trackingData = action.payload.Data;
-      })
-      .addCase(setReg.rejected, (state, action) => {
-        state.Status = "Error";
-        state.loading = false;
-      })
-      .addCase(customerorderanalysis.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.customerData = action.payload.Data;
-      })
-      .addCase(productorderanalysis.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.productanalysisData = action.payload.Data;
-      })
-      .addCase(uomMaterialRate.fulfilled, (state, action) => {
-        state.conversionData = action.payload;
-      })
-      .addCase(costLeatherData.fulfilled, (state, action) => {
-        console.log(
-          "🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:",
-          action,
-        );
+    .addCase(explorePostData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.postLoading = false;
+    })
+    .addCase(explorePostData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.postLoading = false;
+    })
+    .addCase(dpConversionData.fulfilled, (state, action) => {
+      state.conversionData = action.payload;
+      // console.log("🚀 ~ file: Formapireducer.js:373 ~ .addCase ~ action:", action)
+    })
+    .addCase(stockGetData.fulfilled, (state, action) => {
+      state.materialStockData = action.payload;
+      // console.log("🚀 ~ file: Formapireducer.js:373 ~ .addCase ~ action:", action)
+    })
+    .addCase(getVersionBom.fulfilled, (state, action) => {
+      state.Status = "success";
 
-        if (action.meta.arg.LeatherNumber == 1) {
-          state.costingLeatherCost.leatherOneCost = Number(
-            action.payload.LeatherCost,
-          ).toFixed(2);
-          state.costingLeatherCost.latestleatherOneCost = Number(
-            action.payload.LeatherLatestCost,
-          ).toFixed(2);
-        }
-        if (action.meta.arg.LeatherNumber == 2) {
-          state.costingLeatherCost.leatherTwoCost = Number(
-            action.payload.LeatherCost,
-          ).toFixed(2);
-          state.costingLeatherCost.latestleatherTwoCost = Number(
-            action.payload.LeatherLatestCost,
-          ).toFixed(2);
-        }
-        if (action.meta.arg.LeatherNumber == 3) {
-          state.costingLeatherCost.leatherThreeCost = Number(
-            action.payload.LeatherCost,
-          ).toFixed(2);
-          state.costingLeatherCost.latestleatherThreeCost = Number(
-            action.payload.LeatherLatestCost,
-          ).toFixed(2);
-        }
-      })
-      .addCase(costingBOMData.fulfilled, (state, action) => {
-        state.costingLeatherCost.materialCost = Number(
-          action.payload.Cost,
+      state.exploreData = action.payload.Data ? action.payload.Data : "N";
+    })
+    .addCase(getVersionJobworkBom.fulfilled, (state, action) => {
+      state.Status = "success";
+
+      state.exploreData = action.payload.Data ? action.payload.Data : "N";
+    })
+    .addCase(hashtoken.fulfilled, (state, action) => {
+      state.Status = "success";
+
+      state.hashtokenData = action.payload;
+    })
+    .addCase(getBomList.fulfilled, (state, action) => {
+      state.Status = "success";
+
+      state.exploreData = action.payload.Data;
+    })
+    .addCase(getDCTracking.pending, (state, action) => {
+      state.Status = "idle";
+      state.loading = true;
+    })
+    .addCase(getDCTracking.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.trackingData = action.payload.Data;
+      state.summeryData = action.payload.Summary;
+    })
+    .addCase(getDCTracking.rejected, (state, action) => {
+      state.Status = "Error";
+      state.loading = false;
+    })
+    .addCase(proPriceTracking.pending, (state, action) => {
+      state.Status = "idle";
+      state.loading = true;
+    })
+    .addCase(proPriceTracking.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.trackingData = action.payload.Data;
+    })
+    .addCase(proPriceTracking.rejected, (state, action) => {
+      state.Status = "Error";
+      state.loading = false;
+    })
+    /*Regularization*/
+    .addCase(setReg.pending, (state, action) => {
+      state.Status = "idle";
+      state.loading = true;
+    })
+    .addCase(setReg.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.trackingData = action.payload.Data;
+    })
+    .addCase(setReg.rejected, (state, action) => {
+      state.Status = "Error";
+      state.loading = false;
+    })
+    .addCase(customerorderanalysis.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.customerData = action.payload.Data;
+    })
+    .addCase(productorderanalysis.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.productanalysisData = action.payload.Data;
+    })
+    .addCase(uomMaterialRate.fulfilled, (state, action) => {
+      state.conversionData = action.payload;
+    })
+    .addCase(costLeatherData.fulfilled, (state, action) => {
+      console.log(
+        "🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:",
+        action,
+      );
+
+      if (action.meta.arg.LeatherNumber == 1) {
+        state.costingLeatherCost.leatherOneCost = Number(
+          action.payload.LeatherCost,
         ).toFixed(2);
-        state.costingLeatherCost.latestmaterialCost = Number(
-          action.payload.LatestCost,
+        state.costingLeatherCost.latestleatherOneCost = Number(
+          action.payload.LeatherLatestCost,
         ).toFixed(2);
-      })
-      .addCase(customerLeather.fulfilled, (state, action) => {
-        state.customerLeatherData = action.payload;
-      })
-      .addCase(dcSummary.fulfilled, (state, action) => {
-        state.summaryData = action.payload.Data;
-      })
-      .addCase(getDeployment.fulfilled, (state, action) => {
-        state.deploymentData = action.payload.Data;
-      })
-      .addCase(getResignation.fulfilled, (state, action) => {
-        state.ResignationGetData = action.payload.Data;
-      })
-      //CRM_ITEM_STOCK_GET
+      }
+      if (action.meta.arg.LeatherNumber == 2) {
+        state.costingLeatherCost.leatherTwoCost = Number(
+          action.payload.LeatherCost,
+        ).toFixed(2);
+        state.costingLeatherCost.latestleatherTwoCost = Number(
+          action.payload.LeatherLatestCost,
+        ).toFixed(2);
+      }
+      if (action.meta.arg.LeatherNumber == 3) {
+        state.costingLeatherCost.leatherThreeCost = Number(
+          action.payload.LeatherCost,
+        ).toFixed(2);
+        state.costingLeatherCost.latestleatherThreeCost = Number(
+          action.payload.LeatherLatestCost,
+        ).toFixed(2);
+      }
+    })
+    .addCase(costingBOMData.fulfilled, (state, action) => {
+      state.costingLeatherCost.materialCost = Number(
+        action.payload.Cost,
+      ).toFixed(2);
+      state.costingLeatherCost.latestmaterialCost = Number(
+        action.payload.LatestCost,
+      ).toFixed(2);
+    })
+    .addCase(customerLeather.fulfilled, (state, action) => {
+      state.customerLeatherData = action.payload;
+    })
+    .addCase(dcSummary.fulfilled, (state, action) => {
+      state.summaryData = action.payload.Data;
+    })
+    .addCase(getDeployment.fulfilled, (state, action) => {
+      state.deploymentData = action.payload.Data;
+    })
+    .addCase(getResignation.fulfilled, (state, action) => {
+      state.ResignationGetData = action.payload.Data;
+    })
+    //CRM_ITEM_STOCK_GET
 
-      .addCase(ItemstockAnalyticsGET.pending, (state, action) => {
-        state.Itemstockstatus = "idle";
-        state.itemstockDataAnalyticsLoading = true;
-        // state.materialTrackingData = {
-        //   Rateseries: {},
-        //   Qtyseries: {},
-        //   Amountseries: {},
-        //   categories: [],
-        //   TableData: { data: [] },
-        // };
-        state.itemstockDataAnalytics = []
-      })
+    .addCase(ItemstockAnalyticsGET.pending, (state, action) => {
+      state.Itemstockstatus = "idle";
+      state.itemstockDataAnalyticsLoading = true;
+      // state.materialTrackingData = {
+      //   Rateseries: {},
+      //   Qtyseries: {},
+      //   Amountseries: {},
+      //   categories: [],
+      //   TableData: { data: [] },
+      // };
+      state.itemstockDataAnalytics = []
+    })
 
-      .addCase(ItemstockAnalyticsGET.fulfilled, (state, action) => {
-        state.Itemstockstatus = "success";
-        state.itemstockDataAnalyticsLoading = false;
-        state.itemstockDataAnalytics = action.payload.Data;
-      })
-      .addCase(ItemstockAnalyticsGET.rejected, (state, action) => {
-        state.Itemstockstatus = "Error";
-        state.itemstockDataAnalyticsLoading = false;
-        state.itemstockDataAnalytics = [];
-      })
-
-
-
-      .addCase(procurementTrackingGet.pending, (state, action) => {
-        state.Status = "idle";
-        state.trackingLoading = true;
-        state.materialTrackingData = {
-          Rateseries: {},
-          Qtyseries: {},
-          Amountseries: {},
-          categories: [],
-          TableData: { data: [] },
-        };
-      })
-      .addCase(procurementTrackingGet.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.trackingLoading = false;
-        state.materialTrackingData = action.payload.Data;
-      })
-      .addCase(procurementTrackingGet.rejected, (state, action) => {
-        state.Status = "Error";
-        state.trackingLoading = false;
-        state.materialTrackingData = {};
-      })
-      //Employee Geo location get
-      .addCase(geolocationData.fulfilled, (state, action) => {
-        state.exploreData = action.payload.Data;
-      })
-      //Employee Geo location Update
-      .addCase(geolocUpdate.pending, (state, action) => {
-        state.Status = "idle";
-        state.loading = true;
-        state.Data = {};
-      })
-      .addCase(geolocUpdate.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
-        state.Data = action.payload.Data;
-      })
-      .addCase(geolocUpdate.rejected, (state, action) => {
-        state.Status = "Error";
-        state.loading = false;
-        state.Data = {};
-      })
-
-      .addCase(materialDcTrckData.pending, (state, action) => {
-        state.Status = "idle";
-        state.trackingLoading = true;
-        state.matrialDcTrackData = [];
-      })
-      .addCase(materialDcTrckData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.trackingLoading = false;
-        state.matrialDcTrackData = action.payload.Data;
-      })
-      .addCase(materialDcTrckData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.trackingLoading = false;
-        state.matrialDcTrackData = [];
-      })
-
-      .addCase(searchData.pending, (state, action) => {
-        state.Status = "idle";
-        state.searchLoading = true;
-      })
-      .addCase(searchData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.searchLoading = false;
-      })
-      .addCase(searchData.rejected, (state, action) => {
-        state.Status = "Error";
-        state.searchLoading = false;
-      })
-      // .addCase(LeaderData.pending, (state, action) => {
-      //   state.Status = "idle";
-      //   state.searchLoading = true;
-      // })
-      // .addCase(LeaderData.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.searchLoading = false;
-      //    if (action.payload?.Status === "Y" && action.payload.Data?.length > 0) {
-      //     state.leaderDetails = action.payload.Data[0];
-      //   } else {
-      //     state.leaderDetails = null;
-      //   }
-      // })
-      // .addCase(LeaderData.rejected, (state, action) => {
-      //   state.Status = "Error";
-      //   state.searchLoading = false;
-      // })
-      .addCase(materialDcTrckChartData.fulfilled, (state, action) => {
-        // state.Status = "success";
-        // state.trackingLoading = false;
-        state.stockReqData = action.payload.Data;
-      })
-      .addCase(stockorder.pending, (state, action) => {
-        state.Status = "idle";
-        state.trackingLoading = true;
-        state.stockorderData = [];
-      })
-
-      .addCase(stockorder.fulfilled, (state, action) => {
-        state.trackingLoading = false;
-        state.stockorderData = action.payload.data;
-      })
-      //-----------------------------------------//
-      .addCase(purchaseorderrating.pending, (state, action) => {
-        state.Status = "idle";
-        state.trackingLoading = true;
-        state.purchaseorderratingData = [];
-      })
-
-      .addCase(purchaseorderrating.fulfilled, (state, action) => {
-        state.trackingLoading = false;
-        state.purchaseorderratingData = action.payload.Data;
-      })
-      .addCase(empAttendance.fulfilled, (state, action) => {
-        state.empAttendanceData = action.payload.Data;
-        state.empAttendanceDataLoading = false;
-      })
-      .addCase(empAttendance.pending, (state, action) => {
-        state.Status = "idle";
-        state.empAttendanceDataLoading = true;
-        state.empAttendanceData = [];
-      })
-      .addCase(empAttendance.rejected, (state, action) => {
-        state.Status = "Error";
-        state.empAttendanceDataLoading = false;
-        state.empAttendanceData = [];
-      })
+    .addCase(ItemstockAnalyticsGET.fulfilled, (state, action) => {
+      state.Itemstockstatus = "success";
+      state.itemstockDataAnalyticsLoading = false;
+      state.itemstockDataAnalytics = action.payload.Data;
+    })
+    .addCase(ItemstockAnalyticsGET.rejected, (state, action) => {
+      state.Itemstockstatus = "Error";
+      state.itemstockDataAnalyticsLoading = false;
+      state.itemstockDataAnalytics = [];
+    })
 
 
 
-      .addCase(PayrollconfigpayrollAttendance.fulfilled, (state, action) => {
-        state.PayrollconfigpayrollAttendanceData = action.payload.Data;
-        state.PayrollconfigpayrollAttendanceLoading = false;
-      })
-      .addCase(PayrollconfigpayrollAttendance.pending, (state, action) => {
-        state.Status = "idle";
-        state.PayrollconfigpayrollAttendanceLoading = true;
-        state.PayrollconfigpayrollAttendanceData = [];
-      })
-      .addCase(PayrollconfigpayrollAttendance.rejected, (state, action) => {
-        state.Status = "Error";
-        state.PayrollconfigpayrollAttendanceLoading = false;
-        state.PayrollconfigpayrollAttendanceData = [];
-      })
-      // .addCase(Inventryget.fulfilled, (state, action) => {
-      //   state.InventrygetData = action.payload.Data;
-      //   state.InventrygetDataLoading = false;
-      // })
-      // .addCase(Inventryget.pending, (state, action) => {
-      //   state.InventrygetDataStatus = "idle";
-      //   state.InventrygetDataLoading = true;
-      //   state.InventrygetData = [];
-      // })
-      // .addCase(Inventryget.rejected, (state, action) => {
-      //   state.InventrygetDataStatus = "Error";
-      //   state.InventrygetDataLoading = false;
-      //   state.InventrygetData = [];
-      // })
-      .addCase(Inventryget.pending, (state) => {
-        state.Inventoryloading = true;
-      })
+    .addCase(procurementTrackingGet.pending, (state, action) => {
+      state.Status = "idle";
+      state.trackingLoading = true;
+      state.materialTrackingData = {
+        Rateseries: {},
+        Qtyseries: {},
+        Amountseries: {},
+        categories: [],
+        TableData: { data: [] },
+      };
+    })
+    .addCase(procurementTrackingGet.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.trackingLoading = false;
+      state.materialTrackingData = action.payload.Data;
+    })
+    .addCase(procurementTrackingGet.rejected, (state, action) => {
+      state.Status = "Error";
+      state.trackingLoading = false;
+      state.materialTrackingData = {};
+    })
+    //Employee Geo location get
+    .addCase(geolocationData.fulfilled, (state, action) => {
+      state.exploreData = action.payload.Data;
+    })
+    //Employee Geo location Update
+    .addCase(geolocUpdate.pending, (state, action) => {
+      state.Status = "idle";
+      state.loading = true;
+      state.Data = {};
+    })
+    .addCase(geolocUpdate.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
+      state.Data = action.payload.Data;
+    })
+    .addCase(geolocUpdate.rejected, (state, action) => {
+      state.Status = "Error";
+      state.loading = false;
+      state.Data = {};
+    })
 
-      .addCase(Inventryget.fulfilled, (state, action) => {
-        state.Inventoryloading = false;
+    .addCase(materialDcTrckData.pending, (state, action) => {
+      state.Status = "idle";
+      state.trackingLoading = true;
+      state.matrialDcTrackData = [];
+    })
+    .addCase(materialDcTrckData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.trackingLoading = false;
+      state.matrialDcTrackData = action.payload.Data;
+    })
+    .addCase(materialDcTrckData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.trackingLoading = false;
+      state.matrialDcTrackData = [];
+    })
 
-        if (action.payload?.Status === "Y") {
-          state.InventrygetData = action.payload.Data || [];
-        } else {
-          state.InventrygetData = [];
-        }
-      })
+    .addCase(searchData.pending, (state, action) => {
+      state.Status = "idle";
+      state.searchLoading = true;
+    })
+    .addCase(searchData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.searchLoading = false;
+    })
+    .addCase(searchData.rejected, (state, action) => {
+      state.Status = "Error";
+      state.searchLoading = false;
+    })
+    // .addCase(LeaderData.pending, (state, action) => {
+    //   state.Status = "idle";
+    //   state.searchLoading = true;
+    // })
+    // .addCase(LeaderData.fulfilled, (state, action) => {
+    //   state.Status = "success";
+    //   state.searchLoading = false;
+    //    if (action.payload?.Status === "Y" && action.payload.Data?.length > 0) {
+    //     state.leaderDetails = action.payload.Data[0];
+    //   } else {
+    //     state.leaderDetails = null;
+    //   }
+    // })
+    // .addCase(LeaderData.rejected, (state, action) => {
+    //   state.Status = "Error";
+    //   state.searchLoading = false;
+    // })
+    .addCase(materialDcTrckChartData.fulfilled, (state, action) => {
+      // state.Status = "success";
+      // state.trackingLoading = false;
+      state.stockReqData = action.payload.Data;
+    })
+    .addCase(stockorder.pending, (state, action) => {
+      state.Status = "idle";
+      state.trackingLoading = true;
+      state.stockorderData = [];
+    })
 
-      .addCase(Inventryget.rejected, (state) => {
-        state.Inventoryloading = false;
+    .addCase(stockorder.fulfilled, (state, action) => {
+      state.trackingLoading = false;
+      state.stockorderData = action.payload.data;
+    })
+    //-----------------------------------------//
+    .addCase(purchaseorderrating.pending, (state, action) => {
+      state.Status = "idle";
+      state.trackingLoading = true;
+      state.purchaseorderratingData = [];
+    })
+
+    .addCase(purchaseorderrating.fulfilled, (state, action) => {
+      state.trackingLoading = false;
+      state.purchaseorderratingData = action.payload.Data;
+    })
+    .addCase(empAttendance.fulfilled, (state, action) => {
+      state.empAttendanceData = action.payload.Data;
+      state.empAttendanceDataLoading = false;
+    })
+    .addCase(empAttendance.pending, (state, action) => {
+      state.Status = "idle";
+      state.empAttendanceDataLoading = true;
+      state.empAttendanceData = [];
+    })
+    .addCase(empAttendance.rejected, (state, action) => {
+      state.Status = "Error";
+      state.empAttendanceDataLoading = false;
+      state.empAttendanceData = [];
+    })
+    //SortPayrollattendance
+    .addCase(SortAttendance.fulfilled, (state, action) => {
+      state.empAttendanceData = action.payload.Data;
+      state.empAttendanceDataLoading = false;
+    })
+    .addCase(SortAttendance.pending, (state, action) => {
+      state.Status = "idle";
+      state.empAttendanceDataLoading = true;
+      state.empAttendanceData = [];
+    })
+    .addCase(SortAttendance.rejected, (state, action) => {
+      state.Status = "Error";
+      state.empAttendanceDataLoading = false;
+      state.empAttendanceData = [];
+    })
+
+
+    .addCase(PayrollconfigpayrollAttendance.fulfilled, (state, action) => {
+      state.PayrollconfigpayrollAttendanceData = action.payload.Data;
+      state.PayrollconfigpayrollAttendanceLoading = false;
+    })
+    .addCase(PayrollconfigpayrollAttendance.pending, (state, action) => {
+      state.Status = "idle";
+      state.PayrollconfigpayrollAttendanceLoading = true;
+      state.PayrollconfigpayrollAttendanceData = [];
+    })
+    .addCase(PayrollconfigpayrollAttendance.rejected, (state, action) => {
+      state.Status = "Error";
+      state.PayrollconfigpayrollAttendanceLoading = false;
+      state.PayrollconfigpayrollAttendanceData = [];
+    })
+    // .addCase(Inventryget.fulfilled, (state, action) => {
+    //   state.InventrygetData = action.payload.Data;
+    //   state.InventrygetDataLoading = false;
+    // })
+    // .addCase(Inventryget.pending, (state, action) => {
+    //   state.InventrygetDataStatus = "idle";
+    //   state.InventrygetDataLoading = true;
+    //   state.InventrygetData = [];
+    // })
+    // .addCase(Inventryget.rejected, (state, action) => {
+    //   state.InventrygetDataStatus = "Error";
+    //   state.InventrygetDataLoading = false;
+    //   state.InventrygetData = [];
+    // })
+    .addCase(Inventryget.pending, (state) => {
+      state.Inventoryloading = true;
+    })
+
+    .addCase(Inventryget.fulfilled, (state, action) => {
+      state.Inventoryloading = false;
+
+      if (action.payload?.Status === "Y") {
+        state.InventrygetData = action.payload.Data || [];
+      } else {
         state.InventrygetData = [];
-      })
-      .addCase(payslipAttendance.fulfilled, (state, action) => {
-        state.payslipAttendanceData = action.payload.Data;
-        state.empAttendanceDataLoading = false;
-      })
-      .addCase(payslipAttendance.pending, (state, action) => {
-        state.Status = "idle";
-        state.empAttendanceDataLoading = true;
-        state.payslipAttendanceData = [];
-      })
-      .addCase(payslipAttendance.rejected, (state, action) => {
-        state.Status = "Error";
-        state.empAttendanceDataLoading = false;
-        state.payslipAttendanceData = [];
-      })
-      .addCase(Attendance.fulfilled, (state, action) => {
-        state.AttendanceData = action.payload.Data;
-        state.AttendanceDataLoading = false;
-      })
-      .addCase(Attendance.pending, (state, action) => {
-        state.AttendanceDataStatus = "idle";
-        state.AttendanceDataLoading = true;
-      })
-      .addCase(Attendance.rejected, (state, action) => {
-        state.AttendanceData = {};
-        state.AttendanceDataLoading = false;
-      })
-      .addCase(RegGetData.pending, (state, action) => {
-        state.RegGetData = {};
-        state.getLoading = true;
-      })
-      .addCase(RegGetData.fulfilled, (state, action) => {
-        state.RegGetData = action.payload.Data;
-        state.getLoading = false;
-      })
-      .addCase(RegGetData.rejected, (state, action) => {
-        state.RegGetData = {};
-        state.getLoading = false;
-      })
+      }
+    })
 
-      //SKILL-INSIGHTS
-      .addCase(getInsights1.pending, (state) => {
-        state.skillInsights2getdata = [];
-        state.skillInsights1getdata = {};
-        state.skillInsights1loading = true;
-        state.error = null;
-      })
-      .addCase(getInsights1.fulfilled, (state, action) => {
-        state.skillInsights2getdata = [];
-        if (action.payload.Status === "Y") {
-          // store full Data object
-          state.skillInsights1getdata = action.payload.Data;
-        } else {
-          state.skillInsights1getdata = {};
-        }
-        state.skillInsights1loading = false;
-        state.error = null;
-      })
-      .addCase(getInsights1.rejected, (state, action) => {
-        state.skillInsights2getdata = [];
-        state.skillInsights1getdata = {};
-        state.skillInsights1loading = false;
-        state.error = action.error.message;
-      })
+    .addCase(Inventryget.rejected, (state) => {
+      state.Inventoryloading = false;
+      state.InventrygetData = [];
+    })
+    .addCase(payslipAttendance.fulfilled, (state, action) => {
+      state.payslipAttendanceData = action.payload.Data;
+      state.empAttendanceDataLoading = false;
+    })
+    .addCase(payslipAttendance.pending, (state, action) => {
+      state.Status = "idle";
+      state.empAttendanceDataLoading = true;
+      state.payslipAttendanceData = [];
+    })
+    .addCase(payslipAttendance.rejected, (state, action) => {
+      state.Status = "Error";
+      state.empAttendanceDataLoading = false;
+      state.payslipAttendanceData = [];
+    })
+    .addCase(Attendance.fulfilled, (state, action) => {
+      state.AttendanceData = action.payload.Data;
+      state.AttendanceDataLoading = false;
+    })
+    .addCase(Attendance.pending, (state, action) => {
+      state.AttendanceDataStatus = "idle";
+      state.AttendanceDataLoading = true;
+    })
+    .addCase(Attendance.rejected, (state, action) => {
+      state.AttendanceData = {};
+      state.AttendanceDataLoading = false;
+    })
+    .addCase(RegGetData.pending, (state, action) => {
+      state.RegGetData = {};
+      state.getLoading = true;
+    })
+    .addCase(RegGetData.fulfilled, (state, action) => {
+      state.RegGetData = action.payload.Data;
+      state.getLoading = false;
+    })
+    .addCase(RegGetData.rejected, (state, action) => {
+      state.RegGetData = {};
+      state.getLoading = false;
+    })
 
-      .addCase(getInsights2.pending, (state) => {
-        state.skillInsights2getdata = [];
-        state.skillInsights2loading = true;
-        state.error = null;
-      })
-      .addCase(getInsights2.fulfilled, (state, action) => {
-        // if (action.payload.Status === "Y") {
+    //SKILL-INSIGHTS
+    .addCase(getInsights1.pending, (state) => {
+      state.skillInsights2getdata = [];
+      state.skillInsights1getdata = {};
+      state.skillInsights1loading = true;
+      state.error = null;
+    })
+    .addCase(getInsights1.fulfilled, (state, action) => {
+      state.skillInsights2getdata = [];
+      if (action.payload.Status === "Y") {
         // store full Data object
-        state.skillInsights2getdata = action.payload.Data;
+        state.skillInsights1getdata = action.payload.Data;
+      } else {
+        state.skillInsights1getdata = {};
+      }
+      state.skillInsights1loading = false;
+      state.error = null;
+    })
+    .addCase(getInsights1.rejected, (state, action) => {
+      state.skillInsights2getdata = [];
+      state.skillInsights1getdata = {};
+      state.skillInsights1loading = false;
+      state.error = action.error.message;
+    })
 
-        // } else {
-        //   state.skillInsights2getdata = [];
-        // }
-        state.skillInsights2loading = false;
-        state.error = null;
-      })
-      .addCase(getInsights2.rejected, (state, action) => {
-        state.skillInsights2getdata = [];
-        state.skillInsights2loading = false;
-        state.error = action.error.message;
-      })
+    .addCase(getInsights2.pending, (state) => {
+      state.skillInsights2getdata = [];
+      state.skillInsights2loading = true;
+      state.error = null;
+    })
+    .addCase(getInsights2.fulfilled, (state, action) => {
+      // if (action.payload.Status === "Y") {
+      // store full Data object
+      state.skillInsights2getdata = action.payload.Data;
 
-      .addCase(scheduleGetData.pending, (state) => {
-        state.schedulegetdata = [];
-        state.scheduleloading = true;
-        state.error = null;
-      })
-      .addCase(scheduleGetData.fulfilled, (state, action) => {
-        state.schedulegetdata = action.payload.Data;
+      // } else {
+      //   state.skillInsights2getdata = [];
+      // }
+      state.skillInsights2loading = false;
+      state.error = null;
+    })
+    .addCase(getInsights2.rejected, (state, action) => {
+      state.skillInsights2getdata = [];
+      state.skillInsights2loading = false;
+      state.error = action.error.message;
+    })
 
-        state.scheduleloading = false;
-        state.error = null;
-      })
-      .addCase(scheduleGetData.rejected, (state, action) => {
-        state.schedulegetdata = [];
-        state.scheduleloading = false;
-        state.error = action.error.message;
-      })
+    .addCase(scheduleGetData.pending, (state) => {
+      state.schedulegetdata = [];
+      state.scheduleloading = true;
+      state.error = null;
+    })
+    .addCase(scheduleGetData.fulfilled, (state, action) => {
+      state.schedulegetdata = action.payload.Data;
 
-      //APPRAISAL BASED SCHEDULE
-      .addCase(appraisalscheduleGetData.pending, (state) => {
-        state.appraisalscheduleGetData = [];
-        state.appraisalscheduleGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(appraisalscheduleGetData.fulfilled, (state, action) => {
-        state.appraisalscheduleGetData = action.payload.Data;
+      state.scheduleloading = false;
+      state.error = null;
+    })
+    .addCase(scheduleGetData.rejected, (state, action) => {
+      state.schedulegetdata = [];
+      state.scheduleloading = false;
+      state.error = action.error.message;
+    })
 
-        state.appraisalscheduleGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(appraisalscheduleGetData.rejected, (state, action) => {
-        state.appraisalscheduleGetData = [];
-        state.appraisalscheduleGetDataloading = false;
-        state.error = action.error.message;
-      })
+    //APPRAISAL BASED SCHEDULE
+    .addCase(appraisalscheduleGetData.pending, (state) => {
+      state.appraisalscheduleGetData = [];
+      state.appraisalscheduleGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(appraisalscheduleGetData.fulfilled, (state, action) => {
+      state.appraisalscheduleGetData = action.payload.Data;
 
-      //VENDOR REGISTRATION GET
-      .addCase(VendorRegisterFetchData.pending, (state) => {
-        state.vendorregisterGetData = {};
-        state.vendorregisterGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(VendorRegisterFetchData.fulfilled, (state, action) => {
-        state.vendorregisterGetData = action.payload.Data;
+      state.appraisalscheduleGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(appraisalscheduleGetData.rejected, (state, action) => {
+      state.appraisalscheduleGetData = [];
+      state.appraisalscheduleGetDataloading = false;
+      state.error = action.error.message;
+    })
 
-        state.vendorregisterGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(VendorRegisterFetchData.rejected, (state, action) => {
-        state.vendorregisterGetData = {};
-        state.vendorregisterGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //ITEM FLAG GET
-      .addCase(ItemFlagFetchData.pending, (state) => {
-        state.itemFlagGetData = {};
-        state.itemFlagGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(ItemFlagFetchData.fulfilled, (state, action) => {
-        state.itemFlagGetData = action.payload.Data;
+    //VENDOR REGISTRATION GET
+    .addCase(VendorRegisterFetchData.pending, (state) => {
+      state.vendorregisterGetData = {};
+      state.vendorregisterGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(VendorRegisterFetchData.fulfilled, (state, action) => {
+      state.vendorregisterGetData = action.payload.Data;
 
-        state.itemFlagGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(ItemFlagFetchData.rejected, (state, action) => {
-        state.itemFlagGetData = {};
-        state.itemFlagGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //ITEM STOCK GET
-      .addCase(ItemStockMenuGet.pending, (state) => {
-        state.itemStockGetData = {};
-        state.itemStockGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(ItemStockMenuGet.fulfilled, (state, action) => {
-        state.itemStockGetData = action.payload.Data;
+      state.vendorregisterGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(VendorRegisterFetchData.rejected, (state, action) => {
+      state.vendorregisterGetData = {};
+      state.vendorregisterGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //ITEM FLAG GET
+    .addCase(ItemFlagFetchData.pending, (state) => {
+      state.itemFlagGetData = {};
+      state.itemFlagGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(ItemFlagFetchData.fulfilled, (state, action) => {
+      state.itemFlagGetData = action.payload.Data;
 
-        state.itemStockGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(ItemStockMenuGet.rejected, (state, action) => {
-        state.itemStockGetData = {};
-        state.itemStockGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //ITEM MAIN GET BY ID
-      .addCase(ItemMainGETFetchData.pending, (state) => {
-        state.itemMainGETFetchData = {};
-        state.itemMainGETFetchDataloading = true;
-        state.error = null;
-      })
-      .addCase(ItemMainGETFetchData.fulfilled, (state, action) => {
-        state.itemMainGETFetchData = action.payload.Data;
+      state.itemFlagGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(ItemFlagFetchData.rejected, (state, action) => {
+      state.itemFlagGetData = {};
+      state.itemFlagGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //ITEM STOCK GET
+    .addCase(ItemStockMenuGet.pending, (state) => {
+      state.itemStockGetData = {};
+      state.itemStockGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(ItemStockMenuGet.fulfilled, (state, action) => {
+      state.itemStockGetData = action.payload.Data;
 
-        state.itemMainGETFetchDataloading = false;
-        state.error = null;
-      })
-      .addCase(ItemMainGETFetchData.rejected, (state, action) => {
-        state.itemMainGETFetchData = {};
-        state.itemMainGETFetchDataloading = false;
-        state.error = action.error.message;
-      })
+      state.itemStockGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(ItemStockMenuGet.rejected, (state, action) => {
+      state.itemStockGetData = {};
+      state.itemStockGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //ITEM MAIN GET BY ID
+    .addCase(ItemMainGETFetchData.pending, (state) => {
+      state.itemMainGETFetchData = {};
+      state.itemMainGETFetchDataloading = true;
+      state.error = null;
+    })
+    .addCase(ItemMainGETFetchData.fulfilled, (state, action) => {
+      state.itemMainGETFetchData = action.payload.Data;
 
-      //VENDOR DEFAULT GET
-      .addCase(VendorDefaultFetchData.pending, (state) => {
-        state.vendorDefaultGetData = {};
-        state.vendorDefaultGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(VendorDefaultFetchData.fulfilled, (state, action) => {
-        state.vendorDefaultGetData = action.payload.Data;
+      state.itemMainGETFetchDataloading = false;
+      state.error = null;
+    })
+    .addCase(ItemMainGETFetchData.rejected, (state, action) => {
+      state.itemMainGETFetchData = {};
+      state.itemMainGETFetchDataloading = false;
+      state.error = action.error.message;
+    })
 
-        state.vendorDefaultGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(VendorDefaultFetchData.rejected, (state, action) => {
-        state.vendorDefaultGetData = {};
-        state.vendorDefaultGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //ITEM MAIN GET
-      .addCase(ItemMainMenuFetchData.pending, (state) => {
-        state.itemMainGetData = {};
-        state.itemMainGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(ItemMainMenuFetchData.fulfilled, (state, action) => {
-        state.itemMainGetData = action.payload;
+    //VENDOR DEFAULT GET
+    .addCase(VendorDefaultFetchData.pending, (state) => {
+      state.vendorDefaultGetData = {};
+      state.vendorDefaultGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(VendorDefaultFetchData.fulfilled, (state, action) => {
+      state.vendorDefaultGetData = action.payload.Data;
 
-        state.itemMainGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(ItemMainMenuFetchData.rejected, (state, action) => {
-        state.itemMainGetData = {};
-        state.itemMainGetDataloading = false;
-        state.error = action.error.message;
-      })
-      // .addCase(TimeTableGenerateget.pending, (state) => {
-      //   state.Status = "loading";
-      //   state.loading = true;
-      //   state.Data = {};
-      //   state.AutogeneratecolumnData = [];
-      //   state.AutogeneratecolumnData = [];
-      // })
+      state.vendorDefaultGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(VendorDefaultFetchData.rejected, (state, action) => {
+      state.vendorDefaultGetData = {};
+      state.vendorDefaultGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //ITEM MAIN GET
+    .addCase(ItemMainMenuFetchData.pending, (state) => {
+      state.itemMainGetData = {};
+      state.itemMainGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(ItemMainMenuFetchData.fulfilled, (state, action) => {
+      state.itemMainGetData = action.payload;
 
-      // .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.loading = false;
+      state.itemMainGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(ItemMainMenuFetchData.rejected, (state, action) => {
+      state.itemMainGetData = {};
+      state.itemMainGetDataloading = false;
+      state.error = action.error.message;
+    })
+    // .addCase(TimeTableGenerateget.pending, (state) => {
+    //   state.Status = "loading";
+    //   state.loading = true;
+    //   state.Data = {};
+    //   state.AutogeneratecolumnData = [];
+    //   state.AutogeneratecolumnData = [];
+    // })
 
-      //   const data = action.payload.TimetableView;
-      //   const breakSlots = action.payload.TimetableView?.BreakSlots;
+    // .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
+    //   state.Status = "success";
+    //   state.loading = false;
 
-      //   //  Save raw response
-      //   state.Data = data;
-      //   state.breakSlots = breakSlots; 
-      //   //  Create dynamic columns
-      //   state.AutogeneratecolumnData = [
-      //     {
-      //       field: "day",
-      //       headerName: "Days",
-      //       flex: 1,
-      //       headerAlign: "center",
-      //       align: "center",
-      //     },
-      //     ...data.timeSlots.map((slot) => ({
-      //       field: slot,
-      //       headerName: slot,
-      //       flex: 1,
-      //       headerAlign: "center",
-      //       align: "center",
-      //     })),
-      //   ];
+    //   const data = action.payload.TimetableView;
+    //   const breakSlots = action.payload.TimetableView?.BreakSlots;
 
-      //   //  Create dynamic rows
-      //   state.AutogeneraterowData = data.schedule.map((item, index) => ({
-      //     id: index + 1,
-      //     day: item.day,
-      //     ...item.slots,
-      //   }));
-      // })
+    //   //  Save raw response
+    //   state.Data = data;
+    //   state.breakSlots = breakSlots; 
+    //   //  Create dynamic columns
+    //   state.AutogeneratecolumnData = [
+    //     {
+    //       field: "day",
+    //       headerName: "Days",
+    //       flex: 1,
+    //       headerAlign: "center",
+    //       align: "center",
+    //     },
+    //     ...data.timeSlots.map((slot) => ({
+    //       field: slot,
+    //       headerName: slot,
+    //       flex: 1,
+    //       headerAlign: "center",
+    //       align: "center",
+    //     })),
+    //   ];
 
-      // .addCase(TimeTableGenerateget.rejected, (state) => {
-      //   state.Status = "error";
-      //   state.loading = false;
-      // })
-      .addCase(TimeTableGenerateget.pending, (state) => {
-        state.Status = "loading";
-        state.loading = true;
-        // REMOVE: state.Data = {}; — don't clear Data on pending
-        state.AutogeneratecolumnData = [];
-        state.AutogeneraterowData = [];   //  fix typo: was AutogeneratecolumnData twice
-      })
+    //   //  Create dynamic rows
+    //   state.AutogeneraterowData = data.schedule.map((item, index) => ({
+    //     id: index + 1,
+    //     day: item.day,
+    //     ...item.slots,
+    //   }));
+    // })
 
-      .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.loading = false;
+    // .addCase(TimeTableGenerateget.rejected, (state) => {
+    //   state.Status = "error";
+    //   state.loading = false;
+    // })
+    .addCase(TimeTableGenerateget.pending, (state) => {
+      state.Status = "loading";
+      state.loading = true;
+      // REMOVE: state.Data = {}; — don't clear Data on pending
+      state.AutogeneratecolumnData = [];
+      state.AutogeneraterowData = [];   //  fix typo: was AutogeneratecolumnData twice
+    })
 
-        const fullPayload = action.payload;
-        const timetableView = fullPayload?.TimetableView;
+    .addCase(TimeTableGenerateget.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.loading = false;
 
-        if (!timetableView) return; // guard if TimetableView missing
+      const fullPayload = action.payload;
+      const timetableView = fullPayload?.TimetableView;
 
-        //  Store the FULL response so calendarData?.TimetableView works in component
-        state.Data = fullPayload;
-        state.breakSlots = timetableView?.BreakSlots || [];
+      if (!timetableView) return; // guard if TimetableView missing
 
-        //  Build columns: first col = Day, then one per timeSlot
-        const timeSlots = timetableView.timeSlots || [];
-        const schedule = timetableView.schedule || [];
+      //  Store the FULL response so calendarData?.TimetableView works in component
+      state.Data = fullPayload;
+      state.breakSlots = timetableView?.BreakSlots || [];
 
-        state.AutogeneratecolumnData = [
-          {
-            field: "day",
-            headerName: "Days",
-            width: 110,
-            headerAlign: "center",
-            align: "center",
-          },
-          ...timeSlots.map((slot, index) => ({
-            field: `slot_${index}`,   //  safe field key (matches component logic)
-            headerName: slot,
-            width: 140,
-            headerAlign: "center",
-            align: "center",
-          })),
-        ];
+      //  Build columns: first col = Day, then one per timeSlot
+      const timeSlots = timetableView.timeSlots || [];
+      const schedule = timetableView.schedule || [];
 
-        //  Build rows: one per day, slot_N as field keys
-        state.AutogeneraterowData = schedule.map((item, index) => {
-          const row = { id: index, day: item.day };
-          timeSlots.forEach((slot, i) => {
-            row[`slot_${i}`] = item.slots?.[slot] || "";
-          });
-          return row;
+      state.AutogeneratecolumnData = [
+        {
+          field: "day",
+          headerName: "Days",
+          width: 110,
+          headerAlign: "center",
+          align: "center",
+        },
+        ...timeSlots.map((slot, index) => ({
+          field: `slot_${index}`,   //  safe field key (matches component logic)
+          headerName: slot,
+          width: 140,
+          headerAlign: "center",
+          align: "center",
+        })),
+      ];
+
+      //  Build rows: one per day, slot_N as field keys
+      state.AutogeneraterowData = schedule.map((item, index) => {
+        const row = { id: index, day: item.day };
+        timeSlots.forEach((slot, i) => {
+          row[`slot_${i}`] = item.slots?.[slot] || "";
         });
-      })
-
-      .addCase(TimeTableGenerateget.rejected, (state) => {
-        state.Status = "error";
-        state.loading = false;
-      })
-
-      //staffmappingTeacherget
-        
-      .addCase(staffmappingTeacherget.pending, (state) => {
-        state.staffmappingGetData = {};
-        state.staffmappingGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(staffmappingTeacherget.fulfilled, (state, action) => {
-        state.staffmappingGetData = action.payload || {};
-        state.staffmappingGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(staffmappingTeacherget.rejected, (state, action) => {
-        state.staffmappingGetData = {};
-        state.staffmappingGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //LEADER GET
-      .addCase(LeadEnquiryFilterGet.pending, (state) => {
-        state.leaderEnquiryGetData = {};
-        state.leaderEnquiryGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(LeadEnquiryFilterGet.fulfilled, (state, action) => {
-        // state.leaderEnquiryGetData = action.payload;
-        state.leaderEnquiryGetData = action.payload.Data || {};
-        state.leaderEnquiryGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(LeadEnquiryFilterGet.rejected, (state, action) => {
-        state.leaderEnquiryGetData = {};
-        state.leaderEnquiryGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //DefaultProductDeliveryChargeGet
-      .addCase(DefaultProductDeliveryChargeGet.pending, (state) => {
-        state.DefaultProductDeliveryChargeGetData = {};
-        state.DefaultProductDeliveryChargeGetDataloading = true;
-        state.error = null;
-      })
-      .addCase(DefaultProductDeliveryChargeGet.fulfilled, (state, action) => {
-        state.DefaultProductDeliveryChargeGetData = action.payload.Data;
-
-        state.DefaultProductDeliveryChargeGetDataloading = false;
-        state.error = null;
-      })
-      .addCase(DefaultProductDeliveryChargeGet.rejected, (state, action) => {
-        state.DefaultProductDeliveryChargeGetData = {};
-        state.DefaultProductDeliveryChargeGetDataloading = false;
-        state.error = action.error.message;
-      })
-      //PROJECT COSTING PDF
-      .addCase(getProjectCosting.pending, (state) => {
-        state.projectCostinggetdata = {};
-        state.projectCostingloading = true;
-        state.error = null;
-      })
-      .addCase(getProjectCosting.fulfilled, (state, action) => {
-        state.projectCostinggetdata = action.payload.Data;
-        state.projectCostingloading = false;
-        state.error = null;
-      })
-      .addCase(getProjectCosting.rejected, (state, action) => {
-        state.projectCostinggetdata = {};
-        state.projectCostingloading = false;
-        state.error = action.error.message;
-      })
-
-      //ORDER HEADER PDF
-      .addCase(getOrderdetailReport.pending, (state) => {
-        state.OrderdetailReportgetdata = {};
-        state.OrderdetailReportloading = true;
-        state.error = null;
-      })
-      .addCase(getOrderdetailReport.fulfilled, (state, action) => {
-        state.OrderdetailReportgetdata = action.payload.Data;
-        state.OrderdetailReportloading = false;
-        state.error = null;
-      })
-      .addCase(getOrderdetailReport.rejected, (state, action) => {
-        state.OrderdetailReportgetdata = {};
-        state.OrderdetailReportloading = false;
-        state.error = action.error.message;
-      })
-
-      //Audit UserGETController
-
-      .addCase(auditUserActivityGET.pending, (state) => {
-        state.Auditgetstatus = "loading";
-        state.Auditgetloading = true;
-        state.Auditgetdata = [];
-      })
-      .addCase(auditUserActivityGET.fulfilled, (state, action) => {
-        state.Auditgetstatus = "succeeded";
-        state.Auditgetloading = false;
-        state.Auditgetdata = action.payload.Data;
-      })
-      .addCase(auditUserActivityGET.rejected, (state, action) => {
-        state.Auditgetstatus = "failed";
-        state.Auditgetloading = false;
-        state.error = action.error.message;
-        state.Auditgetdata = [];
-      })
-
-      //AuditScrenCompanyGET
-
-      .addCase(auditScreennameGET.pending, (state) => {
-        state.Auditcompanygetstatus = "loading";
-        state.Auditcompanygetloading = true;
-        state.AuditScreennamegetdata = [];
-      })
-      .addCase(auditScreennameGET.fulfilled, (state, action) => {
-        state.Auditcompanygetstatus = "succeeded";
-        state.Auditcompanygetloading = false;
-        state.AuditScreennamegetdata = action.payload.Data;
-      })
-      .addCase(auditScreennameGET.rejected, (state, action) => {
-        state.Auditcompanygetstatus = "failed";
-        state.Auditcompanygetloading = false;
-        state.error = action.error.message;
-        state.AuditScreennamegetdata = [];
-      })
-
-      .addCase(getLeaveweeklyData.pending, (state) => {
-        state.Status = "idle";
-        state.getLoading = true;
-        state.leaveweeklyData = {
-          Employee: "",
-          Year: "",
-          LeaveDetailsData: {
-            TableData: [],
-            Others: [],
-          },
-        };
-        state.msg = "Loading...";
-      })
-
-      .addCase(getLeaveweeklyData.rejected, (state) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.leaveweeklyData = {
-          Employee: "",
-          Year: "",
-          LeaveDetailsData: {
-            TableData: [],
-            Others: [],
-          },
-        };
-        toast.error("Something Went Wrong");
-      })
-
-      // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.getLoading = false;
-      //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
-      //   // state.msg =  action.payload.Msg
-      // })
-      .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
-        state.Status = "success";
-        state.getLoading = false;
-        state.leaveweeklyData = action.payload?.Data?.[0] || {
-          Employee: "",
-          Year: "",
-          LeaveDetailsData: {
-            TableData: [],
-            Others: [],
-          },
-        };
-      })
-      //SOP Process POST
-      .addCase(SOPProcessPost.pending, (state, action) => {
-        state.SOPProcessStatus = "idle";
-        state.SOPProcessLoading = true;
-      })
-      .addCase(SOPProcessPost.fulfilled, (state, action) => {
-        state.SOPProcessStatus = "success";
-        state.SOPProcessLoading = false
-        state.SOPProcessdata = action.meta.arg.idata;
-      })
-
-      .addCase(SOPProcessPost.rejected, (state, action) => {
-        state.SOPProcessStatus = "Error";
-        state.SOPProcessLoading = false;
-      })
-      //SOP CONFIG POST
-      .addCase(SOPConfigPost.pending, (state, action) => {
-        state.SOPConfigStatus = "idle";
-        state.SOPConfigLoading = true;
-      })
-      .addCase(SOPConfigPost.fulfilled, (state, action) => {
-        state.SOPConfigStatus = "success";
-        state.SOPConfigLoading = false
-        state.SOPConfigdata = action.meta.arg.idata;
-      })
-
-      .addCase(SOPConfigPost.rejected, (state, action) => {
-        state.SOPConfigStatus = "Error";
-        state.SOPConfigLoading = false;
-      })
-
-      //SOP CONFIGURATION  - GET
-      .addCase(SOPConfigGet.pending, (state, action) => {
-        state.SOPConfigGetstatus = "idle";
-        state.SOPConfigGetloading = true;
-      })
-      .addCase(SOPConfigGet.fulfilled, (state, action) => {
-        state.SOPConfigGetstatus = "success";
-        state.SOPConfigGetloading = false;
-        state.SOPConfigGetdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(SOPConfigGet.rejected, (state, action) => {
-        state.SOPConfigGetstatus = "Error";
-        state.SOPConfigGetloading = false;
-      })
-      //SPECIMEN - GET
-      .addCase(SpecimenGet.pending, (state, action) => {
-        state.SpecimenGetstatus = "idle";
-        state.SpecimenGetloading = true;
-      })
-      .addCase(SpecimenGet.fulfilled, (state, action) => {
-        state.SpecimenGetstatus = "success";
-        state.SpecimenGetloading = false;
-        state.SpecimenGetdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(SpecimenGet.rejected, (state, action) => {
-        state.SpecimenGetstatus = "Error";
-        state.SpecimenGetloading = false;
-      })
-      //SPECIMEN - POST
-      .addCase(SpecimenPost.pending, (state, action) => {
-        state.SpecimenPoststatus = "idle";
-        state.SpecimenPostloading = true;
-      })
-      .addCase(SpecimenPost.fulfilled, (state, action) => {
-        state.SpecimenPoststatus = "success";
-        state.SpecimenPostloading = false;
-        state.SpecimenPostdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(SpecimenPost.rejected, (state, action) => {
-        state.SpecimenPoststatus = "Error";
-        state.SpecimenPostloading = false;
-      })
-      //SopEmpMappingController - POST
-      .addCase(SopEmpMappingController.pending, (state, action) => {
-        state.SopEmpMappingControllerstatus = "idle";
-        state.SopEmpMappingControllerloading = true;
-      })
-      .addCase(SopEmpMappingController.fulfilled, (state, action) => {
-        state.SopEmpMappingControllerstatus = "success";
-        state.SopEmpMappingControllerloading = false;
-        state.SopEmpMappingControllerdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(SopEmpMappingController.rejected, (state, action) => {
-        state.SopEmpMappingControllerstatus = "Error";
-        state.SopEmpMappingControllerloading = false;
-      })
-      //PARTY ORDER PENDING - GET
-      .addCase(PartyOrderPendingGet.pending, (state, action) => {
-        state.PartyOrderPendingGetstatus = "idle";
-        state.PartyOrderPendingGetloading = true;
-      })
-      .addCase(PartyOrderPendingGet.fulfilled, (state, action) => {
-        state.PartyOrderPendingGetstatus = "success";
-        state.PartyOrderPendingGetloading = false;
-        state.PartyOrderPendingGetdata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(PartyOrderPendingGet.rejected, (state, action) => {
-        state.PartyOrderPendingGetstatus = "Error";
-        state.PartyOrderPendingGetloading = false;
-      })
-
-      //SOP TIMELINE - GET
-      .addCase(SopTimeLineController.pending, (state, action) => {
-        state.SOPTimelinestatus = "idle";
-        state.SOPTimelineloading = true;
-      })
-      .addCase(SopTimeLineController.fulfilled, (state, action) => {
-        state.SOPTimelinestatus = "success";
-        state.SOPTimelineloading = false;
-        state.SOPTimelinedata = action.payload.Data
-          ? action.payload.Data
-          : {};
-      })
-      .addCase(SopTimeLineController.rejected, (state, action) => {
-        state.SOPTimelinestatus = "Error";
-        state.SOPTimelineloading = false;
-      })
-      //GetOverflowAffectedOrders - GET
-      .addCase(GetOverflowAffectedOrders.pending, (state, action) => {
-        state.GetOverflowAffectedOrdersstatus = "idle";
-        state.GetOverflowAffectedOrdersloading = true;
-      })
-      .addCase(GetOverflowAffectedOrders.fulfilled, (state, action) => {
-        state.GetOverflowAffectedOrdersstatus = "success";
-        state.GetOverflowAffectedOrdersloading = false;
-        state.GetOverflowAffectedOrdersdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(GetOverflowAffectedOrders.rejected, (state, action) => {
-        state.GetOverflowAffectedOrdersstatus = "Error";
-        state.GetOverflowAffectedOrdersloading = false;
-      })
-      //PartyReset - GET
-      .addCase(PartyReset.pending, (state, action) => {
-        state.PartyResetstatus = "idle";
-        state.PartyResetloading = true;
-      })
-      .addCase(PartyReset.fulfilled, (state, action) => {
-        state.PartyResetstatus = "success";
-        state.PartyResetloading = false;
-        state.PartyResetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(PartyReset.rejected, (state, action) => {
-        state.PartyResetstatus = "Error";
-        state.PartyResetloading = false;
-      })
-      //PROMOTION_MAIN_LISTVIEW_GET
-      .addCase(promototionGET.pending, (state, action) => {
-        state.promotiongetstatus = "idle";
-        state.promotiongetloading = true;
-        state.promotiongetdata = [];
-      })
-      .addCase(promototionGET.fulfilled, (state, action) => {
-        state.promotiongetstatus = "success";
-        state.promotiongetloading = false;
-        state.promotiongetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(promototionGET.rejected, (state, action) => {
-        state.promotiongetstatus = "Error";
-        state.promotiongetloading = false;
-         state.promotiongetdata = [];
-      })
-//PROMOTION_STDACTIVITIE_GET
-
-.addCase(promototionprojGET.pending, (state, action) => {
-        state.promotionSTDgetstatus = "idle";
-        state.promotionSTDgetloading = true;
-        state.promotionSTDgetdata = [];
-      })
-      .addCase(promototionprojGET.fulfilled, (state, action) => {
-        state.promotionSTDgetstatus = "success";
-        state.promotionSTDgetloading = false;
-        state.promotionSTDgetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(promototionprojGET.rejected, (state, action) => {
-        state.promotionSTDgetstatus = "Error";
-        state.promotionSTDgetloading = false;
-         state.promotionSTDgetdata = [];
-      })
-
-
-
-
-
-      //PROMOTION_STUDENT_MARKS_GET
-   .addCase(promototioStudMarksGET.pending, (state, action) => {
-        state.promotionstudmarksgetstatus = "idle";
-        state.promotionstudmarksgetloading = true;
-      })
-      .addCase(promototioStudMarksGET.fulfilled, (state, action) => {
-        state.promotionstudmarksgetstatus = "success";
-        state.promotionstudmarksgetloading = false;
-        state.promotionstudmarksgetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(promototioStudMarksGET.rejected, (state, action) => {
-        state.promotionstudmarksgetstatus = "Error";
-        state.promotionstudmarksgetloading = false;
-      })
-
-
-      .addCase(TimetableProcessController.pending, (state, action) => {
-        state.Timetableresetstatus = "idle";
-        state.Timetableresetloading = true;
-      })
-      .addCase(TimetableProcessController.fulfilled, (state, action) => {
-        state.Timetableresetstatus = "success";
-        state.Timetableresetloading = false;
-        state.Timetableresetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(TimetableProcessController.rejected, (state, action) => {
-        state.Timetableresetstatus = "Error";
-        state.Timetableresetloading = false;
-      })
-      .addCase(PublishEvent.pending, (state, action) => {
-        state.PublishEventstatus = "idle";
-        state.PublishEventloading = true;
-      })
-      .addCase(PublishEvent.fulfilled, (state, action) => {
-        state.PublishEventstatus = "success";
-        state.PublishEventloading = false;
-        state.PublishEventdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(PublishEvent.rejected, (state, action) => {
-        state.PublishEventstatus = "Error";
-        state.PublishEventloading = false;
-      })
-      //TIMETABLE TASK PROCESS
-      .addCase(TaskProcess.pending, (state, action) => {
-        state.TaskProcessstatus = "idle";
-        state.TaskProcessloading = true;
-      })
-      .addCase(TaskProcess.fulfilled, (state, action) => {
-        state.TaskProcessstatus = "success";
-        state.TaskProcessloading = false;
-        state.TaskProcessdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(TaskProcess.rejected, (state, action) => {
-        state.TaskProcessstatus = "Error";
-        state.TaskProcessloading = false;
-      })
-      //TaskSessionGet
-      .addCase(TaskSessionGet.pending, (state, action) => {
-        state.TaskSessionGetstatus = "idle";
-        state.TaskSessionGetloading = true;
-      })
-      .addCase(TaskSessionGet.fulfilled, (state, action) => {
-        state.TaskSessionGetstatus = "success";
-        state.TaskSessionGetloading = false;
-        state.TaskSessionGetdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(TaskSessionGet.rejected, (state, action) => {
-        state.TaskSessionGetstatus = "Error";
-        state.TaskSessionGetloading = false;
-      })
-      //TaskSessionUpdate
-      .addCase(TaskSessionUpdate.pending, (state, action) => {
-        state.TaskSessionUpdatestatus = "idle";
-        state.TaskSessionUpdateloading = true;
-      })
-      .addCase(TaskSessionUpdate.fulfilled, (state, action) => {
-        state.TaskSessionUpdatestatus = "success";
-        state.TaskSessionUpdateloading = false;
-        state.TaskSessionUpdatedata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(TaskSessionUpdate.rejected, (state, action) => {
-        state.TaskSessionUpdatestatus = "Error";
-        state.TaskSessionUpdateloading = false;
-      })
-      //PartyAnalytics - GET
-      .addCase(PartyAnalytics.pending, (state, action) => {
-        state.PartyAnalyticsstatus = "idle";
-        state.PartyAnalyticsloading = true;
-      })
-      .addCase(PartyAnalytics.fulfilled, (state, action) => {
-        state.PartyAnalyticsstatus = "success";
-        state.PartyAnalyticsloading = false;
-        state.PartyAnalyticsdata = action.payload
-          ? action.payload
-          : {};
-      })
-      .addCase(PartyAnalytics.rejected, (state, action) => {
-        state.PartyAnalyticsstatus = "Error";
-        state.PartyAnalyticsloading = false;
-      })
-
-      .addCase(ContractInvoice.pending, (state, action) => {
-        state.InvoiceHeaderDatastatus = "idle";
-        state.InvoiceHeaderDataloading = true;
-      })
-      .addCase(ContractInvoice.fulfilled, (state, action) => {
-        state.InvoiceHeaderData =
-          action.payload.HeaderData ? action.payload.HeaderData : [];
-        state.InvoiceDetailData =
-          action.payload.DetailData ? action.payload.DetailData : [];
-        state.InvoiceBaseUrl =
-          action.payload.BaseUrl ? action.payload.BaseUrl : [];
-      })
-      .addCase(ContractInvoice.rejected, (state, action) => {
-        state.InvoiceHeaderDatastatus = "Error";
-        state.InvoiceHeaderDataloading = false;
-      })
-      //SCOREBOARD
-      // .addCase(ScoredashBoard.pending, (state, action) => {
-      //   // state.ScoredashBoardGetData = []
-      //   state.ScoredashBoardGetStaus = "pending";
-      //   state.ScoredashBoardGetLoading = true;
-      //   state.ScoredashBoardGetError = null;
-      // })
-
-      // .addCase(ScoredashBoard.fulfilled, (state, action) => {
-      //   state.ScoredashBoardGetData = action.payload;
-      //   state.ScoredashBoardGetStaus = "fulfilled";
-      //   state.ScoredashBoardGetLoading = false;
-      //   state.ScoredashBoardGetError = null;
-      //   console.log("ScoredashBoardGetData",state.ScoredashBoardGetData)
-      // })
-      // .addCase(ScoredashBoard.rejected, (state, action) => {
-      //   // state.ScoredashBoardGetData = [];
-      //   state.ScoredashBoardGetStaus = "rejected";
-      //   state.ScoredashBoardGetLoading = false;
-      //   state.ScoredashBoardGetError = null;
-      // })
-
-
-      .addCase(timeSheet.fulfilled, (state, action) => {
-        state.timeSheetData = action.payload?.Data?.Task || [];
-        state.projectName =
-          action.payload?.Data?.ProjectName?.ProjectName || "";
-        state.managerName =
-          action.payload?.Data?.ManagersName?.ManagersName || "";
-      })
-      .addCase(MonthlyAttendance.pending, (state, action) => {
-        state.MonthlyAttendanceDataGetloading = true;
-      })
-      .addCase(MonthlyAttendance.fulfilled, (state, action) => {
-        state.MonthlyAttendanceDataGetloading = false;
-        state.MonthlyAttendanceData = action.payload.Data;
+        return row;
       });
-  },
+    })
+
+    .addCase(TimeTableGenerateget.rejected, (state) => {
+      state.Status = "error";
+      state.loading = false;
+    })
+
+    //staffmappingTeacherget
+
+    .addCase(staffmappingTeacherget.pending, (state) => {
+      state.staffmappingGetData = {};
+      state.staffmappingGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(staffmappingTeacherget.fulfilled, (state, action) => {
+      state.staffmappingGetData = action.payload || {};
+      state.staffmappingGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(staffmappingTeacherget.rejected, (state, action) => {
+      state.staffmappingGetData = {};
+      state.staffmappingGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //LEADER GET
+    .addCase(LeadEnquiryFilterGet.pending, (state) => {
+      state.leaderEnquiryGetData = {};
+      state.leaderEnquiryGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(LeadEnquiryFilterGet.fulfilled, (state, action) => {
+      // state.leaderEnquiryGetData = action.payload;
+      state.leaderEnquiryGetData = action.payload.Data || {};
+      state.leaderEnquiryGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(LeadEnquiryFilterGet.rejected, (state, action) => {
+      state.leaderEnquiryGetData = {};
+      state.leaderEnquiryGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //DefaultProductDeliveryChargeGet
+    .addCase(DefaultProductDeliveryChargeGet.pending, (state) => {
+      state.DefaultProductDeliveryChargeGetData = {};
+      state.DefaultProductDeliveryChargeGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(DefaultProductDeliveryChargeGet.fulfilled, (state, action) => {
+      state.DefaultProductDeliveryChargeGetData = action.payload.Data;
+
+      state.DefaultProductDeliveryChargeGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(DefaultProductDeliveryChargeGet.rejected, (state, action) => {
+      state.DefaultProductDeliveryChargeGetData = {};
+      state.DefaultProductDeliveryChargeGetDataloading = false;
+      state.error = action.error.message;
+    })
+    //PROJECT COSTING PDF
+    .addCase(getProjectCosting.pending, (state) => {
+      state.projectCostinggetdata = {};
+      state.projectCostingloading = true;
+      state.error = null;
+    })
+    .addCase(getProjectCosting.fulfilled, (state, action) => {
+      state.projectCostinggetdata = action.payload.Data;
+      state.projectCostingloading = false;
+      state.error = null;
+    })
+    .addCase(getProjectCosting.rejected, (state, action) => {
+      state.projectCostinggetdata = {};
+      state.projectCostingloading = false;
+      state.error = action.error.message;
+    })
+
+    //ORDER HEADER PDF
+    .addCase(getOrderdetailReport.pending, (state) => {
+      state.OrderdetailReportgetdata = {};
+      state.OrderdetailReportloading = true;
+      state.error = null;
+    })
+    .addCase(getOrderdetailReport.fulfilled, (state, action) => {
+      state.OrderdetailReportgetdata = action.payload.Data;
+      state.OrderdetailReportloading = false;
+      state.error = null;
+    })
+    .addCase(getOrderdetailReport.rejected, (state, action) => {
+      state.OrderdetailReportgetdata = {};
+      state.OrderdetailReportloading = false;
+      state.error = action.error.message;
+    })
+
+    //Audit UserGETController
+
+    .addCase(auditUserActivityGET.pending, (state) => {
+      state.Auditgetstatus = "loading";
+      state.Auditgetloading = true;
+      state.Auditgetdata = [];
+    })
+    .addCase(auditUserActivityGET.fulfilled, (state, action) => {
+      state.Auditgetstatus = "succeeded";
+      state.Auditgetloading = false;
+      state.Auditgetdata = action.payload.Data;
+    })
+    .addCase(auditUserActivityGET.rejected, (state, action) => {
+      state.Auditgetstatus = "failed";
+      state.Auditgetloading = false;
+      state.error = action.error.message;
+      state.Auditgetdata = [];
+    })
+
+    //AuditScrenCompanyGET
+
+    .addCase(auditScreennameGET.pending, (state) => {
+      state.Auditcompanygetstatus = "loading";
+      state.Auditcompanygetloading = true;
+      state.AuditScreennamegetdata = [];
+    })
+    .addCase(auditScreennameGET.fulfilled, (state, action) => {
+      state.Auditcompanygetstatus = "succeeded";
+      state.Auditcompanygetloading = false;
+      state.AuditScreennamegetdata = action.payload.Data;
+    })
+    .addCase(auditScreennameGET.rejected, (state, action) => {
+      state.Auditcompanygetstatus = "failed";
+      state.Auditcompanygetloading = false;
+      state.error = action.error.message;
+      state.AuditScreennamegetdata = [];
+    })
+
+    .addCase(getLeaveweeklyData.pending, (state) => {
+      state.Status = "idle";
+      state.getLoading = true;
+      state.leaveweeklyData = {
+        Employee: "",
+        Year: "",
+        LeaveDetailsData: {
+          TableData: [],
+          Others: [],
+        },
+      };
+      state.msg = "Loading...";
+    })
+
+    .addCase(getLeaveweeklyData.rejected, (state) => {
+      state.Status = "Error";
+      state.getLoading = false;
+      state.leaveweeklyData = {
+        Employee: "",
+        Year: "",
+        LeaveDetailsData: {
+          TableData: [],
+          Others: [],
+        },
+      };
+      toast.error("Something Went Wrong");
+    })
+
+    // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+    //   state.Status = "success";
+    //   state.getLoading = false;
+    //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
+    //   // state.msg =  action.payload.Msg
+    // })
+    .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+      state.Status = "success";
+      state.getLoading = false;
+      state.leaveweeklyData = action.payload?.Data?.[0] || {
+        Employee: "",
+        Year: "",
+        LeaveDetailsData: {
+          TableData: [],
+          Others: [],
+        },
+      };
+    })
+    //SOP Process POST
+    .addCase(SOPProcessPost.pending, (state, action) => {
+      state.SOPProcessStatus = "idle";
+      state.SOPProcessLoading = true;
+    })
+    .addCase(SOPProcessPost.fulfilled, (state, action) => {
+      state.SOPProcessStatus = "success";
+      state.SOPProcessLoading = false
+      state.SOPProcessdata = action.meta.arg.idata;
+    })
+
+    .addCase(SOPProcessPost.rejected, (state, action) => {
+      state.SOPProcessStatus = "Error";
+      state.SOPProcessLoading = false;
+    })
+    //SOP CONFIG POST
+    .addCase(SOPConfigPost.pending, (state, action) => {
+      state.SOPConfigStatus = "idle";
+      state.SOPConfigLoading = true;
+    })
+    .addCase(SOPConfigPost.fulfilled, (state, action) => {
+      state.SOPConfigStatus = "success";
+      state.SOPConfigLoading = false
+      state.SOPConfigdata = action.meta.arg.idata;
+    })
+
+    .addCase(SOPConfigPost.rejected, (state, action) => {
+      state.SOPConfigStatus = "Error";
+      state.SOPConfigLoading = false;
+    })
+
+    //SOP CONFIGURATION  - GET
+    .addCase(SOPConfigGet.pending, (state, action) => {
+      state.SOPConfigGetstatus = "idle";
+      state.SOPConfigGetloading = true;
+    })
+    .addCase(SOPConfigGet.fulfilled, (state, action) => {
+      state.SOPConfigGetstatus = "success";
+      state.SOPConfigGetloading = false;
+      state.SOPConfigGetdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(SOPConfigGet.rejected, (state, action) => {
+      state.SOPConfigGetstatus = "Error";
+      state.SOPConfigGetloading = false;
+    })
+    //SPECIMEN - GET
+    .addCase(SpecimenGet.pending, (state, action) => {
+      state.SpecimenGetstatus = "idle";
+      state.SpecimenGetloading = true;
+    })
+    .addCase(SpecimenGet.fulfilled, (state, action) => {
+      state.SpecimenGetstatus = "success";
+      state.SpecimenGetloading = false;
+      state.SpecimenGetdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(SpecimenGet.rejected, (state, action) => {
+      state.SpecimenGetstatus = "Error";
+      state.SpecimenGetloading = false;
+    })
+    //SPECIMEN - POST
+    .addCase(SpecimenPost.pending, (state, action) => {
+      state.SpecimenPoststatus = "idle";
+      state.SpecimenPostloading = true;
+    })
+    .addCase(SpecimenPost.fulfilled, (state, action) => {
+      state.SpecimenPoststatus = "success";
+      state.SpecimenPostloading = false;
+      state.SpecimenPostdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(SpecimenPost.rejected, (state, action) => {
+      state.SpecimenPoststatus = "Error";
+      state.SpecimenPostloading = false;
+    })
+    //SopEmpMappingController - POST
+    .addCase(SopEmpMappingController.pending, (state, action) => {
+      state.SopEmpMappingControllerstatus = "idle";
+      state.SopEmpMappingControllerloading = true;
+    })
+    .addCase(SopEmpMappingController.fulfilled, (state, action) => {
+      state.SopEmpMappingControllerstatus = "success";
+      state.SopEmpMappingControllerloading = false;
+      state.SopEmpMappingControllerdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(SopEmpMappingController.rejected, (state, action) => {
+      state.SopEmpMappingControllerstatus = "Error";
+      state.SopEmpMappingControllerloading = false;
+    })
+    //PARTY ORDER PENDING - GET
+    .addCase(PartyOrderPendingGet.pending, (state, action) => {
+      state.PartyOrderPendingGetstatus = "idle";
+      state.PartyOrderPendingGetloading = true;
+    })
+    .addCase(PartyOrderPendingGet.fulfilled, (state, action) => {
+      state.PartyOrderPendingGetstatus = "success";
+      state.PartyOrderPendingGetloading = false;
+      state.PartyOrderPendingGetdata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(PartyOrderPendingGet.rejected, (state, action) => {
+      state.PartyOrderPendingGetstatus = "Error";
+      state.PartyOrderPendingGetloading = false;
+    })
+
+    //SOP TIMELINE - GET
+    .addCase(SopTimeLineController.pending, (state, action) => {
+      state.SOPTimelinestatus = "idle";
+      state.SOPTimelineloading = true;
+    })
+    .addCase(SopTimeLineController.fulfilled, (state, action) => {
+      state.SOPTimelinestatus = "success";
+      state.SOPTimelineloading = false;
+      state.SOPTimelinedata = action.payload.Data
+        ? action.payload.Data
+        : {};
+    })
+    .addCase(SopTimeLineController.rejected, (state, action) => {
+      state.SOPTimelinestatus = "Error";
+      state.SOPTimelineloading = false;
+    })
+    //GetOverflowAffectedOrders - GET
+    .addCase(GetOverflowAffectedOrders.pending, (state, action) => {
+      state.GetOverflowAffectedOrdersstatus = "idle";
+      state.GetOverflowAffectedOrdersloading = true;
+    })
+    .addCase(GetOverflowAffectedOrders.fulfilled, (state, action) => {
+      state.GetOverflowAffectedOrdersstatus = "success";
+      state.GetOverflowAffectedOrdersloading = false;
+      state.GetOverflowAffectedOrdersdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(GetOverflowAffectedOrders.rejected, (state, action) => {
+      state.GetOverflowAffectedOrdersstatus = "Error";
+      state.GetOverflowAffectedOrdersloading = false;
+    })
+    //PartyReset - GET
+    .addCase(PartyReset.pending, (state, action) => {
+      state.PartyResetstatus = "idle";
+      state.PartyResetloading = true;
+    })
+    .addCase(PartyReset.fulfilled, (state, action) => {
+      state.PartyResetstatus = "success";
+      state.PartyResetloading = false;
+      state.PartyResetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(PartyReset.rejected, (state, action) => {
+      state.PartyResetstatus = "Error";
+      state.PartyResetloading = false;
+    })
+    //PROMOTION_MAIN_LISTVIEW_GET
+    .addCase(promototionGET.pending, (state, action) => {
+      state.promotiongetstatus = "idle";
+      state.promotiongetloading = true;
+      state.promotiongetdata = [];
+    })
+    .addCase(promototionGET.fulfilled, (state, action) => {
+      state.promotiongetstatus = "success";
+      state.promotiongetloading = false;
+      state.promotiongetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(promototionGET.rejected, (state, action) => {
+      state.promotiongetstatus = "Error";
+      state.promotiongetloading = false;
+      state.promotiongetdata = [];
+    })
+    //PROMOTION_STDACTIVITIE_GET
+
+    .addCase(promototionprojGET.pending, (state, action) => {
+      state.promotionSTDgetstatus = "idle";
+      state.promotionSTDgetloading = true;
+      state.promotionSTDgetdata = [];
+    })
+    .addCase(promototionprojGET.fulfilled, (state, action) => {
+      state.promotionSTDgetstatus = "success";
+      state.promotionSTDgetloading = false;
+      state.promotionSTDgetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(promototionprojGET.rejected, (state, action) => {
+      state.promotionSTDgetstatus = "Error";
+      state.promotionSTDgetloading = false;
+      state.promotionSTDgetdata = [];
+    })
+
+
+
+
+
+    //PROMOTION_STUDENT_MARKS_GET
+    .addCase(promototioStudMarksGET.pending, (state, action) => {
+      state.promotionstudmarksgetstatus = "idle";
+      state.promotionstudmarksgetloading = true;
+    })
+    .addCase(promototioStudMarksGET.fulfilled, (state, action) => {
+      state.promotionstudmarksgetstatus = "success";
+      state.promotionstudmarksgetloading = false;
+      state.promotionstudmarksgetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(promototioStudMarksGET.rejected, (state, action) => {
+      state.promotionstudmarksgetstatus = "Error";
+      state.promotionstudmarksgetloading = false;
+    })
+
+
+    .addCase(TimetableProcessController.pending, (state, action) => {
+      state.Timetableresetstatus = "idle";
+      state.Timetableresetloading = true;
+    })
+    .addCase(TimetableProcessController.fulfilled, (state, action) => {
+      state.Timetableresetstatus = "success";
+      state.Timetableresetloading = false;
+      state.Timetableresetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(TimetableProcessController.rejected, (state, action) => {
+      state.Timetableresetstatus = "Error";
+      state.Timetableresetloading = false;
+    })
+    .addCase(PublishEvent.pending, (state, action) => {
+      state.PublishEventstatus = "idle";
+      state.PublishEventloading = true;
+    })
+    .addCase(PublishEvent.fulfilled, (state, action) => {
+      state.PublishEventstatus = "success";
+      state.PublishEventloading = false;
+      state.PublishEventdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(PublishEvent.rejected, (state, action) => {
+      state.PublishEventstatus = "Error";
+      state.PublishEventloading = false;
+    })
+    //TIMETABLE TASK PROCESS
+    .addCase(TaskProcess.pending, (state, action) => {
+      state.TaskProcessstatus = "idle";
+      state.TaskProcessloading = true;
+    })
+    .addCase(TaskProcess.fulfilled, (state, action) => {
+      state.TaskProcessstatus = "success";
+      state.TaskProcessloading = false;
+      state.TaskProcessdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(TaskProcess.rejected, (state, action) => {
+      state.TaskProcessstatus = "Error";
+      state.TaskProcessloading = false;
+    })
+    //TaskSessionGet
+    .addCase(TaskSessionGet.pending, (state, action) => {
+      state.TaskSessionGetstatus = "idle";
+      state.TaskSessionGetloading = true;
+    })
+    .addCase(TaskSessionGet.fulfilled, (state, action) => {
+      state.TaskSessionGetstatus = "success";
+      state.TaskSessionGetloading = false;
+      state.TaskSessionGetdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(TaskSessionGet.rejected, (state, action) => {
+      state.TaskSessionGetstatus = "Error";
+      state.TaskSessionGetloading = false;
+    })
+    //TaskSessionUpdate
+    .addCase(TaskSessionUpdate.pending, (state, action) => {
+      state.TaskSessionUpdatestatus = "idle";
+      state.TaskSessionUpdateloading = true;
+    })
+    .addCase(TaskSessionUpdate.fulfilled, (state, action) => {
+      state.TaskSessionUpdatestatus = "success";
+      state.TaskSessionUpdateloading = false;
+      state.TaskSessionUpdatedata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(TaskSessionUpdate.rejected, (state, action) => {
+      state.TaskSessionUpdatestatus = "Error";
+      state.TaskSessionUpdateloading = false;
+    })
+    //PartyAnalytics - GET
+    .addCase(PartyAnalytics.pending, (state, action) => {
+      state.PartyAnalyticsstatus = "idle";
+      state.PartyAnalyticsloading = true;
+    })
+    .addCase(PartyAnalytics.fulfilled, (state, action) => {
+      state.PartyAnalyticsstatus = "success";
+      state.PartyAnalyticsloading = false;
+      state.PartyAnalyticsdata = action.payload
+        ? action.payload
+        : {};
+    })
+    .addCase(PartyAnalytics.rejected, (state, action) => {
+      state.PartyAnalyticsstatus = "Error";
+      state.PartyAnalyticsloading = false;
+    })
+
+    .addCase(ContractInvoice.pending, (state, action) => {
+      state.InvoiceHeaderDatastatus = "idle";
+      state.InvoiceHeaderDataloading = true;
+    })
+    .addCase(ContractInvoice.fulfilled, (state, action) => {
+      state.InvoiceHeaderData =
+        action.payload.HeaderData ? action.payload.HeaderData : [];
+      state.InvoiceDetailData =
+        action.payload.DetailData ? action.payload.DetailData : [];
+      state.InvoiceBaseUrl =
+        action.payload.BaseUrl ? action.payload.BaseUrl : [];
+    })
+    .addCase(ContractInvoice.rejected, (state, action) => {
+      state.InvoiceHeaderDatastatus = "Error";
+      state.InvoiceHeaderDataloading = false;
+    })
+    //SCOREBOARD
+    // .addCase(ScoredashBoard.pending, (state, action) => {
+    //   // state.ScoredashBoardGetData = []
+    //   state.ScoredashBoardGetStaus = "pending";
+    //   state.ScoredashBoardGetLoading = true;
+    //   state.ScoredashBoardGetError = null;
+    // })
+
+    // .addCase(ScoredashBoard.fulfilled, (state, action) => {
+    //   state.ScoredashBoardGetData = action.payload;
+    //   state.ScoredashBoardGetStaus = "fulfilled";
+    //   state.ScoredashBoardGetLoading = false;
+    //   state.ScoredashBoardGetError = null;
+    //   console.log("ScoredashBoardGetData",state.ScoredashBoardGetData)
+    // })
+    // .addCase(ScoredashBoard.rejected, (state, action) => {
+    //   // state.ScoredashBoardGetData = [];
+    //   state.ScoredashBoardGetStaus = "rejected";
+    //   state.ScoredashBoardGetLoading = false;
+    //   state.ScoredashBoardGetError = null;
+    // })
+
+
+    .addCase(timeSheet.fulfilled, (state, action) => {
+      state.timeSheetData = action.payload?.Data?.Task || [];
+      state.projectName =
+        action.payload?.Data?.ProjectName?.ProjectName || "";
+      state.managerName =
+        action.payload?.Data?.ManagersName?.ManagersName || "";
+    })
+    .addCase(MonthlyAttendance.pending, (state, action) => {
+      state.MonthlyAttendanceDataGetloading = true;
+    })
+    .addCase(MonthlyAttendance.fulfilled, (state, action) => {
+      state.MonthlyAttendanceDataGetloading = false;
+      state.MonthlyAttendanceData = action.payload.Data;
+    });
+},
 });
 
 // Destructure and export the plain action creators
@@ -6949,7 +7042,25 @@ export const empAttendance = createAsyncThunk(
     return response.data;
   },
 );
-
+export const SortAttendance = createAsyncThunk(
+  "employee/SortAttendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.SortPayrollAttendance;
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const PayrollconfigpayrollAttendance = createAsyncThunk(
   "Payroll Configuation/Payrollattendance",
   async ({ data }) => {

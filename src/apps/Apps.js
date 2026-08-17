@@ -240,6 +240,9 @@ import EditStandardSessions from "./pages/HR/EditStandardSessions";
 import StudentReports from "./pages/Empolyee/EditAcademicreport";
 import EditAttendanceEntry from "./pages/Empolyee/EditAttendanceentry";
 import EditGeneral from "./pages/HR/EditGeneralevent";
+import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
+import EditRemainder from "./pages/Empolyee/EditRemainder";
+
 
 function App() {
   //   useEffect(() => {
@@ -1398,7 +1401,10 @@ function App() {
                     path="/:accessID/:screenName/EditSettlements/:id/:Mode"
                     element={<EditSettlements />}
                   />
-
+                  <Route
+                    path="/Reminder"
+                    element={<EditRemainder />}
+                  />
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
@@ -1645,6 +1651,10 @@ function App() {
                     element={<ProjectTimeTable />}
                   />
                   <Route
+                    path="/ItemStokAnalytics"
+                   element={<ItemStokAnalytics />}
+                  />
+                   <Route
                     // path="/:accessID/RaiseComplaints"
                     path="/:accessID/Escalation/EditEscalation/:id/:Mode"
                     element={<RaiseComplaints />}

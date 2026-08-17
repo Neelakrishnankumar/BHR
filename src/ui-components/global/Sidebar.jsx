@@ -2208,7 +2208,7 @@ import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutl
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-
+import CelebrationIcon from '@mui/icons-material/Celebration';
 const getPersonnelMenu = (is00123Subscription) =>
   is00123Subscription
     ? {
@@ -2747,7 +2747,8 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR122",
           },
-          {
+           ...(!is003Subscription
+            ? [{
             name: "Department",
             id: 3456,
             url: "./TR026/Department",
@@ -2763,7 +2764,7 @@ const Sidebars = () => {
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
-          },
+          }]:[]),
           ...(is003Subscription
             ? [
               {
@@ -3304,6 +3305,24 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR217",
           },
           {
+            name: "Reminder",
+            url: "/Apps/Reminder",
+            id: 5490,
+            icon: (
+              <Tooltip title="Reminder">
+                {/* <AppRegistrationOutlinedIcon color="info" /> */}
+                <CelebrationIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR412",
+          },
+          {
             name: "Attendance Register",
             url: "/Apps/TR259/EditAttendanceHistory",
             id: 5591,
@@ -3803,13 +3822,14 @@ const Sidebars = () => {
                 boxShadow: "0 1px 3px rgba(0,0,0,0.08)", // Optional
               }}
             >
-              <Typography variant="body2" fontWeight={600} color="text.primary">
+           
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                {/* <Typography variant="body2" fontWeight={500} color="text.secondary">
+                  {year || "Year"}
+                </Typography> */}
+                   <Typography variant="body2" fontWeight={600} color="text.primary">
                 {company || "Company"}
               </Typography>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="body2" fontWeight={500} color="text.secondary">
-                  {year || "Year"}
-                </Typography>
                 <Tooltip title="Configuration">
                   <IconButton
                     size="small"

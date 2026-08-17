@@ -12,7 +12,7 @@
     "Loc": "Please enter the Location",
     "Department": "Please enter the Department",
     "subjectskill": "Please select the Type",
-    "Subject": "Please enter the Subject/Activities"
+    "Subject": "Please enter the Subject"
   },
    "Cocurricularact": {
     "Date": "Please enter the Date",
@@ -144,7 +144,9 @@
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
     "employeetype": "Please select the Type",
-    "Gender": "Please select the Gender"
+    "Gender": "Please select the Gender",
+    "Subject": "Please select the Subject"
+
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -508,13 +510,15 @@
     "ContactPersonAndNumber": "Please enter the Contact Person And Number"
 },
  "EventGeneral": {
-    "EmergencyTitle": "Please enter the General Type",
+    "Title": "Please enter the Event Title",
     "Priority": "Please select the Priority",
     "Standard1": "Please select the Standard/Activities",
     "Standard": "Please select the Standard/Activities",
     "Student": "Please select the Student",
     "Message": "Please enter the Message",
-    "ContactPersonAndNumber": "Please enter the Contact Person And Number"
+    "ContactPersonAndNumber": "Please enter the Contact Person And Number",
+    "Eventtype": "Please select the Event Category",
+    "EventDate": "Please enter the Event Date"
 },
   "EventAcademics": {
     "EventTitle": "Please enter the Event Title",

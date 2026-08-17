@@ -28,6 +28,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Slider
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -170,6 +171,7 @@ const Editemployee = () => {
   const [page2, setPage2] = React.useState(secondaryCurrentPage);
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
+  const [ID3Image, setID3Image] = useState("");
   const [footerHeight, setFooterHeight] = useState(60);
   const [isReady, setIsReady] = useState(false);
   const theme = useTheme();
@@ -713,6 +715,14 @@ const Editemployee = () => {
 
     return match?.CAPTION || defaultCaption;
   };
+  //Skill Identification
+  const ratingEmojis = ["😡", "😞", "😟", "😕", "😐", "🙂", "😊", "😃", "😄", "🤩"];
+
+  const getRatingEmoji = (rating) => {
+    const num = Number(rating);
+    if (!num || num < 1) return "😡";
+    return ratingEmojis[Math.min(num, 10) - 1];
+  };
   useEffect(() => {
     if (InventrygetData) {
       setBottomRows(InventrygetData);
@@ -753,19 +763,33 @@ const Editemployee = () => {
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
-        if (!isStudentClassification) {
-          Department: Yup.array()
-            .min(1, data.Employee.Department) //FIXED
+        if (is003Subscription && !isStudentClassification) {
+          schemaFields.Department = Yup.array()
+            .min(1, data.Employee.Subject)
+            .required(data.Employee.Subject);
+        }
+        if (!is003Subscription) {
+          schemaFields.Department = Yup.array()
+            .min(1, data.Employee.Department)
             .required(data.Employee.Department);
         }
+
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
         }
-        if (!isStudentClassification) {
-          Department: Yup.array()
-            .min(1, data.Employee.Department) //FIXED
-            .required(data.Employee.Department);
-        }
+        // if (!isStudentClassification) {
+        //   Department: Yup.array()
+        //     .min(1, data.Employee.Department) //FIXED
+        //     .required(data.Employee.Department);
+        // }
+        // if (CompanyAutoCode === "N") {
+        //   schemaFields.Code = Yup.string().required(data.Employee.Code);
+        // }
+        // if (!isStudentClassification) {
+        //   Department: Yup.array()
+        //     .min(1, data.Employee.Department) //FIXED
+        //     .required(data.Employee.Department);
+        // }
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
 
@@ -905,7 +929,7 @@ const Editemployee = () => {
         //cocurricular_school scenario
         const schema24 = Yup.object().shape({
           date: Yup.string().trim().required(data.Cocurricularact.Date),
-          cocurricular: Yup.object().required(data.Cocurricularact.Cocurricular).nullable(),
+          // cocurricular: Yup.object().required(data.Cocurricularact.Cocurricular).nullable(),
           rating: Yup.number()
             .typeError("Rating must be a number")
             .required(data.Cocurricularact.Rating)
@@ -2705,7 +2729,7 @@ const Editemployee = () => {
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           {/* <Typography>{`List of Co-curricular Activities`}</Typography> */}
-          <Typography>{`List of Identified Skills`}</Typography> 
+          <Typography>{`List of Skill/Memories`}</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -2721,6 +2745,7 @@ const Editemployee = () => {
               onClick={() => {
                 selectcelldata("", "A", "");
                 setOpenCocurricular(true);
+                setIsEdit(false);
               }}
             >
               <AddOutlinedIcon />
@@ -3894,6 +3919,45 @@ const Editemployee = () => {
       }
     };
   };
+    const getSkillFile = async (e) => {
+    let files = e.target.files;
+    let fileReader = new FileReader();
+
+    fileReader.readAsDataURL(files[0]);
+    fileReader.onload = (event) => {
+      let fileInput = !!event.target.result;
+      if (fileInput) {
+        try {
+          Resizer.imageFileResizer(
+            files[0],
+            150,
+            150,
+            "JPEG",
+            100,
+            0,
+            async (uri) => {
+              const formData = { image: uri, type: "images" };
+              const fileData = await dispatch(imageUpload({ formData }));
+              console.log("Uploaded File Response:", fileData);
+
+              if (fileData?.payload?.Status === "Y") {
+                toast.success(fileData.payload.Msg);
+                setID3Image(fileData.payload.name);
+              } else {
+                toast.error("File upload failed.");
+              }
+            },
+            "base64",
+            150,
+            150,
+          );
+        } catch (err) {
+          console.log(err);
+          toast.error("An error occurred during file processing.");
+        }
+      }
+    };
+  };
   // locality screen
   const localityinitialValue = {
     code: Data.Code,
@@ -4140,7 +4204,9 @@ const Editemployee = () => {
                 ? "OF"
                 : contractorData.units === "Term Fees"
                   ? "TF"
-                  : "",
+                  : contractorData.units === "Annual Fees"
+                    ? "AF"
+                    : "",
     BillingType:
       contractorData.BillingType === "Cash Memo"
         ? "CashMemo"
@@ -4801,13 +4867,13 @@ const Editemployee = () => {
     elligibledays: LeaveCondata.elligibledays,
     Year:
       LeaveCondata.Year
-      //  === "2024"
-      //   ? "2024"
-      //   : LeaveCondata.Year === "2025"
-      //     ? "2025"
-      //     : LeaveCondata.Year === "2026"
-      //       ? "2026"
-      //       : "",
+    //  === "2024"
+    //   ? "2024"
+    //   : LeaveCondata.Year === "2025"
+    //     ? "2025"
+    //     : LeaveCondata.Year === "2026"
+    //       ? "2026"
+    //       : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -5577,6 +5643,12 @@ const Editemployee = () => {
       desc: "Basic details about the personnel",
       icon: "👤",
     },
+    // {
+    //   value: 25,
+    //   label: "Dependent,
+    //   desc: "Dependent details",
+    //   icon: "🔗",
+    // },
     {
       value: 5,
       label: "Contact",
@@ -5598,8 +5670,8 @@ const Editemployee = () => {
         {
           value: 24,
           // label: "Co-Curricular Activity",
-          label: "Skill Identification",
-          desc: "Student skill identification and participation",
+          label: "Skill/Memories",
+          desc: "Student skill or memories",
           icon: "📋",
         },
       ]
@@ -5645,13 +5717,13 @@ const Editemployee = () => {
         },
       ]
       : []),
- ...(!is003Subscription ? [
-    {
-      value: 1,
-      label: getBusinessCaption("Skills", "Skills"),
-      desc: "Skills and competency details",
-      icon: "🛠️",
-    },
+    ...(!is003Subscription ? [
+      {
+        value: 1,
+        label: getBusinessCaption("Skills", "Skills"),
+        desc: "Skills and competency details",
+        icon: "🛠️",
+      },
     ]
       : []),
 
@@ -5902,6 +5974,7 @@ const Editemployee = () => {
   const [rowModesModel, setRowModesModel] = React.useState({});
   const CocurriculargetData = useSelector((state) => state.formApi.CocurriculargetData);
   const rows = CocurriculargetData?.EmployeeProcess || [];
+  console.log(rows, "CocurriculargetData");
 
   const editingRow = editingRecordID
     ? rows.find((r) => String(r.RecordID) === String(editingRecordID))
@@ -5923,6 +5996,7 @@ const Editemployee = () => {
   const resetFormToAddMode = () => {
     setEditingRecordID(null);
     setIsEdit(false);
+    setID3Image(""); 
     setIsAddingActivity(false);
     formikRef.current?.resetForm({
       values: {
@@ -5931,6 +6005,7 @@ const Editemployee = () => {
         cocurricularName: "",
         comments: "",
         rating: "",
+        
       },
     });
   };
@@ -6011,26 +6086,47 @@ const Editemployee = () => {
       headerAlign: "center",
       editable: false,
     },
+    // {
+    //   field: "Rating",
+    //   headerName: "Rating",
+    //   headerAlign: "center",
+    //   width: 90,
+    //   align: "right",
+    //   editable: false,
+    //   renderCell: (params) => (
+    //     <Typography
+    //       sx={{
+    //         color: getRatingColor(params.value),
+    //         fontWeight: 600,
+    //         fontSize: 14,
+    //         width: "100%",
+    //         textAlign: "right",
+    //       }}
+    //     >
+    //       {params.value ?? "-"}
+    //     </Typography>
+    //   ),
+    // },
     {
-      field: "Rating",
-      headerName: "Rating",
-      headerAlign: "center",
-      width: 90,
-      align: "right",
-      editable: false,
-      renderCell: (params) => (
-        <Typography
-          sx={{
-            color: getRatingColor(params.value),
-            fontWeight: 600,
-            fontSize: 14,
-            width: "100%",
-            textAlign: "right",
-          }}
-        >
-          {params.value ?? "-"}
-        </Typography>
-      ),
+        field: "Rating",
+        headerName: "Rating",
+        headerAlign: "center",
+        width: 90,
+        align: "right",
+        editable: false,
+        renderCell: (params) => (
+            <Typography
+                sx={{
+                    color: getRatingColor(params.value),
+                    fontWeight: 600,
+                    fontSize: 14,
+                    width: "100%",
+                    textAlign: "right",
+                }}
+            >
+                {getRatingEmoji(params.value)} {params.value ?? "-"}
+            </Typography>
+        ),
     },
     {
       field: "Comments",
@@ -6048,8 +6144,8 @@ const Editemployee = () => {
     cocurricularName: "",
     comments: "",
     rating: "",
-    Code:Data.Code,
-    Name:Data.Name
+    Code: Data.Code,
+    Name: Data.Name
   };
   const handleApplyClick = async (values) => {
     const idata = {
@@ -6066,7 +6162,7 @@ const Editemployee = () => {
       CocurricularName: isAddingActivity
         ? values.cocurricularName || ""
         : "",
-    };
+      Attachments: ID3Image || editingRow?.Attachments || "",    };
 
     try {
       const result = await dispatch(
@@ -6101,21 +6197,45 @@ const Editemployee = () => {
     if (yyyy.length === 4) return `${yyyy}-${mm}-${dd}`; // already DD-MM-YYYY
     return dateStr;
   };
+  // const handleEditClick = (row) => () => {
+  //   setEditingRecordID(row.RecordID);
+  //   console.log(row,"editrow");
+  //   setIsEdit(true);
+  //   console.log(isEdit, "isEditinedit");
+  //   setIsAddingActivity(false);
+  //   formikRef.current?.setValues({
+  //     date: toInputDate(row.EPDate),
+  //     cocurricular: row.CocurricularRecordID
+  //       ? { RecordID: row.CocurricularRecordID, Name: row.CocurricularName }
+  //       : null,
+  //     cocurricularName: row.CocurricularName || "",
+  //     comments: row.Comments || "",
+  //     rating: row.Rating || "",
+  //   });
+  // };
   const handleEditClick = (row) => () => {
-    setEditingRecordID(row.RecordID);
-    setIsEdit(true);
-    console.log(isEdit, "isEditinedit");
-    setIsAddingActivity(false);
+  setOpenCocurricular(true);
+  setEditingRecordID(row.RecordID);
+  setIsEdit(true);
+  setIsAddingActivity(false);
+   setID3Image(row.Attachments || ""); 
+
+  setTimeout(() => {
     formikRef.current?.setValues({
       date: toInputDate(row.EPDate),
       cocurricular: row.CocurricularRecordID
-        ? { RecordID: row.CocurricularRecordID, Name: row.CocurricularActivity }
+        ? {
+            RecordID: row.CocurricularRecordID,
+            Name: row.CocurricularName,
+          }
         : null,
-      cocurricularName: "",
+      cocurricularName: row.CocurricularName || "",
       comments: row.Comments || "",
       rating: row.Rating || "",
+
     });
-  };
+  }, 0);
+};
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
@@ -6637,6 +6757,7 @@ const Editemployee = () => {
                       handleSubmit,
                       setFieldValue,
                       resetForm,
+                      setFieldTouched
                     }) => {
                       const handleSaveAndNext = async () => {
                         await fnSave(values, false);
@@ -6733,7 +6854,7 @@ const Editemployee = () => {
                                           name="Department"
                                           label={
                                             <>
-                                              Department
+                                              {is003Subscription ? "Subject" : "Department"}
                                               <span
                                                 style={{
                                                   color: "red",
@@ -6760,6 +6881,7 @@ const Editemployee = () => {
                                             String(option.RecordID) ===
                                             String(value.RecordID)
                                           }
+                                          onBlur={() => setFieldTouched("Department", true)}
                                           error={
                                             !!touched.Department &&
                                             !!errors.Department
@@ -6788,6 +6910,7 @@ const Editemployee = () => {
                                                 color: "red",
                                                 fontSize: "10px",
                                                 marginTop: "2px",
+                                                marginLeft: "10px",
                                               }}
                                             >
                                               {errors.Department}
@@ -7180,119 +7303,122 @@ const Editemployee = () => {
 
                               {/* ----- Permissions ----- */}
                               <Box sx={{ p: 3 }}>
-                                <Box
-                                  display="flex"
-                                  alignItems="center"
-                                  gap={1}
-                                  mb={0.5}
-                                >
-                                  <Box
-                                    sx={{
-                                      width: 32,
-                                      height: 32,
-                                      borderRadius: "50%",
-                                      backgroundColor: "#FEF3C7",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Typography sx={{ fontSize: 16 }}>
-                                      🛡️
+                                {!isStudentClassification && (
+                                  <>
+                                    <Box
+                                      display="flex"
+                                      alignItems="center"
+                                      gap={1}
+                                      mb={0.5}
+                                    >
+                                      <Box
+                                        sx={{
+                                          width: 32,
+                                          height: 32,
+                                          borderRadius: "50%",
+                                          backgroundColor: "#FEF3C7",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <Typography sx={{ fontSize: 16 }}>
+                                          🛡️
+                                        </Typography>
+                                      </Box>
+                                      <Typography
+                                        variant="subtitle1"
+                                        fontWeight={700}
+                                        color="#D97706"
+                                      >
+                                        Permissions
+                                      </Typography>
+                                    </Box>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      mb={2}
+                                      ml={5.5}
+                                    >
+                                      Set permissions and access levels
                                     </Typography>
-                                  </Box>
-                                  <Typography
-                                    variant="subtitle1"
-                                    fontWeight={700}
-                                    color="#D97706"
-                                  >
-                                    Permissions
-                                  </Typography>
-                                </Box>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  mb={2}
-                                  ml={5.5}
-                                >
-                                  Set permissions and access levels
-                                </Typography>
 
-                                <Box>
-                                  <Field
-                                    //  size="small"
-                                    type="checkbox"
-                                    name="qualityassurance"
-                                    id="qualityassurance"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    as={Checkbox}
-                                    label="Quality Assurance"
-                                  />
-
-                                  <FormLabel focused={false}>
-                                    {" "}
-                                    {getBusinessCaption(
-                                      "QualityAssurance",
-                                      "Quality Assurance",
-                                    )}
-                                  </FormLabel>
-                                  <Field
-                                    //  size="small"
-                                    type="checkbox"
-                                    name="scrummaster"
-                                    id="scrummaster"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    as={Checkbox}
-                                    label="Scrum Master"
-                                  />
-
-                                  <FormLabel focused={false}>
-                                    {" "}
-                                    {getBusinessCaption(
-                                      "ScrumMaster",
-                                      "Scrum Master",
-                                    )}
-                                  </FormLabel>
-                                  <Field
-                                    //  size="small"
-                                    type="checkbox"
-                                    name="prjmanager"
-                                    id="prjmanager"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    as={Checkbox}
-                                    label="Project Manager"
-                                  />
-
-                                  <FormLabel focused={false}>
-                                    {getBusinessCaption(
-                                      "ProjectManager",
-                                      "Project Manager",
-                                    )}
-                                  </FormLabel>
-
-                                  {!is003Subscription && (
-                                    <>
+                                    <Box>
                                       <Field
                                         //  size="small"
                                         type="checkbox"
-                                        name="CRMUser"
-                                        id="CRMUser"
+                                        name="qualityassurance"
+                                        id="qualityassurance"
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         as={Checkbox}
-                                        label="CRM User"
+                                        label="Quality Assurance"
                                       />
 
                                       <FormLabel focused={false}>
-                                        CRM User
+                                        {" "}
+                                        {getBusinessCaption(
+                                          "QualityAssurance",
+                                          "Quality Assurance",
+                                        )}
                                       </FormLabel>
-                                    </>
-                                  )}
-                                </Box>
+                                      <Field
+                                        //  size="small"
+                                        type="checkbox"
+                                        name="scrummaster"
+                                        id="scrummaster"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        as={Checkbox}
+                                        label="Scrum Master"
+                                      />
 
+                                      <FormLabel focused={false}>
+                                        {" "}
+                                        {getBusinessCaption(
+                                          "ScrumMaster",
+                                          "Scrum Master",
+                                        )}
+                                      </FormLabel>
+                                      <Field
+                                        //  size="small"
+                                        type="checkbox"
+                                        name="prjmanager"
+                                        id="prjmanager"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        as={Checkbox}
+                                        label="Project Manager"
+                                      />
+
+                                      <FormLabel focused={false}>
+                                        {getBusinessCaption(
+                                          "ProjectManager",
+                                          "Project Manager",
+                                        )}
+                                      </FormLabel>
+
+                                      {!is003Subscription && (
+                                        <>
+                                          <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="CRMUser"
+                                            id="CRMUser"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="CRM User"
+                                          />
+
+                                          <FormLabel focused={false}>
+                                            CRM User
+                                          </FormLabel>
+                                        </>
+                                      )}
+                                    </Box>
+                                  </>
+                                )}
                                 <Box>
                                   <Field
                                     //  size="small"
@@ -13520,7 +13646,7 @@ const Editemployee = () => {
                                 fontWeight={700}
                                 color="#0D94885"
                               >
-                                Skill Identification
+                                Skill/Memories
                               </Typography>
 
                               <Typography
@@ -13768,6 +13894,7 @@ const Editemployee = () => {
                       resetForm,
                       handleSubmit,
                       setFieldValue,
+                      setFieldTouched
                     }) => (
                       <>
                         <form
@@ -13785,7 +13912,7 @@ const Editemployee = () => {
                             }}
                           >
                             <Typography variant="h6">
-                              Skill Identification
+                              Skill/Memories
                             </Typography>
 
                             <IconButton onClick={() => setOpenCocurricular(false)}>
@@ -13930,7 +14057,58 @@ const Editemployee = () => {
                                 helperText={touched.comments && errors.comments}
                                 fullWidth
                               />
-                              <TextField
+                              <Box>
+                                <Typography sx={{ mb: 1 }}>
+                                  Rating (1-10)
+                                  <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                </Typography>
+
+                                <Box display="flex" alignItems="center" gap={2}>
+                                  <Typography
+                                    sx={{
+                                      fontSize: 25,
+                                      lineHeight: 1,
+                                      minWidth: 48,
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    {getRatingEmoji(values.rating)}
+                                  </Typography>
+
+                                  <Slider
+                                    value={Number(values.rating) || 0}
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    marks
+                                    valueLabelDisplay="on"
+                                    onChange={(e, newValue) => setFieldValue("rating", newValue)}
+                                    onChangeCommitted={() =>
+                                      formikRef.current?.setFieldTouched("rating", true)
+                                    }
+                                    sx={{
+                                      marginTop: 2,
+                                      color: getRatingColor(values.rating),
+                                      "& .MuiSlider-thumb": {
+                                        height: 10,
+                                        width: 10,
+                                        backgroundColor: "#fff",
+                                        border: `1px solid ${getRatingColor(values.rating)}`,
+                                      },
+                                      "& .MuiSlider-valueLabel": {
+                                        backgroundColor: getRatingColor(values.rating),
+                                      },
+                                    }}
+                                  />
+                                </Box>
+
+                                {touched.rating && errors.rating && (
+                                  <Typography color="error" variant="caption">
+                                    {errors.rating}
+                                  </Typography>
+                                )}
+                              </Box>
+                              {/* <TextField
                                 name="rating"
                                 type="number"
                                 label={
@@ -13957,7 +14135,7 @@ const Editemployee = () => {
                                     fontSize: 16
                                   },
                                 }}
-                              />
+                              /> */}
 
                             </Box>
                           </DialogContent>
@@ -13972,6 +14150,45 @@ const Editemployee = () => {
                               gap: 1,
                             }}
                           >
+                             <Box display="flex" gap={1}>
+                                <Tooltip title="ID Proof">
+                                <IconButton
+                                  size="small"
+                                  color="warning"
+                                  aria-label="upload picture"
+                                  component="label"
+                                >
+                                  <input
+                                    hidden
+                                    accept="all/*"
+                                    type="file"
+                                    // onChange={getFilegstChange}
+                                    onChange={getSkillFile}
+                                  />
+                                  <PictureAsPdfOutlinedIcon />
+                                </IconButton>
+                               
+                              </Tooltip>
+                                <Button
+                                size="small"
+                                variant="contained"
+                                onClick={() => {                              
+                                    editingRow?.Attachments || ID3Image 
+                                    ? window.open(
+                                      ID3Image
+                                        ? store.getState().globalurl
+                                          .attachmentUrl + ID3Image
+                                        : store.getState().globalurl
+                                          .attachmentUrl +
+                                        editingRow?.Attachments,
+                                      "_blank",
+                                    )
+                                    : toast.error("Please Upload File");
+                                }}
+                              >
+                                View
+                              </Button>
+                              </Box>
                             <Button
                               type="submit"
                               sx={{
@@ -15085,6 +15302,297 @@ const Editemployee = () => {
           ) : (
             false
           )}
+          {show == "25" ? (
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+              {/* LEFT: Document content */}
+              <Box flex={1} minWidth={0}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
+                  <Formik
+                    initialValues={parentcontactInitialValue}
+                    onSubmit={(values, setSubmitting) => {
+                      setTimeout(() => {
+                        contactsave(values);
+                      }, 100);
+                    }}
+                    // validationSchema={validationSchema13}
+                    enableReinitialize={true}
+                  >
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      isSubmitting,
+                      values,
+                      handleSubmit,
+                      setFieldValue,
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        {/* ----- CARD HEADER ----- */}
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                          mb={0.5}
+                        >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: "#EEF2FF",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography sx={{ fontSize: 16 }}>📑</Typography>
+                          </Box>
+                          <Box>
+
+
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={700}
+                              color="#0D94885"
+                            >
+                              Dependency
+                            </Typography>
+
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              mb={1}
+
+                            >
+                              Dependency information
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          display="grid"
+                          gap={formGap}
+                          padding={1}
+                          gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                          // gap="30px"
+                          sx={{
+                            "& > div": {
+                              gridColumn: isNonMobile ? undefined : "span 2",
+                            },
+                          }}
+                        >
+                          {CompanyAutoCode == "Y" ? (
+                            <TextField
+                              variant="outlined"
+                              size="small"
+                              type="text"
+                              id="code"
+                              name="code"
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+
+                              label="Code"
+                              InputProps={{ readOnly: true }}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              placeholder="Auto"
+                              // focused
+                              // required
+
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                            // sx={{
+                            //   backgroundColor: "#ffffff", // Set the background to white
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            //   },
+                            // }}
+
+                            // autoFocus
+                            />
+                          ) : (
+                            <TextField
+                              name="code"
+                              type="text"
+                              id="code"
+                              label={
+                                <>
+                                  Code
+                                  <span style={{ color: "red", fontSize: "20px" }}>
+                                    *
+                                  </span>
+                                </>
+                              }
+                              variant="outlined"
+                              size="small"
+                              // focused
+                              // required
+                              value={values.code}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.code && !!errors.code}
+                              helperText={touched.code && errors.code}
+                              // sx={{
+                              //   backgroundColor: "#ffffff", // Set the background to white
+                              //   "& .MuiFilledInput-root": {
+                              //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              //   },
+                              // }}
+                              autoFocus
+                            />
+                          )}
+                          <TextField
+                            name="name"
+                            type="text"
+                            id="name"
+                            label={
+                              <>
+                                Name
+                                {/* <span style={{ color: "red", fontSize: "20px" }}>
+                                     *
+                                   </span> */}
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            // focused
+                            value={values.name}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.name && !!errors.name}
+                            helperText={touched.name && errors.name}
+                            // sx={{
+                            //   backgroundColor: "#ffffff", // Set the background to white
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            //   },
+                            // }}
+                            InputProps={{
+                              inputProps: {
+                                readOnly: true,
+                              },
+                            }}
+                            // required
+                            autoFocus={CompanyAutoCode == "Y"}
+                          />
+                       
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          padding={1}
+                          mt={3}
+                          gap="20px"
+                        >
+                          {/* GSTimage */}
+
+                          {YearFlag == "true" ? (
+                            <LoadingButton
+                              // color="secondary"
+                              variant="contained"
+                              type="submit"
+                              loading={isLoading}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
+                          ) : (
+                            <Button
+                              // color="secondary"
+                              variant="contained"
+                              disabled={true}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
+                            >
+                              Save
+                            </Button>
+                          )}
+                          {/* {YearFlag == "true" ? (
+                               <Button
+                                 color="error"
+                                 variant="contained"
+                                 onClick={() => {
+                                   Fnsave(values, "harddelete");
+                                 }}
+                               >
+                                 Delete
+                               </Button>
+                             ) : (
+                               <Button color="error" variant="contained" disabled={true}>
+                                 Delete
+                               </Button>
+                             )} */}
+
+                          <Button
+                            // color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                            sx={{
+                              px: 4,
+                              borderRadius: 2,
+                              textTransform: "none",
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Box>
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Paper>
+              </Box>
+            </Box>
+          ) : (
+            false
+          )}
 
           {/*Contracts In */}
           {show == "8" ? (
@@ -15680,6 +16188,8 @@ const Editemployee = () => {
                                     onChange={(e) => {
                                       const value = e.target.value;
                                       setFieldValue("BillingUnits", value);
+                                      setFieldValue("Components", []);
+                                      setFieldValue("UnitRate", "0.00");
                                       if (!["OF", "TF"].includes(value)) {
                                         setFieldValue("DueDate", "");
                                       }
@@ -15846,13 +16356,34 @@ const Editemployee = () => {
                                         label="Component"
                                         id="Components"
                                         value={values.Components}
-                                        onChange={(e, newValue) =>
+                                        // onChange={(e, newValue) =>
+                                        //   setFieldValue(
+                                        //     "Components",
+                                        //     newValue,
+                                        //     true,
+                                        //   )
+                                        // }
+                                        onChange={(e, newValue) => {
                                           setFieldValue(
                                             "Components",
                                             newValue,
-                                            true,
-                                          )
-                                        }
+                                          );
+                                          const totalAmount = newValue.reduce(
+                                            (sum, item) =>
+                                              sum + Number(item.Amount || 0),
+                                            0,
+                                          );
+                                          const discount = Number(
+                                            values.discount || 0,
+                                          );
+                                          const finalAmount =
+                                            totalAmount -
+                                            (totalAmount * discount) / 100;
+                                          setFieldValue(
+                                            "UnitRate",
+                                            finalAmount.toFixed(2),
+                                          );
+                                        }}
                                         isOptionEqualToValue={(option, value) =>
                                           String(option.RecordID) ===
                                           String(value.RecordID)
@@ -15961,42 +16492,90 @@ const Editemployee = () => {
                                       name="discount"
                                       label="Discount in (%)"
                                       onChange={(e) => {
-                                        const discount = Number(
-                                          e.target.value || 0,
-                                        );
-                                        setFieldValue(
-                                          "discount",
-                                          e.target.value,
-                                        );
-                                        const totalAmount = (
-                                          values.Components || []
-                                        ).reduce(
+                                        const value = e.target.value;
+
+                                        // Allow empty value while editing
+                                        if (value === "") {
+                                          setFieldValue("discount", "");
+                                          setFieldValue("UnitRate", "");
+                                          return;
+                                        }
+
+                                        const discount = Number(value);
+
+                                        // Only allow values between 1 and 100
+                                        if (discount < 1 || discount > 100) return;
+
+                                        setFieldValue("discount", value);
+
+                                        const totalAmount = (values.Components || []).reduce(
                                           (sum, item) =>
-                                            sum + Number(item.Amount || 0),
-                                          0,
+                                            sum + Number(item.Amount || contractorData.unitrate || 0),
+                                          0
                                         );
+
                                         const finalAmount =
-                                          totalAmount -
-                                          (totalAmount * discount) / 100;
-                                        setFieldValue(
-                                          "UnitRate",
-                                          finalAmount.toFixed(2),
-                                        );
+                                          totalAmount - (totalAmount * discount) / 100;
+
+                                        setFieldValue("UnitRate", finalAmount.toFixed(2));
                                       }}
                                       onBlur={handleBlur}
-                                      error={
-                                        !!touched.discount && !!errors.discount
-                                      }
-                                      helperText={
-                                        touched.discount && errors.discount
-                                      }
+                                      error={!!touched.discount && !!errors.discount}
+                                      helperText={touched.discount && errors.discount}
                                       inputProps={{
-                                        style: { textAlign: "right" },
-                                        min: 0,
+                                        min: 1,
                                         max: 100,
                                         step: "0.01",
+                                        style: { textAlign: "right" },
                                       }}
                                     />
+                                    // <TextField
+                                    //   fullWidth
+                                    //   variant="outlined"
+                                    //   size="small"
+                                    //   type="number"
+                                    //   inputMode="decimal"
+                                    //   value={values.discount}
+                                    //   id="discount"
+                                    //   name="discount"
+                                    //   label="Discount in (%)"
+                                    //   onChange={(e) => {
+                                    //     const discount = Number(
+                                    //       e.target.value || 0,
+                                    //     );
+                                    //     setFieldValue(
+                                    //       "discount",
+                                    //       e.target.value,
+                                    //     );
+                                    //     const totalAmount = (
+                                    //       values.Components || []
+                                    //     ).reduce(
+                                    //       (sum, item) =>
+                                    //         sum + Number(item.Amount || contractorData.unitrate|| 0),
+                                    //       0,
+                                    //     );
+                                    //     const finalAmount =
+                                    //       totalAmount -
+                                    //       (totalAmount * discount) / 100;
+                                    //     setFieldValue(
+                                    //       "UnitRate",
+                                    //       finalAmount.toFixed(2),
+                                    //     );
+                                    //   }}
+                                    //   onBlur={handleBlur}
+                                    //   error={
+                                    //     !!touched.discount && !!errors.discount
+                                    //   }
+                                    //   helperText={
+                                    //     touched.discount && errors.discount
+                                    //   }
+                                    //   inputProps={{
+                                    //     style: { textAlign: "right" },
+                                    //     min: 0,
+                                    //     max: 100,
+                                    //     step: "0.01",
+                                    //   }}
+                                    // />
                                   )}
 
                                   {/* Billing Type */}
@@ -16513,9 +17092,10 @@ const Editemployee = () => {
                                 is003Subscription &&
                                 // flag !== "P" &&
                                 contractorData.Process == "N" &&
-                                ["OF", "TF"].includes(
+                                ["OF", "TF", "AF"].includes(
                                   values?.BillingUnits || "",
-                                ) && (
+                                )
+                                && (
                                   <Button
                                     variant="standard"
                                     size="small"

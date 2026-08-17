@@ -814,7 +814,7 @@ const EditEmergency = () => {
                                   color: "#6B7280",
                                 }}
                               >
-                                Who is this about?
+                                Share To?
                               </Typography>
 
                               <ButtonGroup

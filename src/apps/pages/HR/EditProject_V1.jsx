@@ -3781,7 +3781,7 @@ const Editproject_V1 = () => {
                           name="sortorder"
                           type="number"
                           id="sortorder"
-                          label="Sort Order"
+                          label={is003Subscription ? "Sequence Order" : "Sort Order"}
                           variant="outlined"
                           size="small"
                           focused

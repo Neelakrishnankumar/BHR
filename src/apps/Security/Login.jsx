@@ -1107,8 +1107,8 @@ const Login = () => {
           >
             <Box
               sx={{
-                // backgroundImage: `url(${background})`,
-                backgroundImage: `url(${background1})`,
+                backgroundImage: `url(${background})`,
+                // backgroundImage: `url(${background1})`,
                 // backgroundSize: "cover",
                 backgroundSize: "contain",
                 backgroundSize: "100% 100%",

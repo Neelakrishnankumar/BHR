@@ -8868,7 +8868,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
       if (data.payload.Status === "Y") {
         Swal.fire({
-          title: data.payload.Message,
+          text: data.payload.Msg,
           icon: "success",
           confirmButtonText: "OK",
           confirmButtonColor: "#3085d6",
@@ -9570,7 +9570,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR385" && (
           <>
-            {params.row.IsPublish === "Y" ? (
+            {/* {params.row.IsPublish === "Y" ? (
               <Link
                 to={`./EditEvent Category/${params.row.RecordID}/V`}
                 state={{
@@ -9585,7 +9585,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     <VisibilityIcon />
                   </IconButton>
                 </Tooltip>
-              </Link>) : (<Link
+              </Link>) : 
+              (<Link
                 to={`./EditEvent Category/${params.row.RecordID}/E`}
                 state={{
                   ...state,
@@ -9599,7 +9600,22 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     <ModeEditOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-              </Link>)}
+              </Link>)} */}
+              <Link
+                to={`./EditEvent Category/${params.row.RecordID}/E`}
+                state={{
+                  ...state,
+                  // AcademicYear: params.row.AcademicYear,
+                  // BreadCrumb1: params.row.Category,
+                  BreadCrumb2: params.row.Title,
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
           </>
         )}
       </div>

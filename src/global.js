@@ -368,7 +368,10 @@ const initialState = {
   AttendanceEntryLockGET: "",
   AttendanceentryrGetUrl: "",
   Teamattendancegeturl: "",
-  Teamattendanceposturl:""
+  Teamattendanceposturl:"",
+  Analyticsdashboardurl:"",
+  BirthdayAnniversaryGet:"",
+  SortPayrollAttendance:""
 
 };
 
@@ -610,6 +613,9 @@ export const getUrlSlice = createSlice({
       state.AttendanceentryrGetUrl = APIurl + "AttendanceEntryGetController.php";
       state.Teamattendancegeturl = APIurl + "teamattendanceget.php";
       state.Teamattendanceposturl = APIurl + "teamattendancepost.php";
+      state.Analyticsdashboardurl = APIurl + "studanalyticsdashboardget.php";
+      state.BirthdayAnniversaryGet =  APIurl + "bdaycumanniversaryget.php";
+      state.SortPayrollAttendance =  APIurl + "BosPayrollAttendanceController.php"
 
     },
 
