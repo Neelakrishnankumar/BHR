@@ -238,6 +238,7 @@ import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
 import StudentReports from "./pages/Empolyee/EditAcademicreport";
+import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
 
 function App() {
   //   useEffect(() => {
@@ -373,6 +374,10 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
+<Route
+                    path="/ItemStokAnalytics"
+                   element={<ItemStokAnalytics />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}

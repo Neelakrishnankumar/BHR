@@ -1040,8 +1040,9 @@ const Listview = () => {
 
             {accessID === "TR315" && (
               <Tooltip arrow title="Item Analytics">
+        
                 <IconButton
-                  onClick={() => navigate("/Apps/ItemStokAnalytics")}
+                  onClick={() => { navigate("/Apps/ItemStokAnalytics")}}
                 >
                   <AssessmentIcon />
                 </IconButton>
