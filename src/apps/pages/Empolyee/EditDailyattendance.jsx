@@ -234,7 +234,7 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
     {
       field: "Name",
       headerName: "Personnel",
-      flex: 1,
+      flex: 1.5,
       headerAlign: "center",
     },
     {

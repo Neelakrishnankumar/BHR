@@ -243,7 +243,67 @@ export const slotListView = createAsyncThunk(
     return response.data;
   }
 );
+//Attendance entryget
+export const AttendanceEntryGet = createAsyncThunk(
+  "AttendanceEntryGet/Attendance entry",
+  async ({Checkindate, CompanyID, ClassificationID }) => {
+    var url = store.getState().globalurl.Teamattendancegeturl;
+    var data = {
+      Checkindate: Checkindate,
+      CompanyID: CompanyID,
+      ClassificationID: ClassificationID
+    }
 
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+//Attendance_ENTRY_LOCK_GET
+
+export const AttendanceEntryLockGet = createAsyncThunk(
+  "AttendanceEntry_lock_Get/Attendance LOCK entry",
+  async ({ ManagerID, Checkindate, CompanyID, ProjectID }) => {
+    var url = store.getState().globalurl.AttendanceEntryLockGET;
+    var data = {
+      ManagerID: ManagerID,
+      Checkindate: Checkindate,
+      CompanyID: CompanyID,
+      ProjectID: ProjectID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const getApiSlice = createSlice({
   name: "exploreApi",
   initialState,
@@ -491,7 +551,7 @@ export const getApiSlice = createSlice({
         state.Status = "error";
         state.loading = false;
       })
-     
+
 
       //SLOT ADDCAE IN COMPANY EXPLORE
       .addCase(slotListView.pending, (state, action) => {
@@ -619,6 +679,7 @@ export const fetchExplorelitview =
         AccessID !== "TR325" &&
         AccessID !== "TR302" &&
         AccessID !== "TR249" &&
+        AccessID !== "TR415" &&
         AccessID !== "2151" &&
         AccessID !== "2152" &&
         AccessID !== "2153" &&

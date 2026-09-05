@@ -44,6 +44,7 @@ import {
 } from "../../../ui-components/global/Autocomplete";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import * as Yup from "yup";
+import { breadcrumbStyles } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditOrderitem = () => {
@@ -77,6 +78,7 @@ const EditOrderitem = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const state = location.state || {};
+  console.log("🚀 ~ EditOrderitem ~ state:", state);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const [validationSchema, setValidationSchema] = useState(null);
 
@@ -290,13 +292,19 @@ const EditOrderitem = () => {
       // }
       if (mode === "A") {
         if (params.Type === "Party") {
+          //added order item screenname
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            // `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/${params.OrderType}/TR311/Order Item/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/${params.OrderType}/TR311/Order Item/${params.filtertype1}`,
+
             { state: { ...state } }
           );
-        } else {
+        }
+        //added order item screenname
+        else {
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            // `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/${params.OrderType}/TR311/Order Item/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/${params.OrderType}/TR311/Order Item/${params.filtertype1}`,
             { state: { ...state } }
           );
         }
@@ -306,7 +314,7 @@ const EditOrderitem = () => {
       // ⭐ CASE 2 → Edit or Delete → Redirect back to OrderItem list
       if (mode === "E" || del === "harddelete") {
         navigate(
-          `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
+          `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/Order Item/${params.filtertype1}`,
           { state: { ...state } }
         );
       }
@@ -376,20 +384,14 @@ const EditOrderitem = () => {
             )}
 
             <Breadcrumbs
-              maxItems={4}
-              separator={<NavigateNextIcon fontSize="small" color="primary" />}
+              maxItems={3}
               aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+              sx={breadcrumbStyles.separator}
             >
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
+                sx={breadcrumbStyles.item}
+
                 onClick={() => {
                   navigate("/Apps/TR321/Party");
                 }}
@@ -399,15 +401,7 @@ const EditOrderitem = () => {
 
               {params.Type === "Leader" ? (
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate(
                       `/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`,
@@ -420,15 +414,7 @@ const EditOrderitem = () => {
               ) : null}
 
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#0D47A1",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
+                sx={breadcrumbStyles.item}
                 onClick={() => {
                   navigate(
                     `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
@@ -442,18 +428,10 @@ const EditOrderitem = () => {
 
               {params.Type === "Party" && mode === "E" ? (
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/Order Item/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}
@@ -464,18 +442,10 @@ const EditOrderitem = () => {
 
               {params.Type === "Leader" ? (
                 <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#0D47A1",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
+                  sx={breadcrumbStyles.item}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/Order Item/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}
@@ -485,11 +455,8 @@ const EditOrderitem = () => {
               ) : null}
 
               <Typography
-                variant="body1"
-                sx={{
-                  color: "#6B7280",
-                  fontWeight: 600,
-                }}
+                // sx={breadcrumbStyles.item}
+                sx={breadcrumbStyles.active}
               >
                 {params.OrderType === "O"
                   ? mode === "A"
@@ -507,7 +474,7 @@ const EditOrderitem = () => {
               <IconButton
                 onClick={() => fnLogOut("Close")}
                 sx={{
-                //  bgcolor: "#FEF2F2",
+                  //  bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
@@ -522,12 +489,12 @@ const EditOrderitem = () => {
               <IconButton
                 onClick={() => fnLogOut("Logout")}
                 sx={{
-               //  bgcolor: "#FEF2F2",
+                  //  bgcolor: "#FEF2F2",
                   color: "#DC2626",
                   "&:hover": {
                     bgcolor: "#FEE2E2",
                   },
-                }} 
+                }}
               >
                 <LogoutOutlinedIcon />
               </IconButton>
@@ -662,7 +629,7 @@ const EditOrderitem = () => {
                       🛍️
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={700} color="#4F46E5">
+                        <Typography variant="h6" fontWeight={700} color="#0D94885">
                         Order Item
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -673,7 +640,7 @@ const EditOrderitem = () => {
 
                   <Box
                     display="grid"
-                    gap = "20px"
+                    gap="20px"
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
@@ -774,7 +741,7 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
-                    
+
                       autoFocus
                     />
                     <TextField
@@ -799,7 +766,7 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
-                      
+
                       autoFocus
                     />
                     <TextField
@@ -819,7 +786,7 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
-                      
+
                     />
                     <TextField
                       select
@@ -851,7 +818,7 @@ const EditOrderitem = () => {
                       }}
                       variant="outlined"
                       size="small"
-                      
+
                     >
                       <MenuItem value="Purchase">Purchase</MenuItem>
                       <MenuItem value="Damage">Damage</MenuItem>
@@ -881,7 +848,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        
+
                         autoFocus
                       />
                     ) : values.PurchaseType === "Return" ? (
@@ -907,7 +874,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        
+
                         autoFocus
                       />
                     ) : (
@@ -933,7 +900,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        
+
                         autoFocus
                       />
                     )}
@@ -973,7 +940,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        
+
                       />
                     ) : (
                       <TextField
@@ -1010,7 +977,7 @@ const EditOrderitem = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        
+
                       />
                     )}
 
@@ -1032,7 +999,7 @@ const EditOrderitem = () => {
                               style: { textAlign: "right" },
                             },
                           }}
-                          
+
                         />
                         <TextField
                           name="netQty"
@@ -1052,7 +1019,7 @@ const EditOrderitem = () => {
                               style: { textAlign: "right" },
                             },
                           }}
-                          
+
                         />
                       </>
                     ) : null}
@@ -1061,7 +1028,7 @@ const EditOrderitem = () => {
                   <Box display="flex" justifyContent="end" gap={2} mt={4}>
                     {YearFlag == "true" ? (
                       <LoadingButton
-                        color="secondary"
+                        // color="secondary"
                         variant="contained"
                         type="submit"
                         loading={isLoading}
@@ -1112,7 +1079,7 @@ const EditOrderitem = () => {
                         variant="contained"
                         onClick={() => {
                           navigate(
-                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/${params.filtertype1}`,
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/Order Item/${params.filtertype1}`,
                             { state: { ...state } }
                           );
                         }}
@@ -1124,7 +1091,7 @@ const EditOrderitem = () => {
                           "&:hover": { bgcolor: "#EA580C" },
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     ) : (
                       <Button
@@ -1132,7 +1099,7 @@ const EditOrderitem = () => {
                         variant="contained"
                         onClick={() => {
                           navigate(
-                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/${params.filtertype1}`,
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/Order Item/${params.filtertype1}`,
                             { state: { ...state } }
                           );
                         }}
@@ -1144,7 +1111,7 @@ const EditOrderitem = () => {
                           "&:hover": { bgcolor: "#EA580C" },
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     )}
                   </Box>

@@ -1,7 +1,8 @@
 
 {
-  "API_URL": "https://bos.beyondexs.com/api/",
+ "API_URL": "https://bos.beyondexs.com/api/",
   "BASE_URL": "https://bos.beyondexs.com/",
   "ESS_URL": "https://ess.beyondexs.com/",
   "UAAM_URL": "https://uaam.beyondexs.com/"
+
 }

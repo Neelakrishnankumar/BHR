@@ -74,8 +74,7 @@ const EditTimetablev1 = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
-  console.log(params, "--find params");
-  
+  console.log(params,"params")
   const dispatch = useDispatch();
   const recID = params.id;
   const compID = sessionStorage.getItem("compID");
@@ -96,6 +95,7 @@ const EditTimetablev1 = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const rowData = location.state || {};
+  console.log(rowData,"state")
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -1428,7 +1428,7 @@ useEffect(() => {
                   sx={breadcrumbStyles.item}
                   onClick={() => {
                     is003Subscription
-                      ? navigate("/Apps/TR133/Classes")
+                      ? navigate(`/Apps/SecondarylistView/TR275/Project/${params.YearID}`, { state: { ...rowData } })
                       : navigate("/Apps/TR133/Project");
                   }}
                 >
@@ -1595,8 +1595,7 @@ useEffect(() => {
                     <>
                       Term
                       <span style={{ color: "red", fontSize: "20px" }}>
-                        {" "}
-                        *{" "}
+                        *
                       </span>
                     </>
                   }
@@ -1718,9 +1717,10 @@ useEffect(() => {
                   focused
                   inputFormat="YYYY-MM-DD"
                   value={values.assignedDate}
-                  sx={{ gridColumn: "span 2" }}
+                 
                   InputLabelProps={{ readOnly: true }}
                     sx={{
+                                 gridColumn: "span 2",
                                 "& .MuiOutlinedInput-root": {
                                   backgroundColor: "#fff",
                                   borderRadius: "6px",

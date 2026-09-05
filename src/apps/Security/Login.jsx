@@ -474,6 +474,691 @@
 // };
 
 // export default Login;
+
+//commented for school
+// import { LoadingButton } from "@mui/lab";
+// import {
+//   Card,
+//   Checkbox,
+//   Grid,
+//   TextField,
+//   Button,
+//   Box,
+//   Link,
+//   IconButton,
+//   FormControl,
+//   InputLabel,
+//   OutlinedInput,
+//   InputAdornment,
+//   Typography,
+//   FormControlLabel,
+//   Stack,
+// } from "@mui/material";
+// import { styled } from "@mui/system";
+// import React, { useEffect, useRef, useState } from "react";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
+// import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+// import { useNavigate } from "react-router-dom";
+// import { Field, Form, Formik } from "formik";
+// import { useDispatch, useSelector } from "react-redux";
+// import { fetchApidata } from "../../store/reducers/LoginReducer";
+// import { toast } from "react-hot-toast";
+// // import background from "../../assets/img/Back_Office_Final.png";
+// // import background from "../../assets/img/Back_Office_Final2.png";
+// import background from "../../assets/img/BOS_Coverimg2.png";
+// // import Schoolimg from "../../assets/img/Admin.png";
+
+// import background1 from "../../assets/img//LAK_loginimg.jpg"
+
+
+// const FlexBox = styled(Box)(() => ({
+//   display: "flex",
+//   alignItems: "center",
+// }));
+
+// const JustifyBox = styled(FlexBox)(() => ({
+//   justifyContent: "center",
+// }));
+
+// const ContentBox = styled(Box)(({ theme }) => ({
+//   height: "100%",
+//   padding: theme.spacing(4),
+//   display: "flex",
+//   flexDirection: "column",
+//   justifyContent: "center",
+//   [theme.breakpoints.down("sm")]: {
+//     minHeight: "100vh",
+//     justifyContent: "center",
+//   },
+// }));
+
+// const JWTRoot = styled(JustifyBox)(({ theme }) => ({
+//   minHeight: "90vh",
+//   "& .card": {
+//     width: "100%",
+//     minHeight: "90vh",
+//     display: "flex",
+//     // borderRadius: 12,
+//     overflow: "hidden",
+//     [theme.breakpoints.down("sm")]: {
+//       flexDirection: "column",
+//       boxShadow: "none",
+//       borderRadius: 0,
+//       minHeight: "90vh",
+//     },
+//   },
+// }));
+
+// const StyledTextField = styled(TextField)(({ theme }) => ({
+//   "& .MuiOutlinedInput-root": {
+//     backgroundColor: "#f5f9fa",
+//     borderRadius: "8px",
+//     "& fieldset": {
+//       borderColor: "#e0e0e0",
+//     },
+//     "&:hover fieldset": {
+//       borderColor: "#00796b",
+//     },
+//     "&.Mui-focused fieldset": {
+//       borderColor: "#00796b",
+//     },
+//   },
+//   "& .MuiInputLabel-root": {
+//     color: "#666",
+//   },
+//   "& .MuiInputLabel-root.Mui-focused": {
+//     color: "#00796b",
+//   },
+// }));
+
+// const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+//   backgroundColor: "#f5f9fa",
+//   borderRadius: "8px",
+//   "& fieldset": {
+//     borderColor: "#e0e0e0",
+//   },
+//   "&:hover fieldset": {
+//     borderColor: "#00796b",
+//   },
+//   "&.Mui-focused fieldset": {
+//     borderColor: "#00796b",
+//   },
+// }));
+
+// const LoginButton = styled(LoadingButton)(({ theme }) => ({
+//   // backgroundColor: "#00796b",
+//   background: "#0A4063",
+//   background: "radial-gradient(circle, rgba(10, 64, 99, 1) 40%, rgba(6, 128, 150, 1) 100%)",
+//   color: "#ffffff",
+//   padding: "12px 0",
+//   borderRadius: "8px",
+//   fontSize: "16px",
+//   fontWeight: 600,
+//   textTransform: "none",
+//   // "&:hover": {
+//   //   backgroundColor: "#00695c",
+//   // },
+//   "&:hover": {
+//     background: "radial-gradient(circle, rgba(10, 64, 99, 1) 40%, rgba(6, 128, 150, 1) 100%)",
+//   },
+
+//   "& .MuiCircularProgress-root": {
+//     color: "#ffffff",
+//   },
+// }));
+
+// const Login = () => {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const isLoading = useSelector((state) => state.loginApi.loading);
+//   const [loading, setLoading] = useState(false);
+//   const [showPassword, setShowPassword] = useState(false);
+
+//   const handleClickShowPassword = () => {
+//     setShowPassword((prev) => !prev);
+//   };
+//   const formikRef = useRef();
+
+//   // useEffect(() => {
+//   //   dispatch(resetData())
+//   // }, [])
+//   const [initialValues, setInitialValues] = useState({
+//     username: "",
+//     password: "",
+//     license: "",
+//     remember: false,
+//   });
+//   useEffect(() => {
+//     const rememberedData = localStorage.getItem("rememberMeData");
+
+//     if (rememberedData) {
+//       const parsedData = JSON.parse(rememberedData);
+
+//       setInitialValues({
+//         username: parsedData.username || "",
+//         password: parsedData.password || "",
+//         license: parsedData.license || "",
+//         remember: true,
+//       });
+//     }
+//   }, []);
+//   // const initialValues = {
+//   //   username: "",
+//   //   password: "",
+//   //   license: "",
+//   //   remember: false,
+//   // };
+
+//   const fnLogin = async (values) => {
+//     if (values.username == "") {
+//       // toast.error("UserName should not be empty");
+//       toast.error("Username should not be empty");
+//       setLoading(false);
+//       return;
+//     }
+//     if (values.password == "") {
+//       toast.error("Password shoud not be empty");
+//       setLoading(false);
+//       return;
+//     }
+//     if (values.license == "" || values.license == undefined) {
+//       // toast.error("Please give LicenseKey");
+//       toast.error("Please provide Subscription Code");
+//       setLoading(false);
+//       return;
+//     }
+//     const data = await dispatch(fetchApidata(values.username, values.password, values.license
+//       //values.company,values.year
+
+//     ));
+//     // const idata = {
+//     //   username: values.username,
+//     //   password: values.password,
+//     //   yearrecordid: values.year,
+//     //   companyrecordid: values.company,
+//     // };
+//     // const data = await dispatch(authentication({ idata }));
+//     console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
+
+//     //  var UserName = data.payload.apiResponse.Name
+
+//     sessionStorage.setItem("loginRecid", loginrecordID);
+//     if (data.payload.Status == "Y") {
+//       if (values.remember) {
+//         localStorage.setItem("rememberMeData", JSON.stringify({
+//           username: values.username,
+//           password: values.password,
+//           license: values.license,
+//           remember: true,
+//         }));
+//         console.log("Saved:", localStorage.getItem("rememberMeData"));
+//       } else {
+//         localStorage.removeItem("rememberMeData");
+//         setInitialValues({
+//           username: "",
+//           password: "",
+//           license: "",
+//           remember: false,
+//         });
+//       }
+//       var company = data.payload.apiResponse.Company
+//       var SubscriptionCode = data.payload.SubscriptionCode
+//       var VerticalLicense = data.payload.VerticalLicense
+//       var year = data.payload.apiResponse.Year
+//       var YearFlag = data.payload.apiResponse.YearFlag
+//       var compID = data.payload.apiResponse.CompanyRecordid
+//       var empID = data.payload.apiResponse.Recordid
+//       var stockflag = data.payload.apiResponse.Process
+//       var Cifbysea = data.payload.apiResponse.Cifbysea
+//       var Cifbyair = data.payload.apiResponse.Cifbyair
+//       var Fob = data.payload.apiResponse.Fob
+//       //  var EmpId=data.payload.apiResponse.EmpId
+//       var Overhead = data.payload.apiResponse.Overhead
+//       var YearRecorid = data.payload.apiResponse.YearRecorid
+//       var Groupaccess = data.payload.apiResponse.Groupaccess
+//       var UserName = data.payload.apiResponse.Name
+//       var loginrecordID = data.payload.apiResponse.Recordid
+//       var Modules = data.payload.apiResponse.Modules
+//       var UserName = data.payload.apiResponse.Name
+//       // var SubscriptionCode = data.payload.SubscriptionCode
+//       var SubscriptionID = data.payload.SubscriptionID
+//       var Expiryin = data.payload.Expiryin
+//       var CompanyAutoCode = data.payload.CompanyAutoCode
+//       var companygroupflag = data.payload.companygroupflag
+//       var companygroup = data.payload.companygroup
+//       var CompanyGraceTime = data.payload.CompanyGraceTime
+//       var CompanySessionTimeOut = data.payload.CompanySessionTimeOut
+//       var ClassificationData = data.payload.ClassificationData
+//       var CompanyLogo = data.payload.CompanyLogo
+//       var CompanyHeader = data.payload.CompanyHeader
+//       var CompanyFooter = data.payload.CompanyFooter
+//       var CompanyCode = data.payload.CompanyCode
+//       var firstLogin = data.payload.firstLogin
+//       var CompanySignature = data.payload.CompanySignature
+//       //  var firstLogin = "Y";
+//       console.log(ClassificationData,companygroup, "--login screen ClassificationData");
+
+
+//       sessionStorage.setItem("Expiryin", Expiryin);
+//       sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+//       sessionStorage.setItem("SubscriptionID", SubscriptionID);
+//       sessionStorage.setItem("UserName", UserName);
+//       sessionStorage.setItem("loginrecordID", loginrecordID);
+//       // sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+//       sessionStorage.setItem("VerticalLicense", VerticalLicense);
+//       sessionStorage.setItem("company", company);
+//       sessionStorage.setItem("year", year);
+//       sessionStorage.setItem("YearFlag", YearFlag);
+//       sessionStorage.setItem("compID", compID);
+//       sessionStorage.setItem("empID", empID);
+//       sessionStorage.setItem("stockflag", stockflag);
+//       sessionStorage.setItem("currentPage", 0);
+//       sessionStorage.setItem("secondaryCurrentPage", 0);
+//       sessionStorage.setItem("Cifbysea", Cifbysea)
+//       sessionStorage.setItem("Cifbyair", Cifbyair)
+//       sessionStorage.setItem("Fob", Fob)
+//       sessionStorage.setItem("firstLogin", firstLogin)
+//       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
+//       sessionStorage.setItem("companygroupflag", companygroupflag)
+//       sessionStorage.setItem("companygroup", JSON.stringify(data.payload.companygroup));
+//       sessionStorage.setItem("CompanyGraceTime", CompanyGraceTime)
+//       sessionStorage.setItem("CompanySessionTimeOut", CompanySessionTimeOut)
+//       sessionStorage.setItem("ClassificationData", JSON.stringify(data.payload.ClassificationData));
+//       sessionStorage.setItem("CompanyLogo", CompanyLogo)
+//       sessionStorage.setItem("CompanyHeader", CompanyHeader)
+//       sessionStorage.setItem("CompanyFooter", CompanyFooter)
+//       sessionStorage.setItem("CompanyCode", CompanyCode)
+//       sessionStorage.setItem("Overhead", Overhead)
+//       sessionStorage.setItem("YearRecorid", YearRecorid)
+//       sessionStorage.setItem("CompanySignature", CompanySignature)
+//       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))
+//       sessionStorage.setItem("Modules", JSON.stringify(Modules))
+
+//       navigate("/Apps/HR");
+//       console.log("Groupaccess:", Groupaccess);
+
+//       console.log("firstLogin:", firstLogin);
+//       if (firstLogin == "Y") {
+//         navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+//         // navigate("/Apps/HR")
+//       }
+//       else {
+//         navigate("/Apps/HR")
+//       }
+//     }
+//     else {
+//       if (data.payload.subscription == 0) {
+//         navigate("/SubscriptionScreen", { state: { subCode: values.license } });
+//       }
+//       setLoading(false);
+//       toast.error(data.payload.Msg);
+//     }
+//   };
+
+//   return (
+//     <JWTRoot>
+//       <Card
+//         className="card"
+//         sx={{
+//           width: "100%",
+//           boxShadow: { xs: "none", sm: 3 },
+//           borderRadius: { xs: 0, sm: 0 },
+
+//           // ✅ Add this
+//           backgroundImage: {
+//             xs: `url(${background})`,
+//             sm: "none",
+//           },
+//           backgroundSize: {
+//             xs: "cover",
+//             sm: "unset",
+//           },
+//           backgroundRepeat: "no-repeat",
+//           backgroundPosition: "center",
+//         }}
+//       >
+//         <Grid container sx={{
+//           height: "100vh",
+//         }}>
+
+//           {/* Left Side: Login Form */}
+//           <Grid item sm={7} xs={12}>
+//             <ContentBox
+//               sx={{
+//                 mx: "auto",
+//                 width: "100%",
+//                 // maxWidth: { xs: "100%", sm: 500 },
+//                 // px: { xs: 3, sm: 8 },
+//                 // py: { xs: 4, sm: 8 },
+//                 maxWidth: { xs: "95%", sm: 420 },
+//                 // px: { xs: 2, sm: 6 },
+//                 // py: { xs: 4, sm: 6 },
+//                 paddingRight: { xs: 2, sm: 6 },
+//                 paddingLeft: { xs: 1, sm: 6 },
+//                 paddingTop: { xs: 0, sm: 0 },
+//                 paddingBottom: { xs: 0, sm: 0 },
+//                 backgroundColor: "#ffffff",
+//                 // ✅ Transparent on xs so background shows
+//                 backgroundColor: {
+//                   xs: "rgba(255,255,255,0.85)",
+//                   sm: "#ffffff",
+//                 },
+//                 backdropFilter: {
+//                   xs: "blur(15px)",
+//                   sm: "none",
+//                 },
+//               }}
+//             >
+//               {/* Header */}
+//               <Box mb={3}>
+//                 <Typography
+//                   variant="h6"
+//                   sx={{
+//                     // fontSize: { xs: "30px", sm: "40px" },
+//                     fontSize: { xs: "20px", sm: "30px" },
+//                     fontWeight: 600,
+//                     // mb: 0.5,
+
+//                     // background: "linear-gradient(180deg, rgba(10,64,99,1) 53%, rgba(6,128,150,1) 100%)",
+//                     background: "linear-gradient(180deg,rgba(10, 64, 99, 1) 37%, rgba(6, 128, 150, 1) 100%)",
+//                     WebkitBackgroundClip: "text",
+//                     WebkitTextFillColor: "transparent",
+//                     backgroundClip: "text",
+//                     color: "transparent",
+//                     textAlign: "center"
+//                   }}
+//                 >
+//                   Login to your Account
+//                 </Typography>
+//               </Box>
+
+//               {/* Form */}
+//               <Formik
+//                 innerRef={formikRef}
+//                 initialValues={initialValues}
+//                 enableReinitialize
+//                 validate={(values) => {
+//                   const errors = {};
+//                   if (!values.username) {
+//                     errors.username = "Please enter the Username";
+//                   }
+//                   if (!values.password) {
+//                     errors.password = "Please enter the Password";
+//                   }
+//                   if (!values.license) {
+//                     errors.license = "Please enter the Subscription Code";
+//                   }
+//                   return errors;
+//                 }}
+//                 onSubmit={(values, { resetForm }) => {
+//                   fnLogin(values);
+//                 }}
+//               >
+//                 {({
+//                   values,
+//                   errors,
+//                   touched,
+//                   handleBlur,
+//                   handleChange,
+//                   handleSubmit,
+//                   resetForm,
+//                 }) => (
+//                   <form onSubmit={handleSubmit}>
+//                     {/* <Stack spacing={3}> */}
+//                     <Stack spacing={2}>
+//                       {/* Username Field */}
+//                       <StyledTextField
+//                         name="username"
+//                         label="Username"
+//                         id="username"
+//                         placeholder="Username"
+//                         value={values.username}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         fullWidth
+//                         error={!!touched.username && !!errors.username}
+//                         helperText={touched.username && errors.username}
+//                         InputProps={{
+//                           startAdornment: (
+//                             <InputAdornment position="start">
+//                               <Box sx={{ color: "#999", fontSize: "20px" }}>#</Box>
+//                             </InputAdornment>
+//                           ),
+//                         }}
+//                       // focused
+//                       />
+
+//                       {/* Password Field */}
+//                       {/* <FormControl
+//                         fullWidth
+//                         error={!!touched.password && !!errors.password}
+//                       >
+//                         <InputLabel
+//                           sx={{
+//                             color: "#666",
+//                             "&.Mui-focused": { color: "#00796b" },
+//                           }}
+//                         >
+//                           Password
+//                         </InputLabel>
+//                         <StyledOutlinedInput
+//                           id="password"
+//                           name="password"
+//                           type={showPassword ? "text" : "password"}
+//                           placeholder="Password"
+//                           value={values.password}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           startAdornment={
+//                             <InputAdornment position="start">
+//                               <Box sx={{ color: "#999", fontSize: "18px" }}>🔒</Box>
+//                             </InputAdornment>
+//                           }
+//                           endAdornment={
+//                             <InputAdornment position="end">
+//                               <IconButton
+//                                 onClick={handleClickShowPassword}
+//                                 edge="end"
+//                                 sx={{ color: "#999" }}
+//                               >
+//                                 {showPassword ? (
+//                                   <VisibilityOffIcon />
+//                                 ) : (
+//                                   <VisibilityIcon />
+//                                 )}
+//                               </IconButton>
+//                             </InputAdornment>
+//                           }
+//                           label="Password"
+//                           focused
+//                         />
+//                         {touched.password && errors.password && (
+//                           <Typography
+//                             variant="caption"
+//                             color="error"
+//                             sx={{ ml: "14px", mt: "4px" }}
+//                           >
+//                             {errors.password}
+//                           </Typography>
+//                         )}
+//                       </FormControl> */}
+//                       <StyledTextField
+//                         name="password"
+//                         label="Password"
+//                         type={showPassword ? "text" : "password"}
+//                         placeholder="Password"
+//                         value={values.password}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         fullWidth
+//                         error={!!touched.password && !!errors.password}
+//                         helperText={touched.password && errors.password}
+//                         InputProps={{
+//                           startAdornment: (
+//                             <InputAdornment position="start">
+//                               <Box sx={{ color: "#999", fontSize: "18px" }}>🔒</Box>
+//                             </InputAdornment>
+//                           ),
+//                           endAdornment: (
+//                             <InputAdornment position="end">
+//                               <IconButton onClick={handleClickShowPassword} edge="end">
+//                                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+//                               </IconButton>
+//                             </InputAdornment>
+//                           ),
+//                           sx: {
+//                             paddingRight: "14px",
+//                             paddingLeft: "7px",
+//                           },
+//                         }}
+//                       // focused
+//                       />
+
+//                       {/* Subscription Code Field */}
+//                       <StyledTextField
+//                         name="license"
+//                         label="Subscription Code"
+//                         id="license"
+//                         placeholder="Subscription Code"
+//                         value={values.license}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         fullWidth
+//                         error={!!touched.license && !!errors.license}
+//                         helperText={touched.license && errors.license}
+//                         InputProps={{
+//                           startAdornment: (
+//                             <InputAdornment position="start">
+//                               <Box sx={{ color: "#999", fontSize: "20px" }}>#</Box>
+//                             </InputAdornment>
+//                           ),
+//                         }}
+//                       // focused
+//                       />
+
+//                       {/* Remember Me & Forgot Password */}
+//                       <Box
+//                         sx={{
+//                           display: "flex",
+//                           justifyContent: "space-between",
+//                           alignItems: "center",
+//                           mt: 1,
+//                         }}
+//                       >
+//                         <FormControlLabel
+//                           control={
+//                             <Checkbox
+//                               name="remember"
+//                               checked={values.remember}
+//                               onChange={handleChange}
+//                               sx={{
+//                                 color: "#00796b",
+//                                 "&.Mui-checked": {
+//                                   color: "#00796b",
+//                                 },
+//                               }}
+//                             />
+//                           }
+//                           label={
+//                             <Typography sx={{ color: "#666", fontSize: "14px" }}>
+//                               Remember me
+//                             </Typography>
+//                           }
+//                         />
+//                         <Link
+//                           onClick={() => navigate("/Forgotpassword")}
+//                           sx={{
+//                             // color: "#00796b",
+//                             color: "#608dcb",
+//                             fontSize: "14px",
+//                             cursor: "pointer",
+//                             textDecoration: "none",
+//                             "&:hover": {
+//                               textDecoration: "underline",
+//                             },
+//                           }}
+//                         >
+//                           Forget Password?
+//                         </Link>
+//                       </Box>
+
+//                       {/* Login Button */}
+//                       <LoginButton
+//                         type="submit"
+//                         loading={isLoading}
+//                         variant="contained"
+//                         fullWidth
+//                         sx={{ mt: 3 }}
+//                       >
+//                         Login
+//                       </LoginButton>
+//                     </Stack>
+//                   </form>
+//                 )}
+//               </Formik>
+//             </ContentBox>
+//           </Grid>
+//           {/* Right Side: Image */}
+//           <Grid
+//             item
+//             sm={5}
+//             xs={false}
+//             sx={{
+//               display: { xs: "none", sm: "flex" },
+//               alignItems: "center", // CHANGED: Added to center vertically
+//               justifyContent: "center",
+//             }}
+//           >
+//             <Box
+//               sx={{
+//                 backgroundImage: `url(${background})`,
+//                 // backgroundImage: `url(${background1})`,
+//                 // backgroundSize: "cover",
+//                 backgroundSize: "contain",
+//                 backgroundSize: "100% 100%",
+//                 backgroundRepeat: "no-repeat",
+//                 backgroundPosition: "center center",
+//                 // height: "100%",
+//                 height: "98vh",
+//                 minHeight: "100vh",
+//                 width: "100%",
+//               }}
+
+//             />
+
+//             {/* <Box
+//               sx={{
+//                 // background: "linear-gradient(93deg, #095070, #06869B)",
+//                 display: "flex",
+//                 alignItems: "center",
+//                 justifyContent: "flex-end",
+//                 minHeight: "90vh",
+//                 width: "100%",
+//               }}
+//             >
+//               <Box
+//                 component="img"
+//                 src={background}
+//                 sx={{
+//                   minWidth: "95%",
+//                   height: "100vh",
+//                 }}
+//               />
+//             </Box> */}
+
+//           </Grid>
+
+//         </Grid>
+//       </Card>
+//     </JWTRoot >
+//   );
+// };
+
+// export default Login;
+
+
+//New Design
+
 import { LoadingButton } from "@mui/lab";
 import {
   Card,
@@ -491,11 +1176,18 @@ import {
   Typography,
   FormControlLabel,
   Stack,
+  Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
@@ -503,7 +1195,11 @@ import { fetchApidata } from "../../store/reducers/LoginReducer";
 import { toast } from "react-hot-toast";
 // import background from "../../assets/img/Back_Office_Final.png";
 // import background from "../../assets/img/Back_Office_Final2.png";
-import background from "../../assets/img/BOS_Coverimg2.png";
+// import Schoolimg from "../../assets/img/BOS_Coverimg2.png";
+import Schoolimg from "../../assets/img/AdminV1.png";
+
+import background1 from "../../assets/img//LAK_loginimg.jpg"
+
 
 const FlexBox = styled(Box)(() => ({
   display: "flex",
@@ -545,61 +1241,81 @@ const JWTRoot = styled(JustifyBox)(({ theme }) => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
-    backgroundColor: "#f5f9fa",
-    borderRadius: "8px",
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
     "& fieldset": {
-      borderColor: "#e0e0e0",
+      borderColor: "#e2e5ea",
     },
     "&:hover fieldset": {
-      borderColor: "#00796b",
+      borderColor: "#2F6FED",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#00796b",
+      borderColor: "#2F6FED",
     },
   },
-  "& .MuiInputLabel-root": {
-    color: "#666",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#00796b",
+  "& .MuiInputBase-input::placeholder": {
+    color: "#a7aebb",
+    opacity: 1,
   },
 }));
 
+// Static field label shown above each input, matching the reference design
+const FieldLabel = ({ children }) => (
+  <Typography
+    sx={{
+      fontSize: "13px",
+      fontWeight: 600,
+      color: "#1B2559",
+      mb: 0.75,
+    }}
+  >
+    {children}
+  </Typography>
+);
+
 const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
   backgroundColor: "#f5f9fa",
-  borderRadius: "8px",
+  borderRadius: "10px",
   "& fieldset": {
     borderColor: "#e0e0e0",
   },
   "&:hover fieldset": {
-    borderColor: "#00796b",
+    borderColor: "#0A4063",
   },
   "&.Mui-focused fieldset": {
-    borderColor: "#00796b",
+    borderColor: "#0A4063",
   },
 }));
 
 const LoginButton = styled(LoadingButton)(({ theme }) => ({
-  // backgroundColor: "#00796b",
-  background: "#0A4063",
-  background: "radial-gradient(circle, rgba(10, 64, 99, 1) 40%, rgba(6, 128, 150, 1) 100%)",
+  background: "linear-gradient(90deg, #14C6B8 0%, #2F6FED 100%)",
   color: "#ffffff",
   padding: "12px 0",
-  borderRadius: "8px",
+  borderRadius: "10px",
   fontSize: "16px",
   fontWeight: 600,
   textTransform: "none",
-  // "&:hover": {
-  //   backgroundColor: "#00695c",
-  // },
+  gap: "8px",
   "&:hover": {
-    background: "radial-gradient(circle, rgba(10, 64, 99, 1) 40%, rgba(6, 128, 150, 1) 100%)",
+    background: "linear-gradient(90deg, #10AFA3 0%, #2A63D9 100%)",
   },
-
   "& .MuiCircularProgress-root": {
     color: "#ffffff",
   },
 }));
+
+// Small trust-badge shown in the footer row of the login card
+const TrustItem = ({ icon, color, title, subtitle }) => (
+  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.4, flex: 1 }}>
+    <Box sx={{ color, display: "flex" }}>{icon}</Box>
+    <Typography sx={{ fontSize: "12px", fontWeight: 600, color: "#1B2559", textAlign: "center", lineHeight: 1.3 }}>
+      {title}
+    </Typography>
+    <Typography sx={{ fontSize: "10px", color: "#9aa5b1", textAlign: "center", lineHeight: 1.2 }}>
+      {subtitle}
+    </Typography>
+  </Box>
+);
 
 const Login = () => {
   const navigate = useNavigate();
@@ -800,7 +1516,7 @@ const Login = () => {
 
           // ✅ Add this
           backgroundImage: {
-            xs: `url(${background})`,
+            xs: `url(${Schoolimg})`,
             sm: "none",
           },
           backgroundSize: {
@@ -815,24 +1531,40 @@ const Login = () => {
           height: "100vh",
         }}>
 
-          {/* Left Side: Login Form */}
-          <Grid item sm={7} xs={12}>
+          {/* Left Side: Illustration / Branding */}
+          <Grid
+            item
+            sm={6}
+            xs={false}
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                backgroundImage: `url(${Schoolimg})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "left center",
+                height: "100vh",
+                width: "100%",
+              }}
+            />
+          </Grid>
+
+          {/* Right Side: Login Form (fills the white space) */}
+          <Grid item sm={6} xs={12}>
             <ContentBox
               sx={{
                 mx: "auto",
                 width: "100%",
-                // maxWidth: { xs: "100%", sm: 500 },
-                // px: { xs: 3, sm: 8 },
-                // py: { xs: 4, sm: 8 },
                 maxWidth: { xs: "95%", sm: 420 },
-                // px: { xs: 2, sm: 6 },
-                // py: { xs: 4, sm: 6 },
                 paddingRight: { xs: 2, sm: 6 },
                 paddingLeft: { xs: 1, sm: 6 },
                 paddingTop: { xs: 0, sm: 0 },
                 paddingBottom: { xs: 0, sm: 0 },
-                backgroundColor: "#ffffff",
-                // ✅ Transparent on xs so background shows
                 backgroundColor: {
                   xs: "rgba(255,255,255,0.85)",
                   sm: "#ffffff",
@@ -844,25 +1576,24 @@ const Login = () => {
               }}
             >
               {/* Header */}
-              <Box mb={3}>
+              <Box mb={3} textAlign="center">
                 <Typography
-                  variant="h6"
                   sx={{
-                    // fontSize: { xs: "30px", sm: "40px" },
-                    fontSize: { xs: "20px", sm: "30px" },
-                    fontWeight: 600,
-                    // mb: 0.5,
-
-                    // background: "linear-gradient(180deg, rgba(10,64,99,1) 53%, rgba(6,128,150,1) 100%)",
-                    background: "linear-gradient(180deg,rgba(10, 64, 99, 1) 37%, rgba(6, 128, 150, 1) 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    color: "transparent",
-                    textAlign: "center"
+                    fontSize: { xs: "22px", sm: "26px" },
+                    fontWeight: 700,
+                    color: "#1B2559",
+                    mb: 1,
                   }}
                 >
-                  Login to your Account
+                  Sign in to your account
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    color: "#8a94a6",
+                  }}
+                >
+                  Streamline operations, manage users, and stay on top of your institution.
                 </Typography>
               </Box>
 
@@ -898,137 +1629,86 @@ const Login = () => {
                   resetForm,
                 }) => (
                   <form onSubmit={handleSubmit}>
-                    {/* <Stack spacing={3}> */}
                     <Stack spacing={2}>
                       {/* Username Field */}
-                      <StyledTextField
-                        name="username"
-                        label="Username"
-                        id="username"
-                        placeholder="Username"
-                        value={values.username}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        fullWidth
-                        error={!!touched.username && !!errors.username}
-                        helperText={touched.username && errors.username}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Box sx={{ color: "#999", fontSize: "20px" }}>#</Box>
-                            </InputAdornment>
-                          ),
-                        }}
-                      // focused
-                      />
+                      <Box>
+                        <FieldLabel>Username</FieldLabel>
+                        <StyledTextField
+                          name="username"
+                          id="username"
+                          placeholder="Enter your username"
+                          value={values.username}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          fullWidth
+                          error={!!touched.username && !!errors.username}
+                          helperText={touched.username && errors.username}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <PersonOutlineOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>
 
                       {/* Password Field */}
-                      {/* <FormControl
-                        fullWidth
-                        error={!!touched.password && !!errors.password}
-                      >
-                        <InputLabel
-                          sx={{
-                            color: "#666",
-                            "&.Mui-focused": { color: "#00796b" },
-                          }}
-                        >
-                          Password
-                        </InputLabel>
-                        <StyledOutlinedInput
-                          id="password"
+                      <Box>
+                        <FieldLabel>Password</FieldLabel>
+                        <StyledTextField
                           name="password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="Password"
+                          placeholder="Enter your password"
                           value={values.password}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          startAdornment={
-                            <InputAdornment position="start">
-                              <Box sx={{ color: "#999", fontSize: "18px" }}>🔒</Box>
-                            </InputAdornment>
-                          }
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={handleClickShowPassword}
-                                edge="end"
-                                sx={{ color: "#999" }}
-                              >
-                                {showPassword ? (
-                                  <VisibilityOffIcon />
-                                ) : (
-                                  <VisibilityIcon />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                          label="Password"
-                          focused
+                          fullWidth
+                          error={!!touched.password && !!errors.password}
+                          helperText={touched.password && errors.password}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <LockOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton onClick={handleClickShowPassword} edge="end">
+                                  {showPassword ? <VisibilityOffIcon sx={{ color: "#9aa5b1" }} /> : <VisibilityIcon sx={{ color: "#9aa5b1" }} />}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                            sx: {
+                              paddingRight: "14px",
+                              paddingLeft: "7px",
+                            },
+                          }}
                         />
-                        {touched.password && errors.password && (
-                          <Typography
-                            variant="caption"
-                            color="error"
-                            sx={{ ml: "14px", mt: "4px" }}
-                          >
-                            {errors.password}
-                          </Typography>
-                        )}
-                      </FormControl> */}
-                      <StyledTextField
-                        name="password"
-                        label="Password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        value={values.password}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        fullWidth
-                        error={!!touched.password && !!errors.password}
-                        helperText={touched.password && errors.password}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Box sx={{ color: "#999", fontSize: "18px" }}>🔒</Box>
-                            </InputAdornment>
-                          ),
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton onClick={handleClickShowPassword} edge="end">
-                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                          sx: {
-                            paddingRight: "14px",
-                            paddingLeft: "7px",
-                          },
-                        }}
-                      // focused
-                      />
+                      </Box>
 
                       {/* Subscription Code Field */}
-                      <StyledTextField
-                        name="license"
-                        label="Subscription Code"
-                        id="license"
-                        placeholder="Subscription Code"
-                        value={values.license}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        fullWidth
-                        error={!!touched.license && !!errors.license}
-                        helperText={touched.license && errors.license}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Box sx={{ color: "#999", fontSize: "20px" }}>#</Box>
-                            </InputAdornment>
-                          ),
-                        }}
-                      // focused
-                      />
+                      <Box>
+                        <FieldLabel>Subscription Code</FieldLabel>
+                        <StyledTextField
+                          name="license"
+                          id="license"
+                          placeholder="Enter your subscription code"
+                          value={values.license}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          fullWidth
+                          error={!!touched.license && !!errors.license}
+                          helperText={touched.license && errors.license}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <ConfirmationNumberOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>
 
                       {/* Remember Me & Forgot Password */}
                       <Box
@@ -1046,9 +1726,9 @@ const Login = () => {
                               checked={values.remember}
                               onChange={handleChange}
                               sx={{
-                                color: "#00796b",
+                                color: "#c4c9d4",
                                 "&.Mui-checked": {
-                                  color: "#00796b",
+                                  color: "#2F6FED",
                                 },
                               }}
                             />
@@ -1062,8 +1742,7 @@ const Login = () => {
                         <Link
                           onClick={() => navigate("/Forgotpassword")}
                           sx={{
-                            // color: "#00796b",
-                            color: "#608dcb",
+                            color: "#2F6FED",
                             fontSize: "14px",
                             cursor: "pointer",
                             textDecoration: "none",
@@ -1082,63 +1761,49 @@ const Login = () => {
                         loading={isLoading}
                         variant="contained"
                         fullWidth
+                        startIcon={!isLoading ? <LockOutlinedIcon sx={{ fontSize: "18px" }} /> : null}
                         sx={{ mt: 3 }}
                       >
-                        Login
+                        Sign In
                       </LoginButton>
                     </Stack>
                   </form>
                 )}
               </Formik>
-            </ContentBox>
-          </Grid>
-          {/* Right Side: Image */}
-          <Grid
-            item
-            sm={5}
-            xs={false}
-            sx={{
-              display: { xs: "none", sm: "flex" },
-              alignItems: "center", // CHANGED: Added to center vertically
-              justifyContent: "center",
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${background})`,
-                // backgroundSize: "cover",
-                backgroundSize: "contain",
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center center",
-                // height: "100%",
-                height: "98vh",
-                minHeight: "100vh",
-                width: "100%",
-              }}
 
-            />
-
-            {/* <Box
-              sx={{
-                // background: "linear-gradient(93deg, #095070, #06869B)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                minHeight: "90vh",
-                width: "100%",
-              }}
-            >
+              {/* Trust badges footer, matching the reference design */}
               <Box
-                component="img"
-                src={background}
                 sx={{
-                  minWidth: "95%",
-                  height: "100vh",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mt: 4,
+                  pt: 3,
+                  borderTop: "1px solid #eef1f4",
                 }}
-              />
-            </Box> */}
-
+              >
+                <TrustItem
+                  icon={<ShieldOutlinedIcon fontSize="small" />}
+                  color="#14C6B8"
+                  title="Secure & Private"
+                  subtitle="Your data is safe with us"
+                />
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <TrustItem
+                  icon={<GroupsOutlinedIcon fontSize="small" />}
+                  color="#2F6FED"
+                  title="Role-Based Access"
+                  subtitle="Built for your team"
+                />
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <TrustItem
+                  icon={<AccessTimeOutlinedIcon fontSize="small" />}
+                  color="#2F6FED"
+                  title="Real-time Updates"
+                  subtitle="Stay informed, always"
+                />
+              </Box>
+            </ContentBox>
           </Grid>
 
         </Grid>

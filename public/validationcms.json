@@ -128,6 +128,11 @@
     "aadharcardnumber1": "Aadhar Card Number must be exactly 12 alphanumeric characters",
     "aadharcardnumber2": "Aadhar Card Number must be exactly 12 alphanumeric characters"
   },
+  "Relationship": {
+    "Name": "Please enter the Name",
+    "mobilenumber": "Please enter the Mobile Number",
+    "Relationship":"Please select the Relationship"
+  },
   "TermFees": {
     "Terms": "Please select the Term",
     "Standard": "Please select the Applicable Standard",
@@ -144,7 +149,9 @@
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
     "employeetype": "Please select the Type",
-    "Gender": "Please select the Gender"
+    "Gender": "Please select the Gender",
+    "Subject": "Please select the Subject"
+
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -506,6 +513,17 @@
     "Student": "Please select the Student",
     "Message": "Please enter the Message",
     "ContactPersonAndNumber": "Please enter the Contact Person And Number"
+},
+ "EventGeneral": {
+    "Title": "Please enter the Event Title",
+    "Priority": "Please select the Priority",
+    "Standard1": "Please select the Standard/Activities",
+    "Standard": "Please select the Standard/Activities",
+    "Student": "Please select the Student",
+    "Message": "Please enter the Message",
+    "ContactPersonAndNumber": "Please enter the Contact Person And Number",
+    "Eventtype": "Please select the Event Category",
+    "EventDate": "Please enter the Event Date"
 },
   "EventAcademics": {
     "EventTitle": "Please enter the Event Title",

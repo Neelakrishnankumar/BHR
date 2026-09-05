@@ -149,6 +149,7 @@ const EditAcademicyear = () => {
         academicyear: mode === "E" ? data.AcademicYear : "",
         disable: data.Disable === "Y" ? true : false,
         delete: data.DeleteFlag === "Y" ? true : false,
+        sortorder: mode === "E" ? data.Sortorder : 0,
 
     };
 

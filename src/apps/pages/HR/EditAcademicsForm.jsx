@@ -1520,7 +1520,7 @@ const EditAcademicsForm = () => {
                                         </Box> */}
 
                             {/* NOTIFY OPTIONS */}
-                            <Box>
+                            {/* <Box>
                               <Typography
                                 variant="subtitle2"
                                 sx={{
@@ -1578,7 +1578,7 @@ const EditAcademicsForm = () => {
                                   </Box>
                                 ))}
                               </Box>
-                            </Box>
+                            </Box> */}
 
                             {/* BUTTONS */}
                             <Box

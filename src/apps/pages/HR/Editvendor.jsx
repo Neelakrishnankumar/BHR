@@ -534,6 +534,8 @@ const Editvendor = () => {
 
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+        dispatch(VendorRegisterFetchData({ get: "get", recID }));
+
       } else {
         dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       }
@@ -652,11 +654,11 @@ const Editvendor = () => {
     );
   }
   // Page params
-
+  console.log(partyRegistergetdata, "partyRegistergetdata");
   const InitialValue = {
     code: data.Code || "",
     name: data.Name || "",
-    Pancardnumber: data.PanCardNo || "",
+    Pancardnumber: partyRegistergetdata.PanCardNo || data.PanCardNo || "",
     locality:
       data.LocalityID && data.LocalityID !== "0"
         ? {
@@ -677,7 +679,7 @@ const Editvendor = () => {
     maplink: data.MapLocation || "",
     PanImg: data.PanImg || "",
     GstImg: data.gstImage || "",
-    gstnumber: data.GstNo || "",
+    gstnumber: partyRegistergetdata.GstNo || data.GstNo || "",
     mobilenumber: data.MobileNo || "",
     date: data.RegistrationDate || "",
     verifieddate: data.VerifyConfirmDate || "",
@@ -693,6 +695,8 @@ const Editvendor = () => {
     BusinessPartner: data.BusinessPartner === "Y" ? true : false,
     Parent: data.ParentCheckBox === "Y" ? true : false,
     disable: data.Disable === "Y" ? true : false,
+    WholeSale: data.Type === "Y" ? true : false,
+    sortorder: data.SortOrder || 0,
   };
   console.log(data.PanImg, "dooo");
   const Fnsave = async (values, del) => {
@@ -729,6 +733,7 @@ const Editvendor = () => {
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
       EmailID: values.emailid,
+      SortOrder: values.sortorder || 0,
       CompanyID,
       VendorCheckbox: values.vendor === true ? "Y" : "N",
       CustomerCheckbox: values.customer === true ? "Y" : "N",
@@ -738,12 +743,13 @@ const Editvendor = () => {
       BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
+      Type: values.WholeSale == true ? "Y" : "N",
       Source: "Cloud",
       CreateBy: LoginID,
     };
 
     try {
-      const response = await dispatch(postData({ accessID: "TR243V1", action, idata }));
+      const response = await dispatch(postData({ accessID: "TR243", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -1296,32 +1302,32 @@ const Editvendor = () => {
 
             <Box>
               <Typography
-                              sx={{
-                                fontSize: 20,
-                                fontWeight: 700,
-                                color: "#111827",
-                                // mb: 0.2,
-                                px: 1,
-                                py: 0.2,
-                              }}
-                            >
-                              {mode === "A"
-                                ? `New Party`
-                                : `Edit Party`}
-                            </Typography>
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                  // mb: 0.2,
+                  px: 1,
+                  py: 0.2,
+                }}
+              >
+                {mode === "A"
+                  ? `New Party`
+                  : `Edit Party`}
+              </Typography>
               {/* Breadcrumb */}
               <Breadcrumbs
-               maxItems={3}
-                                 aria-label="breadcrumb"
-                                 separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                                 sx={breadcrumbStyles.separator}
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                sx={breadcrumbStyles.separator}
               >
                 <Typography
-                 sx={
-                                        show == "0"
-                                          ? breadcrumbStyles.active
-                                          : breadcrumbStyles.item
-                                      }
+                  sx={
+                    show == "0"
+                      ? breadcrumbStyles.active
+                      : breadcrumbStyles.item
+                  }
                   onClick={() => {
                     setScreen(0);
                   }}
@@ -1636,7 +1642,23 @@ const Editvendor = () => {
                         }}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":"","VerticalLicense":"${Subscriptionlastthree}"}}`}
                       />
-
+                      <TextField
+                        name="sortorder"
+                        type="text"
+                        id="sortorder"
+                        label="Sort Order"
+                        variant="outlined"
+                        size="small"
+                        value={values.sortorder}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={textFieldSx}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
                       <Box
                         sx={{
                           gridColumn: "span 2",
@@ -1667,6 +1689,17 @@ const Editvendor = () => {
                             />
                             <FormLabel focused={false}>Vendor/Supplier</FormLabel>
                           </Box>
+                          <Box>
+                            <Field
+                              type="checkbox"
+                              name="prospect"
+                              id="prospect"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Prospects</FormLabel>
+                          </Box>
 
                           <Box>
                             <Field
@@ -1679,17 +1712,16 @@ const Editvendor = () => {
                             />
                             <FormLabel focused={false}>Customer</FormLabel>
                           </Box>
-
                           <Box>
                             <Field
                               type="checkbox"
-                              name="prospect"
-                              id="prospect"
+                              name="WholeSale"
+                              id="WholeSale"
                               onChange={handleChange}
                               onBlur={handleBlur}
                               as={Checkbox}
                             />
-                            <FormLabel focused={false}>Prospects</FormLabel>
+                            <FormLabel focused={false}>Whole Sale</FormLabel>
                           </Box>
 
                           <Box>
@@ -1713,8 +1745,11 @@ const Editvendor = () => {
                               onBlur={handleBlur}
                               as={Checkbox}
                             />
-                            <FormLabel focused={false}>Parent</FormLabel>
+                            <FormLabel focused={false}>
+                              {Subscriptionlastthree === "003" ? "Parent" : "Employee"}
+                            </FormLabel>
                           </Box>
+
 
                           <Box>
                             <Field
@@ -2028,7 +2063,7 @@ const Editvendor = () => {
                         helperText={touched.mobileno1 && errors.mobileno1}
                         inputProps={{ maxLength: 10 }}
                         sx={textFieldSx}
-                        autoFocus
+                      // autoFocus
                       />
                       <TextField
                         name="mobileno2"
@@ -2042,7 +2077,7 @@ const Editvendor = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         sx={textFieldSx}
-                        autoFocus
+                      // autoFocus
                       />
                       <TextField
                         fullWidth
@@ -3446,7 +3481,7 @@ const Editvendor = () => {
                       setScreen("0");
                     }}
                     sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}
-                    
+
                   >
                     Back
                   </Button>

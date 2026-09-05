@@ -238,7 +238,11 @@ import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
 import StudentReports from "./pages/Empolyee/EditAcademicreport";
+import EditAttendanceEntry from "./pages/Empolyee/EditAttendanceentry";
+import EditGeneral from "./pages/HR/EditGeneralevent";
 import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
+import EditRemainder from "./pages/Empolyee/EditRemainder";
+
 
 function App() {
   //   useEffect(() => {
@@ -374,10 +378,7 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-<Route
-                    path="/ItemStokAnalytics"
-                   element={<ItemStokAnalytics />}
-                  />
+
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
@@ -416,10 +417,10 @@ function App() {
                     element={<EditPayment />}
                   />
                   <Route
-                    path="/:accessID/:screenName/Invoice/Analytics"
+                    path="/Invoice/Analytics"
                     element={<InvoiceAnalytics />}
                   />
-                  {/* SKILL GLOW */}
+                  {/* SKILL GLOW /Apps/SecondarylistView/TR331/Invoice/60/Invoice/Analytics*/ }
 
                   {/* SCHEDULE */}
                   <Route
@@ -459,7 +460,11 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
-
+{/* /Apps/Secondarylistview/TR310/Order/2636/Party/O/TR311/Order%20item/2066 */}
+{/* <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  /> */}
                   {/* Session */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
@@ -789,7 +794,13 @@ function App() {
                     element={<LeaveType />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
+                    element={<Holidaylist />}
+                  />
+                   <Route
+                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
                   />
 
@@ -1004,9 +1015,10 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
                   /> */}
+                  {/* Orderitem */}
                   <Route
                     // path="/Secondarylistview/:accessID1/:OrderType/:filtertype/:Type/:screenName/:accessID/:filtertype1"
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1"
                     element={<ListviewSecondary />}
                   />
                   {/* FEES STRUCTURE */}
@@ -1033,6 +1045,11 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/E/EditEvent Category/:id/:Mode"
                     element={<EditEmergency />}
+                    // element={<EditOtherEvents />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/G/EditEvent Category/:id/:Mode"
+                    element={<EditGeneral />}
                     // element={<EditOtherEvents />}
                   />
                   {/* ACADEMMICS */}
@@ -1390,7 +1407,10 @@ function App() {
                     path="/:accessID/:screenName/EditSettlements/:id/:Mode"
                     element={<EditSettlements />}
                   />
-
+                  <Route
+                    path="/Reminder"
+                    element={<EditRemainder />}
+                  />
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
@@ -1547,7 +1567,7 @@ function App() {
                     element={<ListviewSecondary />}
                   /> */}
                   <Route
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
                   <Route
@@ -1637,6 +1657,10 @@ function App() {
                     element={<ProjectTimeTable />}
                   />
                   <Route
+                    path="/ItemStokAnalytics"
+                   element={<ItemStokAnalytics />}
+                  />
+                   <Route
                     // path="/:accessID/RaiseComplaints"
                     path="/:accessID/Escalation/EditEscalation/:id/:Mode"
                     element={<RaiseComplaints />}
@@ -1654,6 +1678,10 @@ function App() {
                   <Route
                    path="/AcademicReport/:id"
                     element={<StudentReports />}
+                  />
+                   <Route
+                   path="/Attendanceentry"
+                    element={<EditAttendanceEntry />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

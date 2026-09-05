@@ -145,6 +145,8 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 import BallotIcon from '@mui/icons-material/Ballot';
+import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
+import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -619,46 +621,80 @@ export const fetchListview =
       const defaultFromDate = format(oneMonthBefore);
       const defaultToDate = format(today);
 
+      // const handlestdDelete = async (values) => {
+      //   const payload = {
+      //     ProjectId: values.RecordID,
+      //     CompanyID: values.CompanyID,
+      //   }
+      //   console.log(payload, "-- GENERATE PAYLOAD");
+      //   const response = await dispatch(
+      //     standardDelete(payload)
+      //   );
+      //   console.log(response, "-- generate response");
+
+      //   if (response?.payload?.Status === "Y") {
+      //     toast.success(response?.payload?.Msg);
+      //     dispatch(
+      //       fetchListview(
+      //         "TR275",
+      //         "003",
+      //         screenName,
+      //         `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+      //         "",
+
+
+      //       )
+      //     );
+      //     // dispatch(
+      //     //   getFetchData({
+      //     //     accessID: "TR368v1",
+      //     //     get: "get",
+      //     //     recID: headerid,
+      //     //   })
+      //     // );      
+      //   }
+      //   else if (response?.payload?.Status == "N") {
+      //     toast.error(response?.payload?.Msg);
+      //   }
+      // };
+
       const handlestdDelete = async (values) => {
-        const payload = {
-          ProjectId: values.RecordID,
-          CompanyID: values.CompanyID,
-        }
-        console.log(payload, "-- GENERATE PAYLOAD");
-        const response = await dispatch(
-          standardDelete(payload)
-        );
-        console.log(response, "-- generate response");
+        Swal.fire({
+          title: "Do you want to Delete?",
+          // text: "This action cannot be undone.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const payload = {
+              ProjectId: values.RecordID,
+              CompanyID: values.CompanyID,
+            };
+            console.log(payload, "-- GENERATE PAYLOAD");
+            const response = await dispatch(standardDelete(payload));
+            console.log(response, "-- generate response");
 
-        if (response?.payload?.Status === "Y") {
-          toast.success(response?.payload?.Msg);
-          dispatch(
-            fetchListview(
-              "TR275",
-              "003",
-              screenName,
-              `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
-              "",
-
-
-            )
-          );
-          // dispatch(
-          //   getFetchData({
-          //     accessID: "TR368v1",
-          //     get: "get",
-          //     recID: headerid,
-          //   })
-          // );      
-        }
-        else if (response?.payload?.Status == "N") {
-          toast.error(response?.payload?.Msg);
-        }
+            if (response?.payload?.Status === "Y") {
+              toast.success(response?.payload?.Msg);
+              dispatch(
+                fetchListview(
+                  "TR275",
+                  "003",
+                  screenName,
+                  `AcademicYearID='${values.AcademicYearID}' AND CompanyID='${CompId}'`,
+                  "",
+                ),
+              );
+            } else if (response?.payload?.Status == "N") {
+              toast.error(response?.payload?.Msg);
+            }
+          }
+        });
       };
-
-
-
-
 
       // const handlePDFGET = (ProjectID, EmployeeID) => {
       //   console.log("Dispatching with:", { ProjectID, EmployeeID });
@@ -691,6 +727,7 @@ export const fetchListview =
         AccessID !== "TR291" &&
         AccessID !== "TR283" &&
         AccessID !== "TR026" &&
+        AccessID !== "TR401" &&
         AccessID !== "TR148"
       ) {
         if (
@@ -823,6 +860,9 @@ export const fetchListview =
           AccessID != "TR377" &&
           AccessID != "TR387" &&
           AccessID != "TR026" &&
+          AccessID != "TR401" &&
+          AccessID != "TR218" &&
+          AccessID != "TR331" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -1487,6 +1527,10 @@ export const fetchListview =
         // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
         filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
       }
+      else if (AccessID === "TR401" && screenName === "Subject") {
+        // filter = `CompanyID='${CompId}' AND SubjectSkill= 'Y'`;
+        filter = `CompanyID='${CompId}' AND SubjectSkill NOT IN('D')`;
+      }
       else if (AccessID === "TR026" && screenName === "Department") {
         filter = `CompanyID='${CompId}' AND SubjectSkill= 'D'`;
       }
@@ -1895,10 +1939,10 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
+                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
                         <Link
                           // to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
-                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
+                          to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
                           state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
@@ -1906,8 +1950,8 @@ export const fetchListview =
                             MilestoneName: params.row.Name,
                             projectName: params.row.Project,
                             BreadCrumb1: params.row.Project,
-                            SlotGroupID:params.row.SlotGroupID,
-                            SlotGroupName:params.row.SlotGroupName
+                            SlotGroupID: params.row.SlotGroupID,
+                            SlotGroupName: params.row.SlotGroupName
                           }}
                         >
                           <Tooltip title="Time Table">
@@ -1917,14 +1961,14 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
-                          <Tooltip title="Time Table">
-                             <span style={{ cursor: "pointer" }}>
-    <IconButton color="info" size="small" disabled>
-      <DatasetLinkedIcon />
-    </IconButton>
-  </span>
-                          </Tooltip>
+                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                        <Tooltip title="Time Table">
+                          <span style={{ cursor: "pointer" }}>
+                            <IconButton color="info" size="small" disabled>
+                              <DatasetLinkedIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
                       )}
 
                       {!isSeedEditable && (
@@ -2000,10 +2044,10 @@ export const fetchListview =
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
-                      
-     {(is003Subscription && params.row.RoutineTasks !=="Y")&& (
+
+                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
                         <Link to={`./EditPromotion/${params.row.RecordID}/E`}
-                         state={{
+                          state={{
                             AcademicYear: params.row.AcademicYear,
                             AcademicYearID: params.row.AcademicYearID,
                             projectID: params.row.RecordID,
@@ -2019,13 +2063,13 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                  {(is003Subscription && params.row.RoutineTasks ==="Y")&& (
-                          <Tooltip title="Promotion">
-                            <IconButton color="info" size="small" disabled>
-                              <NextWeekIcon />
-                            </IconButton>
-                          </Tooltip>
-                   
+                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                        <Tooltip title="Promotion">
+                          <IconButton color="info" size="small" disabled>
+                            <NextWeekIcon />
+                          </IconButton>
+                        </Tooltip>
+
                       )}
 
 
@@ -2437,6 +2481,66 @@ export const fetchListview =
                 },
               };
             }
+            else if (AccessID == "TR411") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR218/Holiday List/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Holiday List">
+                          <IconButton color="info" size="small">
+                            <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR416") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR331/Invoice/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Invoice">
+                          <IconButton color="info" size="small">
+                            <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
             else if (AccessID == "TR383") {
               obj = {
                 field: "action",
@@ -2648,6 +2752,8 @@ export const fetchListview =
                           Employee: params.row.Employee,
                           Project: params.row.Project,
                           ProjectID: params.row.ProjectID,
+                          AcademicYearID: params.row.AcademicYearID,
+                          AcademicYear: params.row.AcademicYear
                         }}
                       >
                         <Tooltip title="Payment">
@@ -5077,82 +5183,82 @@ export const fetchListview =
                             //       BreadCrumb1: params.row.Description,
                             //     }
                             //   :
-                              AccessID === "TR027"
+                            AccessID === "TR027"
                               ? {
-                                  EmpName: params.row.Name,
-                                  Employee: params.row.Employee,
-                                  BreadCrumb1: params.row.Description,
-                                   Classification: params.row.Description,
-                                }
-                              :
-                         
-                            AccessID === "TR128"
-                              ? {
-                                LocationName: params.row.Name,
-                                CompanyName: params.row.CompanyName,
+                                EmpName: params.row.Name,
+                                Employee: params.row.Employee,
+                                BreadCrumb1: params.row.Description,
+                                Classification: params.row.Description,
                               }
-                              : AccessID === "TR127"
+                              :
+
+                              AccessID === "TR128"
                                 ? {
-                                  GateName: params.row.Name,
-                                  LocationName: params.row.LocationName,
+                                  LocationName: params.row.Name,
                                   CompanyName: params.row.CompanyName,
                                 }
-                                : AccessID === "TR375"
+                                : AccessID === "TR127"
                                   ? {
-                                    AcademicYear: params.row.AcademicYear,
+                                    GateName: params.row.Name,
+                                    LocationName: params.row.LocationName,
+                                    CompanyName: params.row.CompanyName,
                                   }
-                                  : AccessID === "TR377"
+                                  : AccessID === "TR375"
                                     ? {
-                                      SlotGroupName: params.row.SlotGroup,
+                                      AcademicYear: params.row.AcademicYear,
                                     }
-                                    : AccessID === "TR257"
+                                    : AccessID === "TR377"
                                       ? {
-                                        EmpName: params.row.Name,
+                                        SlotGroupName: params.row.SlotGroup,
                                       }
-                                      : AccessID === "TR132"
+                                      : AccessID === "TR257"
                                         ? {
-                                          proName: params.row.ProjectName,
-                                          Date: params.row.Date,
-                                          EmpName: params.row.EmployeeName,
-                                          Locname: params.row.LocationName,
+                                          EmpName: params.row.Name,
                                         }
-                                        : AccessID === "TR123"
+                                        : AccessID === "TR132"
                                           ? {
-                                            EmpName: params.row.Name,
+                                            proName: params.row.ProjectName,
+                                            Date: params.row.Date,
+                                            EmpName: params.row.EmployeeName,
+                                            Locname: params.row.LocationName,
                                           }
-                                          : AccessID === "TR134"
+                                          : AccessID === "TR123"
                                             ? {
-                                              proName: params.row.ProjectName,
-                                              EmpName: params.row.EmployeeName,
-                                              Date: params.row.Date,
-                                              Locname: params.row.LocationName,
-                                              EmployeeID: params.row.EmployeesID,
-                                              checkinID: params.row.CheckinID,
+                                              EmpName: params.row.Name,
                                             }
-                                            : AccessID === "TR124"
+                                            : AccessID === "TR134"
                                               ? {
+                                                proName: params.row.ProjectName,
                                                 EmpName: params.row.EmployeeName,
+                                                Date: params.row.Date,
+                                                Locname: params.row.LocationName,
+                                                EmployeeID: params.row.EmployeesID,
                                                 checkinID: params.row.CheckinID,
                                               }
-                                              : // : AccessID === "TR127"
-                                              // ? {
-                                              //     GateName: params.row.Name,
-                                              //     LocationName: params.row.LocationName,
-                                              //     CompanyName: params.row.CompanyName,
-                                              //   }
-                                              // : AccessID === "TR129"
-                                              // ? {
-                                              //     bin: params.row.Name,
-                                              //     LocationName: params.row.LocationName,
-                                              //     CompanyName: params.row.CompanyName,
-                                              //   }
-                                              {
-                                                CustomerID:
-                                                  params.row.CustomerRecordID,
-                                                ProductID:
-                                                  params.row.ProductRecordID,
-                                                BomID: params.row.BomRecordID,
-                                              }
+                                              : AccessID === "TR124"
+                                                ? {
+                                                  EmpName: params.row.EmployeeName,
+                                                  checkinID: params.row.CheckinID,
+                                                }
+                                                : // : AccessID === "TR127"
+                                                // ? {
+                                                //     GateName: params.row.Name,
+                                                //     LocationName: params.row.LocationName,
+                                                //     CompanyName: params.row.CompanyName,
+                                                //   }
+                                                // : AccessID === "TR129"
+                                                // ? {
+                                                //     bin: params.row.Name,
+                                                //     LocationName: params.row.LocationName,
+                                                //     CompanyName: params.row.CompanyName,
+                                                //   }
+                                                {
+                                                  CustomerID:
+                                                    params.row.CustomerRecordID,
+                                                  ProductID:
+                                                    params.row.ProductRecordID,
+                                                  BomID: params.row.BomRecordID,
+                                                }
                           }
                         >
                           <Tooltip title="Edit">
@@ -6513,7 +6619,45 @@ export const fetchListview =
                 },
               };
             }
+            if (AccessID == "TR401") {
+              const obj = {
+                field: "Type",
+                headerName: "Type",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 60,
+                maxWidth: 60,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link>
+                        {params.row.SubjectSkill === "A" && (
+                          <Tooltip title="Activities">
+                            <IconButton color="info">
+                              <BrightnessAutoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link>
 
+                      {/* <Link>
+                        {params.row.EmpType === "Contracts Out" && (
+                          <Tooltip title="Contract Out">
+                            <IconButton color="info">
+                              <UndoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link> */}
+                    </Stack>
+                  );
+                },
+              };
+              listviewData.Data.columns.splice(2, 0, obj);
+            }
             if (AccessID == "TR027") {
               const obj = {
                 field: "Type",
@@ -6553,6 +6697,7 @@ export const fetchListview =
               };
               listviewData.Data.columns.splice(2, 0, obj);
             }
+
             if (AccessID == "TR027") {
               const obj = {
                 field: "emp",
@@ -6580,7 +6725,7 @@ export const fetchListview =
               };
               listviewData.Data.columns.splice(2, 0, obj);
             }
-     if (AccessID == "TR026") {
+            if (AccessID == "TR026") {
               const obj = {
                 field: "activity",
                 headerName: " ",
@@ -6595,13 +6740,13 @@ export const fetchListview =
                   return (
                     <Stack direction="row">
                       <Link>
-                      {params.row.SubjectSkill === "A" && (
-                        <Tooltip title="Activity">
-                          <IconButton color="info">
-                            <ManageAccountsIcon />
-                          </IconButton>
-                        </Tooltip>
-                            )}
+                        {params.row.SubjectSkill === "A" && (
+                          <Tooltip title="Activity">
+                            <IconButton color="info">
+                              <ManageAccountsIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Link>
                     </Stack>
                   );
@@ -7424,10 +7569,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const dispatch = useDispatch();
   const UserName = sessionStorage.getItem("UserName");
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const LogoImg = sessionStorage.getItem("CompanyLogo");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
-  console.log("HeaderImg", HeaderImg, FooterImg);
+  console.log("HeaderImg", HeaderImg, FooterImg, LogoImg);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
@@ -7484,7 +7630,57 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     const dispatch = store.dispatch;
     const [loading, setLoading] = React.useState(false);
 
-    const handlePDFGET = async () => {
+    // const handlePDFGET = async () => {
+    //   try {
+    //     setLoading(true);
+
+    //     const resultAction = await dispatch(
+    //       getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
+    //     );
+
+    //     const data = resultAction.payload; // <-- this depends on how your thunk is defined
+    //     if (!data?.HeaderData?.DetailData?.length) {
+    //       alert("No Order Items available for this order..");
+    //       return;
+    //     }
+
+    //     // Generate and download PDF
+    //     const blob = await pdf(
+    //       <OrderHeaderPdf
+    //         data={data}
+    //         UserName={UserName}
+    //         OrderType={OrderType}
+    //       />,
+    //     ).toBlob();
+    //     // const link = document.createElement("a");
+    //     // link.href = URL.createObjectURL(blob);
+    //     // //link.download = "OrderDeatils.pdf";
+    //     // link.Open();
+    //     // link.click();
+    //     const blobUrl = URL.createObjectURL(blob);
+    //     window.open(blobUrl, "_blank");
+
+    //     // 2. TO DOWNLOAD DIRECTLY
+    //     // const url = URL.createObjectURL(blob);
+
+    //     // const link = document.createElement("a");
+    //     // link.href = url;
+    //     // link.download = "OrderDetails.pdf";
+    //     // document.body.appendChild(link);
+
+    //     // link.click();
+
+    //     // document.body.removeChild(link);
+    //     // URL.revokeObjectURL(url);
+    //   } catch (err) {
+    //     console.error("PDF generation failed", err);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+    const handlePDFGET = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
       try {
         setLoading(true);
 
@@ -7492,13 +7688,12 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
         );
 
-        const data = resultAction.payload; // <-- this depends on how your thunk is defined
+        const data = resultAction.payload;
         if (!data?.HeaderData?.DetailData?.length) {
           alert("No Order Items available for this order..");
           return;
         }
 
-        // Generate and download PDF
         const blob = await pdf(
           <OrderHeaderPdf
             data={data}
@@ -7506,26 +7701,9 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             OrderType={OrderType}
           />,
         ).toBlob();
-        // const link = document.createElement("a");
-        // link.href = URL.createObjectURL(blob);
-        // //link.download = "OrderDeatils.pdf";
-        // link.Open();
-        // link.click();
+
         const blobUrl = URL.createObjectURL(blob);
         window.open(blobUrl, "_blank");
-
-        // 2. TO DOWNLOAD DIRECTLY
-        // const url = URL.createObjectURL(blob);
-
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = "OrderDetails.pdf";
-        // document.body.appendChild(link);
-
-        // link.click();
-
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(url);
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {
@@ -7630,7 +7808,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     }
   };
 
-  const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
+  const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month, Year }) => {
     const dispatch = store.dispatch;
     const [payloading, setPayLoading] = React.useState(false);
 
@@ -7660,6 +7838,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <PayslipPdf
             data={data}
             filters={{
+              LogoImg: LogoImg,
               Imageurl: baseurlUAAM,
               HeaderImg: HeaderImg,
               FooterImg: FooterImg,
@@ -7672,7 +7851,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         const link = document.createElement("a");
         link.href = blobUrl;
-        link.download = "Payslip.pdf";
+        link.download = `Payslip_${Month}_${Year}.pdf`;
         document.body.appendChild(link); // ✅ Important
         link.click();
         document.body.removeChild(link); // ✅ Cleanup
@@ -7845,25 +8024,25 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               )}
             {(params.row.Description === "Non Teaching Staff") && (
-                <Tooltip title="Productivity Report">
-                  <IconButton
-                    color="info"
-                    size="small"
-                    onClick={() =>
-                      navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
-                        state: {
-                          ...state,
-                          BreadCrumb1: params.row.Description,
-                          Classification: params.row.Description,
-                          CompanyID: params.row.CompanyID,
-                        },
-                      })
-                    }
-                  >
-                    <SensorOccupiedIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title="Productivity Report">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(`/Apps/NonTeacherOccupancy/${params.row.RecordID}`, {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Description,
+                        Classification: params.row.Description,
+                        CompanyID: params.row.CompanyID,
+                      },
+                    })
+                  }
+                >
+                  <SensorOccupiedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
 
@@ -7956,6 +8135,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 EmployeeID={params.row.EmployeeID}
                 Finyear={params.row.Year}
                 Month={params.row.Month}
+                Year={params.row.Year}
               />
             ) : (
               <Tooltip title="Payslip Process pending">
@@ -8225,9 +8405,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
               to={
                 params.row.OrderItemsCount >= 1
-                  ? `./TR311/${id}`
-                  : `./TR311/${id}/EditOrderitem/-1/A`
+                  ? `./TR311/Order Item/${id}`
+                  : `./TR311/Order Item/${id}/EditOrderitem/-1/A`
               }
+              // /Secondarylistview/:accessID1/:screenName1/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1
+              //  to={
+              //   params.row.OrderItemsCount >= 1
+              //     ? `/Apps/Secondarylistview/TR311/Order Item/${id}`
+              //     : `/Apps/Secondarylistview/TR311/Order Item/${id}/EditOrderitem/-1/A`
+              // }
               state={{
                 PartyName: params.row.PartyName,
                 Count: params.row.MarketingCount,
@@ -8352,6 +8538,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   OperationStageID: params.row.OperationStageID,
                   projectName: params.row.Project,
                   Employee: params.row.Employee,
+                  AcademicYearID: params.row.AcademicYearID,
+                  AcademicYear: params.row.AcademicYear
                 }}
               >
                 <Tooltip title="Edit">
@@ -8446,6 +8634,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(path, {
                     state: {
                       ...state,
+                      returnPage: state.page,
+                      returnPageSize: state.pageSize,
                       screenName: screenName,
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
@@ -8486,19 +8676,19 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
             {is003Subscription && params.row.Classification == "Student" && (
-            <Link
-              to={`/Apps/AcademicReport/${params.row.RecordID}`}
-              state={{
-                EmpName: params.row.Name,
-                Employee: params.row.Personnel,
-              }}
-            >
-              <Tooltip title="Academic Report">
-                <IconButton color="info" size="small">
-                  <BallotIcon />
-                </IconButton>
-              </Tooltip>
-            </Link>
+              <Link
+                to={`/Apps/AcademicReport/${params.row.RecordID}`}
+                state={{
+                  EmpName: params.row.Name,
+                  Employee: params.row.Personnel,
+                }}
+              >
+                <Tooltip title="Analytics">
+                  <IconButton color="info" size="small">
+                    <BallotIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
             )}
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
@@ -8542,8 +8732,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const companygroupflag = sessionStorage.getItem("companygroupflag");
   const companygroup =
-    JSON.parse(sessionStorage.getItem("companygroup") || "[]"); 
-    console.log(companygroup, companygroupflag, "companygroupflag.....");
+    JSON.parse(sessionStorage.getItem("companygroup") || "[]");
+  console.log(companygroup, companygroupflag, "companygroupflag.....");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   const CompanyID = sessionStorage.getItem("compID");
   const EmployeeID = sessionStorage.getItem("empID");
@@ -8563,140 +8753,210 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
   const handleDeleteTermFees = async (values) => {
-    const payload = {
-      HeaderID: values.RecordID,
-      CompanyID: CompanyID,
-    }
-    console.log(payload, "-- GENERATE PAYLOAD");
-    const response = await dispatch(
-      FeesStructureDelete(payload)
-    );
-    console.log(response, "-- generate response");
+    Swal.fire({
+      title: "Do you want to Delete?",
+      // text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          HeaderID: values.RecordID,
+          CompanyID: CompanyID,
+        }
+        console.log(payload, "-- GENERATE PAYLOAD");
+        const response = await dispatch(
+          FeesStructureDelete(payload)
+        );
+        console.log(response, "-- generate response");
 
-    if (response?.payload?.Status === "Y") {
-      toast.success(response?.payload?.Msg);
-      // dispatch(
-      //   getFetchData({
-      //     accessID: "TR368v1",
-      //     get: "get",
-      //     recID: headerid,
-      //   })
-      // );      
-    }
-    else if (response?.payload?.Status == "N") {
-      toast.error(response?.payload?.Msg);
-    }
+        if (response?.payload?.Status === "Y") {
+          toast.success(response?.payload?.Msg);
+          dispatch(
+            fetchListview(
+              "TR387",
+              "003",
+              screenName,
+              `AcademicYearID = '${values.AcademicYearID}' AND AcadamicTypeID='${values.AcadamicTypeID}' AND CompanyID = '${CompanyID}'`,
+              "",
+              CompanyID,
+              "003"
+
+            )
+          );
+        }
+        else if (response?.payload?.Status == "N") {
+          toast.error(response?.payload?.Msg);
+        }
+      }
+    });
   };
   const handleGenerateTimetable = async (values) => {
-    const payload = {
-      HeaderID: values.RecordID,
-      CompanyID: CompanyID,
-    }
-    console.log(payload, "-- GENERATE PAYLOAD");
-    const response = await dispatch(
-      TimeTableDelete(payload)
-    );
-    console.log(response, "-- generate response");
+    Swal.fire({
+      title: "Do you want to Delete?",
+      // text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          HeaderID: values.RecordID,
+          CompanyID: CompanyID,
+        }
+        console.log(payload, "-- GENERATE PAYLOAD");
+        const response = await dispatch(
+          TimeTableDelete(payload)
+        );
+        console.log(response, "-- generate response");
 
-    if (response?.payload?.Status === "Y") {
-      toast.success(response?.payload?.Msg);
-      // dispatch(
-      //   getFetchData({
-      //     accessID: "TR368v1",
-      //     get: "get",
-      //     recID: headerid,
-      //   })
-      // );      
-    }
-    else if (response?.payload?.Status == "N") {
-      toast.error(response?.payload?.Msg);
-    }
+        if (response?.payload?.Status === "Y") {
+          toast.success(response?.payload?.Msg);
+          // dispatch(
+          //   getFetchData({
+          //     accessID: "TR368v1",
+          //     get: "get",
+          //     recID: headerid,
+          //   }) 
+          dispatch(
+            fetchListview(
+              "TR368",
+              "003",
+              screenName,
+              `CompanyID='${CompanyID}' AND StandardID='${values.StandardID || 0}'`,
+              "",
+              CompanyID,
+              "003"
+
+            )
+          );
+          // );      
+        }
+        else if (response?.payload?.Status == "N") {
+          toast.error(response?.payload?.Msg);
+        }
+      }
+    });
   };
   const handledeleteDeposit = async (values) => {
-    try {
-      const action = "harddelete";
+    Swal.fire({
+      title: "Are you sure you want to delete this deposit?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const action = "harddelete";
 
-      const idata = {
-        RecordID: values?.RecordID,
-        DepositDate: values?.CurrentDate,
-        TransactionID: values?.transactionID,
-        CategoryID: values?.CategoryID,
-        EmployeeID: values?.EmployeeID,
-        Amount: Number(values?.Amount || 0),
-        AccountNo: values?.AccountNo,
-        IFSCCode: values?.IfscCode,
-        HolderName: values?.HolderName,
-        Attachment: values?.Attachment || "",
-        BalanceAmount: Number(values?.BalanceAmnt || 0),
-        BranchName: values?.BranchName,
-      };
+          const idata = {
+            RecordID: values?.RecordID,
+            DepositDate: values?.CurrentDate,
+            TransactionID: values?.transactionID,
+            CategoryID: values?.CategoryID,
+            EmployeeID: values?.EmployeeID,
+            Amount: Number(values?.Amount || 0),
+            AccountNo: values?.AccountNo,
+            IFSCCode: values?.IfscCode,
+            HolderName: values?.HolderName,
+            Attachment: values?.Attachment || "",
+            BalanceAmount: Number(values?.BalanceAmnt || 0),
+            BranchName: values?.BranchName,
+          };
 
-      console.log(idata, "-- DELETE PAYLOAD");
+          console.log(idata, "-- DELETE PAYLOAD");
 
-      const response = await dispatch(
-        postData({
-          accessID,
-          action,
-          idata,
-        })
-      );
+          const response = await dispatch(
+            postData({
+              accessID,
+              action,
+              idata,
+            })
+          );
 
-      console.log(response, "-- DELETE RESPONSE");
+          console.log(response, "-- DELETE RESPONSE");
 
-      const result = response?.payload;
+          const result = response?.payload;
 
-      if (result?.Status === "Y") {
-        toast.success(result?.Msg);
-      } else if (result?.Status === "N") {
-        toast.error(result?.Msg);
-      } else {
-        toast.error("Unexpected response received.");
+          if (result?.Status === "Y") {
+            toast.success(result?.Msg);
+          } else if (result?.Status === "N") {
+            toast.error(result?.Msg);
+          } else {
+            toast.error("Unexpected response received.");
+          }
+        } catch (error) {
+          console.error("Delete Deposit Error:", error);
+          toast.error("Failed to delete deposit.");
+        }
       }
-    } catch (error) {
-      console.error("Delete Deposit Error:", error);
-      toast.error("Failed to delete deposit.");
-    }
+    });
   };
+
   const handledeleteDebit = async (values) => {
-    try {
-      const action = "harddelete";
+    Swal.fire({
+      title: "Are you sure you want to delete this debit?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const action = "harddelete";
 
-      const idata = {
-        RecordID: values?.RecordID,
-        DebitDate: values.CurrentDate,
-        TransactionID: values.transactionID,
-        CategoryID: values.CategoryID || 0,
-        EmployeeID: values.EmployeeID || 0,
-        Description: values.Description,
-        Amount: Number(values.Amount),
-        BalanceAmount: Number(values.BalanceAmnt),
-      };
+          const idata = {
+            RecordID: values?.RecordID,
+            DebitDate: values.CurrentDate,
+            TransactionID: values.transactionID,
+            CategoryID: values.CategoryID || 0,
+            EmployeeID: values.EmployeeID || 0,
+            Description: values.Description,
+            Amount: Number(values.Amount),
+            BalanceAmount: Number(values.BalanceAmnt),
+          };
 
-      console.log(idata, "-- DELETE PAYLOAD");
+          console.log(idata, "-- DELETE PAYLOAD");
 
-      const response = await dispatch(
-        postData({
-          accessID,
-          action,
-          idata,
-        })
-      );
+          const response = await dispatch(
+            postData({
+              accessID,
+              action,
+              idata,
+            })
+          );
 
-      console.log(response, "-- DELETE RESPONSE");
+          console.log(response, "-- DELETE RESPONSE");
 
-      const result = response?.payload;
+          const result = response?.payload;
 
-      if (result?.Status === "Y") {
-        toast.success(result?.Msg);
-      } else if (result?.Status === "N") {
-        toast.error(result?.Msg);
-      } else {
-        toast.error("Unexpected response received.");
+          if (result?.Status === "Y") {
+            toast.success(result?.Msg);
+          } else if (result?.Status === "N") {
+            toast.error(result?.Msg);
+          } else {
+            toast.error("Unexpected response received.");
+          }
+        } catch (error) {
+          console.error("Delete Deposit Error:", error);
+          toast.error("Failed to delete deposit.");
+        }
       }
-    } catch (error) {
-      console.error("Delete Deposit Error:", error);
-      toast.error("Failed to delete deposit.");
-    }
+    });
   };
 
 
@@ -8724,7 +8984,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
       if (data.payload.Status === "Y") {
         Swal.fire({
-          title: data.payload.Message,
+          text: data.payload.Msg,
           icon: "success",
           confirmButtonText: "OK",
           confirmButtonColor: "#3085d6",
@@ -9042,7 +9302,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   SlotGroupID: params.row.SlotGroupID,
                   GroupID: params.row.SlotGroupID,
                   HeaderID: params.row.RecordID,
-                  isprocess: params.row.IsProcess
+                  isprocess: params.row.IsProcess,
+                  AcademicYear: params.row.AcademicYear
                 }}
               >
                 <Tooltip title="Edit">
@@ -9100,7 +9361,42 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </IconButton>
               </Tooltip>
             </Link> */}
-
+            {is003Subscription && (
+              //<Link
+              // to={`./EditStandardSessions/${params.row.StandardID}/E`}
+              // state={{
+              //   ProjectID: params.row.StandardID,
+              //   HeaderID: params.row.HeaderID,   // <-- confirm this field exists on params.row
+              //   TermID: params.row.TermID,       // <-- confirm this field exists on params.row
+              //   BreadCrumb1: params.row.Project,
+              //   BreadCrumb2: params.row.AcademicYear,
+              // }}
+              //>
+              <Tooltip title="Session">
+                <IconButton color="info" size="small"
+                  onClick={() => navigate(
+                    `/Apps/Secondarylistview/TR368/Timetable/${params.row.AcademicYearID}/${params.row.StandardID}/EditStandardSessions/${params.row.RecordID}/E`,
+                    {
+                      state: {
+                        ...state, ProjectID: params.row.StandardID,
+                        HeaderID: params.row.RecordID,
+                        TermID: params.row.TermID,
+                        BreadCrumb1: params.row.standardID,
+                        Project: params.row.Project,
+                        Description: params.row.Description,
+                        BreadCrumb2: params.row.AcademicYearID,
+                      }
+                    }
+                  )}
+                >
+                  <ViewTimelineIcon />
+                </IconButton>
+                {/* <IconButton color="info" size="small">
+                    <ViewTimelineIcon />
+                  </IconButton> */}
+              </Tooltip>
+              // </Link>
+            )}
             {params.row.IsProcess === "N" ? (
               <>
                 <Link
@@ -9337,6 +9633,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 AcademicYear: params.row.AcademicYear,
                 AcademicYearID: params.row.AcademicYearID,
                 AcademicType: params.row.AcademicType,
+                AcadamicTypeID: params.row.AcadamicTypeID
 
               }}
             >
@@ -9367,15 +9664,15 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Link>
             {(params.row.IsPublish === "Y" && params.row.Events !== "0") && (
 
-            <Tooltip title="Publish Event Category">
-              <IconButton
-                color="error"
-                size="small"
-                onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
-              >
-                <PublishedWithChangesOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Publish Event Category">
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => { companygroupflag == "Y" ? handlePublish1(params.row) : handlePublish(params.row) }}
+                >
+                  <PublishedWithChangesOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             )}
             <PublishEventCategoryDialog
               open={publishDialog.open}
@@ -9389,7 +9686,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR385" && (
           <>
-            {params.row.IsPublish === "Y" ? (
+            {/* {params.row.IsPublish === "Y" ? (
               <Link
                 to={`./EditEvent Category/${params.row.RecordID}/V`}
                 state={{
@@ -9404,7 +9701,8 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     <VisibilityIcon />
                   </IconButton>
                 </Tooltip>
-              </Link>) : (<Link
+              </Link>) : 
+              (<Link
                 to={`./EditEvent Category/${params.row.RecordID}/E`}
                 state={{
                   ...state,
@@ -9418,7 +9716,22 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     <ModeEditOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-              </Link>)}
+              </Link>)} */}
+            <Link
+              to={`./EditEvent Category/${params.row.RecordID}/E`}
+              state={{
+                ...state,
+                // AcademicYear: params.row.AcademicYear,
+                // BreadCrumb1: params.row.Category,
+                BreadCrumb2: params.row.Title,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
           </>
         )}
       </div>
