@@ -1509,7 +1509,7 @@ console.log(idata, "idata");
                                                 </Box>
 
                                                 {/* NOTIFY OPTIONS */}
-                                                <Box>
+                                                {/* <Box>
                                                     <Typography
                                                         variant="subtitle2"
                                                         sx={{
@@ -1571,7 +1571,7 @@ console.log(idata, "idata");
                                                             </Box>
                                                         ))}
                                                     </Box>
-                                                </Box>
+                                                </Box> */}
 
                                                 {/* BUTTONS */}
                                                 <Box

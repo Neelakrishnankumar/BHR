@@ -371,7 +371,13 @@ const initialState = {
   Teamattendanceposturl:"",
   Analyticsdashboardurl:"",
   BirthdayAnniversaryGet:"",
-  SortPayrollAttendance:""
+  SortPayrollAttendance:"",
+  OrderSummarypdfurl: "",
+  DefaultProjectGet:"",
+  CompanyBankGET:"",
+  CompanyBankUPDATE:"",
+  CompanyReportSettingGet:"",
+  CompanyReportSettingUpdate:""
 
 };
 
@@ -615,8 +621,13 @@ export const getUrlSlice = createSlice({
       state.Teamattendanceposturl = APIurl + "teamattendancepost.php";
       state.Analyticsdashboardurl = APIurl + "studanalyticsdashboardget.php";
       state.BirthdayAnniversaryGet =  APIurl + "bdaycumanniversaryget.php";
-      state.SortPayrollAttendance =  APIurl + "BosPayrollAttendanceController.php"
-
+      state.SortPayrollAttendance =  APIurl + "BosPayrollAttendanceController.php";
+      state.OrderSummarypdfurl = APIurl + "OrderpaymenthistoryGetcontroller.php"
+      state.DefaultProjectGet =  APIurl + "EmpDefProjectGet.php";
+      state.CompanyBankGET = APIurl + "CompanyBankGetContoller.php";
+      state.CompanyBankUPDATE = APIurl + "CompanyBankUpdateContoller.php";
+      state.CompanyReportSettingGet = APIurl + "CompanyReportSettingGet.php";
+      state.CompanyReportSettingUpdate = APIurl + "CompanyReportSettingUpdate.php";
     },
 
   },

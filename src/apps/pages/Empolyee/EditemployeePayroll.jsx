@@ -90,7 +90,9 @@ import { type } from "@testing-library/user-event/dist/type";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from '@mui/icons-material/Close';
-
+import LinearProgress from "@mui/material/LinearProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -106,13 +108,14 @@ import {
 import RegisterOfWagesPDF from "../pdf/Payslip_V1";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { dataGridHeightExplore } from "../../../ui-components/utils";
-
+import CircularProgress from "@mui/material/CircularProgress";
 const EditemployeePayroll = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -781,6 +784,7 @@ const EditemployeePayroll = () => {
     (state) => state.exploreApi.explorecolumnData,
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
+  const Payslipgetloading = useSelector((state) => state.formApi.empAttendanceDataLoading);
 
   // const [show, setScreen] = React.useState(mode == "E" ? "1" : "0");
 
@@ -2290,7 +2294,65 @@ const EditemployeePayroll = () => {
   //   dispatch(payslipAttendance({ data }));
   // };
   const [rows, setRows] = useState([]);
+  const [can, setCan] = useState("");
+
+  //   const isPayrollMonthCompleted = (month, year) => {
+  //   if (!month || !year || String(year).length !== 4) {
+  //     return false;
+  //   }
+
+  //   const selectedMonth = Number(month);
+  //   const selectedYear = Number(year);
+
+  //   const today = new Date();
+  //   const currentMonth = today.getMonth() + 1;
+  //   const currentYear = today.getFullYear();
+
+  //   // Disable current month and future months
+  //   return (
+  //     selectedYear < currentYear ||
+  //     (selectedYear === currentYear && selectedMonth < currentMonth)
+  //   );
+  // };
+  const isPayrollMonthCompleted = (month, year) => {
+    if (!month || !year || String(year).length !== 4) {
+      return false;
+    }
+
+    const selectedMonth = Number(month);
+    const selectedYear = Number(year);
+
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+    const currentDate = today.getDate();
+
+    // Previous months can always be processed
+    if (selectedYear < currentYear) {
+      return true;
+    }
+
+    // Future years cannot be processed
+    if (selectedYear > currentYear) {
+      return false;
+    }
+
+    // Previous months of current year can be processed
+    if (selectedMonth < currentMonth) {
+      return true;
+    }
+
+    // Future months cannot be processed
+    if (selectedMonth > currentMonth) {
+      return false;
+    }
+
+    // Current month can be processed only from 25th onwards
+    return currentDate >= 25;
+  };
   const attFnSave = async (values) => {
+    const canProcessPayroll = isPayrollMonthCompleted(values.month, values.year);
+    setCan(canProcessPayroll);
     const data = {
       Month: values.month.toString(),
       Year: values.year,
@@ -2376,31 +2438,156 @@ const EditemployeePayroll = () => {
     "November",
     "December",
   ];
-  const attendaceProcessFnSave = async (values) => {
-    const EmployeeIDs = payslipAttendanceData
-      .map((row) => row.EmpRecid)
-      .join(",");
-    const data = {
-      // action: "update",
+  const [processProgress, setProcessProgress] = useState({
+    open: false,
+    total: 0,
+    completed: 0,
+    currentLabel: "",
+    log: [], // { name, status: 'success' | 'error' }
+  });
+  const groupByDesignation = (data) => {
+    const groups = {};
+    data.forEach((row) => {
+      const key = row.DesignationID ?? "Unassigned";
+      const label = row.Designation ?? "Unassigned";
 
-      // Month: values.month.toString(),
-      Month: monthNames[Number(values.month) - 1],
-      Year: values.year.toString(),
-      CompanyID: CompanyID,
-      EmployeeID: EmployeeIDs,
-    };
-
-    console.log("Final Payload:", data);
-
-    const response = await dispatch(Processpost(data));
-
-    if (response.payload.Status === "Y") {
-      toast.success(response.payload.Msg);
-      navigate("/Apps/TR333/Payroll");
-    } else {
-      toast.error(response.payload.Msg);
-    }
+      if (!groups[key]) {
+        groups[key] = { label, employeeIds: [] };
+      }
+      groups[key].employeeIds.push(row.EmpRecid);
+    });
+    return Object.values(groups);
   };
+  const PieProgress = ({ value = 0, size = 100, color = "#0D9488", trackColor = "#e5e7eb" }) => {
+    return (
+      <Box
+        sx={{
+          position: "relative",
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          background: `conic-gradient(${color} ${value * 3.6}deg, ${trackColor} ${value * 3.6}deg 360deg)`,
+          transition: "background 0.4s ease",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* inner circle to create text space, remove this Box if you want a solid pie with no hole */}
+        <Box
+          sx={{
+            width: size * 0.72,
+            height: size * 0.72,
+            borderRadius: "50%",
+            backgroundColor: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" fontWeight={700}>
+            {Math.round(value)}%
+          </Typography>
+        </Box>
+      </Box>
+    );
+  };
+  const attendaceProcessFnSave = async (values) => {
+    const groups = groupByDesignation(payslipAttendanceData);
+
+    if (groups.length === 0) {
+      toast.error("No data to process.");
+      return;
+    }
+
+    setProcessProgress({
+      open: true,
+      total: groups.length,
+      completed: 0,
+      currentLabel: "",
+      log: [],
+    });
+
+
+    let hadError = false;
+
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i];
+
+      setProcessProgress((prev) => ({ ...prev, currentLabel: group.label }));
+
+      const data = {
+        Month: monthNames[Number(values.month) - 1],
+        Year: values.year.toString(),
+        CompanyID: CompanyID,
+        EmployeeID: group.employeeIds.join(","),
+      };
+
+      try {
+        const response = await dispatch(Processpost(data));
+
+        if (response?.payload?.Status === "Y") {
+          setProcessProgress((prev) => ({
+            ...prev,
+            completed: prev.completed + 1,
+            log: [...prev.log, { name: group.label, status: "success" }],
+          }));
+        }
+        else {
+          hadError = true;
+          setProcessProgress((prev) => ({
+            ...prev,
+            completed: prev.completed + 1,
+            log: [...prev.log, { name: group.label, status: "error" }],
+          }));
+        }
+      } catch (err) {
+        hadError = true;
+        setProcessProgress((prev) => ({
+          ...prev,
+          completed: prev.completed + 1,
+          log: [...prev.log, { name: group.label, status: "error" }],
+        }));
+      }
+    }
+
+    setTimeout(() => {
+      setProcessProgress((prev) => ({ ...prev, open: false }));
+
+      if (hadError) {
+        toast.error("Some Designation failed to process");
+      }
+      else {
+        toast.success("All Designation Processed Successfully.");
+        navigate("/Apps/TR333/Payroll");
+      }
+    }, 2000);
+  };
+  // const attendaceProcessFnSave = async (values) => {
+  //   const EmployeeIDs = payslipAttendanceData
+  //     .map((row) => row.EmpRecid)
+  //     .join(",");
+  //   const data = {
+  //     // action: "update",
+
+  //     // Month: values.month.toString(),
+  //     Month: monthNames[Number(values.month) - 1],
+  //     Year: values.year.toString(),
+  //     CompanyID: CompanyID,
+  //     EmployeeID: EmployeeIDs,
+  //   };
+
+  //   console.log("Final Payload:", data);
+
+  //   const response = await dispatch(Processpost(data));
+
+  //   if (response.payload.Status === "Y") {
+  //     toast.success(response.payload.Msg);
+  //     navigate("/Apps/TR333/Payroll");
+  //   } else {
+  //     toast.error(response.payload.Msg);
+  //   }
+  // };
 
   const getFileChange = async (event) => {
     // setImgName(event.target.files[0]);
@@ -3267,21 +3454,21 @@ const EditemployeePayroll = () => {
                   <Box
                     display="flex"
                     alignItems="center"
-                    gap={1.5}   // 👈 increase gap between icon and text
+                    gap={1.5}
                     mb={0.5}
                     m="10px"
                   >
                     {/* ICON */}
                     <Box
                       sx={{
-                        width: 36,          // 👈 slightly bigger
+                        width: 36,
                         height: 36,
                         borderRadius: "50%",
                         backgroundColor: "#EFF6FF",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        mr: 0.5,            // 👈 extra spacing from text
+                        mr: 0.5,
                       }}
                     >
                       <Typography sx={{ fontSize: 18 }}>💰</Typography>
@@ -3302,158 +3489,7 @@ const EditemployeePayroll = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  {/* <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                   
-                    <MultiFormikOptimizedAutocomplete
-                      name="project"
-                      // label="Project"
-                      label={getBusinessCaption("Project", "Project")}
-                      id="project"
-                      value={values.project}
-                      onChange={(e, newValue) => {
-                        setFieldValue("project", newValue);
-                      }}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                        Query: {
-                          AccessID: "2054",
-                          ScreenName: "Project",
-                          VerticalLicense: Subscriptionlastthree,
-                          Filter: `parentID=${CompanyID}`,
-                          Any: "",
-                        },
-                      })}`}
-                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    />
-                   
-                    <MultiFormikOptimizedAutocomplete
-                      name="Designation"
-                      label="Designation"
-                      id="Designation"
-                      value={values.Designation}
-                      onChange={(e, newValue) => {
-                        setFieldValue("Designation", newValue);
-                      }}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                        Query: {
-                          AccessID: "2047",
-                          ScreenName: "Designation",
-                          VerticalLicense: Subscriptionlastthree,
-                          Filter: `parentID='${CompanyID}'`,
-                          Any: "",
-                        },
-                      })}`}
-                    // url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      type="month"
-                      id="month"
-                      name="month"
-                      label="Month"
-                      value={values.month}
-                      focused
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      select
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          backgroundColor: "#fff",
-                          borderRadius: "6px",
 
-                          "& fieldset": {
-                            borderColor: "#d1d5db", // 👈 light grey border
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                            borderWidth: "1px",
-                          },
-                        },
-
-                        "& .MuiInputLabel-root": {
-                          color: "#6b7280", // label grey
-                        },
-                        "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#6b7280", // keep same on focus
-                        },
-                        width: 620,
-                      }}
-                    >
-                      <MenuItem value={"1"}>January</MenuItem>
-                      <MenuItem value={"2"}>February</MenuItem>
-                      <MenuItem value={"3"}>March</MenuItem>
-                      <MenuItem value={"4"}>April</MenuItem>
-                      <MenuItem value={"5"}>May</MenuItem>
-                      <MenuItem value={"6"}>June</MenuItem>
-                      <MenuItem value={"7"}>July</MenuItem>
-                      <MenuItem value={"8"}>August</MenuItem>
-                      <MenuItem value={"9"}>September</MenuItem>
-                      <MenuItem value={"10"}>October</MenuItem>
-                      <MenuItem value={"11"}>November</MenuItem>
-                      <MenuItem value={"12"}>December</MenuItem>
-                    </TextField>
-                    
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      placeholder="eg: 2020"
-                      id="year"
-                      name="year"
-                      label="Year"
-                      value={values.year}
-                      focused
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                        setFieldValue("year", value);
-                      }}
-                      inputProps={{
-                        maxLength: 4,
-                        inputMode: "numeric",
-                      }}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          backgroundColor: "#fff",
-                          borderRadius: "6px",
-
-                          "& fieldset": {
-                            borderColor: "#d1d5db", // 👈 light grey border
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                            borderWidth: "1px",
-                          },
-                        },
-
-                        "& .MuiInputLabel-root": {
-                          color: "#6b7280", // label grey
-                        },
-                        "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#6b7280", // keep same on focus
-                        },
-                        width: 620,
-                      }}   
-                    />
-                  </Box> */}
                   <Box
                     display="grid"
                     gridTemplateColumns={{
@@ -3583,57 +3619,136 @@ const EditemployeePayroll = () => {
                   </Box>
                   <Box
                     display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap="20px"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    m="10px"
+                    mt={1}
+                    gap={2}
+                    flexWrap="wrap"
                   >
-                    <Button type="submit" variant="contained"
+                    {/* Calculation Method — half width, formulas stacked row by row */}
+                    <Box
+                      p={1}
                       sx={{
-                        textTransform: "none",
+                        position: "relative",
+                        backgroundColor: "#F0FDFA", // soft teal tint, matches #0D9488 accent family
+                        border: "1px solid #CCFBF1",
                         borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
+                        pl: 3,
+                        width: { xs: "100%", md: "35%" },
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          bottom: 0,
+                          width: 4,
+                          borderTopLeftRadius: 8,
+                          borderBottomLeftRadius: 8,
+                          backgroundColor: "#0D9488",
                         },
                       }}
                     >
-                      Apply
-                    </Button>
-                    <Button
-                      sx={{ textTransform: "none" }}
-                      type="reset"
-                      variant="contained"
-                      color="primary"
-                      onClick={() => attendaceProcessFnSave(values)}
-                    >
-                      Process
-                    </Button>
-                    <Button type="reset" variant="contained" color="error" sx={{ textTransform: "none" }} >
-                      Reset
-                    </Button>
-                    {/* <PDFDownloadLink
-                      document={<RegisterOfWagesPDF data={sampleData} />}
-                      fileName="Register_Of_Wages.pdf"
-                      style={{ color: "#d32f2f", cursor: "pointer" }}
+                      <Box display="flex" alignItems="center" gap={1} mb={1}>
+                        <Box
+                          sx={{
+                            width: 15,
+                            height: 15,
+                            borderRadius: "50%",
+                            backgroundColor: "#CCFBF1",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 11 }}>ℹ️</Typography>
+                        </Box>
+                        <Typography fontSize="11px" fontWeight={700} color="#0F766E">
+                          Calculation Method
+                        </Typography>
+                      </Box>
 
-                    >
-                      {({ loading }) =>
-                        loading ? (
-                          <PictureAsPdfIcon
-                            sx={{ fontSize: 24, opacity: 0.5 }}
-                          />
-                        ) : (
-                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                        )
-                      }
-                    </PDFDownloadLink> */}
+                      <Box display="flex" flexDirection="column" gap={0.75}>
+                        <Box display="flex" alignItems="baseline" gap={1}>
+                          <Typography fontSize="11.5px" fontWeight={700} color="#134E4A" sx={{ minWidth: 90 }}>
+                            Loss of Pay
+                          </Typography>
+                          <Typography fontSize="11.5px" color="text.secondary">
+                            = (Total Allowances / No. of Total Days) / No. of Leave
+                          </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="baseline" gap={1}>
+                          <Typography fontSize="11.5px" fontWeight={700} color="#134E4A" sx={{ minWidth: 90 }}>
+                            Permission
+                          </Typography>
+                          <Typography fontSize="11.5px" color="text.secondary">
+                            = (Total Allowances / No. of Total Days) / 2
+                          </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="baseline" gap={1}>
+                          <Typography fontSize="11.5px" fontWeight={700} color="#134E4A" sx={{ minWidth: 90 }}>
+                            Late Login
+                          </Typography>
+                          <Typography fontSize="11.5px" color="text.secondary">
+                            = (Total Allowances / No. of Total Days) / 2
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Buttons — right half, aligned to end */}
+                    <Box display="flex" alignItems="center" gap={1} mt={{ xs: 1, md: 3 }}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: 2,
+                          px: 3,
+                          bgcolor: "#0D9488",
+                          "&:hover": { bgcolor: "#0F766E" },
+                        }}
+                      >
+                        Apply
+                      </Button>
+                      <Button
+                        sx={{ textTransform: "none" }}
+                        type="reset"
+                        variant="contained"
+                        color="primary"
+                        disabled={processProgress.open || !can}
+                        onClick={() => attendaceProcessFnSave(values)}
+                      >
+                        Process
+                      </Button>
+                      {/* <Button
+                        sx={{ textTransform: "none" }}
+                        type="reset"
+                        variant="contained"
+                        color="primary"
+                        disabled={processProgress.open}
+                        onClick={() => attendaceProcessFnSave(values)}
+                      >
+                        Process
+                      </Button> */}
+
+                      <Button
+                        type="reset"
+                        variant="contained"
+                        color="error"
+                        sx={{ textTransform: "none" }}
+                      >
+                        Reset
+                      </Button>
+                    </Box>
                   </Box>
 
                   <Box m="5px">
                     <Box
                       m="5px 0 0 0"
-                      //height={dataGridHeight}
                       height="50vh"
                       sx={{
                         "& .MuiDataGrid-root": {
@@ -3661,13 +3776,12 @@ const EditemployeePayroll = () => {
                         },
                         "& .odd-row": {
                           backgroundColor: "",
-                          color: "", // Color for odd rows
+                          color: "",
                         },
                         "& .even-row": {
                           backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
+                          color: "",
                         },
-
                         "& .MuiDataGrid-columnHeaderTitle": {
                           color: colors.blueAccent[900],
                           fontWeight: 600,
@@ -3675,25 +3789,18 @@ const EditemployeePayroll = () => {
                         "& .MuiTablePagination-root": {
                           color: colors.blueAccent[900],
                         },
-                        /* ✅ PAGINATION STYLES (WHITE COLOR) */
                         "& .MuiTablePagination-root": {
                           color: "#fff",
                         },
-
                         "& .MuiTablePagination-selectLabel": {
                           color: "#fff",
                         },
-
                         "& .MuiTablePagination-displayedRows": {
                           color: "#fff",
                         },
-
-                        /* Dropdown icon */
                         "& .MuiTablePagination-selectIcon": {
                           color: "#fff",
                         },
-
-                        /* Left & Right arrow buttons */
                         "& .MuiTablePagination-actions button": {
                           color: "#fff",
                         },
@@ -3709,7 +3816,7 @@ const EditemployeePayroll = () => {
                         rows={rows}
                         columns={column}
                         disableSelectionOnClick
-                        getRowId={(row) => row.SLNO}
+                        getRowId={(row) => row.EmpRecid}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) =>
                           setPageSize(newPageSize)
@@ -3718,15 +3825,7 @@ const EditemployeePayroll = () => {
                         headerHeight={dataGridHeaderFooterHeight}
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
-                        // loading={isLoading}
-                        // onCellClick={(params) => {
-                        //   const currentRow = params.row;
-                        //   const currentcellField = params.field;
-                        //     // selectcelldata(currentRow, "E", currentcellField);
-
-                        //   console.log(JSON.stringify(params));
-                        // }}
-                        loading={exploreLoading}
+                        loading={Payslipgetloading}
                         components={{
                           Toolbar: empAttendanceTool,
                         }}
@@ -3743,6 +3842,33 @@ const EditemployeePayroll = () => {
                         }}
                       />
                     </Box>
+                    <Dialog open={processProgress.open} maxWidth="xs" fullWidth disableEscapeKeyDown>
+                      <DialogTitle sx={{ fontWeight: 700, textAlign: "center" }}>
+                        Processing Payroll
+                      </DialogTitle>
+                      <DialogContent>
+                        <Box display="flex" flexDirection="column" alignItems="center" sx={{ mb: 2 }}>
+                          <PieProgress
+                            value={
+                              processProgress.total
+                                ? (processProgress.completed / processProgress.total) * 100
+                                : 0
+                            }
+                            size={110}
+                          />
+
+                          <Typography variant="body2" fontWeight={600} sx={{ mt: 1.5 }}>
+                            {processProgress.completed}/{processProgress.total} Designations Completed
+                          </Typography>
+
+                          <Typography variant="body2" color="text.secondary">
+                            {processProgress.completed < processProgress.total && processProgress.currentLabel
+                              ? `Processing "${processProgress.currentLabel}"...`
+                              : "Finalizing..."}
+                          </Typography>
+                        </Box>
+                      </DialogContent>
+                    </Dialog>
                   </Box>
                 </form>
               )}
@@ -3751,7 +3877,6 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
-
         {/* Allowance */}
         {show == "1" ? (
           <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>

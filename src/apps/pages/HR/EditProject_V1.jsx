@@ -544,10 +544,16 @@ const Editproject_V1 = () => {
   // Wired to <DataGrid processRowUpdate={processRowUpdateTeach}> in show=4.
   // The Save icon in Teachcolumns calls handleSaveClickTeach which just switches
   // the row to View mode; DataGrid then fires processRowUpdate automatically.
+  const pageRef = useRef(page);
+  const justSavedTeachRef = useRef(false);
+const savedTeachPageRef = useRef(0);
+  useEffect(() => { pageRef.current = page; }, [page]);
+
   const processRowUpdateTeach = async (newRow, oldRow) => {
     console.log(newRow, "--inside processRowUpdateTeach");
     // formikRef is attached to show=0 Formik which is unmounted in show=4.
     // TR389 detail save does not need header form values — pass {} safely.
+    //const savedPage = pageRef.current;
     const currentFormikValues = formikRef.current?.values ?? {};
     console.log(currentFormikValues, "currentFormikValues");
 
@@ -561,7 +567,8 @@ const Editproject_V1 = () => {
       EmpID: newRow.Teacher?.RecordID || 0,
       DeptID: newRow.Department?.RecordID || 0,
     };
-
+  savedTeachPageRef.current = page;
+  justSavedTeachRef.current = true;
     try {
       const HeaderID = await FnsaveTech(
         currentFormikValues, // {} when show=4 — TR389 branch ignores values
@@ -584,6 +591,7 @@ const Editproject_V1 = () => {
 
       return updatedRow;
     } catch (err) {
+      justSavedTeachRef.current = false;
       console.error("Row save failed:", err);
       throw err;
     }
@@ -1974,19 +1982,38 @@ const Editproject_V1 = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
-  useEffect(() => {
-    if (mode !== "A" && data?.Details) {
-      const formattedRows = data.Details.map((item) => ({
-        id: Number(item.ProjectTeamsID),
-        RecordID: Number(item.ProjectTeamsID),
-        Department: { RecordID: item.DepartmentID, Name: item.DeptName },
-        Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
-      }));
+  // useEffect(() => {
+  //   if (mode !== "A" && data?.Details) {
+  //     const formattedRows = data.Details.map((item) => ({
+  //       id: Number(item.ProjectTeamsID),
+  //       RecordID: Number(item.ProjectTeamsID),
+  //       Department: { RecordID: item.DepartmentID, Name: item.DeptName },
+  //       Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
+  //     }));
 
-      setTeachrows(formattedRows);
-      setPage(0);
+  //     setTeachrows(formattedRows);
+  //     setPage(0);
+  //   }
+  // }, [data]);
+  useEffect(() => {
+  if (mode !== "A" && data?.Details) {
+    const formattedRows = data.Details.map((item) => ({
+      id: Number(item.ProjectTeamsID),
+      RecordID: Number(item.ProjectTeamsID),
+      Department: { RecordID: item.DepartmentID, Name: item.DeptName },
+      Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
+    }));
+
+    setTeachrows(formattedRows);
+
+    if (justSavedTeachRef.current) {
+      setPage(savedTeachPageRef.current); // restore the page we saved on
+      justSavedTeachRef.current = false;
+    } else {
+      setPage(0); // normal first-load / mode-switch behavior unchanged
     }
-  }, [data]);
+  }
+}, [data]);
 
   // useEffect(() => {
   //     if (mode !== "A" && staffmappingGetData?.Terms) {
@@ -2962,7 +2989,7 @@ const Editproject_V1 = () => {
       desc: "Basic details about the Project",
       icon: "📁",
     },
-    ...((data?.RoutineTasks === "N" || data?.RoutineTasks === null )&& is003Subscription
+    ...((data?.RoutineTasks === "N" || data?.RoutineTasks === null) && is003Subscription
       ? ([
         {
           value: 4,
@@ -3015,7 +3042,7 @@ const Editproject_V1 = () => {
       ])
       : []),
   ];
-    console.log("formSections at render:", formSections.map(s => ({ value: s.value, label: s.label })));
+  console.log("formSections at render:", formSections.map(s => ({ value: s.value, label: s.label })));
 
   function FormSectionsSidebar({
     show,
@@ -4786,14 +4813,14 @@ const Editproject_V1 = () => {
                         >
                           <Button
                             sx={{
-                              textTransform: "none",
-                              borderRadius: 2,
-                              px: 4,
-                              bgcolor: "#F97316",
-                              "&:hover": {
-                                bgcolor: "#EA580C",
-                              },
-                            }}
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C",
+                            },
+                          }}
                             variant="contained"
                             onClick={() => setScreen("0")}
                           >
@@ -5731,11 +5758,19 @@ const Editproject_V1 = () => {
                         </Box>
                         <Box display="flex" justifyContent="flex-end" padding={1}>
                           <Button
-                            color="warning"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C",
+                            },
+                          }}
                             variant="contained"
                             onClick={() => setScreen("0")}
                           >
-                            Cancel
+                            Back
                           </Button>
                         </Box>
                       </Box>

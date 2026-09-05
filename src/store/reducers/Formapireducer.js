@@ -34,6 +34,11 @@ const initialState = {
   pakingListCarton: [],
   summeryData: [],
   hashtokenData: {},
+  BankgetLoading: false,
+  BankStatus: "",
+  BankData: {},
+  BankpostLoading:false,
+  Status: "",
   CustomisedCaptionGetData: {},
   costingLeatherCost: {
     materialCost: 0,
@@ -304,6 +309,10 @@ const initialState = {
   PolicygetLoading: false,
   PolicyStatus: "",
   PolicyData: {},
+  CompReportgetLoading: false,
+  CompReportpostDataLoading:false,
+  CompReportStatus: "",
+  CompReportData: {},
   companytermsgetLoading: false,
   companytermsStatus: "",
   companytermsData: [],
@@ -3105,6 +3114,23 @@ export const productorderanalysis = createAsyncThunk(
     return response.data;
   },
 );
+export const OrderSummaryDataGet = createAsyncThunk(
+  "OrderSummary/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.OrderSummarypdfurl;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const InvoiceAnalyticsget = createAsyncThunk(
   "Mgr_Desk/invoice_analytics_get",
   async (data, { rejectWithValue }) => {
@@ -3634,7 +3660,85 @@ export const standardDelete = createAsyncThunk(
     }
   }
 );
+export const DefaultProjectGet = createAsyncThunk(
+  "DefaultProjectGet/get",
+  async ({ get, CompanyID,EmployeeID }) => {
+    var url = store.getState().globalurl.DefaultProjectGet;
+    const data = {
+      get: get,
+      CompanyID: CompanyID,
+      EmployeeID: EmployeeID
+    };
 
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+// BANK DETAILS
+export const BankFetchData = createAsyncThunk(
+  "BankFetchData/get",
+  async ({ get, CompanyID }) => {
+    var url = store.getState().globalurl.CompanyBankGET;
+    const data = {
+      get: get,
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+export const BankpostData = createAsyncThunk(
+  "BankpostData/post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.CompanyBankUPDATE;
+
+    
+      const data= idata;
+    
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const companyTermsGet = createAsyncThunk(
   "COMPANY_TERMS_GET/GET",
   async ({ CompanyID }) => {
@@ -3741,6 +3845,57 @@ export const PolicyUpdateData = createAsyncThunk(
     return response.data;
   }
 );
+// COMPANY REPORT
+export const CompReportFetchData = createAsyncThunk(
+  "CompReportFetchData/get",
+  async ({  CompanyID }) => {
+    var url = store.getState().globalurl.CompanyReportSettingGet;
+    const data = {
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+export const CompReportpostData = createAsyncThunk(
+  "CompReportpostData/post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.CompanyReportSettingUpdate;
+
+    
+      const data= idata;
+    
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const getApiSlice = createSlice({
   name: "formApi",
   initialState,
@@ -4063,7 +4218,58 @@ export const getApiSlice = createSlice({
       state.companytermsData = [];
       toast.error("Something Went Wrong");
     })
+    //COMPANY REPORT UPDATE POST
+      .addCase(CompReportpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.CompReportpostDataLoading = true;
+      })
+      .addCase(CompReportpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.CompReportpostDataLoading = false;
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(CompReportpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.CompReportpostDataLoading = false;
+      })
 
+// BANK DETAILS GET
+      .addCase(BankFetchData.pending, (state, action) => {
+        state.BankStatus = "idle";
+        state.BankgetLoading = true;
+        state.BankData = {};
+        state.msg = "Loading...";
+      })
+      .addCase(BankFetchData.fulfilled, (state, action) => {
+        state.BankStatus = "success";
+        state.BankgetLoading = false;
+        state.BankData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(BankFetchData.rejected, (state, action) => {
+        state.BankStatus = "Error";
+        state.BankgetLoading = false;
+        state.BankData = {};
+        toast.error("Something Went Wrong");
+      })
+      //BANK UPDATE POST
+      .addCase(BankpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.BankpostLoading = true;
+      })
+      .addCase(BankpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.BankpostLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(BankpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.BankpostLoading = false;
+      })
     //COMPANY_POLICY_GET
 
     .addCase(PolicyFetchData.pending, (state, action) => {
@@ -4084,6 +4290,24 @@ export const getApiSlice = createSlice({
       state.PolicyData = {};
       toast.error("Something Went Wrong");
     })
+    .addCase(CompReportFetchData.pending, (state, action) => {
+        state.CompReportStatus = "idle";
+        state.CompReportgetLoading = true;
+        state.CompReportData = {};
+        state.msg = "Loading...";
+      })
+      .addCase(CompReportFetchData.fulfilled, (state, action) => {
+        state.CompReportStatus = "success";
+        state.CompReportgetLoading = false;
+        state.CompReportData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(CompReportFetchData.rejected, (state, action) => {
+        state.CompReportStatus = "Error";
+        state.CompReportgetLoading = false;
+        state.CompReportData = {};
+        toast.error("Something Went Wrong");
+      })
     .addCase(ModuleUrl.pending, (state) => {
       state.status = "loading";
       state.error = null;
@@ -4381,7 +4605,30 @@ export const getApiSlice = createSlice({
       state.Status = "Error";
       state.postLoading = false;
     })
+      // OrderSummaryDocument
+      //Pending
+      .addCase(OrderSummaryDataGet.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
 
+      // Fulfilled
+      .addCase(OrderSummaryDataGet.fulfilled, (state, action) => {
+        state.loading = false;
+
+        if (action.payload.Status === "Y") {
+          state.OrderSummaryData = action.payload.Data;
+        } else {
+          state.OrderSummaryData = [];
+        }
+      })
+
+      // Rejected
+      .addCase(OrderSummaryDataGet.rejected, (state, action) => {
+        state.loading = false;
+        state.OrderSummaryData = [];
+        state.error = action.error.message;
+      })
     //ORDER HEADER - PAYMENT UPDATE
     .addCase(OHPaymentUpdateController.pending, (state, action) => {
       state.OHPaymentPutstatus = "idle";
@@ -4408,6 +4655,7 @@ export const getApiSlice = createSlice({
       state.PartyDateAndAmtFilterdata = action.payload.Data
         ? action.payload.Data
         : [];
+        //  state.PartyDateAndAmtFilterdata = [...state.PartyDateAndAmtFilterdata, ...action.payload.Data]
     })
     .addCase(PartyBydateByamtFilter.rejected, (state, action) => {
       state.PartyDateAndAmtFilterstatus = "Error";

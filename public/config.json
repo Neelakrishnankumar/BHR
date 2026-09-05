@@ -1,7 +1,8 @@
 
 {
- "API_URL": "https://bosuat.bexschools.com/api/",
-  "BASE_URL": "https://bosuat.bexschools.com/",
-  "ESS_URL": "https://essuat.bexschools.com/",
-  "UAAM_URL": "https://uaamuat.bexschools.com/"
+ "API_URL": "https://bos.beyondexs.com/api/",
+  "BASE_URL": "https://bos.beyondexs.com/",
+  "ESS_URL": "https://ess.beyondexs.com/",
+  "UAAM_URL": "https://uaam.beyondexs.com/"
+
 }

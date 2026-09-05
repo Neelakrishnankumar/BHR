@@ -534,6 +534,8 @@ const Editvendor = () => {
 
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+        dispatch(VendorRegisterFetchData({ get: "get", recID }));
+
       } else {
         dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       }
@@ -652,11 +654,11 @@ const Editvendor = () => {
     );
   }
   // Page params
-
+  console.log(partyRegistergetdata, "partyRegistergetdata");
   const InitialValue = {
     code: data.Code || "",
     name: data.Name || "",
-    Pancardnumber: data.PanCardNo || "",
+    Pancardnumber: partyRegistergetdata.PanCardNo || data.PanCardNo || "",
     locality:
       data.LocalityID && data.LocalityID !== "0"
         ? {
@@ -677,7 +679,7 @@ const Editvendor = () => {
     maplink: data.MapLocation || "",
     PanImg: data.PanImg || "",
     GstImg: data.gstImage || "",
-    gstnumber: data.GstNo || "",
+    gstnumber: partyRegistergetdata.GstNo || data.GstNo || "",
     mobilenumber: data.MobileNo || "",
     date: data.RegistrationDate || "",
     verifieddate: data.VerifyConfirmDate || "",
@@ -747,7 +749,7 @@ const Editvendor = () => {
     };
 
     try {
-      const response = await dispatch(postData({ accessID: "TR243V1", action, idata }));
+      const response = await dispatch(postData({ accessID: "TR243", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -2061,7 +2063,7 @@ const Editvendor = () => {
                         helperText={touched.mobileno1 && errors.mobileno1}
                         inputProps={{ maxLength: 10 }}
                         sx={textFieldSx}
-                        autoFocus
+                      // autoFocus
                       />
                       <TextField
                         name="mobileno2"
@@ -2075,7 +2077,7 @@ const Editvendor = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         sx={textFieldSx}
-                        autoFocus
+                      // autoFocus
                       />
                       <TextField
                         fullWidth

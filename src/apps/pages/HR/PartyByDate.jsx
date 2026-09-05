@@ -153,6 +153,7 @@ const PartyByDate = () => {
       })
     );
   }, [dispatch]);
+  console.log("rows going into PDF:", PartyFilterData.length, PartyFilterData.map(r => r.RecordID));
   useEffect(() => {
     if (Array.isArray(PartyFilterData)) {
       setRows(PartyFilterData);
@@ -532,7 +533,7 @@ const PartyByDate = () => {
                     Reset
                   </Button>
 
-                  <PDFDownloadLink
+                  {/* <PDFDownloadLink
                     document={
                       <AgingPdf
                         data={PartyFilterData}
@@ -545,6 +546,20 @@ const PartyByDate = () => {
                         footerHeight={footerHeight}
                       />
                     }
+                    fileName={`Aging_Report_${values?.partySort}.pdf`}
+                    style={{ color: "#d32f2f", cursor: "pointer" }}
+                  > */}
+                  <PDFDownloadLink
+                    key={`${values.partySort}-${PartyFilterData?.length}-${PartyFilterData?.[0]?.RecordID}`}
+                    document={
+                    <AgingPdf 
+                    data={PartyFilterData} 
+                    filters={{ PartySort: values.partySort, Imageurl: baseurlUAAM,
+                          HeaderImg: HeaderImg,
+                          FooterImg: FooterImg }} 
+                    footerHeight={footerHeight} 
+                    />
+                  }
                     fileName={`Aging_Report_${values?.partySort}.pdf`}
                     style={{ color: "#d32f2f", cursor: "pointer" }}
                   >

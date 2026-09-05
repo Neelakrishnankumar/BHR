@@ -36,7 +36,9 @@ import {
   dataGridHeight,
   dataGridRowHeight,
   dataGridRowHeight_v1,
-  dataGridFooterHeight
+  dataGridFooterHeight,
+  getGridState,
+  setGridState
 } from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -47,7 +49,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { tokens, ColorModeContext } from "../../Theme";
 import { useProSidebar } from "react-pro-sidebar";
 import React from "react";
-import { useNavigate, useLocation, useActionData } from "react-router-dom";
+import { useNavigate, useLocation, useActionData, useNavigationType } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -85,6 +87,7 @@ import {
   searchData,
   Setup_MenuExcel,
   VendorFilterController,
+  OrderSummaryDataGet
 } from "../../store/reducers/Formapireducer";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import toast from "react-hot-toast";
@@ -136,6 +139,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
+import OrderSummaryDocument from "./pdf/OrderSummaryDocument";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -165,8 +169,12 @@ const Listview = () => {
   const currentDate = new Date().toISOString().split("T")[0];
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  const [pageSize, setPageSize] = React.useState(20);
-  const [page, setPage] = React.useState(currentPage || 0);
+  // const [pageSize, setPageSize] = React.useState(20);
+  // const [page, setPage] = React.useState(currentPage || 0);
+  const [page, setPage] = useState(() => getGridState(accessID).page);
+  const [pageSize, setPageSize] = useState(() => getGridState(accessID).pageSize);
+  const [search, setSearch] = useState(() => getGridState(accessID).search);
+
   const [collapse, setcollapse] = React.useState(false);
   var invoice;
   const mailData = useSelector((state) => state.listviewApi.mailData);
@@ -229,6 +237,17 @@ const Listview = () => {
 
     dispatch(screenRightsData(found));
   }, [accessID, dispatch]);
+
+  const navigationType = useNavigationType(); // "POP" | "PUSH" | "REPLACE"
+
+  React.useEffect(() => {
+    const saved = getGridState(accessID);
+    setPage(saved.page);
+    setPageSize(saved.pageSize);
+    setSearch(saved.search || "");
+
+    // dispatch(fetchListview(accessID, Subscriptionlastthree, screenName1, compID));
+  }, [location.key]);
   console.log("🚀 ~ file: Listview.jsx:59 ~ Listview ~ UGA_ADD:", UGA_ADD);
   // console.log("🚀 ~ file: Listview.jsx:61 ~ Listview ~ UGA_MOD:", UGA_MOD)
 
@@ -257,7 +276,10 @@ const Listview = () => {
   const [personnelPageSize, setPersonnelPageSize] = useState(10);
   const [personnelSearch, setPersonnelSearch] = useState("");
   const [selectedRowForAction, setSelectedRowForAction] = useState(null);
+  const SummaryData = useSelector((state) => state.formApi.OrderSummaryData);
+  console.log(SummaryData, "SummaryData")
 
+  const [Summaryfilter, setSummaryfilter] = useState(null);
 
   //BULK UPLOAD
   const [showBulkUpload, setShowBulkUpload] = React.useState(false);
@@ -354,6 +376,10 @@ const Listview = () => {
   //   );
   //   // dispatch(screenRightsData(accessID));
   // }, [location.key]);
+  // useEffect(() => {
+  //   setSearch("");
+  //   setPage(0);
+  // }, [listViewData]);
   React.useEffect(() => {
     if (screenName1 == "Subject") {
       dispatch(
@@ -379,8 +405,8 @@ const Listview = () => {
             // accessID == "TR321" ||
             accessID == "TR022"
             ? `compID=${compID}`
-            : accessID == "TR027" ||
-              accessID == "TR321" ?
+            :( accessID == "TR027" ||
+              accessID == "TR321") ?
               `CompanyID=${compID}` :
               (accessID == "TR331" || accessID == "TR366") ?
                 `CompanyID=${compID}`
@@ -547,7 +573,7 @@ const Listview = () => {
 
 
   //Grid Search
-  const [search, setSearch] = React.useState("");
+  // const [search, setSearch] = React.useState("");
 
   const visibleColumns = React.useMemo(
     () => columns.filter((c) => c.field !== "slno" && c.field !== "action"),
@@ -677,28 +703,28 @@ const Listview = () => {
     URL.revokeObjectURL(url);
   };
   const handleSync = async () => {
-  try {
-    const res = await dispatch(
-      PartySync({
-        accessid: "TR321",
-        action: "sync",
-      })
-    ).unwrap();
+    try {
+      const res = await dispatch(
+        PartySync({
+          accessid: "TR321",
+          action: "sync",
+        })
+      ).unwrap();
 
-    if (res.status === "success") {
-      dispatch(
-        fetchListview(
-          accessID,
-          Subscriptionlastthree,
-          screenName,
-          `CompanyId=${compID}`
+      if (res.status === "success") {
+        dispatch(
+          fetchListview(
+            accessID,
+            Subscriptionlastthree,
+            screenName,
+            `CompanyId=${compID}`
+          )
         )
-      )
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-  }
-};
+  };
   function CustomToolbar() {
     return (
       <Box
@@ -749,23 +775,25 @@ const Listview = () => {
               ? `${screenName1}` :
               accessID == "TR378"
                 ? `${screenName1}` :
-                 accessID == "TR411"
-                ? `${screenName1}` :
-                accessID == "TR383"
+                accessID == "TR416"
                   ? `${screenName1}` :
-                  accessID == "TR323"
-                    ? screenName || rowData.Screennameroute :
-                    accessID == "TR315"
-                      ? screenName || rowData.Screenname
-                      : accessID == "TR128"
-                        ? screenName || rowData.LocationName
-                        : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                          ? screenName1
-                          : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
-                            ? screenName1
-                            // : screenName}</Typography>
-                            // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
-                            : screenName ?? screenName1}</Typography>
+                  accessID == "TR411"
+                    ? `${screenName1}` :
+                    accessID == "TR383"
+                      ? `${screenName1}` :
+                      accessID == "TR323"
+                        ? screenName || rowData.Screennameroute :
+                        accessID == "TR315"
+                          ? screenName || rowData.Screenname
+                          : accessID == "TR128"
+                            ? screenName || rowData.LocationName
+                            : (accessID == "TR027" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                              ? screenName1
+                              : (accessID == "TR321" && !is003Subscription) // for Employee screen in non-003 subscription, show SCREENNAME1 instead of screenName --MANOJ
+                                ? screenName1
+                                // : screenName}</Typography>
+                                // CHANGE DONE SINCE screenName BECOMING UNDEFINED IN LIST VIEW DUE -- MANOJ -- 29/04/2026
+                                : screenName ?? screenName1}</Typography>
 
         {/* RIGHT SIDE */}
         <Box
@@ -809,7 +837,7 @@ const Listview = () => {
               false
             )}
 
-            {accessID == "TR122" || accessID == "TR026" || accessID == "TR401"? (
+            {accessID == "TR122" || accessID == "TR026" || accessID == "TR401" ? (
               <Tooltip title="Bulk Upload">
                 <IconButton sx={{ cursor: "pointer" }}>
                   <FaFileExcel size={20}
@@ -824,7 +852,7 @@ const Listview = () => {
                 <IconButton>
                   <AnalyticsIcon
                     onClick={() => {
-                      navigate(`./Invoice/Analytics`, {
+                      navigate(`/Apps/Invoice/Analytics`, {
                         state: {
                           ...rowData,
                         },
@@ -836,7 +864,7 @@ const Listview = () => {
             ) : (
               false
             )}
-             {(accessID == "TR331" || accessID == "TR366") && is003Subscription ? (
+            {(accessID == "TR331" || accessID == "TR366") && is003Subscription ? (
               <Tooltip arrow title="Cash Management">
                 <IconButton>
                   <AccountBalanceWalletIcon
@@ -946,57 +974,60 @@ const Listview = () => {
             ) : accessID == "TR330" ? (
               false
             )
-           : accessID == "TR366" ? (
-              false
-            )
-            
-              : accessID == "TR337" ? (
+              : accessID == "TR366" ? (
                 false
               )
-                : accessID == "TR331" ? (
+
+                : accessID == "TR337" ? (
                   false
                 )
-                  : accessID == "TR378" ? (
+                  : accessID == "TR331" ? (
                     false
                   )
-                    : accessID == "TR383" ? (
+                    : accessID == "TR378" ? (
                       false
                     )
-                      //  : accessID == "TR391" ? (
-                      //   false
-                      // )
-                      // : YearFlag == "true" ? (
-                      : UGA_ADD ? (
-
-                        <Tooltip arrow title="Add">
-                          <IconButton
-                            sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
-                          >
-                            <AddOutlinedIcon
-                              fontSize="small"
-                              onClick={() => {
-                                navigate(
-                                  `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""}`,
-                                  {
-                                    state: {
-                                      ...rowData,
-                                      Routescreen: screenName,
-                                      CustomerID: "-1",
-                                      ProductID: "-1",
-                                      BomID: "-1",
-                                    },
-                                  }
-                                );
-                              }}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        // ) : (
+                      : accessID == "TR383" ? (
+                        false
+                      )
+                         : accessID == "TR411" ? (
+                        false
+                      )
+                        //  : accessID == "TR391" ? (
                         //   false
                         // )
-                        false
-                      )}
+                        // : YearFlag == "true" ? (
+                        : UGA_ADD ? (
+
+                          <Tooltip arrow title="Add">
+                            <IconButton
+                              sx={{ backgroundColor: "#EEF2FF", color: "#4F46E5", "&:hover": { backgroundColor: "#E0E7FF" } }}
+                            >
+                              <AddOutlinedIcon
+                                fontSize="small"
+                                onClick={() => {
+                                  navigate(
+                                    `./Edit${screenName1}/-1/A${accessID === "TR010" ? "/0" : ""}`,
+                                    {
+                                      state: {
+                                        ...rowData,
+                                        Routescreen: screenName,
+                                        CustomerID: "-1",
+                                        ProductID: "-1",
+                                        BomID: "-1",
+                                      },
+                                    }
+                                  );
+                                }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          // ) : (
+                          //   false
+                          // )
+                          false
+                        )}
 
             {/* <Tooltip arrow title="Import Excel">
                  <IconButton
@@ -1025,14 +1056,14 @@ const Listview = () => {
 
             {accessID === "TR321" && (
               <>
-              <Tooltip arrow title="Party Analytics">
-                <IconButton
-                  onClick={() => navigate("/Apps/CRMPartyAnalytics")}
-                >
-                  <AssessmentIcon />
-                </IconButton>
-              </Tooltip>
-            <Button
+                <Tooltip arrow title="Party Analytics">
+                  <IconButton
+                    onClick={() => navigate("/Apps/CRMPartyAnalytics")}
+                  >
+                    <AssessmentIcon />
+                  </IconButton>
+                </Tooltip>
+                <Button
                   startIcon={<AutorenewIcon />}
                   // onClick={() =>
                   //   dispatch(
@@ -1222,8 +1253,14 @@ const Listview = () => {
 
   const handlePagechange = (pageno) => {
     setPage(pageno);
+    setGridState(accessID, { page: pageno, pageSize, search });
     sessionStorage.setItem("currentPage", pageno);
   };
+  const handlePageSizeChange = (newPageSize) => {
+  setPageSize(newPageSize);
+  setPage(0);
+  setGridState(accessID, { pageSize: newPageSize, page: 0, search });
+};
   const [selectedFileExcel, setSelectedFileExcel] = React.useState(null);
 
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -1729,8 +1766,10 @@ const Listview = () => {
                 size="small"
                 value={search}
                 onChange={(e) => {
-                  setSearch(e.target.value);
+                  const value = e.target.value;
+                  setSearch(value);
                   setPage(0);
+                  setGridState(accessID, { search: value, page: 0, pageSize });
                 }}
                 InputProps={{
                   startAdornment: (
@@ -1742,9 +1781,14 @@ const Listview = () => {
                     <InputAdornment position="end">
                       <IconButton
                         size="small"
+                        // onClick={() => {
+                        //   setSearch("");
+                        //   setPage(0);
+                        // }}
                         onClick={() => {
                           setSearch("");
                           setPage(0);
+                          setGridState(accessID, { search: "", page: 0, pageSize });
                         }}
                       >
                         <ClearIcon fontSize="small" />
@@ -1815,6 +1859,10 @@ const Listview = () => {
                   color: colors.blueAccent[900],
                   fontWeight: 800
                 },
+                "& .disabled-row": {
+                  backgroundColor: "#f9dbbb !important",
+                  color: "#999 !important",
+                },
               }}
             >
 
@@ -1842,14 +1890,24 @@ const Listview = () => {
                 getRowId={(row) => row.RecordID}
                 pageSize={pageSize}
                 page={page}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                // onPageSizeChange={(newPageSize) => {
+                //   setPageSize(newPageSize);
+                //   setPage(0);
+                //   setGridState(accessID, { pageSize: newPageSize, page: 0, search });
+                // }}
                 rowsPerPageOptions={[5, 10, 15, 20]}
                 onPageChange={(pageno) => handlePagechange(pageno)}
-                getRowClassName={(params) =>
-                  params.indexRelativeToCurrentPage % 2 === 0
+                getRowClassName={(params) => {
+                  // Special background for disabled rows in TR027
+                  if ((accessID === "TR027" && params.row.Disable === "Y")) {
+                    return "disabled-row";
+                  }
+
+                  // Normal alternate row colors
+                  return params.indexRelativeToCurrentPage % 2 === 0
                     ? "odd-row"
-                    : "even-row"
-                }
+                    : "even-row";
+                }}
                 components={{ Footer: CustomFooter }}          // 👈 add this
                 componentsProps={{                              // 👈 and this
                   footer: {
@@ -1857,7 +1915,8 @@ const Listview = () => {
                     pageSize,
                     totalRows: filteredRows.length,
                     onPageChange: handlePagechange,
-                    onPageSizeChange: setPageSize,
+                    // onPageSizeChange: setPageSize,
+                    onPageSizeChange: handlePageSizeChange,
                     rowsPerPageOptions: [5, 10, 15, 20],
                   },
                 }}
@@ -2315,7 +2374,7 @@ const Listview = () => {
               )}
 
 
-              {showMore && accessID === "TR313" && (
+              {/* {showMore && accessID === "TR313" && (
                 <Box
                   sx={{
                     width: 300,
@@ -2366,110 +2425,7 @@ const Listview = () => {
                         values.Delivered ||
                         values.Picked;
                     }}
-                    // onSubmit={(values, { setSubmitting }) => {
-                    //   const conditions = [];
-                    //   const statusDateMap = {
-                    //     Created: "OROrderDate",
-                    //     Process: "ORProcessDate",
-                    //     ReadyToDeliver: "ORTentativeDate",
-                    //     YetToDeliver: "ORTentativeDate",
-                    //     Picked: "ORPickedDate",
-                    //     Scheduled: "ORTentativeDate",
-                    //     Delivered: "ORDeliveryDate",
-                    //     Paid: "ORPaidDate",
-                    //   };
-
-                    //   const fromDate = values.fromdate || "";
-                    //   const toDate = values.date || "";
-
-
-                    //   sessionStorage.setItem("FromDate", fromDate);
-                    //   sessionStorage.setItem("ToDate", toDate);
-                    //   sessionStorage.setItem("ordertype", values.ordertype);
-                    //   // Store checkbox values
-                    //   Object.keys(statusDateMap).forEach((status) => {
-                    //     sessionStorage.setItem(
-                    //       `TR313_${status}`,
-                    //       values[status] ? "Y" : "N"
-                    //     );
-                    //   });
-
-                    //   sessionStorage.setItem(
-                    //     "TR313_Filters",
-                    //     JSON.stringify(values)
-                    //   );
-
-                    //   const selectedStatuses = Object.keys(statusDateMap).filter(
-                    //     (status) => values[status]
-                    //   );
-
-                    //   if (selectedStatuses.length > 0) {
-                    //     conditions.push(
-                    //       `Status IN (${selectedStatuses
-                    //         .map((s) => `'${s}'`)
-                    //         .join(", ")})`
-                    //     );
-                    //   }
-
-                    //   const dateConditions = [];
-
-                    //   selectedStatuses.forEach((status) => {
-                    //     const field = statusDateMap[status];
-
-                    //     if (fromDate && toDate) {
-                    //       dateConditions.push(
-                    //         `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                    //       );
-                    //     } else if (fromDate) {
-                    //       dateConditions.push(`(${field} >= '${fromDate}')`);
-                    //     } else if (toDate) {
-                    //       dateConditions.push(`(${field} <= '${toDate}')`);
-                    //     }
-                    //   });
-                    //   if (values.party?.length > 0) {
-                    //     const partyIds = values.party
-                    //       .map((p) => `'${p.RecordID}'`)
-                    //       .join(", ");
-
-                    //     conditions.push(`PartyRecordID IN (${partyIds})`);
-                    //   }
-
-                    //   if (values.product?.length > 0) {
-                    //     const productIds = values.product
-                    //       .map((p) => `'${p.RecordID}'`)
-                    //       .join(", ");
-
-                    //     conditions.push(`ProductID IN (${productIds})`);
-                    //   }
-                    //   if (values.ordertype?.length > 0) {
-                    //     // const ordertype = values.ordertype.map(t => t).join("','");
-                    //     conditions.push(`OrderType IN ('${values.ordertype}')`);
-                    //   }
-                    //   if (compID) {
-                    //     conditions.push(`CompanyID = '${compID}'`);
-                    //   }
-                    //   if (dateConditions.length > 0) {
-                    //     conditions.push(`(${dateConditions.join(" OR ")})`);
-                    //   }
-
-                    //   // --------------------------
-                    //   // FINAL WHERE CLAUSE
-                    //   // --------------------------
-                    //   const whereClause = conditions.join(" AND ");
-                    //   console.log("FINAL FILTER:", whereClause);
-
-                    //   dispatch(
-                    //     fetchListview(
-                    //       accessID,
-                    //       screenName,
-                    //       whereClause,
-                    //       "",
-                    //       compID
-                    //     )
-                    //   );
-
-                    //   setTimeout(() => setSubmitting(false), 100);
-                    // }}
+                   
                     onSubmit={(values, { setSubmitting }) => {
                       const conditions = [];
 
@@ -2702,7 +2658,6 @@ const Listview = () => {
                               sx={{ width: 250, mt: 2 }}
                             />
 
-                            {/* <MultiFormikOptimizedAutocomplete */}
                             <PartymultiSelect
                               sx={{ width: 250, mt: 1 }}
                               id="party"
@@ -2784,9 +2739,7 @@ const Listview = () => {
                               }}
                               variant="standard"
                             >
-                              {/* <MenuItem value="">
-                                     <em>None</em>
-                                   </MenuItem> */}
+                              
                               <MenuItem value="O">Order</MenuItem>
                               <MenuItem value="Q">Quotation</MenuItem>
                             </TextField>
@@ -2935,23 +2888,7 @@ const Listview = () => {
                               }
                               label="Paid"
                             />
-                            {/* 
-                                 <Stack
-                                   direction="row"
-                                   alignItems="center"
-                                   justifyContent="end"
-                                   spacing={1}
-                                   mt={2}
-                                 >
-                                   <Button
-                                     type="submit"
-                                     variant="contained"
-                                     color="primary"
-                                     disabled={isSubmitting}
-                                   >
-                                     Apply
-                                   </Button>
-                                 </Stack> */}
+                           
                             <Stack
                               direction="row"
                               alignItems="center"
@@ -2967,76 +2904,7 @@ const Listview = () => {
                               >
                                 Apply
                               </Button>
-                              {/* {values.Type === "ByProduct" ? (                 
-                                     <BlobProvider
-                                       document={
-                                         <OrdEnqProductPDF
-                                           data={listViewData}
-                                           Product={values?.product?.Name}
-                                           Party={values?.party?.Name}
-                                           filters={{
-                                             fromdate: values?.fromdate,
-                                             todate: values?.date,
-                                             ordertype: values?.ordertype,
-                                             Imageurl: baseurlUAAM,
-                                             HeaderImg: HeaderImg,
-                                             FooterImg: FooterImg,
-                                           }}
-                                         />
-                                       }
-                                     >
-                                       {({ url, loading }) => {
-                                         if (loading || !url) {
-                                           return <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />;
-                                         }
-         
-                                         return (
-                                           <PictureAsPdfIcon
-                                             sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
-                                             onClick={() => {
-                                               if (url) {
-                                                 window.open(url);
-                                               }
-                                             }}
-                                           />
-                                         );
-                                       }}
-                                     </BlobProvider>
-                                   ) : (
-                                     <PDFDownloadLink
-                                       document={
-                                         <OrdEnqPartyPDF
-                                           data={listViewData}
-                                           Product={values?.product?.Name}
-                                           Party={values?.party?.Name}
-                                           filters={{
-                                             fromdate: values?.fromdate,
-                                             todate: values?.date,
-                                             ordertype: values.ordertype,
-                                             Imageurl: baseurlUAAM,
-                                             HeaderImg: HeaderImg,
-                                             FooterImg: FooterImg,
-                                           }}
-                                         />
-                                       }
-                                       // fileName={`OrderEnquirySummary_Party".pdf`}
-                                       fileName={`OrderEnquirySummary_Party.pdf`}
-                                       style={{ color: "#d32f2f", cursor: "pointer" }}
-                                     >
-                                       {({ loading }) =>
-                                         loading ? (
-                                           <PictureAsPdfIcon
-                                             sx={{ fontSize: 24, opacity: 0.5 }}
-                                           />
-                                         ) : (
-                                           <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                         )
-                                       }
-         
-                                     </PDFDownloadLink>
-                                   )} */}
-
-                              {/* CHANGED AS ON 08/04/2026 - TO SOLVE SLOW PDF GENERATION */}
+                             
                               <PictureAsPdfIcon
                                 sx={{
                                   fontSize: 24,
@@ -3049,32 +2917,7 @@ const Listview = () => {
                                 }}
                               />
 
-                              {/* <FaFileExcel
-           size={20}
-           color="#1D6F42"
-           style={{ cursor: "pointer" }}
-           onClick={() =>
-             OrderEnqProdandPartyExcel(
-               listViewData,
-               {
-                 fromdate: values?.fromdate,
-                 todate: values?.todate,
-                 ordertype: values?.ordertype,
-                 product: values?.product?.Name || "",
-                 party: values?.party?.Name || "",
-               }
-             )
-           }
-         /> */}
-
-                              {/* <Button
-                                     type="button"
-                                     variant="contained"
-                                     color="error"
-                                     size="small"                         
-                                   >
-                                     RESET
-                                   </Button> */}
+                              
                               <Button
                                 type="button"
                                 variant="contained"
@@ -3128,7 +2971,7 @@ const Listview = () => {
                     }}
                   </Formik>
                 </Box>
-              )}
+              )} */}
 
               {showMore && (accessID === "TR331") && (() => {
 
@@ -5227,6 +5070,890 @@ const Listview = () => {
                   </Formik>
                 </Box>
               )}
+
+              {showMore && accessID === "TR313" && (
+                <Box
+                  sx={{
+                    width: 300,
+                    p: 2,
+                    borderRadius: 1,
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  <Formik
+                    initialValues={{
+                      fromdate: sessionStorage.getItem("FromDate") || "",
+                      date: sessionStorage.getItem("ToDate") || "",
+                      Created: sessionStorage.getItem("TR313_Created") === "Y",
+                      Process: sessionStorage.getItem("TR313_Process") === "Y",
+                      Picked: sessionStorage.getItem("TR313_Picked") === "Y",
+                      ReadyToDeliver:
+                        sessionStorage.getItem("TR313_ReadyToDeliver") === "Y",
+                      YetToDeliver:
+                        sessionStorage.getItem("TR313_YetToDeliver") === "Y",
+                      Paid: sessionStorage.getItem("TR313_Paid") === "Y",
+                      Scheduled:
+                        sessionStorage.getItem("TR313_Scheduled") === "Y",
+                      Delivered:
+                        sessionStorage.getItem("TR313_Delivered") === "Y",
+                      PartiallyPaid:
+                        sessionStorage.getItem("TR313_PartiallyPaid") === "Y",
+                      Type: "ByProduct",
+                      // party: [],
+                      // product: [],
+                      party:
+                        JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
+                      product:
+                        JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
+                      ordertype: "",
+                    }}
+                    enableReinitialize
+                    validate={(values) => {
+                      const hasAtLeastOneValue =
+                        values.fromdate ||
+                        values.date ||
+                        values.party ||
+                        values.product ||
+                        values.ordertype ||
+                        values.Created ||
+                        values.Process ||
+                        values.ReadyToDeliver ||
+                        values.YetToDeliver ||
+                        values.Paid ||
+                        values.PartiallyPaid ||
+                        values.Scheduled ||
+                        values.Delivered ||
+                        values.Picked;
+                    }}
+                    onSubmit={(values, { setSubmitting }) => {
+                      const conditions = [];
+
+                      const statusDateMap = {
+                        Created: "OROrderDate",
+                        Process: "ORProcessDate",
+                        ReadyToDeliver: "ORTentativeDate",
+                        YetToDeliver: "ORTentativeDate",
+                        Picked: "ORPickedDate",
+                        Scheduled: "ORTentativeDate",
+                        Delivered: "ORDeliveryDate",
+                        Paid: "ORPaidDate",
+                      };
+
+                      const statusValueMap = {
+                        Created: "Created",
+                        Process: "Process",
+                        ReadyToDeliver: "Ready To Deliver",
+                        YetToDeliver: "Yet To Deliver",
+                        Picked: "Picked",
+                        Scheduled: "Scheduled",
+                        Delivered: "Delivered",
+                        Paid: "Paid",
+                        PartiallyPaid: "Partially Paid",
+                      };
+
+                      const fromDate = values.fromdate || "";
+                      const toDate = values.date || "";
+
+                      sessionStorage.setItem("FromDate", fromDate);
+                      sessionStorage.setItem("ToDate", toDate);
+                      sessionStorage.setItem("ordertype", values.ordertype || "");
+
+                      Object.keys(statusValueMap).forEach((status) => {
+                        sessionStorage.setItem(
+                          `TR313_${status}`,
+                          values[status] ? "Y" : "N"
+                        );
+                      });
+
+                      sessionStorage.setItem(
+                        "TR313_Filters",
+                        JSON.stringify(values)
+                      );
+
+                      const selectedStatuses = Object.keys(statusValueMap).filter(
+                        (status) => Boolean(values[status])
+                      );
+
+                      // Status filter
+                      if (selectedStatuses.length > 0) {
+                        const selectedStatusValues = selectedStatuses
+                          .map((status) => `'${statusValueMap[status]}'`)
+                          .join(", ");
+
+                        conditions.push(
+                          `Status IN (${selectedStatusValues})`
+                        );
+                      }
+
+                      // Party filter
+                      if (
+                        Array.isArray(values.party) &&
+                        values.party.length > 0
+                      ) {
+                        const partyIds = values.party
+                          .map((party) => `'${party.RecordID}'`)
+                          .join(", ");
+
+                        conditions.push(
+                          `PartyRecordID IN (${partyIds})`
+                        );
+                      }
+
+                      // Product filter
+                      if (
+                        Array.isArray(values.product) &&
+                        values.product.length > 0
+                      ) {
+                        const productIds = values.product
+                          .map((product) => `'${product.RecordID}'`)
+                          .join(", ");
+
+                        conditions.push(
+                          `ProductID IN (${productIds})`
+                        );
+                      }
+
+                      // Order type filter
+                      if (
+                        values.ordertype &&
+                        (!Array.isArray(values.ordertype) ||
+                          values.ordertype.length > 0)
+                      ) {
+                        conditions.push(`OrderType = '${values.ordertype}'`);
+                      }
+                      // if (
+                      //   values.ordertype &&
+                      //   (!Array.isArray(values.ordertype) ||
+                      //     values.ordertype.length > 0)
+                      // ) {
+                      //   const orderTypes = Array.isArray(values.ordertype)
+                      //     ? values.ordertype
+                      //     : [values.ordertype];
+
+                      //   const formattedOrderTypes = orderTypes
+                      //     .map((type) => {
+                      //       // Supports strings and objects.
+                      //       const orderTypeValue =
+                      //         typeof type === "object"
+                      //           ? type.value || type.RecordID
+                      //           : type;
+
+                      //       return `'${orderTypeValue}'`;
+                      //     })
+                      //     .join(", ");
+
+                      //   conditions.push(
+                      //     `OrderType IN (${formattedOrderTypes})`
+                      //   );
+                      // }
+
+                      // Company filter
+                      if (compID) {
+                        conditions.push(
+                          `CompanyID = '${compID}'`
+                        );
+                      }
+
+                      // Date filters
+                      const dateConditions = [];
+
+                      selectedStatuses.forEach((status) => {
+
+                        // Partially Paid uses two date fields.
+                        if (status === "PartiallyPaid") {
+                          const partiallyPaidDateConditions = [];
+
+                          if (fromDate && toDate) {
+                            partiallyPaidDateConditions.push(
+                              `ORDeliveryDate BETWEEN '${fromDate}' AND '${toDate}'`
+                            );
+
+                            partiallyPaidDateConditions.push(
+                              `ORPaidDate BETWEEN '${fromDate}' AND '${toDate}'`
+                            );
+                          } else if (fromDate) {
+                            partiallyPaidDateConditions.push(
+                              `ORDeliveryDate >= '${fromDate}'`
+                            );
+
+                            partiallyPaidDateConditions.push(
+                              `ORPaidDate >= '${fromDate}'`
+                            );
+                          } else if (toDate) {
+                            partiallyPaidDateConditions.push(
+                              `ORDeliveryDate <= '${toDate}'`
+                            );
+
+                            partiallyPaidDateConditions.push(
+                              `ORPaidDate <= '${toDate}'`
+                            );
+                          }
+
+                          if (partiallyPaidDateConditions.length > 0) {
+                            dateConditions.push(
+                              `(${partiallyPaidDateConditions.join(" OR ")})`
+                            );
+                          }
+
+                          return;
+                        }
+
+                        // Other statuses use one date field.
+                        const dateField = statusDateMap[status];
+
+                        if (!dateField) {
+                          return;
+                        }
+
+                        if (fromDate && toDate) {
+                          dateConditions.push(
+                            `${dateField} BETWEEN '${fromDate}' AND '${toDate}'`
+                          );
+                        } else if (fromDate) {
+                          dateConditions.push(
+                            `${dateField} >= '${fromDate}'`
+                          );
+                        } else if (toDate) {
+                          dateConditions.push(
+                            `${dateField} <= '${toDate}'`
+                          );
+                        }
+                      });
+                      if (selectedStatuses.length === 0 && (fromDate || toDate)) {
+                        if (fromDate && toDate) {
+                          dateConditions.push(`OROrderDate BETWEEN '${fromDate}' AND '${toDate}'`);
+                        } else if (fromDate) {
+                          dateConditions.push(`OROrderDate >= '${fromDate}'`);
+                        } else if (toDate) {
+                          dateConditions.push(`OROrderDate <= '${toDate}'`);
+                        }
+                      }
+                      // Add date conditions to final filter.
+                      if (dateConditions.length === 1) {
+                        conditions.push(dateConditions[0]);
+                      } else if (dateConditions.length > 1) {
+                        conditions.push(
+                          `(${dateConditions.join(" OR ")})`
+                        );
+                      }
+
+                      const whereClause = conditions.join(" AND ");
+
+                      console.log("FINAL FILTER:", whereClause);
+
+                      setSummaryfilter(whereClause);
+
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          Subscriptionlastthree,
+                          screenName,
+                          whereClause,
+                          "",
+                          compID
+                        )
+                      );
+
+                      setTimeout(() => setSubmitting(false), 100);
+                    }}
+                  >
+                    {({
+                      values,
+                      handleSubmit,
+                      handleChange,
+                      handleBlur,
+                      isSubmitting,
+                      setFieldValue,
+                      resetForm,
+                    }) => {
+                      const generatePdf = async () => {
+                        try {
+                          setLoadingPdf(true);
+
+                          const selectedStatuses = [];
+
+                          if (values.Created) selectedStatuses.push("Created");
+                          if (values.Process) selectedStatuses.push("Process");
+
+                          if (values.ReadyToDeliver) {
+                            selectedStatuses.push("Ready To Deliver");
+                          }
+
+                          if (values.YetToDeliver) {
+                            selectedStatuses.push("Yet To Deliver");
+                          }
+
+                          if (values.Picked) selectedStatuses.push("Picked");
+                          if (values.Scheduled) selectedStatuses.push("Scheduled");
+                          if (values.Delivered) selectedStatuses.push("Delivered");
+                          if (values.Paid) selectedStatuses.push("Paid");
+
+                          if (values.PartiallyPaid) {
+                            selectedStatuses.push("Partially Paid");
+                          }
+
+                          const fromDate = values.fromdate || "";
+                          const toDate = values.date || "";
+
+                          console.log("FINAL FILTER:", Summaryfilter);
+
+                          // Wait for the API response
+                          const result = await dispatch(
+                            OrderSummaryDataGet({
+                              idata: {
+                                Filter: Summaryfilter,
+                              },
+                            })
+                          ).unwrap();
+
+                          console.log("API Response:", result);
+
+                          if (result?.Status !== "Y") {
+                            console.log(result?.Message || "No records found");
+                            return;
+                          }
+
+                          const pdfData = Array.isArray(result?.Data)
+                            ? result.Data
+                            : [];
+
+                          if (pdfData.length === 0) {
+                            console.log("No data available for PDF");
+                            return;
+                          }
+
+                          // Generate PDF using the latest API response
+                          const blob = await pdf(
+                            <OrderSummaryDocument
+                              orderData={pdfData}
+                              fromDate={fromDate}
+                              toDate={toDate}
+                              selectedStatuses={selectedStatuses}
+                            />
+                          ).toBlob();
+
+                          const pdfUrl = URL.createObjectURL(blob);
+
+                          window.open(pdfUrl, "_blank");
+
+                          // Release the temporary URL later
+                          setTimeout(() => {
+                            URL.revokeObjectURL(pdfUrl);
+                          }, 60000);
+                        } catch (error) {
+                          console.error("PDF ERROR:", error);
+                        } finally {
+                          setLoadingPdf(false);
+                        }
+                      };
+                      return (
+
+                        // <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                          <Box sx={{ height: 600, overflowY: "auto" }}>
+                            <IconButton
+                              size="small"
+                              onClick={() => setShowMore(false)}
+                              sx={{ position: "absolute", top: 5, right: 4 }}
+                            >
+                              <Tooltip title="Close">
+                                <CancelIcon color="error" />
+                              </Tooltip>
+                            </IconButton>
+                            <TextField
+                              name="fromdate"
+                              type="date"
+                              id="fromdate"
+                              label="Transaction From Date"
+                              variant="standard"
+                              value={values.fromdate || ""}
+                              onChange={(e) => {
+                                const newDate = e.target.value;
+                                setFieldValue("fromdate", newDate);
+                                // dispatch(setFromDate(newDate));
+                                sessionStorage.setItem("FromDate", newDate);
+                              }}
+                              focused
+                              InputLabelProps={{ shrink: true }}
+                              inputProps={{
+                                max: new Date().toISOString().split("T")[0],
+                              }}
+                              // sx={{ width: 250, mt: 2 }}
+                              sx={{ width: 250, mt: 0 }}
+                            />
+
+                            <TextField
+                              name="date"
+                              type="date"
+                              id="date"
+                              label="Transaction To Date"
+                              variant="standard"
+                              value={values.date || ""}
+                              onChange={(e) => {
+                                const newDate = e.target.value;
+                                setFieldValue("date", newDate);
+                                // dispatch(setToDate(newDate));
+                                sessionStorage.setItem("ToDate", newDate);
+                              }}
+                              focused
+                              InputLabelProps={{ shrink: true }}
+                              inputProps={{
+                                max: new Date().toISOString().split("T")[0],
+                              }}
+                              // sx={{ width: 250, mt: 2 }}
+                              sx={{ width: 250, mt: 1 }}
+                            />
+
+                            {/* <MultiFormikOptimizedAutocomplete */}
+                            <PartymultiSelect
+                              sx={{ width: 250, mt: 1 }}
+                              id="party"
+                              name="party"
+                              label="Party"
+                              variant="outlined"
+                              value={values.party}
+                              onChange={(e, newValue) => {
+                                setFieldValue("party", newValue);
+                                sessionStorage.setItem(
+                                  "TR313_Party",
+                                  JSON.stringify(newValue)
+                                );
+                              }}
+                              // error={!!touched.party && !!errors.party}
+                              // helperText={touched.party && errors.party}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2140",
+                                  ScreenName: "Party",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `CompanyID='${compID}'`,
+                                  Any: "",
+                                },
+                              })}`}
+                            />
+
+                            <MultiFormikOptimizedAutocomplete
+                              sx={{ width: 250, mt: 1 }}
+                              id="product"
+                              name="product"
+                              label="Product"
+                              variant="outlined"
+                              value={values.product}
+                              onChange={(e, newValue) => {
+                                setFieldValue("product", newValue);
+                                sessionStorage.setItem(
+                                  "TR313_Product",
+                                  JSON.stringify(newValue)
+                                );
+                              }}
+                              // error={!!touched.product && !!errors.product}
+                              // helperText={touched.product && errors.product}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2137",
+                                  ScreenName: "Product",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `CompanyID='${compID}' AND ItemsDesc ='Product'`,
+                                  Any: "",
+                                },
+                              })}`}
+                            />
+                            <TextField
+                              select
+                              sx={{ width: 250, mt: 1 }}
+                              focused
+                              label="Order Type"
+                              value={values.ordertype || ""}
+                              onChange={(e) => {
+                                const ordertype = e.target.value;
+                                setFieldValue("ordertype", ordertype);
+                                sessionStorage.setItem("ordertype", ordertype);
+                              }}
+                              InputProps={{
+                                endAdornment: values.ordertype && (
+                                  <InputAdornment position="end">
+                                    <ClearIcon
+                                      sx={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        setFieldValue("ordertype", "");
+                                        sessionStorage.removeItem("ordertype");
+                                      }}
+                                    />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              variant="standard"
+                            >
+                              {/* <MenuItem value="">
+                                     <em>None</em>
+                                   </MenuItem> */}
+                              <MenuItem value="O">Order</MenuItem>
+                              <MenuItem value="Q">Quotation</MenuItem>
+                            </TextField>
+
+                            {/* <TextField
+                              select
+                              fullWidth
+                              focused
+                              label="Type"
+                              id="Type"
+                              name="Type"
+                              value={values.Type}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              variant="standard"
+                              sx={{ width: 250, mt: 1 }}
+                            >
+                              <MenuItem value="ByParty">By Party</MenuItem>
+                              <MenuItem value="ByProduct">By Product</MenuItem>
+                            </TextField> */}
+                            {/* <Typography mt={2} fontWeight="bold" color="error"> */}
+                            <Typography mt={1} fontWeight="bold" color="error">
+                              Status
+                            </Typography>
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Created"
+                                  checked={values.Created}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Created", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Created",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Created"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Process"
+                                  checked={values.Process}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Process", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Process",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Process"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="ReadyToDeliver"
+                                  checked={values.ReadyToDeliver}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("ReadyToDeliver", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_ReadyToDeliver",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Ready To Deliver"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Scheduled"
+                                  checked={values.Scheduled}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Scheduled", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Scheduled",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Scheduled"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Picked"
+                                  checked={values.Picked}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Picked", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Picked",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Picked"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Delivered"
+                                  checked={values.Delivered}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Delivered", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Delivered",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Delivered"
+                            />
+
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="Paid"
+                                  checked={values.Paid}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("Paid", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_Paid",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Paid"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="PartiallyPaid"
+                                  checked={values.PartiallyPaid}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("PartiallyPaid", checked);
+                                    sessionStorage.setItem(
+                                      "TR313_PartiallyPaid",
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label="Partially Paid"
+                            />
+                            {/* 
+                                 <Stack
+                                   direction="row"
+                                   alignItems="center"
+                                   justifyContent="end"
+                                   spacing={1}
+                                   mt={2}
+                                 >
+                                   <Button
+                                     type="submit"
+                                     variant="contained"
+                                     color="primary"
+                                     disabled={isSubmitting}
+                                   >
+                                     Apply
+                                   </Button>
+                                 </Stack> */}
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              justifyContent="end"
+                              spacing={1}
+                              // marginTop={3}
+                              marginTop={0.5}
+                            >
+                              <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                disabled={isSubmitting}
+                              >
+                                Apply
+                              </Button>
+                              {/* {values.Type === "ByProduct" ? (                 
+                                     <BlobProvider
+                                       document={
+                                         <OrdEnqProductPDF
+                                           data={listViewData}
+                                           Product={values?.product?.Name}
+                                           Party={values?.party?.Name}
+                                           filters={{
+                                             fromdate: values?.fromdate,
+                                             todate: values?.date,
+                                             ordertype: values?.ordertype,
+                                             Imageurl: baseurlUAAM,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                           }}
+                                         />
+                                       }
+                                     >
+                                       {({ url, loading }) => {
+                                         if (loading || !url) {
+                                           return <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />;
+                                         }
+         
+                                         return (
+                                           <PictureAsPdfIcon
+                                             sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+                                             onClick={() => {
+                                               if (url) {
+                                                 window.open(url);
+                                               }
+                                             }}
+                                           />
+                                         );
+                                       }}
+                                     </BlobProvider>
+                                   ) : (
+                                     <PDFDownloadLink
+                                       document={
+                                         <OrdEnqPartyPDF
+                                           data={listViewData}
+                                           Product={values?.product?.Name}
+                                           Party={values?.party?.Name}
+                                           filters={{
+                                             fromdate: values?.fromdate,
+                                             todate: values?.date,
+                                             ordertype: values.ordertype,
+                                             Imageurl: baseurlUAAM,
+                                             HeaderImg: HeaderImg,
+                                             FooterImg: FooterImg,
+                                           }}
+                                         />
+                                       }
+                                       // fileName={`OrderEnquirySummary_Party".pdf`}
+                                       fileName={`OrderEnquirySummary_Party.pdf`}
+                                       style={{ color: "#d32f2f", cursor: "pointer" }}
+                                     >
+                                       {({ loading }) =>
+                                         loading ? (
+                                           <PictureAsPdfIcon
+                                             sx={{ fontSize: 24, opacity: 0.5 }}
+                                           />
+                                         ) : (
+                                           <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                         )
+                                       }
+         
+                                     </PDFDownloadLink>
+                                   )} */}
+
+                              {/* CHANGED AS ON 08/04/2026 - TO SOLVE SLOW PDF GENERATION */}
+                              <PictureAsPdfIcon
+                                sx={{
+                                  fontSize: 24,
+                                  color: loadingPdf ? "grey" : "#d32f2f",
+                                  cursor: loadingPdf ? "not-allowed" : "pointer",
+                                  opacity: loadingPdf ? 0.5 : 1,
+                                }}
+                                onClick={() => {
+                                  if (!loadingPdf) generatePdf();
+                                }}
+                              />
+
+                              {/* <FaFileExcel
+           size={20}
+           color="#1D6F42"
+           style={{ cursor: "pointer" }}
+           onClick={() =>
+             OrderEnqProdandPartyExcel(
+               listViewData,
+               {
+                 fromdate: values?.fromdate,
+                 todate: values?.todate,
+                 ordertype: values?.ordertype,
+                 product: values?.product?.Name || "",
+                 party: values?.party?.Name || "",
+               }
+             )
+           }
+         /> */}
+
+                              {/* <Button
+                                     type="button"
+                                     variant="contained"
+                                     color="error"
+                                     size="small"                         
+                                   >
+                                     RESET
+                                   </Button> */}
+                              <Button
+                                type="button"
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                  [
+                                    "FromDate",
+                                    "ToDate",
+                                    "ordertype",
+                                    "TR313_Created",
+                                    "TR313_Process",
+                                    "TR313_ReadyToDeliver",
+                                    "TR313_YetToDeliver",
+                                    "TR313_Picked",
+                                    "TR313_Scheduled",
+                                    "TR313_Delivered",
+                                    "TR313_Paid",
+                                    "TR313_PartiallyPaid",
+                                    "TR313_Party",
+                                    "TR313_Product",
+                                    "TR313_Filters",
+                                  ].forEach((key) =>
+                                    sessionStorage.removeItem(key)
+                                  );
+
+                                  resetForm({
+                                    values: {
+                                      fromdate: "",
+                                      date: "",
+                                      Created: false,
+                                      Process: false,
+                                      ReadyToDeliver: false,
+                                      YetToDeliver: false,
+                                      Picked: false,
+                                      Scheduled: false,
+                                      Delivered: false,
+                                      Paid: false,
+                                      PartiallyPaid: false,
+                                      party: [],
+                                      product: [],
+                                      Type: "ByProduct",
+                                      ordertype: ""
+                                    },
+                                  });
+                                }}
+                              >
+                                RESET
+                              </Button>
+                            </Stack>
+                          </Box>
+                        </form>
+                      )
+                    }}
+                  </Formik>
+                </Box>
+              )}
+
+
             </Box>
           </Box>
           {accessID !== "TR313" && (
@@ -5325,6 +6052,29 @@ const Listview = () => {
               label="Download Payslip Pdf"
               variant="outlined"
             />
+            {/* <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              padding="15px 25px"
+              border="1px solid #080808"
+              borderRadius="8px"
+              width="fit-content"
+              // marginBottom={10}
+            >
+              <Typography><strong>Calculation Method</strong></Typography>
+              <Typography variant="body2">
+               <strong>Loss of Pay</strong> = (Total Allowances / No. of Total Days) / No. of Leave
+              </Typography>
+
+              <Typography variant="body2">
+                 <strong>Permission</strong> = (Total Allowances / No. of Total Days) / 2
+              </Typography>
+
+              <Typography variant="body2">
+                 <strong>Late Login</strong> = (Total Allowances / No. of Total Days) / 2
+              </Typography>
+            </Box> */}
           </Box>
         ) : accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -5586,7 +6336,7 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
-            ) : accessID == "TR026" ? (
+        ) : accessID == "TR026" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -5594,7 +6344,7 @@ const Listview = () => {
               variant="outlined"
             />
 
-           
+
             <Chip
               icon={<ManageAccountsIcon color="primary" />}
               label="Activity"
@@ -5811,122 +6561,122 @@ const Listview = () => {
                 />
               </Box>
             )
-             : accessID == "TR411" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                <Chip
-                  icon={<SourceOutlinedIcon color="primary" />}
-                  label="Holiday List"
-                  variant="outlined"
-                // sx={{ marginLeft: "50px" }}
-                />
-              </Box>
-            )
-              : accessID == "TR383" ? (
+              : accessID == "TR411" ? (
                 <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                   <Chip
-                    icon={<EventOutlinedIcon color="primary" />}
-                    label="Event Category"
+                    icon={<SourceOutlinedIcon color="primary" />}
+                    label="Holiday List"
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
                 </Box>
               )
-                : accessID == "TR337" ? (
+                : accessID == "TR383" ? (
                   <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                     <Chip
-                      // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
-                      icon={<DoubleArrowOutlinedIcon color="primary" />}
-                      label="SOP Documents"
+                      icon={<EventOutlinedIcon color="primary" />}
+                      label="Event Category"
                       variant="outlined"
                     // sx={{ marginLeft: "50px" }}
                     />
                   </Box>
-                ) : accessID == "TR316" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<QrCodeScannerOutlinedIcon color="primary" />}
-                      label="HSN Master"
-                      variant="outlined"
-                    // sx={{ marginLeft: "50px" }}
-                    />
-                  </Box>
-                ) : accessID == "TR099" ? (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="List of Usergroups"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR275" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-                    {/* <Chip
+                )
+                  : accessID == "TR337" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                      <Chip
+                        // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+                        icon={<DoubleArrowOutlinedIcon color="primary" />}
+                        label="SOP Documents"
+                        variant="outlined"
+                      // sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR316" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<QrCodeScannerOutlinedIcon color="primary" />}
+                        label="HSN Master"
+                        variant="outlined"
+                      // sx={{ marginLeft: "50px" }}
+                      />
+                    </Box>
+                  ) : accessID == "TR099" ? (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="List of Usergroups"
+                        variant="outlined"
+                      />
+                    </Box>
+                  ) : accessID == "TR275" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                      {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Visibility color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PictureAsPdfIcon color="error" />}
-                      label="Download PDF"
-                      variant="outlined"
-                    />
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<Visibility color="primary" />}
+                        label="View"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<PictureAsPdfIcon color="error" />}
+                        label="Download PDF"
+                        variant="outlined"
+                      />
 
-                  </Box>
-                ) : accessID == "TR379" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    </Box>
+                  ) : accessID == "TR379" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap={2}>
 
-                    {/* <Chip
+                      {/* <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}
                       label="Edit"
                       variant="outlined"
                     /> */}
 
-                    <Chip
-                      icon={<PictureAsPdfIcon color="error" />}
-                      label="AdmissionForm PDF"
-                      variant="outlined"
-                    />
+                      <Chip
+                        icon={<PictureAsPdfIcon color="error" />}
+                        label="AdmissionForm PDF"
+                        variant="outlined"
+                      />
 
-                  </Box>
-                ) : accessID == "TR128" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                    </Box>
+                  ) : accessID == "TR128" ? (
+                    <Box display="flex" flexDirection="row" padding="25px" gap="5px">
 
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ListAltOutlinedIcon color="primary" />}
-                      label="Gate"
-                      variant="outlined"
-                    />
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<ListAltOutlinedIcon color="primary" />}
+                        label="Gate"
+                        variant="outlined"
+                      />
 
-                  </Box>
-                ) : (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                )}
+                    </Box>
+                  ) : (
+                    <Box display="flex" flexDirection="row" padding="25px">
+                      <Chip
+                        icon={<ModeEditOutlinedIcon color="primary" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                    </Box>
+                  )}
       </Box>
       <MatxCustomizer
         open={open}

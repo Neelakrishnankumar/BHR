@@ -71,6 +71,8 @@ const EditLeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const data = useSelector((state) => state.formApi.Data);
+  console.log(filtertype, data.PartyID, "filtertype-----");
+
   const leader = useSelector((state) => state.formApi.leaderDetails);
   console.log(leader, "leader");
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -86,6 +88,7 @@ const EditLeader = () => {
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const [leaderDetails, setLeaderDetails] = useState(null);
+  console.log(leaderDetails, "leaderDetails");
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const rowSx = { height: 36, "& td, & th": { py: 0.5 } };
@@ -198,10 +201,11 @@ const EditLeader = () => {
               Status: "",
               project: leaderData.ProjectID
                 ? {
-                    RecordID: leaderData.ProjectID,
-                    Name: leaderData.ProjectName,
-                  }
+                  RecordID: leaderData.ProjectID,
+                  Name: leaderData.ProjectName,
+                }
                 : null,
+                projects: leaderData.ProjectName || "",
             });
           }
         } catch (error) {
@@ -255,6 +259,8 @@ const EditLeader = () => {
           : data.ProjectID
             ? { RecordID: data.ProjectID, Name: data.ProjectName }
             : null,
+            
+           projects: data.ProjectName || "",
     });
   }, [data, mode, curdate]);
 
@@ -311,6 +317,7 @@ const EditLeader = () => {
       toast.success(response.payload.Msg);
 
       const LeaderID = response.payload.LeaderID;
+      const PartyID = response.payload.PartyID;
       // setIni(true)
       setLoading(false);
       // navigate(-1);
@@ -324,7 +331,8 @@ const EditLeader = () => {
           {
             state: {
               ...state,
-              PartyID: data.PartyID || filtertype,
+              //  PartyID: data.PartyID || filtertype,
+              PartyID: PartyID,
               PartyName: Name || state.PartyName,
               LeadTitle: values.leadtitle,
               LEStatus: values.Status,
@@ -337,7 +345,8 @@ const EditLeader = () => {
           {
             state: {
               ...state,
-              PartyID: data.PartyID || filtertype,
+              // PartyID: data.PartyID || filtertype,
+              PartyID: PartyID,
               PartyName: Name || state.PartyName,
               LeadTitle: values.leadtitle,
               LEStatus: values.Status,
@@ -351,7 +360,7 @@ const EditLeader = () => {
         navigate(-1);
       } else {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-        navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
+        navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${PartyID}`);
       }
     } else {
       toast.error(response.payload.Msg);
@@ -485,12 +494,12 @@ const EditLeader = () => {
               <Box display={isNonMobile ? "flex" : "none"} alignItems="center">
                 <Breadcrumbs
                   maxItems={3}
-                                   aria-label="breadcrumb"
-                                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                                   sx={breadcrumbStyles.separator}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                  sx={breadcrumbStyles.separator}
                 >
                   <Typography
-                     sx={breadcrumbStyles.item}
+                    sx={breadcrumbStyles.item}
                     onClick={() => {
                       // navigate("/Apps/TR243/Party");
                       navigate("/Apps/TR321/Party");
@@ -634,7 +643,7 @@ const EditLeader = () => {
                     disabled={Type === "T"}
                   />
 
-                  <CheckinAutocomplete
+                  {/* <CheckinAutocomplete
                     id="project"
                     name="project"
                     label={
@@ -667,7 +676,52 @@ const EditLeader = () => {
                         Any: "",
                       },
                     })}`}
-                  />
+                  /> */}
+                  {Type !== "T" ? (
+                    <CheckinAutocomplete
+                      id="project"
+                      name="project"
+                      label={
+                        <>
+                          Product
+                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      variant="outlined"
+                      value={values.project}
+                      onChange={(newValue) => {
+                        setFieldValue("project", newValue);
+                      }}
+                      error={!!touched.project && !!errors.project}
+                      helperText={touched.project && errors.project}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      url={`${listViewurl}?data=${JSON.stringify({
+                        Query: {
+                          AccessID: "2137",
+                          ScreenName: "Project",
+                          VerticalLicense: Subscriptionlastthree,
+                          Filter: `CompanyID='${CompanyID}'AND ItemsDesc ='Product'`,
+                          Any: "",
+                        },
+                      })}`}
+                    />
+                  ) : (
+                    <TextField
+                      label="Product"
+                      id="projects"
+                      name="projects"
+                      variant="outlined"
+                      size="small"
+                      value={values.projects || ""}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      disabled
+                      fullWidth
+                    />
+                  )}
 
                   <TextField
                     label={

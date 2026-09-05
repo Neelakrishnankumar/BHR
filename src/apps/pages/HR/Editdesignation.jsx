@@ -589,19 +589,19 @@ const Editdesignation = () => {
                       <MenuOutlinedIcon />
                     </IconButton>
                   )}
-                     <Box>
-                                           <Typography
-                                             sx={{
-                                               fontSize: 20,
-                                               fontWeight: 700,
-                                               color: "#111827",
-                                               // mb: 0.2,
-                                                   px: 1,
-                                     py: 0.2,
-                                             }}
-                                           >
-                                             {mode === "A" ? "New Designation" : "Edit Designation"}
-                                           </Typography>
+                <Box>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                        px: 1,
+                    py: 0.2,
+                  }}
+                >
+                  {mode === "A" ? "New Designation" : "Edit Designation"}
+                </Typography>
 
                   <Box
                     display={isNonMobile ? "flex" : "none"}
@@ -909,7 +909,7 @@ const Editdesignation = () => {
                             focused
                             value={values.name}
                             onBlur={handleBlur}
-                            onChange={handleChange}
+                            // onChange={handleChange}
                             onChange={(e) => {
                               const value = e.target.value;
                               // allow only letters and spaces
@@ -1054,7 +1054,7 @@ const Editdesignation = () => {
                             onChange={handleChange}
                             error={!!touched.sortorder && !!errors.sortorder}
                             helperText={touched.sortorder && errors.sortorder}
-                            sx={{ background: "" }}
+                            // sx={{ background: "" }}
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: "right" },

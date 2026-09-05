@@ -17,7 +17,10 @@ import {
   Avatar,
   Chip,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -53,6 +56,8 @@ import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { tokens } from "../../../Theme";
 import store from "../../../index";
 import { LoadingButton } from "@mui/lab";
@@ -68,8 +73,6 @@ import { FaFileExcel } from "react-icons/fa";
 import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
 import AttenHistrySummatyPDF from "../pdf/AttenHistrySummatyPDF";
 import AttendanceHistrySummaryExcel from "../pdf/AttendanceHistrySummaryExcel";
-
-
 
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -103,6 +106,17 @@ const EditAttendanceHistory = () => {
   );
   console.log("AttendanceData", AttendanceData);
 
+  // 👇 NEW: local accumulator for multi-location fetch results — the grid & exports now read from this, not AttendanceData
+  const [historyRows, setHistoryRows] = useState([]);
+
+  // 👇 NEW: progress tracking state for the PieProgress dialog
+  const [processProgress, setProcessProgress] = useState({
+    open: false,
+    total: 0,
+    completed: 0,
+    currentLabel: "",
+    log: [], // { name, status: 'success' | 'error' }
+  });
 
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
@@ -125,6 +139,41 @@ const EditAttendanceHistory = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [footerHeight, setFooterHeight] = useState(60);
   const [isReady, setIsReady] = useState(false);
+
+  // 👇 NEW: PieProgress component
+  const PieProgress = ({ value = 0, size = 100, color = "#0D9488", trackColor = "#e5e7eb" }) => {
+    return (
+      <Box
+        sx={{
+          position: "relative",
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          background: `conic-gradient(${color} ${value * 3.6}deg, ${trackColor} ${value * 3.6}deg 360deg)`,
+          transition: "background 0.4s ease",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: size * 0.72,
+            height: size * 0.72,
+            borderRadius: "50%",
+            backgroundColor: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" fontWeight={700}>
+            {Math.round(value)}%
+          </Typography>
+        </Box>
+      </Box>
+    );
+  };
 
   useEffect(() => {
     if (!FooterImg) return;
@@ -174,7 +223,15 @@ const EditAttendanceHistory = () => {
 
     console.log("Dispatching Attendance on load:", data);
 
-    dispatch(SortAttendance({ data }));
+    // 👇 CHANGED: capture the initial load result into historyRows too
+    dispatch(SortAttendance({ data })).then((resultAction) => {
+      const payload = resultAction?.payload;
+      if (payload?.Status === "Y" && Array.isArray(payload?.Data)) {
+        setHistoryRows(
+          payload.Data.map((row, idx) => ({ ...row, SLNO: idx + 1 }))
+        );
+      }
+    });
   }, [EMPID, dispatch]);
 
   function AttendanceTool() {
@@ -212,18 +269,7 @@ const EditAttendanceHistory = () => {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      valueGetter: (params) => {
-        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-
-        const totalVisibleRows = params.api.getAllRowIds().length;
-        const totalAllRows = params.api.getRowsCount();
-
-        if (totalVisibleRows < totalAllRows) {
-          return index + 1;
-        } else {
-          return page * pageSize + index + 1;
-        }
-      },
+      valueGetter: (params) => params.row.SLNO, // 👈 CHANGED: use existing SLNO instead of risky DataGrid API calls
     },
     { field: "Name", headerName: "Personnel", width: 150 },
     { field: "Designation", headerName: "Designation", headerAlign: "center", width: 150 },
@@ -303,18 +349,7 @@ const EditAttendanceHistory = () => {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      valueGetter: (params) => {
-        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-
-        const totalVisibleRows = params.api.getAllRowIds().length;
-        const totalAllRows = params.api.getRowsCount();
-
-        if (totalVisibleRows < totalAllRows) {
-          return index + 1;
-        } else {
-          return page * pageSize + index + 1;
-        }
-      },
+      valueGetter: (params) => params.row.SLNO, // 👈 CHANGED: same fix as AttColumn
     },
     { field: "Name", headerName: "Personnel", width: 300 },
 
@@ -331,39 +366,129 @@ const EditAttendanceHistory = () => {
 
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-  const AttInitialvalues = {
-    code: data.Code,
-    description: data.Name,
-    Sal: data.Sal,
-    month: sessionStorage.getItem("month") || currentMonthNumber,
-    year: Number(sessionStorage.getItem("year")) || currentYear,
-    sortby: sessionStorage.getItem("sortby") || "Name", // default: Name
-    location: [], // gets auto-filled with "select all" once EventsmultiSelect loads its options
-  };
+const AttInitialvalues = React.useMemo(() => ({
+  code: data.Code,
+  description: data.Name,
+  Sal: data.Sal,
+  month: sessionStorage.getItem("month") || currentMonthNumber,
+  year: Number(sessionStorage.getItem("year")) || currentYear,
+  sortby: sessionStorage.getItem("sortby") || "Name",
+  location: [],
+}), [data.Code, data.Name, data.Sal]); // only recompute when these actually change
 
   const attendaceFnSave = async (values) => {
-    const selectedLocations = Array.isArray(values.location) ? values.location : [];
-    // "ALL" is a synthetic pseudo-option added by EventsmultiSelect — strip it,
-    // send the real location IDs (comma separated) to the API
-    const LocationID = selectedLocations
-      .filter((loc) => loc.RecordID !== "ALL")
-      .map((loc) => loc.RecordID)
-      .join(",") || 0;
+    const selectedLocations = Array.isArray(values.location)
+      ? values.location.filter(
+          (loc) => String(loc.RecordID) !== "ALL" && loc.RecordID
+        )
+      : [];
 
-    const data = {
-      Month: values.month.toString(),
+    // If no location is selected, send 0
+    const locationIDs =
+      selectedLocations.length > 0
+        ? selectedLocations.map((loc) => loc.RecordID)
+        : [0];
+
+    const locationNames =
+      selectedLocations.length > 0
+        ? selectedLocations.map(
+            (loc) => loc.Name || loc.LocationName || `Location ${loc.RecordID}`
+          )
+        : ["All Locations"];
+
+    console.log("Selected locations:", selectedLocations);
+    console.log("Location IDs:", locationIDs);
+
+    setProcessProgress({
+      open: true,
+      total: 1,
+      completed: 0,
+      currentLabel: locationNames.join(", "),
+      log: [],
+    });
+
+    const requestData = {
+      Month: values.month,
       Year: values.year,
       ManagerID: EMPID,
       Etype: "H",
       SortByFilters: values.sortby,
-      LocationID,
-      CompanyID
+
+      // IMPORTANT:
+      // Send ALL selected Location IDs
+      LocationID:
+          selectedLocations.length > 0
+            ? locationIDs.join(",")
+            : 0,
+      CompanyID,
     };
 
-    dispatch(SortAttendance({ data }));
-    setPage(0);
-  };
+    console.log("Attendance API input:", requestData);
 
+    try {
+      const resultAction = await dispatch(
+        SortAttendance({
+          data: requestData,
+        })
+      );
+
+      const payload = resultAction?.payload;
+
+      if (payload?.Status === "Y" && Array.isArray(payload?.Data)) {
+        const renumbered = payload.Data.map((row, idx) => ({
+          ...row,
+          SLNO: idx + 1,
+        }));
+
+        setHistoryRows(renumbered);
+        setPage(0);
+
+        setProcessProgress((prev) => ({
+          ...prev,
+          completed: 1,
+          log: [
+            {
+              name: locationNames.join(", "),
+              status: "success",
+            },
+          ],
+        }));
+      } else {
+        setHistoryRows([]);
+
+        setProcessProgress((prev) => ({
+          ...prev,
+          completed: 1,
+          log: [
+            {
+              name: locationNames.join(", "),
+              status: "success",
+            },
+          ],
+        }));
+      }
+    } catch (err) {
+      console.error("Attendance fetch error:", err);
+
+      setProcessProgress((prev) => ({
+        ...prev,
+        completed: 1,
+        log: [
+          {
+            name: locationNames.join(", "),
+            status: "error",
+          },
+        ],
+      }));
+    }
+
+    setTimeout(() => {
+      setProcessProgress((prev) => ({
+        ...prev,
+        open: false,
+      }));
+    }, 800);
+  };
   const attendaceProcessFnSave = async (values) => {
     console.log("month", values.month.toString());
 
@@ -653,7 +778,7 @@ const EditAttendanceHistory = () => {
                         }}
                         error={!!touched.location && !!errors.location}
                         helperText={touched.location && errors.location}
-                        sx={{ width: 250 }}
+                         sx={{ width: 350 }}
                         url={`${listViewurl}?data=${JSON.stringify({
                           Query: {
                             AccessID: "2051",
@@ -727,6 +852,7 @@ const EditAttendanceHistory = () => {
                           <Button
                             type="submit"
                             variant="contained"
+                            disabled={processProgress.open}
                             sx={{
                               textTransform: "none",
                               borderRadius: 2,
@@ -744,6 +870,7 @@ const EditAttendanceHistory = () => {
                             variant="contained"
                             color="error"
                             size="small"
+                            disabled={processProgress.open}
                             sx={{
                               textTransform: "none",
                               borderRadius: 2,
@@ -752,11 +879,11 @@ const EditAttendanceHistory = () => {
                           >
                             Reset
                           </Button>
-                          {!summarycheck && AttendanceData?.length > 0 && (
+                          {!summarycheck && historyRows?.length > 0 && (
                             <PDFDownloadLink
                               document={
                                 <AttendanceHistoryPDF
-                                  data={AttendanceData}
+                                  data={historyRows}
                                   filters={{
                                     Month: values.month,
                                     Year: values.year,
@@ -783,7 +910,7 @@ const EditAttendanceHistory = () => {
 
 
                           )}
-                          {!summarycheck && AttendanceData?.length > 0 && (
+                          {!summarycheck && historyRows?.length > 0 && (
 
                             <FaFileExcel
                               size={20}
@@ -791,7 +918,7 @@ const EditAttendanceHistory = () => {
                               style={{ cursor: "pointer", }}
                               onClick={() =>
                                 AttendanceHistoryExcel(
-                                  AttendanceData,
+                                  historyRows,
                                   {
                                     month: values.month,
                                     year: values.year
@@ -805,11 +932,11 @@ const EditAttendanceHistory = () => {
 
 
 
-                          {summarycheck && AttendanceData?.length > 0 && (
+                          {summarycheck && historyRows?.length > 0 && (
                             <PDFDownloadLink
                               document={
                                 <AttenHistrySummatyPDF
-                                  data={AttendanceData}
+                                  data={historyRows}
                                   filters={{
                                     Month: values.month,
                                     Year: values.year,
@@ -835,7 +962,7 @@ const EditAttendanceHistory = () => {
                             </PDFDownloadLink>
                           )}
 
-                          {summarycheck && AttendanceData?.length > 0 && (
+                          {summarycheck && historyRows?.length > 0 && (
 
                             <FaFileExcel
                               size={20}
@@ -843,7 +970,7 @@ const EditAttendanceHistory = () => {
                               style={{ cursor: "pointer", }}
                               onClick={() =>
                                 AttendanceHistrySummaryExcel(
-                                  AttendanceData,
+                                  historyRows,
                                   {
                                     month: values.month,
                                     year: values.year
@@ -923,7 +1050,7 @@ const EditAttendanceHistory = () => {
                               }}
                               rowHeight={dataGridRowHeight}
                               headerHeight={dataGridHeaderFooterHeight}
-                              rows={AttendanceData}
+                              rows={historyRows}
                               columns={AttColumn}
                               disableSelectionOnClick
                               getRowId={(row) => row.SLNO}
@@ -1022,7 +1149,7 @@ const EditAttendanceHistory = () => {
                             }}
                             rowHeight={dataGridRowHeight}
                             headerHeight={dataGridHeaderFooterHeight}
-                            rows={AttendanceData}
+                            rows={historyRows}
                             columns={SummaryColumn}
                             disableSelectionOnClick
                             getRowId={(row) => row.SLNO}
@@ -1129,11 +1256,1189 @@ const EditAttendanceHistory = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* 👇 NEW: Pie progress dialog shown while attendaceFnSave loops through locations */}
+      <Dialog open={processProgress.open} maxWidth="xs" fullWidth disableEscapeKeyDown>
+        <DialogTitle sx={{ fontWeight: 700, textAlign: "center" }}>
+          Fetching Attendance
+        </DialogTitle>
+        <DialogContent>
+          <Box display="flex" flexDirection="column" alignItems="center" sx={{ mb: 2 }}>
+            <PieProgress
+              value={
+                processProgress.total
+                  ? (processProgress.completed / processProgress.total) * 100
+                  : 0
+              }
+              size={110}
+            />
+            <Typography variant="body2" fontWeight={600} sx={{ mt: 1.5 }}>
+              {processProgress.completed}/{processProgress.total} locations completed
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {processProgress.completed < processProgress.total && processProgress.currentLabel
+                ? `Fetching "${processProgress.currentLabel}"...`
+                : "Finalizing..."}
+            </Typography>
+          </Box>
+
+          {/* <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
+            {processProgress.log.map((item, idx) => (
+              <Box key={idx} display="flex" alignItems="center" gap={1} mb={0.5}>
+                {item.status === "success" ? (
+                  <CheckCircleIcon color="success" fontSize="small" />
+                ) : (
+                  <CancelIcon color="error" fontSize="small" />
+                )}
+                <Typography variant="body2">{item.name}</Typography>
+              </Box>
+            ))}
+          </Box> */}
+        </DialogContent>
+      </Dialog>
     </React.Fragment>
   );
 };
 
 export default EditAttendanceHistory;
+//Second
+// import React, { useState, useEffect } from "react";
+// import {
+//   Box,
+//   Typography,
+//   FormControl,
+//   TextField,
+//   Paper,
+//   Button,
+//   IconButton,
+//   Tooltip,
+//   Stack,
+//   useTheme,
+//   LinearProgress,
+//   Select,
+//   MenuItem,
+//   InputLabel,
+//   Avatar,
+//   Chip,
+//   FormControlLabel,
+//   Checkbox
+// } from "@mui/material";
+// import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
+// import {
+//   explorePostData,
+//   fetchApidata,
+//   postApidata,
+//   postApidatawol,
+//   getDeployment,
+//   postDeployment,
+//   invoiceExploreGetData,
+//   postData,
+//   resetTrackingData,
+//   empAttendance,
+//   Attendance,
+//   AttendanceProcess,
+//   SortAttendance
+// } from "../../../store/reducers/Formapireducer";
+// import useMediaQuery from "@mui/material/useMediaQuery";
+// import {
+//   GridToolbarContainer,
+//   GridToolbarQuickFilter,
+// } from "@mui/x-data-grid";
+
+// import { Formik } from "formik";
+// import { useNavigate, useParams, useLocation } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import Swal from "sweetalert2";
+// import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+// import { DataGrid } from "@mui/x-data-grid";
+// import { useProSidebar } from "react-pro-sidebar";
+// import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+
+// import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+// import ResetTvIcon from "@mui/icons-material/ResetTv";
+// import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+// import { tokens } from "../../../Theme";
+// import store from "../../../index";
+// import { LoadingButton } from "@mui/lab";
+// import { useDispatch } from "react-redux";
+// import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+// import { PDFDownloadLink } from "@react-pdf/renderer";
+// import AttendanceHistoryPDF from "../pdf/AttendanceHistoryPdf"
+// import { toast } from "react-hot-toast";
+// import { Employeeautocomplete, CheckinAutocomplete, EventsmultiSelect, LocmultiSelect } from "../../../ui-components/global/Autocomplete";
+// import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+// import { getConfig } from "../../../config";
+// import { FaFileExcel } from "react-icons/fa";
+// import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+// import AttenHistrySummatyPDF from "../pdf/AttenHistrySummatyPDF";
+// import AttendanceHistrySummaryExcel from "../pdf/AttendanceHistrySummaryExcel";
+
+
+
+// const EditAttendanceHistory = () => {
+//   const isNonMobile = useMediaQuery("(min-width:600px)");
+//   const navigate = useNavigate();
+//   const params = useParams();
+//   const location = useLocation();
+//   const mode = params.Mode;
+//   const dispatch = useDispatch();
+//   const isManager = sessionStorage.getItem("isManager");
+//   var recID = params.id;
+//   var accessID = params.accessID;
+//   const { toggleSidebar, broken, rtl } = useProSidebar();
+//   const listViewData = useSelector((state) => state.listviewApi.rowData);
+//   const listViewColumn = useSelector((state) => state.listviewApi.columnData);
+//   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+//   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+//   console.log(SubscriptionCode, "codehr");
+//   const lastThree = SubscriptionCode?.slice(-3) || "";
+//   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+//     ? lastThree
+//     : "";
+
+//   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+//   const FooterImg = sessionStorage.getItem("CompanyFooter");
+//   console.log("HeaderImg", HeaderImg, FooterImg);
+//   const config = getConfig();
+//   const baseurlUAAM = config.UAAM_URL;
+
+//   const AttendanceData = useSelector(
+//     (state) => state.formApi.empAttendanceData
+//   );
+//   console.log("AttendanceData", AttendanceData);
+
+
+//   const getLoading = useSelector((state) => state.formApi.getLoading);
+//   const data = useSelector((state) => state.formApi.Data);
+//   const isLoading = useSelector((state) => state.formApi.loading);
+//   const [pageSize, setPageSize] = useState(10);
+//   const [page, setPage] = React.useState(0);
+//   const [rowCount, setRowCount] = useState(0);
+//   const [show, setScreen] = React.useState("0");
+//   const EMPID = sessionStorage.getItem("empID");
+//   console.log(EMPID, '-------------djkvbwld')
+//   const CompanyID = sessionStorage.getItem("compID")
+//   const theme = useTheme();
+//   const [loading, setLoading] = useState(false);
+//   const [summarycheck, setSummaryCheck] = useState(false);
+//   const [locationOptions, setLocationOptions] = useState([]); // full fetched location list, used for "select all" default & reset
+
+
+//   const colors = tokens(theme.palette.mode);
+
+//   const [errorMsgData, setErrorMsgData] = useState(null);
+//   const [footerHeight, setFooterHeight] = useState(60);
+//   const [isReady, setIsReady] = useState(false);
+
+//   useEffect(() => {
+//     if (!FooterImg) return;
+
+//     const url = `${baseurlUAAM}/uploads/images/${FooterImg}`;
+
+//     const img = new Image();
+//     img.src = url;
+
+//     img.onload = () => {
+//       const aspectRatio = img.height / img.width;
+
+//       const pageWidth = 842; // LANDSCAPE WIDTH
+
+//       const MAX_FOOTER_HEIGHT = 80;
+
+//       const calculatedHeight = Math.min(
+//         pageWidth * aspectRatio,
+//         MAX_FOOTER_HEIGHT
+//       );
+
+//       setFooterHeight(calculatedHeight);
+//       setIsReady(true);
+//     };
+//   }, [FooterImg]);
+
+//   useEffect(() => {
+
+//     const savedMonth = sessionStorage.getItem("month");
+//     const savedYear = Number(sessionStorage.getItem("year"));
+
+//     const month = currentMonthNumber ? currentMonthNumber : savedMonth;
+//     const year = currentYear ? currentYear : savedYear;
+//     console.log(currentMonthNumber, year, savedMonth, savedYear, "--month & year in useeffect");
+//     sessionStorage.setItem("month", month);
+//     sessionStorage.setItem("year", year);
+
+//     const data = {
+//       Month: month,
+//       Year: year,
+//       Etype: "H",
+//       CompanyID,
+//       ManagerID: EMPID,
+//       LocationID: 0, // 0 = all locations, matches "select all" default
+//       SortByFilters: "Name", // matches the "Name" default sort
+//     };
+
+//     console.log("Dispatching Attendance on load:", data);
+
+//     dispatch(SortAttendance({ data }));
+//   }, [EMPID, dispatch]);
+
+//   function AttendanceTool() {
+//     return (
+//       <GridToolbarContainer
+//         sx={{
+//           display: "flex",
+//           flexDirection: "row",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <Box sx={{ display: "flex", flexDirection: "row" }}>
+//           <Typography>Attendance</Typography>
+//         </Box>
+//         <Box
+//           sx={{
+//             display: "flex",
+//             flexDirection: "row",
+//             justifyContent: "space-between",
+//           }}
+//         >
+//           <GridToolbarQuickFilter />
+//         </Box>
+//       </GridToolbarContainer>
+//     );
+//   }
+
+//   const AttColumn = [
+//     {
+//       field: "slno",
+//       headerName: "SL#",
+//       width: 40,
+//       headerAlign: "center",
+//       align: "right",
+//       sortable: false,
+//       filterable: false,
+//       disableColumnMenu: true,
+//       valueGetter: (params) => {
+//         const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+//         const totalVisibleRows = params.api.getAllRowIds().length;
+//         const totalAllRows = params.api.getRowsCount();
+
+//         if (totalVisibleRows < totalAllRows) {
+//           return index + 1;
+//         } else {
+//           return page * pageSize + index + 1;
+//         }
+//       },
+//     },
+//     { field: "Name", headerName: "Personnel", width: 150 },
+//     { field: "Designation", headerName: "Designation", headerAlign: "center", width: 150 },
+//     { field: "Day1", headerName: "1", width: 5 },
+//     { field: "Day2", headerName: "2", width: 5 },
+//     { field: "Day3", headerName: "3", width: 5 },
+//     { field: "Day4", headerName: "4", width: 5 },
+//     { field: "Day5", headerName: "5", width: 5 },
+//     { field: "Day6", headerName: "6", width: 5 },
+//     { field: "Day7", headerName: "7", width: 5 },
+//     { field: "Day8", headerName: "8", width: 5 },
+//     { field: "Day9", headerName: "9", width: 5 },
+//     { field: "Day10", headerName: "10", width: 5 },
+//     { field: "Day11", headerName: "11", width: 5 },
+//     { field: "Day12", headerName: "12", width: 5 },
+//     { field: "Day13", headerName: "13", width: 5 },
+//     { field: "Day14", headerName: "14", width: 5 },
+//     { field: "Day15", headerName: "15", width: 5 },
+//     { field: "Day16", headerName: "16", width: 5 },
+//     { field: "Day17", headerName: "17", width: 5 },
+//     { field: "Day18", headerName: "18", width: 5 },
+//     { field: "Day19", headerName: "19", width: 5 },
+//     { field: "Day20", headerName: "20", width: 5 },
+//     { field: "Day21", headerName: "21", width: 5 },
+//     { field: "Day22", headerName: "22", width: 5 },
+//     { field: "Day23", headerName: "23", width: 5 },
+//     { field: "Day24", headerName: "24", width: 5 },
+//     { field: "Day25", headerName: "25", width: 5 },
+//     { field: "Day26", headerName: "26", width: 5 },
+//     { field: "Day27", headerName: "27", width: 5 },
+//     { field: "Day28", headerName: "28", width: 5 },
+//     { field: "Day29", headerName: "29", width: 5 },
+//     { field: "Day30", headerName: "30", width: 5 },
+//     { field: "Day31", headerName: "31", width: 5 },
+//     { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
+//     { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 130 },
+//     { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
+//     { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
+//     { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
+//     { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
+//   ];
+
+
+//   function SummaryTool() {
+//     return (
+//       <GridToolbarContainer
+//         sx={{
+//           display: "flex",
+//           flexDirection: "row",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <Box sx={{ display: "flex", flexDirection: "row" }}>
+//           <Typography>Summary</Typography>
+//         </Box>
+//         <Box
+//           sx={{
+//             display: "flex",
+//             flexDirection: "row",
+//             justifyContent: "space-between",
+//           }}
+//         >
+//           <GridToolbarQuickFilter />
+//         </Box>
+//       </GridToolbarContainer>
+//     );
+//   }
+
+
+//   const SummaryColumn = [
+//     {
+//       field: "slno",
+//       headerName: "SL#",
+//       width: 40,
+//       headerAlign: "center",
+//       align: "right",
+//       sortable: false,
+//       filterable: false,
+//       disableColumnMenu: true,
+//       valueGetter: (params) => {
+//         const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+//         const totalVisibleRows = params.api.getAllRowIds().length;
+//         const totalAllRows = params.api.getRowsCount();
+
+//         if (totalVisibleRows < totalAllRows) {
+//           return index + 1;
+//         } else {
+//           return page * pageSize + index + 1;
+//         }
+//       },
+//     },
+//     { field: "Name", headerName: "Personnel", width: 300 },
+
+//     { field: "Present", headerName: "Present", headerAlign: "center", align: "right", },
+//     { field: "UnPaidLeave", headerName: "Unscheduled Leave", headerAlign: "center", align: "right", width: 200 },
+//     { field: "PaidLeave", headerName: "Scheduled Leave", headerAlign: "center", align: "right", width: 100 },
+//     { field: "Holidays", headerName: "Holidays", headerAlign: "center", align: "right", },
+//     { field: "Weekoff", headerName: "Week Off", headerAlign: "center", align: "right", },
+//     { field: "Total", headerName: "Total Days", headerAlign: "center", align: "right", },
+//   ];
+
+
+//   /***********Attendance ************/
+
+//   const currentMonthNumber = new Date().getMonth() + 1;
+//   const currentYear = new Date().getFullYear();
+//   const AttInitialvalues = {
+//     code: data.Code,
+//     description: data.Name,
+//     Sal: data.Sal,
+//     month: sessionStorage.getItem("month") || currentMonthNumber,
+//     year: Number(sessionStorage.getItem("year")) || currentYear,
+//     sortby: sessionStorage.getItem("sortby") || "Name", // default: Name
+//     location: [], // gets auto-filled with "select all" once EventsmultiSelect loads its options
+//   };
+
+//   const attendaceFnSave = async (values) => {
+//     const selectedLocations = Array.isArray(values.location) ? values.location : [];
+//     // "ALL" is a synthetic pseudo-option added by EventsmultiSelect — strip it,
+//     // send the real location IDs (comma separated) to the API
+//     const LocationID = selectedLocations
+//       .filter((loc) => loc.RecordID !== "ALL")
+//       .map((loc) => loc.RecordID)
+//       .join(",") || 0;
+
+//     const data = {
+//       Month: values.month.toString(),
+//       Year: values.year,
+//       ManagerID: EMPID,
+//       Etype: "H",
+//       SortByFilters: values.sortby,
+//       LocationID,
+//       CompanyID
+//     };
+
+//     dispatch(SortAttendance({ data }));
+//     setPage(0);
+//   };
+
+//   const attendaceProcessFnSave = async (values) => {
+//     console.log("month", values.month.toString());
+
+//     const data = {
+//       Month: values.month.toString(),
+//       Year: values.year,
+//       EmployeeID: recID,
+//     };
+
+//     const response = await dispatch(AttendanceProcess({ data }));
+//     if (response.payload.Status == "Y") {
+//       toast.success(response.payload.Msg);
+//       navigate("/Apps/TR217/EditAttendance");
+//     } else {
+//       toast.error(response.payload.Msg);
+//     }
+//   };
+
+//   const explorelistViewData = useSelector(
+//     (state) => state.exploreApi.explorerowData
+//   );
+//   const explorelistViewColumn = useSelector(
+//     (state) => state.exploreApi.explorecolumnData
+//   );
+//   const empAttLoading = useSelector((state) => state.formApi.empAttendanceDataLoading);
+//   const exploreLoading = useSelector((state) => state.exploreApi.loading);
+//   const screenChange = (event) => {
+//     setScreen(event.target.value);
+//   };
+//   const VISIBLE_FIELDS = [
+//     "SLNO",
+//     "OtDate",
+//     "NumberOfHours",
+//     "Status",
+//     "action",
+//   ];
+//   const [funMode, setFunMode] = useState("A");
+//   const columns = React.useMemo(
+//     () =>
+//       explorelistViewColumn
+//         ? explorelistViewColumn.filter((column) =>
+//           VISIBLE_FIELDS.includes(column.field)
+//         )
+//         : [],
+//     [explorelistViewColumn]
+//   );
+
+//   const fnLogOut = (props) => {
+//     Swal.fire({
+//       title: errorMsgData.Warningmsg[props],
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#3085d6",
+//       cancelButtonColor: "#d33",
+//       confirmButtonText: props,
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         if (props === "Logout") navigate("/");
+//         if (props === "Close") navigate("/Apps/TR217/EditAttendance");
+//       }
+//     });
+//   };
+//   const [empData, setempData] = useState(null);
+//   const handleSelectionEmployeeChange = (newValue) => {
+
+//     if (newValue) {
+//       setempData(newValue);
+//       console.log(newValue.RecordID, "--selectedproductid");
+//     } else {
+//       setempData(null);
+//     }
+
+//   };
+
+//   return (
+//     <React.Fragment>
+//       <Box sx={{ height: "100vh", overflow: "auto" }}>
+//         <Box sx={{ backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+//           <Box sx={{ p: 2, borderRadius: 3, }}>
+//             <Paper sx={{ borderRadius: 3 }}>
+
+//               <Box display="flex" justifyContent="space-between" p={2}>
+//                 <Box display="flex" borderRadius="3px" alignItems="center">
+//                   {broken && !rtl && (
+//                     <IconButton onClick={() => toggleSidebar()}>
+//                       <MenuOutlinedIcon />
+//                     </IconButton>
+//                   )}
+//                   <Typography
+//                     sx={{
+//                       fontSize: 20,
+//                       fontWeight: 700,
+//                       color: "#111827",
+//                       px: 1,
+//                       py: 0.2,
+//                     }}
+//                   >Attendance History</Typography>
+//                 </Box>
+//                 <Box display="flex">
+//                   <Tooltip title="Close">
+//                     <IconButton onClick={() => fnLogOut("Close")} color="error">
+//                       <ResetTvIcon />
+//                     </IconButton>
+//                   </Tooltip>
+//                   <Tooltip title="Logout">
+//                     <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+//                       <LogoutOutlinedIcon />
+//                     </IconButton>
+//                   </Tooltip>
+//                 </Box>
+//               </Box>
+//             </Paper>
+//           </Box>
+//           <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
+
+//             <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+
+//               <Paper elevation={3} sx={{ margin: "2px", backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+//                 <Formik
+//                   initialValues={AttInitialvalues}
+//                   enableReinitialize={true}
+//                   onSubmit={(values, { resetForm }) => {
+//                     setTimeout(() => {
+//                       attendaceFnSave(values, resetForm);
+//                     }, 100);
+//                   }}
+//                 >
+//                   {({
+//                     errors,
+//                     touched,
+//                     handleBlur,
+//                     handleChange,
+//                     isSubmitting,
+//                     values,
+//                     handleSubmit,
+//                     resetForm,
+//                     setFieldValue
+//                   }) => (
+//                     <form
+//                       onSubmit={handleSubmit}
+//                       onReset={() => {
+//                         resetForm();
+//                         setFieldValue("month", currentMonthNumber);
+//                         setFieldValue("year", currentYear);
+//                         setFieldValue("sortby", "Name");
+//                         setFieldValue("location", locationOptions); // re-select all on reset
+//                         sessionStorage.removeItem("month");
+//                         sessionStorage.removeItem("year");
+//                         sessionStorage.removeItem("sortby");
+//                         dispatch(resetTrackingData());
+//                         setSummaryCheck(false);
+//                       }}
+//                     >
+
+//                       {/* ----- CARD HEADER ----- */}
+//                       <Box
+//                         display="flex"
+//                         alignItems="center"
+//                         gap={1.5}
+//                         mb={1}
+//                         sx={{ px: 2, pt: 2 }}
+//                       >
+//                         <Box
+//                           sx={{
+//                             width: 36,
+//                             height: 36,
+//                             borderRadius: "50%",
+//                             backgroundColor: "#EFF6FF",
+//                             display: "flex",
+//                             alignItems: "center",
+//                             justifyContent: "center",
+//                           }}
+//                         >
+//                           <Typography sx={{ fontSize: 18 }}>
+//                             📋
+//                           </Typography>
+//                         </Box>
+
+//                         <Box>
+//                           <Typography
+//                             variant="subtitle1"
+//                             fontWeight={700}
+//                             color="#0D94885"
+//                           >
+//                             Attendance History
+//                           </Typography>
+
+//                           <Typography variant="body2" color="text.secondary">
+//                             Track and review daily attendance for all personnel
+//                           </Typography>
+//                         </Box>
+//                       </Box>
+
+//                       {/* ----- ROW 1: filter fields only, wraps responsively ----- */}
+//                     <Box padding={1}>
+//                     <Stack
+//                       direction="row"
+//                       spacing={2}
+//                       flexWrap="wrap"
+//                       sx={{ width: "100%", rowGap: 2 }}
+//                     >
+//                       <TextField
+//                         variant="outlined"
+//                         size="small"
+//                         type="text"
+//                         id="month"
+//                         name="month"
+//                         label="Month"
+//                         value={values.month}
+//                         focused
+//                         onChange={(e) => {
+//                           handleChange(e);
+//                           sessionStorage.setItem("month", e.target.value);
+//                         }}
+//                         onBlur={handleBlur}
+//                         select
+//                         sx={{
+//                           "& .MuiOutlinedInput-root": {
+//                             backgroundColor: "#fff",
+//                             borderRadius: "6px",
+//                             "& fieldset": { borderColor: "#d1d5db" },
+//                             "&:hover fieldset": { borderColor: "#bfc4cc" },
+//                             "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+//                           },
+//                           "& .MuiInputLabel-root": { color: "#6b7280" },
+//                           "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+//                           width: 110,
+//                         }}
+//                       >
+//                         <MenuItem value={"1"}>January</MenuItem>
+//                         <MenuItem value={"2"}>February</MenuItem>
+//                         <MenuItem value={"3"}>March</MenuItem>
+//                         <MenuItem value={"4"}>April</MenuItem>
+//                         <MenuItem value={"5"}>May</MenuItem>
+//                         <MenuItem value={"6"}>June</MenuItem>
+//                         <MenuItem value={"7"}>July</MenuItem>
+//                         <MenuItem value={"8"}>August</MenuItem>
+//                         <MenuItem value={"9"}>September</MenuItem>
+//                         <MenuItem value={"10"}>October</MenuItem>
+//                         <MenuItem value={"11"}>November</MenuItem>
+//                         <MenuItem value={"12"}>December</MenuItem>
+//                       </TextField>
+
+//                       <TextField
+//                         variant="outlined"
+//                         size="small"
+//                         type="number"
+//                         id="year"
+//                         name="year"
+//                         label="Year"
+//                         value={values.year}
+//                         inputProps={{ min: "1900", max: "2100", step: "1" }}
+//                         focused
+//                         onChange={(e) => {
+//                           handleChange(e);
+//                           sessionStorage.setItem("year", e.target.value);
+//                         }}
+//                         onBlur={handleBlur}
+//                         sx={{
+//                           "& .MuiOutlinedInput-root": {
+//                             backgroundColor: "#fff",
+//                             borderRadius: "6px",
+//                             "& fieldset": { borderColor: "#d1d5db" },
+//                             "&:hover fieldset": { borderColor: "#bfc4cc" },
+//                             "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+//                           },
+//                           "& .MuiInputLabel-root": { color: "#6b7280" },
+//                           "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+//                           width: 100,
+//                         }}
+//                       />
+
+//                       <EventsmultiSelect
+//                         name="location"
+//                         label="Location"
+//                         id="location"
+//                         multiple
+//                         value={values.location || []}
+//                         onChange={(event, newValue) =>
+//                           setFieldValue("location", newValue)
+//                         }
+//                         onOptionsLoaded={(opts) => {
+//                           setLocationOptions(opts);
+//                           if (!values.location || values.location.length === 0) {
+//                             setFieldValue("location", opts);
+//                           }
+//                         }}
+//                         error={!!touched.location && !!errors.location}
+//                         helperText={touched.location && errors.location}
+//                         sx={{ width: 250 }}
+//                         url={`${listViewurl}?data=${JSON.stringify({
+//                           Query: {
+//                             AccessID: "2051",
+//                             ScreenName: "Location",
+//                             VerticalLicense: Subscriptionlastthree,
+//                             Filter: `parentID=${CompanyID}`,
+//                             Any: "",
+//                           },
+//                         })}`}
+//                       />
+
+//                       <TextField
+//                         variant="outlined"
+//                         size="small"
+//                         type="text"
+//                         id="sortby"
+//                         name="sortby"
+//                         label="Sort By"
+//                         value={values.sortby}
+//                         focused
+//                         onChange={(e) => {
+//                           handleChange(e);
+//                           sessionStorage.setItem("sortby", e.target.value);
+//                         }}
+//                         onBlur={handleBlur}
+//                         select
+//                         sx={{
+//                           "& .MuiOutlinedInput-root": {
+//                             backgroundColor: "#fff",
+//                             borderRadius: "6px",
+//                             "& fieldset": { borderColor: "#d1d5db" },
+//                             "&:hover fieldset": { borderColor: "#bfc4cc" },
+//                             "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
+//                           },
+//                           "& .MuiInputLabel-root": { color: "#6b7280" },
+//                           "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
+//                           width: 200,
+//                         }}
+//                       >
+//                         <MenuItem value={"Name"}>Name</MenuItem>
+//                         <MenuItem value={"DesignationRank"}>Designation</MenuItem>
+//                         <MenuItem value={"DateOfJoin"}>Date of Joining</MenuItem>
+//                         <MenuItem value={"Sortorder"}>Sortorder</MenuItem>
+//                       </TextField>
+//                     </Stack>
+//                   </Box>
+
+//                       {/* ----- ROW 2: Summary checkbox → Excel icon, own row, right-aligned ----- */}
+//                       <Box padding={1} display="flex" justifyContent="flex-end">
+//                         <Stack
+//                           direction="row"
+//                           spacing={2}
+//                           flexWrap="wrap"
+//                           alignItems="center"
+//                           sx={{
+//                             justifyContent: { xs: "flex-start", md: "flex-end" },
+//                             width: { xs: "100%", md: "auto" },
+//                             rowGap: 1,
+//                           }}
+//                         >
+//                           <FormControlLabel
+//                             control={
+//                               <Checkbox
+//                                 checked={summarycheck}
+//                                 onChange={(e) => setSummaryCheck(e.target.checked)}
+//                                 color="primary"
+//                               />
+//                             }
+//                             label="Summary"
+//                           />
+//                           <Button
+//                             type="submit"
+//                             variant="contained"
+//                             sx={{
+//                               textTransform: "none",
+//                               borderRadius: 2,
+//                               px: 4,
+//                               bgcolor: "#0D9488",
+//                               "&:hover": {
+//                                 bgcolor: "#0F766E",
+//                               },
+//                             }}
+//                           >
+//                             Apply
+//                           </Button>
+//                           <Button
+//                             type="reset"
+//                             variant="contained"
+//                             color="error"
+//                             size="small"
+//                             sx={{
+//                               textTransform: "none",
+//                               borderRadius: 2,
+//                               px: 4,
+//                             }}
+//                           >
+//                             Reset
+//                           </Button>
+//                           {!summarycheck && AttendanceData?.length > 0 && (
+//                             <PDFDownloadLink
+//                               document={
+//                                 <AttendanceHistoryPDF
+//                                   data={AttendanceData}
+//                                   filters={{
+//                                     Month: values.month,
+//                                     Year: values.year,
+//                                     EmployeeID: empData?.RecordID,
+//                                     Imageurl: baseurlUAAM,
+//                                     HeaderImg: HeaderImg,
+//                                     FooterImg: FooterImg,
+//                                   }}
+//                                   footerHeight={footerHeight}
+//                                 />
+//                               }
+//                               fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+//                               style={{ color: "#d32f2f", cursor: "pointer" }}
+//                             >
+
+//                               {({ loading }) =>
+//                                 loading ? (
+//                                   <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+//                                 ) : (
+//                                   <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+//                                 )
+//                               }
+//                             </PDFDownloadLink>
+
+
+//                           )}
+//                           {!summarycheck && AttendanceData?.length > 0 && (
+
+//                             <FaFileExcel
+//                               size={20}
+//                               color="#1D6F42"
+//                               style={{ cursor: "pointer", }}
+//                               onClick={() =>
+//                                 AttendanceHistoryExcel(
+//                                   AttendanceData,
+//                                   {
+//                                     month: values.month,
+//                                     year: values.year
+//                                   },
+//                                   empData
+//                                 )
+//                               }
+//                             />
+
+//                           )}
+
+
+
+//                           {summarycheck && AttendanceData?.length > 0 && (
+//                             <PDFDownloadLink
+//                               document={
+//                                 <AttenHistrySummatyPDF
+//                                   data={AttendanceData}
+//                                   filters={{
+//                                     Month: values.month,
+//                                     Year: values.year,
+//                                     EmployeeID: empData?.RecordID,
+//                                     Imageurl: baseurlUAAM,
+//                                     HeaderImg: HeaderImg,
+//                                     FooterImg: FooterImg,
+//                                   }}
+//                                   footerHeight={footerHeight}
+//                                 />
+//                               }
+//                               fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+//                               style={{ color: "#d32f2f", cursor: "pointer" }}
+//                             >
+
+//                               {({ loading }) =>
+//                                 loading ? (
+//                                   <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+//                                 ) : (
+//                                   <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+//                                 )
+//                               }
+//                             </PDFDownloadLink>
+//                           )}
+
+//                           {summarycheck && AttendanceData?.length > 0 && (
+
+//                             <FaFileExcel
+//                               size={20}
+//                               color="#1D6F42"
+//                               style={{ cursor: "pointer", }}
+//                               onClick={() =>
+//                                 AttendanceHistrySummaryExcel(
+//                                   AttendanceData,
+//                                   {
+//                                     month: values.month,
+//                                     year: values.year
+//                                   },
+//                                   empData
+//                                 )
+//                               }
+//                             />
+
+//                           )}
+//                         </Stack>
+//                       </Box>
+
+//                       {!summarycheck && (
+//                         <Box sx={{ gridColumn: "span 4" }}>
+//                           <Box
+//                             height="400px"
+//                             padding={1}
+//                             marginTop={2}
+//                             sx={{
+//                               "& .name-column--cell": {
+//                                 color: colors.greenAccent[300],
+//                               },
+//                               "& .MuiDataGrid-columnHeaders": {
+//                                 backgroundColor: colors.blueAccent[800],
+//                               },
+//                               "& .MuiDataGrid-virtualScroller": {
+//                                 backgroundColor: colors.primary[400],
+//                               },
+//                               "& .MuiDataGrid-footerContainer": {
+//                                 backgroundColor: colors.blueAccent[800],
+//                               },
+//                               "& .MuiCheckbox-root": {
+//                                 color: `${colors.greenAccent[200]} !important`,
+//                               },
+//                               "& .odd-row": {
+//                                 backgroundColor: "",
+//                                 color: "",
+//                               },
+//                               "& .even-row": {
+//                                 backgroundColor: "#d0edec",
+//                                 color: "",
+//                               },
+
+//                               "& .MuiDataGrid-columnHeaderTitle": {
+//                                 color: colors.blueAccent[900],
+//                                 fontWeight: 600,
+//                               },
+//                               "& .MuiTablePagination-root": {
+//                                 color: "#fff",
+//                               },
+
+//                               "& .MuiTablePagination-selectLabel": {
+//                                 color: "#fff",
+//                               },
+
+//                               "& .MuiTablePagination-displayedRows": {
+//                                 color: "#fff",
+//                               },
+
+//                               "& .MuiTablePagination-selectIcon": {
+//                                 color: "#fff",
+//                               },
+
+//                               "& .MuiTablePagination-actions button": {
+//                                 color: "#fff",
+//                               },
+
+//                             }}
+//                           >
+//                             <DataGrid
+//                               sx={{
+//                                 "& .MuiDataGrid-footerContainer": {
+//                                   height: dataGridHeaderFooterHeight,
+//                                   minHeight: dataGridHeaderFooterHeight,
+//                                 }
+//                               }}
+//                               rowHeight={dataGridRowHeight}
+//                               headerHeight={dataGridHeaderFooterHeight}
+//                               rows={AttendanceData}
+//                               columns={AttColumn}
+//                               disableSelectionOnClick
+//                               getRowId={(row) => row.SLNO}
+//                               pageSize={pageSize}
+//                               page={page}
+//                               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+//                               onPageChange={(newPage) => setPage(newPage)}
+//                               onCellClick={(params) => { }}
+//                               rowsPerPageOptions={[5, 10, 20]}
+//                               pagination
+//                               components={{
+//                                 Toolbar: AttendanceTool,
+//                               }}
+//                               onStateChange={(stateParams) =>
+//                                 setRowCount(stateParams.pagination.rowCount)
+//                               }
+//                               loading={empAttLoading}
+//                               componentsProps={{
+//                                 toolbar: {
+//                                   showQuickFilter: true,
+//                                   quickFilterProps: { debounceMs: 500 },
+//                                 },
+//                               }}
+
+//                               getRowClassName={(params) =>
+//                                 params.indexRelativeToCurrentPage % 2 === 0
+//                                   ? 'odd-row'
+//                                   : 'even-row'
+//                               }
+
+//                             />
+//                           </Box>
+//                         </Box>
+//                       )}
+
+//                       <Box sx={{ gridColumn: "span 4" }}>
+//                         <Box
+//                           height="400px"
+//                           padding={1}
+//                           marginTop={2}
+//                           sx={{
+//                             "& .name-column--cell": {
+//                               color: colors.greenAccent[300],
+//                             },
+//                             "& .MuiDataGrid-columnHeaders": {
+//                               backgroundColor: colors.blueAccent[800],
+//                             },
+//                             "& .MuiDataGrid-virtualScroller": {
+//                               backgroundColor: colors.primary[400],
+//                             },
+//                             "& .MuiDataGrid-footerContainer": {
+//                               backgroundColor: colors.blueAccent[800],
+//                             },
+//                             "& .MuiCheckbox-root": {
+//                               color: `${colors.greenAccent[200]} !important`,
+//                             },
+//                             "& .odd-row": {
+//                               backgroundColor: "",
+//                               color: "",
+//                             },
+//                             "& .even-row": {
+//                               backgroundColor: "#d0edec",
+//                               color: "",
+//                             },
+//                             "& .MuiDataGrid-columnHeaderTitle": {
+//                               color: colors.blueAccent[900],
+//                               fontWeight: 600,
+//                             },
+//                             "& .MuiTablePagination-root": {
+//                               color: "#fff",
+//                             },
+
+//                             "& .MuiTablePagination-selectLabel": {
+//                               color: "#fff",
+//                             },
+
+//                             "& .MuiTablePagination-displayedRows": {
+//                               color: "#fff",
+//                             },
+
+//                             "& .MuiTablePagination-selectIcon": {
+//                               color: "#fff",
+//                             },
+
+//                             "& .MuiTablePagination-actions button": {
+//                               color: "#fff",
+//                             },
+//                           }}
+//                         >
+//                           <DataGrid
+//                             sx={{
+//                               "& .MuiDataGrid-footerContainer": {
+//                                 height: dataGridHeaderFooterHeight,
+//                                 minHeight: dataGridHeaderFooterHeight,
+//                               }
+//                             }}
+//                             rowHeight={dataGridRowHeight}
+//                             headerHeight={dataGridHeaderFooterHeight}
+//                             rows={AttendanceData}
+//                             columns={SummaryColumn}
+//                             disableSelectionOnClick
+//                             getRowId={(row) => row.SLNO}
+//                             pageSize={pageSize}
+//                             page={page}
+//                             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+//                             onPageChange={(newPage) => setPage(newPage)}
+//                             onCellClick={(params) => { }}
+//                             rowsPerPageOptions={[5, 10, 20]}
+//                             pagination
+//                             components={{
+//                               Toolbar: SummaryTool,
+//                             }}
+//                             onStateChange={(stateParams) =>
+//                               setRowCount(stateParams.pagination.rowCount)
+//                             }
+//                             loading={empAttLoading}
+//                             componentsProps={{
+//                               toolbar: {
+//                                 showQuickFilter: true,
+//                                 quickFilterProps: { debounceMs: 500 },
+//                               },
+//                             }}
+
+//                             getRowClassName={(params) =>
+//                               params.indexRelativeToCurrentPage % 2 === 0
+//                                 ? 'odd-row'
+//                                 : 'even-row'
+//                             }
+//                           />
+//                         </Box>
+//                       </Box>
+
+
+//                       <Stack
+//                         direction="row"
+//                         padding={1}
+//                         alignItems="center"
+//                         justifyContent="space-between"
+//                         flexWrap="wrap"
+
+//                       >
+//                         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
+//                             label="Present"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>SH</Avatar>}
+//                             label="Second Half"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
+//                             label="Week Off"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
+//                             label="Holiday"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>CL</Avatar>}
+//                             label="CasualLeave"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>M</Avatar>}
+//                             label="Medical Leave"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>UL</Avatar>}
+//                             label="Unscheduled Leave"
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+//                           <Chip
+//                             avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>IR</Avatar>}
+//                             label=" IR Regular "
+//                             variant="outlined"
+//                             sx={{ backgroundColor: "#ccc4c4", }}
+//                           />
+
+//                         </Box>
+//                       </Stack>
+//                     </form>
+
+//                   )}
+//                 </Formik>
+//               </Paper>
+//             </Box>
+//           </Box>
+//         </Box>
+//       </Box>
+//     </React.Fragment>
+//   );
+// };
+
+// export default EditAttendanceHistory;
+//first
 // import React, { useState, useEffect } from "react";
 // import {
 //   Box,

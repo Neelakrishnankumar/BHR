@@ -163,7 +163,8 @@ const LeaderCardView = () => {
           },
         }
       );
-    } else if (OrderCount >= 1) {
+    } 
+    else if (OrderCount >= 1) {
       // Case 2: Existing order(s) → go to Order List or Edit
       navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/O`, {
         state: {
@@ -199,6 +200,7 @@ const LeaderCardView = () => {
           },
         }
       );
+      console.log(QuotationCount,"QuotationCount");
     } else if (QuotationCount >= 1) {
       // Case 2: Existing order(s) → go to Order List or Edit
       navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/Q`, {
@@ -210,7 +212,10 @@ const LeaderCardView = () => {
           OrderCount: QuotationCount,
         },
       });
+            console.log(QuotationCount,"QuotationCount");
+
     }
+    
   };
   const handleorderitemscreen = (
     recordID,
@@ -289,10 +294,16 @@ const LeaderCardView = () => {
               <Card
                 sx={{
                   p: 2,
+                  height: 350,
+                  width: "100%",
                   borderRadius: 3,
                   boxShadow: 4,
                   background: index % 2 === 0 ? "#E3F2FD" : "#FCE4EC",
                   transition: "all 0.3s ease",
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+
                   "&:hover": {
                     transform: "scale(1.03)",
                     boxShadow: 6,
@@ -300,7 +311,23 @@ const LeaderCardView = () => {
                   },
                 }}
               >
-                <CardContent>
+                <CardContent
+                  sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                    minHeight: 0,
+                    p: 0,
+
+                    "&::-webkit-scrollbar": {
+                      width: "5px",
+                    },
+
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#aaa",
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
                   <Typography
                     variant="h6"
                     sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}

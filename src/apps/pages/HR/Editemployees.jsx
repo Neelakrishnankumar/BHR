@@ -72,6 +72,7 @@ import {
   CocurricularActivityPost,
   resetTrackingData,
   Contractprocess,
+  DefaultProjectGet,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -286,7 +287,9 @@ const Editemployee = () => {
 
   const isStudentClassification = designationType === "Student";
   console.log(isStudentClassification, "--find isStudentClassification");
-
+  const BoardandNonteaching =
+    designationType === "Board Of Directors" ||
+    designationType === "Non Teaching Staff";
   const isLoading = useSelector((state) => state.formApi.loading);
   const ParentgetData = useSelector((state) => state.formApi.Partygetdata);
   console.log("ParentgetData", ParentgetData);
@@ -389,6 +392,7 @@ const Editemployee = () => {
   const [validationSchema18, setValidationSchema18] = useState(null);
   const [validationSchema23, setValidationSchema23] = useState(null);
   const [validationSchema24, setValidationSchema24] = useState(null);
+  const [validationSchema25, setValidationSchema25] = useState(null);
 
   const formikRef = useRef(null);
   const [editingRecordID, setEditingRecordID] = useState(null);
@@ -763,16 +767,16 @@ const Editemployee = () => {
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
         };
-        if (is003Subscription && !isStudentClassification) {
+        if (is003Subscription && !isStudentClassification && !BoardandNonteaching) {
           schemaFields.Department = Yup.array()
             .min(1, data.Employee.Subject)
             .required(data.Employee.Subject);
         }
-        if (!is003Subscription) {
-          schemaFields.Department = Yup.array()
-            .min(1, data.Employee.Department)
-            .required(data.Employee.Department);
-        }
+        // if (!is003Subscription) {
+        //   schemaFields.Department = Yup.array()
+        //     .min(1, data.Employee.Department)
+        //     .required(data.Employee.Department);
+        // }
 
         if (CompanyAutoCode === "N") {
           schemaFields.Code = Yup.string().required(data.Employee.Code);
@@ -938,7 +942,45 @@ const Editemployee = () => {
         });
 
         setValidationSchema24(schema24);
+        const schemaFields25 = {
+          RelationName: Yup.string()
+            .trim()
+            .required(data.Relationship.Name),
 
+          // FIX: Relationship is a string, not an object
+          Relationship: Yup.string()
+            .required(data.Relationship.Relationship),
+
+          mobilenumber: Yup.string()
+            .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
+            .required(data.Relationship.mobilenumber),
+
+          // Optional Aadhar
+          aadharcardnumber1: Yup.string()
+            .nullable()
+            .transform((value) => (value === "" ? null : value))
+            .test(
+              "aadhar-format",
+              "Invalid Aadhar Card No",
+              (value) => !value || /^\d{12}$/.test(value)
+            ),
+
+          // Optional Email
+          emailid2: Yup.string()
+            .nullable()
+            .transform((value) => (value === "" ? null : value))
+            .test(
+              "email-format",
+              "Invalid Email ID",
+              (value) =>
+                !value ||
+                /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
+            ),
+        };
+
+        const schema25 = Yup.object().shape(schemaFields25);
+
+        setValidationSchema25(schema25);
         //Function
         const schema4 = Yup.object().shape({
           functionLookup: Yup.object()
@@ -1539,27 +1581,27 @@ const Editemployee = () => {
   //   ManagerID: "",
   // });
 
-  if (isPopupData == false) {
-    selectLookupData.lookupRecordid = Data.DeptRecordID;
-    selectLookupData.lookupCode = Data.DeptCode;
-    selectLookupData.lookupDesc = Data.DeptName;
+  // if (isPopupData == false) {
+  // selectLookupData.lookupRecordid = Data.DeptRecordID;
+  // selectLookupData.lookupCode = Data.DeptCode;
+  // selectLookupData.lookupDesc = Data.DeptName;
 
-    //Designation
-    console.log(deploymentData, "ispopupdeployment");
-    designLookup.RecordID = deploymentData.DesignationID;
-    designLookup.Code = deploymentData.DesignationCode;
-    designLookup.Name = deploymentData.DesignationName;
+  //Designation
+  // console.log(deploymentData, "ispopupdeployment");
+  // designLookup.RecordID = deploymentData.DesignationID;
+  // designLookup.Code = deploymentData.DesignationCode;
+  // designLookup.Name = deploymentData.DesignationName;
 
-    // Location
-    locationLookup.RecordID = deploymentData.LocationID;
-    locationLookup.Code = deploymentData.LocationCode;
-    locationLookup.Name = deploymentData.LocationName;
+  // Location
+  // locationLookup.RecordID = deploymentData.LocationID;
+  // locationLookup.Code = deploymentData.LocationCode;
+  // locationLookup.Name = deploymentData.LocationName;
 
-    // Gate
-    gateLookup.RecordID = deploymentData.StoregatemasterID;
-    gateLookup.Code = deploymentData.StoregatemasterCode;
-    gateLookup.Name = deploymentData.StoregatemasterName;
-  }
+  // Gate
+  // gateLookup.RecordID = deploymentData.StoregatemasterID;
+  // gateLookup.Code = deploymentData.StoregatemasterCode;
+  // gateLookup.Name = deploymentData.StoregatemasterName;
+  // }
 
   //************************** Lookup value assign type based Function *****************/
   const childToParent = (childdata, type) => {
@@ -1765,7 +1807,8 @@ const Editemployee = () => {
   });
 
   const [boMode, setBomode] = useState("A");
-
+  const [defaultProjectData, setDefaultProjectData] = useState(null);
+  console.log(defaultProjectData, "defaultProjectData");
   // **********ScreenChange Function*********
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -1957,6 +2000,20 @@ const Editemployee = () => {
     // }
     if (event.target.value == "8") {
       dispatch(getDeployment({ HeaderID: recID }));
+      if(is003Subscription){
+      dispatch(
+        DefaultProjectGet({
+          EmployeeID: recID,
+          CompanyID,
+        }),
+      ).then((defProjRes) => {
+        if (defProjRes?.payload?.status === "Y" && defProjRes?.payload?.data) {
+          setDefaultProjectData(defProjRes.payload.data);
+        } else {
+          setDefaultProjectData(null);
+        }
+      });
+    }
       dispatch(
         EmployeeVendorGetController({
           EmployeeID: recID,
@@ -2117,6 +2174,20 @@ const Editemployee = () => {
           "TR249",
           Subscriptionlastthree,
           "Leave Configuration",
+          `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
+          "",
+        ),
+      );
+      // dispatch(fetchApidata(accessID, "get", recID));
+      selectcelldata("", "A", "");
+    }
+    if (event.target.value == "26") {
+
+      dispatch(
+        fetchExplorelitview(
+          "TR415",
+          Subscriptionlastthree,
+          "Relationship",
           `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
           "",
         ),
@@ -2360,7 +2431,7 @@ const Editemployee = () => {
       EsiNo: values.esinumber,
       PermanentAddress: values.permanentaddress,
       LocalAddress: values.localaddress,
-      FathersName: values.FatherName,
+      FathersName: values.FatherName || "",
       Branch: values.Branch,
       IfscCode: values.IfscCode,
       AccountHoldersName: values.AccountHoldersName,
@@ -2532,6 +2603,14 @@ const Editemployee = () => {
       "LeavePart",
       "AvailDays",
       "EligibleDays",
+      "action",
+    ];
+  } else if (show == "26") {
+    VISIBLE_FIELDS = [
+      "slno",
+      "Name",
+      "RelationshipType",
+      "MobileNo",
       "action",
     ];
   } else if (show == "20") {
@@ -2729,7 +2808,7 @@ const Editemployee = () => {
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           {/* <Typography>{`List of Co-curricular Activities`}</Typography> */}
-          <Typography>{`List of Skill/Memories`}</Typography>
+          <Typography>{`List of Skill Identification`}</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -2746,6 +2825,45 @@ const Editemployee = () => {
                 selectcelldata("", "A", "");
                 setOpenCocurricular(true);
                 setIsEdit(false);
+              }}
+            >
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+
+  }
+  function RelationshipToolbar() {
+    const rowCount = explorelistViewData?.length || 0;
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          {/* <Typography>{`List of Co-curricular Activities`}</Typography> */}
+          <Typography>{`List of Relationship`}</Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton
+              onClick={() => {
+                selectcelldata("", "A", "");
+                setOpenCocurricular(true);
+                // setIsEdit(false);
               }}
             >
               <AddOutlinedIcon />
@@ -2865,9 +2983,11 @@ const Editemployee = () => {
                                     ? `List of ${getBusinessCaption("ContractIn", "Contract In")}`
                                     : show == "23"
                                       ? `List of Course Attendance`
-                                      : show == "11"
-                                        ? "List of Contracts"
-                                        : "List of Managers"}
+                                      : show == "26"
+                                        ? `List of Relation`
+                                        : show == "11"
+                                          ? "List of Contracts"
+                                          : "List of Managers"}
           </Typography>
 
           {show != "20" && (
@@ -3056,6 +3176,15 @@ const Editemployee = () => {
     elligibledays: "",
     Year: "",
   });
+  const [RelationData, setRelationData] = useState({
+    recordID: "",
+    RelationName: "",
+    Relationship: "",
+    MailID: "",
+    AadharNo: "",
+    MobileNo: "",
+    DateOfBirth: ""
+  });
   const [empLoaData, SetEmpLoaData] = useState({
     recordID: "",
     description: "",
@@ -3203,6 +3332,15 @@ const Editemployee = () => {
         elligibledays: "",
         Year: "",
       });
+      setRelationData({
+        recordID: "",
+        RelationName: "",
+        Relationship: "",
+        MailID: "",
+        AadharNo: "",
+        MobileNo: "",
+        DateOfBirth: ""
+      });
       setInvendata({
         recordID: "",
         itemgroups: null,
@@ -3214,6 +3352,8 @@ const Editemployee = () => {
       console.log(rowData, "--rowData");
       console.log(rowData.Description, "rowData.Description");
       console.log(rowData.Category, "rowData.Category");
+
+
       if (funMode === "E" && show == "8") {
         // fetch invoice data for this specific row
         dispatch(
@@ -3226,6 +3366,7 @@ const Editemployee = () => {
             CompanyID,
           }),
         )
+
       }
       if (field == "action") {
         //   dispatch(
@@ -3482,6 +3623,15 @@ const Editemployee = () => {
             }
             : null,
           Year: rowData.Year,
+        });
+        setRelationData({
+          recordID: rowData.RecordID,
+          RelationName: rowData.Name,
+          Relationship: rowData.RelationshipType,
+          MailID: rowData.MailID,
+          AadharNo: rowData.AadharNo,
+          MobileNo: rowData.MobileNo,
+          DateOfBirth: rowData.DateOfBirth
         });
         setInvendata({
           recordID: rowData.RecordID,
@@ -3919,7 +4069,7 @@ const Editemployee = () => {
       }
     };
   };
-    const getSkillFile = async (e) => {
+  const getSkillFile = async (e) => {
     let files = e.target.files;
     let fileReader = new FileReader();
 
@@ -4223,11 +4373,22 @@ const Editemployee = () => {
     Invoicebillingdate: contractorData.Invoicebillingdate,
     RenewableNotification: contractorData.renewalperiod || "",
     Description: contractorData.Description,
-    project: contractorData.project || null,
+    // project: contractorData.project || null,
+    project:
+      contractorData.project ||
+      (defaultProjectData
+        ? {
+          RecordID: defaultProjectData.ProjectID,
+          // Code: defaultProjectData.Project?.split("||")[0]?.trim() || "",
+          Name: defaultProjectData.Project,
+        }
+        : null),
     shift: contractorData.shift || null,
     shift2: contractorData.shift2 || null,
     Process: contractorData.Process || ""
   };
+  const isProjectLocked =
+    !!defaultProjectData && defaultProjectData.AllowBacklog !== "Y" && defaultProjectData.Project != null;
   // console.log(contractorData, "--get a contractorData");
   console.log(Data.DesignationName, "--contract idata");
 
@@ -5032,6 +5193,15 @@ const Editemployee = () => {
           Name: deploymentData.DesignationName,
         }
         : null,
+    Department:
+      // deploymentData.DesignationID
+      deploymentData.DepartmentRecid2 && deploymentData.DepartmentRecid2 !== "0"
+        ? {
+          RecordID: deploymentData.DepartmentRecid2,
+          Code: deploymentData.DepartmentCode,
+          Name: deploymentData.DepartmentName2,
+        }
+        : null,
     location:
       // deploymentData.LocationID
       deploymentData.LocationID && deploymentData.LocationID !== "0"
@@ -5191,6 +5361,7 @@ const Editemployee = () => {
       // Saturday: values.saturday === true ? "Y" : "N",
       // Sunday: values.sunday === true ? "Y" : "N",
       DesignationID: values.Designation.RecordID || 0,
+      DepartmentRecid2: values?.Department?.RecordID || 0,
       DesignationName: values.Designation.Name || "",
       LocationID: values.location.RecordID || 0,
       LocationName: values.location.Name || "",
@@ -5312,6 +5483,7 @@ const Editemployee = () => {
       HeaderID: recID,
       CheckInTime: deploymentData.ShiftStartTime || "",
       CheckOutTime: deploymentData.ShiftEndTime || "",
+      DepartmentRecid2: deploymentData.DepartmentRecid2 || 0,
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
       Monday: deploymentData.MondayShift === "Y" ? true : false,
@@ -5670,8 +5842,8 @@ const Editemployee = () => {
         {
           value: 24,
           // label: "Co-Curricular Activity",
-          label: "Skill/Memories",
-          desc: "Student skill or memories",
+          label: "Skill Identification",
+          desc: "Student skill Identification",
           icon: "📋",
         },
       ]
@@ -5707,16 +5879,35 @@ const Editemployee = () => {
         },
       ]
       : []),
-    ...(is003Subscription && isStudentClassification
-      ? [
-        {
-          value: 16,
-          label: "Parent Contact Details",
-          desc: "Parent contact information",
-          icon: "☎️",
-        },
-      ]
-      : []),
+    // ...(is003Subscription && isStudentClassification
+    //   ? [
+    //     {
+    //       value: 16,
+    //       label: "Parent Contact Details",
+    //       desc: "Parent contact information",
+    //       icon: "☎️",
+    //     },
+    //   ]
+    //   : []),
+
+    {
+      value: 26,
+      label: "Relationship",
+      desc: "Relationship Information",
+      icon: "🧩",
+    },
+
+
+    //  ...(!isStudentClassification
+    //   ? [
+    //     {
+    //       value: 16,
+    //       label: "Dependent",
+    //       desc: "Dependent information",
+    //       icon: "☎️",
+    //     },
+    //   ]
+    //   : []),
     ...(!is003Subscription ? [
       {
         value: 1,
@@ -5996,7 +6187,7 @@ const Editemployee = () => {
   const resetFormToAddMode = () => {
     setEditingRecordID(null);
     setIsEdit(false);
-    setID3Image(""); 
+    setID3Image("");
     setIsAddingActivity(false);
     formikRef.current?.resetForm({
       values: {
@@ -6005,7 +6196,7 @@ const Editemployee = () => {
         cocurricularName: "",
         comments: "",
         rating: "",
-        
+
       },
     });
   };
@@ -6108,25 +6299,25 @@ const Editemployee = () => {
     //   ),
     // },
     {
-        field: "Rating",
-        headerName: "Rating",
-        headerAlign: "center",
-        width: 90,
-        align: "right",
-        editable: false,
-        renderCell: (params) => (
-            <Typography
-                sx={{
-                    color: getRatingColor(params.value),
-                    fontWeight: 600,
-                    fontSize: 14,
-                    width: "100%",
-                    textAlign: "right",
-                }}
-            >
-                {getRatingEmoji(params.value)} {params.value ?? "-"}
-            </Typography>
-        ),
+      field: "Rating",
+      headerName: "Rating",
+      headerAlign: "center",
+      width: 90,
+      align: "right",
+      editable: false,
+      renderCell: (params) => (
+        <Typography
+          sx={{
+            color: getRatingColor(params.value),
+            fontWeight: 600,
+            fontSize: 14,
+            width: "100%",
+            textAlign: "right",
+          }}
+        >
+          {getRatingEmoji(params.value)} {params.value ?? "-"}
+        </Typography>
+      ),
     },
     {
       field: "Comments",
@@ -6162,7 +6353,8 @@ const Editemployee = () => {
       CocurricularName: isAddingActivity
         ? values.cocurricularName || ""
         : "",
-      Attachments: ID3Image || editingRow?.Attachments || "",    };
+      Attachments: ID3Image || editingRow?.Attachments || "",
+    };
 
     try {
       const result = await dispatch(
@@ -6214,28 +6406,163 @@ const Editemployee = () => {
   //   });
   // };
   const handleEditClick = (row) => () => {
-  setOpenCocurricular(true);
-  setEditingRecordID(row.RecordID);
-  setIsEdit(true);
-  setIsAddingActivity(false);
-   setID3Image(row.Attachments || ""); 
+    setOpenCocurricular(true);
+    setEditingRecordID(row.RecordID);
+    setIsEdit(true);
+    setIsAddingActivity(false);
+    setID3Image(row.Attachments || "");
 
-  setTimeout(() => {
-    formikRef.current?.setValues({
-      date: toInputDate(row.EPDate),
-      cocurricular: row.CocurricularRecordID
-        ? {
+    setTimeout(() => {
+      formikRef.current?.setValues({
+        date: toInputDate(row.EPDate),
+        cocurricular: row.CocurricularRecordID
+          ? {
             RecordID: row.CocurricularRecordID,
             Name: row.CocurricularName,
           }
-        : null,
-      cocurricularName: row.CocurricularName || "",
-      comments: row.Comments || "",
-      rating: row.Rating || "",
+          : null,
+        cocurricularName: row.CocurricularName || "",
+        comments: row.Comments || "",
+        rating: row.Rating || "",
 
-    });
-  }, 0);
-};
+      });
+    }, 0);
+  };
+  const RelationshipColumn = [
+
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      editable: false,
+      sortable: false,
+      filterable: false,
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Action",
+      width: 80,
+      cellClassName: "actions",
+      getActions: (params) => {
+        return [
+          <GridActionsCellItem
+            icon={<ModeEditOutlinedIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(params.row)}
+            color="info"
+            size="small"
+          />,
+        ];
+      },
+    },
+    {
+      field: "Name",
+      headerName: "Name",
+      headerAlign: "center",
+      width: 200,
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Relationship",
+      field: "Relationship",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
+      editable: false,
+    },
+
+    {
+      field: "MobileNo",
+      headerName: "Mobile No",
+      headerAlign: "center",
+      width: 150,
+      hide: false,
+      editable: false,
+    },
+
+  ];
+  const RelationInitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    Relationship: RelationData.Relationship || "",
+    RelationName: RelationData.RelationName || "",
+    mobilenumber: RelationData.MobileNo || "",
+    aadharcardnumber1: RelationData.AadharNo || "",
+    emailid2: RelationData.MailID || "",
+    dateofbirth: RelationData.DateOfBirth || "",
+
+  };
+  // const [funMgrRecID, setFunMgrRecID] = useState("");
+
+  const Relationshipsave = async (values, resetForm, del) => {
+    setLoading(true);
+    // if (funMode === "E" && del && RelationData.recordID === "") {
+    //   toast.error("Please select the data to delete");
+    //   setLoading(false);
+    //   return;
+    // }
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+
+    const idata = {
+      RecordID: RelationData.recordID,
+      CompanyID,
+      EmployeeID: recID,
+      // LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+      // LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+      RelationshipType: values?.Relationship,
+      Name: values?.RelationName || "",
+      MobileNo: values.mobilenumber,
+      AadharNo: values.aadharcardnumber1,
+      MailID: values.emailid2,
+      DateOfBirth: values.dateofbirth
+
+    };
+
+    const response = await dispatch(
+      explorePostData({ accessID: "TR415", action, idata }),
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      await dispatch(
+        fetchExplorelitview(
+          "TR415",
+          Subscriptionlastthree,
+          "Relationship",
+          `EmployeeID='${recID}'AND CompanyID=${CompanyID}`,
+          "",
+        ),
+      );
+
+      toast.success(response.payload.Message);
+
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Message);
+    }
+  };
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
@@ -6837,7 +7164,7 @@ const Editemployee = () => {
                                     gridTemplateColumns="repeat(2, minmax(0,1fr))"
                                     gap={2}
                                   >
-                                    {!isStudentClassification && (
+                                    {(is003Subscription && !isStudentClassification) && (
                                       <FormControl>
                                         <MultiFormikOptimizedAutocomplete
                                           sx={{
@@ -6855,14 +7182,16 @@ const Editemployee = () => {
                                           label={
                                             <>
                                               {is003Subscription ? "Subject" : "Department"}
-                                              <span
-                                                style={{
-                                                  color: "red",
-                                                  fontSize: "20px",
-                                                }}
-                                              >
-                                                *
-                                              </span>
+                                              {!BoardandNonteaching && (
+                                                <span
+                                                  style={{
+                                                    color: "red",
+                                                    fontSize: "20px",
+                                                  }}
+                                                >
+                                                  *
+                                                </span>
+                                              )}
                                             </>
                                           }
                                           id="Department"
@@ -6897,7 +7226,7 @@ const Editemployee = () => {
                                                 ScreenName: "Department",
                                                 VerticalLicense:
                                                   Subscriptionlastthree,
-                                                Filter: `parentID=${CompanyID}`,
+                                                Filter: `parentID=${CompanyID} AND SubjectOrSkill = 'S'`,
                                                 Any: "",
                                               },
                                             },
@@ -7144,25 +7473,25 @@ const Editemployee = () => {
                                       }
                                       InputLabelProps={{ shrink: true }}
                                     />
-
-                                    <TextField
-                                      fullWidth
-                                      variant="outlined"
-                                      type="text"
-                                      label="Job"
-                                      placeholder="Enter job title"
-                                      value={values.Job}
-                                      id="Job"
-                                      onBlur={handleBlur}
-                                      onChange={handleChange}
-                                      name="Job"
-                                      error={!!touched.Job && !!errors.Job}
-                                      helperText={touched.Job && errors.Job}
-                                      sx={{ backgroundColor: "#ffffff" }}
-                                      size="small"
-                                      inputProps={{ maxLength: 90 }}
-                                    />
-
+                                    {!isStudentClassification && (
+                                      <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        type="text"
+                                        label="Job"
+                                        placeholder="Enter job title"
+                                        value={values.Job}
+                                        id="Job"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        name="Job"
+                                        error={!!touched.Job && !!errors.Job}
+                                        helperText={touched.Job && errors.Job}
+                                        sx={{ backgroundColor: "#ffffff" }}
+                                        size="small"
+                                        inputProps={{ maxLength: 90 }}
+                                      />
+                                    )}
                                     <TextField
                                       fullWidth
                                       variant="outlined"
@@ -7258,32 +7587,33 @@ const Editemployee = () => {
                                         },
                                       }}
                                     />
-
-                                    <TextField
-                                      name="amount"
-                                      type="text"
-                                      id="amount"
-                                      label="Basic Pay"
-                                      placeholder="Enter basic pay"
-                                      variant="outlined"
-                                      size="small"
-                                      value={values.amount}
-                                      onBlur={handleBlur}
-                                      onChange={handleChange}
-                                      error={
-                                        !!touched.amount && !!errors.amount
-                                      }
-                                      helperText={
-                                        touched.amount && errors.amount
-                                      }
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: "right" },
-                                          min: 0,
-                                          max: 24,
-                                        },
-                                      }}
-                                    />
+                                    {!isStudentClassification && (
+                                      <TextField
+                                        name="amount"
+                                        type="text"
+                                        id="amount"
+                                        label="Basic Pay"
+                                        placeholder="Enter basic pay"
+                                        variant="outlined"
+                                        size="small"
+                                        value={values.amount}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={
+                                          !!touched.amount && !!errors.amount
+                                        }
+                                        helperText={
+                                          touched.amount && errors.amount
+                                        }
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: "right" },
+                                            min: 0,
+                                            max: 24,
+                                          },
+                                        }}
+                                      />
+                                    )}
                                   </Box>
 
                                   {/* Photo column */}
@@ -7722,7 +8052,7 @@ const Editemployee = () => {
                                 fontWeight={700}
                                 color="#0D94885"
                               >
-                                Contact Information
+                                Contact
                               </Typography>
                               <Typography
                                 variant="body2"
@@ -7770,7 +8100,7 @@ const Editemployee = () => {
                                 InputProps={{ readOnly: true }}
                               />
 
-                              <TextField
+                              {/* <TextField
                                 fullWidth
                                 variant="outlined"
                                 size="small"
@@ -7781,7 +8111,7 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Father's Name"
-                              />
+                              /> */}
 
                               <TextField
                                 fullWidth
@@ -7874,26 +8204,7 @@ const Editemployee = () => {
                                 helperText={touched.pfnumber && errors.pfnumber}
                               />
 
-                              <TextField
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                                type="number"
-                                inputMode="numeric"
-                                id="esinumber"
-                                name="esinumber"
-                                value={values.esinumber}
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                label="ESI No"
-                                onWheel={(e) => e.target.blur()}
-                                error={
-                                  touched.esinumber && Boolean(errors.esinumber)
-                                }
-                                helperText={
-                                  touched.esinumber && errors.esinumber
-                                }
-                              />
+
 
                               <TextField
                                 fullWidth
@@ -7923,6 +8234,26 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Local Address"
+                              />
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                inputMode="numeric"
+                                id="esinumber"
+                                name="esinumber"
+                                value={values.esinumber}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="ESI No"
+                                onWheel={(e) => e.target.blur()}
+                                error={
+                                  touched.esinumber && Boolean(errors.esinumber)
+                                }
+                                helperText={
+                                  touched.esinumber && errors.esinumber
+                                }
                               />
                             </Box>
 
@@ -10015,7 +10346,6 @@ const Editemployee = () => {
                                 onStateChange={(stateParams) =>
                                   setRowCount(stateParams.pagination.rowCount)
                                 }
-                                loading={exploreLoading}
                               />
                             </Box>
                           </Box>
@@ -10457,7 +10787,35 @@ const Editemployee = () => {
                                 onChange={handleChange}
                                 label="Name"
                               />
-
+                              <CheckinAutocomplete
+                                name="Department"
+                                label="Department"
+                                variant="outlined"
+                                size="small"
+                                id="Department"
+                                value={values.Department}
+                                onChange={(newValue) =>
+                                  setFieldValue("Department", newValue)
+                                }
+                                error={
+                                  !!touched.Department && !!errors.Department
+                                }
+                                helperText={
+                                  touched.Department && errors.Department
+                                }
+                                url={`${listViewurl}?data=${JSON.stringify(
+                                  {
+                                    Query: {
+                                      AccessID: "2010",
+                                      ScreenName: "Department",
+                                      VerticalLicense:
+                                        Subscriptionlastthree,
+                                      Filter: `parentID=${CompanyID} AND SubjectOrSkill  = 'D'`,
+                                      Any: "",
+                                    },
+                                  },
+                                )}`}
+                              />
                               <CheckinAutocomplete
                                 name="Designation"
                                 label={
@@ -11417,286 +11775,259 @@ const Editemployee = () => {
                           resetForm();
                         }}
                       >
-                        {/* Code, Description & Photo */}
-                        <Box
-                          display="grid"
-                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
-                          gap={2}
-                          mt={2}
-                          alignItems="start"
-                        >
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="text"
-                            id="code"
-                            name="code"
-                            value={values.code}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Code"
-                          />
+                        {/* Top-level: LEFT = all form sections stacked, RIGHT = photo (independent column) */}
+                        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" mt={2}>
+                          {/* LEFT COLUMN */}
+                          <Box flex={1} minWidth={280}>
+                            {/* Code & Name only — no photo in this row anymore */}
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="text"
+                                id="code"
+                                name="code"
+                                value={values.code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                              />
 
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="text"
-                            id="description"
-                            name="description"
-                            value={values.description}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Name"
-                          />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="text"
+                                id="description"
+                                name="description"
+                                value={values.description}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                              />
+                            </Box>
 
-                          {renderProfilePhoto(
-                            img,
-                            userimg,
-                            isImgChanged,
-                            imgUpload,
-                            "Profile Photo",
-                          )}
+                            {/* Resignation Details Section */}
+                            <Typography
+                              variant="h6"
+                              fontWeight={700}
+                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                            >
+                              Resignation Details
+                            </Typography>
+
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="date"
+                                id="resignationdate"
+                                name="resignationdate"
+                                label="Resignation Date"
+                                value={values.resignationdate}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.resignationdate && !!errors.resignationdate}
+                                helperText={touched.resignationdate && errors.resignationdate}
+                                InputLabelProps={{ shrink: true }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="text"
+                                id="resignationnote"
+                                name="resignationnote"
+                                label="Resignation Note"
+                                value={values.resignationnote}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.resignationnote && !!errors.resignationnote}
+                                helperText={touched.resignationnote && errors.resignationnote}
+                                multiline
+                              />
+                            </Box>
+
+                            {/* Exit Interview Section */}
+                            <Typography
+                              variant="h6"
+                              fontWeight={700}
+                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                            >
+                              Exit Interview
+                            </Typography>
+
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                              gap={2}
+                            >
+                              <CheckinAutocomplete
+                                name="exitinterviewby"
+                                label="Exit Interview By"
+                                variant="outlined"
+                                id="exitinterviewby"
+                                value={values.exitinterviewby}
+                                onChange={(newValue) => {
+                                  setFieldValue("exitinterviewby", newValue);
+                                }}
+                                error={!!touched.exitinterviewby && !!errors.exitinterviewby}
+                                helperText={touched.exitinterviewby && errors.exitinterviewby}
+                                // url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","VerticalLicense":"${Subscriptionlastthree}",Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2165",
+                                    ScreenName: "Exit Interview By",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="date"
+                                id="exitinterviewdate"
+                                name="exitinterviewdate"
+                                label="Exit Interview Date"
+                                value={values.exitinterviewdate}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.exitinterviewdate && !!errors.exitinterviewdate}
+                                helperText={touched.exitinterviewdate && errors.exitinterviewdate}
+                                InputLabelProps={{ shrink: true }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="text"
+                                id="exitinterviewcomments"
+                                name="exitinterviewcomments"
+                                label="Exit Interview Comments"
+                                value={values.exitinterviewcomments}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.exitinterviewcomments && !!errors.exitinterviewcomments
+                                }
+                                helperText={
+                                  touched.exitinterviewcomments && errors.exitinterviewcomments
+                                }
+                                multiline
+                                rows={2}
+                              />
+                            </Box>
+
+                            {/* Relieving Details Section */}
+                            <Typography
+                              variant="h6"
+                              fontWeight={700}
+                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                            >
+                              Relieving Details
+                            </Typography>
+
+                            <Box
+                              display="grid"
+                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+                              gap={2}
+                            >
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="date"
+                                id="acceptedrelievingdate"
+                                name="acceptedrelievingdate"
+                                label="Accepted Relieving Date"
+                                value={values.acceptedrelievingdate}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.acceptedrelievingdate && !!errors.acceptedrelievingdate
+                                }
+                                helperText={
+                                  touched.acceptedrelievingdate && errors.acceptedrelievingdate
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="date"
+                                id="actualrelievingdate"
+                                name="actualrelievingdate"
+                                label="Actual Relieving Date"
+                                value={values.actualrelievingdate}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.actualrelievingdate && !!errors.actualrelievingdate
+                                }
+                                helperText={
+                                  touched.actualrelievingdate && errors.actualrelievingdate
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                type="date"
+                                id="dateofsettlement"
+                                name="dateofsettlement"
+                                label="Date of Settlement"
+                                value={values.dateofsettlement}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.dateofsettlement && !!errors.dateofsettlement}
+                                helperText={touched.dateofsettlement && errors.dateofsettlement}
+                                InputLabelProps={{ shrink: true }}
+                              />
+                            </Box>
+
+                            {/* Checkbox */}
+                            <Box display="flex" alignItems="center" gap={1} mt={3}>
+                              <Field
+                                type="checkbox"
+                                id="exitformalitiesacceptrd"
+                                name="exitformalitiesacceptrd"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                as={Checkbox}
+                              />
+                              <FormLabel>Exit Formalities Accepted</FormLabel>
+                            </Box>
+
+                            {/* Action Buttons */}
+
+                          </Box>
+
+                          {/* RIGHT COLUMN — Photo, isolated so its height never affects the left column's rows */}
+                          <Box sx={{ width: { xs: "100%", md: 220 }, flexShrink: 0 }}>
+                            {renderProfilePhoto(img, userimg, isImgChanged, imgUpload, "Profile Photo")}
+                          </Box>
                         </Box>
-
-                        {/* Resignation Details Section */}
-                        <Typography
-                          variant="h6"
-                          fontWeight={700}
-                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                        >
-                          Resignation Details
-                        </Typography>
-
-                        <Box
-                          display="grid"
-                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                          gap={2}
-                        >
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="date"
-                            id="resignationdate"
-                            name="resignationdate"
-                            label="Resignation Date"
-                            value={values.resignationdate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.resignationdate &&
-                              !!errors.resignationdate
-                            }
-                            helperText={
-                              touched.resignationdate && errors.resignationdate
-                            }
-                            InputLabelProps={{ shrink: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="text"
-                            id="resignationnote"
-                            name="resignationnote"
-                            label="Resignation Note"
-                            value={values.resignationnote}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.resignationnote &&
-                              !!errors.resignationnote
-                            }
-                            helperText={
-                              touched.resignationnote && errors.resignationnote
-                            }
-                            multiline
-                          />
-                        </Box>
-
-                        {/* Exit Interview Section */}
-                        <Typography
-                          variant="h6"
-                          fontWeight={700}
-                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                        >
-                          Exit Interview
-                        </Typography>
-
-                        <Box
-                          display="grid"
-                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                          gap={2}
-                        >
-                          <CheckinAutocomplete
-                            name="exitinterviewby"
-                            label="Exit Interview By"
-                            variant="outlined"
-                            id="exitinterviewby"
-                            value={values.exitinterviewby}
-                            onChange={(newValue) => {
-                              setFieldValue("exitinterviewby", newValue);
-                            }}
-                            error={
-                              !!touched.exitinterviewby &&
-                              !!errors.exitinterviewby
-                            }
-                            helperText={
-                              touched.exitinterviewby && errors.exitinterviewby
-                            }
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="date"
-                            id="exitinterviewdate"
-                            name="exitinterviewdate"
-                            label="Exit Interview Date"
-                            value={values.exitinterviewdate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.exitinterviewdate &&
-                              !!errors.exitinterviewdate
-                            }
-                            helperText={
-                              touched.exitinterviewdate &&
-                              errors.exitinterviewdate
-                            }
-                            InputLabelProps={{ shrink: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="text"
-                            id="exitinterviewcomments"
-                            name="exitinterviewcomments"
-                            label="Exit Interview Comments"
-                            value={values.exitinterviewcomments}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.exitinterviewcomments &&
-                              !!errors.exitinterviewcomments
-                            }
-                            helperText={
-                              touched.exitinterviewcomments &&
-                              errors.exitinterviewcomments
-                            }
-                            multiline
-                            rows={2}
-                          />
-                        </Box>
-
-                        {/* Relieving Details Section */}
-                        <Typography
-                          variant="h6"
-                          fontWeight={700}
-                          sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                        >
-                          Relieving Details
-                        </Typography>
-
-                        <Box
-                          display="grid"
-                          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
-                          gap={2}
-                        >
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="date"
-                            id="acceptedrelievingdate"
-                            name="acceptedrelievingdate"
-                            label="Accepted Relieving Date"
-                            value={values.acceptedrelievingdate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.acceptedrelievingdate &&
-                              !!errors.acceptedrelievingdate
-                            }
-                            helperText={
-                              touched.acceptedrelievingdate &&
-                              errors.acceptedrelievingdate
-                            }
-                            InputLabelProps={{ shrink: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="date"
-                            id="actualrelievingdate"
-                            name="actualrelievingdate"
-                            label="Actual Relieving Date"
-                            value={values.actualrelievingdate}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.actualrelievingdate &&
-                              !!errors.actualrelievingdate
-                            }
-                            helperText={
-                              touched.actualrelievingdate &&
-                              errors.actualrelievingdate
-                            }
-                            InputLabelProps={{ shrink: true }}
-                          />
-
-                          <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="date"
-                            id="dateofsettlement"
-                            name="dateofsettlement"
-                            label="Date of Settlement"
-                            value={values.dateofsettlement}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              !!touched.dateofsettlement &&
-                              !!errors.dateofsettlement
-                            }
-                            helperText={
-                              touched.dateofsettlement &&
-                              errors.dateofsettlement
-                            }
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        </Box>
-
-                        {/* Checkbox */}
-                        <Box display="flex" alignItems="center" gap={1} mt={3}>
-                          <Field
-                            type="checkbox"
-                            id="exitformalitiesacceptrd"
-                            name="exitformalitiesacceptrd"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                          />
-                          <FormLabel>Exit Formalities Accepted</FormLabel>
-                        </Box>
-
-                        {/* Action Buttons */}
-                        <Box
-                          display="flex"
-                          justifyContent="flex-end"
-                          gap={2}
-                          mt={4}
-                        >
+                        <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                           <Button
                             color="secondary"
                             variant="contained"
@@ -11707,9 +12038,7 @@ const Editemployee = () => {
                               color: "#fff",
                               px: 4,
                               bgcolor: "#0D9488",
-                              "&:hover": {
-                                bgcolor: "#0F766E",
-                              },
+                              "&:hover": { bgcolor: "#0F766E" },
                             }}
                           >
                             Save
@@ -11726,15 +12055,342 @@ const Editemployee = () => {
                               color: "#fff",
                               textTransform: "none",
                               bgcolor: "#F97316",
-                              "&:hover": {
-                                bgcolor: "#EA580C",
-                              },
+                              "&:hover": { bgcolor: "#EA580C" },
                             }}
                           >
                             Back
                           </Button>
                         </Box>
                       </form>
+                      // <form
+                      //   onSubmit={handleSubmit}
+                      //   onReset={() => {
+                      //     selectCellRowData({
+                      //       rowData: {},
+                      //       mode: "A",
+                      //       field: "",
+                      //     });
+                      //     resetForm();
+                      //   }}
+                      // >
+                      //   {/* Code, Description & Photo */}
+                      //   <Box
+                      //     display="grid"
+                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+                      //     gap={2}
+                      //     mt={2}
+                      //     alignItems="start"
+                      //   >
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="text"
+                      //       id="code"
+                      //       name="code"
+                      //       value={values.code}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       label="Code"
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="text"
+                      //       id="description"
+                      //       name="description"
+                      //       value={values.description}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       label="Name"
+                      //     />
+
+                      //     {renderProfilePhoto(
+                      //       img,
+                      //       userimg,
+                      //       isImgChanged,
+                      //       imgUpload,
+                      //       "Profile Photo",
+                      //     )}
+                      //   </Box>
+
+                      //   {/* Resignation Details Section */}
+                      //   <Typography
+                      //     variant="h6"
+                      //     fontWeight={700}
+                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                      //   >
+                      //     Resignation Details
+                      //   </Typography>
+
+                      //   <Box
+                      //     display="grid"
+                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                      //     gap={2}
+                      //   >
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="date"
+                      //       id="resignationdate"
+                      //       name="resignationdate"
+                      //       label="Resignation Date"
+                      //       value={values.resignationdate}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.resignationdate &&
+                      //         !!errors.resignationdate
+                      //       }
+                      //       helperText={
+                      //         touched.resignationdate && errors.resignationdate
+                      //       }
+                      //       InputLabelProps={{ shrink: true }}
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="text"
+                      //       id="resignationnote"
+                      //       name="resignationnote"
+                      //       label="Resignation Note"
+                      //       value={values.resignationnote}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.resignationnote &&
+                      //         !!errors.resignationnote
+                      //       }
+                      //       helperText={
+                      //         touched.resignationnote && errors.resignationnote
+                      //       }
+                      //       multiline
+                      //     />
+                      //   </Box>
+
+                      //   {/* Exit Interview Section */}
+                      //   <Typography
+                      //     variant="h6"
+                      //     fontWeight={700}
+                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                      //   >
+                      //     Exit Interview
+                      //   </Typography>
+
+                      //   <Box
+                      //     display="grid"
+                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                      //     gap={2}
+                      //   >
+                      //     <CheckinAutocomplete
+                      //       name="exitinterviewby"
+                      //       label="Exit Interview By"
+                      //       variant="outlined"
+                      //       id="exitinterviewby"
+                      //       value={values.exitinterviewby}
+                      //       onChange={(newValue) => {
+                      //         setFieldValue("exitinterviewby", newValue);
+                      //       }}
+                      //       error={
+                      //         !!touched.exitinterviewby &&
+                      //         !!errors.exitinterviewby
+                      //       }
+                      //       helperText={
+                      //         touched.exitinterviewby && errors.exitinterviewby
+                      //       }
+                      //       url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="date"
+                      //       id="exitinterviewdate"
+                      //       name="exitinterviewdate"
+                      //       label="Exit Interview Date"
+                      //       value={values.exitinterviewdate}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.exitinterviewdate &&
+                      //         !!errors.exitinterviewdate
+                      //       }
+                      //       helperText={
+                      //         touched.exitinterviewdate &&
+                      //         errors.exitinterviewdate
+                      //       }
+                      //       InputLabelProps={{ shrink: true }}
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="text"
+                      //       id="exitinterviewcomments"
+                      //       name="exitinterviewcomments"
+                      //       label="Exit Interview Comments"
+                      //       value={values.exitinterviewcomments}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.exitinterviewcomments &&
+                      //         !!errors.exitinterviewcomments
+                      //       }
+                      //       helperText={
+                      //         touched.exitinterviewcomments &&
+                      //         errors.exitinterviewcomments
+                      //       }
+                      //       multiline
+                      //       rows={2}
+                      //     />
+                      //   </Box>
+
+                      //   {/* Relieving Details Section */}
+                      //   <Typography
+                      //     variant="h6"
+                      //     fontWeight={700}
+                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+                      //   >
+                      //     Relieving Details
+                      //   </Typography>
+
+                      //   <Box
+                      //     display="grid"
+                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+                      //     gap={2}
+                      //   >
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="date"
+                      //       id="acceptedrelievingdate"
+                      //       name="acceptedrelievingdate"
+                      //       label="Accepted Relieving Date"
+                      //       value={values.acceptedrelievingdate}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.acceptedrelievingdate &&
+                      //         !!errors.acceptedrelievingdate
+                      //       }
+                      //       helperText={
+                      //         touched.acceptedrelievingdate &&
+                      //         errors.acceptedrelievingdate
+                      //       }
+                      //       InputLabelProps={{ shrink: true }}
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="date"
+                      //       id="actualrelievingdate"
+                      //       name="actualrelievingdate"
+                      //       label="Actual Relieving Date"
+                      //       value={values.actualrelievingdate}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.actualrelievingdate &&
+                      //         !!errors.actualrelievingdate
+                      //       }
+                      //       helperText={
+                      //         touched.actualrelievingdate &&
+                      //         errors.actualrelievingdate
+                      //       }
+                      //       InputLabelProps={{ shrink: true }}
+                      //     />
+
+                      //     <TextField
+                      //       fullWidth
+                      //       size="small"
+                      //       variant="outlined"
+                      //       type="date"
+                      //       id="dateofsettlement"
+                      //       name="dateofsettlement"
+                      //       label="Date of Settlement"
+                      //       value={values.dateofsettlement}
+                      //       onBlur={handleBlur}
+                      //       onChange={handleChange}
+                      //       error={
+                      //         !!touched.dateofsettlement &&
+                      //         !!errors.dateofsettlement
+                      //       }
+                      //       helperText={
+                      //         touched.dateofsettlement &&
+                      //         errors.dateofsettlement
+                      //       }
+                      //       InputLabelProps={{ shrink: true }}
+                      //     />
+                      //   </Box>
+
+                      //   {/* Checkbox */}
+                      //   <Box display="flex" alignItems="center" gap={1} mt={3}>
+                      //     <Field
+                      //       type="checkbox"
+                      //       id="exitformalitiesacceptrd"
+                      //       name="exitformalitiesacceptrd"
+                      //       onChange={handleChange}
+                      //       onBlur={handleBlur}
+                      //       as={Checkbox}
+                      //     />
+                      //     <FormLabel>Exit Formalities Accepted</FormLabel>
+                      //   </Box>
+
+                      //   {/* Action Buttons */}
+                      //   <Box
+                      //     display="flex"
+                      //     justifyContent="flex-end"
+                      //     gap={2}
+                      //     mt={4}
+                      //   >
+                      //     <Button
+                      //       color="secondary"
+                      //       variant="contained"
+                      //       type="submit"
+                      //       sx={{
+                      //         textTransform: "none",
+                      //         borderRadius: 2,
+                      //         color: "#fff",
+                      //         px: 4,
+                      //         bgcolor: "#0D9488",
+                      //         "&:hover": {
+                      //           bgcolor: "#0F766E",
+                      //         },
+                      //       }}
+                      //     >
+                      //       Save
+                      //     </Button>
+
+                      //     <Button
+                      //       type="reset"
+                      //       color="warning"
+                      //       variant="outlined"
+                      //       onClick={() => setScreen(0)}
+                      //       sx={{
+                      //         px: 4,
+                      //         borderRadius: 2,
+                      //         color: "#fff",
+                      //         textTransform: "none",
+                      //         bgcolor: "#F97316",
+                      //         "&:hover": {
+                      //           bgcolor: "#EA580C",
+                      //         },
+                      //       }}
+                      //     >
+                      //       Back
+                      //     </Button>
+                      //   </Box>
+                      // </form>
                     )}
                   </Formik>
                 </Paper>
@@ -12047,7 +12703,6 @@ const Editemployee = () => {
                                 );
                               }}
                               components={{ Toolbar: Employee }}
-                              loading={exploreLoading}
                               onStateChange={(stateParams) =>
                                 setRowCount(stateParams.pagination.rowCount)
                               }
@@ -13646,7 +14301,7 @@ const Editemployee = () => {
                                 fontWeight={700}
                                 color="#0D94885"
                               >
-                                Skill/Memories
+                                Skill Identification
                               </Typography>
 
                               <Typography
@@ -13912,7 +14567,7 @@ const Editemployee = () => {
                             }}
                           >
                             <Typography variant="h6">
-                              Skill/Memories
+                              Skill Identification
                             </Typography>
 
                             <IconButton onClick={() => setOpenCocurricular(false)}>
@@ -14150,8 +14805,8 @@ const Editemployee = () => {
                               gap: 1,
                             }}
                           >
-                             <Box display="flex" gap={1}>
-                                <Tooltip title="ID Proof">
+                            <Box display="flex" gap={1}>
+                              <Tooltip title="ID Proof">
                                 <IconButton
                                   size="small"
                                   color="warning"
@@ -14167,13 +14822,13 @@ const Editemployee = () => {
                                   />
                                   <PictureAsPdfOutlinedIcon />
                                 </IconButton>
-                               
+
                               </Tooltip>
-                                <Button
+                              <Button
                                 size="small"
                                 variant="contained"
-                                onClick={() => {                              
-                                    editingRow?.Attachments || ID3Image 
+                                onClick={() => {
+                                  editingRow?.Attachments || ID3Image
                                     ? window.open(
                                       ID3Image
                                         ? store.getState().globalurl
@@ -14188,7 +14843,7 @@ const Editemployee = () => {
                               >
                                 View
                               </Button>
-                              </Box>
+                            </Box>
                             <Button
                               type="submit"
                               sx={{
@@ -14217,7 +14872,589 @@ const Editemployee = () => {
                               }}
                               variant="contained"
                               onClick={() => {
-                                navigate(-1);
+                                setOpenCocurricular(false)
+                              }}
+                            >
+                              Back
+                            </Button>
+                          </DialogActions>
+
+                        </form>
+                      </>
+                    )}
+                  </Formik>
+                </Dialog>
+              </Box>
+            </Box>
+          ) : (
+            false
+          )}
+          {show == "26" ? (
+            <Box
+              display="flex"
+              gap={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ p: 1 }}
+            >
+              {/* LEFT: shared Form Sections sidebar — same as Personnel */}
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+
+              {/* RIGHT: Skills content */}
+              <Box
+                flex={1}
+                minWidth={0}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
+                  <Formik
+                    innerRef={formikRef}
+                    initialValues={RelationInitialValue}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema25}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      handleSubmit,
+                      setFieldValue
+                    }) => (
+                      <Box>
+                        {/* ----- CARD HEADER ----- */}
+                        <Box sx={{ p: 1 }}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            mb={1}
+                          >
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>🕸️</Typography>
+                            </Box>
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                color="#0D94885"
+                              >
+                                Relationship
+                              </Typography>
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Relationship Information
+                              </Typography>
+                            </Box>
+                          </Box>
+                          {/* ----- Code/Name + Photo (separate column) ----- */}
+                          <Box display="flex" gap={3} flexWrap="wrap" mb={2}>
+                            {/* LEFT SIDE */}
+                            <Box
+                              flex={1}
+                              minWidth={280}
+                              display="flex"
+                              flexDirection="column"
+                              gap={2}
+                              mt={2}
+                            >
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Code"
+                                name="Code"
+                                value={values.Code}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Code"
+                                inputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="Name"
+                                name="Name"
+                                value={values.Name}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Name"
+                                InputProps={{ readOnly: true }}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                              />
+                            </Box>
+
+                            {/* Photo column */}
+                            <Box sx={{ width: 220, flexShrink: 0 }}>
+                              {renderProfilePhoto(
+                                img,
+                                userimg,
+                                isImgChanged,
+                                imgUpload,
+                                "Profile Photo",
+                              )}
+                            </Box>
+                          </Box>
+                        </Box>
+                        {/* ----- LIST OF SKILLS TABLE ----- */}
+                        <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                          }}
+                        >
+                          {/* <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5} sx={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
+                            <Typography variant="body2" fontWeight={700}>
+                              List of {getBusinessCaption("Skills", "Skills")} ({explorelistViewData?.length || 0})
+                            </Typography>
+                          </Box> */}
+
+                          <Box
+                            sx={{
+                              height: "350px",
+                              "& .MuiDataGrid-root": {
+                                border: "none",
+                              },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderBottom: "none",
+                              },
+                              "& .name-column--cell": {
+                                color: colors.greenAccent[300],
+                              },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                // backgroundColor: "#25adad",
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                                // borderColor: "#d0edec",
+                                // backgroundColor: "",
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": {
+                                backgroundColor: "",
+                                color: "", // Color for odd rows
+                              },
+                              "& .even-row": {
+                                // backgroundColor: "#d0edec",
+                                backgroundColor: "",
+                                color: "", // Color for even rows
+                              },
+
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": {
+                                color: colors.blueAccent[900],
+                              },
+                              /* ✅ PAGINATION STYLES (WHITE COLOR) */
+                              "& .MuiTablePagination-root": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-selectLabel": {
+                                color: "#fff",
+                              },
+
+                              "& .MuiTablePagination-displayedRows": {
+                                color: "#fff",
+                              },
+
+                              /* Dropdown icon */
+                              "& .MuiTablePagination-selectIcon": {
+                                color: "#fff",
+                              },
+
+                              /* Left & Right arrow buttons */
+                              "& .MuiTablePagination-actions button": {
+                                color: "#fff",
+                              },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              rows={explorelistViewData}
+                              columns={columns}
+                              disableSelectionOnClick
+                              rowModesModel={rowModesModel}
+                              getRowId={(row) => row.RecordID}
+                              disableRowSelectionOnClick
+                              experimentalFeatures={{ newEditingApi: true }}
+                              onProcessRowUpdateError={(error) => {
+                                console.error("Row update validation failed:", error.message);
+                                toast.error(error.message);
+                              }}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenCocurricular(true);
+
+                              }}
+                              components={{ Toolbar: RelationshipToolbar }}
+                              pagination
+                              pageSize={pageSize}
+                              page={page}
+                              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                              onPageChange={(newPage) => setPage(newPage)}
+                            />
+                          </Box>
+                        </Box>
+                      </Box>
+                    )}
+                  </Formik>
+                </Paper>
+
+                {/* ----- ADD/EDIT SKILL FORM CARD ----- */}
+                <Dialog
+                  open={opencocurricular}
+                  onClose={() => setOpenCocurricular(false)}
+                  maxWidth="sm"
+                  fullWidth
+                  PaperProps={{
+                    sx: {
+                      borderRadius: 3,
+                    },
+                  }}
+                >
+                  <Formik
+                    // innerRef={formikRef}
+                    initialValues={RelationInitialValue}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema25}
+                    onSubmit={(values, { resetForm }) => {
+                      setTimeout(() => {
+                        Relationshipsave(values, resetForm, false);
+                        setOpenCocurricular(false);
+                      }, 100);
+                    }}
+
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      resetForm,
+                      handleSubmit,
+                      setFieldValue,
+                      setFieldTouched
+                    }) => (
+                      <>
+                        <form
+                          onSubmit={handleSubmit}
+                          onReset={() => {
+                            selectCellRowData({
+                              rowData: {},
+                              mode: "A",
+                              field: "",
+                            });
+                            resetForm();
+                            setOpenCocurricular(true);
+                          }}
+                        >
+                          {/* Header */}
+
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="h6">
+                              Add Relationship
+                            </Typography>
+
+                            <IconButton onClick={() => setOpenCocurricular(false)}>
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogTitle>
+
+                          {/* Body */}
+
+                          <DialogContent
+                            sx={{
+                              pt: 3,
+                              "&.MuiDialogContent-root": {
+                                paddingTop: "24px",
+                              },
+                            }}
+                          >
+                            <Box display="flex" flexDirection="column" gap={formGap}>
+
+                              {/* <Typography variant="h5" sx={{ color: "#0000D1" }}>
+
+                                  {isEdit ? "Edit Activity" : "Add Activity"}
+                             </Typography> */}
+                              <TextField
+                                name="RelationName"
+                                type="text"
+                                label={
+                                  <>
+                                    Name
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                // focused
+                                InputLabelProps={{ shrink: true }}
+                                value={values.RelationName}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.RelationName && !!errors.RelationName}
+                                helperText={touched.RelationName && errors.RelationName}
+                                fullWidth
+                              />
+                              <TextField
+                                fullWidth
+                                select
+                                size="small"
+                                label={
+                                  <>
+                                    Relationship{" "}
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                name="Relationship"
+                                value={values.Relationship || ""}
+                                onBlur={handleBlur}
+
+
+                                onChange={handleChange}
+                                error={!!touched.Relationship && !!errors.Relationship}
+                                helperText={touched.Relationship && errors.Relationship}
+                              >
+                                <MenuItem value="Father">Father</MenuItem>
+                                <MenuItem value="Mother">Mother</MenuItem>
+                                <MenuItem value="Daughter">Daughter</MenuItem>
+                                <MenuItem value="Son">Son</MenuItem>
+                                <MenuItem value="Spouse">Spouse</MenuItem>
+                              </TextField>
+                              <TextField
+                                name="mobilenumber"
+                                id="mobilenumber"
+                                label={
+                                  <>
+                                    Mobile Number
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                variant="outlined"
+                                size="small"
+                                value={values.mobilenumber}
+                                onBlur={handleBlur}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  // Only allow numbers and max 10 digits
+                                  if (/^\d{0,10}$/.test(value)) {
+                                    handleChange(e);
+                                  }
+                                }}
+                                error={
+                                  !!touched.mobilenumber && !!errors.mobilenumber
+                                }
+                                helperText={
+                                  touched.mobilenumber && errors.mobilenumber
+                                }
+                                inputProps={{ maxLength: 10 }}
+                                sx={{ backgroundColor: "#ffffff" }}
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "left" },
+                                  },
+                                }}
+                              />
+
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="aadharcardnumber1"
+                                name="aadharcardnumber1"
+                                value={values.aadharcardnumber1}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                label="Aadhar Card No"
+                                // focused
+                                // onWheel={(e) => e.target.blur()}
+                                error={
+                                  touched.aadharcardnumber1 &&
+                                  Boolean(errors.aadharcardnumber1)
+                                }
+                                helperText={
+                                  touched.aadharcardnumber1 && errors.aadharcardnumber1
+                                }
+                              />
+                              <TextField
+                                name="emailid2"
+                                type="text"
+                                id="emailid2"
+                                label="Email ID"
+                                variant="outlined"
+                                size="small"
+                                value={values.emailid2}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.emailid2 && !!errors.emailid2}
+                                helperText={touched.emailid2 && errors.emailid2}
+                                sx={{
+                                  backgroundColor: "#ffffff",
+                                  "& .MuiFilledInput-root": { backgroundColor: "#f5f5f5" },
+                                }}
+                                autoFocus
+                              />
+                              <TextField
+                                name="dateofbirth"
+                                type="date"
+                                id="dateofbirth"
+                                label="Date of Birth"
+                                variant="outlined"
+                                size="small"
+                                inputFormat="YYYY-MM-DD"
+                                value={values.dateofbirth}
+                                onBlur={handleBlur}
+                                onChange={(e) =>
+                                  handleDateChange(e, handleChange)
+                                }
+                                error={
+                                  !!touched.dateofbirth &&
+                                  !!errors.dateofbirth
+                                }
+                                helperText={
+                                  touched.dateofbirth &&
+                                  errors.dateofbirth
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+
+                            </Box>
+
+                          </DialogContent>
+
+                          {/* Footer */}
+
+                          <DialogActions
+                            sx={{
+                              borderTop: "1px solid #E5E7EB",
+                              p: 2,
+                              justifyContent: "flex-end",
+                              gap: 1,
+                            }}
+                          >
+
+                            <Button
+                              type="submit"
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                              variant="contained"
+                            // disabled={mode === "E"}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
+                              variant="contained"
+                              onClick={() => {
+                                // navigate(-1);
+                                setOpenCocurricular(false)
                               }}
                             >
                               Back
@@ -15109,6 +16346,49 @@ const Editemployee = () => {
                               touched.aadharcardnumber2 && errors.aadharcardnumber2
                             }
                           />
+                          {/* <TextField
+                                fullWidth
+                                select
+                                size="small"
+                                label={
+                                  <>
+                                    Relationship{" "}
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                  </>
+                                }
+                                name="Relationship1"
+                                value={values.Relationship1 || ""}
+                                onBlur={handleBlur}
+
+                                
+                                onChange={handleChange}
+                                error={!!touched.Relationship1 && !!errors.Relationship1}
+                                helperText={touched.Relationship1 && errors.Relationship1}
+                              >
+                                <MenuItem value="Father">Father</MenuItem>
+                                <MenuItem value="Mother">Mother</MenuItem>
+                                <MenuItem value="Daughter">Daughter</MenuItem>
+                                <MenuItem value="Son">Son</MenuItem>
+                                <MenuItem value="Spouse">Spouse</MenuItem>
+                              </TextField>
+                              <TextField
+                                fullWidth
+                                select
+                                size="small"
+                                label="Relationship"
+                                name="Relationship2"
+                                value={values.Relationship2 || ""}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.Relationship2 && !!errors.Relationship2}
+                                helperText={touched.Relationship2 && errors.Relationship2}
+                              >
+                                <MenuItem value="Father">Father</MenuItem>
+                                <MenuItem value="Mother">Mother</MenuItem>
+                                <MenuItem value="Daughter">Daughter</MenuItem>
+                                <MenuItem value="Son">Son</MenuItem>
+                                <MenuItem value="Spouse">Spouse</MenuItem>
+                              </TextField> */}
                         </Box>
                         <Grid container spacing={2}>
                           {/* ID Proof (Left side – 50%) */}
@@ -15501,54 +16781,54 @@ const Editemployee = () => {
                             // required
                             autoFocus={CompanyAutoCode == "Y"}
                           />
-                       
-                        <Box
-                          display="flex"
-                          justifyContent="flex-end"
-                          padding={1}
-                          mt={3}
-                          gap="20px"
-                        >
-                          {/* GSTimage */}
 
-                          {YearFlag == "true" ? (
-                            <LoadingButton
-                              // color="secondary"
-                              variant="contained"
-                              type="submit"
-                              loading={isLoading}
-                              sx={{
-                                textTransform: "none",
-                                borderRadius: 2,
-                                color: "#fff",
-                                px: 4,
-                                bgcolor: "#0D9488",
-                                "&:hover": {
-                                  bgcolor: "#0F766E",
-                                },
-                              }}
-                            >
-                              Save
-                            </LoadingButton>
-                          ) : (
-                            <Button
-                              // color="secondary"
-                              variant="contained"
-                              disabled={true}
-                              sx={{
-                                px: 4,
-                                borderRadius: 2,
-                                textTransform: "none",
-                                bgcolor: "#F97316",
-                                "&:hover": {
-                                  bgcolor: "#EA580C",
-                                },
-                              }}
-                            >
-                              Save
-                            </Button>
-                          )}
-                          {/* {YearFlag == "true" ? (
+                          <Box
+                            display="flex"
+                            justifyContent="flex-end"
+                            padding={1}
+                            mt={3}
+                            gap="20px"
+                          >
+                            {/* GSTimage */}
+
+                            {YearFlag == "true" ? (
+                              <LoadingButton
+                                // color="secondary"
+                                variant="contained"
+                                type="submit"
+                                loading={isLoading}
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  color: "#fff",
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                              >
+                                Save
+                              </LoadingButton>
+                            ) : (
+                              <Button
+                                // color="secondary"
+                                variant="contained"
+                                disabled={true}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
+                              >
+                                Save
+                              </Button>
+                            )}
+                            {/* {YearFlag == "true" ? (
                                <Button
                                  color="error"
                                  variant="contained"
@@ -15564,25 +16844,25 @@ const Editemployee = () => {
                                </Button>
                              )} */}
 
-                          <Button
-                            // color="warning"
-                            variant="contained"
-                            onClick={() => {
-                              setScreen(0);
-                            }}
-                            sx={{
-                              px: 4,
-                              borderRadius: 2,
-                              textTransform: "none",
-                              bgcolor: "#F97316",
-                              "&:hover": {
-                                bgcolor: "#EA580C",
-                              },
-                            }}
-                          >
-                            Back
-                          </Button>
-                        </Box>
+                            <Button
+                              // color="warning"
+                              variant="contained"
+                              onClick={() => {
+                                setScreen(0);
+                              }}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
+                            >
+                              Back
+                            </Button>
+                          </Box>
                         </Box>
                       </form>
                     )}
@@ -16079,7 +17359,7 @@ const Editemployee = () => {
                                   )}
 
                                   {/* Project */}
-                                  <CheckinAutocomplete
+                                  {/* <CheckinAutocomplete
                                     id="project"
                                     name="project"
                                     label={
@@ -16101,6 +17381,7 @@ const Editemployee = () => {
                                     variant="outlined"
                                     size="small"
                                     value={values.project}
+                                    disabled={isProjectLocked}
                                     onChange={(newValue) => {
                                       if (!newValue) {
                                         setFieldValue("project", null);
@@ -16127,7 +17408,58 @@ const Editemployee = () => {
                                         Any: "",
                                       },
                                     })}`}
-                                  />
+                                  /> */}
+                                  {isProjectLocked ? (
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      size="small"
+                                      label={
+                                        <>
+                                          {getBusinessCaption("Project", "Project")}
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      value={values.project?.Name || ""}
+                                      InputProps={{ readOnly: true }}
+                                    />
+                                  ) : (
+                                    <CheckinAutocomplete
+                                      id="project"
+                                      name="project"
+                                      label={
+                                        <>
+                                          {getBusinessCaption("Project", "Project")}
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      variant="outlined"
+                                      size="small"
+                                      value={values.project}
+                                      onChange={(newValue) => {
+                                        if (!newValue) {
+                                          setFieldValue("project", null);
+                                          return;
+                                        }
+                                        setFieldValue("project", {
+                                          RecordID: newValue.RecordID,
+                                          Code: newValue.Code,
+                                          Name: newValue.Name,
+                                        });
+                                      }}
+                                      error={!!touched.project && !!errors.project}
+                                      helperText={touched.project && errors.project}
+                                      url={`${listViewurl}?data=${JSON.stringify({
+                                        Query: {
+                                          AccessID: "2054",
+                                          ScreenName: "Project",
+                                          VerticalLicense: Subscriptionlastthree,
+                                          Filter: `parentID=${CompanyID}`,
+                                          Any: "",
+                                        },
+                                      })}`}
+                                    />
+                                  )}
 
                                   {/* Description */}
                                   <TextField
@@ -17092,7 +18424,7 @@ const Editemployee = () => {
                                 is003Subscription &&
                                 // flag !== "P" &&
                                 contractorData.Process == "N" &&
-                                ["OF", "TF", "AF"].includes(
+                                ["OF", "TF", "AF", "HS"].includes(
                                   values?.BillingUnits || "",
                                 )
                                 && (
@@ -17233,10 +18565,7 @@ const Editemployee = () => {
                                 <Button
                                   color="error"
                                   variant="outlined"
-                                  sx={{
-                                    textTransform: "none",
-                                    borderRadius: 2,
-                                  }}
+
                                   onClick={() => {
                                     setOpenContractPopup(false);
                                     Swal.fire({
@@ -17258,6 +18587,8 @@ const Editemployee = () => {
                                     });
                                   }}
                                   sx={{
+                                    textTransform: "none",
+                                    borderRadius: 2,
                                     px: 4,
                                     borderRadius: 2,
                                     textTransform: "none",
@@ -20849,7 +22180,6 @@ const Editemployee = () => {
                                   ? "odd-row"
                                   : "even-row"
                               }
-                              loading={exploreLoading}
                               componentsProps={{
                                 toolbar: {
                                   showQuickFilter: true,
@@ -22859,8 +24189,13 @@ const Editemployee = () => {
           )}
         </Box>
       </Box>
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 
 export default Editemployee;
+
+
+
+
+

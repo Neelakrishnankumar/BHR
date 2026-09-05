@@ -1126,7 +1126,7 @@ const Circular = () => {
                             </Box>
 
                             {/* NOTIFY OPTIONS */}
-                            <Box>
+                            {/* <Box>
                               <Typography
                                 variant="subtitle2"
                                 sx={{
@@ -1184,7 +1184,7 @@ const Circular = () => {
                                   </Box>
                                 ))}
                               </Box>
-                            </Box>
+                            </Box> */}
 
                             {/* BUTTONS */}
                             <Box

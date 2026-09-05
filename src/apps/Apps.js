@@ -416,10 +416,10 @@ function App() {
                     element={<EditPayment />}
                   />
                   <Route
-                    path="/:accessID/:screenName/Invoice/Analytics"
+                    path="/Invoice/Analytics"
                     element={<InvoiceAnalytics />}
                   />
-                  {/* SKILL GLOW */}
+                  {/* SKILL GLOW /Apps/SecondarylistView/TR331/Invoice/60/Invoice/Analytics*/ }
 
                   {/* SCHEDULE */}
                   <Route
@@ -459,7 +459,11 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
-
+{/* /Apps/Secondarylistview/TR310/Order/2636/Party/O/TR311/Order%20item/2066 */}
+{/* <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  /> */}
                   {/* Session */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
@@ -1010,9 +1014,10 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
                   /> */}
+                  {/* Orderitem */}
                   <Route
                     // path="/Secondarylistview/:accessID1/:OrderType/:filtertype/:Type/:screenName/:accessID/:filtertype1"
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1"
                     element={<ListviewSecondary />}
                   />
                   {/* FEES STRUCTURE */}
@@ -1561,7 +1566,7 @@ function App() {
                     element={<ListviewSecondary />}
                   /> */}
                   <Route
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
                   <Route

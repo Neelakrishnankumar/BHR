@@ -2747,8 +2747,9 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR122",
           },
-           ...(!is003Subscription
-            ? [{
+          //  ...(!is003Subscription
+          //   ? [
+              {
             name: "Department",
             id: 3456,
             url: "./TR026/Department",
@@ -2764,7 +2765,8 @@ const Sidebars = () => {
             UGA_PROCESS: true,
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
-          }]:[]),
+          },
+        // ]:[]),
           ...(is003Subscription
             ? [
               {
@@ -3231,25 +3233,25 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
-          {
-            name: "Admission",
-            url: "./TR379/Admission",
-            id: 5596,
-            icon: (
-              <Tooltip title="Admission">
-                <ContactsIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR379",
-          },
-          ...(is003Subscription
-            ? [
+          // {
+          //   name: "Admission",
+          //   url: "./TR379/Admission",
+          //   id: 5596,
+          //   icon: (
+          //     <Tooltip title="Admission">
+          //       <ContactsIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR379",
+          // },
+          // ...(is003Subscription
+          //   ? [
               {
                 name: "Team Attendance",
                 url: "/Apps/Attendanceentry",
@@ -3267,7 +3269,7 @@ const Sidebars = () => {
                 UGA_VIEW: true,
                 UGA_ACCESSIDS: "TR410",
               },
-            ] : []),
+            // ] : []),
 
           {
             name: "Attendance(D)",
@@ -3382,7 +3384,8 @@ const Sidebars = () => {
             : []),
           {
             name: "Invoice",
-            url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+            // url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+            url: is003Subscription ? "/Apps/TR416/Academic Year" : "/Apps/TR366/Invoice",
             id: 88,
             icon: (
               <Tooltip title="Invoice">

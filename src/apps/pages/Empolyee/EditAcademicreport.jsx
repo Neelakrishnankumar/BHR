@@ -542,7 +542,7 @@ export default function StudentHistoryDashboard() {
   const assessmentTerms = assessmentPerformance.terms || [];
   const assessmentOverall = assessmentPerformance.overall || [];
   const legacyAssessments = apiData?.assessments || [];
-
+console.log(legacyAssessments,"legacyAssessments")
   useEffect(() => {
     // Reset to Overall whenever academic year/data changes
     setSelectedTermIdx(-1);

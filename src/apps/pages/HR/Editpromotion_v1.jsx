@@ -450,9 +450,11 @@ setAssignedRows(promotedOnly);
 
   const handleEditClicknew = (id) => () => {
     const student = promoterows.find((r) => r.RecordID === id);
+    console.log(student, "--find student in marks get");
+    
     dispatch(
       promototioStudMarksGET({
-        StudentID: student.RecordID,
+        StudentID: student.StudentID,
         ProjectID: rowData.projectID || recID,
         CompanyID: CompanyID,
       }),
@@ -770,6 +772,7 @@ setAssignedRows(promotedOnly);
       RecordID: row.RecordID,
       Marks: row.Marks || 0,
       OutOfMarks: row.OutOfMarks || 0,
+      StudentID: row.StudentID
     }));
 
     console.log(idata, "--SAVE MARKS PAYLOAD (array of objects)");
@@ -785,7 +788,7 @@ setAssignedRows(promotedOnly);
         setEditedAssessmentRows({}); // clear tracked edits
         dispatch(
           promototioStudMarksGET({
-            StudentID: marksDialogStudent?.RecordID,
+            StudentID: marksDialogStudent?.StudentID,
             ProjectID: rowData.projectID || recID,
             CompanyID: CompanyID,
           }),

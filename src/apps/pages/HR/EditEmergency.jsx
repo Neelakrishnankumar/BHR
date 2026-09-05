@@ -1360,7 +1360,7 @@ const EditEmergency = () => {
                               </Box>
                             </Box>
                             {/* NOTIFY OPTIONS */}
-                            <Box>
+                            {/* <Box>
                               <Typography
                                 variant="subtitle2"
                                 sx={{
@@ -1422,7 +1422,7 @@ const EditEmergency = () => {
                                   </Box>
                                 ))}
                               </Box>
-                            </Box>
+                            </Box> */}
 
                             {/* BUTTONS */}
                             <Box

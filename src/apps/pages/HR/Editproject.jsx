@@ -430,12 +430,12 @@ const Editproject = () => {
         onChange={handleChange}
         // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
         url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-        // sx={{
-        //         height: "100%",
-        //         "& .MuiOutlinedInput-root": {
-        //           height: "100%",
-        //         },
-        //       }}
+      // sx={{
+      //         height: "100%",
+      //         "& .MuiOutlinedInput-root": {
+      //           height: "100%",
+      //         },
+      //       }}
       />
     );
   }
@@ -632,10 +632,10 @@ const Editproject = () => {
       ...row,
       OwnedBy: row.OwnedByRecordID
         ? {
-            RecordID: row.OwnedByRecordID,
-            Code: row.OwnedByCode,
-            Name: row.OwnedByName,
-          }
+          RecordID: row.OwnedByRecordID,
+          Code: row.OwnedByCode,
+          Name: row.OwnedByName,
+        }
         : null,
     }));
 
@@ -731,26 +731,26 @@ const Editproject = () => {
         {
           Subscriptionlastthree === "003"
             ? dispatch(
-                getFetchData_v1({
-                  accessID: "TR389",
-                  get: "get",
-                  recID,
-                  CompanyID,
-                }),
-              )
+              getFetchData_v1({
+                accessID: "TR389",
+                get: "get",
+                recID,
+                CompanyID,
+              }),
+            )
             : dispatch(getFetchData({ accessID, get: "get", recID }));
         }
       } else {
         {
           Subscriptionlastthree === "003"
             ? dispatch(
-                getFetchData_v1({
-                  accessID: "TR389",
-                  get: "get",
-                  recID,
-                  CompanyID,
-                }),
-              )
+              getFetchData_v1({
+                accessID: "TR389",
+                get: "get",
+                recID,
+                CompanyID,
+              }),
+            )
             : dispatch(getFetchData({ accessID, get: "get", recID }));
         }
         // dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -817,65 +817,106 @@ const Editproject = () => {
     setEditedRows((prev) => prev.filter((row) => row.RecordID !== numericID));
   };
 
+  // const handleCancelClick = (RecordID) => () => {
+  //   setRowModesModel({
+  //     ...rowModesModel,
+  //     [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+  //   });
+
+  //   const editedRow = rows.find((row) => row.RecordID === RecordID);
+  //   if (editedRow.isNew) {
+  //     setRows(rows.filter((row) => row.RecordID !== RecordID));
+  //   }
+  // };
   const handleCancelClick = (RecordID) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.RecordID === RecordID);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.RecordID !== RecordID));
-    }
+    setRowModesModel((prev) => ({
+      ...prev,
+      [RecordID]: {
+        mode: GridRowModes.View,
+      },
+    }));
   };
-
   const UnitRowSlot = (row) => {
     if (!row.Name) {
       return "Name is required";
     }
-    if (!row.OwnedBy || !row.OwnedBy.Name) {
-      return "Owned By is required";
-    }
+    // if (!row.OwnedBy || !row.OwnedBy.Name) {
+    //   return "Owned By is required";
+    // }
 
     return null;
   };
   // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
+  // const processRowUpdate = (newRow, oldRow) => {
+  //   //validation
+  //   const error = UnitRowSlot(newRow);
+  //   if (error) {
+  //     throw new Error(error);
+  //   }
+
+  //   const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
+  //   const updatedRow = { ...newRow, isNew: isNew };
+
+  //   setRows((prev) => {
+  //     const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
+  //     const updated = [...prev];
+  //     updated[index] = updatedRow;
+  //     return updated;
+  //   });
+
+  //   // track edited rows
+  //   if (!isNew) {
+  //     setEditedRows((prev) => {
+  //       const exists = prev.find((r) => r.RecordID === newRow.RecordID);
+
+  //       if (exists) {
+  //         return prev.map((r) =>
+  //           r.RecordID === newRow.RecordID ? updatedRow : r,
+  //         );
+  //       }
+
+  //       return [...prev, updatedRow];
+  //     });
+  //   }
+
+  //   // remove from deletedRows if it exists
+  //   setDeletedRows((prev) =>
+  //     prev.filter((d) => d.RecordID !== Number(newRow.RecordID)),
+  //   );
+
+  //   return updatedRow;
+  // };
   const processRowUpdate = (newRow, oldRow) => {
-    //validation
-    const error = UnitRowSlot(newRow);
-    if (error) {
-      throw new Error(error);
-    }
+    const updatedRow = {
+      ...newRow,
+      OwnedBy: newRow.OwnedBy || null,
+    };
 
-    const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
-    const updatedRow = { ...newRow, isNew: isNew };
-
-    setRows((prev) => {
-      const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
-      const updated = [...prev];
-      updated[index] = updatedRow;
-      return updated;
-    });
-
-    // track edited rows
-    if (!isNew) {
-      setEditedRows((prev) => {
-        const exists = prev.find((r) => r.RecordID === newRow.RecordID);
-
-        if (exists) {
-          return prev.map((r) =>
-            r.RecordID === newRow.RecordID ? updatedRow : r,
-          );
-        }
-
-        return [...prev, updatedRow];
-      });
-    }
-
-    // remove from deletedRows if it exists
-    setDeletedRows((prev) =>
-      prev.filter((d) => d.RecordID !== Number(newRow.RecordID)),
+    // Update actual rows
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        String(row.RecordID) === String(updatedRow.RecordID)
+          ? updatedRow
+          : row
+      )
     );
+
+    // Update editedRows
+    setEditedRows((prev) => {
+      const exists = prev.some(
+        (row) => String(row.RecordID) === String(updatedRow.RecordID)
+      );
+
+      if (exists) {
+        return prev.map((row) =>
+          String(row.RecordID) === String(updatedRow.RecordID)
+            ? updatedRow
+            : row
+        );
+      }
+
+      return [...prev, updatedRow];
+    });
 
     return updatedRow;
   };
@@ -974,17 +1015,17 @@ const Editproject = () => {
     // price: data.Price ?? 0.00,
     budget: data.Budget === "" ? "0.00" : data.Budget,
     scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
-    Planned:data.PlannedCost === "" ? "0.00" : data.PlannedCost,
+    Planned: data.PlannedCost === "" ? "0.00" : data.PlannedCost,
     actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
     price: data.Price === "" ? "0.00" : data.Price,
     OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
     projectOwner:
       data.ProjectOwnerID && data.ProjectOwnerID !== "0"
         ? {
-            RecordID: data.ProjectOwnerID,
-            Code: data.ProjectOwnerCode,
-            Name: data.ProjectOwnerName,
-          }
+          RecordID: data.ProjectOwnerID,
+          Code: data.ProjectOwnerCode,
+          Name: data.ProjectOwnerName,
+        }
         : null,
     // OtherExpenses: data.OtherExpenses ?? 0.00,
     longitude: data.Longitude || 0,
@@ -1039,7 +1080,7 @@ const Editproject = () => {
       AcademicYearID: params.filtertype || 0,
       TentativeStartDate: values.TentativeStartDate || "",
       TentativeEndDate: values.TentativeEndDate || "",
-       SlotGroupID:0,
+      SlotGroupID: 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -1154,32 +1195,36 @@ const Editproject = () => {
       ? ["slno", "Code", "Name", "OwnedBy", "Comments", "action"]
       : show == "2"
         ? [
-            "slno",
-            "Code",
-            "Documents",
-            // "Party",
-            // "Unit",
-            "action",
-          ]
+          "slno",
+          "Code",
+          "Documents",
+          // "Party",
+          // "Unit",
+          "action",
+        ]
         : [];
 
   function EditOwnedByAutocomplete(props) {
-    const { id, value, field, api, row } = props;
+    const { id, value, field, api } = props;
 
     const [ownedBylookup, setOwnedBylookup] = useState(value || null);
 
     const handleChange = async (newValue) => {
-      if (!newValue) return;
+      // Allow clearing Owned By
+      setOwnedBylookup(newValue || null);
 
-      setOwnedBylookup(newValue);
       await api.setEditCellValue({
         id,
         field: "OwnedBy",
-        value: newValue,
+        value: newValue || null,
       });
 
-      api.stopCellEditMode({ id, field });
+      api.stopCellEditMode({
+        id,
+        field,
+      });
     };
+
     return (
       <ProjectVendor
         name="OwnedBy"
@@ -1187,7 +1232,15 @@ const Editproject = () => {
         id="OwnedBy"
         value={ownedBylookup}
         onChange={handleChange}
-        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Project Unit","Filter":"parentID='${CompanyID}'","Any":""}}`}
+        url={`${listViewurl}?data=${JSON.stringify({
+          Query: {
+            AccessID: "2102",
+            ScreenName: "Customer",
+            VerticalLicense: Subscriptionlastthree,
+            Filter: `parentID=${CompanyID}`,
+            Any: "",
+          },
+        })}`}
       />
     );
   }
@@ -1243,11 +1296,12 @@ const Editproject = () => {
     },
     {
       field: "OwnedBy",
-      headerName: (
-        <span>
-          Owned By <span style={{ color: "red" }}>*</span>
-        </span>
-      ),
+      headerName: "Owned By",
+      // (
+      //   <span>
+      //     Owned By <span style={{ color: "red" }}>*</span>
+      //   </span>
+      // ),
 
       width: 200,
       hide: false,
@@ -1364,10 +1418,10 @@ const Editproject = () => {
           description: rowData.description,
           OwnedBy: rowData.OwnedByRecordID
             ? {
-                RecordID: rowData.OwnedByRecordID,
-                Code: rowData.OwnedByCode,
-                Name: rowData.OwnedByName,
-              }
+              RecordID: rowData.OwnedByRecordID,
+              Code: rowData.OwnedByCode,
+              Name: rowData.OwnedByName,
+            }
             : null,
           sortOrder: rowData.SortOrder,
           Comments: rowData.Comments,
@@ -1569,7 +1623,7 @@ const Editproject = () => {
         RecordID: "",
         Code: row.Code || "",
         Name: row.Name || "",
-        OwnedBy: row.OwnedBy?.RecordID || 0,
+        OwnedBy: row.OwnedBy?.RecordID ?? 0,
         Comments: row.Comments || "",
         SortOrder: row.SortOrder || 0,
         Disable: row.Disable || "N",
@@ -1588,7 +1642,7 @@ const Editproject = () => {
         RecordID: row.RecordID,
         Code: row.Code || "",
         Name: row.Name || "",
-        OwnedBy: row.OwnedBy?.RecordID || 0,
+        OwnedBy: row.OwnedBy?.RecordID ?? 0,
         Comments: row.Comments || "",
         SortOrder: row.SortOrder || 0,
         Disable: row.Disable || "N",
@@ -1817,13 +1871,13 @@ const Editproject = () => {
     },
     ...(is003Subscription === false
       ? [
-          {
-            value: 3,
-            label: "Units",
-            desc: "Unit / block details linked to the Project",
-            icon: "🏢",
-          },
-        ]
+        {
+          value: 3,
+          label: "Units",
+          desc: "Unit / block details linked to the Project",
+          icon: "🏢",
+        },
+      ]
       : []),
   ];
   function FormSectionsSidebar({
@@ -2208,8 +2262,6 @@ const Editproject = () => {
                             InputLabelProps={{
                               shrink: true,
                             }}
-                            variant="outlined"
-                            size="small"
                             sx={{
                               "& .MuiOutlinedInput-root": {
                                 backgroundColor: "#fff",
@@ -2234,7 +2286,7 @@ const Editproject = () => {
                                 color: "#6b7280", // keep same on focus
                               },
                             }}
-                            // autoFocus
+                          // autoFocus
                           />
                         ) : (
                           <TextField
@@ -2378,7 +2430,7 @@ const Editproject = () => {
                               Any: "",
                             },
                           })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                         />
                         {is003Subscription === false ? (
                           <CheckinAutocomplete
@@ -2417,7 +2469,7 @@ const Editproject = () => {
                                 Any: "",
                               },
                             })}`}
-                            // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                           />
                         ) : null}
                         {/* {touched.incharge && errors.incharge && (
@@ -2668,7 +2720,6 @@ const Editproject = () => {
                           onChange={handleChange}
                           error={!!touched.sortorder && !!errors.sortorder}
                           helperText={touched.sortorder && errors.sortorder}
-                          sx={{ background: "" }}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
@@ -2727,7 +2778,7 @@ const Editproject = () => {
                         />
                         <FormLabel
                           focused={false}
-                          // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+                        // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
                         >
                           Routine Tasks
                         </FormLabel>
@@ -2759,8 +2810,8 @@ const Editproject = () => {
                             />
                             <FormLabel
                               focused={false}
-                              // htmlFor="ServiceMaintenance"
-                              // sx={{ ml: 1,marginLeft:0}}
+                            // htmlFor="ServiceMaintenance"
+                            // sx={{ ml: 1,marginLeft:0}}
                             >
                               Product
                             </FormLabel>
@@ -2951,7 +3002,7 @@ const Editproject = () => {
                                   },
                                 }}
                               />
-                               <TextField
+                              <TextField
                                 fullWidth
                                 disabled={mode == "V"}
                                 type="number"
@@ -3043,7 +3094,7 @@ const Editproject = () => {
                                   },
                                 }}
                               />
-                             
+
                               <TextField
                                 disabled={mode == "V"}
                                 fullWidth
@@ -4042,10 +4093,10 @@ const Editproject = () => {
                   }) => (
                     <form
                       onSubmit={handleSubmit}
-                      // onReset={() => {
-                      //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                      //   resetForm();
-                      // }}
+                    // onReset={() => {
+                    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    //   resetForm();
+                    // }}
                     >
                       {/* ----- CARD HEADER ----- */}
                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
@@ -4440,11 +4491,11 @@ const Editproject = () => {
                   initialValues={DocInitialValues}
                   // validationSchema={validationSchema2}
                   enableReinitialize={true}
-                  // onSubmit={(values, { resetForm, setFieldValue }) => {
-                  //   setTimeout(() => {
-                  //     FnAttachment(values, resetForm, false, setFieldValue);
-                  //   }, 100);
-                  // }}
+                // onSubmit={(values, { resetForm, setFieldValue }) => {
+                //   setTimeout(() => {
+                //     FnAttachment(values, resetForm, false, setFieldValue);
+                //   }, 100);
+                // }}
                 >
                   {({
                     values,
@@ -4698,7 +4749,7 @@ const Editproject = () => {
                               field: params.field,
                             });
                           }}
-                          rowsPerPageOptions={[5, 10, 20]}
+                          // rowsPerPageOptions={[5, 10, 20]}
                           pagination
                           components={{
                             Toolbar: Employee,

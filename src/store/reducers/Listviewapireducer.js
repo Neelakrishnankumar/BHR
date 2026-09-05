@@ -146,6 +146,7 @@ import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithC
 import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 import BallotIcon from '@mui/icons-material/Ballot';
 import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
+import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -861,6 +862,7 @@ export const fetchListview =
           AccessID != "TR026" &&
           AccessID != "TR401" &&
           AccessID != "TR218" &&
+          AccessID != "TR331" &&
           AccessID != "TR386"
         ) {
           filter = "parentID=" + `'${filter}'`;
@@ -2479,7 +2481,7 @@ export const fetchListview =
                 },
               };
             }
-             else if (AccessID == "TR411") {
+            else if (AccessID == "TR411") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -2499,6 +2501,36 @@ export const fetchListview =
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Holiday List">
+                          <IconButton color="info" size="small">
+                            <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            else if (AccessID == "TR416") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR331/Invoice/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Invoice">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
                           </IconButton>
@@ -2720,6 +2752,8 @@ export const fetchListview =
                           Employee: params.row.Employee,
                           Project: params.row.Project,
                           ProjectID: params.row.ProjectID,
+                          AcademicYearID: params.row.AcademicYearID,
+                          AcademicYear: params.row.AcademicYear
                         }}
                       >
                         <Tooltip title="Payment">
@@ -5149,82 +5183,82 @@ export const fetchListview =
                             //       BreadCrumb1: params.row.Description,
                             //     }
                             //   :
-                              AccessID === "TR027"
+                            AccessID === "TR027"
                               ? {
-                                  EmpName: params.row.Name,
-                                  Employee: params.row.Employee,
-                                  BreadCrumb1: params.row.Description,
-                                   Classification: params.row.Description,
-                                }
-                              :
-                         
-                            AccessID === "TR128"
-                              ? {
-                                LocationName: params.row.Name,
-                                CompanyName: params.row.CompanyName,
+                                EmpName: params.row.Name,
+                                Employee: params.row.Employee,
+                                BreadCrumb1: params.row.Description,
+                                Classification: params.row.Description,
                               }
-                              : AccessID === "TR127"
+                              :
+
+                              AccessID === "TR128"
                                 ? {
-                                  GateName: params.row.Name,
-                                  LocationName: params.row.LocationName,
+                                  LocationName: params.row.Name,
                                   CompanyName: params.row.CompanyName,
                                 }
-                                : AccessID === "TR375"
+                                : AccessID === "TR127"
                                   ? {
-                                    AcademicYear: params.row.AcademicYear,
+                                    GateName: params.row.Name,
+                                    LocationName: params.row.LocationName,
+                                    CompanyName: params.row.CompanyName,
                                   }
-                                  : AccessID === "TR377"
+                                  : AccessID === "TR375"
                                     ? {
-                                      SlotGroupName: params.row.SlotGroup,
+                                      AcademicYear: params.row.AcademicYear,
                                     }
-                                    : AccessID === "TR257"
+                                    : AccessID === "TR377"
                                       ? {
-                                        EmpName: params.row.Name,
+                                        SlotGroupName: params.row.SlotGroup,
                                       }
-                                      : AccessID === "TR132"
+                                      : AccessID === "TR257"
                                         ? {
-                                          proName: params.row.ProjectName,
-                                          Date: params.row.Date,
-                                          EmpName: params.row.EmployeeName,
-                                          Locname: params.row.LocationName,
+                                          EmpName: params.row.Name,
                                         }
-                                        : AccessID === "TR123"
+                                        : AccessID === "TR132"
                                           ? {
-                                            EmpName: params.row.Name,
+                                            proName: params.row.ProjectName,
+                                            Date: params.row.Date,
+                                            EmpName: params.row.EmployeeName,
+                                            Locname: params.row.LocationName,
                                           }
-                                          : AccessID === "TR134"
+                                          : AccessID === "TR123"
                                             ? {
-                                              proName: params.row.ProjectName,
-                                              EmpName: params.row.EmployeeName,
-                                              Date: params.row.Date,
-                                              Locname: params.row.LocationName,
-                                              EmployeeID: params.row.EmployeesID,
-                                              checkinID: params.row.CheckinID,
+                                              EmpName: params.row.Name,
                                             }
-                                            : AccessID === "TR124"
+                                            : AccessID === "TR134"
                                               ? {
+                                                proName: params.row.ProjectName,
                                                 EmpName: params.row.EmployeeName,
+                                                Date: params.row.Date,
+                                                Locname: params.row.LocationName,
+                                                EmployeeID: params.row.EmployeesID,
                                                 checkinID: params.row.CheckinID,
                                               }
-                                              : // : AccessID === "TR127"
-                                              // ? {
-                                              //     GateName: params.row.Name,
-                                              //     LocationName: params.row.LocationName,
-                                              //     CompanyName: params.row.CompanyName,
-                                              //   }
-                                              // : AccessID === "TR129"
-                                              // ? {
-                                              //     bin: params.row.Name,
-                                              //     LocationName: params.row.LocationName,
-                                              //     CompanyName: params.row.CompanyName,
-                                              //   }
-                                              {
-                                                CustomerID:
-                                                  params.row.CustomerRecordID,
-                                                ProductID:
-                                                  params.row.ProductRecordID,
-                                                BomID: params.row.BomRecordID,
-                                              }
+                                              : AccessID === "TR124"
+                                                ? {
+                                                  EmpName: params.row.EmployeeName,
+                                                  checkinID: params.row.CheckinID,
+                                                }
+                                                : // : AccessID === "TR127"
+                                                // ? {
+                                                //     GateName: params.row.Name,
+                                                //     LocationName: params.row.LocationName,
+                                                //     CompanyName: params.row.CompanyName,
+                                                //   }
+                                                // : AccessID === "TR129"
+                                                // ? {
+                                                //     bin: params.row.Name,
+                                                //     LocationName: params.row.LocationName,
+                                                //     CompanyName: params.row.CompanyName,
+                                                //   }
+                                                {
+                                                  CustomerID:
+                                                    params.row.CustomerRecordID,
+                                                  ProductID:
+                                                    params.row.ProductRecordID,
+                                                  BomID: params.row.BomRecordID,
+                                                }
                           }
                         >
                           <Tooltip title="Edit">
@@ -6585,7 +6619,45 @@ export const fetchListview =
                 },
               };
             }
+            if (AccessID == "TR401") {
+              const obj = {
+                field: "Type",
+                headerName: "Type",
+                headerAlign: "center",
+                sortable: false,
+                filterable: false,
+                disableColumnMenu: true,
+                minWidth: 60,
+                maxWidth: 60,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Link>
+                        {params.row.SubjectSkill === "A" && (
+                          <Tooltip title="Activities">
+                            <IconButton color="info">
+                              <BrightnessAutoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link>
 
+                      {/* <Link>
+                        {params.row.EmpType === "Contracts Out" && (
+                          <Tooltip title="Contract Out">
+                            <IconButton color="info">
+                              <UndoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Link> */}
+                    </Stack>
+                  );
+                },
+              };
+              listviewData.Data.columns.splice(2, 0, obj);
+            }
             if (AccessID == "TR027") {
               const obj = {
                 field: "Type",
@@ -6625,6 +6697,7 @@ export const fetchListview =
               };
               listviewData.Data.columns.splice(2, 0, obj);
             }
+
             if (AccessID == "TR027") {
               const obj = {
                 field: "emp",
@@ -7500,7 +7573,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
   console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
-  console.log("HeaderImg", HeaderImg, FooterImg);
+  console.log("HeaderImg", HeaderImg, FooterImg, LogoImg);
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
   const config = getConfig();
@@ -7557,7 +7630,57 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     const dispatch = store.dispatch;
     const [loading, setLoading] = React.useState(false);
 
-    const handlePDFGET = async () => {
+    // const handlePDFGET = async () => {
+    //   try {
+    //     setLoading(true);
+
+    //     const resultAction = await dispatch(
+    //       getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
+    //     );
+
+    //     const data = resultAction.payload; // <-- this depends on how your thunk is defined
+    //     if (!data?.HeaderData?.DetailData?.length) {
+    //       alert("No Order Items available for this order..");
+    //       return;
+    //     }
+
+    //     // Generate and download PDF
+    //     const blob = await pdf(
+    //       <OrderHeaderPdf
+    //         data={data}
+    //         UserName={UserName}
+    //         OrderType={OrderType}
+    //       />,
+    //     ).toBlob();
+    //     // const link = document.createElement("a");
+    //     // link.href = URL.createObjectURL(blob);
+    //     // //link.download = "OrderDeatils.pdf";
+    //     // link.Open();
+    //     // link.click();
+    //     const blobUrl = URL.createObjectURL(blob);
+    //     window.open(blobUrl, "_blank");
+
+    //     // 2. TO DOWNLOAD DIRECTLY
+    //     // const url = URL.createObjectURL(blob);
+
+    //     // const link = document.createElement("a");
+    //     // link.href = url;
+    //     // link.download = "OrderDetails.pdf";
+    //     // document.body.appendChild(link);
+
+    //     // link.click();
+
+    //     // document.body.removeChild(link);
+    //     // URL.revokeObjectURL(url);
+    //   } catch (err) {
+    //     console.error("PDF generation failed", err);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+    const handlePDFGET = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
       try {
         setLoading(true);
 
@@ -7565,13 +7688,12 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
         );
 
-        const data = resultAction.payload; // <-- this depends on how your thunk is defined
+        const data = resultAction.payload;
         if (!data?.HeaderData?.DetailData?.length) {
           alert("No Order Items available for this order..");
           return;
         }
 
-        // Generate and download PDF
         const blob = await pdf(
           <OrderHeaderPdf
             data={data}
@@ -7579,26 +7701,9 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             OrderType={OrderType}
           />,
         ).toBlob();
-        // const link = document.createElement("a");
-        // link.href = URL.createObjectURL(blob);
-        // //link.download = "OrderDeatils.pdf";
-        // link.Open();
-        // link.click();
+
         const blobUrl = URL.createObjectURL(blob);
         window.open(blobUrl, "_blank");
-
-        // 2. TO DOWNLOAD DIRECTLY
-        // const url = URL.createObjectURL(blob);
-
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = "OrderDetails.pdf";
-        // document.body.appendChild(link);
-
-        // link.click();
-
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(url);
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {
@@ -7703,7 +7808,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     }
   };
 
-  const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
+  const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month, Year }) => {
     const dispatch = store.dispatch;
     const [payloading, setPayLoading] = React.useState(false);
 
@@ -7746,7 +7851,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         const link = document.createElement("a");
         link.href = blobUrl;
-        link.download = "Payslip.pdf";
+        link.download = `Payslip_${Month}_${Year}.pdf`;
         document.body.appendChild(link); // ✅ Important
         link.click();
         document.body.removeChild(link); // ✅ Cleanup
@@ -8030,6 +8135,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 EmployeeID={params.row.EmployeeID}
                 Finyear={params.row.Year}
                 Month={params.row.Month}
+                Year={params.row.Year}
               />
             ) : (
               <Tooltip title="Payslip Process pending">
@@ -8299,9 +8405,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
               to={
                 params.row.OrderItemsCount >= 1
-                  ? `./TR311/${id}`
-                  : `./TR311/${id}/EditOrderitem/-1/A`
+                  ? `./TR311/Order Item/${id}`
+                  : `./TR311/Order Item/${id}/EditOrderitem/-1/A`
               }
+              // /Secondarylistview/:accessID1/:screenName1/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1
+              //  to={
+              //   params.row.OrderItemsCount >= 1
+              //     ? `/Apps/Secondarylistview/TR311/Order Item/${id}`
+              //     : `/Apps/Secondarylistview/TR311/Order Item/${id}/EditOrderitem/-1/A`
+              // }
               state={{
                 PartyName: params.row.PartyName,
                 Count: params.row.MarketingCount,
@@ -8426,6 +8538,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   OperationStageID: params.row.OperationStageID,
                   projectName: params.row.Project,
                   Employee: params.row.Employee,
+                  AcademicYearID: params.row.AcademicYearID,
+                  AcademicYear: params.row.AcademicYear
                 }}
               >
                 <Tooltip title="Edit">
@@ -8520,6 +8634,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(path, {
                     state: {
                       ...state,
+                      returnPage: state.page,
+                      returnPageSize: state.pageSize,
                       screenName: screenName,
                       EmpName: params.row.Name,
                       Employee: params.row.Employee,
@@ -8560,19 +8676,19 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </Tooltip>
             </Link>
             {is003Subscription && params.row.Classification == "Student" && (
-            <Link
-              to={`/Apps/AcademicReport/${params.row.RecordID}`}
-              state={{
-                EmpName: params.row.Name,
-                Employee: params.row.Personnel,
-              }}
-            >
-              <Tooltip title="Analytics">
-                <IconButton color="info" size="small">
-                  <BallotIcon />
-                </IconButton>
-              </Tooltip>
-            </Link>
+              <Link
+                to={`/Apps/AcademicReport/${params.row.RecordID}`}
+                state={{
+                  EmpName: params.row.Name,
+                  Employee: params.row.Personnel,
+                }}
+              >
+                <Tooltip title="Analytics">
+                  <IconButton color="info" size="small">
+                    <BallotIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
             )}
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
@@ -8637,7 +8753,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const [modalOpenE, setModalOpenE] = useState(false);
   const [selectedRowE, setSelectedRowE] = useState(null);
   const handleDeleteTermFees = async (values) => {
-     Swal.fire({
+    Swal.fire({
       title: "Do you want to Delete?",
       // text: "This action cannot be undone.",
       icon: "warning",
@@ -8648,19 +8764,19 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       cancelButtonColor: "#3085d6",
     }).then(async (result) => {
       if (result.isConfirmed) {
-    const payload = {
-      HeaderID: values.RecordID,
-      CompanyID: CompanyID,
-    }
-    console.log(payload, "-- GENERATE PAYLOAD");
-    const response = await dispatch(
-      FeesStructureDelete(payload)
-    );
-    console.log(response, "-- generate response");
+        const payload = {
+          HeaderID: values.RecordID,
+          CompanyID: CompanyID,
+        }
+        console.log(payload, "-- GENERATE PAYLOAD");
+        const response = await dispatch(
+          FeesStructureDelete(payload)
+        );
+        console.log(response, "-- generate response");
 
-    if (response?.payload?.Status === "Y") {
-      toast.success(response?.payload?.Msg);
-      dispatch(
+        if (response?.payload?.Status === "Y") {
+          toast.success(response?.payload?.Msg);
+          dispatch(
             fetchListview(
               "TR387",
               "003",
@@ -8671,12 +8787,12 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               "003"
 
             )
-          ); 
-    }
-    else if (response?.payload?.Status == "N") {
-      toast.error(response?.payload?.Msg);
-    }
-    }
+          );
+        }
+        else if (response?.payload?.Status == "N") {
+          toast.error(response?.payload?.Msg);
+        }
+      }
     });
   };
   const handleGenerateTimetable = async (values) => {
@@ -9517,7 +9633,7 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 AcademicYear: params.row.AcademicYear,
                 AcademicYearID: params.row.AcademicYearID,
                 AcademicType: params.row.AcademicType,
-                AcadamicTypeID:params.row.AcadamicTypeID
+                AcadamicTypeID: params.row.AcadamicTypeID
 
               }}
             >
@@ -9601,21 +9717,21 @@ const PartyAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>)} */}
-              <Link
-                to={`./EditEvent Category/${params.row.RecordID}/E`}
-                state={{
-                  ...state,
-                  // AcademicYear: params.row.AcademicYear,
-                  // BreadCrumb1: params.row.Category,
-                  BreadCrumb2: params.row.Title,
-                }}
-              >
-                <Tooltip title="Edit">
-                  <IconButton color="info" size="small">
-                    <ModeEditOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Link>
+            <Link
+              to={`./EditEvent Category/${params.row.RecordID}/E`}
+              state={{
+                ...state,
+                // AcademicYear: params.row.AcademicYear,
+                // BreadCrumb1: params.row.Category,
+                BreadCrumb2: params.row.Title,
+              }}
+            >
+              <Tooltip title="Edit">
+                <IconButton color="info" size="small">
+                  <ModeEditOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
           </>
         )}
       </div>

@@ -188,10 +188,29 @@ const TableHeaderRow = () => (
     </View>
 );
 
-const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
-    const totalBalance = data.reduce((sum, r) => sum + Number(r.Balance || 0), 0);
-    const totalParties = data.length;
+/**
+ * IMPORTANT FIX
+ * -------------
+ * The duplicated / out-of-order rows you were seeing were NOT caused by the
+ * sort logic. They were caused by react-pdf running a first layout pass
+ * before the header/footer <Image> (loaded from a remote URL) had finished
+ * downloading, then re-running pagination once the real image dimensions
+ * were known. Rows that were already placed with wrap={false} during the
+ * first pass were not being cleanly discarded on the second pass, which is
+ * what produced the repeated / shuffled blocks of rows in the final PDF.
+ *
+ * Fix: this component now expects filters.HeaderImg / filters.FooterImg to
+ * already be resolved, same-size-known image sources (ideally base64 data
+ * URIs, preloaded by the caller BEFORE <AgingPdf> is ever constructed / fed
+ * into <PDFDownloadLink document={...}>). It no longer builds a remote URL
+ * itself, so there is no async image load happening once react-pdf starts
+ * laying out the document, so there is only ever a single layout pass.
+ *
+ * See the accompanying PartyByDate.jsx changes for how to preload the
+ * images to base64 and gate the PDFDownloadLink until they're ready.
+ */
 
+const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
     const sortLabel =
         filters.PartySort === "ByDays"
             ? "By Days"
@@ -199,11 +218,43 @@ const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
                 ? "By Amount"
                 : "";
 
+    // IMPORTANT: do NOT re-sort here. The API already returns Data in the
+    // correct order for the requested SortType (ByDays / ByAmount) - that
+    // sort decision is made server-side based on what SortType was sent in
+    // the request. Re-sorting on the client was what caused SL# and row
+    // order to look "wrong"/inconsistent. The PDF must render rows in
+    // exactly the order the API response provides them, with SL# simply
+    // being that array position (i + 1).
+    const sortedData = Array.isArray(data) ? data : [];
+
     const currentDate = new Date().toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
     });
+
+    const totalBalance = sortedData.reduce(
+        (sum, r) => sum + Number(r.Balance || 0),
+        0
+    );
+
+    const totalParties = sortedData.length;
+
+    // Resolve the image source once. Prefer a preloaded data URI
+    // (filters.HeaderImgSrc / filters.FooterImgSrc) if the caller supplied
+    // one; only fall back to building a remote URL if it didn't (kept for
+    // backward compatibility, but NOT recommended - see note above).
+    const headerImgSrc =
+        filters.HeaderImgSrc ||
+        (filters.HeaderImg
+            ? `${filters.Imageurl}/uploads/images/${filters.HeaderImg}`
+            : null);
+
+    const footerImgSrc =
+        filters.FooterImgSrc ||
+        (filters.FooterImg
+            ? `${filters.Imageurl}/uploads/images/${filters.FooterImg}`
+            : null);
 
     return (
         <Document>
@@ -227,11 +278,8 @@ const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
             >
                 {/* HEADER IMAGE - repeats on every page */}
                 <View fixed style={styles.headerWrapper}>
-                    {filters.HeaderImg && (
-                        <Image
-                            src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                            style={styles.headerImage}
-                        />
+                    {headerImgSrc && (
+                        <Image src={headerImgSrc} style={styles.headerImage} />
                     )}
                 </View>
 
@@ -250,7 +298,7 @@ const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
                 <View style={styles.table}>
                     <TableHeaderRow />
 
-                    {data.map((row, i) => {
+                    {sortedData.map((row, i) => {
                         const balanceValue = Number(row.Balance || 0);
                         const displayBalance =
                             (balanceValue < 0 ? "-" : "") +
@@ -358,9 +406,9 @@ const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
                         height: footerHeight,
                     }}
                 >
-                    {filters.FooterImg && (
+                    {footerImgSrc && (
                         <Image
-                            src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                            src={footerImgSrc}
                             style={{ width: "100%", height: "100%" }}
                         />
                     )}
@@ -381,6 +429,7 @@ const AgingPdf = ({ data = [], filters = {}, footerHeight = 60 }) => {
 };
 
 export default AgingPdf;
+
 
 
 // import React from "react";
