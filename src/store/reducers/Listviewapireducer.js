@@ -138,6 +138,7 @@ import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 import AdmissionPDF from "../../apps/pages/Empolyee/AdmissionPDF";
 import Timetableprocess from "../../apps/pages/Modals/Timetableprocess";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
@@ -841,6 +842,7 @@ export const fetchListview =
           AccessID != "TR338" &&
           AccessID != "TR339" &&
           AccessID != "TR331" &&
+          AccessID != "TR418" &&
           AccessID != "TR366" &&
           AccessID != "TR351" &&
           AccessID != "TR127" &&
@@ -2533,6 +2535,37 @@ export const fetchListview =
                         <Tooltip title="Invoice">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                },
+              };
+            }
+            //Invoice Enquiry
+               else if (AccessID == "TR417") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => {
+                  return (
+                    <Box>
+                      <Link
+                        //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR418/Invoice Enquiry/${params.row.RecordID}`}
+                        state={{ AcademicYear: params.row.AcademicYear }}
+                      >
+                        <Tooltip title="Invoice Enquiry">
+                          <IconButton color="info" size="small">
+                            <FactCheckIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>

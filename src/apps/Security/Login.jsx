@@ -475,7 +475,7 @@
 
 // export default Login;
 
-//commented for school
+//commented for school - HR Login page
 // import { LoadingButton } from "@mui/lab";
 // import {
 //   Card,
@@ -1157,7 +1157,9 @@
 // export default Login;
 
 
-//New Design
+//New Design full background image
+
+
 
 import { LoadingButton } from "@mui/lab";
 import {
@@ -1196,10 +1198,10 @@ import { toast } from "react-hot-toast";
 // import background from "../../assets/img/Back_Office_Final.png";
 // import background from "../../assets/img/Back_Office_Final2.png";
 // import Schoolimg from "../../assets/img/BOS_Coverimg2.png";
-import Schoolimg from "../../assets/img/AdminV1.png";
-
+// import Schoolimg from "../../assets/img/AdminV1.png";
+import Schoolimg from "../../assets/img/Adminfullimg.png";
 import background1 from "../../assets/img//LAK_loginimg.jpg"
-
+import LogoImg from "../../assets/img/BexATM.png"
 
 const FlexBox = styled(Box)(() => ({
   display: "flex",
@@ -1506,309 +1508,679 @@ const Login = () => {
   };
 
   return (
-    <JWTRoot>
-      <Card
-        className="card"
+<JWTRoot>
+      <Box
         sx={{
+          position: "relative",
           width: "100%",
-          boxShadow: { xs: "none", sm: 3 },
-          borderRadius: { xs: 0, sm: 0 },
+          minHeight: "100vh",
+          height: { xs: "auto", md: "100vh" },   // ⬅ lets content grow instead of clipping on short screens
+          overflowY: { xs: "auto", md: "hidden" },
+          overflowX: "hidden",
 
-          // ✅ Add this
-          backgroundImage: {
-            xs: `url(${Schoolimg})`,
-            sm: "none",
-          },
-          backgroundSize: {
-            xs: "cover",
-            sm: "unset",
-          },
+          // ✅ Full-width background image (all breakpoints)
+          backgroundImage: `url(${Schoolimg})`,
+          backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
+
+          display: "flex",
+          alignItems: "center",           // keeps card vertically centered, not stretched
+          justifyContent: { xs: "center", sm: "center", md: "flex-end" },
+          px: { xs: 1.5, sm: 3, md: 6, lg: 10 },
+          py: { xs: 3, md: 0 },           // breathing room top/bottom on mobile when content wraps
         }}
       >
-        <Grid container sx={{
-          height: "100vh",
-        }}>
-
-          {/* Left Side: Illustration / Branding */}
-          <Grid
-            item
-            sm={6}
-            xs={false}
+        {/* Logo + Branding block — top-left over the background image (desktop only) */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flexDirection: "column",
+            position: "absolute",
+            top: { md: 15, lg: 15 },
+            left: { md: 30, lg: 56 },
+            maxWidth: 480,
+          }}
+        >
+          {/* Logo */}
+          <Box
+            component="img"
+            src={LogoImg} // TODO: replace LogoImg import below with your actual logo file
+            alt="ATM Logo"
             sx={{
-              display: { xs: "none", sm: "flex" },
-              alignItems: "center",
-              justifyContent: "center",
+              height: 100,
+              width: "auto",
+              objectFit: "contain",
+              mb: 1.5,
+            }}
+          />
+
+          {/* "Welcome to" + Portal name */}
+          <Typography
+            sx={{
+              fontSize: { md: "18px", lg: "20px" },
+              fontWeight: 600,
+              color: "#1B2559",
+              mb: 0.5,
             }}
           >
-            <Box
-              sx={{
-                backgroundImage: `url(${Schoolimg})`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "left center",
-                height: "100vh",
-                width: "100%",
-              }}
-            />
-          </Grid>
+            Welcome to
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: { md: "40px", lg: "48px" },
+              fontWeight: 800,
+              color: "#1B2559",
+              lineHeight: 1.1,
+              mb: 0.5,
+            }}
+          >
+            Admin Portal
+          </Typography>
 
-          {/* Right Side: Login Form (fills the white space) */}
-          <Grid item sm={6} xs={12}>
-            <ContentBox
+          {/* Short accent underline */}
+          <Box
+            sx={{
+              width: 56,
+              height: 4,
+              borderRadius: "2px",
+              backgroundColor: "#2F6FED",
+              mb: 0.5,
+            }}
+          />
+
+          {/* Supporting subtext */}
+          <Typography
+            sx={{
+              fontSize: { md: "15px", lg: "16px" },
+              color: "#1c2b47",
+              lineHeight: 1.6,
+              fontWeight: 550,
+            }}
+          >
+            Streamline operations. Manage users.
+            <br />
+            Empower your institution.
+          </Typography>
+        </Box>
+
+        {/* Floating Sign-In Card */}
+        <ContentBox
+          sx={{
+            width: "100%",
+            maxWidth: { xs: 380, sm: 400, md: 420, lg: 440 },
+            height: "auto",          // ⬅ override any height:100% / 100vh coming from ContentBox
+            minHeight: "unset",      // ⬅ override any minHeight coming from ContentBox
+            alignSelf: "center",     // ⬅ don't let flex stretch it vertically
+            flexGrow: 0,
+            backgroundColor: "#ffffff",
+            borderRadius: { xs: "18px", sm: "24px" },
+            boxShadow: "0px 25px 60px rgba(15, 23, 42, 0.28)",
+            p: { xs: 2, sm: 3, md: 3.5 },
+            mx: { xs: 0, md: 3 },
+          }}
+        >
+          {/* Header — subtext removed here since it now lives in the left branding block */}
+          <Box mb={2.5} textAlign="center">
+            <Typography
               sx={{
-                mx: "auto",
-                width: "100%",
-                maxWidth: { xs: "95%", sm: 420 },
-                paddingRight: { xs: 2, sm: 6 },
-                paddingLeft: { xs: 1, sm: 6 },
-                paddingTop: { xs: 0, sm: 0 },
-                paddingBottom: { xs: 0, sm: 0 },
-                backgroundColor: {
-                  xs: "rgba(255,255,255,0.85)",
-                  sm: "#ffffff",
-                },
-                backdropFilter: {
-                  xs: "blur(15px)",
-                  sm: "none",
-                },
+                fontSize: { xs: "18px", sm: "22px", md: "23px" },
+                fontWeight: 700,
+                color: "#1B2559",
               }}
             >
-              {/* Header */}
-              <Box mb={3} textAlign="center">
-                <Typography
-                  sx={{
-                    fontSize: { xs: "22px", sm: "26px" },
-                    fontWeight: 700,
-                    color: "#1B2559",
-                    mb: 1,
-                  }}
-                >
-                  Sign in to your account
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    color: "#8a94a6",
-                  }}
-                >
-                  Streamline operations, manage users, and stay on top of your institution.
-                </Typography>
-              </Box>
+              Sign in to your account
+            </Typography>
+          </Box>
 
-              {/* Form */}
-              <Formik
-                innerRef={formikRef}
-                initialValues={initialValues}
-                enableReinitialize
-                validate={(values) => {
-                  const errors = {};
-                  if (!values.username) {
-                    errors.username = "Please enter the Username";
-                  }
-                  if (!values.password) {
-                    errors.password = "Please enter the Password";
-                  }
-                  if (!values.license) {
-                    errors.license = "Please enter the Subscription Code";
-                  }
-                  return errors;
-                }}
-                onSubmit={(values, { resetForm }) => {
-                  fnLogin(values);
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  resetForm,
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Stack spacing={2}>
-                      {/* Username Field */}
-                      <Box>
-                        <FieldLabel>Username</FieldLabel>
-                        <StyledTextField
-                          name="username"
-                          id="username"
-                          placeholder="Enter your username"
-                          value={values.username}
-                          onBlur={handleBlur}
+          {/* Form */}
+          <Formik
+            innerRef={formikRef}
+            initialValues={initialValues}
+            enableReinitialize
+            validate={(values) => {
+              const errors = {};
+              if (!values.username) {
+                errors.username = "Please enter the Username";
+              }
+              if (!values.password) {
+                errors.password = "Please enter the Password";
+              }
+              if (!values.license) {
+                errors.license = "Please enter the Subscription Code";
+              }
+              return errors;
+            }}
+            onSubmit={(values, { resetForm }) => {
+              fnLogin(values);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              resetForm,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Stack spacing={1.5}>
+                  {/* Username Field */}
+                  <Box>
+                    <FieldLabel>Username</FieldLabel>
+                    <StyledTextField
+                      name="username"
+                      id="username"
+                      placeholder="Enter your username"
+                      value={values.username}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      fullWidth
+                      error={!!touched.username && !!errors.username}
+                      helperText={touched.username && errors.username}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <PersonOutlineOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  {/* Password Field */}
+                  <Box>
+                    <FieldLabel>Password</FieldLabel>
+                    <StyledTextField
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={values.password}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      fullWidth
+                      error={!!touched.password && !!errors.password}
+                      helperText={touched.password && errors.password}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={handleClickShowPassword} edge="end">
+                              {showPassword ? <VisibilityOffIcon sx={{ color: "#9aa5b1" }} /> : <VisibilityIcon sx={{ color: "#9aa5b1" }} />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        sx: {
+                          paddingRight: "14px",
+                          paddingLeft: "7px",
+                          borderRadius: "10px",
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  {/* Subscription Code Field */}
+                  <Box>
+                    <FieldLabel>Subscription Code</FieldLabel>
+                    <StyledTextField
+                      name="license"
+                      id="license"
+                      placeholder="Enter your subscription code"
+                      value={values.license}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      fullWidth
+                      error={!!touched.license && !!errors.license}
+                      helperText={touched.license && errors.license}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <ConfirmationNumberOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+                          </InputAdornment>
+                        ),
+                        sx: {
+                          borderRadius: "10px",
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  {/* Remember Me & Forgot Password */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      rowGap: 0.5,
+                      mt: 1,
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="remember"
+                          checked={values.remember}
                           onChange={handleChange}
-                          fullWidth
-                          error={!!touched.username && !!errors.username}
-                          helperText={touched.username && errors.username}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <PersonOutlineOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Box>
-
-                      {/* Password Field */}
-                      <Box>
-                        <FieldLabel>Password</FieldLabel>
-                        <StyledTextField
-                          name="password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
-                          value={values.password}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          fullWidth
-                          error={!!touched.password && !!errors.password}
-                          helperText={touched.password && errors.password}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <LockOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton onClick={handleClickShowPassword} edge="end">
-                                  {showPassword ? <VisibilityOffIcon sx={{ color: "#9aa5b1" }} /> : <VisibilityIcon sx={{ color: "#9aa5b1" }} />}
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                            sx: {
-                              paddingRight: "14px",
-                              paddingLeft: "7px",
-                            },
-                          }}
-                        />
-                      </Box>
-
-                      {/* Subscription Code Field */}
-                      <Box>
-                        <FieldLabel>Subscription Code</FieldLabel>
-                        <StyledTextField
-                          name="license"
-                          id="license"
-                          placeholder="Enter your subscription code"
-                          value={values.license}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          fullWidth
-                          error={!!touched.license && !!errors.license}
-                          helperText={touched.license && errors.license}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <ConfirmationNumberOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Box>
-
-                      {/* Remember Me & Forgot Password */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          mt: 1,
-                        }}
-                      >
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="remember"
-                              checked={values.remember}
-                              onChange={handleChange}
-                              sx={{
-                                color: "#c4c9d4",
-                                "&.Mui-checked": {
-                                  color: "#2F6FED",
-                                },
-                              }}
-                            />
-                          }
-                          label={
-                            <Typography sx={{ color: "#666", fontSize: "14px" }}>
-                              Remember me
-                            </Typography>
-                          }
-                        />
-                        <Link
-                          onClick={() => navigate("/Forgotpassword")}
                           sx={{
-                            color: "#2F6FED",
-                            fontSize: "14px",
-                            cursor: "pointer",
-                            textDecoration: "none",
-                            "&:hover": {
-                              textDecoration: "underline",
+                            color: "#c4c9d4",
+                            "&.Mui-checked": {
+                              color: "#2F6FED",
                             },
                           }}
-                        >
-                          Forget Password?
-                        </Link>
-                      </Box>
+                        />
+                      }
+                      label={
+                        <Typography sx={{ color: "#666", fontSize: "14px" }}>
+                          Remember me
+                        </Typography>
+                      }
+                    />
+                    <Link
+                      onClick={() => navigate("/Forgotpassword")}
+                      sx={{
+                        color: "#2F6FED",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      Forget Password?
+                    </Link>
+                  </Box>
 
-                      {/* Login Button */}
-                      <LoginButton
-                        type="submit"
-                        loading={isLoading}
-                        variant="contained"
-                        fullWidth
-                        startIcon={!isLoading ? <LockOutlinedIcon sx={{ fontSize: "18px" }} /> : null}
-                        sx={{ mt: 3 }}
-                      >
-                        Sign In
-                      </LoginButton>
-                    </Stack>
-                  </form>
-                )}
-              </Formik>
+                  {/* Login Button */}
+                  <LoginButton
+                    type="submit"
+                    loading={isLoading}
+                    variant="contained"
+                    fullWidth
+                    startIcon={!isLoading ? <LockOutlinedIcon sx={{ fontSize: "18px" }} /> : null}
+                    sx={{
+                      mt: 1.5,
+                      borderRadius: "10px",
+                      py: 1,
+                      background: "linear-gradient(90deg, #1B3FA0 0%, #2F6FED 100%)",
+                      "&:hover": {
+                        background: "linear-gradient(90deg, #17348A 0%, #275FD1 100%)",
+                      },
+                    }}
+                  >
+                    Sign In
+                  </LoginButton>
+                </Stack>
+              </form>
+            )}
+          </Formik>
 
-              {/* Trust badges footer, matching the reference design */}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mt: 4,
-                  pt: 3,
-                  borderTop: "1px solid #eef1f4",
-                }}
-              >
-                <TrustItem
-                  icon={<ShieldOutlinedIcon fontSize="small" />}
-                  color="#14C6B8"
-                  title="Secure & Private"
-                  subtitle="Your data is safe with us"
-                />
-                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-                <TrustItem
-                  icon={<GroupsOutlinedIcon fontSize="small" />}
-                  color="#2F6FED"
-                  title="Role-Based Access"
-                  subtitle="Built for your team"
-                />
-                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-                <TrustItem
-                  icon={<AccessTimeOutlinedIcon fontSize="small" />}
-                  color="#2F6FED"
-                  title="Real-time Updates"
-                  subtitle="Stay informed, always"
-                />
-              </Box>
-            </ContentBox>
-          </Grid>
+          {/* Trust badges footer, matching the reference design */}
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              alignItems: "center",
+              justifyContent: { xs: "center", sm: "space-between" },
+              gap: { xs: 1.5, sm: 0 },
+              mt: 2,
+              pt: 2,
+              borderTop: "1px solid #eef1f4",
+            }}
+          >
+            <Box sx={{ flex: { xs: "1 1 45%", sm: "1 1 0" }, minWidth: 0 }}>
+              <TrustItem
+                icon={<ShieldOutlinedIcon fontSize="small" />}
+                color="#14C6B8"
+                title="Secure & Private"
+                subtitle="Your data is safe with us"
+              />
+            </Box>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 1, display: { xs: "none", sm: "block" } }}
+            />
+            <Box sx={{ flex: { xs: "1 1 45%", sm: "1 1 0" }, minWidth: 0 }}>
+              <TrustItem
+                icon={<GroupsOutlinedIcon fontSize="small" />}
+                color="#2F6FED"
+                title="Role-Based Access"
+                subtitle="Built for your team"
+              />
+            </Box>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 1, display: { xs: "none", sm: "block" } }}
+            />
+            <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 0" }, minWidth: 0 }}>
+              <TrustItem
+                icon={<AccessTimeOutlinedIcon fontSize="small" />}
+                color="#2F6FED"
+                title="Real-time Updates"
+                subtitle="Stay informed, always"
+              />
+            </Box>
+          </Box>
+        </ContentBox>
+      </Box>
+    </JWTRoot>
 
-        </Grid>
-      </Card>
-    </JWTRoot >
+    // <JWTRoot>
+    //   <Card
+    //     className="card"
+    //     sx={{
+    //       width: "100%",
+    //       boxShadow: { xs: "none", sm: 3 },
+    //       borderRadius: { xs: 0, sm: 0 },
+
+    //       // ✅ Add this
+    //       backgroundImage: {
+    //         xs: `url(${Schoolimg})`,
+    //         sm: "none",
+    //       },
+    //       backgroundSize: {
+    //         xs: "cover",
+    //         sm: "unset",
+    //       },
+    //       backgroundRepeat: "no-repeat",
+    //       backgroundPosition: "center",
+    //     }}
+    //   >
+    //     <Grid container sx={{
+    //       height: "100vh",
+    //     }}>
+
+    //       {/* Left Side: Illustration / Branding */}
+    //       <Grid
+    //         item
+    //         sm={6}
+    //         xs={false}
+    //         sx={{
+    //           display: { xs: "none", sm: "flex" },
+    //           alignItems: "center",
+    //           justifyContent: "center",
+    //         }}
+    //       >
+    //         <Box
+    //           sx={{
+    //             backgroundImage: `url(${Schoolimg})`,
+    //             backgroundSize: "cover",
+    //             backgroundRepeat: "no-repeat",
+    //             backgroundPosition: "left center",
+    //             height: "100vh",
+    //             width: "100%",
+    //           }}
+    //         />
+    //       </Grid>
+
+    //       {/* Right Side: Login Form (fills the white space) */}
+    //       <Grid item sm={6} xs={12}>
+    //         <ContentBox
+    //           sx={{
+    //             mx: "auto",
+    //             width: "100%",
+    //             maxWidth: { xs: "95%", sm: 420 },
+    //             paddingRight: { xs: 2, sm: 6 },
+    //             paddingLeft: { xs: 1, sm: 6 },
+    //             paddingTop: { xs: 0, sm: 0 },
+    //             paddingBottom: { xs: 0, sm: 0 },
+    //             backgroundColor: {
+    //               xs: "rgba(255,255,255,0.85)",
+    //               sm: "#ffffff",
+    //             },
+    //             backdropFilter: {
+    //               xs: "blur(15px)",
+    //               sm: "none",
+    //             },
+    //           }}
+    //         >
+    //           {/* Header */}
+    //           <Box mb={3} textAlign="center">
+    //             <Typography
+    //               sx={{
+    //                 fontSize: { xs: "22px", sm: "26px" },
+    //                 fontWeight: 700,
+    //                 color: "#1B2559",
+    //                 mb: 1,
+    //               }}
+    //             >
+    //               Sign in to your account
+    //             </Typography>
+    //             <Typography
+    //               sx={{
+    //                 fontSize: "14px",
+    //                 color: "#8a94a6",
+    //               }}
+    //             >
+    //               Streamline operations, manage users, and stay on top of your institution.
+    //             </Typography>
+    //           </Box>
+
+    //           {/* Form */}
+    //           <Formik
+    //             innerRef={formikRef}
+    //             initialValues={initialValues}
+    //             enableReinitialize
+    //             validate={(values) => {
+    //               const errors = {};
+    //               if (!values.username) {
+    //                 errors.username = "Please enter the Username";
+    //               }
+    //               if (!values.password) {
+    //                 errors.password = "Please enter the Password";
+    //               }
+    //               if (!values.license) {
+    //                 errors.license = "Please enter the Subscription Code";
+    //               }
+    //               return errors;
+    //             }}
+    //             onSubmit={(values, { resetForm }) => {
+    //               fnLogin(values);
+    //             }}
+    //           >
+    //             {({
+    //               values,
+    //               errors,
+    //               touched,
+    //               handleBlur,
+    //               handleChange,
+    //               handleSubmit,
+    //               resetForm,
+    //             }) => (
+    //               <form onSubmit={handleSubmit}>
+    //                 <Stack spacing={2}>
+    //                   {/* Username Field */}
+    //                   <Box>
+    //                     <FieldLabel>Username</FieldLabel>
+    //                     <StyledTextField
+    //                       name="username"
+    //                       id="username"
+    //                       placeholder="Enter your username"
+    //                       value={values.username}
+    //                       onBlur={handleBlur}
+    //                       onChange={handleChange}
+    //                       fullWidth
+    //                       error={!!touched.username && !!errors.username}
+    //                       helperText={touched.username && errors.username}
+    //                       InputProps={{
+    //                         startAdornment: (
+    //                           <InputAdornment position="start">
+    //                             <PersonOutlineOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+    //                           </InputAdornment>
+    //                         ),
+    //                       }}
+    //                     />
+    //                   </Box>
+
+    //                   {/* Password Field */}
+    //                   <Box>
+    //                     <FieldLabel>Password</FieldLabel>
+    //                     <StyledTextField
+    //                       name="password"
+    //                       type={showPassword ? "text" : "password"}
+    //                       placeholder="Enter your password"
+    //                       value={values.password}
+    //                       onBlur={handleBlur}
+    //                       onChange={handleChange}
+    //                       fullWidth
+    //                       error={!!touched.password && !!errors.password}
+    //                       helperText={touched.password && errors.password}
+    //                       InputProps={{
+    //                         startAdornment: (
+    //                           <InputAdornment position="start">
+    //                             <LockOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+    //                           </InputAdornment>
+    //                         ),
+    //                         endAdornment: (
+    //                           <InputAdornment position="end">
+    //                             <IconButton onClick={handleClickShowPassword} edge="end">
+    //                               {showPassword ? <VisibilityOffIcon sx={{ color: "#9aa5b1" }} /> : <VisibilityIcon sx={{ color: "#9aa5b1" }} />}
+    //                             </IconButton>
+    //                           </InputAdornment>
+    //                         ),
+    //                         sx: {
+    //                           paddingRight: "14px",
+    //                           paddingLeft: "7px",
+    //                         },
+    //                       }}
+    //                     />
+    //                   </Box>
+
+    //                   {/* Subscription Code Field */}
+    //                   <Box>
+    //                     <FieldLabel>Subscription Code</FieldLabel>
+    //                     <StyledTextField
+    //                       name="license"
+    //                       id="license"
+    //                       placeholder="Enter your subscription code"
+    //                       value={values.license}
+    //                       onBlur={handleBlur}
+    //                       onChange={handleChange}
+    //                       fullWidth
+    //                       error={!!touched.license && !!errors.license}
+    //                       helperText={touched.license && errors.license}
+    //                       InputProps={{
+    //                         startAdornment: (
+    //                           <InputAdornment position="start">
+    //                             <ConfirmationNumberOutlinedIcon sx={{ color: "#9aa5b1", fontSize: "20px" }} />
+    //                           </InputAdornment>
+    //                         ),
+    //                       }}
+    //                     />
+    //                   </Box>
+
+    //                   {/* Remember Me & Forgot Password */}
+    //                   <Box
+    //                     sx={{
+    //                       display: "flex",
+    //                       justifyContent: "space-between",
+    //                       alignItems: "center",
+    //                       mt: 1,
+    //                     }}
+    //                   >
+    //                     <FormControlLabel
+    //                       control={
+    //                         <Checkbox
+    //                           name="remember"
+    //                           checked={values.remember}
+    //                           onChange={handleChange}
+    //                           sx={{
+    //                             color: "#c4c9d4",
+    //                             "&.Mui-checked": {
+    //                               color: "#2F6FED",
+    //                             },
+    //                           }}
+    //                         />
+    //                       }
+    //                       label={
+    //                         <Typography sx={{ color: "#666", fontSize: "14px" }}>
+    //                           Remember me
+    //                         </Typography>
+    //                       }
+    //                     />
+    //                     <Link
+    //                       onClick={() => navigate("/Forgotpassword")}
+    //                       sx={{
+    //                         color: "#2F6FED",
+    //                         fontSize: "14px",
+    //                         cursor: "pointer",
+    //                         textDecoration: "none",
+    //                         "&:hover": {
+    //                           textDecoration: "underline",
+    //                         },
+    //                       }}
+    //                     >
+    //                       Forget Password?
+    //                     </Link>
+    //                   </Box>
+
+    //                   {/* Login Button */}
+    //                   <LoginButton
+    //                     type="submit"
+    //                     loading={isLoading}
+    //                     variant="contained"
+    //                     fullWidth
+    //                     startIcon={!isLoading ? <LockOutlinedIcon sx={{ fontSize: "18px" }} /> : null}
+    //                     sx={{ mt: 3 }}
+    //                   >
+    //                     Sign In
+    //                   </LoginButton>
+    //                 </Stack>
+    //               </form>
+    //             )}
+    //           </Formik>
+
+    //           {/* Trust badges footer, matching the reference design */}
+    //           <Box
+    //             sx={{
+    //               display: "flex",
+    //               alignItems: "center",
+    //               justifyContent: "space-between",
+    //               mt: 4,
+    //               pt: 3,
+    //               borderTop: "1px solid #eef1f4",
+    //             }}
+    //           >
+    //             <TrustItem
+    //               icon={<ShieldOutlinedIcon fontSize="small" />}
+    //               color="#14C6B8"
+    //               title="Secure & Private"
+    //               subtitle="Your data is safe with us"
+    //             />
+    //             <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+    //             <TrustItem
+    //               icon={<GroupsOutlinedIcon fontSize="small" />}
+    //               color="#2F6FED"
+    //               title="Role-Based Access"
+    //               subtitle="Built for your team"
+    //             />
+    //             <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+    //             <TrustItem
+    //               icon={<AccessTimeOutlinedIcon fontSize="small" />}
+    //               color="#2F6FED"
+    //               title="Real-time Updates"
+    //               subtitle="Stay informed, always"
+    //             />
+    //           </Box>
+    //         </ContentBox>
+    //       </Grid>
+
+    //     </Grid>
+    //   </Card>
+    // </JWTRoot >
   );
 };
 

@@ -58,6 +58,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
@@ -777,6 +778,8 @@ const Listview = () => {
                 ? `${screenName1}` :
                 accessID == "TR416"
                   ? `${screenName1}` :
+                  accessID == "TR417"
+                  ? `${screenName1}` :
                   accessID == "TR411"
                     ? `${screenName1}` :
                     accessID == "TR383"
@@ -993,9 +996,9 @@ const Listview = () => {
                          : accessID == "TR411" ? (
                         false
                       )
-                        //  : accessID == "TR391" ? (
-                        //   false
-                        // )
+                         : accessID == "TR417" ? (
+                          false
+                        )
                         // : YearFlag == "true" ? (
                         : UGA_ADD ? (
 
@@ -6175,6 +6178,16 @@ const Listview = () => {
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label=" List of Category"
+              variant="outlined"
+            />
+          </Box>
+        )
+        //Invoice enquiry
+        : accessID == "TR417" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<FactCheckIcon color="primary" />}
+              label="Invoice Enquiry"
               variant="outlined"
             />
           </Box>

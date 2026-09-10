@@ -17,6 +17,9 @@ import {
   DialogActions,
   Grid,
   MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { Formik } from "formik";
 import { BlobProvider, pdf, PDFDownloadLink } from "@react-pdf/renderer";
@@ -150,6 +153,7 @@ import InvpaymentPDF from "./pdf/Invpaymentdetailpdf";
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import LockResetIcon from "@mui/icons-material/LockReset";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import InvenquiryPDF from "./pdf/Invoiceenquirypdf";
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -259,7 +263,238 @@ const ListviewSecondary = () => {
         setTransferLoading(false);
       });
   };
+  // New component — lives outside Secondarylistview, or above it in the same file
+  function TR418FilterPanel({
+    setShowMore,
+    currentMonthNumber,
+    currentYear,
+    dispatch,
+    fetchListview,
+    Subscriptionlastthree,
+    screenName,
+    CompId,
+    listViewData,
+    baseurl1,
+    HeaderImg,
+    FooterImg,
+    is003Subscription,
+  }) {
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ];
 
+    const savedFilters = JSON.parse(sessionStorage.getItem("TR418_Filters")) || {};
+
+    const initialFormValues = {
+      Standard: savedFilters.Standard || [],
+      Student: savedFilters.Student || [],
+      Type: savedFilters.Type || "Month",
+      months: savedFilters.months || monthNames[currentMonthNumber - 1],
+      Paymentyear: savedFilters.Paymentyear || currentYear,
+    };
+
+    // ✅ now legal — top level of a real function component
+    const [appliedValues, setAppliedValues] = useState(initialFormValues);
+
+    return (
+      <Box sx={{ width: 320, p: 2, borderRadius: 1, backgroundColor: "#fff", position: "relative" }}>
+        <Formik
+          initialValues={initialFormValues}
+          enableReinitialize
+          onSubmit={(values, { setSubmitting }) => {
+            sessionStorage.setItem("TR418_Filters", JSON.stringify(values));
+            setAppliedValues(values); // snapshot only on Apply
+
+            const conditions = [];
+            if (values.Student?.length > 0) {
+              const EmpIds = values.Student.map((e) => `'${e.RecordID}'`).join(",");
+              conditions.push(`EmployeeID IN (${EmpIds})`);
+            }
+            if (values.Standard?.length > 0) {
+              const projIds = values.Standard.map((p) => `'${p.RecordID}'`).join(",");
+              conditions.push(`ProjectID IN (${projIds})`);
+            }
+            if (values.months) {
+              const monthNumbers = values.months
+                .split(",")
+                .map((name) => monthNames.indexOf(name.trim()) + 1)
+                .filter((n) => n > 0);
+              if (monthNumbers.length > 0) {
+                conditions.push(`BillableMonth IN (${monthNumbers.join(",")})`);
+              }
+            }
+            if (values.Paymentyear) {
+              conditions.push(`BillableYear='${values.Paymentyear}'`);
+            }
+            conditions.push(`CompanyID='${CompId}'`);
+
+            const whereClause = conditions.join(" AND ");
+
+            dispatch(
+              fetchListview("TR418", Subscriptionlastthree, screenName, whereClause, "", CompId)
+            );
+
+            setTimeout(() => setSubmitting(false), 100);
+          }}
+        >
+          {({ values, handleChange, handleSubmit, resetForm, handleBlur, setFieldValue, isSubmitting }) => (
+            <form onSubmit={handleSubmit}>
+              <Box sx={{ height: 600, overflowY: "auto" }}>
+                <IconButton size="small" onClick={() => setShowMore(false)} sx={{ position: "absolute", top: 5, right: 4 }}>
+                  <Tooltip title="Close">
+                    <CancelIcon color="error" />
+                  </Tooltip>
+                </IconButton>
+
+                <MultiFormikOptimizedAutocomplete
+                  sx={{ mt: 2 }}
+                  name="Standard"
+                  label={is003Subscription ? "Standard/Activities" : "Standard"}
+                  value={values.Standard}
+                  onChange={(e, newValue) => setFieldValue("Standard", newValue)}
+                  url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                      AccessID: "2054",
+                      ScreenName: "Standard",
+                      VerticalLicense: Subscriptionlastthree,
+                      Filter: `parentID='${CompId}'`,
+                      Any: "",
+                    },
+                  })}`}
+                />
+
+                <MultiFormikOptimizedAutocomplete
+                  sx={{ mt: 2 }}
+                  name="Student"
+                  label={is003Subscription ? "Student" : "Personnel"}
+                  value={values.Student}
+                  onChange={(e, newValue) => setFieldValue("Student", newValue)}
+                  url={`${listViewurl}?data=${JSON.stringify({
+                    Query: {
+                      AccessID: "2116",
+                      ScreenName: "Personnel",
+                      VerticalLicense: Subscriptionlastthree,
+                      Filter: `CompanyID='${CompId}'`,
+                      Any: "",
+                    },
+                  })}`}
+                />
+
+                <TextField
+                  sx={{ mt: 2 }}
+                  select
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  label="Type"
+                  value={values.Type}
+                  id="Type"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  name="Type"
+                >
+                  <MenuItem value="Month">Month</MenuItem>
+                  <MenuItem value="Standard">Standard</MenuItem>
+                </TextField>
+
+                <FormControl variant="standard" fullWidth focused sx={{ mt: 2 }}>
+                  <InputLabel id="Month-label">Month</InputLabel>
+                  <Select
+                    labelId="Month-label"
+                    id="months"
+                    name="months"
+                    multiple
+                    value={values.months ? values.months.split(",").filter(Boolean) : []}
+                    onChange={(e) => {
+                      handleChange({ target: { name: "months", value: e.target.value.join(",") } });
+                    }}
+                    renderValue={(selected) => selected.join(", ")}
+                  >
+                    {monthNames.map((m) => (
+                      <MenuItem key={m} value={m}>{m}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <TextField
+                  sx={{ mt: 2 }}
+                  variant="standard"
+                  label="Year"
+                  name="Paymentyear"
+                  value={values.Paymentyear || ""}
+                  onChange={handleChange}
+                  select
+                  fullWidth
+                  focused
+                  InputProps={{
+                    endAdornment: values.Paymentyear && (
+                      <InputAdornment position="end">
+                        <IconButton size="small" sx={{ marginRight: 2 }} onClick={() => setFieldValue("Paymentyear", "")}>
+                          <ClearIcon fontSize="small" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                >
+                  {Array.from({ length: 3 }, (_, index) => {
+                    const year = new Date().getFullYear() - index;
+                    return <MenuItem key={year} value={String(year)}>{year}</MenuItem>;
+                  })}
+                </TextField>
+
+                <Stack direction="row" justifyContent="end" spacing={1} mt={3}>
+                  <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    Apply
+                  </Button>
+
+                  <PDFDownloadLink
+                    key={`${appliedValues.Type}-${appliedValues.months}-${appliedValues.Paymentyear}`}
+                    document={
+                      <InvenquiryPDF
+                        data={listViewData}
+                        filters={{
+                          Imageurl: baseurl1,
+                          HeaderImg,
+                          FooterImg,
+                          months: appliedValues.months,
+                          Paymentyear: appliedValues.Paymentyear,
+                          PDFType: appliedValues.Type,
+                        }}
+                      />
+                    }
+                    fileName={`Invoice_Enquiry_${appliedValues.Type}_wise`}
+                    style={{ color: "#d32f2f" }}
+                  >
+                    {({ loading }) => (loading ? <PictureAsPdfIcon sx={{ opacity: 0.5 }} /> : <PictureAsPdfIcon />)}
+                  </PDFDownloadLink>
+
+                  <Button
+                    type="button"
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      sessionStorage.removeItem("TR418_Filters");
+                      resetForm({
+                        values: {
+                          Student: [],
+                          Standard: [],
+                          months: currentMonthNumber,
+                          Paymentyear: currentYear,
+                        },
+                      });
+                    }}
+                  >
+                    RESET
+                  </Button>
+                </Stack>
+              </Box>
+            </form>
+          )}
+        </Formik>
+      </Box>
+    );
+  }
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
   );
@@ -433,6 +668,9 @@ const ListviewSecondary = () => {
     filter = `MobileNo = '${state.MobileNo}'`;
   }
   else if (accessID == "TR375") {
+    filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
+  }
+  else if (accessID == "TR418") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
   else if (accessID == "TR395") {
@@ -1477,7 +1715,32 @@ const ListviewSecondary = () => {
                   </Typography>
                 </Breadcrumbs>
               </Box>
-            ) : accessID == "TR332" ? (
+            ) : accessID == "TR418" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR417/Academic Year");
+                  }}
+                >
+                  Academic Year ({state.AcademicYear})
+                </Typography>
+                <Typography
+                  key={63259}
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>            
+          ) : accessID == "TR332" ? (
               <Breadcrumbs
                 maxItems={2}
                 aria-label="breadcrumb"
@@ -1507,12 +1770,12 @@ const ListviewSecondary = () => {
                         navigate(`/Apps/SecondarylistView/TR331/Invoice/${state.AcademicYearID}`, { state: { ...state } }) :
                         navigate("/Apps/TR366/Invoice");
                     }
-
+ 
                   }}
                 >
                   {`Invoice(${state.Employee})`}
                 </Typography>
-
+ 
                 <Typography
                   key={63259}
                   variant="h5"
@@ -1522,7 +1785,7 @@ const ListviewSecondary = () => {
                   {screenName}
                 </Typography>
               </Breadcrumbs>
-            ) : accessID == "TR375" ? (
+              ) : accessID == "TR375" ? (
               <Breadcrumbs
                 maxItems={2}
                 aria-label="breadcrumb"
@@ -5001,7 +5264,7 @@ const ListviewSecondary = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            {accessID === "TR371" || accessID === "TR372" || accessID === "TR331" ||
+            {accessID === "TR371" || accessID === "TR372" || accessID === "TR331" || accessID === "TR418" ||
               accessID === "TR366" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
@@ -5399,6 +5662,8 @@ const ListviewSecondary = () => {
                 ) : accessID == "TR331" ? (
                   false
                 ) : accessID == "TR399" ? (
+                  false
+                ) : accessID == "TR418" ? (
                   false
                   //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
                   // false  
@@ -7274,6 +7539,25 @@ const ListviewSecondary = () => {
               );
 
             })()}
+            {/* Invoice enquiry */}
+            {showMore && accessID === "TR418" && (
+              <TR418FilterPanel
+                setShowMore={setShowMore}
+                currentMonthNumber={currentMonthNumber}
+                currentYear={currentYear}
+                dispatch={dispatch}
+                fetchListview={fetchListview}
+                Subscriptionlastthree={Subscriptionlastthree}
+                screenName={screenName}
+                CompId={CompId}
+                listViewData={listViewData}
+                baseurl1={baseurl1}
+                HeaderImg={HeaderImg}
+                FooterImg={FooterImg}
+                is003Subscription={is003Subscription}
+              />
+            )}
+
           </Box>
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
@@ -8439,7 +8723,7 @@ const ListviewSecondary = () => {
                               variant="outlined"
                             />
                           </Box>
-                        ) : accessID != "TR373" && accessID != "TR371" && accessID != "TR399" ? (
+                        ) : accessID != "TR373" && accessID != "TR418" && accessID != "TR371" && accessID != "TR399" ? (
                           <Box display="flex" flexDirection="row" padding="25px">
                             <Chip
                               icon={<ModeEditOutlinedIcon color="primary" />}
