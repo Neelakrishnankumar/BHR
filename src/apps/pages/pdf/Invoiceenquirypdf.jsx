@@ -721,7 +721,7 @@ const InvpaymentPDF = ({
 
                                 <View style={styles.summaryStrip}>
                                     <View style={styles.summaryCell}>
-                                        <Text style={styles.summaryLabel}>Invoices</Text>
+                                        <Text style={styles.summaryLabel}>Receipts</Text>
                                         <Text style={styles.summaryValue}>{totalInvoices}</Text>
                                     </View>
                                     <View style={styles.summaryCell}>
@@ -894,7 +894,7 @@ const InvpaymentPDF = ({
                         <Text style={[styles.headerCell, styles.sSL, styles.cellCenter]}>SL#</Text>
                         <Text style={[styles.headerCell, styles.sPrimary]}>{summaryPrimaryHeader}</Text>
                         <Text style={[styles.headerCell, styles.sSecondary]}>{summarySecondaryHeader}</Text>
-                        <Text style={[styles.headerCell, styles.sInv, styles.cellCenter]}>Invoices</Text>
+                        <Text style={[styles.headerCell, styles.sInv, styles.cellCenter]}>Receipts</Text>
                         <Text style={[styles.headerCell, styles.sAmt, styles.cellNum]}>Amount</Text>
                         <Text style={[styles.headerCell, styles.sPaid, styles.cellNum]}>Paid</Text>
                         <Text style={[styles.headerCell, styles.sDue, styles.cellNum]}>Due</Text>
@@ -970,6 +970,7 @@ export default InvpaymentPDF;
 //     amberTint: "#FBF3E4",
 //     due: "#A6432E",
 //     headerText: "#EFE9DC",
+//     muted_v1: "#343941",
 // };
 
 // /* =========================================================
@@ -987,7 +988,9 @@ export default InvpaymentPDF;
 //     },
 
 //     /* ---------- MASTHEAD ---------- */
-
+// summaryTableWrapper: {
+//   width: "60%",
+// },
 //     masthead: {
 //         position: "relative",
 //         flexDirection: "row",
@@ -1075,11 +1078,11 @@ export default InvpaymentPDF;
 //     },
 
 //     summaryLabel: {
-//         fontSize: 8,
-//         // color: COLORS.muted,
+//         fontSize: 10,
+//         color: COLORS.ink,
 //         marginBottom: 4,
 //         textAlign: "center",
-//         fontWeight: 700,
+//         fontWeight: 600,
 //     },
 
 //     summaryValue: {
@@ -1181,11 +1184,12 @@ export default InvpaymentPDF;
 //         borderBottomColor: COLORS.amber,
 //     },
 
-//     subtotalLabel: {
+//        subtotalLabel: {
 //         fontSize: 7,
 //         fontWeight: 600,
 //         color: COLORS.muted,
 //         padding: 5,
+//         textAlign: "right",
 //     },
 
 //     subtotalValue: {
@@ -1217,25 +1221,54 @@ export default InvpaymentPDF;
 //         textAlign: "right",
 //     },
 
-//     /* ---------- COLUMN WIDTHS: DETAIL TABLE ---------- */
+//     /* ---------- COLUMN WIDTHS: DETAIL TABLE ----------
+//        Two of these columns swap meaning depending on report type:
+//        - wProject / wProjectNarrow  → "Standard/Activities" (Month mode)
+//                                        or "Billable Month/Year" (Standard mode)
+//        - wEmployee / wEmployeeNarrow → "Student"
+//        The *Narrow variants are used in Standard mode, since that
+//        column's content ("September || 2026") and the Student column
+//        are both shorter there; the freed-up width is redistributed to
+//        Paid / Due / Paid Date so each mode's row still lines up.
+//        NOTE: the Amount column itself has been removed from the header
+//        and data rows entirely (see wAmount / wAmountWide below — they
+//        are now unused by the header/data rows and are only kept around
+//        in case the column is restored later). ---------- */
 
 //     wSL: { width: "3.5%" },
 //     wInvoice: { width: "7%" },
 //     wDate: { width: "7%" },
-//     wEmployee: { width: "18%" },
-//     wProject: { width: "20%" },
+
+//     wEmployee: { width: "18%" },        // Student — Month mode
+//     wEmployeeNarrow: { width: "15%" },  // Student — Standard mode
+
+//     wProject: { width: "20%" },         // Standard/Activities — Month mode
+//     wProjectNarrow: { width: "14%" },   // Billable Month/Year — Standard mode
+
 //     wAmount: { width: "10%" },
+//     wAmountWide: { width: "12%" },
+
 //     wPaid: { width: "10%" },
+//     wPaidWide: { width: "12%" },
+
 //     wDue: { width: "10%" },
+//     wDueWide: { width: "12%" },
+
 //     wLastPaid: { width: "7.5%" },
+//     wLastPaidWide: { width: "10.5%" },
 
 //     // SL + Invoice + Receipt + Date + Project + Student
-//     wLabelSpan: { width: "62.5%" },
+//     // (this already excludes the removed Amount column, so it lines
+//     // up directly with Paid on both the header row and data rows)
+//     wLabelSpan: { width: "62.5%" },        // Month mode
+//     wLabelSpanNarrow: { width: "53.5%" },  // Standard mode
 
 //     /* ---------- COLUMN WIDTHS: SUMMARY TABLE ----------
 //        SL# | <primary> | <secondary> | Invoices | Amount | Paid | Due
 //        primary/secondary are Month & Standard/Activities, order
-//        depends on the report's grouping mode. */
+//        depends on the report's grouping mode. The Amount column on
+//        this summary page is unrelated to the detail-table one above
+//        and has NOT been removed. */
 
 //     sSL: { width: "5%" },
 //     sPrimary: { width: "20%" },
@@ -1317,25 +1350,12 @@ export default InvpaymentPDF;
 //     return `${mName} ${year}`.trim() || "—";
 // };
 
-// /* ---------- INVOICE-HEADER DE-DUPLICATION ----------
-//    One invoice (one InvoiceHeaderId) can have several rows in `data` —
-//    one per payment/receipt made against it. InvoiceAmount is the same
-//    invoice's total each time, so it must only be counted ONCE per
-//    header id, not once per row. We take the highest InvoiceAmount seen
-//    for that header id (in case of any rounding/display differences
-//    between its rows) and sum those unique values.
 
-//    NOTE: adjust HEADER_ID_FIELD below if your data uses a different
-//    field name for the invoice header id (e.g. "HeaderId", "InvHeaderId"). */
 // const HEADER_ID_FIELD = "InvoiceHeaderID";
 
 // const getHeaderId = (row) => row?.[HEADER_ID_FIELD] ?? row?.InvoiceNo;
 
-// // Generic version: sums `field` (InvoiceAmount, Due, ...) counting each
-// // unique header id once, using the highest value seen for that header id
-// // across its rows (both InvoiceAmount and the outstanding Due repeat
-// // per payment row for the same invoice, so a plain per-row sum
-// // over-counts them).
+
 // const sumUniqueByHeader = (rows, field) => {
 //     const maxByHeader = new Map();
 //     rows.forEach((row) => {
@@ -1355,13 +1375,35 @@ export default InvpaymentPDF;
 
 // const sumUniqueInvoiceAmount = (rows) => sumUniqueByHeader(rows, "InvoiceAmount");
 
-// // Due is deliberately NOT read from each row's `Due` field for any
-// // subtotal/grand-total figure. That field is a per-payment snapshot and
-// // isn't reliable to sum or max across a header's rows. Instead every
-// // aggregate Due below is derived as (unique-header Amount) − (summed
-// // Paid), which is the only calculation that's guaranteed consistent:
-// // Total Invoice Amount − Total Paid = Total Due.
+// // Reorders a section's rows so that every payment belonging to the
+// // same invoice (InvoiceHeaderID) sits together, sorted by RecordID
+// // ascending. Since each successive payment against an invoice reduces
+// // its Due, this makes the Due column read in decreasing order within
+// // each invoice. Invoices themselves keep whatever order they first
+// // appeared in within the section — only the payments *inside* each
+// // invoice get reordered.
+// const orderRowsByHeaderThenRecordId = (rows) => {
+//     const headerOrder = [];
+//     const byHeader = new Map();
 
+//     rows.forEach((row) => {
+//         const headerId = getHeaderId(row);
+//         if (!byHeader.has(headerId)) {
+//             byHeader.set(headerId, []);
+//             headerOrder.push(headerId);
+//         }
+//         byHeader.get(headerId).push(row);
+//     });
+
+//     const ordered = [];
+//     headerOrder.forEach((headerId) => {
+//         const headerRows = byHeader.get(headerId).slice();
+//         headerRows.sort((a, b) => Number(a?.RecordID) - Number(b?.RecordID));
+//         ordered.push(...headerRows);
+//     });
+
+//     return ordered;
+// };
 
 // const buildGroups = (data, mode, selectedMonthNames) => {
 //     const selectedMonthNums = selectedMonthNames
@@ -1401,16 +1443,13 @@ export default InvpaymentPDF;
 //         : [{ label: null, rows: filteredData }];
 // };
 
-// /* =========================================================
-//    PAGINATION (transaction detail pages)
-// ========================================================= */
 
 // const FIRST_PAGE_COUNT = 14;
 // const OTHER_PAGE_COUNT = 22;
 
 // const buildEntries = (groups) => {
 //     const entries = [];
-//     let sl = 1;
+//     let totalRows = 0;
 //     let grandPaid = 0;
 
 //     groups.forEach((group) => {
@@ -1419,10 +1458,19 @@ export default InvpaymentPDF;
 //         }
 
 //         let mPaid = 0;
+//         // Serial number restarts at 1 for every section (Month or
+//         // Standard group), rather than continuing across sections.
+//         let sl = 1;
 
-//         group.rows.forEach((row) => {
+//         // Payments for the same invoice are grouped together and
+//         // ordered by RecordID ascending, so Due reads in decreasing
+//         // order as you go down each invoice's payments.
+//         const orderedRows = orderRowsByHeaderThenRecordId(group.rows);
+
+//         orderedRows.forEach((row) => {
 //             mPaid += Number(row.PaidAmount || 0);
 //             entries.push({ type: "row", row, serial: sl++ });
+//             totalRows += 1;
 //         });
 
 //         // Amount & Due subtotal per group: sum the unique-header-id
@@ -1449,7 +1497,9 @@ export default InvpaymentPDF;
 
 //     entries.push({ type: "grand", grandAmount, grandPaid, grandDue });
 
-//     return { entries, grandAmount, grandPaid, grandDue, totalInvoices: sl - 1 };
+//     // totalInvoices is the true count of every row across every
+//     // section (independent of the per-section serial numbers above).
+//     return { entries, grandAmount, grandPaid, grandDue, totalInvoices: totalRows };
 // };
 
 // const paginateEntries = (entries) => {
@@ -1541,6 +1591,19 @@ export default InvpaymentPDF;
 
 //     // "Month" (default) or "Standard" — from the Type dropdown in the filter panel.
 //     const mode = filters?.PDFType === "Standard" ? "Standard" : "Month";
+
+//     // Column widths for the detail table swap based on report type — see
+//     // the STYLES section above for why. Picked once here and reused
+//     // across the header row, data rows, subtotal row, and grand row so
+//     // everything lines up.
+//     const colW = {
+//         project: mode === "Standard" ? styles.wProjectNarrow : styles.wProject,
+//         employee: mode === "Standard" ? styles.wEmployeeNarrow : styles.wEmployee,
+//         paid: mode === "Standard" ? styles.wPaidWide : styles.wPaid,
+//         due: mode === "Standard" ? styles.wDueWide : styles.wDue,
+//         lastPaid: mode === "Standard" ? styles.wLastPaidWide : styles.wLastPaid,
+//         labelSpan: mode === "Standard" ? styles.wLabelSpanNarrow : styles.wLabelSpan,
+//     };
 
 //     // Suffix shown in the report title so the reader can tell at a
 //     // glance whether the report is grouped Month wise or Standard wise.
@@ -1640,7 +1703,7 @@ export default InvpaymentPDF;
 
 //                                 <View style={styles.summaryStrip}>
 //                                     <View style={styles.summaryCell}>
-//                                         <Text style={styles.summaryLabel}>Invoices</Text>
+//                                         <Text style={styles.summaryLabel}>Receipts</Text>
 //                                         <Text style={styles.summaryValue}>{totalInvoices}</Text>
 //                                     </View>
 //                                     <View style={styles.summaryCell}>
@@ -1675,21 +1738,21 @@ export default InvpaymentPDF;
 //                                 <Text style={[styles.headerCell, styles.wInvoice]}>Receipt#</Text>
 //                                 <Text style={[styles.headerCell, styles.wDate]}>Date</Text>
 //                                 {mode === "Month" && (
-//                                     <Text style={[styles.headerCell, styles.wProject]}>
+//                                     <Text style={[styles.headerCell, colW.project]}>
 //                                     Standard/Activities
 //                                 </Text>
 //                                 )}
 //                                 {mode === "Standard" && (
-//                                 <Text style={[styles.headerCell, styles.wProject, styles.cellCenter]}>Billable Month/Year</Text>
+//                                 <Text style={[styles.headerCell, colW.project, styles.cellCenter]}>Billable Month/Year</Text>
 //                                 )}
-//                                 <Text style={[styles.headerCell, styles.wEmployee]}>
+//                                 <Text style={[styles.headerCell, colW.employee]}>
 //                                     Student
 //                                 </Text>
 
-//                                 <Text style={[styles.headerCell, styles.wAmount, styles.cellNum]}>Amount</Text>
-//                                 <Text style={[styles.headerCell, styles.wPaid, styles.cellNum]}>Paid Amount</Text>
-//                                 <Text style={[styles.headerCell, styles.wDue, styles.cellNum]}>Due</Text>
-//                                 <Text style={[styles.headerCell, styles.wLastPaid]}>Paid Date</Text>
+//                                 {/* <Text style={[styles.headerCell, colW.amount, styles.cellNum]}>Amount</Text> */}
+//                                 <Text style={[styles.headerCell, colW.paid, styles.cellNum]}>Paid Amount</Text>
+//                                 <Text style={[styles.headerCell, colW.due, styles.cellNum]}>Due</Text>
+//                                 <Text style={[styles.headerCell, colW.lastPaid]}>Paid Date</Text>
 //                             </View>
 
 //                             {pageEntries.map((entry, idx) => {
@@ -1711,32 +1774,32 @@ export default InvpaymentPDF;
 //                                             <Text style={[styles.cell, styles.wInvoice]}>{row?.ReceiptNo ?? ""}</Text>
 //                                             <Text style={[styles.cell, styles.wDate]}>{row?.InvoiceDate ?? ""}</Text>
 //                                             {mode === "Month" && (
-//                                                 <Text style={[styles.cell, styles.wProject]}>{row?.Project ?? ""}</Text>
+//                                                 <Text style={[styles.cell, colW.project]}>{row?.Project ?? ""}</Text>
 //                                             )}
 //                                             {mode === "Standard" && (
-//                                             <Text style={[styles.cell, styles.wProject]}>{row?.BillableMonthYear ?? ""}</Text>
+//                                             <Text style={[styles.cell, colW.project]}>{row?.BillableMonthYear ?? ""}</Text>
 //                                             )}
-//                                             <Text style={[styles.cell, styles.wEmployee]}>{row?.Employee ?? ""}</Text>
-//                                             <Text style={[styles.cell, styles.wAmount, styles.cellNum]}>
+//                                             <Text style={[styles.cell, colW.employee]}>{row?.Employee ?? ""}</Text>
+//                                             {/* <Text style={[styles.cell, colW.amount, styles.cellNum]}>
 //                                                 {money(row?.InvoiceAmount)}
-//                                             </Text>
+//                                             </Text> */}
 //                                             {/* <Text style={[styles.cell, styles.wBillYr, styles.cellCenter]}>
 //                         {row?.BillableYear ?? ""}
 //                       </Text> */}
-//                                             <Text style={[styles.cell, styles.wPaid, styles.cellNum]}>
+//                                             <Text style={[styles.cell, colW.paid, styles.cellNum]}>
 //                                                 {money(row?.PaidAmount)}
 //                                             </Text>
 //                                             <Text
 //                                                 style={[
 //                                                     styles.cell,
-//                                                     styles.wDue,
+//                                                     colW.due,
 //                                                     styles.cellNum,
 //                                                     Number(row?.Due) > 0 ? styles.cellDue : null,
 //                                                 ]}
 //                                             >
 //                                                 {money(row?.Due)}
 //                                             </Text>
-//                                             <Text style={[styles.cell, styles.wLastPaid]}>{row?.PaidDate ?? ""}</Text>
+//                                             <Text style={[styles.cell, colW.lastPaid, { textAlign: "center" }]}>{row?.PaidDate ?? ""}</Text>
 //                                         </View>
 //                                     );
 //                                 }
@@ -1744,23 +1807,19 @@ export default InvpaymentPDF;
 //                                 if (entry.type === "subtotal") {
 //                                     return (
 //                                         <View key={idx} style={styles.subtotalRow}>
-//                                             <Text style={[styles.subtotalLabel, styles.wLabelSpan]}>
-                                                
-//                                             </Text>
-
-//                                             <Text style={[styles.subtotalValue, styles.wAmount]}>
+//                                             <Text style={[styles.subtotalLabel, colW.labelSpan]}>
 //                                                 Total
 //                                             </Text>
 
-//                                             <Text style={[styles.subtotalValue, styles.wPaid]}>
+//                                             <Text style={[styles.subtotalValue, colW.paid]}>
 //                                                 {money(entry.mPaid)}
 //                                             </Text>
 
-//                                             <Text style={[styles.subtotalValue, styles.wDue]}>
+//                                             <Text style={[styles.subtotalValue, colW.due]}>
 //                                                 {money(entry.mDue)}
 //                                             </Text>
 
-//                                             <Text style={styles.wLastPaid} />
+//                                             <Text style={colW.lastPaid} />
 //                                         </View>
 //                                     );
 //                                 }
@@ -1768,23 +1827,19 @@ export default InvpaymentPDF;
 //                                 if (entry.type === "grand") {
 //                                     return (
 //                                         <View key={idx} style={styles.grandRow}>
-//                                             <Text style={[styles.grandLabel, styles.wLabelSpan]}>
+//                                             <Text style={[styles.grandLabel, colW.labelSpan]}>
 //                                                 Grand Total
 //                                             </Text>
 
-//                                             <Text style={[styles.grandValue, styles.wAmount]}>
-//                                                 {money(entry.grandAmount)}
-//                                             </Text>
-
-//                                             <Text style={[styles.grandValue, styles.wPaid]}>
+//                                             <Text style={[styles.grandValue, colW.paid]}>
 //                                                 {money(entry.grandPaid)}
 //                                             </Text>
 
-//                                             <Text style={[styles.grandValue, styles.wDue]}>
+//                                             <Text style={[styles.grandValue, colW.due]}>
 //                                                 {money(entry.grandDue)}
 //                                             </Text>
 
-//                                             <Text style={styles.wLastPaid} />
+//                                             <Text style={colW.lastPaid} />
 //                                         </View>
 //                                     );
 //                                 }
@@ -1804,7 +1859,9 @@ export default InvpaymentPDF;
 //           Single flat table: SL# | <primary> | <secondary> |
 //           Invoices | Amount | Paid | Due. Column order flips
 //           with the grouping mode. No per-group subtotal rows —
-//           just one Grand Total row at the bottom.
+//           just one Grand Total row at the bottom. This page's
+//           Amount column is separate from the detail table and is
+//           still shown.
 //       ========================================================= */}
 //             <Page size="A4" orientation="landscape" style={styles.page}>
 //                 <HeaderImage />
@@ -1813,18 +1870,18 @@ export default InvpaymentPDF;
 //                     <Text style={styles.sectionTitle}>Summary</Text>
 //                     {/* <Text style={styles.sectionSubtitle}>Grouped by {detailGroupWord}</Text> */}
 //                 </View>
-
+//    <View style={styles.summaryTableWrapper}>   
 //                 <View style={styles.table}>
 //                     <View style={styles.headerRow}>
 //                         <Text style={[styles.headerCell, styles.sSL, styles.cellCenter]}>SL#</Text>
 //                         <Text style={[styles.headerCell, styles.sPrimary]}>{summaryPrimaryHeader}</Text>
 //                         <Text style={[styles.headerCell, styles.sSecondary]}>{summarySecondaryHeader}</Text>
-//                         <Text style={[styles.headerCell, styles.sInv, styles.cellCenter]}>Invoices</Text>
+//                         <Text style={[styles.headerCell, styles.sInv, styles.cellCenter]}>Receipts</Text>
 //                         <Text style={[styles.headerCell, styles.sAmt, styles.cellNum]}>Amount</Text>
 //                         <Text style={[styles.headerCell, styles.sPaid, styles.cellNum]}>Paid</Text>
 //                         <Text style={[styles.headerCell, styles.sDue, styles.cellNum]}>Due</Text>
 //                     </View>
-
+// </View>
 //                     {flatSummary.rows.map((r, idx) => {
 //                         const zebra = idx % 2 === 1 ? styles.dataRowZebra : null;
 //                         return (
@@ -1868,384 +1925,3 @@ export default InvpaymentPDF;
 // };
 
 // export default InvpaymentPDF;
-
-
-// import {
-//     Page,
-//     Text,
-//     View,
-//     Document,
-//     StyleSheet,
-//     Image,
-// } from "@react-pdf/renderer";
-
-// // Styles
-// const styles = StyleSheet.create({
-//     page: {
-//         // padding: 20,
-//         // fontSize: 10,
-//         paddingTop: 90,   // ⬅ space for header
-//         paddingBottom: 80, // ⬅ space for footer
-//         paddingHorizontal: 20,
-//         fontSize: 10,
-//     },
-//     section: {
-//         marginBottom: 10,
-//     },
-//     headerContainer: {
-//         alignItems: 'center',
-//         justifyContent: 'flex-start',
-//         marginTop: -3,
-//     },
-//     headerText: {
-//         fontSize: 12,
-//         fontWeight: 'bold',
-//         textAlign: "center",
-//         marginBottom: 10
-//     },
-//     table: {
-//         display: "table",
-//         width: "100%",
-//         borderWidth: 1,
-//         borderColor: "#000",
-//         borderStyle: "solid",
-//     },
-//     tableRow: {
-//         flexDirection: "row",
-//         borderBottomWidth: 1,
-//         borderBottomColor: "#000",
-//         borderBottomStyle: "solid",
-//     },
-//     tableRowLast: {
-//         flexDirection: "row",
-//     },
-//     tableColHeader: {
-//         width: "20%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         fontWeight: "bold",
-//         backgroundColor: "#EEE",
-//         textAlign: "center",
-//     },
-//     tableCol3Header: {
-//         width: "30%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         fontWeight: "bold",
-//         backgroundColor: "#EEE",
-//         textAlign: "center",
-//     },
-//     tableCol2Header: {
-//         width: "10%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         fontWeight: "bold",
-//         backgroundColor: "#EEE",
-//         textAlign: "center",
-//     },
-//     tableColHeader1: {
-//         width: "5%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         fontWeight: "bold",
-//         backgroundColor: "#EEE",
-//         justifyContent: "center",
-//         alignItems: "center",
-//         textAlign: "center",
-//     },
-//     tableColHeaderLast: {
-//         width: "15%",
-//         padding: 5,
-//         fontWeight: "bold",
-//         backgroundColor: "#EEE",
-//         textAlign: "center",
-//     },
-//     tableCol3: {
-//         width: "30%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         textAlign: "left",
-//     },
-//     tableCol: {
-//         width: "20%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         textAlign: "left",
-//     },
-//     tableCol2: {
-//         width: "10%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         textAlign: "left",
-//     },
-//     tableCol1: {
-//         width: "5%",
-//         borderRightWidth: 1,
-//         borderRightColor: "#000",
-//         padding: 5,
-//         justifyContent: "center",
-//         alignItems: "center",
-//         textAlign: "right",
-//     },
-//     tableColLast: {
-//         width: "15%",
-//         padding: 5,
-//     },
-
-//     /*HEADER*/
-//     headerWrapper: {
-//         position: "absolute",
-//         top: 15,
-//         left: 20,
-//         right: 20,
-//         height: 50,
-//         justifyContent: "center",
-//         alignItems: "center",
-//     },
-//     headerImage: {
-//         width: "100%",
-//         height: 50,
-//         objectFit: "contain",
-//     },
-//     /* FOOTER */
-//     footerWrapper: {
-//         position: "absolute",
-//         bottom: 0,
-//         left: 0,
-//         right: 0,
-//         height: 70,
-//     },
-
-//     footerImage: {
-//         width: "100%",
-//         height: 100,
-//         objectFit: "cover",
-//     },
-// });
-
-// const InvenquiryPDF = ({ data = [], filters = {} }) => {
-//     const FIRST_PAGE_COUNT = 13;
-//     const OTHER_PAGE_COUNT = 15;
-
-//     const paginateData = (data) => {
-//         const pages = [];
-
-//         // First page
-//         pages.push(data.slice(0, FIRST_PAGE_COUNT));
-
-//         // Remaining pages
-//         for (
-//             let i = FIRST_PAGE_COUNT;
-//             i < data.length;
-//             i += OTHER_PAGE_COUNT
-//         ) {
-//             pages.push(data.slice(i, i + OTHER_PAGE_COUNT));
-//         }
-
-//         return pages;
-//     };
-//     const pages = paginateData(data);
-//     pages.forEach((page, i) => {
-//         console.log(`Page ${i + 1} first row index:`, data.indexOf(page[0]));
-//     });
-//     const formattedfromDate = filters.fromDate
-//         ? filters.fromDate.split("-").reverse().join("-")
-//         : "";
-//     const formattedtoDate = filters.toDate
-//         ? filters.toDate.split("-").reverse().join("-")
-//         : "";
-
-//     // Whether to show Invoice No & Receipt No columns.
-//     // Type === "Month"    -> hide them
-//     // Type === "Standard" -> show them
-//     const showInvoiceReceipt = filters.Type !== "Month";
-
-//     const dynamicHeaderStyles = {
-//         col1: {
-//             ...styles.tableColHeader1,
-//             width: "4.5%"
-//         },
-//         colInvoiceReceipt: {
-//             ...styles.tableColHeader,
-//             width: "7.5%"
-//         },
-//         colDate: {
-//             ...styles.tableColHeader,
-//             width: showInvoiceReceipt ? "7.5%" : "9%"
-//         },
-//         colCheckIn: {
-//             ...styles.tableColHeader,
-//             width: showInvoiceReceipt ? "20%" : "28%"
-//         },
-//         colCheckOut: {
-//             ...styles.tableColHeader,
-//             width: showInvoiceReceipt ? "20%" : "28%"
-//         },
-//         colHours: {
-//             ...styles.tableCol2Header,
-//             width: "8%"
-//         },
-//         colStatus: {
-//             ...styles.tableColHeaderLast,
-//             width: "8%"
-//         },
-//         colName: {
-//             ...styles.tableCol3Header,
-//             display: filters.Self === "Y" ? "none" : "block"
-//         }
-//     };
-
-//     const dynamicRowStyles = {
-//         col1: {
-//             ...styles.tableCol1,
-//             width: "4.5%"
-//         },
-//         colInvoiceReceipt: {
-//             ...styles.tableCol,
-//             width: "7.5%"
-//         },
-//         colDate: {
-//             ...styles.tableCol,
-//             width: showInvoiceReceipt ? "7.5%" : "9%"
-//         },
-//         colCheckIn: {
-//             ...styles.tableCol,
-//             width: showInvoiceReceipt ? "20%" : "28%"
-//         },
-//         colCheckOut: {
-//             ...styles.tableCol,
-//             width: showInvoiceReceipt ? "20%" : "28%"
-//         },
-//         colHours: {
-//             ...styles.tableCol2,
-//             width: "8%",
-//             textAlign: "right"
-//         },
-//         colStatus: {
-//             ...styles.tableColLast,
-//             width: "8%"
-//         },
-//         colName: {
-//             ...styles.tableCol3,
-//             display: filters.Self === "Y" ? "none" : "block"
-//         }
-//     };
-
-//     const monthNames = [
-//         "January", "February", "March", "April", "May", "June",
-//         "July", "August", "September", "October", "November", "December"
-//     ];
-//     return (
-//         <Document>
-//             {pages.map((pageData, pageIndex) => (
-//                 <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-//                     <View fixed style={styles.headerWrapper}>
-//                         {filters.HeaderImg && (
-//                             <Image
-//                                 src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-//                                 style={styles.headerImage}
-//                             />
-//                         )}
-//                     </View>
-//                     {pageIndex === 0 && (
-//                         <View style={styles.headerContainer}>
-//                             <Text style={styles.headerText}>
-//                                 Invoice Enquiry Report
-//                             </Text>
-//                         </View>
-
-//                     )}
-
-//                     <View style={styles.table}>
-
-//                         <View style={styles.tableRow}>
-//                             <Text style={dynamicHeaderStyles.col1}>SL#</Text>
-//                             {showInvoiceReceipt && (
-//                                 <>
-//                                     <Text style={dynamicHeaderStyles.colInvoiceReceipt}>Invoice No</Text>
-//                                     <Text style={dynamicHeaderStyles.colInvoiceReceipt}>Receipt No</Text>
-//                                 </>
-//                             )}
-//                             <Text style={dynamicHeaderStyles.colDate}>Date</Text>
-//                             <Text style={dynamicHeaderStyles.colCheckOut}>Standard/Activity</Text>
-//                             <Text style={dynamicHeaderStyles.colCheckIn}>Student</Text>
-//                             <Text style={dynamicHeaderStyles.colHours}>Billable Month/Year</Text>
-//                             <Text style={dynamicHeaderStyles.colHours}>Amount</Text>
-//                             <Text style={dynamicHeaderStyles.colHours}>Paid Amount</Text>
-//                             <Text style={dynamicHeaderStyles.colHours}>Due</Text>
-//                         </View>
-
-//                         {pageData.map((row, rowIndex) => {
-//                             const globalIndex =
-//                                 pageIndex === 0
-//                                     ? rowIndex + 1
-//                                     : FIRST_PAGE_COUNT +
-//                                     (pageIndex - 1) * OTHER_PAGE_COUNT +
-//                                     rowIndex +
-//                                     1;
-
-//                             const isLast = rowIndex === pageData.length - 1;
-//                             return (
-//                                 <View
-//                                     key={rowIndex}
-//                                     style={isLast ? styles.tableRowLast : styles.tableRow}
-//                                 >
-//                                     <Text style={dynamicRowStyles.col1}>{globalIndex}</Text>
-//                                     {showInvoiceReceipt && (
-//                                         <>
-//                                             <Text style={dynamicRowStyles.colInvoiceReceipt}>{row.invno}</Text>
-//                                             <Text style={dynamicRowStyles.colInvoiceReceipt}>{row.Receiptno}</Text>
-//                                         </>
-//                                     )}
-//                                     <Text style={dynamicRowStyles.colDate}>{row.Date}</Text>
-//                                     <Text style={dynamicRowStyles.colCheckIn}>{row.Employee}</Text>
-//                                     <Text style={dynamicRowStyles.colCheckOut}>{row.Project}</Text>
-//                                     <Text style={dynamicRowStyles.colHours}>{row.BillableMonth}</Text>
-//                                     <Text style={dynamicRowStyles.colHours}>{row.TotalAmount}</Text>
-//                                     <Text style={dynamicRowStyles.colHours}>{row.PaidAmount}</Text>
-//                                     <Text style={dynamicRowStyles.colHours}>{row.Due}</Text>
-//                                 </View>
-//                             );
-//                         })}
-
-//                     </View>
-//                     <View
-//                         fixed
-//                         style={{
-//                             position: "absolute",
-//                             bottom: 10,
-//                             left: 0,
-//                             right: 0,
-//                             textAlign: "center",
-//                             fontSize: 10,
-//                         }}
-//                     >
-//                         <Text
-//                             render={({ pageNumber, totalPages }) =>
-//                                 `Page ${pageNumber} of ${totalPages}`
-//                             }
-//                         />
-//                     </View>
-
-//                     <View fixed style={styles.footerWrapper}>
-//                         {filters.FooterImg && (
-//                             <Image
-//                                 src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-//                                 style={styles.footerImage}
-//                             />
-//                         )}
-//                     </View>
-//                 </Page>
-//             ))}
-//         </Document>
-//     );
-// };
-
-// export default InvenquiryPDF;

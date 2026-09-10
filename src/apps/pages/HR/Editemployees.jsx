@@ -73,6 +73,7 @@ import {
   resetTrackingData,
   Contractprocess,
   DefaultProjectGet,
+  ExitFormalities,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -370,6 +371,10 @@ const Editemployee = () => {
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [resetReason, setResetReason] = useState("");
   const [resetReasonError, setResetReasonError] = useState(false);
+  //For Resignation or Dropoff
+  const [reset1DialogOpen, setReset1DialogOpen] = useState(false);
+  const [reset1Reason, setReset1Reason] = useState("");
+  const [reset1ReasonError, setReset1ReasonError] = useState(false);
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
@@ -2000,20 +2005,20 @@ const Editemployee = () => {
     // }
     if (event.target.value == "8") {
       dispatch(getDeployment({ HeaderID: recID }));
-      if(is003Subscription){
-      dispatch(
-        DefaultProjectGet({
-          EmployeeID: recID,
-          CompanyID,
-        }),
-      ).then((defProjRes) => {
-        if (defProjRes?.payload?.status === "Y" && defProjRes?.payload?.data) {
-          setDefaultProjectData(defProjRes.payload.data);
-        } else {
-          setDefaultProjectData(null);
-        }
-      });
-    }
+      if (is003Subscription) {
+        dispatch(
+          DefaultProjectGet({
+            EmployeeID: recID,
+            CompanyID,
+          }),
+        ).then((defProjRes) => {
+          if (defProjRes?.payload?.status === "Y" && defProjRes?.payload?.data) {
+            setDefaultProjectData(defProjRes.payload.data);
+          } else {
+            setDefaultProjectData(null);
+          }
+        });
+      }
       dispatch(
         EmployeeVendorGetController({
           EmployeeID: recID,
@@ -4813,6 +4818,32 @@ const Editemployee = () => {
       setLoading(false);
     }
   };
+  //Resignation
+  const handleResignationProcess = async (values, reason) => {
+  const idata = {
+    CompanyID: CompanyID,
+    EmployeeID: recID,
+    ExitformalitiesAccepted: "N",
+    Reason: reason,
+  };
+
+  setLoading(true);
+
+  try {
+    const response = await dispatch(ExitFormalities({ idata }));
+
+    if (response.payload.Status === "Y") {
+      dispatch(getResignation({ EmployeeID: recID }));
+      toast.success(response.payload.Msg || "Process reset successfully");
+    } else {
+      toast.error(response.payload.Msg || "Something went wrong");
+    }
+  } catch (error) {
+    toast.error("Something went wrong while resetting the process");
+  } finally {
+    setLoading(false);
+  }
+};
   //Geolocation
   const geolocationinitialvlues = {
     Code: Data.Code,
@@ -5442,7 +5473,7 @@ const Editemployee = () => {
     exitformalitiesacceptrd:
       ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
   };
-
+const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
@@ -5450,6 +5481,10 @@ const Editemployee = () => {
     //   seterrorSchema22("Please Select the Exit Interview By");
     //   return;
     // }
+      if (isResignationLocked) {
+    toast.error("This record is processed. Unprocess it first to make changes.");
+    return;
+  }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -5462,6 +5497,8 @@ const Editemployee = () => {
       DateOfSettlement: values.dateofsettlement,
       ExitFormalitiesAccepted:
         values.exitformalitiesacceptrd === true ? "Y" : "N",
+
+
     };
 
     console.log(idata, "--resignation idata");
@@ -6030,16 +6067,16 @@ const Editemployee = () => {
       desc: "Upload and manage documents",
       icon: "📑",
     },
-    ...(!isStudentClassification
-      ? [
-        {
-          value: 22,
-          label: "Resignation",
-          desc: "Resignation and exit details",
-          icon: "🚪",
-        },
-      ]
-      : []),
+    // ...(!isStudentClassification
+    //   ? [
+    {
+      value: 22,
+      label: (is003Subscription && isStudentClassification) ? "Drop Off" : "Resignation",
+      desc: (is003Subscription && isStudentClassification) ? "Drop off and exit details" : "Resignation and exit details",
+      icon: "🚪",
+    },
+    // ]
+    // : []),
 
 
   ];
@@ -11686,13 +11723,7 @@ const Editemployee = () => {
 
           {/* Resignation */}
           {show == "22" ? (
-            <Box
-              display="flex"
-              gap={3}
-              alignItems="flex-start"
-              flexWrap="wrap"
-              sx={{ p: 1 }}
-            >
+            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
               {/* SIDEBAR */}
               {mode !== "A" && (
                 <FormSectionsSidebar
@@ -11731,24 +11762,42 @@ const Editemployee = () => {
                       <Typography sx={{ fontSize: 20 }}>📤</Typography>
                     </Box>
                     <Box>
-                      <Typography
-                        variant="subtitle1"
-                        fontWeight={700}
-                        color="#1F2937"
-                      >
-                        Resignation
+                      <Typography variant="subtitle1" fontWeight={700} color="#1F2937">
+                        {(is003Subscription && isStudentClassification) ? "Drop Off" : "Resignation"}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        Record resignation and exit details
+                        {(is003Subscription && isStudentClassification) ? "Drop off record and exit details" : "Resignation record and exit details"}
                       </Typography>
                     </Box>
                   </Box>
+
+                  {/* Locked banner — only shown once the record is processed */}
+                  {isResignationLocked && (
+                    <Box
+                      sx={{
+                        mb: 2,
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        backgroundColor: "#FEF3C7",
+                        border: "1px solid #FDE68A",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Typography variant="body2" color="#92400E">
+                        This personnel is processed. Click Unprocess to make changes.
+                      </Typography>
+                    </Box>
+                  )}
 
                   <Formik
                     initialValues={resignationinitialvalues}
                     enableReinitialize={true}
                     validationSchema={validationSchema22}
                     onSubmit={(values, { resetForm }) => {
+                      if (isResignationLocked) return;
                       setTimeout(() => {
                         Fnsaveresignation(values, resetForm, false);
                       }, 100);
@@ -11775,16 +11824,10 @@ const Editemployee = () => {
                           resetForm();
                         }}
                       >
-                        {/* Top-level: LEFT = all form sections stacked, RIGHT = photo (independent column) */}
                         <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" mt={2}>
                           {/* LEFT COLUMN */}
                           <Box flex={1} minWidth={280}>
-                            {/* Code & Name only — no photo in this row anymore */}
-                            <Box
-                              display="grid"
-                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                              gap={2}
-                            >
+                            <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
                               <TextField
                                 fullWidth
                                 size="small"
@@ -11796,6 +11839,7 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Code"
+                                disabled={isResignationLocked}
                               />
 
                               <TextField
@@ -11809,23 +11853,16 @@ const Editemployee = () => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Name"
+                                disabled={isResignationLocked}
                               />
                             </Box>
 
                             {/* Resignation Details Section */}
-                            <Typography
-                              variant="h6"
-                              fontWeight={700}
-                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                            >
-                              Resignation Details
+                            <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
+                              Details
                             </Typography>
 
-                            <Box
-                              display="grid"
-                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                              gap={2}
-                            >
+                            <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
                               <TextField
                                 fullWidth
                                 size="small"
@@ -11833,13 +11870,14 @@ const Editemployee = () => {
                                 type="date"
                                 id="resignationdate"
                                 name="resignationdate"
-                                label="Resignation Date"
+                                label={(is003Subscription && isStudentClassification) ? "Drop Off Date" : "Resignation Date"}
                                 value={values.resignationdate}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 error={!!touched.resignationdate && !!errors.resignationdate}
                                 helperText={touched.resignationdate && errors.resignationdate}
                                 InputLabelProps={{ shrink: true }}
+                                disabled={isResignationLocked}
                               />
 
                               <TextField
@@ -11849,30 +11887,23 @@ const Editemployee = () => {
                                 type="text"
                                 id="resignationnote"
                                 name="resignationnote"
-                                label="Resignation Note"
+                                label={(is003Subscription && isStudentClassification) ? "Drop Off Note" : "Resignation Note"}
                                 value={values.resignationnote}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 error={!!touched.resignationnote && !!errors.resignationnote}
                                 helperText={touched.resignationnote && errors.resignationnote}
                                 multiline
+                                disabled={isResignationLocked}
                               />
                             </Box>
 
                             {/* Exit Interview Section */}
-                            <Typography
-                              variant="h6"
-                              fontWeight={700}
-                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                            >
+                            <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
                               Exit Interview
                             </Typography>
 
-                            <Box
-                              display="grid"
-                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                              gap={2}
-                            >
+                            <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }} gap={2}>
                               <CheckinAutocomplete
                                 name="exitinterviewby"
                                 label="Exit Interview By"
@@ -11884,7 +11915,7 @@ const Editemployee = () => {
                                 }}
                                 error={!!touched.exitinterviewby && !!errors.exitinterviewby}
                                 helperText={touched.exitinterviewby && errors.exitinterviewby}
-                                // url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","VerticalLicense":"${Subscriptionlastthree}",Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                                disabled={isResignationLocked}
                                 url={`${listViewurl}?data=${JSON.stringify({
                                   Query: {
                                     AccessID: "2165",
@@ -11910,6 +11941,7 @@ const Editemployee = () => {
                                 error={!!touched.exitinterviewdate && !!errors.exitinterviewdate}
                                 helperText={touched.exitinterviewdate && errors.exitinterviewdate}
                                 InputLabelProps={{ shrink: true }}
+                                disabled={isResignationLocked}
                               />
 
                               <TextField
@@ -11923,31 +11955,20 @@ const Editemployee = () => {
                                 value={values.exitinterviewcomments}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                error={
-                                  !!touched.exitinterviewcomments && !!errors.exitinterviewcomments
-                                }
-                                helperText={
-                                  touched.exitinterviewcomments && errors.exitinterviewcomments
-                                }
+                                error={!!touched.exitinterviewcomments && !!errors.exitinterviewcomments}
+                                helperText={touched.exitinterviewcomments && errors.exitinterviewcomments}
                                 multiline
                                 rows={2}
+                                disabled={isResignationLocked}
                               />
                             </Box>
 
                             {/* Relieving Details Section */}
-                            <Typography
-                              variant="h6"
-                              fontWeight={700}
-                              sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                            >
+                            <Typography variant="h6" fontWeight={700} sx={{ mt: 4, mb: 2, color: "#1F2937" }}>
                               Relieving Details
                             </Typography>
 
-                            <Box
-                              display="grid"
-                              gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
-                              gap={2}
-                            >
+                            <Box display="grid" gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }} gap={2}>
                               <TextField
                                 fullWidth
                                 size="small"
@@ -11959,13 +11980,10 @@ const Editemployee = () => {
                                 value={values.acceptedrelievingdate}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                error={
-                                  !!touched.acceptedrelievingdate && !!errors.acceptedrelievingdate
-                                }
-                                helperText={
-                                  touched.acceptedrelievingdate && errors.acceptedrelievingdate
-                                }
+                                error={!!touched.acceptedrelievingdate && !!errors.acceptedrelievingdate}
+                                helperText={touched.acceptedrelievingdate && errors.acceptedrelievingdate}
                                 InputLabelProps={{ shrink: true }}
+                                disabled={isResignationLocked}
                               />
 
                               <TextField
@@ -11979,13 +11997,10 @@ const Editemployee = () => {
                                 value={values.actualrelievingdate}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                error={
-                                  !!touched.actualrelievingdate && !!errors.actualrelievingdate
-                                }
-                                helperText={
-                                  touched.actualrelievingdate && errors.actualrelievingdate
-                                }
+                                error={!!touched.actualrelievingdate && !!errors.actualrelievingdate}
+                                helperText={touched.actualrelievingdate && errors.actualrelievingdate}
                                 InputLabelProps={{ shrink: true }}
+                                disabled={isResignationLocked}
                               />
 
                               <TextField
@@ -12002,6 +12017,7 @@ const Editemployee = () => {
                                 error={!!touched.dateofsettlement && !!errors.dateofsettlement}
                                 helperText={touched.dateofsettlement && errors.dateofsettlement}
                                 InputLabelProps={{ shrink: true }}
+                                disabled={isResignationLocked}
                               />
                             </Box>
 
@@ -12014,35 +12030,52 @@ const Editemployee = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 as={Checkbox}
+                                disabled={isResignationLocked}
                               />
                               <FormLabel>Exit Formalities Accepted</FormLabel>
                             </Box>
-
-                            {/* Action Buttons */}
-
                           </Box>
 
-                          {/* RIGHT COLUMN — Photo, isolated so its height never affects the left column's rows */}
+                          {/* RIGHT COLUMN — Photo */}
                           <Box sx={{ width: { xs: "100%", md: 220 }, flexShrink: 0 }}>
                             {renderProfilePhoto(img, userimg, isImgChanged, imgUpload, "Profile Photo")}
                           </Box>
                         </Box>
+
                         <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
-                          <Button
-                            color="secondary"
-                            variant="contained"
-                            type="submit"
-                            sx={{
-                              textTransform: "none",
-                              borderRadius: 2,
-                              color: "#fff",
-                              px: 4,
-                              bgcolor: "#0D9488",
-                              "&:hover": { bgcolor: "#0F766E" },
-                            }}
-                          >
-                            Save
-                          </Button>
+                          {/* Unprocess is the ONLY way back in once locked, so only show it when it's needed */}
+                          {isResignationLocked && (
+                            <Tooltip title="Unprocess">
+                              <IconButton
+                                color="info"
+                                onClick={() => {
+                                  setReset1Reason("");
+                                  setReset1ReasonError(false);
+                                  setReset1DialogOpen(true);
+                                }}
+                              >
+                                <LockResetOutlinedIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+
+                          {!isResignationLocked && (
+                            <Button
+                              color="secondary"
+                              variant="contained"
+                              type="submit"
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": { bgcolor: "#0F766E" },
+                              }}
+                            >
+                              Save
+                            </Button>
+                          )}
 
                           <Button
                             type="reset"
@@ -12061,336 +12094,71 @@ const Editemployee = () => {
                             Back
                           </Button>
                         </Box>
+
+                        <Dialog open={reset1DialogOpen} onClose={() => setReset1DialogOpen(false)} fullWidth maxWidth="sm">
+                          <DialogTitle>Give a reason to Unprocess</DialogTitle>
+                          <DialogContent>
+                            <TextField
+                              variant="standard"
+                              label={
+                                <>
+                                  Reason
+                                  <span style={{ color: "red", fontSize: "16px" }}>*</span>
+                                </>
+                              }
+                              fullWidth
+                              value={reset1Reason}
+                              onChange={(e) => {
+                                setReset1Reason(e.target.value);
+                                if (e.target.value.trim()) setReset1ReasonError(false);
+                              }}
+                              error={reset1ReasonError}
+                              helperText={reset1ReasonError ? "Enter the Reason" : ""}
+                              sx={{ mt: 1 }}
+                              autoFocus
+                            />
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": { bgcolor: "#0F766E" },
+                              }}
+                              onClick={() => {
+                                if (!reset1Reason.trim()) {
+                                  setReset1ReasonError(true);
+                                  return;
+                                }
+                                setReset1DialogOpen(false);
+                                handleResignationProcess(values, reset1Reason);
+                              }}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              variant="contained"
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                color: "#fff",
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": { bgcolor: "#EA580C" },
+                              }}
+                              color="warning"
+                              onClick={() => setReset1DialogOpen(false)}
+                            >
+                              Back
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </form>
-                      // <form
-                      //   onSubmit={handleSubmit}
-                      //   onReset={() => {
-                      //     selectCellRowData({
-                      //       rowData: {},
-                      //       mode: "A",
-                      //       field: "",
-                      //     });
-                      //     resetForm();
-                      //   }}
-                      // >
-                      //   {/* Code, Description & Photo */}
-                      //   <Box
-                      //     display="grid"
-                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
-                      //     gap={2}
-                      //     mt={2}
-                      //     alignItems="start"
-                      //   >
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="text"
-                      //       id="code"
-                      //       name="code"
-                      //       value={values.code}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       label="Code"
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="text"
-                      //       id="description"
-                      //       name="description"
-                      //       value={values.description}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       label="Name"
-                      //     />
-
-                      //     {renderProfilePhoto(
-                      //       img,
-                      //       userimg,
-                      //       isImgChanged,
-                      //       imgUpload,
-                      //       "Profile Photo",
-                      //     )}
-                      //   </Box>
-
-                      //   {/* Resignation Details Section */}
-                      //   <Typography
-                      //     variant="h6"
-                      //     fontWeight={700}
-                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                      //   >
-                      //     Resignation Details
-                      //   </Typography>
-
-                      //   <Box
-                      //     display="grid"
-                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                      //     gap={2}
-                      //   >
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="date"
-                      //       id="resignationdate"
-                      //       name="resignationdate"
-                      //       label="Resignation Date"
-                      //       value={values.resignationdate}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.resignationdate &&
-                      //         !!errors.resignationdate
-                      //       }
-                      //       helperText={
-                      //         touched.resignationdate && errors.resignationdate
-                      //       }
-                      //       InputLabelProps={{ shrink: true }}
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="text"
-                      //       id="resignationnote"
-                      //       name="resignationnote"
-                      //       label="Resignation Note"
-                      //       value={values.resignationnote}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.resignationnote &&
-                      //         !!errors.resignationnote
-                      //       }
-                      //       helperText={
-                      //         touched.resignationnote && errors.resignationnote
-                      //       }
-                      //       multiline
-                      //     />
-                      //   </Box>
-
-                      //   {/* Exit Interview Section */}
-                      //   <Typography
-                      //     variant="h6"
-                      //     fontWeight={700}
-                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                      //   >
-                      //     Exit Interview
-                      //   </Typography>
-
-                      //   <Box
-                      //     display="grid"
-                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-                      //     gap={2}
-                      //   >
-                      //     <CheckinAutocomplete
-                      //       name="exitinterviewby"
-                      //       label="Exit Interview By"
-                      //       variant="outlined"
-                      //       id="exitinterviewby"
-                      //       value={values.exitinterviewby}
-                      //       onChange={(newValue) => {
-                      //         setFieldValue("exitinterviewby", newValue);
-                      //       }}
-                      //       error={
-                      //         !!touched.exitinterviewby &&
-                      //         !!errors.exitinterviewby
-                      //       }
-                      //       helperText={
-                      //         touched.exitinterviewby && errors.exitinterviewby
-                      //       }
-                      //       url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"Exit Interview By","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="date"
-                      //       id="exitinterviewdate"
-                      //       name="exitinterviewdate"
-                      //       label="Exit Interview Date"
-                      //       value={values.exitinterviewdate}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.exitinterviewdate &&
-                      //         !!errors.exitinterviewdate
-                      //       }
-                      //       helperText={
-                      //         touched.exitinterviewdate &&
-                      //         errors.exitinterviewdate
-                      //       }
-                      //       InputLabelProps={{ shrink: true }}
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="text"
-                      //       id="exitinterviewcomments"
-                      //       name="exitinterviewcomments"
-                      //       label="Exit Interview Comments"
-                      //       value={values.exitinterviewcomments}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.exitinterviewcomments &&
-                      //         !!errors.exitinterviewcomments
-                      //       }
-                      //       helperText={
-                      //         touched.exitinterviewcomments &&
-                      //         errors.exitinterviewcomments
-                      //       }
-                      //       multiline
-                      //       rows={2}
-                      //     />
-                      //   </Box>
-
-                      //   {/* Relieving Details Section */}
-                      //   <Typography
-                      //     variant="h6"
-                      //     fontWeight={700}
-                      //     sx={{ mt: 4, mb: 2, color: "#1F2937" }}
-                      //   >
-                      //     Relieving Details
-                      //   </Typography>
-
-                      //   <Box
-                      //     display="grid"
-                      //     gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
-                      //     gap={2}
-                      //   >
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="date"
-                      //       id="acceptedrelievingdate"
-                      //       name="acceptedrelievingdate"
-                      //       label="Accepted Relieving Date"
-                      //       value={values.acceptedrelievingdate}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.acceptedrelievingdate &&
-                      //         !!errors.acceptedrelievingdate
-                      //       }
-                      //       helperText={
-                      //         touched.acceptedrelievingdate &&
-                      //         errors.acceptedrelievingdate
-                      //       }
-                      //       InputLabelProps={{ shrink: true }}
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="date"
-                      //       id="actualrelievingdate"
-                      //       name="actualrelievingdate"
-                      //       label="Actual Relieving Date"
-                      //       value={values.actualrelievingdate}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.actualrelievingdate &&
-                      //         !!errors.actualrelievingdate
-                      //       }
-                      //       helperText={
-                      //         touched.actualrelievingdate &&
-                      //         errors.actualrelievingdate
-                      //       }
-                      //       InputLabelProps={{ shrink: true }}
-                      //     />
-
-                      //     <TextField
-                      //       fullWidth
-                      //       size="small"
-                      //       variant="outlined"
-                      //       type="date"
-                      //       id="dateofsettlement"
-                      //       name="dateofsettlement"
-                      //       label="Date of Settlement"
-                      //       value={values.dateofsettlement}
-                      //       onBlur={handleBlur}
-                      //       onChange={handleChange}
-                      //       error={
-                      //         !!touched.dateofsettlement &&
-                      //         !!errors.dateofsettlement
-                      //       }
-                      //       helperText={
-                      //         touched.dateofsettlement &&
-                      //         errors.dateofsettlement
-                      //       }
-                      //       InputLabelProps={{ shrink: true }}
-                      //     />
-                      //   </Box>
-
-                      //   {/* Checkbox */}
-                      //   <Box display="flex" alignItems="center" gap={1} mt={3}>
-                      //     <Field
-                      //       type="checkbox"
-                      //       id="exitformalitiesacceptrd"
-                      //       name="exitformalitiesacceptrd"
-                      //       onChange={handleChange}
-                      //       onBlur={handleBlur}
-                      //       as={Checkbox}
-                      //     />
-                      //     <FormLabel>Exit Formalities Accepted</FormLabel>
-                      //   </Box>
-
-                      //   {/* Action Buttons */}
-                      //   <Box
-                      //     display="flex"
-                      //     justifyContent="flex-end"
-                      //     gap={2}
-                      //     mt={4}
-                      //   >
-                      //     <Button
-                      //       color="secondary"
-                      //       variant="contained"
-                      //       type="submit"
-                      //       sx={{
-                      //         textTransform: "none",
-                      //         borderRadius: 2,
-                      //         color: "#fff",
-                      //         px: 4,
-                      //         bgcolor: "#0D9488",
-                      //         "&:hover": {
-                      //           bgcolor: "#0F766E",
-                      //         },
-                      //       }}
-                      //     >
-                      //       Save
-                      //     </Button>
-
-                      //     <Button
-                      //       type="reset"
-                      //       color="warning"
-                      //       variant="outlined"
-                      //       onClick={() => setScreen(0)}
-                      //       sx={{
-                      //         px: 4,
-                      //         borderRadius: 2,
-                      //         color: "#fff",
-                      //         textTransform: "none",
-                      //         bgcolor: "#F97316",
-                      //         "&:hover": {
-                      //           bgcolor: "#EA580C",
-                      //         },
-                      //       }}
-                      //     >
-                      //       Back
-                      //     </Button>
-                      //   </Box>
-                      // </form>
                     )}
                   </Formik>
                 </Paper>
@@ -12399,7 +12167,6 @@ const Editemployee = () => {
           ) : (
             false
           )}
-
           {/* List of Documents */}
           {show == "6" ? (
             <Box
