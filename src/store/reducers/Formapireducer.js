@@ -3688,6 +3688,24 @@ export const DefaultProjectGet = createAsyncThunk(
     return response.data;
   }
 );
+export const ExitFormalities = createAsyncThunk(
+  "ExitFormalities/post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.ExitFormalitiesUnprocess;
+
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 // BANK DETAILS
 export const BankFetchData = createAsyncThunk(
   "BankFetchData/get",

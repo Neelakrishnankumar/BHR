@@ -377,7 +377,8 @@ const initialState = {
   CompanyBankGET:"",
   CompanyBankUPDATE:"",
   CompanyReportSettingGet:"",
-  CompanyReportSettingUpdate:""
+  CompanyReportSettingUpdate:"",
+  ExitFormalitiesUnprocess:""
 
 };
 
@@ -628,6 +629,7 @@ export const getUrlSlice = createSlice({
       state.CompanyBankUPDATE = APIurl + "CompanyBankUpdateContoller.php";
       state.CompanyReportSettingGet = APIurl + "CompanyReportSettingGet.php";
       state.CompanyReportSettingUpdate = APIurl + "CompanyReportSettingUpdate.php";
+      state.ExitFormalitiesUnprocess = APIurl + "ExitFormalitiesUnprocess.php";
     },
 
   },

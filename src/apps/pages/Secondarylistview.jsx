@@ -479,8 +479,9 @@ const ListviewSecondary = () => {
                         values: {
                           Student: [],
                           Standard: [],
-                          months: currentMonthNumber,
+                          months: monthNames[currentMonthNumber - 1],
                           Paymentyear: currentYear,
+                          Type : "Month"
                         },
                       });
                     }}
