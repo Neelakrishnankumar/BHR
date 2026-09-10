@@ -17,6 +17,9 @@ import {
   DialogActions,
   Grid,
   MenuItem,
+  FormControl,
+  InputLabel,
+  Select
 } from "@mui/material";
 import { Formik } from "formik";
 import { BlobProvider, pdf, PDFDownloadLink } from "@react-pdf/renderer";
@@ -649,6 +652,8 @@ const ListviewSecondary = () => {
   const mailData = useSelector((state) => state.listviewApi.mailData);
   const loading = useSelector((state) => state.listviewApi.loading);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
+console.log(listViewcolumn, "--find listViewcolumn in secondary listview");
+
   //here change
   const alternateMaterialRecordID = useSelector(
     (state) => state.listviewApi.materialRecID
@@ -6579,18 +6584,23 @@ const ListviewSecondary = () => {
               );
             })()}
             {showMore && (accessID === "TR331") && (() => {
+            const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
               // Restore session filters
               const savedFilters =
                 JSON.parse(sessionStorage.getItem("TR331_Filters")) || {};
+console.log(savedFilters, "--find savedFilters");
 
               const initialFormValues = {
-                fromDate: savedFilters.fromDate || defaultFromDate,
-                toDate: savedFilters.toDate || defaultToDate,
+                // fromDate: savedFilters.fromDate || defaultFromDate,
+                // toDate: savedFilters.toDate || defaultToDate,
                 project: savedFilters.project || [],
                 Employee: savedFilters.Employee || [],
-                attmonth: savedFilters.attmonth || currentMonthNumber,
+                paystatus: savedFilters.paystatus,
+                // attmonth: savedFilters.attmonth || currentMonthNumber,
+               attmonth: savedFilters.attmonth || monthNames[currentMonthNumber - 1],
                 attyear: savedFilters.attyear || currentYear,
+                 pdfType: savedFilters.pdfType || "Standard",
               };
 
               return (
@@ -6618,24 +6628,47 @@ const ListviewSecondary = () => {
                       // const fromDate = formattedDate2(values.fromDate);
                       // const toDate = formattedDate2(values.toDate);
 
-                      if (values.fromDate && values.toDate) {
-                        conditions.push(
-                          `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
-                        );
-                      }
+                      // if (values.fromDate && values.toDate) {
+                      //   conditions.push(
+                      //     `FilterDate BETWEEN '${values.fromDate}' AND '${values.toDate}'`
+                      //   );
+                      // }
 
-                      if (values.attmonth) {
-                        conditions.push(
-                          `BillableMonth='${values.attmonth}'`
-                        );
-                      }
+                      // if (values.attmonth) {
+                      //   conditions.push(
+                      //     `BillableMonth='${values.attmonth}'`
+                      //   );
+                      // }
+ // Convert selected month NAMES back to NUMBERS for the SQL filter
+  if (values.attmonth) {
+    const monthNumbers = values.attmonth
+      .split(",")
+      .map((name) => monthNames.indexOf(name.trim()) + 1)
+      .filter((n) => n > 0); // drop any that didn't match
 
-                      if (values.attyear) {
-                        conditions.push(
-                          `BillableYear='${values.attyear}'`
-                        );
-                      }
-
+    if (monthNumbers.length > 0) {
+      conditions.push(`BillableMonth IN (${monthNumbers.join(",")})`);
+    }
+  }
+   if (values.attyear) {
+    conditions.push(`BillableYear='${values.attyear}'`);
+  }
+                      
+                      // if (values.attyear) {
+                      //   conditions.push(
+                      //     `BillableYear='${values.attyear}'`
+                      //   );
+                      // }
+                      if (values.paystatus) {
+  if (values.paystatus === "All") {
+    conditions.push(`PaymentStatus IN ('Partially Paid','Fully Paid')`);
+  } else {
+    conditions.push(`PaymentStatus IN ('${values.paystatus}')`);
+  }
+}
+//  if (values.paystatus) {
+//     conditions.push(`PaymentStatus IN ('${values.paystatus}')`);
+//   }
                       if (values.Employee?.length > 0) {
                         const EmpIds = values.Employee
                           .map((e) => `'${e.RecordID}'`)
@@ -6691,7 +6724,7 @@ const ListviewSecondary = () => {
                           </IconButton>
 
                           {/* From Date */}
-                          <TextField
+                          {/* <TextField
                             fullWidth
                             label="From Date"
                             type="date"
@@ -6701,10 +6734,10 @@ const ListviewSecondary = () => {
                             InputLabelProps={{ shrink: true }}
                             sx={{ mt: 2 }}
                             focused
-                          />
+                          /> */}
 
                           {/* To Date */}
-                          <TextField
+                          {/* <TextField
                             fullWidth
                             label="To Date"
                             type="date"
@@ -6714,7 +6747,7 @@ const ListviewSecondary = () => {
                             InputLabelProps={{ shrink: true }}
                             sx={{ mt: 2 }}
                             focused
-                          />
+                          /> */}
 
                           {/* Project */}
                           <MultiFormikOptimizedAutocomplete
@@ -6777,6 +6810,75 @@ const ListviewSecondary = () => {
                                                  </MenuItem>
                                                ))}
                                              </TextField> */}
+                                 <TextField
+  sx={{ mt: 2, mb: 2 }}
+  variant="standard"
+  label="Payment status"
+  name="paystatus"
+  value={values.paystatus || ""}
+  onChange={handleChange}
+  select
+  fullWidth
+  focused
+  InputProps={{
+    endAdornment: values.paystatus && (
+      <InputAdornment position="end">
+        <IconButton
+          size="small"
+          sx={{ marginRight: 2 }}
+          onClick={() => setFieldValue("paystatus", "")}
+        >
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+>
+  {["All", "Fully Paid", "Partially Paid"].map((status) => (
+    <MenuItem key={status} value={status}>
+      {status}
+    </MenuItem>
+  ))}
+</TextField>
+
+
+
+                                            <FormControl variant="standard" fullWidth focused>
+  <InputLabel id="Month-label">Month</InputLabel>
+ 
+  <Select
+    labelId="Month-label"
+    id="attmonth"
+    name="attmonth"
+    multiple
+    value={values.attmonth ? values.attmonth.split(",").filter(Boolean) : []}
+    onChange={(e) => {
+      handleChange({
+        target: {
+          name: "attmonth",
+          value: e.target.value.join(","),
+        },
+      });
+    }}
+    renderValue={(selected) => selected.join(", ")}
+  >
+    <MenuItem value="January">January</MenuItem>
+    <MenuItem value="February">February</MenuItem>
+    <MenuItem value="March">March</MenuItem>
+    <MenuItem value="April">April</MenuItem>
+    <MenuItem value="May">May</MenuItem>
+    <MenuItem value="June">June</MenuItem>
+    <MenuItem value="July">July</MenuItem>
+    <MenuItem value="August">August</MenuItem>
+    <MenuItem value="September">September</MenuItem>
+    <MenuItem value="October">October</MenuItem>
+    <MenuItem value="November">November</MenuItem>
+    <MenuItem value="December">December</MenuItem>
+  </Select>
+</FormControl>
+                                  
+                          {/*
+                          // old month single select
                           <TextField
                             sx={{ mt: 2 }}
                             variant="standard"
@@ -6809,7 +6911,7 @@ const ListviewSecondary = () => {
                                 {month}
                               </MenuItem>
                             ))}
-                          </TextField>
+                          </TextField> */}
 
                           {/* Year */}
                           {/* <TextField
@@ -6826,8 +6928,54 @@ const ListviewSecondary = () => {
                                                <MenuItem value="2026">2026</MenuItem>
                                                <MenuItem value="2025">2025</MenuItem>
                                              </TextField> */}
+                                               <TextField
+  sx={{ mt: 2, mb: 2 }}
+  variant="standard"
+  label="Type"
+  name="pdfType"
+  value={values.pdfType || ""}
+  onChange={handleChange}
+  select
+  fullWidth
+  focused
+  InputProps={{
+    endAdornment: values.pdfType && (
+      <InputAdornment position="end">
+        <IconButton
+          size="small"
+          sx={{ marginRight: 2 }}
+          onClick={() => setFieldValue("pdfType", "")}
+        >
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+>
+  {["Month", "Standard"].map((pdftype) => (
+    <MenuItem key={pdftype} value={pdftype}>
+      {pdftype}
+    </MenuItem>
+  ))}
+</TextField>
+                                             {/* <TextField
+                             sx={{ mt: 2, mb: 2 }}
+                            select
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            label="Type"
+                            value={values.pdfType}
+                            id="pdfType"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="pdfType"
+                          >
+                            <MenuItem value="Month">Month</MenuItem>
+                            <MenuItem value="Standard">Standard</MenuItem>
+                          </TextField> */}
                           <TextField
-                            sx={{ mt: 2 }}
+                            // sx={{ mt: 1 }}
                             variant="standard"
                             label="Year"
                             name="attyear"
@@ -6850,8 +6998,17 @@ const ListviewSecondary = () => {
                               ),
                             }}
                           >
-                            <MenuItem value="2026">2026</MenuItem>
-                            <MenuItem value="2025">2025</MenuItem>
+                             {Array.from({ length: 3 }, (_, index) => {
+                                                          const year = new Date().getFullYear() - index;
+                             
+                                                          return (
+                                                            <MenuItem key={year} value={String(year)}>
+                                                              {year}
+                                                            </MenuItem>
+                                                          );
+                                                        })}
+                            {/* <MenuItem value="2026">2026</MenuItem>
+                            <MenuItem value="2025">2025</MenuItem> */}
                           </TextField>
 
                           {/* Buttons */}
@@ -6868,32 +7025,33 @@ const ListviewSecondary = () => {
                             >
                               Apply
                             </Button>
-
-                            <PDFDownloadLink
-                              document={
-                                <InvpaymentPDF
-                                  data={listViewData}
-                                  Project={values?.project}
-                                  filters={{
-                                    Imageurl: baseurl1,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                    fromDate: values.fromDate,
-                                    toDate: values.toDate
-                                  }}
-                                />
-                              }
-                              fileName="Invoice_pdf"
-                              style={{ color: "#d32f2f" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon />
-                                )
-                              }
-                            </PDFDownloadLink>
+ <PDFDownloadLink
+  key={`${values.pdfType || "Month"}-${values.attmonth || ""}-${(listViewData || []).length}`}
+  document={
+    <InvpaymentPDF
+      data={listViewData}
+      columndata={listViewcolumn}
+      Project={values?.project}
+      selectedMonths={values.attmonth}
+      filters={{
+        Imageurl: baseurl1,
+        HeaderImg: HeaderImg,
+        FooterImg: FooterImg,
+        PDFType: values.pdfType,
+      }}
+    />
+  }
+  fileName="Invoice_pdf"
+  style={{ color: "#d32f2f" }}
+>
+  {({ loading }) =>
+    loading ? (
+      <PictureAsPdfIcon sx={{ opacity: 0.5 }} />
+    ) : (
+      <PictureAsPdfIcon />
+    )
+  }
+</PDFDownloadLink>
 
                             <Button
                               type="button"
@@ -6906,10 +7064,13 @@ const ListviewSecondary = () => {
                                   values: {
                                     project: [],
                                     Employee: [],
-                                    fromDate: defaultFromDate,
-                                    toDate: defaultToDate,
-                                    attmonth: currentMonthNumber,
-                                    attyear: currentYear,
+                                    // fromDate: defaultFromDate,
+                                    // toDate: defaultToDate,
+                                    // attmonth: currentMonthNumber,
+                                    paystatus: "",
+                                    attmonth: monthNames[currentMonthNumber - 1],
+  attyear: String(currentYear),
+  pdfType: "Standard",
                                   },
                                 });
                               }}
@@ -6927,6 +7088,7 @@ const ListviewSecondary = () => {
 
             })()}
             {showMore && (accessID === "TR366") && (() => {
+console.log(listViewcolumn, "--find inside TR366 filter");
 
               // Restore session filters
               const savedFilters =
@@ -7221,6 +7383,7 @@ const ListviewSecondary = () => {
                               document={
                                 <InvpaymentPDF
                                   data={listViewData}
+                                  columndata={listViewcolumn}
                                   Project={values?.project}
                                   filters={{
                                     Imageurl: baseurl1,
@@ -7242,6 +7405,7 @@ const ListviewSecondary = () => {
                                 )
                               }
                             </PDFDownloadLink>
+                           
 
                             <Button
                               type="button"

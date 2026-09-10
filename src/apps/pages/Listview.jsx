@@ -20,6 +20,8 @@ import {
   FormControl,
   RadioGroup,
   Radio,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import {
   DataGrid,
@@ -140,6 +142,7 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import OrderSummaryDocument from "./pdf/OrderSummaryDocument";
+import InvpaymentPDF_hr from "./pdf/Invpaymentdetailpdf_hr";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -3067,6 +3070,7 @@ const Listview = () => {
                       {({
                         values,
                         handleChange,
+                        handleBlur,
                         handleSubmit,
                         resetForm,
                         setFieldValue,
@@ -3173,6 +3177,8 @@ const Listview = () => {
                                      </MenuItem>
                                    ))}
                                  </TextField> */}
+                         
+                            
                             <TextField
                               sx={{ mt: 2 }}
                               variant="standard"
@@ -3615,7 +3621,7 @@ const Listview = () => {
 
                               <PDFDownloadLink
                                 document={
-                                  <InvpaymentPDF
+                                  <InvpaymentPDF_hr
                                     data={listViewData}
                                     Project={values?.project}
                                     filters={{

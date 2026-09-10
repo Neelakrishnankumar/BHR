@@ -29,6 +29,17 @@ const styles = StyleSheet.create({
   legendText: { fontSize: 6 },
   headerWrapper: { position: "absolute", top: 10, left: 20, right: 20, height: 60, justifyContent: "center", alignItems: "center" },
   headerImage: { width: "100%", height: 60, objectFit: "contain" },
+
+summaryTableWrapper: { width: "40%" },
+
+sumHeaderCell1: { flex: 0.5, padding: 2, backgroundColor: "#eee", textAlign: "center", borderRightWidth: 1, borderColor: "#000", fontWeight: "bold" }, // SL#
+sumHeaderCell:  { flex: 3,   padding: 2, backgroundColor: "#eee", textAlign: "center", borderRightWidth: 1, borderColor: "#000", fontWeight: "bold" }, // Employee / Designation
+sumHeaderCell2: { flex: 1,   padding: 2, backgroundColor: "#eee", textAlign: "center", borderRightWidth: 1, borderColor: "#000", fontWeight: "bold" }, // P / UL / SL / HOL / WO / Total
+
+sumCell1: { flex: 0.5, padding: 2, backgroundColor: "#eee", textAlign: "center", borderRightWidth: 1, borderColor: "#000", fontWeight: "bold" },
+sumCell:  { flex: 3,   padding: 2, textAlign: "left", borderRightWidth: 1, borderColor: "#000" },
+sumCell2: { flex: 1,   padding: 2, backgroundColor: "#eee", textAlign: "center", borderRightWidth: 1, borderColor: "#000", fontWeight: "bold" },
+
 });
 
 // ============================================================================
@@ -163,27 +174,54 @@ const buildFlowPages = (locationGroups, fullPageRows = FULL_PAGE_ROWS, headerRow
 
 // Groups the flat employee list by LocationName, sorts locations A-Z,
 // and sorts employees A-Z within each location, renumbering SLNO per location.
+
+//old_design
+// const groupByLocationAZ = (data) => {
+//   if (!Array.isArray(data)) return [];
+
+//   const groups = {};
+//   data.forEach((row) => {
+//     const key = row.LocationName || "Unassigned Location";
+//     if (!groups[key]) groups[key] = [];
+//     groups[key].push(row);
+//   });
+
+//   return Object.keys(groups)
+//     .sort((a, b) => a.localeCompare(b)) // locations A-Z
+//     .map((locationName) => {
+//       const sortedEmployees = [...groups[locationName]].sort((a, b) =>
+//         (a.Name || "").localeCompare(b.Name || "") // employees A-Z within this location
+//       );
+//       return {
+//         locationName,
+//         employees: sortedEmployees.map((row, idx) => ({ ...row, SLNO: idx + 1 })), // SLNO restarts per location
+//       };
+//     });
+// };
+
+//changed by Radhika_7/9/2026
 const groupByLocationAZ = (data) => {
   if (!Array.isArray(data)) return [];
 
   const groups = {};
+  const locationOrder = []; // track first-seen order of locations
+
   data.forEach((row) => {
     const key = row.LocationName || "Unassigned Location";
-    if (!groups[key]) groups[key] = [];
+    if (!groups[key]) {
+      groups[key] = [];
+      locationOrder.push(key); // preserves the order locations first appear in the data
+    }
     groups[key].push(row);
   });
 
-  return Object.keys(groups)
-    .sort((a, b) => a.localeCompare(b)) // locations A-Z
-    .map((locationName) => {
-      const sortedEmployees = [...groups[locationName]].sort((a, b) =>
-        (a.Name || "").localeCompare(b.Name || "") // employees A-Z within this location
-      );
-      return {
-        locationName,
-        employees: sortedEmployees.map((row, idx) => ({ ...row, SLNO: idx + 1 })), // SLNO restarts per location
-      };
-    });
+  return locationOrder.map((locationName) => ({
+    locationName,
+    // No .sort() here — employees stay in the exact order the API returned them,
+    // matching whatever SortByFilters (Name/Sortorder/DesignationRank/DateOfJoin)
+    // was applied on the screen. Only SLNO is renumbered per location.
+    employees: groups[locationName].map((row, idx) => ({ ...row, SLNO: idx + 1 })),
+  }));
 };
 
 const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight = 0 }) => {
@@ -212,7 +250,24 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight = 0 }) => 
   ];
 
   // ✅ Reusable header
-  const renderHeader = () => (
+  // const renderHeader = () => (
+  //   <View fixed style={styles.headerWrapper}>
+  //     {filters.HeaderImg && (
+  //       <Image
+  //         src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+  //         style={styles.headerImage}
+  //       />
+  //     )}
+  //   </View>
+  // );
+
+  const renderHeader = () => {
+  console.log(
+    `${filters.Imageurl}/uploads/images/${filters.HeaderImg}`,
+    "find header image"
+  );
+
+  return (
     <View fixed style={styles.headerWrapper}>
       {filters.HeaderImg && (
         <Image
@@ -222,7 +277,7 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight = 0 }) => 
       )}
     </View>
   );
-
+};
   // ✅ Reusable footer
   // NOTE: the page number is rendered with react-pdf's `render` prop, which
   // is evaluated at actual layout time against the REAL rendered pages —
@@ -345,34 +400,64 @@ const AttendanceHistoryPDF = ({ data = [], filters = {}, footerHeight = 0 }) => 
     </View>
   );
 
+
   const renderSummaryTable = (rows) => (
-    <View style={[styles.table, { marginTop: 5 }]}>
-      <View style={styles.tableRow}>
-        <Text style={styles.headerCell1}>SL#</Text>
-        <Text style={styles.headerCell}>Employee</Text>
-        <Text style={styles.headerCell}>Designation</Text>
-        <Text style={styles.headerCell2}>P</Text>
-        <Text style={styles.headerCell2}>UL</Text>
-        <Text style={styles.headerCell2}>SL</Text>
-        <Text style={styles.headerCell2}>HOL</Text>
-        <Text style={styles.headerCell2}>WO</Text>
-        <Text style={styles.headerCell2}>Total</Text>
-      </View>
-      {rows.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.tableRow}>
-          <Text style={styles.cell1}>{row.SLNO}</Text>
-          <Text style={styles.cell}>{row.Name}</Text>
-          <Text style={styles.cell}>{row.Designation}</Text>
-          <Text style={styles.cell2}>{row.Present}</Text>
-          <Text style={styles.cell2}>{row.UnPaidLeave}</Text>
-          <Text style={styles.cell2}>{row.PaidLeave}</Text>
-          <Text style={styles.cell2}>{row.Holidays}</Text>
-          <Text style={styles.cell2}>{row.Weekoff}</Text>
-          <Text style={styles.cell2}>{row.Total}</Text>
-        </View>
-      ))}
+  <View style={[styles.table, styles.summaryTableWrapper, { marginTop: 5 }]}>
+    <View style={styles.tableRow}>
+      <Text style={styles.sumHeaderCell1}>SL#</Text>
+      <Text style={styles.sumHeaderCell}>Employee</Text>
+      <Text style={styles.sumHeaderCell}>Designation</Text>
+      <Text style={styles.sumHeaderCell2}>P</Text>
+      <Text style={styles.sumHeaderCell2}>UL</Text>
+      <Text style={styles.sumHeaderCell2}>SL</Text>
+      <Text style={styles.sumHeaderCell2}>HOL</Text>
+      <Text style={styles.sumHeaderCell2}>WO</Text>
+      <Text style={styles.sumHeaderCell2}>Total</Text>
     </View>
-  );
+    {rows.map((row, rowIndex) => (
+      <View key={rowIndex} style={styles.tableRow}>
+        <Text style={styles.sumCell1}>{row.SLNO}</Text>
+        <Text style={styles.sumCell}>{row.Name}</Text>
+        <Text style={styles.sumCell}>{row.Designation}</Text>
+        <Text style={styles.sumCell2}>{row.Present}</Text>
+        <Text style={styles.sumCell2}>{row.UnPaidLeave}</Text>
+        <Text style={styles.sumCell2}>{row.PaidLeave}</Text>
+        <Text style={styles.sumCell2}>{row.Holidays}</Text>
+        <Text style={styles.sumCell2}>{row.Weekoff}</Text>
+        <Text style={styles.sumCell2}>{row.Total}</Text>
+      </View>
+    ))}
+  </View>
+);
+
+  // const renderSummaryTable = (rows) => (
+  //   <View style={[styles.table, { marginTop: 5 }]}>
+  //     <View style={styles.tableRow}>
+  //       <Text style={styles.headerCell1}>SL#</Text>
+  //       <Text style={styles.headerCell}>Employee</Text>
+  //       <Text style={styles.headerCell}>Designation</Text>
+  //       <Text style={styles.headerCell2}>P</Text>
+  //       <Text style={styles.headerCell2}>UL</Text>
+  //       <Text style={styles.headerCell2}>SL</Text>
+  //       <Text style={styles.headerCell2}>HOL</Text>
+  //       <Text style={styles.headerCell2}>WO</Text>
+  //       <Text style={styles.headerCell2}>Total</Text>
+  //     </View>
+  //     {rows.map((row, rowIndex) => (
+  //       <View key={rowIndex} style={styles.tableRow}>
+  //         <Text style={styles.cell1}>{row.SLNO}</Text>
+  //         <Text style={styles.cell}>{row.Name}</Text>
+  //         <Text style={styles.cell}>{row.Designation}</Text>
+  //         <Text style={styles.cell2}>{row.Present}</Text>
+  //         <Text style={styles.cell2}>{row.UnPaidLeave}</Text>
+  //         <Text style={styles.cell2}>{row.PaidLeave}</Text>
+  //         <Text style={styles.cell2}>{row.Holidays}</Text>
+  //         <Text style={styles.cell2}>{row.Weekoff}</Text>
+  //         <Text style={styles.cell2}>{row.Total}</Text>
+  //       </View>
+  //     ))}
+  //   </View>
+  // );
 
   return (
     <Document>
