@@ -1717,9 +1717,10 @@ useEffect(() => {
                   focused
                   inputFormat="YYYY-MM-DD"
                   value={values.assignedDate}
-                  sx={{ gridColumn: "span 2" }}
+                 
                   InputLabelProps={{ readOnly: true }}
                     sx={{
+                                 gridColumn: "span 2",
                                 "& .MuiOutlinedInput-root": {
                                   backgroundColor: "#fff",
                                   borderRadius: "6px",
