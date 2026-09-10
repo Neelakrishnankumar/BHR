@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
+import ArticleIcon from '@mui/icons-material/Article';
 import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Button,
@@ -148,6 +149,7 @@ import PublishEventCategoryDialog from "../../apps/pages/HR/EditPublishpopup";
 import BallotIcon from '@mui/icons-material/Ballot';
 import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
 import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
+import TransferCertificate from "../../apps/pages/SkillGlow/Pdf/TransferCertificatePdf";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -7649,6 +7651,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       setIsReady(true);
     };
   }, [FooterImg]);
+
   const getTodayDate = () => {
     const today = new Date();
 
@@ -7896,6 +7899,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       }
     };
 
+  
     return (
       <Tooltip title="Download Payslip PDF">
         <IconButton color="info" size="small" onClick={handlePayPDFGET}>
@@ -7917,6 +7921,58 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       confirmButtonColor: "#3085d6",
     });
   };
+
+
+  // 🆕 Transfer Certificate button — same pattern as PayslipBtn
+  // const TCButton = ({ EmployeeID, CompanyID }) => {
+  //   const dispatch = store.dispatch;
+  //   const [tcLoading, setTcLoading] = React.useState(false);
+
+  //   const handlePDFGET_TC = async (e) => {
+  //     e.stopPropagation();
+  //     e.preventDefault();
+
+  //     try {
+  //       setTcLoading(true);
+
+  //       const resultAction = await dispatch(
+  //         getFetchData({
+  //           accessID: "TR027",       // swap for whatever accessID/thunk your backend uses for TC
+  //           get: "get",
+  //           recID: EmployeeID,
+  //         })
+  //       );
+
+  //       const data = resultAction.payload;
+
+  //       if (!data?.Data) {
+  //         alert("No data available to generate Transfer Certificate");
+  //         return;
+  //       }
+
+  //       const blob = await pdf(
+  //         <TransferCertificate data={data} UserName={UserName} />
+  //       ).toBlob();
+
+  //       const blobUrl = URL.createObjectURL(blob);
+  //       window.open(blobUrl, "_blank");
+
+  //       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+  //     } catch (err) {
+  //       console.error("TC PDF generation failed", err);
+  //     } finally {
+  //       setTcLoading(false);
+  //     }
+  //   };
+
+  //   return (
+  //     <Tooltip title="Transfer Certificate">
+  //       <IconButton color="info" size="small" onClick={handlePDFGET_TC}>
+  //         {tcLoading ? <CircularProgress size={20} /> : <ArticleIcon />}
+  //       </IconButton>
+  //     </Tooltip>
+  //   );
+  // };
 
   return (
     <Fragment>
@@ -8723,6 +8779,29 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
+              {/* {is003Subscription && params.row.Classification == "Student" && (
+          <TCButton
+            EmployeeID={params.row.RecordID}
+            CompanyID={params.row.CompanyID}
+          />
+        )} */}
+         {is003Subscription && params.row.Classification == "Student" && (
+              <Link
+                to={`/Apps/Tccertificate`}
+                // state={{
+                //   EmpName: params.row.Name,
+                //   Employee: params.row.Personnel,
+                // }}
+              >
+                <Tooltip title="TC">
+                  <IconButton color="info" size="small">
+                    <ArticleIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            )}
+
+
             {(is003Subscription && params.row.HasProjectTask === "Y") && (
               <>
                 <Tooltip title="Staff Timetable">

@@ -1813,9 +1813,14 @@ const Login = () => {
                       mt: 1.5,
                       borderRadius: "10px",
                       py: 1,
-                      background: "linear-gradient(90deg, #1B3FA0 0%, #2F6FED 100%)",
+                      // background: "linear-gradient(90deg, #1B3FA0 0%, #2F6FED 100%)",
+                      // "&:hover": {
+                      //   background: "linear-gradient(90deg, #17348A 0%, #275FD1 100%)",
+                      // },
+                       background: "linear-gradient(90deg, #14B8A6 0%, #2563EB 100%)",
+                      boxShadow: "0px 10px 20px rgba(37, 99, 235, 0.25)",
                       "&:hover": {
-                        background: "linear-gradient(90deg, #17348A 0%, #275FD1 100%)",
+                        background: "linear-gradient(90deg, #0F9C8C 0%, #1D4ED8 100%)",
                       },
                     }}
                   >
