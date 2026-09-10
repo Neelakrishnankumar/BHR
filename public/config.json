@@ -3,6 +3,6 @@
  "API_URL": "https://bosuat.bexschools.com/api/",
   "BASE_URL": "https://bosuat.bexschools.com/",
   "ESS_URL": "https://essuat.bexschools.com/",
-  "UAAM_URL": "https://uaamuat.bexschools.com/"
+  "UAAM_URL": "https://bosuat.bexschools.com/"
 
 }

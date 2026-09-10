@@ -99,8 +99,8 @@ const EditAttendanceHistory = () => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
-  // const baseurlUAAM = config.UAAM_URL;
-  const baseurlUAAM = config.BASE_URL;
+  const baseurlUAAM = config.UAAM_URL;
+  // const baseurlUAAM = config.BASE_URL;
 
   const AttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
