@@ -1726,7 +1726,8 @@ const SummaryTable = ({ flatSummary, summaryPrimaryHeader, summarySecondaryHeade
     })}
 
     <View style={styles.grandRow}>
-      <Text style={[styles.grandLabel, styles.sLabelSpan]}>Grand Total</Text>
+      {/* <Text style={[styles.grandLabel, styles.sLabelSpan]}>Grand Total</Text> */}
+      <Text style={[styles.grandValue, styles.sLabelSpan]}>Grand Total</Text>
       <Text style={[styles.grandValue, styles.sInv, styles.cellCenter]}>
         {flatSummary.grandInvoices}
       </Text>
@@ -1759,11 +1760,21 @@ const InvpaymentPDF = ({
   const modeSuffix = mode === "Standard" ? "Standard Wise" : "Month Wise";
   const reportTitleText = `Invoice Payment Report (${modeSuffix})`;
 
-  const selectedMonthNames = selectedMonths
-    ? selectedMonths.split(",").map((m) => m.trim()).filter(Boolean)
-    : [];
+  // const selectedMonthNames = selectedMonths
+  //   ? selectedMonths.split(",").map((m) => m.trim()).filter(Boolean)
+  //   : [];
+  // const groups = buildGroups(data, mode, selectedMonthNames);
 
-  const groups = buildGroups(data, mode, selectedMonthNames);
+  const selectedMonthNums = Array.isArray(selectedMonths)
+  ? selectedMonths
+      .map((m) => Number(m?.RecordID ?? m))
+      .filter((n) => Number.isFinite(n) && n > 0)
+  : String(selectedMonths || "")
+      .split(",")
+      .map((name) => MONTH_NAMES.indexOf(name.trim()) + 1)
+      .filter((n) => n > 0);
+
+const groups = buildGroups(data, mode, selectedMonthNums);
 
   const { entries, grandAmount, grandPaid, grandDue, totalInvoices } =
     buildEntries(groups);
@@ -1964,8 +1975,9 @@ const InvpaymentPDF = ({
                   return (
                     <View key={idx} style={styles.subtotalRow}>
                       <Text style={styles.wLabelSpanNoProject} />
-                      <Text style={[styles.subtotalLabel, styles.wProject, styles.cellCenter]}>Total</Text>
-                      <Text style={[styles.subtotalValue, styles.wAmount]}>{money(entry.mAmount)}</Text>
+                      <Text style={[styles.subtotalLabel, styles.wProject, styles.cellNum]}>Total</Text>
+                      {/* <Text style={[styles.subtotalLabel, styles.wProject, styles.cellCenter]}>Total</Text> */}
+                     <Text style={[styles.subtotalValue, styles.wAmount]}>{money(entry.mAmount)}</Text>
                       <Text style={[styles.subtotalValue, styles.wPaid]}>{money(entry.mPaid)}</Text>
                       <Text style={[styles.subtotalValue, styles.wDue]}>{money(entry.mDue)}</Text>
                       <Text style={styles.wLastPaid} />
@@ -1977,7 +1989,8 @@ const InvpaymentPDF = ({
                   return (
                     <View key={idx} style={styles.grandRow}>
                       <Text style={styles.wLabelSpanNoProject} />
-                      <Text style={[styles.grandLabel, styles.wProject, styles.cellCenter]}>Grand Total</Text>
+                      <Text style={[styles.grandLabel, styles.wProject, styles.cellNum]}>Grand Total</Text>
+                      {/* <Text style={[styles.grandLabel, styles.wProject, styles.cellCenter]}>Grand Total</Text> */}
                       <Text style={[styles.grandValue, styles.wAmount]}>{money(entry.grandAmount)}</Text>
                       <Text style={[styles.grandValue, styles.wPaid]}>{money(entry.grandPaid)}</Text>
                       <Text style={[styles.grandValue, styles.wDue]}>{money(entry.grandDue)}</Text>

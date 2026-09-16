@@ -5966,7 +5966,7 @@ const Listview = () => {
 
             </Box>
           </Box>
-          {accessID !== "TR313" && (
+          {(accessID !== "TR313" || accessID !== "TR418") && (
             <Box display="flex" alignItems="center" marginLeft={3}>
               <Typography fontWeight={600} fontSize={15} lineHeight={1} mt={2} mb={-2}>
                 Actions Guide
@@ -6599,6 +6599,24 @@ const Listview = () => {
                       variant="outlined"
                     // sx={{ marginLeft: "50px" }}
                     />
+                  </Box>
+                     )
+                : accessID == "TR416" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<SourceOutlinedIcon color="primary" />}
+                      label="Payment"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    
+                    />
+                    <Chip
+                      icon={<FactCheckIcon color="primary" />}
+                      label="Invoice"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />
+                    
                   </Box>
                 )
                   : accessID == "TR337" ? (

@@ -626,7 +626,7 @@ const InvpaymentPDF = ({
     // Suffix shown in the report title so the reader can tell at a
     // glance whether the report is grouped Month wise or Standard wise.
     const modeSuffix = mode === "Standard" ? "Standard Wise" : "Month Wise";
-    const reportTitleText = `Invoice Enquiry Report (${modeSuffix})`;
+    const reportTitleText = `Invoice Report (${modeSuffix})`;
 
     const selectedMonthNames = selectedMonths
         ? selectedMonths.split(",").map((m) => m.trim()).filter(Boolean)
@@ -845,7 +845,7 @@ const InvpaymentPDF = ({
                                 if (entry.type === "grand") {
                                     return (
                                         <View key={idx} style={styles.grandRow}>
-                                            <Text style={[styles.grandLabel, colW.labelSpan]}>
+                                            <Text style={[styles.grandValue, colW.labelSpan]}>
                                                 Grand Total
                                             </Text>
 
@@ -925,7 +925,7 @@ const InvpaymentPDF = ({
                     })}
 
                     <View style={styles.grandRow}>
-                        <Text style={[styles.grandLabel, styles.sLabelSpan]}>Grand Total</Text>
+                        <Text style={[styles.grandValue, styles.sLabelSpan]}>Grand Total</Text>
                         <Text style={[styles.grandValue, styles.sInv, styles.cellCenter]}>
                             {flatSummary.grandInvoices}
                         </Text>

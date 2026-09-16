@@ -289,9 +289,15 @@ const ListviewSecondary = () => {
     const initialFormValues = {
       Standard: savedFilters.Standard || [],
       Student: savedFilters.Student || [],
-      Type: savedFilters.Type || "Month",
-      months: savedFilters.months || monthNames[currentMonthNumber - 1],
-      Paymentyear: savedFilters.Paymentyear || currentYear,
+      Type: savedFilters.Type
+      //  || "Month"
+       ,
+      // months: savedFilters.months
+      //  || monthNames[currentMonthNumber - 1],
+     months: savedFilters.months || [],
+      Paymentyear: savedFilters.Paymentyear
+      //  || currentYear
+       ,
     };
 
     // ✅ now legal — top level of a real function component
@@ -315,15 +321,22 @@ const ListviewSecondary = () => {
               const projIds = values.Standard.map((p) => `'${p.RecordID}'`).join(",");
               conditions.push(`ProjectID IN (${projIds})`);
             }
-            if (values.months) {
-              const monthNumbers = values.months
-                .split(",")
-                .map((name) => monthNames.indexOf(name.trim()) + 1)
-                .filter((n) => n > 0);
-              if (monthNumbers.length > 0) {
-                conditions.push(`BillableMonth IN (${monthNumbers.join(",")})`);
-              }
-            }
+            // if (values.months) {
+            //   const monthNumbers = values.months
+            //     .split(",")
+            //     .map((name) => monthNames.indexOf(name.trim()) + 1)
+            //     .filter((n) => n > 0);
+            //   if (monthNumbers.length > 0) {
+            //     conditions.push(`BillableMonth IN (${monthNumbers.map((n) => `'${n}'`).join(",")})`);
+            //   }
+            // }
+              if (values.months?.length > 0) {
+                        const monthIds = values.months
+                          .map((p) => `'${p.RecordID}'`)
+                          .join(",");
+                        conditions.push(`BillableMonth IN (${monthIds})`);
+                      }
+
             if (values.Paymentyear) {
               conditions.push(`BillableYear='${values.Paymentyear}'`);
             }
@@ -358,7 +371,7 @@ const ListviewSecondary = () => {
                       AccessID: "2054",
                       ScreenName: "Standard",
                       VerticalLicense: Subscriptionlastthree,
-                      Filter: `parentID='${CompId}'`,
+                      Filter: `parentID='${CompId}' AND AcademicYearID='${params.leaderID}'`,
                       Any: "",
                     },
                   })}`}
@@ -385,20 +398,42 @@ const ListviewSecondary = () => {
                   sx={{ mt: 2 }}
                   select
                   fullWidth
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Type"
                   value={values.Type}
                   id="Type"
                   onBlur={handleBlur}
                   onChange={handleChange}
+                  focused
                   name="Type"
+                    InputProps={{
+                              endAdornment: values.Type && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ marginRight: 2 }}
+                                    onClick={() => setFieldValue("Type", "")}
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
                 >
                   <MenuItem value="Month">Month</MenuItem>
                   <MenuItem value="Standard">Standard</MenuItem>
                 </TextField>
 
-                <FormControl variant="standard" fullWidth focused sx={{ mt: 2 }}>
+                {/* <FormControl 
+                variant="standard" 
+                fullWidth 
+                focused 
+                 sx={{
+    mt: 2,
+    position: "relative",
+  }}
+                >
                   <InputLabel id="Month-label">Month</InputLabel>
                   <Select
                     labelId="Month-label"
@@ -410,12 +445,71 @@ const ListviewSecondary = () => {
                       handleChange({ target: { name: "months", value: e.target.value.join(",") } });
                     }}
                     renderValue={(selected) => selected.join(", ")}
-                  >
+                   sx={{
+      "& .MuiSelect-select": {
+        paddingRight: values.months
+          ? "70px !important"
+          : undefined,
+      },
+    }}
+                 >
                     {monthNames.map((m) => (
                       <MenuItem key={m} value={m}>{m}</MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                  
+  {values.months && (
+    <IconButton
+      size="small"
+      onClick={(e) => {
+        e.stopPropagation();
+        setFieldValue("months", "");
+      }}
+      sx={{
+        position: "absolute",
+        right: 20,
+        bottom: 3,
+        zIndex: 5,
+        p: "3px",
+        color: "rgba(0, 0, 0, 0.54)",
+        "&:hover": {
+          color: "rgba(0, 0, 0, 0.87)",
+        },
+      }}
+    >
+      <ClearIcon fontSize="small" />
+    </IconButton>
+  )}
+                </FormControl> */}
+
+
+
+
+
+
+
+
+
+
+
+<MultiFormikOptimizedAutocomplete
+                            sx={{ mt: 2 }}
+                            name="months"
+                            label="Month"
+                            value={values.months}
+                            onChange={(e, newValue) =>
+                              setFieldValue("months", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2211",
+                                ScreenName: "Month",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: "",
+                                Any: "",
+                              },
+                            })}`} />
+
 
                 <TextField
                   sx={{ mt: 2 }}
@@ -449,7 +543,7 @@ const ListviewSecondary = () => {
                   </Button>
 
                   <PDFDownloadLink
-                    key={`${appliedValues.Type}-${appliedValues.months}-${appliedValues.Paymentyear}`}
+                    key={`${appliedValues.Type}-${appliedValues.months || []}-${appliedValues.Paymentyear}`}
                     document={
                       <InvenquiryPDF
                         data={listViewData}
@@ -463,7 +557,8 @@ const ListviewSecondary = () => {
                         }}
                       />
                     }
-                    fileName={`Invoice_Enquiry_${appliedValues.Type}_wise`}
+                    // fileName={`Invoice_Enquiry_${appliedValues.Type}_wise`}
+                     fileName={`Invoice_pdf`}
                     style={{ color: "#d32f2f" }}
                   >
                     {({ loading }) => (loading ? <PictureAsPdfIcon sx={{ opacity: 0.5 }} /> : <PictureAsPdfIcon />)}
@@ -479,9 +574,12 @@ const ListviewSecondary = () => {
                         values: {
                           Student: [],
                           Standard: [],
-                          months: monthNames[currentMonthNumber - 1],
-                          Paymentyear: currentYear,
-                          Type : "Month"
+                          months: [],
+                          Paymentyear: "",
+                          Type : ""
+                          // months: monthNames[currentMonthNumber - 1],
+                          // Paymentyear: currentYear,
+                          // Type : "Month"
                         },
                       });
                     }}
@@ -1729,7 +1827,7 @@ const ListviewSecondary = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                   onClick={() => {
-                    navigate("/Apps/TR417/Academic Year");
+                    navigate("/Apps/TR416/Academic Year");
                   }}
                 >
                   Academic Year ({state.AcademicYear})
@@ -1770,13 +1868,13 @@ const ListviewSecondary = () => {
                     {
                       is003Subscription ?
                         // navigate("/Apps/TR331/Invoice") :
-                        navigate(`/Apps/SecondarylistView/TR331/Invoice/${state.AcademicYearID}`, { state: { ...state } }) :
+                        navigate(`/Apps/SecondarylistView/TR331/Payment/${state.AcademicYearID}`, { state: { ...state } }) :
                         navigate("/Apps/TR366/Invoice");
                     }
 
                   }}
                 >
-                  {`Invoice(${state.Employee})`}
+                  {`Payment(${state.Employee})`}
                 </Typography>
 
                 <Typography
@@ -3147,7 +3245,7 @@ const ListviewSecondary = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Invoice
+                      Payment
                     </Typography>
                   </Breadcrumbs>
                 </Box>
@@ -6165,17 +6263,30 @@ const ListviewSecondary = () => {
               <Typography variant="h4" fontWeight={700} color="#4F46E5">{listViewData.length}</Typography>
             </Box>
           </Box>) : null}
+
+
+          <Box sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, overflow: "hidden" }}>
+  <Box sx={{ display: "flex", flexDirection: "row" }}>
+
+    {/* LEFT COLUMN: search bar + datagrid, always together */}
+    <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+      {/* Search row — now scoped to this column only, so it stays above the grid */}
+      <Box
+        p={1}
+        borderBottom="1px solid #F3F4F6"
+        sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+      >
         {/* ONE card wraps search + grid + footer, like Image 1 */}
-        <Box
+        {/* <Box
           sx={{
             backgroundColor: "#fff",
             border: "1px solid #E5E7EB",
             borderRadius: 3,
             overflow: "hidden",   // <-- this is what rounds the header/footer corners
           }}
-        >
+        > */}
           {/* Search row, bordered off from the grid below it */}
-          <Box
+          {/* <Box
             p={1}
             borderBottom="1px solid #F3F4F6"
             sx={{
@@ -6183,7 +6294,7 @@ const ListviewSecondary = () => {
               justifyContent: "flex-end",
               alignItems: "center",
             }}
-          >
+          > */}
             <TextField
               placeholder="Search..."
               size="small"
@@ -6274,10 +6385,33 @@ const ListviewSecondary = () => {
                 color: colors.blueAccent[900],
                 fontWeight: 800
               },
+              // "& .disabled-row": {
+              //   backgroundColor: "#f9dbbb !important",
+              //   color: "#999 !important",
+              // },
+              //  "& .resignation-row": {
+              //   backgroundColor: "#f77f61 !important",
+              //   color: "#f5eaea !important",
+              // },
+              //chatgpt_1
               "& .disabled-row": {
-                backgroundColor: "#f9dbbb !important",
-                color: "#999 !important",
-              },
+  backgroundColor: "#F9DBBB !important",
+  color: "#666666 !important",
+},
+
+"& .resignation-row": {
+  backgroundColor: "#FECACA !important",
+  color: "#B91C1C !important",
+},
+
+//               "& .disabled-row": {
+//   backgroundColor: "#F5DEBC !important",
+//   color: "#9A9A9A !important",
+// },
+// "& .resignation-row": {
+//   backgroundColor: "#F0805C !important",
+//   color: "#FAF5F5 !important",
+// },
             }}
           >
 
@@ -6332,7 +6466,10 @@ const ListviewSecondary = () => {
                 if (accessID === "TR027" && params.row.Disable === "Y") {
                   return "disabled-row";
                 }
-
+                // resignation rows highlights in TR027
+ if (accessID === "TR027" && params.row.ExitFormalitiesAccepted === "Y") {
+                  return "resignation-row";
+                }
                 // Normal alternate row colors
                 return params.indexRelativeToCurrentPage % 2 === 0
                   ? "odd-row"
@@ -6600,6 +6737,9 @@ const ListviewSecondary = () => {
               </Formik>
             </Box>
           )} */}
+
+            </Box>
+    </Box>
             {showMore && (accessID === "TR371" || accessID === "TR372") && (() => {
 
               const fromDateKey = `${accessID}_FromDate`;
@@ -6861,7 +7001,8 @@ const ListviewSecondary = () => {
                 Employee: savedFilters.Employee || [],
                 paystatus: savedFilters.paystatus,
                 // attmonth: savedFilters.attmonth || currentMonthNumber,
-                attmonth: savedFilters.attmonth || monthNames[currentMonthNumber - 1],
+                // attmonth: savedFilters.attmonth || monthNames[currentMonthNumber - 1],
+                attmonth: savedFilters.attmonth || [],
                 attyear: savedFilters.attyear || currentYear,
                 pdfType: savedFilters.pdfType || "Standard",
               };
@@ -6902,17 +7043,23 @@ const ListviewSecondary = () => {
                       //     `BillableMonth='${values.attmonth}'`
                       //   );
                       // }
-                      // Convert selected month NAMES back to NUMBERS for the SQL filter
-                      if (values.attmonth) {
-                        const monthNumbers = values.attmonth
-                          .split(",")
-                          .map((name) => monthNames.indexOf(name.trim()) + 1)
-                          .filter((n) => n > 0); // drop any that didn't match
-
-                        if (monthNumbers.length > 0) {
-                          conditions.push(`BillableMonth IN (${monthNumbers.join(",")})`);
-                        }
+                        if (values.attmonth?.length > 0) {
+                        const monthIds = values.attmonth
+                          .map((p) => `'${p.RecordID}'`)
+                          .join(",");
+                        conditions.push(`BillableMonth IN (${monthIds})`);
                       }
+                      // Convert selected month NAMES back to NUMBERS for the SQL filter
+                      // if (values.attmonth) {
+                      //   const monthNumbers = values.attmonth
+                      //     .split(",")
+                      //     .map((name) => monthNames.indexOf(name.trim()) + 1)
+                      //     .filter((n) => n > 0); // drop any that didn't match
+
+                      //   if (monthNumbers.length > 0) {
+                      //     conditions.push(`BillableMonth IN (${monthNumbers.map((n) => `'${n}'`).join(",")})`);
+                      //   }
+                      // }
                       if (values.attyear) {
                         conditions.push(`BillableYear='${values.attyear}'`);
                       }
@@ -7026,7 +7173,7 @@ const ListviewSecondary = () => {
                                 AccessID: "2054",
                                 ScreenName: "Project",
                                 VerticalLicense: Subscriptionlastthree,
-                                Filter: `parentID='${CompId}'`,
+                                Filter: `parentID='${CompId}' AND AcademicYearID='${params.leaderID}'`,
                                 Any: "",
                               },
                             })}`}
@@ -7105,8 +7252,15 @@ const ListviewSecondary = () => {
                           </TextField>
 
 
-
-                          <FormControl variant="standard" fullWidth focused>
+{/* Changed by Radhika 12-09-2026 w/o checkbox month selection
+                          <FormControl
+                           variant="standard" 
+                           fullWidth 
+                           focused
+                            sx={{
+      position: "relative",
+  }}
+                           >
                             <InputLabel id="Month-label">Month</InputLabel>
 
                             <Select
@@ -7124,6 +7278,13 @@ const ListviewSecondary = () => {
                                 });
                               }}
                               renderValue={(selected) => selected.join(", ")}
+                               sx={{
+      "& .MuiSelect-select": {
+        paddingRight: values.attmonth
+          ? "70px !important"
+          : undefined,
+      },
+    }}
                             >
                               <MenuItem value="January">January</MenuItem>
                               <MenuItem value="February">February</MenuItem>
@@ -7138,7 +7299,56 @@ const ListviewSecondary = () => {
                               <MenuItem value="November">November</MenuItem>
                               <MenuItem value="December">December</MenuItem>
                             </Select>
-                          </FormControl>
+                            
+  {values.attmonth && (
+    <IconButton
+      size="small"
+      onClick={(e) => {
+        e.stopPropagation();
+        setFieldValue("attmonth", "");
+      }}
+      sx={{
+        position: "absolute",
+        right: 20,
+        bottom: 3,
+        zIndex: 5,
+        p: "3px",
+        color: "rgba(0, 0, 0, 0.54)",
+        "&:hover": {
+          color: "rgba(0, 0, 0, 0.87)",
+        },
+      }}
+    >
+      <ClearIcon fontSize="small" />
+    </IconButton>
+  )}
+                          </FormControl> */}
+
+
+ <MultiFormikOptimizedAutocomplete
+                            // sx={{ mt: 2 }}
+                            name="attmonth"
+                            label="Month"
+                            value={values.attmonth}
+                            onChange={(e, newValue) =>
+                              setFieldValue("attmonth", newValue)
+                            }
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2211",
+                                ScreenName: "Month",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: "",
+                                Any: "",
+                              },
+                            })}`} />
+
+
+
+
+
+
+
 
                           {/*
                           // old month single select
@@ -7192,7 +7402,7 @@ const ListviewSecondary = () => {
                                                <MenuItem value="2025">2025</MenuItem>
                                              </TextField> */}
                           <TextField
-                            sx={{ mt: 2, mb: 2 }}
+                            sx={{ mt: 2, mb: 1.5 }}
                             variant="standard"
                             label="Type"
                             name="pdfType"
@@ -7289,13 +7499,13 @@ const ListviewSecondary = () => {
                               Apply
                             </Button>
                             <PDFDownloadLink
-                              key={`${values.pdfType || "Month"}-${values.attmonth || ""}-${(listViewData || []).length}`}
+                              key={`${values.pdfType || "Month"}-${values.attmonth || []}-${(listViewData || []).length}`}
                               document={
                                 <InvpaymentPDF
                                   data={listViewData}
                                   columndata={listViewcolumn}
                                   Project={values?.project}
-                                  selectedMonths={values.attmonth}
+                                  selectedMonths={values?.attmonth}
                                   filters={{
                                     Imageurl: baseurl1,
                                     HeaderImg: HeaderImg,
@@ -7304,7 +7514,7 @@ const ListviewSecondary = () => {
                                   }}
                                 />
                               }
-                              fileName="Invoice_pdf"
+                              fileName="Payment_pdf"
                               style={{ color: "#d32f2f" }}
                             >
                               {({ loading }) =>
@@ -7331,9 +7541,11 @@ const ListviewSecondary = () => {
                                     // toDate: defaultToDate,
                                     // attmonth: currentMonthNumber,
                                     paystatus: "",
-                                    attmonth: monthNames[currentMonthNumber - 1],
-                                    attyear: String(currentYear),
-                                    pdfType: "Standard",
+                                    attmonth: [],
+                                    attyear: "",
+                                    // attmonth: monthNames[currentMonthNumber - 1],
+                                    // attyear: String(currentYear),
+                                    pdfType: "",
                                   },
                                 });
                               }}
@@ -7877,9 +8089,16 @@ const ListviewSecondary = () => {
                     variant="outlined"
                   />
                 </Box>
+                 ) : accessID == "TR331" ? (
+                 <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                  <Chip
+                      icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+                      label="Payment"
+                      variant="outlined"
+                    />
+                      </Box>
 
-              )
-                : accessID == "TR310" ? (
+              ) : accessID == "TR310" ? (
                   <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}

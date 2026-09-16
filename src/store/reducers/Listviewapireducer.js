@@ -2531,41 +2531,22 @@ export const fetchListview =
                     <Box>
                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                        to={`/Apps/SecondarylistView/TR331/Invoice/${params.row.RecordID}`}
+                        // to={`/Apps/SecondarylistView/TR331/Invoice/${params.row.RecordID}`}
+                         to={`/Apps/SecondarylistView/TR331/Payment/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
-                        <Tooltip title="Invoice">
+                        <Tooltip title="Payment">
                           <IconButton color="info" size="small">
                             <SourceOutlinedIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    </Box>
-                  );
-                },
-              };
-            }
-            //Invoice Enquiry
-               else if (AccessID == "TR417") {
-              obj = {
-                field: "action",
-                headerName: "Action",
-                minWidth: 250,
-                sortable: false,
-                filterable: false,
-                headerAlign: "center",
-                align: "center",
-                disableColumnMenu: true,
-                disableExport: true,
-                renderCell: (params) => {
-                  return (
-                    <Box>
-                      <Link
+                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
-                        to={`/Apps/SecondarylistView/TR418/Invoice Enquiry/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR418/Invoice/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
-                        <Tooltip title="Invoice Enquiry">
+                        <Tooltip title="Invoice">
                           <IconButton color="info" size="small">
                             <FactCheckIcon />
                           </IconButton>
@@ -2576,6 +2557,37 @@ export const fetchListview =
                 },
               };
             }
+            //Invoice Enquiry
+            //    else if (AccessID == "TR417") {
+            //   obj = {
+            //     field: "action",
+            //     headerName: "Action",
+            //     minWidth: 250,
+            //     sortable: false,
+            //     filterable: false,
+            //     headerAlign: "center",
+            //     align: "center",
+            //     disableColumnMenu: true,
+            //     disableExport: true,
+            //     renderCell: (params) => {
+            //       return (
+            //         <Box>
+            //           <Link
+            //             //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
+            //             to={`/Apps/SecondarylistView/TR418/Invoice Enquiry/${params.row.RecordID}`}
+            //             state={{ AcademicYear: params.row.AcademicYear }}
+            //           >
+            //             <Tooltip title="Invoice Enquiry">
+            //               <IconButton color="info" size="small">
+            //                 <FactCheckIcon />
+            //               </IconButton>
+            //             </Tooltip>
+            //           </Link>
+            //         </Box>
+            //       );
+            //     },
+            //   };
+            // }
             else if (AccessID == "TR383") {
               obj = {
                 field: "action",

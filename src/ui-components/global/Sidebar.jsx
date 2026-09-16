@@ -3401,27 +3401,27 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR331",
           },
-           ...(is003Subscription
-            ? [
-           {
-            name: "Invoice Enquiry",
-            // url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
-            url:"/Apps/TR417/Academic Year",
-            id: 87,
-            icon: (
-              <Tooltip title="Invoice Enquiry">
-                <FactCheckIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR417",
-          }
-        ]:[]),
+        //    ...(is003Subscription
+        //     ? [
+        //    {
+        //     name: "Invoice Enquiry",
+        //     // url: is003Subscription ? "/Apps/TR331/Invoice" : "/Apps/TR366/Invoice",
+        //     url:"/Apps/TR417/Academic Year",
+        //     id: 87,
+        //     icon: (
+        //       <Tooltip title="Invoice Enquiry">
+        //         <FactCheckIcon color="info" />
+        //       </Tooltip>
+        //     ),
+        //     UGA_ADD: true,
+        //     UGA_DEL: true,
+        //     UGA_MOD: true,
+        //     UGA_PRINT: true,
+        //     UGA_PROCESS: true,
+        //     UGA_VIEW: true,
+        //     UGA_ACCESSIDS: "TR417",
+        //   }
+        // ]:[]),
         ],
       },
       {
