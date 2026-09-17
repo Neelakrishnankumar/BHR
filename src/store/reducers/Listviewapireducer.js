@@ -2814,6 +2814,7 @@ export const fetchListview =
                 },
               };
             }
+             
             else if (AccessID == "TR370") {
               obj = {
                 field: "action",
@@ -5184,6 +5185,7 @@ export const fetchListview =
               AccessID !== "TR111" &&
               AccessID !== "TR112" &&
               AccessID !== "TR114" &&
+              AccessID !== "TR418" &&
               AccessID !== "TR115"
             ) {
               obj = {

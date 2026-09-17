@@ -6915,6 +6915,19 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                     ) : (
                       false
                     )}
+                    {show == "26" ? (
+                      <Typography
+                        sx={
+                          show == "26"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        {getBusinessCaption("Relationship", "Relationship")}
+                      </Typography>
+                    ) : (
+                      false
+                    )}
                     {show == "13" ? (
                       <Typography
                         sx={
