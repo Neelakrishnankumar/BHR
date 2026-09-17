@@ -771,6 +771,20 @@ const Editemployee = () => {
           Gender: Yup.string().required(data.Employee.Gender),
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
+         relegion: Yup.object()
+  .nullable()
+  .required(data.Employee.Relegion),
+community: Yup.object()
+  .nullable()
+  .required(data.Employee.Community),
+nationality: Yup.object()
+  .nullable()
+  .required(data.Employee.Nationality),
+         
+         
+          // relegion: Yup.string().required(data.Employee.Relegion),
+          // community: Yup.string().required(data.Employee.Community),
+          // nationality: Yup.string().required(data.Employee.Nationality),
         };
         if (is003Subscription && !isStudentClassification && !BoardandNonteaching) {
           schemaFields.Department = Yup.array()
@@ -1480,6 +1494,16 @@ const Editemployee = () => {
 
     // moduleSelect: mode === "E" ? Data.Module : ""
     //  moduleSelect:moduleIDs,
+
+ relegion: Data.Religion
+  ? { RecordID: "", Name: Data.Religion }
+  : null,
+community: Data.Community
+  ? { RecordID: "", Name: Data.Community }
+  : null,
+nationality: Data.Nationality
+  ? { RecordID: "", Name: Data.Nationality }
+  : null,
   };
   console.log(
     "🚀 ~ Editemployee ~ Data.Module:",
@@ -1738,6 +1762,9 @@ const Editemployee = () => {
       CompanyID,
       SubscriptionCode,
       ClassificationID: parentID ? parentID : 0,
+      Religion: values.relegion?.Name,
+      Community: values.community?.Name,
+      Nationality: values.nationality?.Name 
     };
     console.log("🚀 ~ fnSave ~ saveData:", saveData);
     console.log(apiReturnValue, "moduleselect");
@@ -7590,8 +7617,109 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                       </MenuItem>
                                       <MenuItem value="IN">Intern</MenuItem>
                                     </TextField>
+                                    {/* //Autocomplete */}
+                             <CheckinAutocomplete
+                                      fullWidth
+                                      name="relegion"
+                                      // label="Relegion"
+                                      label={
+                                        <>
+                                          {/* Relegion */}
+                                          Relegion
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="relegion"
+                                      value={values.relegion}
+                                      onChange={(newValue) => setFieldValue("relegion", newValue)}
+                                      error={!!touched.relegion && !!errors.relegion}
+                                      helperText={touched.relegion && errors.relegion}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2212",
+                                            ScreenName: "Relegion",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+{touched.relegion && errors.relegion && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.relegion}
+  </div>
+)}
+   <CheckinAutocomplete
+                                      fullWidth
+                                      name="community"
+                                      label={
+                                        <>
+                                          {/* Co-curricular Activity */}
+                                          Community
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="community"
+                                      value={values.community}
+                                      onChange={(newValue) => setFieldValue("community", newValue)}
+                                      error={!!touched.community && !!errors.community}
+                                      helperText={touched.community && errors.community}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2213",
+                                            ScreenName: "Community",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+                                    {touched.community && errors.community && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.community}
+  </div>
+)}
+                                       <CheckinAutocomplete
+                                      fullWidth
+                                      name="nationality"
+                                      label={
+                                        <>
+                                          {/* Co-curricular Activity */}
+                                          Nationality
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="nationality"
+                                      value={values.nationality}
+                                      onChange={(newValue) => setFieldValue("nationality", newValue)}
+                                      error={!!touched.nationality && !!errors.nationality}
+                                      helperText={touched.nationality && errors.nationality}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2214",
+                                            ScreenName: "Nationality",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+  {touched.nationality && errors.nationality && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.nationality}
+  </div>
+)}
 
-                                    <TextField
+                                   <TextField
                                       fullWidth
                                       variant="outlined"
                                       type="number"

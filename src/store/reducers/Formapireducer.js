@@ -329,6 +329,9 @@ const initialState = {
   BirthdayAnniversaryCount: 0,       // Count from the response
   BirthdayAnniversaryGetloading: false,
   BirthdayAnniversaryError: null,
+  TCgetDataStatus: "",
+  TCgetDataLoading: false,
+  TCgetData: {}
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -3891,6 +3894,36 @@ export const CompReportFetchData = createAsyncThunk(
   }
 );
 
+//PERSONNEL_TC
+export const TCgetDatafn = createAsyncThunk(
+  "PERSONNEL_TC/get",
+  async ({  ExitFormalitiesAccepted, CompanyID, EmployeeID }) => {
+    var url = store.getState().globalurl.TcgetUrl;
+    const data = {
+      ExitFormalitiesAccepted: ExitFormalitiesAccepted,
+      CompanyID: CompanyID,
+      EmployeeID: EmployeeID
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const CompReportpostData = createAsyncThunk(
   "CompReportpostData/post",
   async ({ idata }) => {
@@ -4308,6 +4341,27 @@ export const getApiSlice = createSlice({
       state.PolicyData = {};
       toast.error("Something Went Wrong");
     })
+    //PERSONNEL_TC_GET
+    
+      .addCase(TCgetDatafn.pending, (state, action) => {
+        state.TCgetDataStatus = "idle";
+        state.TCgetDataLoading = true;
+        state.TCgetData = {};
+        state.msg = "Loading...";
+      })
+      .addCase(TCgetDatafn.fulfilled, (state, action) => {
+        state.TCgetDataStatus = "success";
+        state.TCgetDataLoading = false;
+        state.TCgetData = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(TCgetDatafn.rejected, (state, action) => {
+        state.TCgetDataStatus = "Error";
+        state.TCgetDataLoading = false;
+        state.TCgetData = {};
+        toast.error("Something Went Wrong");
+      })
+
     .addCase(CompReportFetchData.pending, (state, action) => {
         state.CompReportStatus = "idle";
         state.CompReportgetLoading = true;

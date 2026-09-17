@@ -7936,55 +7936,55 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
 
   // 🆕 Transfer Certificate button — same pattern as PayslipBtn
-  // const TCButton = ({ EmployeeID, CompanyID }) => {
-  //   const dispatch = store.dispatch;
-  //   const [tcLoading, setTcLoading] = React.useState(false);
+  const TCButton = ({ EmployeeID, CompanyID }) => {
+    const dispatch = store.dispatch;
+    const [tcLoading, setTcLoading] = React.useState(false);
 
-  //   const handlePDFGET_TC = async (e) => {
-  //     e.stopPropagation();
-  //     e.preventDefault();
+    const handlePDFGET_TC = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
 
-  //     try {
-  //       setTcLoading(true);
+      try {
+        setTcLoading(true);
 
-  //       const resultAction = await dispatch(
-  //         getFetchData({
-  //           accessID: "TR027",       // swap for whatever accessID/thunk your backend uses for TC
-  //           get: "get",
-  //           recID: EmployeeID,
-  //         })
-  //       );
+        const resultAction = await dispatch(
+          getFetchData({
+            accessID: "TR027",       // swap for whatever accessID/thunk your backend uses for TC
+            get: "get",
+            recID: EmployeeID,
+          })
+        );
 
-  //       const data = resultAction.payload;
+        const data = resultAction.payload;
 
-  //       if (!data?.Data) {
-  //         alert("No data available to generate Transfer Certificate");
-  //         return;
-  //       }
+        if (!data?.Data) {
+          alert("No data available to generate Transfer Certificate");
+          return;
+        }
 
-  //       const blob = await pdf(
-  //         <TransferCertificate data={data} UserName={UserName} />
-  //       ).toBlob();
+        const blob = await pdf(
+          <TransferCertificate data={data} UserName={UserName} />
+        ).toBlob();
 
-  //       const blobUrl = URL.createObjectURL(blob);
-  //       window.open(blobUrl, "_blank");
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
 
-  //       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-  //     } catch (err) {
-  //       console.error("TC PDF generation failed", err);
-  //     } finally {
-  //       setTcLoading(false);
-  //     }
-  //   };
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      } catch (err) {
+        console.error("TC PDF generation failed", err);
+      } finally {
+        setTcLoading(false);
+      }
+    };
 
-  //   return (
-  //     <Tooltip title="Transfer Certificate">
-  //       <IconButton color="info" size="small" onClick={handlePDFGET_TC}>
-  //         {tcLoading ? <CircularProgress size={20} /> : <ArticleIcon />}
-  //       </IconButton>
-  //     </Tooltip>
-  //   );
-  // };
+    return (
+      <Tooltip title="Transfer Certificate">
+        <IconButton color="info" size="small" onClick={handlePDFGET_TC}>
+          {tcLoading ? <CircularProgress size={20} /> : <ArticleIcon />}
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <Fragment>
@@ -8791,12 +8791,13 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-              {/* {is003Subscription && params.row.Classification == "Student" && (
+              {is003Subscription && params.row.Classification == "Student" && (
           <TCButton
             EmployeeID={params.row.RecordID}
             CompanyID={params.row.CompanyID}
           />
-        )} */}
+        )}
+         {/* OLD
          {is003Subscription && params.row.Classification == "Student" && (
               <Link
                 to={`/Apps/Tccertificate`}
@@ -8811,7 +8812,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>
-            )}
+            )} */}
 
 
             {(is003Subscription && params.row.HasProjectTask === "Y") && (

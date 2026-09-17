@@ -242,7 +242,7 @@ import EditAttendanceEntry from "./pages/Empolyee/EditAttendanceentry";
 import EditGeneral from "./pages/HR/EditGeneralevent";
 import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
 import EditRemainder from "./pages/Empolyee/EditRemainder";
-import TransferCertificate from "./pages/SkillGlow/Pdf/TransferCertificatePdf";
+// import TransferCertificate from "./pages/SkillGlow/Pdf/TransferCertificatePdf";
 
 
 function App() {
@@ -1094,11 +1094,10 @@ function App() {
                     path="/otherEvents"
                     element={<EditOtherEvents />}
                   />
-                   <Route
-                    // path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/O/EditEvent Category/:id/:Mode"
+                   {/* <Route
                     path="/Tccertificate"
                     element={< TransferCertificate/>}
-                  />
+                  /> */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditRemarks/:id/:Mode"
                     element={<Editremarks />}
