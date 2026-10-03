@@ -1126,7 +1126,7 @@ const Circular = () => {
                             </Box>
 
                             {/* NOTIFY OPTIONS */}
-                            <Box>
+                            {/* <Box>
                               <Typography
                                 variant="subtitle2"
                                 sx={{
@@ -1172,7 +1172,7 @@ const Circular = () => {
                                     </Typography>
 
                                     <Switch
-                                      color="primary"
+                                      color="success"
                                       checked={values[item.field]}
                                       onChange={(e) =>
                                         setFieldValue(
@@ -1184,7 +1184,7 @@ const Circular = () => {
                                   </Box>
                                 ))}
                               </Box>
-                            </Box>
+                            </Box> */}
 
                             {/* BUTTONS */}
                             <Box

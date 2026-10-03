@@ -66,6 +66,7 @@ const EditdailyAttendance = () => {
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+console.log(baseurlUAAM, "--find baseurlUAAM");
 
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const AttendanceData = useSelector(
@@ -233,7 +234,7 @@ const EditdailyAttendance = () => {
     {
       field: "Name",
       headerName: "Personnel",
-      flex: 1,
+      flex: 1.5,
       headerAlign: "center",
     },
     {

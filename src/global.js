@@ -355,8 +355,31 @@ const initialState = {
   promotionstandardActUrl: "",
   PromotionstudmarksGetUrl: "",
   promotionstudentmarksPosturl: "",
-
-    TermUrl: "",
+  TaskSessionGet:"",
+  TaskSessionUpdate:"",
+  TermUrl: "",
+  CocurricularActivityPost: "",
+  CocurricularActivityGet: "" ,
+   PartySyncurl:"",
+  Standardwisestudentget: "",
+  contractprocessurl:"",
+  AttendanceEntryLock:"",
+  AttendanceEntryLockGET:"",
+  AttendanceEntryLockGET: "",
+  AttendanceentryrGetUrl: "",
+  Teamattendancegeturl: "",
+  Teamattendanceposturl:"",
+  Analyticsdashboardurl:"",
+  BirthdayAnniversaryGet:"",
+  SortPayrollAttendance:"",
+  OrderSummarypdfurl: "",
+  DefaultProjectGet:"",
+  CompanyBankGET:"",
+  CompanyBankUPDATE:"",
+  CompanyReportSettingGet:"",
+  CompanyReportSettingUpdate:"",
+  ExitFormalitiesUnprocess:"",
+  TcgetUrl: "",
 
 };
 
@@ -584,7 +607,31 @@ export const getUrlSlice = createSlice({
       state.promotionstandardActUrl = APIurl + "getacademicprojectdata.php?";
       state.PromotionstudmarksGetUrl = APIurl + "StudentMarksGet.php";
       state.promotionstudentmarksPosturl = APIurl + "StudentMarksPost.php";
+      state.TaskSessionGet = APIurl + "SessionGet.php";
+      state.TaskSessionUpdate = APIurl + "SessionUpdate.php";
       state.TermUrl = APIurl + "TermVersioningPost.php";
+      state.CocurricularActivityPost = APIurl + "CocurricularActivityPost.php";
+      state.CocurricularActivityGet = APIurl + "CocurricularActivityGet.php";
+      state.PartySyncurl = APIurl + "hrvendor_sync.php";
+      state.Standardwisestudentget = APIurl + "Standardwisestudentget.php";
+      state.contractprocessurl = APIurl +"Contractprocesscontroller.php";
+      state.AttendanceEntryLock = APIurl + "AttendanceEntryResonLog.php";
+      state.AttendanceEntryLockGET = APIurl + "AttendanceEntryProcessGetController.php";
+      state.AttendanceEntryLockGET = APIurl + "AttendanceEntryProcessGetController.php";
+      state.AttendanceentryrGetUrl = APIurl + "AttendanceEntryGetController.php";
+      state.Teamattendancegeturl = APIurl + "teamattendanceget.php";
+      state.Teamattendanceposturl = APIurl + "teamattendancepost.php";
+      state.Analyticsdashboardurl = APIurl + "studanalyticsdashboardget.php";
+      state.BirthdayAnniversaryGet =  APIurl + "bdaycumanniversaryget.php";
+      state.SortPayrollAttendance =  APIurl + "BosPayrollAttendanceController.php";
+      state.OrderSummarypdfurl = APIurl + "OrderpaymenthistoryGetcontroller.php"
+      state.DefaultProjectGet =  APIurl + "EmpDefProjectGet.php";
+      state.CompanyBankGET = APIurl + "CompanyBankGetContoller.php";
+      state.CompanyBankUPDATE = APIurl + "CompanyBankUpdateContoller.php";
+      state.CompanyReportSettingGet = APIurl + "CompanyReportSettingGet.php";
+      state.CompanyReportSettingUpdate = APIurl + "CompanyReportSettingUpdate.php";
+      state.ExitFormalitiesUnprocess = APIurl + "ExitFormalitiesUnprocess.php";
+      state.TcgetUrl = APIurl + "TransferCertificateDetailsGet.php";
     },
 
   },

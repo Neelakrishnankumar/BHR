@@ -32,7 +32,7 @@ const LeaderCardView = () => {
   const listViewUrl = useSelector((store) => store.globalurl.listViewurl);
   const state = location.state || {};
   console.log(state, "state");
- const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
@@ -90,7 +90,15 @@ const LeaderCardView = () => {
       }
     );
   };
+  const [expandedComments, setExpandedComments] = useState({});
+  const toggleComment = (rowIndex, type) => {
+    const key = `${rowIndex}-${type}`;
 
+    setExpandedComments((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
   // const handleactivitylistview = () => {
   //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}`);
   // };
@@ -155,7 +163,8 @@ const LeaderCardView = () => {
           },
         }
       );
-    } else if (OrderCount >= 1) {
+    } 
+    else if (OrderCount >= 1) {
       // Case 2: Existing order(s) → go to Order List or Edit
       navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/O`, {
         state: {
@@ -191,6 +200,7 @@ const LeaderCardView = () => {
           },
         }
       );
+      console.log(QuotationCount,"QuotationCount");
     } else if (QuotationCount >= 1) {
       // Case 2: Existing order(s) → go to Order List or Edit
       navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/Q`, {
@@ -202,7 +212,10 @@ const LeaderCardView = () => {
           OrderCount: QuotationCount,
         },
       });
+            console.log(QuotationCount,"QuotationCount");
+
     }
+    
   };
   const handleorderitemscreen = (
     recordID,
@@ -281,10 +294,16 @@ const LeaderCardView = () => {
               <Card
                 sx={{
                   p: 2,
+                  height: 350,
+                  width: "100%",
                   borderRadius: 3,
                   boxShadow: 4,
                   background: index % 2 === 0 ? "#E3F2FD" : "#FCE4EC",
                   transition: "all 0.3s ease",
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+
                   "&:hover": {
                     transform: "scale(1.03)",
                     boxShadow: 6,
@@ -292,7 +311,23 @@ const LeaderCardView = () => {
                   },
                 }}
               >
-                <CardContent>
+                <CardContent
+                  sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                    minHeight: 0,
+                    p: 0,
+
+                    "&::-webkit-scrollbar": {
+                      width: "5px",
+                    },
+
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#aaa",
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
                   <Typography
                     variant="h6"
                     sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
@@ -308,17 +343,95 @@ const LeaderCardView = () => {
                   <Typography>
                     <strong>First Call Date:</strong> {row.FirstCallDate || ""}
                   </Typography>
-                  <Typography>
+                  {/* <Typography>
                     <strong>First Call Comments:</strong>{" "}
                     {row.FirstCallComments || ""}
+                  </Typography> */}
+                  {/* First Call Comments */}
+                  <Typography
+                    component="div"
+                    sx={{
+                      // fontSize: "0.95rem",
+                      lineHeight: 1.5,
+                      mb: 1,
+                    }}
+                  >
+                    <strong>First Call Comments:</strong>{" "}
+                    <span
+                      style={{
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {expandedComments[`${index}-first`]
+                        ? row.FirstCallComments || ""
+                        : `${(row.FirstCallComments || "").slice(0, 50)}${(row.FirstCallComments || "").length > 50 ? "..." : ""
+                        }`}
+                    </span>
+
+                    {row.FirstCallComments?.length > 50 && (
+                      <Button
+                        size="small"
+                        onClick={() => toggleComment(index, "first")}
+                        sx={{
+                          textTransform: "none",
+                          minWidth: "auto",
+                          p: 0,
+                          ml: 0.5,
+                          fontSize: "0.8rem",
+                          verticalAlign: "baseline",
+                        }}
+                      >
+                        {expandedComments[`${index}-first`] ? "Read less" : "Read more"}
+                      </Button>
+                    )}
                   </Typography>
                   <Typography>
                     <strong>Last Call Date:</strong> {row.LastCallDate || ""}
                   </Typography>
-                  <Typography>
+
+
+                  {/* Last Call Comments */}
+                  <Typography
+                    component="div"
+                    sx={{
+                      // fontSize: "0.95rem",
+                      lineHeight: 1.5,
+                      mb: 1,
+                    }}
+                  >
+                    <strong>Last Call Comments:</strong>{" "}
+                    <span
+                      style={{
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {expandedComments[`${index}-last`]
+                        ? row.LastCallComments || ""
+                        : `${(row.LastCallComments || "").slice(0, 50)}${(row.LastCallComments || "").length > 50 ? "..." : ""
+                        }`}
+                    </span>
+
+                    {row.LastCallComments?.length > 50 && (
+                      <Button
+                        size="small"
+                        onClick={() => toggleComment(index, "last")}
+                        sx={{
+                          textTransform: "none",
+                          minWidth: "auto",
+                          p: 0,
+                          ml: 0.5,
+                          fontSize: "0.8rem",
+                          verticalAlign: "baseline",
+                        }}
+                      >
+                        {expandedComments[`${index}-last`] ? "Read less" : "Read more"}
+                      </Button>
+                    )}
+                  </Typography>
+                  {/* <Typography>
                     <strong>Last Call Comments:</strong>{" "}
                     {row.LastCallComments || ""}
-                  </Typography>
+                  </Typography> */}
                   <Typography>
                     <strong>Status:</strong> {row.LEStatus || ""}
                   </Typography>
@@ -329,10 +442,10 @@ const LeaderCardView = () => {
                     <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                   </Typography>
                   {/* {row.RequestDateTime && ( */}
-                    <Typography>
-                      <strong>Request Date & Time:</strong> {row.RequestDateTime || "N/A"}
-                    </Typography>
-                  
+                  <Typography>
+                    <strong>Request Date & Time:</strong> {row.RequestDateTime || "N/A"}
+                  </Typography>
+
                 </CardContent>
                 <Box display="flex" justifyContent="flex-end" mt={-4}>
                   <Tooltip title="Marketing Activity">
@@ -467,7 +580,7 @@ const LeaderCardView = () => {
       {/* Bottom Cancel button */}
       <Box display="flex" justifyContent="flex-end" mt={4}>
         <Button variant="contained" color="warning" onClick={handleCancel}
-        sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}>
+          sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}>
           Back
         </Button>
       </Box>

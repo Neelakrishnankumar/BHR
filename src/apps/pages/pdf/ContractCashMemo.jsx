@@ -416,6 +416,7 @@ export default function ContractCashMemo({ invoice = [], detailData = [], PdfBas
                 style={styles.page}
 
                 style={{
+                    
                     fontFamily: "Helvetica",
 
                     // paddingTop: 80,

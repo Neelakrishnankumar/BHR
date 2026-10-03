@@ -487,6 +487,113 @@ export const CheckinAutocomplete_v12 = ({
     />
   );
 };
+// export const CheckinAutocomplete = ({
+//   value = null,
+//   onChange,
+//   url,
+//   height = 20,
+//   defaultValue,
+//   ...props
+// }) => {
+//   const [options, setOptions] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (!url) return;
+//       setLoading(true);
+//       try {
+//         const response = await axios.get(url, {
+//           headers: {
+//             Authorization:
+//               "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//           },
+//         });
+//         const data = response.data.Data.rows || [];
+//         setOptions(data);
+//       } catch (err) {
+//         setOptions([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [url]);
+
+//   return (
+//     <Autocomplete
+//       size="small"
+//       fullWidth
+//       limitTags={1}
+//       options={options}
+//       loading={loading}
+//       value={value}
+//       isOptionEqualToValue={(option, value) => option.Name === value.Name}
+//       onChange={(event, newValue) => onChange(newValue)}
+//       getOptionLabel={(option) => option.Name}
+//       renderInput={(params) => (
+//         <TextField
+//           {...params}
+//           label={props.label || "Select Options"}
+//           // error={!!error}
+//           // helperText={error}
+
+//           {...props}
+//           variant="standard"
+//           focused
+//           InputProps={{
+//             ...params.InputProps,
+//             endAdornment: (
+//               <>
+//                 {loading ? (
+//                   <CircularProgress color="inherit" size={20} />
+//                 ) : null}
+//                 {params.InputProps.endAdornment}
+//               </>
+//             ),
+//           }}
+//         />
+//       )}
+//       {...props}
+//     />
+//     // <Autocomplete
+//     //   multiple={props.multiple || false}
+//     //   size="small"
+//     //   fullWidth
+//     //   limitTags={1}
+//     //   options={options}
+//     //   loading={loading}
+//     //   value={value}
+//     //   isOptionEqualToValue={(option, value) =>
+//     //     option?.RecordID === value?.RecordID
+//     //   }
+//     //   onChange={(event, newValue) => onChange(newValue)}
+//     //   getOptionLabel={(option) => option?.Name || ""}
+//     //   renderInput={(params) => (
+//     //     <TextField
+//     //       {...params}
+//     //       {...props}
+//     //       // variant="outlined"
+//     //       variant="standard"
+//     //       size="small"
+//     //       InputProps={{
+//     //         ...params.InputProps,
+//     //         endAdornment: (
+//     //           <>
+//     //             {loading && <CircularProgress size={20} />}
+//     //             {params.InputProps.endAdornment}
+//     //           </>
+//     //         ),
+//     //       }}
+//     //     />
+//     //   )}
+//     // />
+//   );
+// };
+
+//PROMOTION_PROJECT_GET_DATA
 export const CheckinAutocomplete = ({
   value = null,
   onChange,
@@ -591,8 +698,6 @@ export const CheckinAutocomplete = ({
     />
   );
 };
-
-//PROMOTION_PROJECT_GET_DATA
 export const PromotionprojAutocomplete = ({
   value = null,
   onChange,
@@ -602,7 +707,7 @@ export const PromotionprojAutocomplete = ({
   defaultValue,
   ...props
 }) => {
-  const [options, setOptions] =  useState(optionsProp || []);
+  const [options, setOptions] = useState(optionsProp || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -633,7 +738,7 @@ export const PromotionprojAutocomplete = ({
       }
     };
 
-   fetchData();
+    fetchData();
   }, [url, optionsProp]);
 
   return (
@@ -1694,6 +1799,7 @@ export function MultiFormikOptimizedAutocomplete({
   multiple = true,
   errors,
   helper,
+  sx,
   ...props
 }) {
   const [options, setOptions] = useState([]);
@@ -1728,14 +1834,34 @@ export function MultiFormikOptimizedAutocomplete({
 
   return (
     <Autocomplete
-      sx={{
-        "& .MuiAutocomplete-tag": { maxWidth: "90px" },
-         "& .MuiOutlinedInput-root": {
-      borderRadius: "8px",
-      backgroundColor: "#fff",
-    },
-      }}
-     
+      //   sx={{
+      //     "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+      //      "& .MuiOutlinedInput-root": {
+      //   borderRadius: "8px",
+      //   backgroundColor: "#fff",
+      // },
+      //   }}
+      sx={[
+        {
+          "& .MuiAutocomplete-tag": { maxWidth: "70px" },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+            height: 40,
+            flexWrap: "nowrap",
+            overflow: "hidden",
+            paddingTop: "0px !important",
+            paddingBottom: "0px !important",
+            alignItems: "center",
+          },
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
+            padding: "0 4px !important",
+            minWidth: "30px !important",
+          },
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),   // 👈 merge caller's sx on top
+      ]}
+
       multiple={multiple}
       limitTags={1}
       open={open}
@@ -1763,8 +1889,8 @@ export function MultiFormikOptimizedAutocomplete({
           {...params}
           label={label}
           error={errors}
-           variant="outlined"       // ⬅ was "standard"
-    size="small"
+          variant="outlined"       // ⬅ was "standard"
+          size="small"
           // focused
           helperText={helper}
           InputProps={{
@@ -1825,13 +1951,13 @@ export function MultiFormikOptimizedAutocompletestaff({
   return (
     <Autocomplete
       sx={{
-    width: "100%",
-    minWidth: "250px",   // 👈 increase this value as needed
-    "& .MuiInputBase-root": {
-      height: "40px",
-       alignItems: "flex-start",
-    },
-  }}
+        width: "100%",
+        minWidth: "250px",   // 👈 increase this value as needed
+        "& .MuiInputBase-root": {
+          height: "40px",
+          alignItems: "flex-start",
+        },
+      }}
       size="small"
       multiple={multiple}
       // limitTags={1}
@@ -1869,7 +1995,7 @@ export function MultiFormikOptimizedAutocompletestaff({
           helperText={helper}
           InputProps={{
             ...params.InputProps,
-             style: { width: "100%" },
+            style: { width: "100%" },
             endAdornment: (
               <>
                 {loading && <CircularProgress color="inherit" size={20} />}
@@ -4041,7 +4167,140 @@ export const SettlementSingleSelect = ({
     />
   );
 };
+export function LocmultiSelect({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  error,
+  helper,
+  helperText,
+  onOptionsLoaded,
+  sx, // NEW — pull sx out so we can merge it instead of clobbering the internal one
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response?.data?.Data?.rows || [];
+        const realOptions = Array.isArray(data) ? data : [];
+        const allOption = { RecordID: "ALL", Code: "ALL", Name: "Select All" };
+
+        setOptions([allOption, ...realOptions]);
+        onOptionsLoaded?.(realOptions);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]);
+        onOptionsLoaded?.([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      sx={{
+        // Keep the field to one line no matter how many chips are selected
+        "& .MuiAutocomplete-inputRoot": {
+          flexWrap: "nowrap",
+          overflow: "hidden",
+        },
+        "& .MuiAutocomplete-tag": { maxWidth: "90px", flexShrink: 0 },
+        ...sx, // parent overrides/extends, but no longer wipes out the base rules
+      }}
+      multiple={multiple}
+      limitTags={1}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      onChange={(event, newValue, reason, details) => {
+        if (!Array.isArray(newValue)) {
+          onChange(event, []);
+          return;
+        }
+
+        const clickedOption = details?.option;
+        const realOptions = options.filter((item) => item.RecordID !== "ALL");
+        const isAllClicked = clickedOption?.RecordID === "ALL";
+
+        if (isAllClicked) {
+          const allSelected = value.length === realOptions.length;
+          if (allSelected) {
+            onChange(event, []);
+          } else {
+            onChange(event, realOptions);
+          }
+          return;
+        }
+
+        onChange(event, newValue);
+      }}
+      options={options}
+      variant="standard"
+      focused
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === value?.RecordID
+      }
+      getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      disableCloseOnSelect
+      loading={loading}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", gap: 2, height: 30 }}>
+          <Checkbox
+            size="small"
+            sx={{ marginLeft: -1 }}
+            checked={
+              option.RecordID === "ALL"
+                ? value.length ===
+                  options.filter((item) => item.RecordID !== "ALL").length
+                : selected
+            }
+          />
+          {`${option.Code} || ${option.Name}`}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant="outlined"
+          size="small"
+          focused
+          error={Boolean(error)}
+          helperText={helperText || ""}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
 export function EventsmultiSelect({
   value = [],
   onChange,
@@ -4200,6 +4459,7 @@ export function EventsmultiSelect({
     />
   );
 }
+
 export function EventsSportsmultiSelect({
   value = [],
   onChange,
@@ -4437,3 +4697,161 @@ export const EventsSingleSelect = ({
     />
   );
 };
+export function ClassmultiSelect({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  error,
+  helper,
+  helperText,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        console.log("API Response:", response.data);
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
+        // setOptions(Array.isArray(data) ? data : []);
+        const allOption = {
+          RecordID: "ALL",
+          Code: "ALL",
+          Name: "Select All",
+        };
+
+        setOptions(Array.isArray(data) ? [allOption, ...data] : [allOption]);
+        //setOptions(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); // Fallback to an empty array
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      sx={{
+        "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+      }}
+      // size="small"
+      multiple={multiple}
+      limitTags={1}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      // onChange={onChange}
+      //       onChange={(event, newValue) => {
+      //   const hasAll = newValue.some(
+      //     (item) => item.RecordID === "ALL"
+      //   );
+
+      //   if (hasAll) {
+      //     const allValues = options.filter(
+      //       (item) => item.RecordID !== "ALL"
+      //     );
+
+      //     onChange(event, allValues);
+      //   } else {
+      //     onChange(event, newValue);
+      //   }
+      // }}
+      onChange={(event, newValue, reason, details) => {
+        if (!Array.isArray(newValue)) {
+          onChange(event, []);
+          return;
+        }
+
+        const clickedOption = details?.option;
+
+        const realOptions = options.filter((item) => item.RecordID !== "ALL");
+
+        const isAllClicked = clickedOption?.RecordID === "ALL";
+
+        if (isAllClicked) {
+          const allSelected = value.length === realOptions.length;
+
+          if (allSelected) {
+            // UNSELECT ALL
+            onChange(event, []);
+          } else {
+            // SELECT ALL
+            onChange(event, realOptions);
+          }
+
+          return;
+        }
+
+        onChange(event, newValue);
+      }}
+      options={options}
+      variant="standard" // Set variant to "standard"
+      focused
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === value?.RecordID
+      }
+      getOptionLabel={(option) => option?.Name || ""}
+      // getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
+      disableCloseOnSelect
+      loading={loading}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", gap: 2, height: 30 }}>
+          <Checkbox size="small" sx={{ marginLeft: -1 }}
+            // checked={selected} 
+            checked={
+              option.RecordID === "ALL"
+                ? value.length ===
+                options.filter(
+                  (item) => item.RecordID !== "ALL"
+                ).length
+                : selected
+            }
+          />
+          {option.Name}
+          {/* {`${option.Code} || ${option.Name}`} */}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          // error={errors}
+          variant="outlined"
+          size="small"
+          focused
+          // helperText={helper}
+          error={Boolean(error)}
+          helperText={helperText || ""}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}

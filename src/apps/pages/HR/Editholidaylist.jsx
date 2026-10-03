@@ -56,6 +56,7 @@ const Holidaylist = () => {
   const recID = params.id;
   const mode = params.Mode;
   const accessID = params.accessID;
+  const YearID = params.filtertype;
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
 
@@ -124,6 +125,7 @@ const Holidaylist = () => {
       SortOrder: values.Sortorder || 0,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
+      AcademicYearID:YearID || "",
       Finyear,
       CompanyID,
     };

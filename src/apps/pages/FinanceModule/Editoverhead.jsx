@@ -1148,7 +1148,7 @@ const Editoverhead = () => {
                   </Box> */}
                   <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
 
-                    {values?.OverheadType?.Name === "Cost of Employee" && (
+                    {/* {(values?.OverheadType?.Name === "Cost of Employee" || values?.OverheadType?.Name === "Salary Advance" || values?.OverheadType?.Name === "Salary Advance Recovery" || values?.OverheadType?.Name === "Irregular") && ( */}
                       <Box display="flex" alignItems="center">
                         <Field
                           type="checkbox"
@@ -1160,7 +1160,7 @@ const Editoverhead = () => {
                         />
                         <FormLabel focused={false}>Impact Payroll</FormLabel>
                       </Box>
-                    )}
+                    {/* )} */}
 
                     <Box display="flex" alignItems="center">
                       <Field

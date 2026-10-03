@@ -4,7 +4,7 @@
 //   Text,
 //   View,
 //   Document,
-//   StyleSheet,
+//   StyleSheet,Image
 // } from "@react-pdf/renderer";
 
 // // Styles
@@ -43,15 +43,25 @@
 //   tableRowLast: {
 //     flexDirection: "row",
 //   },
+//   // tableColHeader1: {
+//   //   width: "9%",
+//   //   borderRightWidth: 1,
+//   //   borderRightColor: "#000",
+//   //   padding: 5,
+//   //   fontWeight: "bold",
+//   //   backgroundColor: "#EEE",
+//   //   textAlign: "center",
+//   // },
 //   tableColHeader1: {
-//     width: "9%",
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     fontWeight: "bold",
-//     backgroundColor: "#EEE",
-//     textAlign: "center",
-//   },
+//   width: "9%",
+//   borderRightWidth: 1,
+//   borderRightColor: "#000",
+//   padding: 5,
+//   fontFamily: "Helvetica-Bold",   // add this
+//   fontWeight: "bold",
+//   backgroundColor: "#EEE",
+//   textAlign: "center",
+// },
 //   tableCol1: {
 //     width: "7.3%",
 //     borderRightWidth: 1,
@@ -126,27 +136,80 @@
 //     padding: 5,
 //     width: "15%",
 //   },
+
+//   //     /* HEADER */
+//   headerWrapper: {
+//     position: "absolute",
+//     top: 15,
+//     left: 20,
+//     right: 20,
+//     height: 50,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   headerImage: {
+//     width: "100%",
+//     height: 50,
+//     objectFit: "contain",
+//   },
+//     /* FOOTER */
+//   footerWrapper: {
+//     position: "absolute",
+//     bottom: 25,
+//     left: 5,
+//     right: 5,
+//     height: 60,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   footerImage: {
+//     width: "100%",
+//     height: 60,
+//     objectFit: "cover",
+//   },
+
 // });
 
 // // Split data: 20 on first page, 26 afterwards
-// const paginateData = (data) => {
-//   const firstPage = data.slice(0, 31);
-//   const otherPages = [];
+// // const paginateData = (data) => {
+// //   const firstPage = data.slice(0, 31);
+// //   const otherPages = [];
 
-//   for (let i = 31; i < data.length; i += 26) {
-//     otherPages.push(data.slice(i, i + 26));
+// //   for (let i = 31; i < data.length; i += 26) {
+// //     otherPages.push(data.slice(i, i + 26));
+// //   }
+
+// //   return [firstPage, ...otherPages];
+// // };
+// const paginateData = (data) => {
+//   const rowsPerPage = 16;
+//   const pages = [];
+
+//   for (let i = 0; i < data.length; i += rowsPerPage) {
+//     pages.push(data.slice(i, i + rowsPerPage));
 //   }
 
-//   return [firstPage, ...otherPages];
+//   return pages.length ? pages : [[]];
 // };
 
 
 
 // const AuditPDF = ({ data = [], filters = {} }) => {
 //   const pages = paginateData(data);
-//   const formattedDate = filters.Date
-//     ? filters.Date.split("-").reverse().join("-")
-//     : "";
+//   // const formattedDate = filters.Date
+//   //   ? filters.Date.split("-").reverse().join("-")
+//   //   : "";
+//     const formatDate = (dateStr) => {
+//   if (!dateStr) return "";
+//   const [yyyy, mm, dd] = dateStr.split("-");
+//   return `${dd}-${mm}-${yyyy}`;
+// };
+//   const formatedfromDate = formatDate(filters.FromDate);
+//   const formatedtoDate = formatDate(filters.ToDate);
+
+//   console.log(formatedfromDate, formatedfromDate, "---filters formatedfromDate");
+// console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage" );
+  
 //   const monthNames = [
 //     "January", "February", "March", "April", "May", "June",
 //     "July", "August", "September", "October", "November", "December"
@@ -216,7 +279,7 @@
 //     <Document>
 //       {pages.map((pageData, pageIndex) => (
 //         <Page size="A4" style={styles.page} key={pageIndex}>
-//           {pageIndex === 0 && (
+//           {/* {pageIndex === 0 && (
 //             <View style={styles.headerContainer}>
 //               <Text style={styles.headerText}>
 //                 {filters.Date
@@ -224,20 +287,40 @@
 //                   : `Audit Report - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
 //               </Text>
 //             </View>
-//           )}
+//           )} */}
+//              <View fixed style={styles.headerWrapper}>
+//              {filters.HeaderImg && (
+//                <Image
+//                  src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+//                  // src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
+//                  style={styles.headerImage}
+//                />
+//              )}
+//            </View>
+
+//          {pageIndex === 0 && (
+//            <View style={styles.headerContainer}>
+//              <Text style={styles.headerText}>
+//              {`Audit Report (From ${formatedfromDate} - To ${formatedtoDate})`}  
+//              </Text>
+//            </View>
+//          )}
+
 
 //           {/* Table Header */}
 //           <View style={styles.table}>
 //             <View style={styles.tableRow}>
 //               <Text style={styles.tableColHeader1}>S.No</Text>
+//                <Text style={dynamicStyles.tableColHeaderLast}>Module</Text>
 //               {/* {includeName && ( */}
-//                 <Text style={styles.tableColHeader}>Date</Text>
+//                 {/* <Text style={styles.tableColHeader}>Date</Text> */}
 //               {/* )} */}
-//               <Text style={dynamicStyles.tableColHeader}>Company</Text>
+//               {/* <Text style={dynamicStyles.tableColHeader}>Company</Text> */}
 //               <Text style={dynamicStyles.tableColHeader}>Screen Name</Text>
-//                <Text style={dynamicStyles.tableColHeader}>Name</Text>
+//                <Text style={dynamicStyles.tableColHeader}>User</Text>
 //               <Text style={dynamicStyles.tableColHeader}>Activity</Text>
-//               <Text style={dynamicStyles.tableColHeaderLast}>Module</Text>
+             
+//               <Text style={styles.tableColHeader}>Date & Time</Text> 
 //               {/* <Text style={dynamicStyles.tableColHeader3}>Name</Text>
 //               <Text style={dynamicStyles.tableColHeader4}>Activity</Text>
 //                <Text style={dynamicStyles.tableColHeaderLast}>Module</Text> */}
@@ -252,12 +335,13 @@
 //                   style={isLast ? styles.tableRowLast : styles.tableRow}
 //                 >
 //                   <Text style={styles.tableCol1}>{row.SLNO}</Text>
-//                   {/* {includeName && ( */}
-//                     <Text style={styles.tableCol2}>{row.Date}</Text>
-//                   {/* )} */}
-//                   <Text style={styles.tableCol3}>
-//                     {row.CompanyName}
+//                    <Text style={dynamicStyles.tableColLast}>
+//                     {row.Module}
 //                   </Text>
+                
+//                   {/* <Text style={styles.tableCol3}>
+//                     {row.CompanyName}
+//                   </Text> */}
 //                   <Text style={styles.tableCol3}>
 //                     {row.ScreenName}
 //                   </Text>
@@ -266,16 +350,25 @@
 //                   </Text>
 //                   <Text style={styles.tableCol3}>
 //                     {row.Activity}
+//                       {/* {includeName && ( */}
+//                     <Text style={styles.tableCol2}>{row.DateTime}</Text>
+//                   {/* )} */}
 //                   </Text>
-//                    <Text style={dynamicStyles.tableColLast}>
-//                     {row.Module}
-//                   </Text>
+                  
 //                 </View>
 //               );
 //             })}
 //           </View>
 
-//           {/* Footer */}
+//          {/* FOOTER */}
+//                 <View fixed style={styles.footerWrapper}>
+//                   {filters.FooterImg && (
+//                     <Image
+//                       src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+//                       style={styles.footerImage}
+//                     />
+//                   )}
+//                 </View>
 //           <View
 //             fixed
 //             style={{
@@ -299,14 +392,22 @@
 
 // export default AuditPDF;
 
-
 import React from "react";
-import { Page, Text, View, Document, StyleSheet,Image } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,Image
+} from "@react-pdf/renderer";
 
-// ================= STYLES =================
+// Styles
 const styles = StyleSheet.create({
-  // page: { padding: 20, fontSize: 10 },
-  page: {
+  // page: {
+  //   padding: 20,
+  //   fontSize: 10,
+  // },
+    page: {
     paddingTop: 80,
     paddingBottom: 70,
     paddingHorizontal: 20,
@@ -314,108 +415,201 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: "center",
-    marginBottom: 10,
+    justifyContent: "flex-start",
+    marginTop: 15,
+    marginBottom: 2,
   },
-
   headerText: {
-    fontSize: 12,
+    fontSize: 13,
+    fontFamily: "Helvetica-Bold",
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 8,
   },
-
   table: {
     display: "table",
     width: "100%",
     borderWidth: 1,
     borderColor: "#000",
+    borderStyle: "solid",
   },
-
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderColor: "#000",
+    borderBottomColor: "#000",
+    borderBottomStyle: "solid",
   },
-    /* HEADER */
-  headerWrapper: {
-    position: "absolute",
-    top: 15,
-    left: 20,
-    right: 20,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerImage: {
-    width: "100%",
-    height: 50,
-    objectFit: "contain",
-  },
-    /* FOOTER */
-  footerWrapper: {
-    position: "absolute",
-    bottom: 25,
-    left: 5,
-    right: 5,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footerImage: {
-    width: "100%",
-    height: 60,
-    objectFit: "cover",
+  tableRowLast: {
+    flexDirection: "row",
   },
 
-  // HEADER COLUMNS
-  h_sno: { width: "5%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_date: { width: "12%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_company: { width: "18%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_screen: { width: "20%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_name: { width: "15%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_activity: { width: "15%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
-  h_module: { width: "15%", padding: 5, fontWeight: "bold" },
+  // ===== HEADER CELLS (6 columns, widths sum to 100%) =====
+  h_sno: {
+    width: "6%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  h_module: {
+    width: "10%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  h_screen: {
+    width: "28%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700/",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  h_user: {
+    width: "14%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  h_activity: {
+    width: "25%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  h_datetime: {
+    width: "17%",
+    padding: 5,
+    fontFamily: "Helvetica-Bold",
+    // fontWeight: "700",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
 
-  // BODY COLUMNS (MUST MATCH HEADER WIDTHS)
-  c_sno: { width: "5%", borderRightWidth: 1, padding: 5 },
-  c_date: { width: "12%", borderRightWidth: 1, padding: 5 },
-  c_company: { width: "18%", borderRightWidth: 1, padding: 5, textWrap: "wrap" },
-  c_screen: { width: "20%", borderRightWidth: 1, padding: 5, textWrap: "wrap" },
-  c_name: { width: "15%", borderRightWidth: 1, padding: 5 },
-  c_activity: { width: "15%", borderRightWidth: 1, padding: 5 },
-  c_module: { width: "15%", padding: 5 },
+  // ===== BODY CELLS (must match header widths exactly) =====
+  c_sno: {
+    width: "6%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    textAlign: "right",
+  },
+  c_module: {
+    width: "10%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
+  c_screen: {
+    width: "28%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
+  c_user: {
+    width: "14%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
+  c_activity: {
+    width: "25%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
+  c_datetime: {
+    width: "17%",
+    padding: 5,
+  },
+   /* HEADER */
+   headerWrapper: {
+     position: "absolute",
+     top: 15,
+     left: 20,
+     right: 20,
+     height: 50,
+     justifyContent: "center",
+     alignItems: "center",
+   },
+   headerImage: {
+     width: "100%",
+     height: 50,
+     objectFit: "contain",
+   },
+     /* FOOTER */
+   footerWrapper: {
+     position: "absolute",
+     bottom: 25,
+     left: 5,
+     right: 5,
+     height: 60,
+     justifyContent: "center",
+     alignItems: "center",
+   },
+   footerImage: {
+     width: "100%",
+     height: 60,
+     objectFit: "cover",
+   },
 });
 
-// ================= PAGINATION =================
-// const paginateData = (data) => {
+// Split data: 16 rows per page, every page
+const paginateData = (data) => {
+  const rowsPerPage = 27;
+  const pages = [];
 
-
-//   const firstPage = data.slice(0, 31);
-//   const otherPages = [];
-//   for (let i = 31; i < data.length; i += 26) {
-//     otherPages.push(data.slice(i, i + 26));
-//   }
-//   return [firstPage, ...otherPages];
-// };
-
-const paginateData = (data = []) => {
-  if (!Array.isArray(data)) return [];
-
-  const firstPageRows = 26;
-  const otherPageRows = 28;
-
-  const firstPage = data.slice(0, firstPageRows);
-  const otherPages = [];
-
-  for (let i = firstPageRows; i < data.length; i += otherPageRows) {
-    otherPages.push(data.slice(i, i + otherPageRows));
+  for (let i = 0; i < data.length; i += rowsPerPage) {
+    pages.push(data.slice(i, i + rowsPerPage));
   }
 
-  return [firstPage, ...otherPages];
+  return pages.length ? pages : [[]];
 };
 
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
-// ================= PDF COMPONENT =================
+// Build a safe title instead of ever showing "undefined"
+const buildTitle = (filters) => {
+  if (filters.Date) {
+    const formattedDate = filters.Date.split("-").reverse().join("-");
+    return `Audit Report - (${formattedDate})`;
+  }
+
+  if (filters.FromDate && filters.ToDate) {
+    return `Audit Report (From ${filters.FromDate} - To ${filters.ToDate})`;
+  }
+
+  if (filters.EmployeeID && filters.Month && filters.Year) {
+    return `Audit Report - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`;
+  }
+
+  // Fallback when none of the expected filter fields were passed in
+  return "Audit Report";
+};
+
 const AuditPDF = ({ data = [], filters = {} }) => {
   const pages = paginateData(data);
+  const title = buildTitle(filters);
 
   const formatDate = (dateStr) => {
   if (!dateStr) return "";
@@ -432,56 +626,60 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
     <Document>
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" style={styles.page} key={pageIndex}>
-
-          {/* HEADER */}
-  <View fixed style={styles.headerWrapper}>
-              {filters.HeaderImg && (
-                <Image
-                  src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                  // src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
-                  style={styles.headerImage}
-                />
-              )}
-            </View>
-
-          {pageIndex === 0 && (
+          {/* {pageIndex === 0 && (
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>
-              {`Audit Report (From ${formatedfromDate} - To ${formatedtoDate})`}  
-              </Text>
+              <Text style={styles.headerText}>{title}</Text>
             </View>
-          )}
+          )} */}
+             <View fixed style={styles.headerWrapper}>
+               {filters.HeaderImg && (
+                 <Image
+                   src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                    // src="https:uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
+                   style={styles.headerImage}
+                 />
+               )}
+             </View>
 
-          {/* TABLE */}
+           {pageIndex === 0 && (
+             <View style={styles.headerContainer}>
+               <Text style={styles.headerText}>
+               {`Audit Report (From ${formatedfromDate} - To ${formatedtoDate})`}  
+               </Text>
+             </View>
+           )}
+
+          {/* Table Header */}
           <View style={styles.table}>
-
-            {/* TABLE HEADER */}
             <View style={styles.tableRow}>
               <Text style={styles.h_sno}>S.No</Text>
-              <Text style={styles.h_date}>Date</Text>
-              <Text style={styles.h_company}>Company</Text>
-              <Text style={styles.h_screen}>Screen Name</Text>
-              <Text style={styles.h_name}>Name</Text>
-              <Text style={styles.h_activity}>Activity</Text>
               <Text style={styles.h_module}>Module</Text>
+              <Text style={styles.h_screen}>Screen Name</Text>
+              <Text style={styles.h_user}>User</Text>
+              <Text style={styles.h_activity}>Activity</Text>
+              <Text style={styles.h_datetime}>Date & Time</Text>
             </View>
 
-            {/* TABLE BODY */}
-            {pageData.map((row, index) => (
-              <View key={index} style={styles.tableRow}>
-                <Text style={styles.c_sno}>{row.SLNO}</Text>
-                <Text style={styles.c_date}>{row.Date}</Text>
-                <Text style={styles.c_company}>{row.CompanyName}</Text>
-                <Text style={styles.c_screen}>{row.ScreenName}</Text>
-                <Text style={styles.c_name}>{row.Name}</Text>
-                <Text style={styles.c_activity}>{row.Activity}</Text>
-                <Text style={styles.c_module}>{row.Module}</Text>
-              </View>
-            ))}
-
+            {/* Table Body */}
+            {pageData.map((row, rowIndex) => {
+              const isLast = rowIndex === pageData.length - 1;
+              return (
+                <View
+                  key={rowIndex}
+                  style={isLast ? styles.tableRowLast : styles.tableRow}
+                >
+                  <Text style={styles.c_sno}>{row.SLNO}</Text>
+                  <Text style={styles.c_module}>{row.Module}</Text>
+                  <Text style={styles.c_screen}>{row.ScreenName}</Text>
+                  <Text style={styles.c_user}>{row.Name}</Text>
+                  <Text style={styles.c_activity}>{row.Activity}</Text>
+                  <Text style={styles.c_datetime}>{row.DateTime}</Text>
+                </View>
+              );
+            })}
           </View>
-       {/* FOOTER */}
-               <View fixed style={styles.footerWrapper}>
+
+      <View fixed style={styles.footerWrapper}>
                  {filters.FooterImg && (
                    <Image
                      src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
@@ -489,10 +687,22 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
                    />
                  )}
                </View>
-          <View fixed style={{ position: "absolute", bottom: 10, width: "100%", textAlign: "center" }}>
-            <Text>Page {pageIndex + 1} of {pages.length}</Text>
+          {/* Footer */}
+          <View
+            fixed
+            style={{
+              position: "absolute",
+              bottom: 10,
+              left: 0,
+              right: 0,
+              textAlign: "center",
+              fontSize: 10,
+            }}
+          >
+            <Text>
+              Page {pageIndex + 1} of {pages.length}
+            </Text>
           </View>
-
         </Page>
       ))}
     </Document>
@@ -500,3 +710,203 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
 };
 
 export default AuditPDF;
+// import React from "react";
+// import { Page, Text, View, Document, StyleSheet,Image } from "@react-pdf/renderer";
+
+// // ================= STYLES =================
+// const styles = StyleSheet.create({
+//   // page: { padding: 20, fontSize: 10 },
+//   page: {
+//     paddingTop: 80,
+//     paddingBottom: 70,
+//     paddingHorizontal: 20,
+//     fontSize: 9,
+//   },
+//   headerContainer: {
+//     alignItems: "center",
+//     marginBottom: 10,
+//   },
+
+//   headerText: {
+//     fontSize: 12,
+//     fontWeight: "bold",
+//   },
+
+//   table: {
+//     display: "table",
+//     width: "100%",
+//     borderWidth: 1,
+//     borderColor: "#000",
+//   },
+
+//   tableRow: {
+//     flexDirection: "row",
+//     borderBottomWidth: 1,
+//     borderColor: "#000",
+//   },
+//     /* HEADER */
+//   headerWrapper: {
+//     position: "absolute",
+//     top: 15,
+//     left: 20,
+//     right: 20,
+//     height: 50,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   headerImage: {
+//     width: "100%",
+//     height: 50,
+//     objectFit: "contain",
+//   },
+//     /* FOOTER */
+//   footerWrapper: {
+//     position: "absolute",
+//     bottom: 25,
+//     left: 5,
+//     right: 5,
+//     height: 60,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   footerImage: {
+//     width: "100%",
+//     height: 60,
+//     objectFit: "cover",
+//   },
+
+//   // HEADER COLUMNS
+//   h_sno: { width: "5%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_date: { width: "12%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_company: { width: "18%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_screen: { width: "20%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_name: { width: "15%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_activity: { width: "15%", borderRightWidth: 1, padding: 5, fontWeight: "bold" },
+//   h_module: { width: "15%", padding: 5, fontWeight: "bold" },
+
+//   // BODY COLUMNS (MUST MATCH HEADER WIDTHS)
+//   c_sno: { width: "5%", borderRightWidth: 1, padding: 5 },
+//   c_date: { width: "12%", borderRightWidth: 1, padding: 5 },
+//   c_company: { width: "18%", borderRightWidth: 1, padding: 5, textWrap: "wrap" },
+//   c_screen: { width: "20%", borderRightWidth: 1, padding: 5, textWrap: "wrap" },
+//   c_name: { width: "15%", borderRightWidth: 1, padding: 5 },
+//   c_activity: { width: "15%", borderRightWidth: 1, padding: 5 },
+//   c_module: { width: "15%", padding: 5 },
+// });
+
+// // ================= PAGINATION =================
+// // const paginateData = (data) => {
+
+
+// //   const firstPage = data.slice(0, 31);
+// //   const otherPages = [];
+// //   for (let i = 31; i < data.length; i += 26) {
+// //     otherPages.push(data.slice(i, i + 26));
+// //   }
+// //   return [firstPage, ...otherPages];
+// // };
+
+// const paginateData = (data = []) => {
+//   if (!Array.isArray(data)) return [];
+
+//   const firstPageRows = 26;
+//   const otherPageRows = 28;
+
+//   const firstPage = data.slice(0, firstPageRows);
+//   const otherPages = [];
+
+//   for (let i = firstPageRows; i < data.length; i += otherPageRows) {
+//     otherPages.push(data.slice(i, i + otherPageRows));
+//   }
+
+//   return [firstPage, ...otherPages];
+// };
+
+
+// // ================= PDF COMPONENT =================
+// const AuditPDF = ({ data = [], filters = {} }) => {
+//   const pages = paginateData(data);
+
+//   const formatDate = (dateStr) => {
+//   if (!dateStr) return "";
+//   const [yyyy, mm, dd] = dateStr.split("-");
+//   return `${dd}-${mm}-${yyyy}`;
+// };
+//   const formatedfromDate = formatDate(filters.FromDate);
+//   const formatedtoDate = formatDate(filters.ToDate);
+
+//   console.log(formatedfromDate, formatedfromDate, "---filters formatedfromDate");
+// console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage" );
+  
+//   return (
+//     <Document>
+//       {pages.map((pageData, pageIndex) => (
+//         <Page size="A4" style={styles.page} key={pageIndex}>
+
+//           {/* HEADER */}
+//   <View fixed style={styles.headerWrapper}>
+//               {filters.HeaderImg && (
+//                 <Image
+//                   src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+//                   // src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
+//                   style={styles.headerImage}
+//                 />
+//               )}
+//             </View>
+
+//           {pageIndex === 0 && (
+//             <View style={styles.headerContainer}>
+//               <Text style={styles.headerText}>
+//               {`Audit Report (From ${formatedfromDate} - To ${formatedtoDate})`}  
+//               </Text>
+//             </View>
+//           )}
+
+//           {/* TABLE */}
+//           <View style={styles.table}>
+
+//             {/* TABLE HEADER */}
+//             <View style={styles.tableRow}>
+//               <Text style={styles.h_sno}>S.No</Text>
+//               <Text style={styles.h_date}>Date</Text>
+//               <Text style={styles.h_company}>Company</Text>
+//               <Text style={styles.h_screen}>Screen Name</Text>
+//               <Text style={styles.h_name}>Name</Text>
+//               <Text style={styles.h_activity}>Activity</Text>
+//               <Text style={styles.h_module}>Module</Text>
+//             </View>
+
+//             {/* TABLE BODY */}
+//             {pageData.map((row, index) => (
+//               <View key={index} style={styles.tableRow}>
+//                 <Text style={styles.c_sno}>{row.SLNO}</Text>
+//                 <Text style={styles.c_date}>{row.Date}</Text>
+//                 <Text style={styles.c_company}>{row.CompanyName}</Text>
+//                 <Text style={styles.c_screen}>{row.ScreenName}</Text>
+//                 <Text style={styles.c_name}>{row.Name}</Text>
+//                 <Text style={styles.c_activity}>{row.Activity}</Text>
+//                 <Text style={styles.c_module}>{row.Module}</Text>
+//               </View>
+//             ))}
+
+//           </View>
+//        {/* FOOTER */}
+//                <View fixed style={styles.footerWrapper}>
+//                  {filters.FooterImg && (
+//                    <Image
+//                      src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+//                      style={styles.footerImage}
+//                    />
+//                  )}
+//                </View>
+//           <View fixed style={{ position: "absolute", bottom: 10, width: "100%", textAlign: "center" }}>
+//             <Text>Page {pageIndex + 1} of {pages.length}</Text>
+//           </View>
+
+//         </Page>
+//       ))}
+//     </Document>
+//   );
+// };
+
+// export default AuditPDF;

@@ -235,6 +235,15 @@ import EditOtherEvents from "./pages/HR/EditOtherEvents";
 import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
 import Editpromotion from "./pages/HR/Editpromotion";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
+import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
+import EditStandardSessions from "./pages/HR/EditStandardSessions";
+import StudentReports from "./pages/Empolyee/EditAcademicreport";
+import EditAttendanceEntry from "./pages/Empolyee/EditAttendanceentry";
+import EditGeneral from "./pages/HR/EditGeneralevent";
+import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
+import EditRemainder from "./pages/Empolyee/EditRemainder";
+// import TransferCertificate from "./pages/SkillGlow/Pdf/TransferCertificatePdf";
+
 
 function App() {
   //   useEffect(() => {
@@ -370,6 +379,7 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
+
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
@@ -408,17 +418,21 @@ function App() {
                     element={<EditPayment />}
                   />
                   <Route
-                    path="/:accessID/:screenName/Invoice/Analytics"
+                    path="/Invoice/Analytics"
                     element={<InvoiceAnalytics />}
                   />
-                  {/* SKILL GLOW */}
+                  {/* SKILL GLOW /Apps/SecondarylistView/TR331/Invoice/60/Invoice/Analytics*/ }
 
                   {/* SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
-
+                  {/* /Apps/Secondarylistview/TR368/TimeTable/39/1034/54/Primary%20School%20(I-V) */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:ID1/:ID2/:SlotID/:Slotname/:TotalWeekSlots"
+                    element={<ListviewSecondary />}
+                  />
                   {/* SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
@@ -447,7 +461,11 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
-
+{/* /Apps/Secondarylistview/TR310/Order/2636/Party/O/TR311/Order%20item/2066 */}
+{/* <Route
+                    path="/Secondarylistview/:accessID1/:screenName1/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  /> */}
                   {/* Session */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
@@ -777,7 +795,13 @@ function App() {
                     element={<LeaveType />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
+                    element={<Holidaylist />}
+                  />
+                   <Route
+                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    // path="/Secondarylistview/:accessID/:screenName/:filtertype/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
                   />
 
@@ -992,9 +1016,10 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
                   /> */}
+                  {/* Orderitem */}
                   <Route
                     // path="/Secondarylistview/:accessID1/:OrderType/:filtertype/:Type/:screenName/:accessID/:filtertype1"
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1"
                     element={<ListviewSecondary />}
                   />
                   {/* FEES STRUCTURE */}
@@ -1021,6 +1046,12 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/E/EditEvent Category/:id/:Mode"
                     element={<EditEmergency />}
+                    // element={<EditOtherEvents />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/G/EditEvent Category/:id/:Mode"
+                    element={<EditGeneral />}
+                    // element={<EditOtherEvents />}
                   />
                   {/* ACADEMMICS */}
                   <Route
@@ -1063,6 +1094,10 @@ function App() {
                     path="/otherEvents"
                     element={<EditOtherEvents />}
                   />
+                   {/* <Route
+                    path="/Tccertificate"
+                    element={< TransferCertificate/>}
+                  /> */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditRemarks/:id/:Mode"
                     element={<Editremarks />}
@@ -1338,7 +1373,7 @@ function App() {
                   />
                    <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditPromotion/:id/:Mode"
-                    element={<Editpromotion />}
+                    element={<Editpromotion_v1 />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
@@ -1377,7 +1412,10 @@ function App() {
                     path="/:accessID/:screenName/EditSettlements/:id/:Mode"
                     element={<EditSettlements />}
                   />
-
+                  <Route
+                    path="/Reminder"
+                    element={<EditRemainder />}
+                  />
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
@@ -1534,7 +1572,7 @@ function App() {
                     element={<ListviewSecondary />}
                   /> */}
                   <Route
-                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:screenName/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
                   <Route
@@ -1606,15 +1644,28 @@ function App() {
                     path="/Secondarylistview/AnnexureForm2"
                     element={<AnnexureForm2 />}
                   />
-                  <Route
+                  {/* <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditTimeTable/:id/:Mode"
                     element={<EditTimetablev1 />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/:SlotID/:SlotName/:TotalWeekSlots/EditTimeTable/:id/:Mode"
+                    element={<EditTimetablev1 />}
+                  />
+                  {/* /Apps/Secondarylistview/TR368/TimeTable/39/1034/54/Primary%20School%20(I-V)/EditTimeTable/-1/A */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/EditStandardSessions/:id/:Mode"
+                    element={<EditStandardSessions />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:YearID/:filtertype/ProjectTimeTable"
                     element={<ProjectTimeTable />}
                   />
                   <Route
+                    path="/ItemStokAnalytics"
+                   element={<ItemStokAnalytics />}
+                  />
+                   <Route
                     // path="/:accessID/RaiseComplaints"
                     path="/:accessID/Escalation/EditEscalation/:id/:Mode"
                     element={<RaiseComplaints />}
@@ -1629,7 +1680,14 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:type/EditDeposit/:id/:Mode"
                     element={<Editdepositcash />}
                   /> 
-                  
+                  <Route
+                   path="/AcademicReport/:id"
+                    element={<StudentReports />}
+                  />
+                   <Route
+                   path="/Attendanceentry"
+                    element={<EditAttendanceEntry />}
+                  />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}

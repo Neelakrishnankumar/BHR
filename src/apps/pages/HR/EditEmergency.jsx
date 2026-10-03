@@ -814,7 +814,7 @@ const EditEmergency = () => {
                                   color: "#6B7280",
                                 }}
                               >
-                                Who is this about?
+                                Share To?
                               </Typography>
 
                               <ButtonGroup
@@ -1360,7 +1360,7 @@ const EditEmergency = () => {
                               </Box>
                             </Box>
                             {/* NOTIFY OPTIONS */}
-                            <Box>
+                            {/* <Box>
                               <Typography
                                 variant="subtitle2"
                                 sx={{
@@ -1410,7 +1410,7 @@ const EditEmergency = () => {
                                     </Typography>
 
                                     <Switch
-                                      color="error"
+                                      color="success"
                                       checked={values[item.field]}
                                       onChange={(e) =>
                                         setFieldValue(
@@ -1422,7 +1422,7 @@ const EditEmergency = () => {
                                   </Box>
                                 ))}
                               </Box>
-                            </Box>
+                            </Box> */}
 
                             {/* BUTTONS */}
                             <Box

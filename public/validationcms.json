@@ -14,6 +14,11 @@
     "subjectskill": "Please select the Type",
     "Subject": "Please enter the Subject"
   },
+   "Cocurricularact": {
+    "Date": "Please enter the Date",
+    "Cocurricular": "Please select the Co-curricular Activity",
+    "Rating": "Please enter the Rating"
+  },
    "Timetable": {
     "Terms": "Please select the Term",
     "Slotgroup": "Please select the Slot Group"
@@ -123,6 +128,11 @@
     "aadharcardnumber1": "Aadhar Card Number must be exactly 12 alphanumeric characters",
     "aadharcardnumber2": "Aadhar Card Number must be exactly 12 alphanumeric characters"
   },
+  "Relationship": {
+    "Name": "Please enter the Name",
+    "mobilenumber": "Please enter the Mobile Number",
+    "Relationship":"Please select the Relationship"
+  },
   "TermFees": {
     "Terms": "Please select the Term",
     "Standard": "Please select the Applicable Standard",
@@ -139,7 +149,12 @@
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
     "employeetype": "Please select the Type",
-    "Gender": "Please select the Gender"
+    "Gender": "Please select the Gender",
+    "Subject": "Please select the Subject",
+    "Relegion": "Please select the Relegion",
+    "Community": "Please select the Community",
+    "Nationality": "Please select the Nationality"
+
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -502,6 +517,17 @@
     "Message": "Please enter the Message",
     "ContactPersonAndNumber": "Please enter the Contact Person And Number"
 },
+ "EventGeneral": {
+    "Title": "Please enter the Event Title",
+    "Priority": "Please select the Priority",
+    "Standard1": "Please select the Standard/Activities",
+    "Standard": "Please select the Standard/Activities",
+    "Student": "Please select the Student",
+    "Message": "Please enter the Message",
+    "ContactPersonAndNumber": "Please enter the Contact Person And Number",
+    "Eventtype": "Please select the Event Category",
+    "EventDate": "Please enter the Event Date"
+},
   "EventAcademics": {
     "EventTitle": "Please enter the Event Title",
     "EventType": "Please select the Event Type",
@@ -593,5 +619,13 @@
     "Teacher": "Please select Non Teaching Staff",
     "terms": "Please select Term",
     "Slotgroup": "Please select Slot Group"   
+},
+"Users": {
+  "name": "Name is required",
+  "NameNoSpace": "Spaces are not allowed",
+  "password": "Password is required",
+  "comfirmpassword": "Confirm Password is required",
+  "passwordMatch": "Password and Confirm Password must match",
+  "usergroup": "User group is required"
 }
 }

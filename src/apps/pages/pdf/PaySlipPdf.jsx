@@ -403,6 +403,9 @@ const styles = StyleSheet.create({
 const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
 
     const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;
+    // const headerPath = filters?.HeaderImg
+    //     ? `${QR_BASE_URL}${filters.HeaderImg}`
+    //     : null;
     const headerPath = filters?.HeaderImg
         ? `${QR_BASE_URL}${filters.HeaderImg}`
         : null;
@@ -478,7 +481,7 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
     );
 
 
-    const Netpayable = data?.Totals?.NetPay || ""
+    const Netpayable = data?.Totals?.RoundedNetPay || ""
 
     const numberToWordsInRupees = (num) => {
         if (!num) return "Zero Rupees Only";
@@ -597,12 +600,16 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeLevel}</Text>
                         </View> */}
-                        <View style={styles.gridRow}>
+                        {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Type</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeType}</Text>
+                        </View> */}
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Date Of Birth</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.EmployeeDob}</Text>
                         </View>
-
 
                     </View>
 
@@ -636,30 +643,26 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
                     </View>
 
                     <View style={[styles.gridColumn, { borderRight: 0 }]}>
+                       
                         <View style={styles.gridRow}>
-                            <Text style={styles.label}>Date Of Birth</Text>
+                            <Text style={styles.label}>Total Working Days</Text>
                             <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.EmployeeDob}</Text>
+                            <Text style={styles.value}>{data?.TotalDays}</Text>
                         </View>
                         <View style={styles.gridRow}>
-                            <Text style={styles.label}>Father/Guardian</Text>
+                            <Text style={styles.label}>Total Work Days</Text>
                             <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.FatherName}</Text>
+                            <Text style={styles.value}>{data?.TotalWorkingDays}</Text>
                         </View>
-                        <View style={styles.gridRow}>
+                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Total Paid Days</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.TotalPaidDays}</Text>
                         </View>
-                        {/* <View style={styles.gridRow}>
-                            <Text style={styles.label}>Basic Pay</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.Basicpay ? data?.Basicpay : 0}</Text>
-                        </View> */}
                         <View style={styles.gridRow}>
-                            <Text style={styles.label}>Basic Pay</Text>
+                            <Text style={styles.label}>Total Unpaid Days</Text>
                             <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.Salary ?? 0 }</Text>
+                            <Text style={styles.value}>{data?.TotalUnPaidDays}</Text>
                         </View>
                     </View>
 
@@ -690,7 +693,7 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
                     ))}
                     <View style={styles.tableRow}>
                         <Text style={styles.col1}></Text>
-                        <Text style={styles.col2}>Gross Total</Text>
+                        <Text style={styles.col2}>Total</Text>
                         <Text style={styles.col3}>{data?.Totals?.SumOfAllowances}</Text>
                     </View>
 
@@ -731,7 +734,7 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
 
                     <View style={styles.tableRow}>
                         <Text style={styles.col1}></Text>
-                        <Text style={styles.col2}>Gross Total</Text>
+                        <Text style={styles.col2}>Total</Text>
                         <Text style={styles.col3}>{data?.Totals?.SumOfDeductions}</Text>
                     </View>
                 </View>
@@ -777,14 +780,27 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
                     <View style={styles.tableRow}>
                         <Text style={styles.Transsactioncol1}></Text>
                         <Text style={styles.Transsactioncol5}></Text>
-                        <Text style={styles.Transsactioncol2}>Gross Total</Text>
+                        <Text style={styles.Transsactioncol2}>Total</Text>
                         <Text style={styles.Transsactioncol3}>{data?.Totals?.SumOfCreditTransactions}</Text>
                         <Text style={styles.Transsactioncol4}>{data?.Totals?.SumOfDebitTransactions}</Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.col1}></Text>
-                        <Text style={styles.col2}>Net Total</Text>
+                        <Text style={styles.col2}>Gross Total</Text>
                         <Text style={styles.col3}>{data?.Totals?.NetPay}</Text>
+                    </View>
+                    {/* Round Off */}
+                    <View style={styles.tableRow}>
+                        <Text style={styles.col1}></Text>
+                        <Text style={styles.col2}>Round Off</Text>
+                        <Text style={styles.col3}>{data?.Totals?.RoundOff}</Text>
+                    </View>
+
+                    {/* Another Value */}
+                    <View style={styles.tableRow}>
+                        <Text style={styles.col1}></Text>
+                        <Text style={styles.col2}>Net Amount To Pay</Text>
+                        <Text style={styles.col3}>{data?.Totals?.RoundedNetPay}</Text>
                     </View>
                 </View>
 
@@ -811,7 +827,7 @@ const PayslipPdf = ({ data = {}, filters = {}, footerHeight }) => {
                             </Text>
 
                             <Text style={{ fontSize: 9, fontWeight: 700 }}>
-                                {data?.Totals?.NetPay}
+                                {data?.Totals?.RoundedNetPay}
                             </Text>
                         </View>
 

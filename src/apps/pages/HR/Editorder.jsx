@@ -44,6 +44,7 @@ const EditOrder = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
+  console.log("🚀 ~ EditOrder ~ params:", params);
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
@@ -62,14 +63,14 @@ const EditOrder = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const location = useLocation();
   const state = location.state || {};
+   const PartyRecordID = state.PartyID;
+  console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
   const ViewStatus = state.ViewStatus;
   console.log("🚀 ~ EditOrder ~ ViewStatus:", ViewStatus)
   const DefaultProductDeliveryChargeGetData = useSelector(
     (state) => state.formApi.DefaultProductDeliveryChargeGetData
   );
-  const PartyRecordID = state.PartyID;
-  console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
-
+ 
   useEffect(() => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
   }, [location.key]);
@@ -172,6 +173,10 @@ const EditOrder = () => {
     // paid: "Yes",
     // deliverby: "Yes"
   };
+  console.log(data.LeaderRecordID, "LeadID");
+  console.log(params.filtertype, "filtertype");
+  console.log(state.PartyID, "PartyID");
+
 
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
@@ -211,7 +216,7 @@ const EditOrder = () => {
         params.Type === "Party"
           ? data.LeaderRecordID || 0
           : params.filtertype || 0,
-
+      Code: values.orderno || data.Code || "",
       PartyName: values.partyname || "",
       OrderDate: values.orderdate || "",
       DeliveryCharges: values.delivercharges || 0,
@@ -232,7 +237,7 @@ const EditOrder = () => {
       ReceiverMobileNumber: values.mobilenumber || "",
       DeliveryComments: values.DeliveryComments || "",
       PaidComments: values.PaidComments || "",
-      PartyRecordID: state.PartyID || 0,
+      PartyRecordID: PartyRecordID || 0,
       EmployeeRecordID: LoginID,
       // SortOrder: values.sortorder,
       // Disable: isCheck,
@@ -252,7 +257,7 @@ const EditOrder = () => {
         const OrderHeaderId = response.payload.OrderHeaderID;
         const OrderHeaderCode = response.payload.OrderHeaderCode;
         navigate(
-          `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
+          `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/Order Item/${OrderHeaderId}/EditOrderitem/-1/A`,
           { state: { ...state, Code: OrderHeaderCode } }
         );
       } else if (mode === "E" && params.OrderType === "O") {
@@ -416,8 +421,25 @@ const EditOrder = () => {
 
                 <Typography
                   sx={breadcrumbStyles.item}
+                  // onClick={() => {
+                  //   params.OrderType === "Q"
+                  //     ? navigate(
+                  //       `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/Q`,
+                  //       { state: { ...state } }
+                  //     )
+                  //     : navigate(
+                  //       `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/O`,
+                  //       { state: { ...state } }
+                  //     );
+                  // }}
                   onClick={() => {
-                    navigate(-1);
+                    const frameType = params.Type === "Party" ? "Party" : "Leader";
+
+                    navigate(
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${frameType}/${params.OrderType === "Q" ? "Q" : "O"
+                      }`,
+                      { state: { ...state } }
+                    );
                   }}
                 >
                   {params.OrderType === "O"
@@ -578,7 +600,10 @@ const EditOrder = () => {
                         error={!!touched.orderno && !!errors.orderno}
                         helperText={touched.orderno && errors.orderno}
                         InputProps={{ readOnly: true }}
-                        sx={textFieldSx}
+                        sx={{
+                          ...textFieldSx,
+                          pointerEvents: "none",
+                        }}
                       />
                     ) : (
                       <TextField
@@ -657,6 +682,7 @@ const EditOrder = () => {
                           }
                           variant="outlined"
                           size="small"
+                          // focused
                           inputFormat="YYYY-MM-DD"
                           value={values.tentativedeliverdate}
                           onBlur={handleBlur}
@@ -668,10 +694,12 @@ const EditOrder = () => {
                           helperText={
                             touched.tentativedeliverdate && errors.tentativedeliverdate
                           }
-                          sx={textFieldSx}
+                          // sx={textFieldSx}
+                          InputLabelProps={{ shrink: true }}
+
                         />
 
-                        <Box sx={{ marginTop: "20px" }}>
+                        <Box sx={{ marginTop: "5px" }}>
                           <Field
                             type="checkbox"
                             name="PurchaseCheckbox"
@@ -786,7 +814,8 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: ViewStatus === "Paid" ? true : false,
                           }}
-                          sx={textFieldSx}
+                          InputLabelProps={{ shrink: true }}
+                        // sx={textFieldSx}
                         />
 
                         <TextField
@@ -1201,7 +1230,8 @@ const EditOrder = () => {
                           helperText={
                             touched.tentativedeliverdate && errors.tentativedeliverdate
                           }
-                          sx={textFieldSx}
+                          // sx={textFieldSx}
+                          InputLabelProps={{ shrink: true }}
                         />
                         <Box>
                           <Field

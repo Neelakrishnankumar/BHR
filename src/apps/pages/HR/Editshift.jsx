@@ -201,8 +201,8 @@ const Editshift = () => {
             Name: values.name,
             // StartTime: values.starttime,
             // EndTime: values.endtime,
-            StartTime: convertTo12Hour(values.starttime),  // ✅ "07:00 AM"
-            EndTime: convertTo12Hour(values.endtime),        // ✅ "07:30 AM"
+            StartTime: convertTo24Hour(values.starttime),  // ✅ "07:00 AM"
+            EndTime: convertTo24Hour(values.endtime),        // ✅ "07:30 AM"
             SortOrder: values.sortorder || 0,
             //WeekOff: values.weekoff,
             Monday: values.monday === true ? "Y" : "N",
@@ -712,7 +712,7 @@ const Editshift = () => {
                                         onChange={handleChange}
                                         error={!!touched.sortorder && !!errors.sortorder}
                                         helperText={touched.sortorder && errors.sortorder}
-                                        sx={{ background: "" }}
+                                        // sx={{ background: "" }}
                                         InputProps={{
                                             inputProps: {
                                                 style: { textAlign: "right" },
