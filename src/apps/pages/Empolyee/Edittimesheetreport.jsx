@@ -79,6 +79,7 @@ import {
   CheckinAutocomplete,
   Employeeautocomplete,
   MultiFormikOptimizedAutocomplete,
+  MultiFormikOptimizedselectAutocomplete,
   Productautocomplete,
 } from "../../../ui-components/global/Autocomplete";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -782,7 +783,8 @@ const Edittimesheetreport = () => {
                         >
                           {/* {isManager == "1" && ( */}
                           <Box sx={{ minWidth: 250 }}>
-                            <MultiFormikOptimizedAutocomplete
+                            {/* <MultiFormikOptimizedAutocomplete */}
+                            <MultiFormikOptimizedselectAutocomplete
                               sx={{ width: "100%" }}
                               name="ProName"
                               label={getBusinessCaption("Project", "Project")}

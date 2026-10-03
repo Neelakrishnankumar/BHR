@@ -46,6 +46,7 @@ const Edituser = () => {
   const location = useLocation();
   const rowData = location.state || {};
   console.log(rowData, "--rowData");
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
   const companyRecID = params.companyRecID;
   // const logincompanyRecID = sessionStorage.getItem("compID");
@@ -104,22 +105,22 @@ const Edituser = () => {
           //   .required(data.Users.comfirmpassword)
           //   .oneOf([Yup.ref("password"), null], "Password and Confirm Password must match"),
           // usergroup: Yup.object().required(data.Users.usergroup).nullable(),
-        name: Yup.string()
-    .required(data.Users.name)
-    .matches(/^\S+$/, data.Users.NameNoSpace),
+          name: Yup.string()
+            .required(data.Users.name)
+            .matches(/^\S+$/, data.Users.NameNoSpace),
 
-  password: Yup.string().required(data.Users.password),
+          password: Yup.string().required(data.Users.password),
 
-  comfirmpassword: Yup.string()
-    .required(data.Users.comfirmpassword)
-    .oneOf(
-      [Yup.ref("password"), null],
-      data.Users.passwordMatch
-    ),
+          comfirmpassword: Yup.string()
+            .required(data.Users.comfirmpassword)
+            .oneOf(
+              [Yup.ref("password"), null],
+              data.Users.passwordMatch
+            ),
 
-  usergroup: Yup.object()
-    .required(data.Users.usergroup)
-    .nullable(),
+          usergroup: Yup.object()
+            .required(data.Users.usergroup)
+            .nullable(),
         });
         setValidationSchema(schema1);
       })
@@ -247,47 +248,47 @@ const Edituser = () => {
   };
 
   const label =
-  Subscriptionlastthree === "003" ? "User Management" : "Users";
+    Subscriptionlastthree === "003" ? "User Management" : "Users";
 
-const text =
-  mode === "E"
-    ? `${label}(${data.Name1})`
-    : `${label}(New)`;
+  const text =
+    mode === "E"
+      ? `${label}(${data.Name1})`
+      : `${label}(New)`;
 
 
   return (
     <React.Fragment>
-    <Paper
-           elevation={0}
-           sx={{
-             mx: 2,
-             mt: 1,
-             mb: 1,
-             p: 2,
-             borderRadius: 3,
-             border: "1px solid #E5E7EB",
-             bgcolor: "#fff",
-           }}
-         >
-           <Box
-             display="flex"
-             justifyContent="space-between"
-             alignItems="center"
-           >
-             {/* Left */}
-             <Box display="flex" alignItems="center" gap={2}>
-               {broken && !rtl && (
-                 <IconButton
-                   onClick={() => toggleSidebar()}
-                   sx={{
-                     border: "1px solid #E5E7EB",
-                     borderRadius: 2,
-                   }}
-                 >
-                   <MenuOutlinedIcon />
-                 </IconButton>
-               )}
-   
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 2,
+          mt: 1,
+          mb: 1,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #E5E7EB",
+          bgcolor: "#fff",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          {/* Left */}
+          <Box display="flex" alignItems="center" gap={2}>
+            {broken && !rtl && (
+              <IconButton
+                onClick={() => toggleSidebar()}
+                sx={{
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 2,
+                }}
+              >
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+
             <Box
               display={isNonMobile ? "flex" : "none"}
               borderRadius="3px"
@@ -319,14 +320,14 @@ const text =
                   {`Subscriptions(${rowData.SubsName})`}
                 </Typography> */}
                 <Typography
-                 sx={{
-                     fontSize: 20,
-                     fontWeight: 700,
-                     color: "#111827",
-                     // mb: 0.2,
-                         px: 1,
-           py: 0.2,
-                   }}
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
+                  }}
                   onClick={() => {
                     navigate(-1);
                   }}
@@ -355,203 +356,214 @@ const text =
           </Box>
         </Box>
       </Paper>
-      
 
-               <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
-               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-             <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
-        {/* <Box m="20px"> */}
-        <Formik
-          initialValues={initialValue}
-          onSubmit={(values, { resetForm }) => {
-            setTimeout(() => {
-              fnSave(values, resetForm);
-            }, 100);
-          }}
-          validationSchema={validationSchema}
-          enableReinitialize={true}
-        >
-          {({
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            isSubmitting,
-            values,
-            handleSubmit,
-            setFieldTouched,
-            setFieldValue
-          }) => (
-            <form onSubmit={handleSubmit}>
 
- {/* Header */}
-                                      <Box display="flex" alignItems="center" gap={1.5} mb={3}>
-                                        <Box
-                                          sx={{
-                                            width: 36,
-                                            height: 36,
-                                            borderRadius: "50%",
-                                            backgroundColor: "#E0E7FF",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            fontSize: 18,
-                                          }}
-                                        >
-                                          👥
-                                        </Box>
-                                        <Box>
-                                          <Typography variant="h6" fontWeight={700}  color="#0D94885">
-                                           {label}
-                                          </Typography>
-                                          <Typography variant="caption" color="text.secondary">
-                                            Create and manage user accounts, login credentials, and access permissions.
-                                          </Typography>
-                                        </Box>
-                                      </Box>
+      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1.5 }}>
+        <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+          <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+            {/* <Box m="20px"> */}
+            <Formik
+              initialValues={initialValue}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  fnSave(values, resetForm);
+                }, 100);
+              }}
+              validationSchema={validationSchema}
+              enableReinitialize={true}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                setFieldTouched,
+                setFieldValue
+              }) => (
+                <form onSubmit={handleSubmit}>
 
-              <Box
-                display="grid"
-                gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                gap={formGap}
-                padding={1}
-                sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4",
-                  },
-                }}
-              >
-                <TextField
-                  name="code"
-                  type="text"
-                  id="code"
-                  label="Code"
-                  placeholder="Auto"
-                  variant="outlined"
-                  size="small"
-                  focused
-                  sx={{ 
-                    gridColumn: "span 2",
-                    "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                  {/* Header */}
+                  <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "#E0E7FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 18,
+                      }}
+                    >
+                      👥
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" fontWeight={700} color="#0D94885">
+                        {label}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Create and manage user accounts, login credentials, and access permissions.
+                      </Typography>
+                    </Box>
+                  </Box>
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(4 , minMax(0,1fr))"
+                    gap={formGap}
+                    padding={1}
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      placeholder="Auto"
+                      variant="outlined"
+                      size="small"
+                      focused
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                  }}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.code}
-                  error={!!touched.code && !!errors.code}
-                  helperText={touched.code && errors.code}
-                  InputProps={{ readOnly: true }}
-                // autoFocus
-                />
-                <TextField
-                  // required
-                  name="name"
-                  type="text"
-                  id="name"
-                  label={
-                    <>
-                      Name<span style={{ color: "red", fontSize: "20px" }}> * </span>
-                    </>
-                  }
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
 
-                  variant="outlined"
-                  size="small"
-                  focused
-                  sx={{ 
-                    gridColumn: "span 2",
-                     "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                      }}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.code}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                    <TextField
+                      // required
+                      name="name"
+                      type="text"
+                      id="name"
+                      label={
+                        <>
+                          Name<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        </>
+                      }
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                      variant="outlined"
+                      size="small"
+                      focused
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                   }}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.name}
-                  error={!!touched.name && !!errors.name}
-                  helperText={touched.name && errors.name}
-                  autoFocus
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
 
-                />
-                <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
-                  {/* <FormControl
+                      }}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.name}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
+                      autoFocus
+
+                    />
+                    <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                      {/* <FormControl
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
                     }}
                   > */}
-                  <CheckinAutocomplete
-                    label={
-                      <span>
-                        User Group <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </span>
-                    }
-                    id="usergroup"
-                    name="usergroup"
-                    value={values.usergroup}
-                    onChange={(newValue) => {
-                      setFieldValue("usergroup", newValue);
-                    }}
-                    error={!!touched.usergroup && !!errors.usergroup}
-                    helperText={touched.usergroup && errors.usergroup}
-                    getOptionLabel={(option) =>
-                      option ? `${option.Code} || ${option.Name}` : ""
-                    }
-                    isOptionEqualToValue={(option, value) =>
-                      option.RecordID === value.RecordID
-                    }
+                      <CheckinAutocomplete
+                        label={
+                          <span>
+                            User Group <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
+                        id="usergroup"
+                        name="usergroup"
+                        value={values.usergroup}
+                        onChange={(newValue) => {
+                          setFieldValue("usergroup", newValue);
+                        }}
+                        error={!!touched.usergroup && !!errors.usergroup}
+                        helperText={touched.usergroup && errors.usergroup}
+                        getOptionLabel={(option) =>
+                          option ? `${option.Code} || ${option.Name}` : ""
+                        }
+                        isOptionEqualToValue={(option, value) =>
+                          option.RecordID === value.RecordID
+                        }
 
-                    url={`${store.getState().globalurl.listViewurl}?data={"Query":{"AccessID":"2039","ScreenName":"UserGroup","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":""}}`}
-                  />
+                        // url={`${store.getState().globalurl.listViewurl}?data={"Query":{"AccessID":"2039","ScreenName":"UserGroup","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":""}}`}
+                        url={`${listViewurl}?data=${JSON.stringify({
+
+                          Query: {
+                            AccessID: "2039",
+                            ScreenName: "UserGroup",
+                            Filter: `CompanyID='${CompanyID}'`,
+                            Any: "",
+                            VerticalLicense: Subscriptionlastthree || "",
+                          },
+
+                        })}`}
+                      />
 
 
 
-                  {/* {touched.usergroup && errors.usergroup && (
+                      {/* {touched.usergroup && errors.usergroup && (
                     <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
                       {errors.usergroup}
                     </div>
                   )} */}
-                  {/* <TextField
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
@@ -585,273 +597,273 @@ const text =
                         inputProps={{ tabIndex: "-1" }}
                         focused
                       /> */}
-                  {/* </FormControl> */}
-                </FormControl>
-                <TextField
-                  name="password"
-                  type="password"
-                  id="password"
-                  label={
-                    <>
-                      Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
-                    </>
-                  }
-                  variant="outlined"
-                  size="small"
-                  focused
-                  // required
-                  sx={{ 
-                    gridColumn: "span 2",
- "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                      {/* </FormControl> */}
+                    </FormControl>
+                    <TextField
+                      name="password"
+                      type="password"
+                      id="password"
+                      label={
+                        <>
+                          Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        </>
+                      }
+                      variant="outlined"
+                      size="small"
+                      focused
+                      // required
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                   }}
-                  onFocus={() => setFieldTouched("password", true)}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.password}
-                  error={!!touched.password && !!errors.password}
-                  helperText={touched.password && errors.password}
-                  inputProps={{ maxLength: 8 }}
-                //  onInvalid={(e) => {
-                //   e.target.setCustomValidity(
-                //     "Please fill the Password"
-                //   );
-                // }}
-                // onInput={(e) => {
-                //   e.target.setCustomValidity("");
-                // }}
-                // required
-                />
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
+                      }}
+                      onFocus={() => setFieldTouched("password", true)}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.password}
+                      error={!!touched.password && !!errors.password}
+                      helperText={touched.password && errors.password}
+                      inputProps={{ maxLength: 8 }}
+                    //  onInvalid={(e) => {
+                    //   e.target.setCustomValidity(
+                    //     "Please fill the Password"
+                    //   );
+                    // }}
+                    // onInput={(e) => {
+                    //   e.target.setCustomValidity("");
+                    // }}
+                    // required
+                    />
 
-                <TextField
-                  name="comfirmpassword"
-                  type="password"
-                  id="comfirmpassword"
-                  label={
-                    <>
-                      Confirm Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
-                    </>
-                  }
-                  variant="outlined"
-                  size="small"
-                  focused
-                  // required
-                  sx={{ 
-                    gridColumn: "span 2", 
- "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                    <TextField
+                      name="comfirmpassword"
+                      type="password"
+                      id="comfirmpassword"
+                      label={
+                        <>
+                          Confirm Password<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        </>
+                      }
+                      variant="outlined"
+                      size="small"
+                      focused
+                      // required
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                  }}
-                  onFocus={() => setFieldTouched("comfirmpassword", true)}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.comfirmpassword}
-                  error={touched.comfirmpassword && !!errors.comfirmpassword} // Show error only if touched
-                  helperText={
-                    touched.comfirmpassword ? errors.comfirmpassword : ""
-                  } // Show text only when touched
-                  inputProps={{ maxLength: 8 }}
-                //  onInvalid={(e) => {
-                //   e.target.setCustomValidity(
-                //     "Please fill the Confirm Password"
-                //   );
-                // }}
-                // onInput={(e) => {
-                //   e.target.setCustomValidity("");
-                // }}
-                // required
-                />
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
+                      }}
+                      onFocus={() => setFieldTouched("comfirmpassword", true)}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.comfirmpassword}
+                      error={touched.comfirmpassword && !!errors.comfirmpassword} // Show error only if touched
+                      helperText={
+                        touched.comfirmpassword ? errors.comfirmpassword : ""
+                      } // Show text only when touched
+                      inputProps={{ maxLength: 8 }}
+                    //  onInvalid={(e) => {
+                    //   e.target.setCustomValidity(
+                    //     "Please fill the Confirm Password"
+                    //   );
+                    // }}
+                    // onInput={(e) => {
+                    //   e.target.setCustomValidity("");
+                    // }}
+                    // required
+                    />
 
-                <TextField
-                  name="email"
-                  type="text"
-                  id="email"
-                  label="Email"
-                  variant="outlined"
-                  size="small"
-                  focused
-                  sx={{ 
-                    gridColumn: "span 2",
- "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                    <TextField
+                      name="email"
+                      type="text"
+                      id="email"
+                      label="Email"
+                      variant="outlined"
+                      size="small"
+                      focused
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                   }}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.email}
-                  error={!!touched.email && !!errors.email}
-                  helperText={touched.email && errors.email}
-                // autoFocus
-                />
-                <TextField
-                  name="comments"
-                  type="text"
-                  id="comments"
-                  label="Comments"
-                  variant="outlined"
-                  size="small"
-                  focused
-                  sx={{ 
-                    gridColumn: "span 2",
- "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
+                      }}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.email}
+                      error={!!touched.email && !!errors.email}
+                      helperText={touched.email && errors.email}
+                    // autoFocus
+                    />
+                    <TextField
+                      name="comments"
+                      type="text"
+                      id="comments"
+                      label="Comments"
+                      variant="outlined"
+                      size="small"
+                      focused
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                   }}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.comments}
-                  error={!!touched.comments && !!errors.comments}
-                  helperText={touched.comments && errors.comments}
-                // autoFocus
-                />
-                <TextField
-                  name="sortorder"
-                  type="number"
-                  id="sortorder"
-                  label="Sort Order"
-                  variant="outlined"
-                  size="small"
-                  focused
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.sortorder}
-                  error={!!touched.sortorder && !!errors.sortorder}
-                  helperText={touched.sortorder && errors.sortorder}
-                  // autoFocus
-                  sx={{ 
-                    gridColumn: "span 2", 
-                     "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
+                      }}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.comments}
+                      error={!!touched.comments && !!errors.comments}
+                      helperText={touched.comments && errors.comments}
+                    // autoFocus
+                    />
+                    <TextField
+                      name="sortorder"
+                      type="number"
+                      id="sortorder"
+                      label="Sort Order"
+                      variant="outlined"
+                      size="small"
+                      focused
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.sortorder}
+                      error={!!touched.sortorder && !!errors.sortorder}
+                      helperText={touched.sortorder && errors.sortorder}
+                      // autoFocus
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#fff",
+                          borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                          "& fieldset": {
+                            borderColor: "#d1d5db", // 👈 light grey border
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                            borderWidth: "1px",
+                          },
+                        },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                   }}
-                  onWheel={(e) => e.target.blur()}
-                  InputProps={{
-                    inputProps: {
-                      style: { textAlign: "right" },
-                    },
-                  }}
-                />
-                <Box>
-                  <Field
-                    //  size="small"
-                    type="checkbox"
-                    name="disable"
-                    id="disable"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    as={Checkbox}
-                    label="Disable"
-                  />
+                        "& .MuiInputLabel-root": {
+                          color: "#6b7280", // label grey
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "#6b7280", // keep same on focus
+                        },
+                      }}
+                      onWheel={(e) => e.target.blur()}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
+                    <Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="disable"
+                        id="disable"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Disable"
+                      />
 
-                  <FormLabel focused={false}>Disable</FormLabel>
-                </Box>
-              </Box>
-              <Box
-                display="flex"
-                padding={1}
-                justifyContent="end"
-                mt="20px"
-                gap="20px"
-              >
-                <Button
-                 variant="contained"
-                  sx={{
+                      <FormLabel focused={false}>Disable</FormLabel>
+                    </Box>
+                  </Box>
+                  <Box
+                    display="flex"
+                    padding={1}
+                    justifyContent="end"
+                    mt="20px"
+                    gap="20px"
+                  >
+                    <Button
+                      variant="contained"
+                      sx={{
                         textTransform: "none",
                         borderRadius: 2,
                         px: 4,
@@ -860,13 +872,13 @@ const text =
                           bgcolor: "#0F766E",
                         },
                       }}
-                     type="submit"
-                     >
-                  Save
-                </Button>
-                <Button
-                  variant="contained"
-                   sx={{
+                      type="submit"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
                         textTransform: "none",
                         borderRadius: 2,
                         px: 4,
@@ -875,20 +887,20 @@ const text =
                           bgcolor: "#EA580C",
                         },
                       }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  Back
-                </Button>
-              </Box>
-            </form>
-          )}
-        </Formik>
-      
-      </Paper>
-       </Box>
-                        </Box>
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                    >
+                      Back
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+
+          </Paper>
+        </Box>
+      </Box>
 
     </React.Fragment>
   );

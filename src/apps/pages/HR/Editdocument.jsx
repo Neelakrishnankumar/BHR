@@ -53,7 +53,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
 import * as Yup from "yup";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
-import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete,MultiFormikOptimizedselectAutocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 
 // ***********************************************
@@ -77,6 +77,17 @@ const Editdocument = () => {
     const CompanyID = sessionStorage.getItem("compID");
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     console.log(CompanyAutoCode, "CompanyAutoCode");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+    const is003Subscription = SubscriptionCode.endsWith("003");
+    const is00123Subscription = ["001", "002", "003"].some((code) =>
+        SubscriptionCode?.endsWith(code),
+    );
+    console.log(SubscriptionCode, "codehr");
+    const sliceSubscriptionCode = SubscriptionCode.slice(-3);
+    const lastThree = SubscriptionCode?.slice(-3) || "";
+    const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+        ? lastThree
+        : "";
     const navigate = useNavigate();
     let params = useParams();
     const dispatch = useDispatch();
@@ -120,7 +131,23 @@ const Editdocument = () => {
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, [CompanyAutoCode]);
+    // Validates a stored filename's extension against the selected fileType
+    const isAttachmentTypeValid = (filename, fileType) => {
+        if (!filename) return true; // nothing attached — nothing to validate
+        if (fileType === "all") return true;
 
+        const ext = filename.split(".").pop()?.toLowerCase() || "";
+
+        const EXT_MAP = {
+            pdf: ["pdf"],
+            video: ["mp4", "mov", "avi", "mkv", "webm"],
+            image: ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"],
+            word: ["doc", "docx"],
+            excel: ["xls", "xlsx"],
+        };
+
+        return EXT_MAP[fileType]?.includes(ext) ?? true;
+    };
     // const getFilepanChange = async (event) => {
     //     const file = event.target.files[0];
 
@@ -282,8 +309,38 @@ const Editdocument = () => {
     // **********Save Function*****************
     // const projecIDs = selectedPro.map((ProName) => ProName.RecordID).join(",");
     // const partyIDs = selectedParty.map((ProName) => ProName.RecordID).join(",");
+    const FILE_TYPE_ACCEPT = {
+        all: "video/*,audio/*,image/*,.pdf,.doc,.docx,.xls,.xlsx",
+        pdf: ".pdf,application/pdf",
+        video: "video/*",
+        image: "image/*",
+        word: ".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        excel: ".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    };
+
+    const FILE_TYPE_LABELS = {
+        all: "All Types",
+        pdf: "PDF",
+        video: "Video",
+        image: "Image",
+        word: "Word",
+        excel: "Excel",
+    };
+
+    // ... inside your component, alongside your existing `image` / `uploading` state:
+    const [fileType, setFileType] = useState("all");
+
+    const handleFileTypeChange = (e) => {
+        setFileType(e.target.value);
+    };
 
     const fnSave = async (values, del) => {
+        if (image && !isAttachmentTypeValid(image, fileType)) {
+            toast.error(
+                `The attached file (${image}) does not match the selected type "${FILE_TYPE_LABELS[fileType]}". Please upload a matching file or change the File Type.`
+            );
+            return; 
+        }
         const projecIDs = values.Employee?.map((item) => item.RecordID).join(",");
         const partyIDs = values.Party?.map((item) => item.RecordID).join(",");
         const projectIDs = values.project?.map(x => x.RecordID).join(",");
@@ -370,7 +427,7 @@ const Editdocument = () => {
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -414,151 +471,236 @@ const Editdocument = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper>
-            {/* {!getLoading ? ( */}
-            <Paper elevation={3} sx={{ margin: "10px" }}>
-                <Formik
-                    initialValues={initialValues}
-                    enableReinitialize={true}
-                    onSubmit={(values) => {
-                        setTimeout(() => {
-                            fnSave(values);
-                        }, 100);
-                    }}
-                    validationSchema={validationSchema}
-                >
-                    {({
-                        errors,
-                        touched,
-                        handleBlur,
-                        handleChange,
-                        isSubmitting,
-                        values,
-                        handleSubmit,
-                        setFieldValue
-                    }) => (
-                        <form onSubmit={handleSubmit}>
-
+            </Paper> */}
+            <Box sx={{ height: "100vh", overflow: "auto" }}>
+                <Box sx={{ backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                    <Box sx={{ p: 1.5, borderRadius: 3, }}>
+                        <Paper sx={{ borderRadius: 3 }}>
                             <Box
-                                display="grid"
-                                gap={formGap}
-                                padding={1}
-                                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                // gap="30px"
-                                sx={{
-                                    "& > div": {
-                                        gridColumn: isNonMobile ? undefined : "span 2",
-                                    },
-                                }}
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                p={2}
                             >
 
-                                {CompanyAutoCode == "Y" ? (
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="text"
-                                        label="Code"
-                                        placeholder="Auto"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.Code}
-                                        id="Code"
-                                        name="Code"
-                                        error={!!touched.Code && !!errors.Code}
-                                        helperText={touched.Code && errors.Code}
-                                        InputProps={{ readOnly: true }}
-                                        // required
-                                        focused
-                                        // autoFocus
-                                        sx={{
+                                {/* LEFT SIDE */}
+                                <Box display="flex" alignItems="center">
+                                    {broken && !rtl && (
+                                        <IconButton onClick={() => toggleSidebar()}>
+                                            <MenuOutlinedIcon />
+                                        </IconButton>
+                                    )}
+                                    <Breadcrumbs
+                                        maxItems={3}
+                                        aria-label="breadcrumb"
+                                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                cursor: "default",
+                                                fontSize: 20,
+                                                fontWeight: 700,
+                                                color: "#111827",
+                                                // mb: 0.2,
+                                                px: 1,
+                                                py: 0.2,
+                                            }}
 
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
-                                        inputProps={{ maxLength: 8 }}
-                                        onInvalid={(e) => {
-                                            e.target.setCustomValidity("Please Fill The Code");
-                                        }}
-                                        onInput={(e) => {
-                                            e.target.setCustomValidity("");
-                                        }}
-                                    />
-                                ) : (
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="text"
-                                        label={
-                                            <>
-                                                Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                            </>
-                                        }
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.Code}
-                                        id="Code"
-                                        name="Code"
-                                        error={!!touched.Code && !!errors.Code}
-                                        helperText={touched.Code && errors.Code}
-                                        // required
-                                        focused
-                                        autoFocus
-                                        sx={{
+                                        >
+                                            Document
+                                        </Typography>
 
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
-                                        inputProps={{ maxLength: 8 }}
-                                        onInvalid={(e) => {
-                                            e.target.setCustomValidity("Please Fill The Code");
-                                        }}
-                                        onInput={(e) => {
-                                            e.target.setCustomValidity("");
-                                        }}
-                                    />
-                                )}
-                                <TextField
-                                    fullWidth
-                                    variant="standard"
-                                    type="text"
-                                    label={
-                                        <>
-                                            Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                        </>
-                                    }
-                                    value={values.Name}
-                                    id="Name"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    name="Name"
-                                    error={!!touched.Name && !!errors.Name}
-                                    helperText={touched.Name && errors.Name}
-                                    focused
-                                    autoFocus={CompanyAutoCode === "Y"}
-                                    sx={{
+                                    </Breadcrumbs>
+                                </Box>
+                                {/* </Box> */}
 
-                                        backgroundColor: "#ffffff", // Set the background to white
-                                        "& .MuiFilledInput-root": {
-                                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                        }
+                                <Box display="flex">
+                                    <Tooltip title="Close">
+                                        <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                            <ResetTvIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Logout">
+                                        <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                            <LogoutOutlinedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </Box>
+                        </Paper>
+                    </Box>
+                    {/* {!getLoading ? ( */}
+                    <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+                        <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                            <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 1 }}>
+                                <Formik
+                                    initialValues={initialValues}
+                                    enableReinitialize={true}
+                                    onSubmit={(values) => {
+                                        setTimeout(() => {
+                                            fnSave(values);
+                                        }, 100);
                                     }}
-                                    // required
-                                    inputProps={{ maxLength: 90 }}
-                                    multiline
-                                    onInvalid={(e) => {
-                                        e.target.setCustomValidity(
-                                            "Please fill the Name"
-                                        );
-                                    }}
-                                    onInput={(e) => {
-                                        e.target.setCustomValidity("");
-                                    }}
-                                />
-                                {/* <CheckinAutocomplete
+                                    validationSchema={validationSchema}
+                                >
+                                    {({
+                                        errors,
+                                        touched,
+                                        handleBlur,
+                                        handleChange,
+                                        isSubmitting,
+                                        values,
+                                        handleSubmit,
+                                        setFieldValue
+                                    }) => (
+                                        <form onSubmit={handleSubmit}>
+                                            <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                                                <Box
+                                                    sx={{
+                                                        width: 36,
+                                                        // height: 36,
+                                                        borderRadius: "50%",
+                                                        backgroundColor: "#E0E7FF",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        fontSize: 18,
+                                                    }}
+                                                >
+                                                    📄
+                                                </Box>
+                                                <Box>
+                                                    <Typography variant="h6" fontWeight={700} color="#0D94885">
+                                                        Document
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary">
+                                                        Manage document based on their categories.
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                            <Box
+                                                display="grid"
+                                                gap={formGap}
+                                                padding={1}
+                                                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                                // gap="30px"
+                                                sx={{
+                                                    "& > div": {
+                                                        gridColumn: isNonMobile ? undefined : "span 2",
+                                                    },
+                                                }}
+                                            >
+
+                                                {CompanyAutoCode == "Y" ? (
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="text"
+                                                        label="Code"
+                                                        placeholder="Auto"
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        value={values.Code}
+                                                        id="Code"
+                                                        name="Code"
+                                                        error={!!touched.Code && !!errors.Code}
+                                                        helperText={touched.Code && errors.Code}
+                                                        InputProps={{ readOnly: true }}
+                                                        // required
+                                                        //focused
+                                                        // autoFocus
+                                                        sx={{
+
+                                                            backgroundColor: "#ffffff", // Set the background to white
+                                                            "& .MuiFilledInput-root": {
+                                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                            }
+                                                        }}
+                                                        inputProps={{ maxLength: 8 }}
+                                                        onInvalid={(e) => {
+                                                            e.target.setCustomValidity("Please Fill The Code");
+                                                        }}
+                                                        onInput={(e) => {
+                                                            e.target.setCustomValidity("");
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="text"
+                                                        label={
+                                                            <>
+                                                                Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                            </>
+                                                        }
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        value={values.Code}
+                                                        id="Code"
+                                                        name="Code"
+                                                        error={!!touched.Code && !!errors.Code}
+                                                        helperText={touched.Code && errors.Code}
+                                                        // required
+                                                        //focused
+                                                        autoFocus
+                                                        sx={{
+
+                                                            backgroundColor: "#ffffff", // Set the background to white
+                                                            "& .MuiFilledInput-root": {
+                                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                            }
+                                                        }}
+                                                        inputProps={{ maxLength: 8 }}
+                                                        onInvalid={(e) => {
+                                                            e.target.setCustomValidity("Please Fill The Code");
+                                                        }}
+                                                        onInput={(e) => {
+                                                            e.target.setCustomValidity("");
+                                                        }}
+                                                    />
+                                                )}
+                                                <TextField
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    size="small"
+                                                    type="text"
+                                                    label={
+                                                        <>
+                                                            Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                        </>
+                                                    }
+                                                    value={values.Name}
+                                                    id="Name"
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    name="Name"
+                                                    error={!!touched.Name && !!errors.Name}
+                                                    helperText={touched.Name && errors.Name}
+                                                    //focused
+                                                    autoFocus={CompanyAutoCode === "Y"}
+                                                    sx={{
+
+                                                        backgroundColor: "#ffffff", // Set the background to white
+                                                        "& .MuiFilledInput-root": {
+                                                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                        }
+                                                    }}
+                                                    // required
+                                                    inputProps={{ maxLength: 90 }}
+                                                    multiline
+                                                    onInvalid={(e) => {
+                                                        e.target.setCustomValidity(
+                                                            "Please fill the Name"
+                                                        );
+                                                    }}
+                                                    onInput={(e) => {
+                                                        e.target.setCustomValidity("");
+                                                    }}
+                                                />
+                                                {/* <CheckinAutocomplete
                                     id="project"
                                     name="project"
                                     label={
@@ -582,10 +724,10 @@ const Editdocument = () => {
                                     helperText={touched.project && errors.project}
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                 /> */}
-                                {/* <TextField
+                                                {/* <TextField
                                     select
                                     fullWidth
-                                    variant="standard"
+                                    variant="outlined"
                                     label={
                                         <span>
                                             Unit
@@ -602,12 +744,12 @@ const Editdocument = () => {
                                     error={!!touched.Unit && !!errors.Unit}
                                     helperText={touched.Unit && errors.Unit}
                                     // required
-                                    focused
+                                    //focused
                                 >
                                     <MenuItem value="Unit1">Unit 1</MenuItem>
                                     <MenuItem value="Unit2">Unit 2</MenuItem>
                                 </TextField> */}
-                                {/* <CheckinAutocomplete
+                                                {/* <CheckinAutocomplete
                                     id="Unit"
                                     name="Unit"
                                     label={
@@ -651,40 +793,78 @@ const Editdocument = () => {
                                     helperText={touched.Designation && errors.Designation}
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                 /> */}
-                                <MultiFormikOptimizedAutocomplete
-                                    sx={{ width: "100%" }}
-                                    name="project"
-                                    label="Project"
-                                    id="project"
-                                    value={values.project || []}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("project", newValue);
-                                    }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                />
-                                <MultiFormikOptimizedAutocomplete
-                                    sx={{ width: "100%" }}
-                                    name="Unit"
-                                    label="Unit"
-                                    id="Unit"
-                                    value={values.Unit || []}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Unit", newValue);
-                                    }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2158","ScreenName":"Unit","Filter":"ProjectID='${values.project?.map(x => x.RecordID).join(",")}' AND CompanyID='${CompanyID}'","Any":""}}`}
-                                />
-                                <MultiFormikOptimizedAutocomplete
-                                    sx={{ width: "100%" }}
-                                    name="Designation"
-                                    label="Designation"
-                                    id="Designation"
-                                    value={values.Designation || []}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Designation", newValue);
-                                    }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                />
-                                {/* <MultiFormikOptimizedAutocomplete
+                                                {/* <MultiFormikOptimizedAutocomplete */}
+                                                <MultiFormikOptimizedselectAutocomplete
+                                                    sx={{ width: "100%" }}
+                                                    name="project"
+                                                    label="Project"
+                                                    id="project"
+                                                    value={values.project || []}
+                                                    onChange={(e, newValue) => {
+                                                        setFieldValue("project", newValue);
+                                                    }}
+                                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                                                    url={`${listViewurl}?data=${encodeURIComponent(
+                                                        JSON.stringify({
+                                                            Query: {
+                                                                AccessID: "2054",
+                                                                ScreenName: "Project",
+                                                                Filter: `parentID='${CompanyID}'`,
+                                                                Any: "",
+                                                                VerticalLicense: Subscriptionlastthree || "",
+                                                            },
+                                                        }),
+                                                    )}`}
+
+                                                />
+                                                {/* <MultiFormikOptimizedAutocomplete */}
+                                                <MultiFormikOptimizedselectAutocomplete
+                                                    sx={{ width: "100%" }}
+                                                    name="Unit"
+                                                    label="Unit"
+                                                    id="Unit"
+                                                    value={values.Unit || []}
+                                                    onChange={(e, newValue) => {
+                                                        setFieldValue("Unit", newValue);
+                                                    }}
+                                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2158","ScreenName":"Unit","Filter":"ProjectID='${values.project?.map(x => x.RecordID).join(",")}' AND CompanyID='${CompanyID}'","Any":""}}`}
+                                                    url={`${listViewurl}?data=${encodeURIComponent(
+                                                        JSON.stringify({
+                                                            Query: {
+                                                                AccessID: "2158",
+                                                                ScreenName: "Unit",
+                                                                Filter: `ProjectID IN (${values.project?.map(x => x.RecordID).join(",")}) AND CompanyID='${CompanyID}'`,
+                                                                Any: "",
+                                                                VerticalLicense: Subscriptionlastthree || "",
+                                                            },
+                                                        }),
+                                                    )}`}
+
+                                                />
+                                                {/* <MultiFormikOptimizedAutocomplete
+                                                    sx={{ width: "100%" }}
+                                                    name="Designation"
+                                                    label="Designation"
+                                                    id="Designation"
+                                                    value={values.Designation || []}
+                                                    onChange={(e, newValue) => {
+                                                        setFieldValue("Designation", newValue);
+                                                    }}
+                                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                                                    url={`${listViewurl}?data=${encodeURIComponent(
+                                                        JSON.stringify({
+                                                            Query: {
+                                                                AccessID: "2047",
+                                                                ScreenName: "Designation",
+                                                                Filter: `parentID='${CompanyID}'`,
+                                                                Any: "",
+                                                                VerticalLicense: Subscriptionlastthree || "",
+                                                            },
+                                                        }),
+                                                    )}`}
+
+                                                /> */}
+                                                {/* <MultiFormikOptimizedAutocomplete
                                     sx={{ width: "100%" }}
                                     name="Employee"
                                     label="Employee"
@@ -700,19 +880,30 @@ const Editdocument = () => {
                                     }}
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                                 /> */}
-                                <MultiFormikOptimizedAutocomplete
-                                    sx={{ width: "100%" }}
-                                    name="Employee"
-                                    label="Personnel"
-                                    id="Employee"
-                                    value={values.Employee || []}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Employee", newValue);
-                                    }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
-
-                                />
-                                {/* <MultiFormikOptimizedAutocomplete
+                                                {/* <MultiFormikOptimizedAutocomplete */}
+                                                <MultiFormikOptimizedselectAutocomplete
+                                                    sx={{ width: "100%" }}
+                                                    name="Employee"
+                                                    label="Personnel"
+                                                    id="Employee"
+                                                    value={values.Employee || []}
+                                                    onChange={(e, newValue) => {
+                                                        setFieldValue("Employee", newValue);
+                                                    }}
+                                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                                                    url={`${listViewurl}?data=${encodeURIComponent(
+                                                        JSON.stringify({
+                                                            Query: {
+                                                                AccessID: "2116",
+                                                                ScreenName: "EMPLOYEETEAMS",
+                                                                Filter: `CompanyID='${CompanyID}'`,
+                                                                Any: "",
+                                                                VerticalLicense: Subscriptionlastthree || "",
+                                                            },
+                                                        }),
+                                                    )}`}
+                                                />
+                                                {/* <MultiFormikOptimizedAutocomplete
                                     sx={{ width: "100%" }}
                                     name="Party"
                                     label="Party"
@@ -724,78 +915,192 @@ const Editdocument = () => {
                                     }}
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Party","Filter":"parentID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                                 /> */}
-                                <MultiFormikOptimizedAutocomplete
-                                    sx={{ width: "100%" }}
-                                    name="Party"
-                                    label="Party"
-                                    id="Party"
-                                    value={values.Party || []}
-                                    onChange={(e, newValue) => {
-                                        setFieldValue("Party", newValue);
-                                    }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Party","Filter":"parentID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                                                {/* <MultiFormikOptimizedAutocomplete */}
+                                                <MultiFormikOptimizedselectAutocomplete
+                                                    sx={{ width: "100%" }}
+                                                    name="Party"
+                                                    label="Party"
+                                                    id="Party"
+                                                    value={values.Party || []}
+                                                    onChange={(e, newValue) => {
+                                                        setFieldValue("Party", newValue);
+                                                    }}
+                                                    // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Party","Filter":"parentID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                                                    url={`${listViewurl}?data=${encodeURIComponent(
+                                                        JSON.stringify({
+                                                            Query: {
+                                                                AccessID: "2100",
+                                                                ScreenName: "Party",
+                                                                Filter: `parentID='${CompanyID}'`,
+                                                                Any: "",
+                                                                VerticalLicense: Subscriptionlastthree || "",
+                                                            },
+                                                        }),
+                                                    )}`}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    size="small"
+                                                    type="Number"
+                                                    label="Sort Order"
+                                                    value={values.SortOrder}
+                                                    id="SortOrder"
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    name="SortOrder"
+                                                    error={!!touched.SortOrder && !!errors.SortOrder}
+                                                    helperText={touched.SortOrder && errors.SortOrder}
 
-                                />
-                                <TextField
-                                    fullWidth
-                                    variant="standard"
-                                    type="Number"
-                                    label="Sort Order"
-                                    value={values.SortOrder}
-                                    id="SortOrder"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    name="SortOrder"
-                                    error={!!touched.SortOrder && !!errors.SortOrder}
-                                    helperText={touched.SortOrder && errors.SortOrder}
+                                                    //focused
+                                                    onWheel={(e) => e.target.blur()}
+                                                    InputProps={{
+                                                        inputProps: {
+                                                            style: { textAlign: "right", background: "" },
+                                                        },
+                                                    }}
+                                                    onInput={(e) => {
+                                                        e.target.value = Math.max(0, parseInt(e.target.value))
+                                                            .toString()
+                                                            .slice(0, 8);
+                                                    }}
+                                                />
+                                                {/* Upload Section */}
 
-                                    focused
-                                    onWheel={(e) => e.target.blur()}
-                                    InputProps={{
-                                        inputProps: {
-                                            style: { textAlign: "right", background: "" },
-                                        },
-                                    }}
-                                    onInput={(e) => {
-                                        e.target.value = Math.max(0, parseInt(e.target.value))
-                                            .toString()
-                                            .slice(0, 8);
-                                    }}
-                                />
-                                {/* Upload Section */}
+                                                <FormControl>
+                                                    <Box>
+                                                        <Field
+                                                            //  size="small"
+                                                            type="checkbox"
+                                                            name="delete"
+                                                            id="delete"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            as={Checkbox}
+                                                            label="Delete"
+                                                        />
 
-                                <FormControl>
-                                    <Box>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="delete"
-                                            id="delete"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Delete"
-                                        />
+                                                        <FormLabel focused={false}>Delete</FormLabel>
+                                                        <Field
+                                                            //  size="small"
+                                                            type="checkbox"
+                                                            name="checkbox"
+                                                            id="checkbox"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            as={Checkbox}
+                                                            label="Disable"
+                                                        />
 
-                                        <FormLabel focused={false}>Delete</FormLabel>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="checkbox"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Disable"
-                                        />
+                                                        <FormLabel focused={false}>Disable</FormLabel>
 
-                                        <FormLabel focused={false}>Disable</FormLabel>
+                                                    </Box>
+                                                </FormControl>
 
-                                    </Box>
-                                </FormControl>
+                                            </Box>
+                                            <Box
+                                                elevation={2}
+                                                sx={{
+                                                    mt: 2,
+                                                    p: 2,
+                                                    borderRadius: 2,
+                                                    background: "#fafafa",
+                                                }}
+                                            >
+                                                <Typography variant="h6" sx={{ marginBottom: 2 }} fontWeight={700} color="#0D94885">
+                                                    Attachment
+                                                </Typography>
 
-                            </Box>
-                            <Paper
+                                                <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+                                                    {/* File Type Selector */}
+                                                    <FormControl size="small" sx={{ minWidth: 140 }}>
+                                                        <InputLabel id="file-type-label">File Type</InputLabel>
+                                                        <Select
+                                                            labelId="file-type-label"
+                                                            label="File Type"
+                                                            value={fileType}
+                                                            onChange={handleFileTypeChange}
+                                                            disabled={uploading}
+                                                        >
+                                                            {Object.entries(FILE_TYPE_LABELS).map(([key, label]) => (
+                                                                <MenuItem key={key} value={key}>
+                                                                    {label}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+
+                                                    {/* Upload Button */}
+                                                    <Button
+                                                        variant="outlined"
+                                                        component="label"
+                                                        size="small"
+                                                        disabled={uploading}
+                                                    >
+                                                        {uploading ? "Uploading..." : "Upload File"}
+                                                        <input
+                                                            hidden
+                                                            type="file"
+                                                            // Only files matching the selected type will show/be pickable.
+                                                            accept={FILE_TYPE_ACCEPT[fileType]}
+                                                            onChange={getFilepanChange}
+                                                        />
+                                                    </Button>
+
+                                                    {/* File Name Box (Always Visible) */}
+                                                    <Box
+                                                        sx={{
+                                                            border: "1px solid #dcdcdc",
+                                                            borderRadius: 1,
+                                                            px: 2,
+                                                            py: 0.5,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: 1,
+                                                            background: "#fff",
+                                                            minWidth: 250,
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                flex: 1,
+                                                                overflow: "hidden",
+                                                                textOverflow: "ellipsis",
+                                                                whiteSpace: "nowrap",
+                                                            }}
+                                                        >
+                                                            {uploading ? "Uploading..." : image ? image : "No file chosen"}
+                                                        </Typography>
+
+                                                        {uploading ? (
+                                                            <CircularProgress size={18} />
+                                                        ) : (
+                                                            image && (
+                                                                <Button
+                                                                    size="small"
+                                                                    variant="contained"
+                                                                    onClick={() => {
+                                                                        const fileUrl =
+                                                                            store.getState().globalurl.attachmentUrl + image;
+                                                                        window.open(fileUrl, "_blank");
+                                                                    }}
+                                                                >
+                                                                    View
+                                                                </Button>
+                                                            )
+                                                        )}
+                                                    </Box>
+                                                </Box>
+
+                                                <Typography variant="caption" color="text.secondary">
+                                                    Allowed:{" "}
+                                                    {fileType === "all"
+                                                        ? "Video, Audio, Image, PDF, Excel, Word"
+                                                        : FILE_TYPE_LABELS[fileType]} Only
+                                                </Typography>
+                                            </Box>
+                                            {/* <Paper
                                 elevation={2}
                                 sx={{
                                     mt: 2,
@@ -804,70 +1109,11 @@ const Editdocument = () => {
                                     background: "#fafafa"
                                 }}
                             >
-                                <Typography variant="h5" sx={{ mb: 1,color: "#3924f9" }}>
+                                <Typography variant="h5" sx={{ mb: 1, color: "#3924f9" }}>
                                     Attachment
                                 </Typography>
-
-                                {/* <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-
-                                    <Button
-                                        variant="outlined"
-                                        component="label"
-                                        size="small"
-                                    >
-                                        Upload File
-                                        <input
-                                            hidden
-                                            type="file"
-                                            accept="video/*,audio/*,image/*,.pdf,.doc,.docx,.xls,.xlsx"
-                                            onChange={getFilepanChange}
-                                        />
-                                    </Button>
-
-                                    {!!image && (
-                                        <Box
-                                            sx={{
-                                                border: "1px solid #dcdcdc",
-                                                borderRadius: 1,
-                                                px: 2,
-                                                py: 0.5,
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 1,
-                                                background: "#fff"
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    maxWidth: 220,
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                    whiteSpace: "nowrap"
-                                                }}
-                                            >
-                                                {image}
-                                            </Typography>
-
-                                            <Button
-                                                size="small"
-                                                variant="contained"
-                                                onClick={() => {
-                                                    const fileUrl =
-                                                        store.getState().globalurl.attachmentUrl + image;
-
-                                                    window.open(fileUrl, "_blank");
-                                                }}
-                                            >
-                                                View
-                                            </Button>
-                                        </Box>
-                                    )}
-
-                                </Box> */}
                                 <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
 
-                                    {/* Upload Button */}
                                     <Button
                                         variant="outlined"
                                         component="label"
@@ -883,7 +1129,6 @@ const Editdocument = () => {
                                         />
                                     </Button>
 
-                                    {/* File Name Box (Always Visible) */}
                                     <Box
                                         sx={{
                                             border: "1px solid #dcdcdc",
@@ -897,7 +1142,6 @@ const Editdocument = () => {
                                             minWidth: 250
                                         }}
                                     >
-                                        {/* File Name */}
                                         <Typography
                                             variant="body2"
                                             sx={{
@@ -914,7 +1158,6 @@ const Editdocument = () => {
                                                     : "No file chosen"}
                                         </Typography>
 
-                                        {/* Loader OR View Button */}
                                         {uploading ? (
                                             <CircularProgress size={18} />
                                         ) : (
@@ -940,9 +1183,9 @@ const Editdocument = () => {
                                 <Typography variant="caption" color="text.secondary">
                                     Allowed: Video, Audio, Image, PDF, Excel, Word
                                 </Typography>
-                            </Paper>
-                            <Box display="flex" justifyContent="end" padding={1} gap={2}>
-                                {/* <Tooltip title="Upload Logo">
+                            </Paper> */}
+                                            <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                                                {/* <Tooltip title="Upload Logo">
                                     <IconButton
                                         size="small"
                                         color="warning"
@@ -977,42 +1220,73 @@ const Editdocument = () => {
                                 >
                                     View
                                 </Button> */}
-                                {YearFlag == "true" ? (
-                                    <LoadingButton
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        loading={loading}
-                                    // onClick={() => {
-                                    //   fnSave(values);
-                                    // }}
-                                    >
-                                        Save
-                                    </LoadingButton>
-                                ) : (
-                                    <Button
-                                        color="secondary"
-                                        variant="contained"
-                                        disabled={true}
-                                    >
-                                        Save
-                                    </Button>
-                                )}
-                                <Button
-                                    color="warning"
-                                    variant="contained"
-                                    onClick={() => {
-                                        navigate(-1);
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                            </Box>
-                        </form>
-                    )}
-                </Formik>
+                                                {YearFlag == "true" ? (
+                                                    <LoadingButton
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#0D9488",
+                                                            "&:hover": {
+                                                                bgcolor: "#0F766E",
+                                                            },
+                                                        }}
+                                                        // color="secondary"
+                                                        variant="contained"
+                                                        type="submit"
+                                                        loading={loading}
+                                                    // onClick={() => {
+                                                    //   fnSave(values);
+                                                    // }}
+                                                    >
+                                                        Save
+                                                    </LoadingButton>
+                                                ) : (
+                                                    <Button
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#0D9488",
+                                                            "&:hover": {
+                                                                bgcolor: "#0F766E",
+                                                            },
+                                                        }}
+                                                        // color="secondary"
+                                                        variant="contained"
+                                                        disabled={true}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                )}
+                                                <Button
+                                                    // color="warning"
+                                                    sx={{
+                                                        textTransform: "none",
+                                                        borderRadius: 2,
+                                                        px: 4,
+                                                        bgcolor: "#F97316",
+                                                        "&:hover": {
+                                                            bgcolor: "#EA580C",
+                                                        },
+                                                    }}
+                                                    variant="contained"
+                                                    onClick={() => {
+                                                        navigate(-1);
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </Box>
+                                        </form>
+                                    )}
+                                </Formik>
 
-            </Paper>
+                            </Paper>
+                        </Box>
+                    </Box>
+                </Box>
+            </Box>
             {/* ) : (
         false
       )} */}

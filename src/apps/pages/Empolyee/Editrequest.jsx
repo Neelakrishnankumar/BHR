@@ -709,6 +709,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR206",
+          Subscriptionlastthree,
           "Employee Allowances",
           `${recID} AND Category='A'`,
           ""
@@ -726,7 +727,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR206",
-
+          Subscriptionlastthree,
           "Employee Deductions",
           `${recID} AND Category='D'`,
           ""
@@ -2052,7 +2053,7 @@ const Editrequests = () => {
 
       dispatch(
         //fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "",`CompId=${compID}`)
-        fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
+        fetchExplorelitview("TR086", Subscriptionlastthree,"Expense", `parentID ='E' AND Approvedby=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2190,7 +2191,7 @@ const Editrequests = () => {
 
       // }
       dispatch(
-        fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID}`, "", `CompId=${CompanyID}`)
+        fetchExplorelitview("TR219", Subscriptionlastthree,"Regularization", `EmployeeID=${recID}`, "", `CompId=${CompanyID}`)
       );
 
       toast.success(response.payload.Msg);
@@ -2327,7 +2328,7 @@ const Editrequests = () => {
       // }
       dispatch(
         //fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "",`CompId=${compID}`)
-        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR242", Subscriptionlastthree,"On Duty", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2439,7 +2440,7 @@ const Editrequests = () => {
       // }
 
       dispatch(
-        fetchExplorelitview("TR266", "Permission", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR266",Subscriptionlastthree, "Permission", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2544,7 +2545,7 @@ const Editrequests = () => {
 
 
       dispatch(
-        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR208", Subscriptionlastthree, "Leave", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2654,7 +2655,7 @@ const Editrequests = () => {
 
 
       //  }
-      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, ""));
+      dispatch(fetchExplorelitview("TR216", Subscriptionlastthree, "OT", `EmployeeID=${recID}`, ""));
 
       toast.success(response.payload.Msg);
 
@@ -2756,6 +2757,7 @@ const Editrequests = () => {
       dispatch(
         fetchExplorelitview(
           "TR160",
+          Subscriptionlastthree,
           "Salary Advance",
           `EmployeeID=${recID}`,
           ""
@@ -2835,7 +2837,7 @@ const Editrequests = () => {
       const query =
         show == "1" ? `${recID} AND Category='A'` : `${recID} AND Category='D'`;
       dispatch(
-        fetchExplorelitview("TR206", "AllowancesAndDeductions", query, "")
+        fetchExplorelitview("TR206", Subscriptionlastthree, "AllowancesAndDeductions", query, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2885,7 +2887,7 @@ const Editrequests = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR146", "ItemCustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR146", Subscriptionlastthree, "ItemCustody", `EmployeeID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -8631,11 +8633,12 @@ const Editrequests = () => {
                                       error={!!touched.purpose && !!errors.purpose}
                                       helperText={touched.purpose && errors.purpose}
                                       InputLabelProps={{ shrink: true }}
-                                      sx={{ flex: 1 }}
+                                       sx={{ flex: 1 }}
                                     />
                                     <FileUploadIconButton
                                       onFileSelect={(file) => {
                                         fileUpload(file, regdata.RecordID, "upload", "", values.purpose);
+                                        // file, appId, action, id, purpose
                                         setFieldValue("purpose", "");
                                       }}
                                     />
@@ -8666,7 +8669,7 @@ const Editrequests = () => {
                                               <TableCell>{index + 1}</TableCell>
                                               <TableCell>{file.uploadedDate}</TableCell>
                                               <TableCell>{file.filename}</TableCell>
-                                              <TableCell>{file.id}</TableCell>
+                                              <TableCell>{file.purpose}</TableCell>
                                               <TableCell>{file.source}</TableCell>
                                               <TableCell>
                                                 <Tooltip title="Open File">

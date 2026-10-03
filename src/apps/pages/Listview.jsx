@@ -111,6 +111,7 @@ import {
   CheckinAutocomplete,
   Employeeautocomplete,
   MultiFormikOptimizedAutocomplete,
+  MultiFormikOptimizedselectAutocomplete,
   OrderItemAutocomplete,
   PartymultiSelect,
 } from "../../ui-components/global/Autocomplete";
@@ -3470,7 +3471,8 @@ const Listview = () => {
                             />
 
                             {/* Project */}
-                            <MultiFormikOptimizedAutocomplete
+                            {/* <MultiFormikOptimizedAutocomplete */}
+                            <MultiFormikOptimizedselectAutocomplete
                               sx={{ mt: 2 }}
                               name="project"
                               label={is003Subscription ? "Standard/Activities" : "Project"}
@@ -3491,7 +3493,8 @@ const Listview = () => {
 
 
                             {/* Employee */}
-                            <MultiFormikOptimizedAutocomplete
+                            {/* <MultiFormikOptimizedAutocomplete */}
+                            <MultiFormikOptimizedselectAutocomplete
                               sx={{ mt: 2 }}
                               name="Employee"
                               label={is003Subscription ? "Student" : "Personnel"}

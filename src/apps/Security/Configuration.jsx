@@ -2021,11 +2021,12 @@ const Configuration = () => {
         code: PolicyData.Code || "",
         name: PolicyData.Name || "",
         noofpermhrs: PolicyData.PerNumberOfHours || "",
+        noofpaidleave: PolicyData.NoOfPaidLeavePerYear || 0,
         noofpermpermonth: PolicyData.PerNumberOfMonth || "",
         lossofpayrate: PolicyData.PerLossOfPayRate || "",
         freeormonth: PolicyData.IrFreeMonth || "",
         lossofpayrate2: PolicyData.IrLossOfPayRate || "",
-        salryrateorday: PolicyData.OtSalaryRatePerDay || "",
+        salryrateorday: PolicyData.OtSalaryRatePerDay || 0,
     };
 
     const Policysave = async (values, del) => {
@@ -2042,6 +2043,7 @@ const Configuration = () => {
             action: "update",
             RecordID: CompanyID,
             PerNumberOfHours: values.noofpermhrs,
+            NoOfPaidLeavePerYear: values.noofpaidleave,
             PerNumberOfMonth: values.noofpermpermonth,
             PerLossOfPayRate: values.lossofpayrate,
             IrFreeMonth: values.freeormonth,
@@ -4296,6 +4298,48 @@ size="small"
                                                     }}
                                                 />
                                             </Box>
+                                            <Typography variant="h5" padding={1}>
+                                                Leave:
+                                            </Typography>
+
+                                            <Box
+                                                display="grid"
+                                                gridTemplateColumns="repeat(2, 1fr)"
+                                                // gridTemplateColumns="repeat(4, minMax(0, 1fr))"
+                                                gap={formGap}
+                                                padding={1}
+                                                sx={{
+                                                    "& > div": {
+                                                        gridColumn: isNonMobile ? undefined : "span 2", // Adjust for mobile view
+                                                    },
+                                                }}
+                                            >
+                                               
+
+                                                <TextField
+                                                    name="noofpaidleave"
+                                                    type="number"
+                                                    id="noofpaidleave"
+                                                    label={<>No of Paid Leave / Year</>}
+                                                    variant="outlined"
+                                                    size="small"
+                                                    // focused
+                                                    value={values.noofpaidleave}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    error={!!touched.noofpaidleave && !!errors.noofpaidleave}
+                                                    helperText={touched.noofpaidleave && errors.noofpaidleave}
+                                                    sx={{
+                                                        backgroundColor: "#ffffff", // Set the background to white
+                                                        "& .MuiFilledInput-root": {
+                                                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                        },
+                                                    }}
+                                                    inputProps={{
+                                                        style: { textAlign: "right" },
+                                                    }}
+                                                />
+                                                </Box>
                                             <Typography variant="h5" padding={1}>
                                                 Permission:
                                             </Typography>

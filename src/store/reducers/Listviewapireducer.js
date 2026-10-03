@@ -66,6 +66,7 @@ import {
   SOPProcessPost,
   standardDelete,
   StockProcessApi,
+  TCgetDatafn,
   TimeTableDelete,
   TimetableProcessController,
 } from "./Formapireducer";
@@ -579,6 +580,7 @@ export const fetchListview =
       const empID = sessionStorage.getItem("empID");
       const config = getConfig();
       const baseurl1 = config.UAAM_URL;
+      const baseurl = config.BASE_URL;
       const year = sessionStorage.getItem("year");
       const company = sessionStorage.getItem("company");
       var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -2532,7 +2534,7 @@ export const fetchListview =
                       <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         // to={`/Apps/SecondarylistView/TR331/Invoice/${params.row.RecordID}`}
-                         to={`/Apps/SecondarylistView/TR331/Payment/${params.row.RecordID}`}
+                        to={`/Apps/SecondarylistView/TR331/Payment/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
                       >
                         <Tooltip title="Payment">
@@ -2541,7 +2543,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                       <Link
+                      <Link
                         //  to={`/Apps/SecondarylistView/TR275/Project/${params.row.RecordID}`}
                         to={`/Apps/SecondarylistView/TR418/Invoice/${params.row.RecordID}`}
                         state={{ AcademicYear: params.row.AcademicYear }}
@@ -2814,7 +2816,7 @@ export const fetchListview =
                 },
               };
             }
-             
+
             else if (AccessID == "TR370") {
               obj = {
                 field: "action",
@@ -7628,7 +7630,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
   const baseurl1 = config.UAAM_URL;
-
+  const baseurl = config.BASE_URL;
   const count = Number(params.row.MarketingCount || 0);
   // const orderType = params.row.OrderType;
   const id = params.row.RecordID;
@@ -7913,7 +7915,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       }
     };
 
-  
+
     return (
       <Tooltip title="Download Payslip PDF">
         <IconButton color="info" size="small" onClick={handlePayPDFGET}>
@@ -7938,55 +7940,80 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
 
   // 🆕 Transfer Certificate button — same pattern as PayslipBtn
-  // const TCButton = ({ EmployeeID, CompanyID }) => {
-  //   const dispatch = store.dispatch;
-  //   const [tcLoading, setTcLoading] = React.useState(false);
+  const TCButton = ({ EmployeeID, CompanyID, rows }) => {
+    const dispatch = store.dispatch;
+    const [tcLoading, setTcLoading] = React.useState(false);
 
-  //   const handlePDFGET_TC = async (e) => {
-  //     e.stopPropagation();
-  //     e.preventDefault();
+    const handlePDFGET_TC = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
 
-  //     try {
-  //       setTcLoading(true);
+      try {
+        setTcLoading(true);
 
-  //       const resultAction = await dispatch(
-  //         getFetchData({
-  //           accessID: "TR027",       // swap for whatever accessID/thunk your backend uses for TC
-  //           get: "get",
-  //           recID: EmployeeID,
-  //         })
-  //       );
+        const resultAction = await dispatch(
+          TCgetDatafn({
+            ExitFormalitiesAccepted: rows.ExitFormalitiesAccepted,
+            CompanyID: CompanyID,
+            EmployeeID: EmployeeID,
+          })
+        );
 
-  //       const data = resultAction.payload;
+        const response = resultAction.payload;
 
-  //       if (!data?.Data) {
-  //         alert("No data available to generate Transfer Certificate");
-  //         return;
-  //       }
+        console.log("TC API Response:", response);
 
-  //       const blob = await pdf(
-  //         <TransferCertificate data={data} UserName={UserName} />
-  //       ).toBlob();
+        if (
+          response?.Status !== "Y" ||
+          !Array.isArray(response?.Data) ||
+          response.Data.length === 0
+        ) {
+          alert("No data available to generate Transfer Certificate");
+          return;
+        }
 
-  //       const blobUrl = URL.createObjectURL(blob);
-  //       window.open(blobUrl, "_blank");
+        // API Data is an array, so get the first record
+        const studentData = response.Data[0];
 
-  //       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-  //     } catch (err) {
-  //       console.error("TC PDF generation failed", err);
-  //     } finally {
-  //       setTcLoading(false);
-  //     }
-  //   };
+        console.log("TC Student Data:", studentData);
 
-  //   return (
-  //     <Tooltip title="Transfer Certificate">
-  //       <IconButton color="info" size="small" onClick={handlePDFGET_TC}>
-  //         {tcLoading ? <CircularProgress size={20} /> : <ArticleIcon />}
-  //       </IconButton>
-  //     </Tooltip>
-  //   );
-  // };
+        const blob = await pdf(
+          <TransferCertificate
+            data={studentData}
+            UserName={UserName}
+            url={baseurl}
+          />
+        ).toBlob();
+
+        // Download PDF
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `Transfer_Certificate_${studentData.EmployeeCode || EmployeeID}.pdf`;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+        }, 1000);
+      } catch (err) {
+        console.error("TC PDF generation failed:", err);
+      } finally {
+        setTcLoading(false);
+      }
+    };
+
+    return (
+      <Tooltip title="Transfer Certificate">
+        <IconButton color="info" size="small" onClick={handlePDFGET_TC}>
+          {tcLoading ? <CircularProgress size={20} /> : <ArticleIcon />}
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <Fragment>
@@ -8038,7 +8065,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`./EditDocument Category/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
                       BreadCrumb1: params.row.DocumentCategories,
@@ -8793,12 +8820,14 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-              {/* {is003Subscription && params.row.Classification == "Student" && (
-          <TCButton
-            EmployeeID={params.row.RecordID}
-            CompanyID={params.row.CompanyID}
-          />
-        )} */}
+            {is003Subscription && params.row.Classification == "Student" && params.row.ExitFormalitiesAccepted == "Y" && (
+              <TCButton
+                EmployeeID={params.row.RecordID}
+                CompanyID={params.row.CompanyID}
+                rows={params.row}
+              />
+            )}
+            {/* OLD
          {is003Subscription && params.row.Classification == "Student" && (
               <Link
                 to={`/Apps/Tccertificate`}
@@ -8813,7 +8842,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>
-            )}
+            )} */}
 
 
             {(is003Subscription && params.row.HasProjectTask === "Y") && (

@@ -213,7 +213,7 @@ const Editdebitcash = () => {
             {getLoading ? <LinearProgress /> : false}
 
             {/* ── Header ── */}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -249,131 +249,243 @@ const Editdebitcash = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper>
+            </Paper> */}
+            <Box sx={{ height: "100vh", overflow: "auto" }}>
+                <Box sx={{ backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                    <Box sx={{ p: 1.5, borderRadius: 3, }}>
+                        <Paper sx={{ borderRadius: 3 }}>
 
-            {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
+                            {/* MAIN HEADER ROW */}
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                p={2}
+                            >
 
-                    {/* ── Summary Cards ── */}
-                    <SummaryCards
-                        openingBalance={data.OpeningBalance}
-                        todaysCollection={data.CollectedAmount}
-                        inHandAmount={data.InHandAmount}
-                    />
+                                {/* LEFT SIDE */}
+                                <Box display="flex" alignItems="center">
+                                    {broken && !rtl && (
+                                        <IconButton onClick={() => toggleSidebar()}>
+                                            <MenuOutlinedIcon />
+                                        </IconButton>
+                                    )}
 
-                    <Formik
-                        initialValues={InitialValue}
-                        onSubmit={(values) => {
-                            setTimeout(() => Fnsave(values), 100);
-                        }}
-                        validationSchema={validationSchema}
-                        enableReinitialize={true}
-                    >
-                        {({ errors, touched, handleBlur, handleChange, values, handleSubmit, setFieldValue }) => (
-                            <form onSubmit={handleSubmit}>
-                                <Box
-                                    display="grid"
-                                    gap={formGap}
-                                    padding={2}
-                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
-                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
-                                >
-                                    {/* Debit Date */}
-                                    <TextField
-                                        name="date"
-                                        type="date"
-                                        id="date"
-                                        label={<>Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        value={values.date}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        focused
-                                        error={!!touched.date && !!errors.date}
-                                        helperText={touched.date && errors.date}
-                                    />
+                                    <Breadcrumbs
+                                        maxItems={3}
+                                        aria-label="breadcrumb"
+                                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                                    >
+                                        <Typography
+                                            // variant="h5"
+                                            // fontWeight={700} 
+                                            // color="#0D94885"
+                                            sx={{
+                                                cursor: "default",
+                                                fontSize: 20,
+                                                fontWeight: 700,
+                                                color: "#111827",
+                                                // mb: 0.2,
+                                                px: 1,
+                                                py: 0.2,
+                                            }}
+                                        >
+                                            Debit Details
+                                        </Typography>
+                                    </Breadcrumbs>
+                                </Box>
 
-                                    {/* Employee (read-only) */}
-                                    <TextField
-                                        name="employee"
-                                        type="text"
-                                        id="employee"
-                                        label="Employee"
-                                        variant="standard"
-                                        focused
-                                        value={values.employee}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.employee && !!errors.employee}
-                                        helperText={touched.employee && errors.employee}
-                                        InputProps={{ readOnly: true }}
-                                    />
+                                {/* RIGHT SIDE */}
+                                <Box display="flex" gap={1}>
+                                    <Tooltip title="Close">
+                                        <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                            <ResetTvIcon />
+                                        </IconButton>
+                                    </Tooltip>
 
-                                    {/* Description */}
-                                    <TextField
-                                        name="description"
-                                        type="text"
-                                        id="description"
-                                        label={<>Description <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        focused
-                                        value={values.description}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.description && !!errors.description}
-                                        helperText={touched.description && errors.description}
-                                    />
+                                    <Tooltip title="Logout">
+                                        <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                                            <LogoutOutlinedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
 
-                                    {/* Amount */}
-                                    <TextField
-                                        name="amount"
-                                        type="number"
-                                        id="amount"
-                                        label={<>Amount <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        focused
-                                        value={values.amount}
-                                        onBlur={handleBlur}
-                                        onChange={(e) => {
-                                            handleChange(e);
-                                            // Auto-compute BalanceAmount = InHandAmount - Amount
-                                            const entered = parseFloat(e.target.value) || 0;
-                                            const inHand = parseFloat(data.InHandAmount) || 0;
-                                            setFieldValue("balamount", (inHand - entered).toFixed(2));
+                            </Box>
+                        </Paper>
+                    </Box>
+                    {!getLoading ? (
+                        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+
+                            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                                <Paper elevation={3} sx={{ margin: "10px", backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+
+                                    {/* ── Summary Cards ── */}
+
+
+                                    <Formik
+                                        initialValues={InitialValue}
+                                        onSubmit={(values) => {
+                                            setTimeout(() => Fnsave(values), 100);
                                         }}
-                                        error={!!touched.amount && !!errors.amount}
-                                        helperText={touched.amount && errors.amount}
-                                        autoFocus
-                                        InputProps={{ inputProps: { min: 0 } }}
-                                        onWheel={(e) => e.target.blur()}
-                                    />
+                                        validationSchema={validationSchema}
+                                        enableReinitialize={true}
+                                    >
+                                        {({ errors, touched, handleBlur, handleChange, values, handleSubmit, setFieldValue }) => (
+                                            <form onSubmit={handleSubmit}>
+                                                <Box
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    gap={1.5}
+                                                    mb={1}
+                                                    sx={{ px: 2, pt: 2 }}
+                                                >
+                                                    {/* ICON */}
+                                                    <Box
+                                                        sx={{
+                                                            width: 36,
+                                                            height: 36,
+                                                            borderRadius: "50%",
+                                                            backgroundColor: "#EFF6FF",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                        }}
+                                                    >
+                                                        <Typography sx={{ fontSize: 18 }}>
+                                                            ⬆️
+                                                        </Typography>
+                                                    </Box>
 
-                                    {/* Balance Amount (read-only, auto-computed) */}
-                                    <TextField
-                                        name="balamount"
-                                        type="text"
-                                        id="balamount"
-                                        label="Balance Amount"
-                                        variant="standard"
-                                        focused
-                                        value={values.balamount}
-                                        InputProps={{ readOnly: true }}
-                                    // sx={{
-                                    //     "& .MuiInputBase-input": {
-                                    //         color: "#0d6e3f",
-                                    //         fontWeight: 500,
-                                    //     }
-                                    // }}
-                                    />
+                                                    {/* TITLE + SUBTITLE */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="subtitle1"
+                                                            fontWeight={700}
+                                                            color="#0D94885"
+                                                        >
+                                                            Debit Details                                                        </Typography>
 
-                                    {/* InHand at entry (read-only, from GET) */}
-                                    {/* <TextField
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            Manage organizational debit cash and details
+
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <SummaryCards
+                                                    openingBalance={data.OpeningBalance}
+                                                    todaysCollection={data.CollectedAmount}
+                                                    inHandAmount={data.InHandAmount}
+                                                />
+                                                <Box
+                                                    display="grid"
+                                                    gap={formGap}
+                                                    padding={2}
+                                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
+                                                >
+                                                    {/* Debit Date */}
+                                                    <TextField
+                                                        name="date"
+                                                        type="date"
+                                                        id="date"
+                                                        label={<>Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        value={values.date}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        focused
+                                                        
+                                                        error={!!touched.date && !!errors.date}
+                                                        helperText={touched.date && errors.date}
+                                                    />
+
+                                                    {/* Employee (read-only) */}
+                                                    <TextField
+                                                        name="employee"
+                                                        type="text"
+                                                        id="employee"
+                                                        label="Employee"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.employee}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        error={!!touched.employee && !!errors.employee}
+                                                        helperText={touched.employee && errors.employee}
+                                                        InputProps={{ readOnly: true }}
+                                                    />
+
+                                                    {/* Description */}
+                                                    <TextField
+                                                        name="description"
+                                                        type="text"
+                                                        id="description"
+                                                        label={<>Description <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.description}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        error={!!touched.description && !!errors.description}
+                                                        helperText={touched.description && errors.description}
+                                                    />
+
+                                                    {/* Amount */}
+                                                    <TextField
+                                                        name="amount"
+                                                        type="number"
+                                                        id="amount"
+                                                        label={<>Amount <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.amount}
+                                                        onBlur={handleBlur}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                            // Auto-compute BalanceAmount = InHandAmount - Amount
+                                                            const entered = parseFloat(e.target.value) || 0;
+                                                            const inHand = parseFloat(data.InHandAmount) || 0;
+                                                            setFieldValue("balamount", (inHand - entered).toFixed(2));
+                                                        }}
+                                                        error={!!touched.amount && !!errors.amount}
+                                                        helperText={touched.amount && errors.amount}
+                                                        // autoFocus
+                                                        InputProps={{ inputProps: { min: 0 } }}
+                                                        onWheel={(e) => e.target.blur()}
+                                                    />
+
+                                                    {/* Balance Amount (read-only, auto-computed) */}
+                                                    <TextField
+                                                        name="balamount"
+                                                        type="text"
+                                                        id="balamount"
+                                                        label="Balance Amount"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.balamount}
+                                                        InputProps={{ readOnly: true }}
+                                                    // sx={{
+                                                    //     "& .MuiInputBase-input": {
+                                                    //         color: "#0d6e3f",
+                                                    //         fontWeight: 500,
+                                                    //     }
+                                                    // }}
+                                                    />
+
+                                                    {/* InHand at entry (read-only, from GET) */}
+                                                    {/* <TextField
                                         name="inhandentry"
                                         type="text"
                                         id="inhandentry"
                                         label="InHand at entry"
-                                        variant="standard"
-                                        focused
+                                        variant="outlined"
+size="small"
+                                        //focused
                                         value={data.InHandAmount ? `₹ ${Number(data.InHandAmount).toLocaleString("en-IN")}` : ""}
                                         InputProps={{ readOnly: true }}
                                         sx={{ "& .MuiInputBase-input": { color: "text.secondary" } }}
@@ -384,37 +496,60 @@ const Editdebitcash = () => {
                                         type="text"
                                         id="balentry"
                                         label="Balance at entry"
-                                        variant="standard"
-                                        focused
+                                        variant="outlined"
+size="small"
+                                        //focused
                                         value={data.BalanceAmount ? `₹ ${Number(data.BalanceAmount).toLocaleString("en-IN")}` : ""}
                                         InputProps={{ readOnly: true }}
                                         sx={{ "& .MuiInputBase-input": { color: "text.secondary" } }}
                                     /> */}
-                                </Box>
+                                                </Box>
 
-                                {/* ── Action Buttons ── */}
-                                <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                                    <LoadingButton
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        loading={isLoading}
-                                    >
-                                        Confirm Debit
-                                    </LoadingButton>
-                                    <Button
-                                        color="warning"
-                                        variant="contained"
-                                        onClick={() => navigate(-1)}
-                                    >
-                                        Back
-                                    </Button>
-                                </Box>
-                            </form>
-                        )}
-                    </Formik>
-                </Paper>
-            ) : false}
+                                                {/* ── Action Buttons ── */}
+                                                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                                                    <LoadingButton
+                                                        // color="secondary"
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#0D9488",
+                                                            "&:hover": {
+                                                                bgcolor: "#0F766E",
+                                                            },
+                                                        }}
+                                                        variant="contained"
+                                                        type="submit"
+                                                        loading={isLoading}
+                                                    >
+                                                        Confirm Debit
+                                                    </LoadingButton>
+                                                    <Button
+                                                        // color="warning"
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#F97316",
+                                                            "&:hover": {
+                                                                bgcolor: "#EA580C",
+                                                            },
+                                                        }}
+                                                        variant="contained"
+                                                        onClick={() => navigate(-1)}
+                                                    >
+                                                        Back
+                                                    </Button>
+                                                </Box>
+                                            </form>
+                                        )}
+                                    </Formik>
+                                </Paper>
+                            </Box>
+                        </Box>
+                    ) : false}
+                </Box>
+            </Box>
         </React.Fragment>
     );
 };

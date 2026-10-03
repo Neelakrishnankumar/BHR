@@ -54,6 +54,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { tokens } from "../../../Theme";
 import {
     MultiFormikOptimizedAutocomplete,
+    MultiFormikOptimizedselectAutocomplete
 } from "../../../ui-components/global/Autocomplete";
 import {
     dataGridHeaderFooterHeight,
@@ -639,7 +640,30 @@ const EditAnnualfeestructure = () => {
 
                                 {/* Applicable Standards — multi-select */}
                                 <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
-                                    <MultiFormikOptimizedAutocomplete
+                                    <MultiFormikOptimizedselectAutocomplete
+                                        name="Standard"
+                                        label={<>Applicable Standards <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                        id="Standard"
+                                        value={values.Standard}
+                                        onChange={(e, newValue) => setFieldValue("Standard", newValue, true)}
+                                        isOptionEqualToValue={(option, value) =>
+                                            String(option.RecordID) === String(value.RecordID)
+                                        }
+                                        error={!!touched.Standard && !!errors.Standard}
+                                        helperText={touched.Standard && errors.Standard}
+                                        url={`${listViewurl}?data=${JSON.stringify({
+                                            Query: {
+                                                AccessID: "2054",
+                                                ScreenName: "Standard",
+                                                VerticalLicense: Subscriptionlastthree,
+                                                Filter: `parentID='${compID}' AND AcademicYearID='${rowData.AcademicYearID}'`,
+                                                Any: "",
+                                            },
+                                        })}`}
+                                        multiple
+                                    />
+
+                                    {/* <MultiFormikOptimizedAutocomplete
                                         // sx={{ gridColumn: "span 2" }}
                                         name="Standard"
                                         label={<>Applicable Standards <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
@@ -661,7 +685,7 @@ const EditAnnualfeestructure = () => {
                                             },
                                         })}`}
                                         multiple
-                                    />
+                                    /> */}
                                     {touched.Standard && errors.Standard && (
                                         <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
                                             {errors.Standard}
@@ -931,7 +955,16 @@ const EditAnnualfeestructure = () => {
                             >
                                 <LoadingButton
                                     disabled={mode === "V"}
-                                    color="secondary"
+                                    // color="secondary"
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: 2,
+                                        px: 4,
+                                        bgcolor: "#0D9488",
+                                        "&:hover": {
+                                            bgcolor: "#0F766E",
+                                        },
+                                    }}
                                     variant="contained"
                                     type="submit"
                                     loading={isLoading}
@@ -940,11 +973,20 @@ const EditAnnualfeestructure = () => {
                                 </LoadingButton>
 
                                 <Button
-                                    color="warning"
+                                    // color="warning"
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: 2,
+                                        px: 4,
+                                        bgcolor: "#F97316",
+                                        "&:hover": {
+                                            bgcolor: "#EA580C",
+                                        },
+                                    }}
                                     variant="contained"
                                     onClick={() => navigate(-1)}
                                 >
-                                    Cancel
+                                    Back
                                 </Button>
                             </Box>
                         </form>

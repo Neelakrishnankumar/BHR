@@ -73,6 +73,7 @@ import {
     Employeeautocomplete,
     ManagerTaskEmpAutocomplete,
     MultiFormikOptimizedAutocomplete,
+    MultiFormikOptimizedselectAutocomplete,
     Productautocomplete,
     SprintEmpAutocomplete,
     SprintEmpAutocomplete1,
@@ -336,6 +337,26 @@ useEffect(() => {
             setActiveTerm(null);
         }
     };
+// const handleTermsChange = (newValue, setFieldValue) => {
+//     setFieldValue("Terms", newValue, true);
+
+//     if (!activeTerm && newValue && newValue.length > 0) {
+//         setActiveTerm(newValue[0]);
+//         setPage(0);
+//     } else if (newValue && newValue.length > 0 && activeTerm) {
+//         const still = newValue.find(
+//             (t) => String(t.RecordID) === String(activeTerm.RecordID)
+//         );
+
+//         if (!still) {
+//             setActiveTerm(newValue[0]);
+//             setPage(0);
+//         }
+//     } else if (!newValue || newValue.length === 0) {
+//         setActiveTerm(null);
+//     }
+// };
+
 
     // ─── Handle row edit stop ──────────────────────────────────────────────
     const handleRowEditStop = (params, event) => {
@@ -910,14 +931,20 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                           )}
                                 </FormControl>
                                 {/* Terms → data.TermsList */}
-                                <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
+                                {/* <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
                                 <MultiFormikOptimizedAutocomplete
-                                    // sx={{ gridColumn: "span 2" }}
                                     name="Terms"
-                                    label={<>Term <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                    label={
+                                        <>
+                                            Term{" "}
+                                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        </>
+                                    }
                                     id="Terms"
                                     value={values.Terms}
-                                    onChange={(e, newValue) => handleTermsChange(newValue, setFieldValue)}
+                                    onChange={(e, newValue) =>
+                                        handleTermsChange(newValue, setFieldValue)
+                                    }
                                     isOptionEqualToValue={(option, value) =>
                                         String(option.RecordID) === String(value.RecordID)
                                     }
@@ -934,14 +961,81 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                     })}`}
                                     multiple
                                 />
+
+                            
                         {touched.Terms && errors.Terms && (
                             <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
                               {errors.Terms}
                             </div>
                           )}
-                          </FormControl>
-                                {/* Standard → data.Standards */}
-                                <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
+                          </FormControl> */}
+                                                <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
+                            <MultiFormikOptimizedselectAutocomplete
+                            name="Terms"
+                            label={
+                                <>
+                                    Term{" "}
+                                    <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                </>
+                            }
+                            id="Terms"
+                            value={values.Terms}
+                            onChange={(e, newValue) =>
+                                handleTermsChange(newValue, setFieldValue)
+                            }
+                            isOptionEqualToValue={(option, value) =>
+                                String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Terms && !!errors.Terms}
+                            helperText={touched.Terms && errors.Terms}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                    AccessID: "2169",
+                                    ScreenName: "Terms",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${compID}' AND AcademicYearID='${AcademicYearID}'`,
+                                    Any: "",
+                                },
+                            })}`}
+                            multiple
+                            />
+                            {touched.Terms && errors.Terms && (
+                            <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
+                                {errors.Terms}
+                            </div>
+                            )}
+                            </FormControl>
+                                                    {/* Standard → data.Standards */}
+                                                    <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
+                            <MultiFormikOptimizedselectAutocomplete
+                            name="Standard"
+                            label={<>Applicable Standards <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                            id="Standard"
+                            value={values.Standard}
+                            onChange={(e, newValue) => setFieldValue("Standard", newValue, true)}
+                            isOptionEqualToValue={(option, value) =>
+                                String(option.RecordID) === String(value.RecordID)
+                            }
+                            error={!!touched.Standard && !!errors.Standard}
+                            helperText={touched.Standard && errors.Standard}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                    AccessID: "2054",
+                                    ScreenName: "Standard",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `parentID='${compID}' AND AcademicYearID='${rowData.AcademicYearID}'`,
+                                    Any: "",
+                                },
+                            })}`}
+                            multiple
+                            />
+                            {touched.Standard && errors.Standard && (
+                            <div style={{ color: "red", fontSize: "10px", marginTop: "2px" }}>
+                            {errors.Standard}
+                            </div>
+                            )}
+                            </FormControl>
+                                {/* <FormControl gap={1} sx={{ gridColumn: "span 2" }}>
                                 <MultiFormikOptimizedAutocomplete
                                     // sx={{ gridColumn: "span 2" }}
                                     name="Standard"
@@ -970,7 +1064,7 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                 {errors.Standard}
                                 </div>
                             )}
-</FormControl>
+</FormControl> */}
                                 {/* Term Due Dates → data.Term1DueDate … Term4DueDate */}
                                {values.Terms.map((term) => {
     const termNumber = getTermNumber(term.Name);
@@ -1379,7 +1473,16 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                             <Box display="flex" justifyContent="end" mt="20px" gap="20px" padding={1}>
                             <LoadingButton
                                 disabled={mode === "V"}
-                                color="secondary"
+                                // color="secondary"
+                                sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
                                 variant="contained"
                                 onClick={() => handleSaveButtonClick(values, validateForm, setTouched)}
                                 type="button"
@@ -1388,11 +1491,20 @@ const handleSaveButtonClick = async (values, validateForm, setTouched) => {
                                 Save
                             </LoadingButton>
                                 <Button
-                                    color="warning"
+                                    // color="warning"
+                                    sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#F97316",
+                                "&:hover": {
+                                  bgcolor: "#EA580C",
+                                },
+                              }}
                                     variant="contained"
                                     onClick={() => navigate(-1)}
                                 >
-                                    Cancel
+                                    Back
                                 </Button>
                             </Box>
                         </form>

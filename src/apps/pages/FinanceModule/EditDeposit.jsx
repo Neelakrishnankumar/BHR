@@ -262,7 +262,7 @@ const Editdepositcash = () => {
             {getLoading ? <LinearProgress /> : false}
 
             {/* ── Header ── */}
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+            {/* <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -298,68 +298,176 @@ const Editdepositcash = () => {
                         </Tooltip>
                     </Box>
                 </Box>
-            </Paper>
+            </Paper> */}
+            <Box sx={{ height: "100vh", overflow: "auto" }}>
+                <Box sx={{ backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+                    <Box sx={{ p: 1.5, borderRadius: 3, }}>
+                        <Paper sx={{ borderRadius: 3 }}>
 
-            {!getLoading ? (
-                <Paper elevation={3} sx={{ margin: "10px" }}>
+                            {/* MAIN HEADER ROW */}
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                p={2}
+                            >
 
-                    {/* ── Summary Cards ── */}
-                    <SummaryCards
-                        openingBalance={data.OpeningBalance}
-                        todaysCollection={data.CollectedAmount}
-                        inHandAmount={data.InHandAmount}
-                    />
+                                {/* LEFT SIDE */}
+                                <Box display="flex" alignItems="center">
+                                    {broken && !rtl && (
+                                        <IconButton onClick={() => toggleSidebar()}>
+                                            <MenuOutlinedIcon />
+                                        </IconButton>
+                                    )}
 
-                    <Formik
-                        initialValues={InitialValue}
-                        validationSchema={validationSchema}
-                        onSubmit={(values) => { setTimeout(() => Fnsave(values), 100); }}
-                        enableReinitialize={true}
-                    >
-                        {({ errors, touched, handleBlur, handleChange, values, handleSubmit, setFieldValue }) => (
-                            <form onSubmit={handleSubmit}>
-                                <Box
-                                    display="grid"
-                                    gap={formGap}
-                                    padding={2}
-                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
-                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
-                                >
-                                    {/* Deposit Date */}
-                                    <TextField
-                                        name="depositdate"
-                                        type="date"
-                                        id="depositdate"
-                                        label={<>Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        value={values.depositdate}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        focused
-                                        error={!!touched.depositdate && !!errors.depositdate}
-                                        helperText={touched.depositdate && errors.depositdate}
-                                    />
+                                    <Breadcrumbs
+                                        maxItems={3}
+                                        aria-label="breadcrumb"
+                                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                                    >
+                                        <Typography
+                                            // variant="h5"
+                                            // fontWeight={700} 
+                                            // color="#0D94885"
+                                            sx={{
+                                                cursor: "default",
+                                                fontSize: 20,
+                                                fontWeight: 700,
+                                                color: "#111827",
+                                                // mb: 0.2,
+                                                px: 1,
+                                                py: 0.2,
+                                            }}
+                                        >
+                                            Deposit Details
+                                        </Typography>
+                                    </Breadcrumbs>
+                                </Box>
 
-                                    {/* Employee (read-only) */}
-                                    <TextField
-                                        name="employee"
-                                        type="text"
-                                        id="employee"
-                                        label="Employee"
-                                        variant="standard"
-                                        focused
-                                        value={values.employee}
-                                        InputProps={{ readOnly: true }}
-                                    />
+                                {/* RIGHT SIDE */}
+                                <Box display="flex" gap={1}>
+                                    <Tooltip title="Close">
+                                        <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                            <ResetTvIcon />
+                                        </IconButton>
+                                    </Tooltip>
 
-                                    {/* Description */}
-                                    {/* <TextField
+                                    <Tooltip title="Logout">
+                                        <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                                            <LogoutOutlinedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+
+                            </Box>
+                        </Paper>
+                    </Box>
+                    {!getLoading ? (
+                        <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+
+                            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+
+                                <Paper elevation={3} sx={{ margin: "10px", backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+
+                                    {/* ── Summary Cards ── */}
+
+
+                                    <Formik
+                                        initialValues={InitialValue}
+                                        validationSchema={validationSchema}
+                                        onSubmit={(values) => { setTimeout(() => Fnsave(values), 100); }}
+                                        enableReinitialize={true}
+                                    >
+                                        {({ errors, touched, handleBlur, handleChange, values, handleSubmit, setFieldValue }) => (
+                                            <form onSubmit={handleSubmit}>
+                                                <Box
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    gap={1.5}
+                                                    mb={1}
+                                                    sx={{ px: 2, pt: 2 }}
+                                                >
+                                                    {/* ICON */}
+                                                    <Box
+                                                        sx={{
+                                                            width: 36,
+                                                            height: 36,
+                                                            borderRadius: "50%",
+                                                            backgroundColor: "#EFF6FF",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                        }}
+                                                    >
+                                                        <Typography sx={{ fontSize: 18 }}>
+                                                            ⬇️
+                                                        </Typography>
+                                                    </Box>
+
+                                                    {/* TITLE + SUBTITLE */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="subtitle1"
+                                                            fontWeight={700}
+                                                            color="#0D94885"
+                                                        >
+                                                            Deposit Details
+                                                        </Typography>
+
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            Manage organizational deposit cash and Details
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <SummaryCards
+                                                    openingBalance={data.OpeningBalance}
+                                                    todaysCollection={data.CollectedAmount}
+                                                    inHandAmount={data.InHandAmount}
+                                                />
+                                                <Box
+                                                    display="grid"
+                                                    gap={formGap}
+                                                    padding={2}
+                                                    gridTemplateColumns="repeat(2, minmax(0,1fr))"
+                                                    sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 2" } }}
+                                                >
+                                                    {/* Deposit Date */}
+                                                    <TextField
+                                                        name="depositdate"
+                                                        type="date"
+                                                        id="depositdate"
+                                                        label={<>Date <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        value={values.depositdate}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        focused
+                                                        error={!!touched.depositdate && !!errors.depositdate}
+                                                        helperText={touched.depositdate && errors.depositdate}
+                                                    />
+
+                                                    {/* Employee (read-only) */}
+                                                    <TextField
+                                                        name="employee"
+                                                        type="text"
+                                                        id="employee"
+                                                        label="Employee"
+                                                        variant="outlined" 
+                                                        size="small"
+                                                        //focused
+                                                        value={values.employee}
+                                                        InputProps={{ readOnly: true }}
+                                                    />
+
+                                                    {/* Description */}
+                                                    {/* <TextField
                                         name="description"
                                         type="text"
                                         id="description"
                                         label={<>Description <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        focused
+                                        variant="outlined"s
+                                        //focused
                                         value={values.description}
                                         onBlur={handleBlur}
                                         onChange={handleChange}s
@@ -367,201 +475,227 @@ const Editdepositcash = () => {
                                         helperText={touched.description && errors.description}
                                     /> */}
 
-                                    {/* Amount */}
-                                    <TextField
-                                        name="amount"
-                                        type="number"
-                                        id="amount"
-                                        label={<>Amount <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        variant="standard"
-                                        focused
-                                        value={values.amount}
-                                        onBlur={handleBlur}
-                                        onChange={(e) => {
-                                            handleChange(e);
-                                            // BalanceAmount = InHandAmount - Amount
-                                            const entered = parseFloat(e.target.value) || 0;
-                                            const inHand = parseFloat(data.InHandAmount) || 0;
-                                            setFieldValue("balamount", (inHand - entered).toFixed(2));
-                                        }}
-                                        error={!!touched.amount && !!errors.amount}
-                                        helperText={touched.amount && errors.amount}
-                                        autoFocus
-                                        InputProps={{ inputProps: { min: 0 } }}
-                                        onWheel={(e) => e.target.blur()}
-                                    />
+                                                    {/* Amount */}
+                                                    <TextField
+                                                        name="amount"
+                                                        type="number"
+                                                        id="amount"
+                                                        label={<>Amount <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.amount}
+                                                        onBlur={handleBlur}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                            // BalanceAmount = InHandAmount - Amount
+                                                            const entered = parseFloat(e.target.value) || 0;
+                                                            const inHand = parseFloat(data.InHandAmount) || 0;
+                                                            setFieldValue("balamount", (inHand - entered).toFixed(2));
+                                                        }}
+                                                        error={!!touched.amount && !!errors.amount}
+                                                        helperText={touched.amount && errors.amount}
+                                                        // autoFocus
+                                                        InputProps={{ inputProps: { min: 0 } }}
+                                                        onWheel={(e) => e.target.blur()}
+                                                    />
 
-                                    {/* Balance Amount (read-only, auto-computed) */}
-                                    <TextField
-                                        name="balamount"
-                                        type="text"
-                                        id="balamount"
-                                        label="Balance Amount"
-                                        variant="standard"
-                                        focused
-                                        value={values.balamount}
-                                        InputProps={{ readOnly: true }}
-                                    // sx={{
-                                    //     "& .MuiInputBase-input": {
-                                    //         color: "#0d6e3f",
-                                    //         fontWeight: 500,
-                                    //     }
-                                    // }}
-                                    />
+                                                    {/* Balance Amount (read-only, auto-computed) */}
+                                                    <TextField
+                                                        name="balamount"
+                                                        type="text"
+                                                        id="balamount"
+                                                        label="Balance Amount"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        //focused
+                                                        value={values.balamount}
+                                                        InputProps={{ readOnly: true }}
+                                                    // sx={{
+                                                    //     "& .MuiInputBase-input": {
+                                                    //         color: "#0d6e3f",
+                                                    //         fontWeight: 500,
+                                                    //     }
+                                                    // }}
+                                                    />
 
-                                    {/* ── Bank Details Section ── */}
-                                    <Typography variant="h5" sx={{ gridColumn: "span 2", mt: 2 }}>
-                                        Bank Details:
-                                    </Typography>
+                                                    {/* ── Bank Details Section ── */}
+                                                    <Typography variant="h5" sx={{ gridColumn: "span 2", mt: 2 }}>
+                                                        Bank Details:
+                                                    </Typography>
 
-                                    {/* Account Number */}
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="number"
-                                        id="AccountNumber"
-                                        name="AccountNumber"
-                                        value={values.AccountNumber}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        label={<>Account Number <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        focused
-                                        error={touched.AccountNumber && Boolean(errors.AccountNumber)}
-                                        helperText={touched.AccountNumber && errors.AccountNumber}
-                                        onWheel={(e) => e.target.blur()}
-                                    />
+                                                    {/* Account Number */}
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="number"
+                                                        id="AccountNumber"
+                                                        name="AccountNumber"
+                                                        value={values.AccountNumber}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        label={<>Account Number <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        //focused
+                                                        error={touched.AccountNumber && Boolean(errors.AccountNumber)}
+                                                        helperText={touched.AccountNumber && errors.AccountNumber}
+                                                        onWheel={(e) => e.target.blur()}
+                                                    />
 
-                                    {/* IFSC Code */}
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="text"
-                                        id="IfscCode"
-                                        name="IfscCode"
-                                        value={values.IfscCode}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        label={<>IFSC Code <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        focused
-                                        error={touched.IfscCode && Boolean(errors.IfscCode)}
-                                        helperText={touched.IfscCode && errors.IfscCode}
-                                    />
+                                                    {/* IFSC Code */}
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="text"
+                                                        id="IfscCode"
+                                                        name="IfscCode"
+                                                        value={values.IfscCode}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        label={<>IFSC Code <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        //focused
+                                                        error={touched.IfscCode && Boolean(errors.IfscCode)}
+                                                        helperText={touched.IfscCode && errors.IfscCode}
+                                                    />
 
-                                    {/* Account Holder Name */}
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="text"
-                                        id="AccountHoldersName"
-                                        name="AccountHoldersName"
-                                        value={values.AccountHoldersName}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        label={<>Account Holder Name <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        focused
-                                        error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
-                                        helperText={touched.AccountHoldersName && errors.AccountHoldersName}
-                                    />
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        type="text"
-                                        id="branchName"
-                                        name="branchName"
-                                        value={values.branchName}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        label={<>Branch Name <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
-                                        focused
-                                        error={touched.branchName && Boolean(errors.branchName)}
-                                        helperText={touched.branchName && errors.branchName}
-                                    />
+                                                    {/* Account Holder Name */}
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="text"
+                                                        id="AccountHoldersName"
+                                                        name="AccountHoldersName"
+                                                        value={values.AccountHoldersName}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        label={<>Account Holder Name <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        //focused
+                                                        error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
+                                                        helperText={touched.AccountHoldersName && errors.AccountHoldersName}
+                                                    />
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        size="small"
+                                                        type="text"
+                                                        id="branchName"
+                                                        name="branchName"
+                                                        value={values.branchName}
+                                                        onBlur={handleBlur}
+                                                        onChange={handleChange}
+                                                        label={<>Branch Name <span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                                                        //focused
+                                                        error={touched.branchName && Boolean(errors.branchName)}
+                                                        helperText={touched.branchName && errors.branchName}
+                                                    />
 
-                                    {/* ── Attachment Section ── */}
-                                    <Typography variant="h5" sx={{ gridColumn: "span 2", mt: 2 }}>
-                                        Attachment:
-                                    </Typography>
+                                                    {/* ── Attachment Section ── */}
+                                                    <Typography variant="h5" sx={{ gridColumn: "span 2", mt: 2 }}>
+                                                        Attachment:
+                                                    </Typography>
 
-                                    <Box sx={{ gridColumn: "span 2" }}>
-                                        {fileName ? (
-                                            <Box sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 1,
-                                                border: "0.5px solid",
-                                                borderColor: "divider",
-                                                borderRadius: 2,
-                                                px: 2,
-                                                py: 1.2,
-                                                background: "#fff",
-                                            }}>
-                                                <InsertDriveFileOutlinedIcon sx={{ color: "#185FA5", fontSize: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ flex: 1, cursor: logoimage ? "pointer" : "default", color: logoimage ? "#185FA5" : "inherit" }}
-                                                    onClick={() => {
-                                                        if (logoimage) {
-                                                            window.open(
-                                                                store.getState().globalurl.attachmentUrl + logoimage,
-                                                                "_blank"
-                                                            );
-                                                        }
-                                                    }}
-                                                >
-                                                    {fileName}
-                                                </Typography>
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() => { setFileName(""); setlogoimage(""); }}
-                                                >
-                                                    <CloseIcon sx={{ fontSize: 16 }} />
-                                                </IconButton>
-                                            </Box>
-                                        ) : (
-                                            <label style={{
-                                                display: "inline-flex",
-                                                alignItems: "center",
-                                                gap: 8,
-                                                border: "0.5px dashed #bbb",
-                                                borderRadius: 8,
-                                                padding: "9px 14px",
-                                                cursor: "pointer",
-                                                width: "100%",
-                                                fontSize: 13,
-                                                color: "#666",
-                                                boxSizing: "border-box",
-                                            }}>
-                                                <UploadOutlinedIcon sx={{ fontSize: 18 }} />
-                                                <span>Click to upload file</span>
-                                                <input hidden type="file" onChange={getFileChange} />
-                                            </label>
+                                                    <Box sx={{ gridColumn: "span 2" }}>
+                                                        {fileName ? (
+                                                            <Box sx={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: 1,
+                                                                border: "0.5px solid",
+                                                                borderColor: "divider",
+                                                                borderRadius: 2,
+                                                                px: 2,
+                                                                py: 1.2,
+                                                                background: "#fff",
+                                                            }}>
+                                                                <InsertDriveFileOutlinedIcon sx={{ color: "#185FA5", fontSize: 20 }} />
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    sx={{ flex: 1, cursor: logoimage ? "pointer" : "default", color: logoimage ? "#185FA5" : "inherit" }}
+                                                                    onClick={() => {
+                                                                        if (logoimage) {
+                                                                            window.open(
+                                                                                store.getState().globalurl.attachmentUrl + logoimage,
+                                                                                "_blank"
+                                                                            );
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {fileName}
+                                                                </Typography>
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={() => { setFileName(""); setlogoimage(""); }}
+                                                                >
+                                                                    <CloseIcon sx={{ fontSize: 16 }} />
+                                                                </IconButton>
+                                                            </Box>
+                                                        ) : (
+                                                            <label style={{
+                                                                display: "inline-flex",
+                                                                alignItems: "center",
+                                                                gap: 8,
+                                                                border: "0.5px dashed #bbb",
+                                                                borderRadius: 8,
+                                                                padding: "9px 14px",
+                                                                cursor: "pointer",
+                                                                width: "100%",
+                                                                fontSize: 13,
+                                                                color: "#666",
+                                                                boxSizing: "border-box",
+                                                            }}>
+                                                                <UploadOutlinedIcon sx={{ fontSize: 18 }} />
+                                                                <span>Click to upload file</span>
+                                                                <input hidden type="file" onChange={getFileChange} />
+                                                            </label>
+                                                        )}
+                                                    </Box>
+                                                </Box>
+
+                                                {/* ── Action Buttons ── */}
+                                                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                                                    <LoadingButton
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#0D9488",
+                                                            "&:hover": {
+                                                                bgcolor: "#0F766E",
+                                                            },
+                                                        }}
+                                                        variant="contained"
+                                                        type="submit"
+                                                        loading={isLoading}
+                                                    >
+                                                        Confirm Deposit
+                                                    </LoadingButton>
+                                                    <Button
+                                                        sx={{
+                                                            textTransform: "none",
+                                                            borderRadius: 2,
+                                                            px: 4,
+                                                            bgcolor: "#F97316",
+                                                            "&:hover": {
+                                                                bgcolor: "#EA580C",
+                                                            },
+                                                        }}
+                                                        variant="contained"
+                                                        onClick={() => navigate(-1)}
+                                                    >
+                                                        Back
+                                                    </Button>
+                                                </Box>
+                                            </form>
                                         )}
-                                    </Box>
-                                </Box>
-
-                                {/* ── Action Buttons ── */}
-                                <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                                    <LoadingButton
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        loading={isLoading}
-                                    >
-                                        Confirm Deposit
-                                    </LoadingButton>
-                                    <Button
-                                        color="warning"
-                                        variant="contained"
-                                        onClick={() => navigate(-1)}
-                                    >
-                                        Back
-                                    </Button>
-                                </Box>
-                            </form>
-                        )}
-                    </Formik>
-                </Paper>
-            ) : false}
+                                    </Formik>
+                                </Paper>
+                            </Box>
+                        </Box>
+                    ) : false}
+                </Box>
+            </Box>
         </React.Fragment>
     );
 };

@@ -127,7 +127,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { TimeTablePostData } from "../../store/reducers/Formapireducer";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-import { MultiFormikOptimizedAutocomplete, CheckinAutocomplete } from "../../ui-components/global/Autocomplete";
+import { MultiFormikOptimizedAutocomplete, CheckinAutocomplete ,MultiFormikOptimizedselectAutocomplete} from "../../ui-components/global/Autocomplete";
 import EnquiryPDF from "./pdf/Enquirypdf";
 import { getConfig } from "../../config";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -360,7 +360,8 @@ const ListviewSecondary = () => {
                   </Tooltip>
                 </IconButton>
 
-                <MultiFormikOptimizedAutocomplete
+                {/* <MultiFormikOptimizedAutocomplete */}
+                <MultiFormikOptimizedselectAutocomplete
                   sx={{ mt: 2 }}
                   name="Standard"
                   label={is003Subscription ? "Standard/Activities" : "Standard"}
@@ -377,7 +378,8 @@ const ListviewSecondary = () => {
                   })}`}
                 />
 
-                <MultiFormikOptimizedAutocomplete
+                {/* <MultiFormikOptimizedAutocomplete */}
+                <MultiFormikOptimizedselectAutocomplete
                   sx={{ mt: 2 }}
                   name="Student"
                   label={is003Subscription ? "Student" : "Personnel"}
@@ -482,7 +484,7 @@ const ListviewSecondary = () => {
   )}
                 </FormControl> */}
 
-<MultiFormikOptimizedAutocomplete
+<MultiFormikOptimizedselectAutocomplete
                             sx={{ mt: 2 }}
                             name="months"
                             label="Month"
@@ -7150,7 +7152,8 @@ const ListviewSecondary = () => {
                           /> */}
 
                           {/* Project */}
-                          <MultiFormikOptimizedAutocomplete
+                          {/* <MultiFormikOptimizedAutocomplete */}
+                          <MultiFormikOptimizedselectAutocomplete
                             sx={{ mt: 2 }}
                             name="project"
                             label={is003Subscription ? "Standard/Activities" : "Project"}
@@ -7171,7 +7174,8 @@ const ListviewSecondary = () => {
 
 
                           {/* Employee */}
-                          <MultiFormikOptimizedAutocomplete
+                          {/* <MultiFormikOptimizedAutocomplete */}
+                          <MultiFormikOptimizedselectAutocomplete
                             sx={{ mt: 2 }}
                             name="Employee"
                             label={is003Subscription ? "Student" : "Personnel"}
@@ -7315,7 +7319,8 @@ const ListviewSecondary = () => {
                           </FormControl> */}
 
 
- <MultiFormikOptimizedAutocomplete
+ {/* <MultiFormikOptimizedAutocomplete */}
+ <MultiFormikOptimizedselectAutocomplete
                             // sx={{ mt: 2 }}
                             name="attmonth"
                             label="Month"
@@ -7692,7 +7697,8 @@ const ListviewSecondary = () => {
                           />
 
                           {/* Project */}
-                          <MultiFormikOptimizedAutocomplete
+                          {/* <MultiFormikOptimizedAutocomplete */}
+                          <MultiFormikOptimizedselectAutocomplete
                             sx={{ mt: 2 }}
                             name="project"
                             label={is003Subscription ? "Standard/Activities" : "Project"}
@@ -7713,7 +7719,8 @@ const ListviewSecondary = () => {
 
 
                           {/* Employee */}
-                          <MultiFormikOptimizedAutocomplete
+                          {/* <MultiFormikOptimizedAutocomplete */}
+                          <MultiFormikOptimizedselectAutocomplete
                             sx={{ mt: 2 }}
                             name="Employee"
                             label={is003Subscription ? "Student" : "Personnel"}

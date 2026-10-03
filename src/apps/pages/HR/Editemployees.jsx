@@ -74,6 +74,7 @@ import {
   Contractprocess,
   DefaultProjectGet,
   ExitFormalities,
+  PaidLeaveProcess,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -117,6 +118,7 @@ import {
 } from "../../../ui-components/global/utils";
 import {
   CheckinAutocomplete,
+  MultiFormikOptimizedselectAutocomplete,
   CusListRunGrpOptimizedAutocomplete,
   CusListRunGrpOptimizedAutocomplete1,
   MultiSelectDropdown,
@@ -193,6 +195,8 @@ const Editemployee = () => {
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const config = getConfig();
   const baseurl1 = config.UAAM_URL;
+  const baseurl = config.BASE_URL;
+
   useEffect(() => {
     if (!FooterImg) return;
 
@@ -771,6 +775,20 @@ const Editemployee = () => {
           Gender: Yup.string().required(data.Employee.Gender),
           employeetype: Yup.string().required(data.Employee.employeetype),
           Password: Yup.string().trim().required(data.Employee.Password),
+          relegion: Yup.object()
+            .nullable()
+            .required(data.Employee.Relegion),
+          community: Yup.object()
+            .nullable()
+            .required(data.Employee.Community),
+          nationality: Yup.object()
+            .nullable()
+            .required(data.Employee.Nationality),
+
+
+          // relegion: Yup.string().required(data.Employee.Relegion),
+          // community: Yup.string().required(data.Employee.Community),
+          // nationality: Yup.string().required(data.Employee.Nationality),
         };
         if (is003Subscription && !isStudentClassification && !BoardandNonteaching) {
           schemaFields.Department = Yup.array()
@@ -1480,6 +1498,16 @@ const Editemployee = () => {
 
     // moduleSelect: mode === "E" ? Data.Module : ""
     //  moduleSelect:moduleIDs,
+
+    relegion: Data.Religion
+      ? { RecordID: "", Name: Data.Religion }
+      : null,
+    community: Data.Community
+      ? { RecordID: "", Name: Data.Community }
+      : null,
+    nationality: Data.Nationality
+      ? { RecordID: "", Name: Data.Nationality }
+      : null,
   };
   console.log(
     "🚀 ~ Editemployee ~ Data.Module:",
@@ -1738,6 +1766,9 @@ const Editemployee = () => {
       CompanyID,
       SubscriptionCode,
       ClassificationID: parentID ? parentID : 0,
+      Religion: values.relegion?.Name,
+      Community: values.community?.Name,
+      Nationality: values.nationality?.Name
     };
     console.log("🚀 ~ fnSave ~ saveData:", saveData);
     console.log(apiReturnValue, "moduleselect");
@@ -2939,7 +2970,88 @@ const Editemployee = () => {
     });
     setOpenManagerModal(true);
   };
+  //Show== "5" for file type filter
+  const FILE_TYPE_EXTENSIONS = {
+    pdf: ["pdf"],
+    word: ["doc", "docx"],
+    excel: ["xls", "xlsx", "csv"],
+    image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "jfif", "svg"],
+    video: ["mp4", "mov", "avi", "mkv", "webm"],
+  };
 
+  function getFileExtension(filename) {
+    // Strip any querystring/hash a stored URL might carry, then grab the
+    // LAST segment after a dot (handles filenames with multiple dots,
+    // e.g. "20260917.100301_Planning.jfif").
+    const clean = String(filename).split(/[?#]/)[0].trim();
+    const parts = clean.split(".");
+    if (parts.length < 2) return null; // no extension at all
+    return parts.pop().toLowerCase();
+  }
+
+  function rowMatchesFileType(row, filterType) {
+    if (filterType === "all") return true;
+
+    const rawAttachments = row.Attachments ?? "";
+    const attachments = String(rawAttachments)
+      .split(",")
+      .map((f) => f.trim())
+      .filter(Boolean);
+
+    const allowedExts = FILE_TYPE_EXTENSIONS[filterType] || [];
+
+    const matched = attachments.some((filename) => {
+      const ext = getFileExtension(filename);
+      return ext && allowedExts.includes(ext);
+    });
+
+    // TEMP DEBUG — remove once confirmed working.
+    console.log(
+      `[fileFilter] row ${row.RecordID}: attachments=[${attachments.join(", ")}]`,
+      `→ filter="${filterType}" allowed=[${allowedExts.join(",")}] → match=${matched}`,
+    );
+
+    return matched;
+  }
+  const FILE_TYPE_LABELS = {
+    all: "All",
+    pdf: "PDF",
+    word: "Word",
+    excel: "Excel",
+    image: "Image",
+    video: "Video",
+  };
+
+  const [fileTypeFilter, setFileTypeFilter] = useState("all");
+
+  // Reset the filter whenever the user navigates away from the Documents tab.
+  React.useEffect(() => {
+    if (explorelistViewData?.length) {
+      console.log("Sample row keys:", Object.keys(explorelistViewData[0]));
+      console.log("Attachments value:", explorelistViewData[0].Attachments);
+    }
+  }, [explorelistViewData]);
+  React.useEffect(() => {
+    if (show != "21") setFileTypeFilter("all");
+  }, [show]);
+
+  const filteredExploreRows = React.useMemo(() => {
+    console.log(
+      "[fileFilter] recompute — show:",
+      show,
+      "fileTypeFilter:",
+      fileTypeFilter,
+      "totalRows:",
+      explorelistViewData?.length,
+    );
+    if (show != "21" || fileTypeFilter === "all") return explorelistViewData;
+    //     ^^ changed !== to !=
+    const result = explorelistViewData.filter((row) =>
+      rowMatchesFileType(row, fileTypeFilter),
+    );
+    console.log("[fileFilter] result length:", result.length);
+    return result;
+  }, [explorelistViewData, show, fileTypeFilter]);
   function Employee() {
     return (
       <GridToolbarContainer
@@ -3016,6 +3128,26 @@ const Editemployee = () => {
             gap: 1,
           }}
         >
+          {show == "21" && (
+            <FormControl size="small" sx={{ minWidth: 140, marginBottom: 0.5 }}>
+              <InputLabel id="doc-file-type-label">File Type</InputLabel>
+              <Select
+                labelId="doc-file-type-label"
+                label="File Type"
+                value={fileTypeFilter}
+                onChange={(e) => {
+                  console.log("[fileFilter] dropdown changed to:", e.target.value);
+                  setFileTypeFilter(e.target.value);
+                }}
+              >
+                {Object.entries(FILE_TYPE_LABELS).map(([key, label]) => (
+                  <MenuItem key={key} value={key}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           {/* SEARCH */}
           <Box
             sx={{
@@ -4486,7 +4618,7 @@ const Editemployee = () => {
       // ShiftCode: values?.shift?.Code || "",
       // ShiftName: values?.shift?.Name || "",
       ShiftID2: values?.shift2?.RecordID || 0,
-      ProjectID: values?.project?.RecordID || 0,
+      ProjectID: values?.project?.RecordID || defaultProjectData?.ProjectID || 0,
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
       ContractProcess: contractorData?.Process || "",
@@ -4682,7 +4814,7 @@ const Editemployee = () => {
       // ShiftCode: values?.shift?.Code || "",
       // ShiftName: values?.shift?.Name || "",
       ShiftID2: values?.shift2?.RecordID || 0,
-      ProjectID: values?.project?.RecordID || 0,
+      ProjectID: values?.project?.RecordID || defaultProjectData?.ProjectID || 0,
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
       ContractProcess: "Y",
@@ -4741,7 +4873,7 @@ const Editemployee = () => {
           BillableMonth: BillableMonth,
           BillableYear: BillableYear,
           EmpRecID: recID,
-          ProjectID: values?.project?.RecordID || 0,
+          ProjectID: values?.project?.RecordID || defaultProjectData?.ProjectID || 0,
           DetailID: DetailID,
           CompanyID,
         }),
@@ -4820,30 +4952,30 @@ const Editemployee = () => {
   };
   //Resignation
   const handleResignationProcess = async (values, reason) => {
-  const idata = {
-    CompanyID: CompanyID,
-    EmployeeID: recID,
-    ExitformalitiesAccepted: "N",
-    Reason: reason,
-  };
+    const idata = {
+      CompanyID: CompanyID,
+      EmployeeID: recID,
+      ExitformalitiesAccepted: "N",
+      Reason: reason,
+    };
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const response = await dispatch(ExitFormalities({ idata }));
+    try {
+      const response = await dispatch(ExitFormalities({ idata }));
 
-    if (response.payload.Status === "Y") {
-      dispatch(getResignation({ EmployeeID: recID }));
-      toast.success(response.payload.Msg || "Process reset successfully");
-    } else {
-      toast.error(response.payload.Msg || "Something went wrong");
+      if (response.payload.Status === "Y") {
+        dispatch(getResignation({ EmployeeID: recID }));
+        toast.success(response.payload.Msg || "Process reset successfully");
+      } else {
+        toast.error(response.payload.Msg || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while resetting the process");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    toast.error("Something went wrong while resetting the process");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
   //Geolocation
   const geolocationinitialvlues = {
     Code: Data.Code,
@@ -5343,6 +5475,7 @@ const Editemployee = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+    PaidLeavePerYear: deploymentData?.PaidLeaveDays,
   };
 
   console.log(deploymentInitialValue.Designation, "--deploymentInitialValue");
@@ -5383,7 +5516,7 @@ const Editemployee = () => {
       CostOfCompany: values.costofcompany || 0,
       CostOfCompanyHours: values.costofcompanyhour || 0,
       CostOfBudgetHours: values.costofbudgethour,
-
+      PaidLeaveDays: values.PaidLeavePerYear || 0,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -5449,7 +5582,31 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const handleProcessPaidLeave = async () => {
+    try {
+      const payload = {
+        EmployeeID: recID,
+        CompanyID: CompanyID,
+        // add your other required API parameters
+      };
 
+      const response = await dispatch(PaidLeaveProcess({data:payload})).unwrap();
+
+      if (response?.Status === "N") {
+        toast.error(response?.Msg || "Paid leave calculation failed");
+        return;
+      }
+
+      if (response?.Status === "Y") {
+      dispatch(getDeployment({ HeaderID: recID }));
+        toast.success(response?.Msg || "Paid leave processed successfully");
+
+        // setFieldValue("PaidLeavePerYear", daysCount);
+      }
+    } catch (error) {
+      console.error("Paid leave calculation failed:", error);
+    }
+  };
   //RESIGNATION_SECTION
 
   const resignationinitialvalues = {
@@ -5473,7 +5630,7 @@ const Editemployee = () => {
     exitformalitiesacceptrd:
       ResignationGetData.ExitFormalitiesAccepted === "Y" ? true : false,
   };
-const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
+  const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
   //RESIGNATION_POST
   const Fnsaveresignation = async (values, resetForm, del) => {
     console.log(values, "--values");
@@ -5481,10 +5638,10 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
     //   seterrorSchema22("Please Select the Exit Interview By");
     //   return;
     // }
-      if (isResignationLocked) {
-    toast.error("This record is processed. Unprocess it first to make changes.");
-    return;
-  }
+    if (isResignationLocked) {
+      toast.error("This record is processed. Unprocess it first to make changes.");
+      return;
+    }
     const idata = {
       EmployeeID: recID,
       ResignationDate: values.resignationdate,
@@ -7216,7 +7373,8 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                   >
                                     {(is003Subscription && !isStudentClassification) && (
                                       <FormControl>
-                                        <MultiFormikOptimizedAutocomplete
+                                        {/* <MultiFormikOptimizedAutocomplete */}
+                                        <MultiFormikOptimizedselectAutocomplete
                                           sx={{
                                             width: "100%",
                                             "& .MuiOutlinedInput-root": {
@@ -7603,6 +7761,107 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                       </MenuItem>
                                       <MenuItem value="IN">Intern</MenuItem>
                                     </TextField>
+                                    {/* //Autocomplete */}
+                                    <CheckinAutocomplete
+                                      fullWidth
+                                      name="relegion"
+                                      // label="Relegion"
+                                      label={
+                                        <>
+                                          {/* Relegion */}
+                                          Relegion
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="relegion"
+                                      value={values.relegion}
+                                      onChange={(newValue) => setFieldValue("relegion", newValue)}
+                                      error={!!touched.relegion && !!errors.relegion}
+                                      helperText={touched.relegion && errors.relegion}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2212",
+                                            ScreenName: "Relegion",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+                                    {/* {touched.relegion && errors.relegion && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.relegion}
+  </div>
+)} */}
+                                    <CheckinAutocomplete
+                                      fullWidth
+                                      name="community"
+                                      label={
+                                        <>
+                                          {/* Co-curricular Activity */}
+                                          Community
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="community"
+                                      value={values.community}
+                                      onChange={(newValue) => setFieldValue("community", newValue)}
+                                      error={!!touched.community && !!errors.community}
+                                      helperText={touched.community && errors.community}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2213",
+                                            ScreenName: "Community",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+                                    {/* {touched.community && errors.community && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.community}
+  </div>
+)} */}
+                                    <CheckinAutocomplete
+                                      fullWidth
+                                      name="nationality"
+                                      label={
+                                        <>
+                                          {/* Co-curricular Activity */}
+                                          Nationality
+                                          <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                                        </>
+                                      }
+                                      id="nationality"
+                                      value={values.nationality}
+                                      onChange={(newValue) => setFieldValue("nationality", newValue)}
+                                      error={!!touched.nationality && !!errors.nationality}
+                                      helperText={touched.nationality && errors.nationality}
+                                      // disabled={mode === "E"}
+                                      url={`${listViewurl}?data=${encodeURIComponent(
+                                        JSON.stringify({
+                                          Query: {
+                                            AccessID: "2214",
+                                            ScreenName: "Nationality",
+                                            Filter: "",
+                                            Any: "",
+                                            VerticalLicense: is003Subscription ? sliceSubscriptionCode : "",
+                                          },
+                                        }),
+                                      )}`}
+                                    />
+                                    {/* {touched.nationality && errors.nationality && (
+  <div style={{ color: "red", fontSize: "10px", marginTop: "2px", marginLeft: "10px" }}>
+    {errors.nationality}
+  </div>
+)} */}
 
                                     <TextField
                                       fullWidth
@@ -11543,7 +11802,74 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                             />
                           </Box>
                         </Box>
+                        {/* ----- Paid Leave Count ----- */}
+                        {!isStudentClassification && (
+                          <Box
+                            sx={{
+                              backgroundColor: "#F9FAFB",
+                              border: "1px solid #E5E7EB",
+                              borderRadius: 2,
+                              p: 2.5,
+                              mb: 2,
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              fontWeight={700}
+                              color="text.secondary"
+                              mb={2}
+                            >
+                              Paid Leave Calculation
+                            </Typography>
 
+                            <Box
+                              display="flex"
+                              alignItems="flex-end"
+                              flexWrap="wrap"
+                              gap={2}
+                            >
+                              {/* No of Paid Leave / Year */}
+                              <TextField
+                                label="No of Paid Leave / Year"
+                                name="PaidLeavePerYear"
+                                value={values.PaidLeavePerYear || ""}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                size="small"
+                                InputProps={{
+                                  readOnly: true,
+
+                                }}
+                                inputProps={{ style: { textAlign: "right" } }}
+                                sx={{
+                                  width: 250,
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+                                  },
+                                }}
+                              />
+
+                              {/* Process Button */}
+                              <Button
+                                disabled={deploymentData.ProcessedFlag == "Y"}
+                                variant="contained"
+                                size='small'
+                                onClick={handleProcessPaidLeave}
+                                sx={{
+                                  height: "35px",
+                                  px: 3,
+                                  borderRadius: "6px",
+                                  textTransform: "none",
+                                  fontFamily: "'Outfit', sans-serif",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                Process
+                              </Button>
+                            </Box>
+                          </Box>
+                        )}
                         {/* ----- COSTING CARD ----- */}
                         {is003Subscription === false && (
                           <Box
@@ -15062,6 +15388,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                 error={!!touched.RelationName && !!errors.RelationName}
                                 helperText={touched.RelationName && errors.RelationName}
                                 fullWidth
+                                autoFocus
                               />
                               <TextField
                                 fullWidth
@@ -15164,7 +15491,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                   backgroundColor: "#ffffff",
                                   "& .MuiFilledInput-root": { backgroundColor: "#f5f5f5" },
                                 }}
-                                autoFocus
+                                // autoFocus
                               />
                               <TextField
                                 name="dateofbirth"
@@ -17299,13 +17626,37 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                     onBlur={handleBlur}
                                     onChange={(e) => {
                                       const value = e.target.value;
+
                                       setFieldValue("BillingUnits", value);
+
+                                      // Always clear components when billing unit changes
                                       setFieldValue("Components", []);
+
+                                      // Reset UnitRate
                                       setFieldValue("UnitRate", "0.00");
+
+                                      // Clear dates unless TF/OF
                                       if (!["OF", "TF"].includes(value)) {
                                         setFieldValue("DueDate", "");
                                       }
+
+                                      // Clear Term when changing away from TF
+                                      if (value !== "TF") {
+                                        setFieldValue("Term", null);
+                                        setFieldValue("FromPeriod", "");
+                                        setFieldValue("ToPeriod", "");
+                                      }
                                     }}
+
+                                    // onChange={(e) => {
+                                    //   const value = e.target.value;
+                                    //   setFieldValue("BillingUnits", value);
+                                    //   setFieldValue("Components", []);
+                                    //   setFieldValue("UnitRate", "0.00");
+                                    //   if (!["OF", "TF"].includes(value)) {
+                                    //     setFieldValue("DueDate", "");
+                                    //   }
+                                    // }}
                                     name="BillingUnits"
                                     error={
                                       !!touched.BillingUnits &&
@@ -17333,8 +17684,10 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                   </TextField>
 
                                   {/* Term (conditional) */}
-                                  {(values.BillingUnits == "TF" ||
+                                  {/* {(values.BillingUnits == "TF" ||
                                     contractorData.units == "Term Fees") &&
+                                    isStudentClassification && ( */}
+                                  {values.BillingUnits === "TF" &&
                                     isStudentClassification && (
                                       <>
                                         <CheckinAutocomplete
@@ -17391,7 +17744,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                                 ScreenName: "Term",
                                                 VerticalLicense:
                                                   Subscriptionlastthree,
-                                                Filter: `CategoryType = 'T' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                                                Filter: `CategoryType = 'T' AND FIND_IN_SET (${values?.project?.RecordID || defaultProjectData?.ProjectID},ProjectID)`,
                                                 Any: "",
                                               },
                                             },
@@ -17399,7 +17752,8 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                         />
 
                                         {/* Components for Term Fees */}
-                                        <MultiFormikOptimizedAutocomplete
+                                        {/* <MultiFormikOptimizedAutocomplete */}
+                                        <MultiFormikOptimizedselectAutocomplete
                                           sx={{ gridColumn: "span 2" }}
                                           multiple
                                           name="Components"
@@ -17459,10 +17813,13 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                     )}
 
                                   {/* Components for Annual Fees */}
-                                  {(values.BillingUnits == "AF" ||
+                                  {/* {(values.BillingUnits == "AF" || values.BillingUnits != "TF" ||
                                     contractorData.units == "Annual Fees") &&
+                                    isStudentClassification && ( */}
+                                  {values.BillingUnits === "AF" &&
                                     isStudentClassification && (
-                                      <MultiFormikOptimizedAutocomplete
+                                      // <MultiFormikOptimizedAutocomplete
+                                      <MultiFormikOptimizedselectAutocomplete
                                         sx={{ gridColumn: "span 2" }}
                                         name="Components"
                                         label="Component"
@@ -17515,7 +17872,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                               ScreenName: "Components",
                                               VerticalLicense:
                                                 Subscriptionlastthree,
-                                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID},ProjectID)`,
+                                              Filter: `CategoryType = 'A' AND FIND_IN_SET (${values?.project?.RecordID || defaultProjectData?.ProjectID},ProjectID)`,
                                               Any: "",
                                             },
                                           },
@@ -18240,7 +18597,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                           detailData={Invoicedetails}
                                           PdfBaseUrl={
                                             PdfBaseUrl ||
-                                            "https://uaam.beyondexs.com/"
+                                            baseurl
                                           }
                                           logoUrl={"/Logo.png"}
                                           headerUrl={"/Elitelogo.png"}
@@ -18250,7 +18607,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                             Month: BillableMonth,
                                             Year: BillableYear,
                                             EmployeeID: recID,
-                                            baseUrl: baseurl1,
+                                            baseUrl: baseurl,
                                           }}
                                           footerHeight={footerHeight}
                                         />
@@ -18260,7 +18617,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                           detailData={Invoicedetails}
                                           PdfBaseUrl={
                                             PdfBaseUrl ||
-                                            "https://uaam.beyondexs.com/"
+                                            baseurl
                                           }
                                           logoUrl={"/Logo.png"}
                                           headerUrl={"/Elitelogo.png"}
@@ -18272,7 +18629,7 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                             Month: BillableMonth,
                                             Year: BillableYear,
                                             EmployeeID: recID,
-                                            baseUrl: baseurl1,
+                                            baseUrl: baseurl,
                                           }}
                                           footerHeight={footerHeight}
                                         />
@@ -23278,7 +23635,8 @@ const isResignationLocked = ResignationGetData?.ExitFormalitiesAccepted === "Y";
                                   minHeight: dataGridHeaderFooterHeight,
                                 },
                               }}
-                              rows={explorelistViewData}
+                              // rows={explorelistViewData}
+                              rows={filteredExploreRows}
                               columns={columns}
                               disableSelectionOnClick
                               getRowId={(row) => row.RecordID}

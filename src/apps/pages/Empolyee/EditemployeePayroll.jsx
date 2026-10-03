@@ -102,6 +102,7 @@ import {
 import {
   CheckinAutocomplete,
   MultiFormikOptimizedAutocomplete,
+  MultiFormikOptimizedselectAutocomplete,
   MultiSelectDropdown,
   Productautocomplete,
 } from "../../../ui-components/global/Autocomplete";
@@ -2971,7 +2972,7 @@ const EditemployeePayroll = () => {
 
                         {/* //sx={{ gap: formGap }} */}
                         <FormControl sx={{ gap: "20px" }}>
-                          <MultiFormikOptimizedAutocomplete
+                          <MultiFormikOptimizedselectAutocomplete
                             multiple
                             disabled={mode == "E"}
                             name="Department"
@@ -3499,7 +3500,8 @@ const EditemployeePayroll = () => {
                     gap={2}
                     p={1}
                   >
-                    <MultiFormikOptimizedAutocomplete
+                    {/* <MultiFormikOptimizedAutocomplete */}
+                    <MultiFormikOptimizedselectAutocomplete
                       name="project"
                       label={getBusinessCaption("Project", "Project")}
                       id="project"
@@ -3516,7 +3518,8 @@ const EditemployeePayroll = () => {
                       })}`}
                     />
 
-                    <MultiFormikOptimizedAutocomplete
+                    {/* <MultiFormikOptimizedAutocomplete */}
+                    <MultiFormikOptimizedselectAutocomplete
                       name="Designation"
                       label="Designation"
                       id="Designation"

@@ -378,7 +378,10 @@ const initialState = {
   CompanyBankUPDATE:"",
   CompanyReportSettingGet:"",
   CompanyReportSettingUpdate:"",
-  ExitFormalitiesUnprocess:""
+  ExitFormalitiesUnprocess:"",
+  TcgetUrl: "",
+  AttendanceSyncController:"",
+  PaidLeaveProcessurl:""
 
 };
 
@@ -630,6 +633,9 @@ export const getUrlSlice = createSlice({
       state.CompanyReportSettingGet = APIurl + "CompanyReportSettingGet.php";
       state.CompanyReportSettingUpdate = APIurl + "CompanyReportSettingUpdate.php";
       state.ExitFormalitiesUnprocess = APIurl + "ExitFormalitiesUnprocess.php";
+      state.TcgetUrl = APIurl + "TransferCertificateDetailsGet.php";
+      state.AttendanceSyncController = APIurl + "AttendanceSyncController.php";
+      state.PaidLeaveProcessurl = APIurl + "PaidLeaveProcessController.php";
     },
 
   },

@@ -121,6 +121,7 @@ const Editvendor = () => {
   const LoginID = sessionStorage.getItem("loginrecordID");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const lastThree = SubscriptionCode?.slice(-3) || "";
+    const is002Subscription = SubscriptionCode.endsWith("002");
   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
     ? lastThree
     : "";
@@ -152,6 +153,13 @@ const Editvendor = () => {
   const colors = tokens(theme.palette.mode);
 
   const [sectionsOpen, setSectionsOpen] = useState(true);
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -261,7 +269,88 @@ const Editvendor = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
+  //Show== "5" for file type filter
+  const FILE_TYPE_EXTENSIONS = {
+    pdf: ["pdf"],
+    word: ["doc", "docx"],
+    excel: ["xls", "xlsx", "csv"],
+    image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "jfif", "svg"],
+    video: ["mp4", "mov", "avi", "mkv", "webm"],
+  };
 
+  function getFileExtension(filename) {
+    // Strip any querystring/hash a stored URL might carry, then grab the
+    // LAST segment after a dot (handles filenames with multiple dots,
+    // e.g. "20260917.100301_Planning.jfif").
+    const clean = String(filename).split(/[?#]/)[0].trim();
+    const parts = clean.split(".");
+    if (parts.length < 2) return null; // no extension at all
+    return parts.pop().toLowerCase();
+  }
+
+  function rowMatchesFileType(row, filterType) {
+    if (filterType === "all") return true;
+
+    const rawAttachments = row.Attachments ?? "";
+    const attachments = String(rawAttachments)
+      .split(",")
+      .map((f) => f.trim())
+      .filter(Boolean);
+
+    const allowedExts = FILE_TYPE_EXTENSIONS[filterType] || [];
+
+    const matched = attachments.some((filename) => {
+      const ext = getFileExtension(filename);
+      return ext && allowedExts.includes(ext);
+    });
+
+    // TEMP DEBUG — remove once confirmed working.
+    console.log(
+      `[fileFilter] row ${row.RecordID}: attachments=[${attachments.join(", ")}]`,
+      `→ filter="${filterType}" allowed=[${allowedExts.join(",")}] → match=${matched}`,
+    );
+
+    return matched;
+  }
+  const FILE_TYPE_LABELS = {
+    all: "All",
+    pdf: "PDF",
+    word: "Word",
+    excel: "Excel",
+    image: "Image",
+    video: "Video",
+  };
+
+  const [fileTypeFilter, setFileTypeFilter] = useState("all");
+
+  // Reset the filter whenever the user navigates away from the Documents tab.
+  React.useEffect(() => {
+    if (explorelistViewData?.length) {
+      console.log("Sample row keys:", Object.keys(explorelistViewData[0]));
+      console.log("Attachments value:", explorelistViewData[0].Attachments);
+    }
+  }, [explorelistViewData]);
+  React.useEffect(() => {
+    if (show != "5") setFileTypeFilter("all");
+  }, [show]);
+
+  const filteredExploreRows = React.useMemo(() => {
+    console.log(
+      "[fileFilter] recompute — show:",
+      show,
+      "fileTypeFilter:",
+      fileTypeFilter,
+      "totalRows:",
+      explorelistViewData?.length,
+    );
+    if (show != "5" || fileTypeFilter === "all") return explorelistViewData;
+    //     ^^ changed !== to !=
+    const result = explorelistViewData.filter((row) =>
+      rowMatchesFileType(row, fileTypeFilter),
+    );
+    console.log("[fileFilter] result length:", result.length);
+    return result;
+  }, [explorelistViewData, show, fileTypeFilter]);
   // useEffect(() => {
   //   if (recID && mode === "E") {
   //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
@@ -279,13 +368,6 @@ const Editvendor = () => {
     }
   }, [location.key, recID, mode, show]);
 
-  const explorelistViewData = useSelector(
-    (state) => state.exploreApi.explorerowData
-  );
-  const explorelistViewcolumn = useSelector(
-    (state) => state.exploreApi.explorecolumnData
-  );
-  const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   // let VISIBLE_FIELDS;
 
@@ -618,6 +700,8 @@ const Editvendor = () => {
   };
 
   function Employee() {
+    const displayCount = show == "5" ? filteredExploreRows.length : rowCount;
+
     return (
       <GridToolbarContainer
         sx={{
@@ -639,9 +723,31 @@ const Editvendor = () => {
           sx={{
             display: "flex",
             flexDirection: "row",
+            alignItems: "center",
+            gap: 1,
             justifyContent: "space-between",
           }}
         >
+          {show == "5" && (
+            <FormControl size="small" sx={{ minWidth: 140, marginBottom: 0.5 }}>
+              <InputLabel id="doc-file-type-label">File Type</InputLabel>
+              <Select
+                labelId="doc-file-type-label"
+                label="File Type"
+                value={fileTypeFilter}
+                onChange={(e) => {
+                  console.log("[fileFilter] dropdown changed to:", e.target.value);
+                  setFileTypeFilter(e.target.value);
+                }}
+              >
+                {Object.entries(FILE_TYPE_LABELS).map(([key, label]) => (
+                  <MenuItem key={key} value={key}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <GridToolbarQuickFilter />
           {show != "5" && (
             <Tooltip title="ADD">
@@ -684,6 +790,7 @@ const Editvendor = () => {
     date: data.RegistrationDate || "",
     verifieddate: data.VerifyConfirmDate || "",
     emailid: data.EmailID || "",
+    Password: data.Password || "",
     vendor: data.VendorCheckbox === "Y" ? true : false,
     customer: data.CustomerCheckbox === "Y" ? true : false,
     // prospect: data.Prospects === "Y" ? true : false,
@@ -733,6 +840,9 @@ const Editvendor = () => {
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
       EmailID: values.emailid,
+      Password: values.Password || "",
+      Otp : "",
+      OtpStatus : "",
       SortOrder: values.sortorder || 0,
       CompanyID,
       VendorCheckbox: values.vendor === true ? "Y" : "N",
@@ -1588,7 +1698,30 @@ const Editvendor = () => {
                         onChange={handleChange}
                         sx={textFieldSx}
                       />
-
+                      {is002Subscription && (
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        type="password"
+                        size="small"
+                        label="Password"
+                        value={values.Password}
+                        id="Password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Password"
+                        error={
+                          !!touched.Password && !!errors.Password
+                        }
+                        helperText={
+                          touched.Password && errors.Password
+                        }
+                        sx={{ backgroundColor: "#ffffff" }}
+                        // InputLabelProps={{
+                        //   shrink: true,
+                        // }}
+                      />
+                      )}
                       <TextField
                         name="address"
                         type="text"
@@ -3412,7 +3545,8 @@ const Editvendor = () => {
                             minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                        rows={explorelistViewData}
+                        // rows={explorelistViewData}
+                        rows={filteredExploreRows}
                         columns={columns}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}

@@ -1095,7 +1095,6 @@ function App() {
                     element={<EditOtherEvents />}
                   />
                    <Route
-                    // path="/Secondarylistview/:accessID/:screenName/:leaderID/Events/:secondaryAccessID/:parentID2/O/EditEvent Category/:id/:Mode"
                     path="/Tccertificate"
                     element={< TransferCertificate/>}
                   />

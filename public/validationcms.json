@@ -150,7 +150,10 @@
     "Department": "Please select the Department",
     "employeetype": "Please select the Type",
     "Gender": "Please select the Gender",
-    "Subject": "Please select the Subject"
+    "Subject": "Please select the Subject",
+    "Relegion": "Please select the Relegion",
+    "Community": "Please select the Community",
+    "Nationality": "Please select the Nationality"
 
   },
   "ItemGroup": {
