@@ -2307,7 +2307,7 @@ export const fetchListview =
                     >
                       <Tooltip title="Attachment">
                         <IconButton color="info" size="small">
-                          <AttachFileOutlinedIcon />
+                          {/* <AttachFileOutlinedIcon /> */}
                         </IconButton>
                       </Tooltip>
                     </a>
