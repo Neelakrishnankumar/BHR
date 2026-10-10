@@ -111,6 +111,8 @@ const Configuration = () => {
     const rowData = location.state || {};
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
+    const [razorpayid, setRazorpayid] = useState("");
+    const [razorpaykey, setRazorpaykey] = useState("");
     const [sessiontime, setSessiontime] = useState("");
     const [gracetime, setGracetime] = useState("");
     const [gst, setGst] = useState("");
@@ -212,6 +214,8 @@ const Configuration = () => {
     useEffect(() => {
         if (data) {
             setOffaddress(data.CM_ADDRESS || "");
+            setRazorpayid(data.CM_RAZORPAYID || "");
+            setRazorpaykey(data.CM_RAZORPAYKEY || "");
             setGst(data.CM_GST || "");
             setlogoimage(data.CM_IMAGE || "");
             setGstImage(data.CM_GSTIMAGE || "");
@@ -1669,32 +1673,32 @@ const Configuration = () => {
         if (event.target.value == "0") {
             console.log(event.target.value, "--find event.target.value");
 
-           dispatch(getSettingsData({
-            SubscriptionCode: Subscriptioncode,
-        }));
+            dispatch(getSettingsData({
+                SubscriptionCode: Subscriptioncode,
+            }));
         }
         if (event.target.value == "1") {
-      if (CompanyID && mode === "E") {
-        dispatch(BankFetchData({ get: "get", CompanyID:CompanyID }));
-      } else {
-        dispatch(BankFetchData({ get: "get", CompanyID:CompanyID }));
-      }
-    }
-    if (event.target.value == "2") {
-      if (CompanyID && mode === "E") {
-        dispatch(CompReportFetchData({ CompanyID:CompanyID }));
-      } else {
-        dispatch(CompReportFetchData({ get: "get", CompanyID:CompanyID }));
-      }
-    }
-    //Policy
-    if (event.target.value == "3") {
-      if (CompanyID && mode === "E") {
-        dispatch(PolicyFetchData({ get: "get", CompanyID:CompanyID }));
-      } else {
-        dispatch(PolicyFetchData({ get: "get", CompanyID:CompanyID }));
-      }
-    }
+            if (CompanyID && mode === "E") {
+                dispatch(BankFetchData({ get: "get", CompanyID: CompanyID }));
+            } else {
+                dispatch(BankFetchData({ get: "get", CompanyID: CompanyID }));
+            }
+        }
+        if (event.target.value == "2") {
+            if (CompanyID && mode === "E") {
+                dispatch(CompReportFetchData({ CompanyID: CompanyID }));
+            } else {
+                dispatch(CompReportFetchData({ get: "get", CompanyID: CompanyID }));
+            }
+        }
+        //Policy
+        if (event.target.value == "3") {
+            if (CompanyID && mode === "E") {
+                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+            } else {
+                dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
+            }
+        }
         // if (event.target.value == "1") {
         //     if (mode === "E") {
         //         dispatch(PolicyFetchData({ get: "get", CompanyID: CompanyID }));
@@ -1906,6 +1910,8 @@ const Configuration = () => {
         noofusers: data.CM_NOOFUSER,
         noofemployee: data.CM_NOOFEMP,
         address: data.CM_ADDRESS,
+        Razorpayid: data.CM_RAZORPAYID,
+        Razorpaykey: data.CM_RAZORPAYKEY,
         gstnumber: data.CM_GST,
         sessiontime: data.CM_SESSIONTIMEOUT,
         gracetime: data.CM_GRACETIME,
@@ -1952,7 +1958,9 @@ const Configuration = () => {
             FooterImg: data.CM_FOOTER,
             CompanyName: data.CM_NAME,
             GraceTime: gracetime || 15,
-            SessionTimeOut: sessiontime || 600
+            SessionTimeOut: sessiontime || 600,
+            RazorpayID: razorpayid,
+            RazorpayKey: razorpaykey,
 
         };
         console.log(offaddress, "Address");
@@ -2508,6 +2516,7 @@ const Configuration = () => {
                                                     />
 
 
+
                                                 </FormControl>
                                                 <FormControl
                                                     fullWidth
@@ -2602,6 +2611,8 @@ const Configuration = () => {
                                                         }}
 
                                                     />
+
+
                                                     <TextField
                                                         name="sessiontime"
                                                         type="number"
@@ -2634,8 +2645,120 @@ const Configuration = () => {
 
                                             <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                                             <Typography variant="h5" padding={1}>Company Details:</Typography>
-
                                             <Box
+                                                display="grid"
+                                                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                                                gap={formGap}
+                                                padding={1}
+                                            >
+                                                {/* Fields occupy full width, 50% each */}
+                                                <Box
+                                                    display="grid"
+                                                    gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+                                                    gap={formGap}
+                                                    sx={{
+                                                        gridColumn: "span 4",
+                                                        width: "100%",
+                                                        "& .MuiOutlinedInput-root": {
+                                                            backgroundColor: "#fff",
+                                                            borderRadius: "6px",
+                                                            "& fieldset": {
+                                                                borderColor: "#d1d5db",
+                                                            },
+                                                            "&:hover fieldset": {
+                                                                borderColor: "#bfc4cc",
+                                                            },
+                                                            "&.Mui-focused fieldset": {
+                                                                borderColor: "#d1d5db",
+                                                                borderWidth: "1px",
+                                                            },
+                                                        },
+                                                        "& .MuiInputLabel-root": {
+                                                            color: "#6b7280",
+                                                        },
+                                                        "& .MuiInputLabel-root.Mui-focused": {
+                                                            color: "#6b7280",
+                                                        },
+                                                    }}
+                                                >
+                                                    <TextField
+                                                        name="address"
+                                                        id="address"
+                                                        label="Office Address"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        multiline
+                                                        rows={3}
+                                                        value={offaddress}
+                                                        onChange={(e) => setOffaddress(e.target.value)}
+                                                        fullWidth
+                                                    />
+
+                                                    <TextField
+                                                        name="gstnumber"
+                                                        id="gstnumber"
+                                                        label="GST Number"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        value={gst}
+                                                        onChange={(e) => {
+                                                            const input = e.target.value.toUpperCase();
+                                                            if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                                                                setGst(input);
+                                                            }
+                                                        }}
+                                                        fullWidth
+                                                    />
+
+                                                    <TextField
+                                                        name="razorpayid"
+                                                        id="razorpayid"
+                                                        label="Razorpay ID"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        value={razorpayid}
+                                                        onChange={(e) => setRazorpayid(e.target.value)}                  
+                                                        fullWidth
+                                                        onBlur={handleBlur}
+                                                         InputLabelProps={{ shrink: true }}
+
+                                                    />
+
+                                                    <TextField
+                                                        name="razorpaykey"
+                                                        id="razorpaykey"
+                                                        label="Razorpay Key"
+                                                        variant="outlined"
+                                                        size="small"
+                                                        value={razorpaykey}
+                                                        onChange={(e) => setRazorpaykey(e.target.value)}
+                                                        fullWidth
+                                                        onBlur={handleBlur}
+                                                         InputLabelProps={{ shrink: true }}
+                                                    />
+                                                </Box>
+
+                                                {/* Checkbox below the fields */}
+                                                <Box
+                                                    sx={{
+                                                        gridColumn: "span 4",
+                                                        display: "flex",
+                                                        justifyContent: "flex-start",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <Checkbox
+                                                        checked={autocode}
+                                                        onChange={handleAutocodeChange}
+                                                        id="checkbox"
+                                                        name="checkbox"
+                                                    />
+                                                    <FormLabel htmlFor="checkbox" focused={false}>
+                                                        Autocode
+                                                    </FormLabel>
+                                                </Box>
+                                            </Box>
+                                            {/* <Box
                                                 display="grid"
                                                 gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                                                 gap={formGap}
@@ -2672,23 +2795,7 @@ const Configuration = () => {
                                                     },
 
                                                 }}>
-                                                    {/* <TextField
-                                            name="address"
-                                            type="text"
-                                            id="address"
-                                            label="Office Address"
-                                            variant="outlined"
-size="small"
-                                            multiline
-                                            rows={3}
-                                            focused
-                                            value={values.address}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            error={!!touched.address && !!errors.address}
-                                            helperText={touched.address && errors.address}
-                                            //autoFocus
-                                        /> */}
+                                                    
                                                     <TextField
                                                         name="address"
                                                         type="text"
@@ -2705,29 +2812,7 @@ size="small"
                                                     />
 
 
-                                                    {/* <TextField
-                                            name="gstnumber"
-                                            label="GST Number"
-                                            variant="outlined"
-size="small"
-                                            focused
-                                            value={values.gstnumber}
-                                            onBlur={handleBlur}
-                                            onChange={(e) => {
-                                                const input = e.target.value.toUpperCase();
-                                                if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                                                    handleChange({
-                                                        target: {
-                                                            name: "gstnumber",
-                                                            value: input,
-                                                        },
-                                                    });
-                                                }
-                                            }}
-                                            error={!!touched.gstnumber && !!errors.gstnumber}
-                                            helperText={touched.gstnumber && errors.gstnumber}
-                                            sx={{ backgroundColor: "#ffffff" }}
-                                        /> */}
+                                                    
                                                     <TextField
                                                         name="gstnumber"
                                                         label="GST Number"
@@ -2743,18 +2828,53 @@ size="small"
                                                         }}
                                                         sx={{ backgroundColor: "#ffffff" }}
                                                     />
+                                                      <TextField
+                                                    name="razorpayid"
+                                                    type="text"
+                                                    id="razorpayid"
+                                                    label="Razorpay ID"
+                                                    variant="outlined"
+                                                    size="small"
+                                                    value={values.razorpayid}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    error={!!touched.razorpayid && !!errors.razorpayid}
+                                                    helperText={touched.razorpayid && errors.razorpayid}
+                                                    sx={{
+                                                        backgroundColor: "#ffffff", 
+                                                        "& .MuiFilledInput-root": {
+                                                            backgroundColor: "#f5f5f5 ", 
+                                                        },
+                                                    }}                                                
+                                               
+                                                />
+                                               
+                                                    <TextField
+                                                    name="razorpaykey"
+                                                    type="text"
+                                                    id="razorpaykey"
+                                                    label="Razorpay Key"
+                                                    variant="outlined"
+                                                    size="small"
+                                                    value={values.razorpaykey}
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    error={!!touched.razorpaykey && !!errors.razorpaykey}
+                                                    helperText={touched.razorpaykey && errors.razorpaykey}
+                                                    sx={{
+                                                        backgroundColor: "#ffffff", 
+                                                        "& .MuiFilledInput-root": {
+                                                            backgroundColor: "#f5f5f5 ", 
+                                                        },
+                                                    }}                                                
+                                               
+                                                />
+                                                  
 
                                                 </FormControl>
                                                 <Box>
-                                                    {/* <Checkbox
-                                            checked={autocode}
-                                            onChange={(e) => setAutocode(e.target.checked)}
-                                            id="checkbox"
-                                            name="checkbox"
-                                        />
-                                        <FormLabel htmlFor="checkbox" focused={false}>
-                                            Autocode
-                                        </FormLabel> */}
+                                                    
+                                                   
                                                     <Checkbox
                                                         checked={autocode}
                                                         onChange={handleAutocodeChange}
@@ -2766,7 +2886,8 @@ size="small"
                                                     </FormLabel>
 
                                                 </Box>
-                                            </Box>
+                                                 
+                                            </Box> */}
 
                                             <Box
                                                 display="flex"
@@ -2775,7 +2896,6 @@ size="small"
                                                 mt="20px"
                                                 gap="20px"
                                             >
-                                                {/* <Box display="flex" alignItems="center" gap={formGap}> */}
                                                 <Tooltip title="Upload Logo">
                                                     <IconButton
                                                         size="small"
@@ -3108,7 +3228,7 @@ size="small"
                                                             readOnly: true,
                                                         },
                                                     }}
-                                                    // //autoFocus
+                                                // //autoFocus
                                                 />
                                                 {/* )} */}
                                                 <TextField
@@ -3172,7 +3292,7 @@ size="small"
                                                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                                         },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 {/* <TextField
                     name="Accounttype"
@@ -3268,7 +3388,7 @@ size="small"
                                                     sx={{
                                                         backgroundColor: "#ffffff",
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 <TextField
                                                     name="ifsc"
@@ -3304,7 +3424,7 @@ size="small"
                                                     sx={{
                                                         backgroundColor: "#ffffff",
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 <TextField
                                                     name="accountholdname"
@@ -3338,7 +3458,7 @@ size="small"
                                                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                                         },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
 
                                                 <TextField
@@ -3425,7 +3545,7 @@ size="small"
                                                     sx={{
                                                         backgroundColor: "#ffffff",
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 <TextField
                                                     name="bankaddress"
@@ -3454,7 +3574,7 @@ size="small"
                                                     }}
                                                     error={!!touched.bankaddress && !!errors.bankaddress}
                                                     helperText={touched.bankaddress && errors.bankaddress}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                             </Box>
                                             <Box
@@ -3680,7 +3800,7 @@ size="small"
                                                             readOnly: true,
                                                         },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 {/* )} */}
                                                 <TextField
@@ -4269,7 +4389,7 @@ size="small"
                                                             readOnly: true,
                                                         },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 {/* )} */}
                                                 <TextField
@@ -4314,7 +4434,7 @@ size="small"
                                                     },
                                                 }}
                                             >
-                                               
+
 
                                                 <TextField
                                                     name="noofpaidleave"
@@ -4339,7 +4459,7 @@ size="small"
                                                         style: { textAlign: "right" },
                                                     }}
                                                 />
-                                                </Box>
+                                            </Box>
                                             <Typography variant="h5" padding={1}>
                                                 Permission:
                                             </Typography>
@@ -4410,7 +4530,7 @@ size="small"
                                                     inputProps={{
                                                         style: { textAlign: "right" },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 <TextField
                                                     name="lossofpayrate"
@@ -4434,7 +4554,7 @@ size="small"
                                                     inputProps={{
                                                         style: { textAlign: "right" },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 {/* </FormControl> */}
                                             </Box>
@@ -4478,7 +4598,7 @@ size="small"
                                                     inputProps={{
                                                         style: { textAlign: "right" },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
                                                 <TextField
                                                     name="lossofpayrate2"
@@ -4502,7 +4622,7 @@ size="small"
                                                     inputProps={{
                                                         style: { textAlign: "right" },
                                                     }}
-                                                    //autoFocus
+                                                //autoFocus
                                                 />
 
                                                 {/* </FormControl> */}
@@ -4553,7 +4673,7 @@ size="small"
                                                         inputProps={{
                                                             style: { textAlign: "right" },
                                                         }}
-                                                        // //autoFocus
+                                                    // //autoFocus
                                                     />
                                                 </FormControl>
                                             </Box>

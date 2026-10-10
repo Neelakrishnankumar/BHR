@@ -457,6 +457,7 @@ setAssignedRows(promotedOnly);
         StudentID: student.StudentID,
         ProjectID: rowData.projectID || recID,
         CompanyID: CompanyID,
+        TermID: "" // API requires this empty structure
       }),
     );
 
@@ -791,6 +792,7 @@ setAssignedRows(promotedOnly);
             StudentID: marksDialogStudent?.StudentID,
             ProjectID: rowData.projectID || recID,
             CompanyID: CompanyID,
+            TermID: "" // API requires this empty structure
           }),
         );
         
@@ -886,6 +888,7 @@ setAssignedRows(promotedOnly);
             StudentID: marksDialogStudent?.RecordID,
             ProjectID: rowData.projectID || recID,
             CompanyID: CompanyID,
+            TermID: "" // API requires this empty structure
           }),
         );
       } else {

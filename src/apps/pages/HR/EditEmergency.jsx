@@ -504,15 +504,15 @@ const EditEmergency = () => {
     },
                           }
                         }
-                      onClick={() => {
-                        // navigate("/Apps/TR243/Party");
-                        navigate(
-                          `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
-                          {
-                            state: { ...state },
-                          },
-                        );
-                      }}
+                      // onClick={() => {
+                      //   // navigate("/Apps/TR243/Party");
+                      //   navigate(
+                      //     `/Apps/SecondarylistView/TR384/Event%20Category/${params.leaderID}`,
+                      //     {
+                      //       state: { ...state },
+                      //     },
+                      //   );
+                      // }}
                       //  sx={breadcrumbStyles.item}
                       onClick={() => {
                         // navigate("/Apps/TR243/Party");

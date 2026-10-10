@@ -3405,7 +3405,7 @@ export const promotionupdate = createAsyncThunk(
 
 export const promototioStudMarksGET = createAsyncThunk(
   "PROMOTION_STUDENT_MARKS/GET",
-  async ({ StudentID, ProjectID, CompanyID }) => {
+  async ({ StudentID, ProjectID, CompanyID,TermID }) => {
     var url = store.getState().globalurl.PromotionstudmarksGetUrl;
 
     const payload =
@@ -3413,7 +3413,7 @@ export const promototioStudMarksGET = createAsyncThunk(
       StudentID: StudentID,
       ProjectID: ProjectID,
       CompanyID: CompanyID,
-
+      TermID:TermID
     }
     const response = await axios.post(url, payload, {
       headers: {
@@ -3451,7 +3451,31 @@ export const promotionstudmarksupdate = createAsyncThunk(
   }
 );
 
+export const StudentReportcardget = createAsyncThunk(
+  "STUDENT_REPORT_CARD/GET",
+  async ({ StudentID, StandardID, CompanyID,TermID }) => {
+    var url = store.getState().globalurl.StudentReportCardGet;
 
+    const payload =
+    {
+      StudentID: StudentID,
+      StandardID: StandardID,
+      CompanyID: CompanyID,
+      TermID:TermID
+    }
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const PublishEvent = createAsyncThunk(
   "PublishEvent/Post",
   async ({ data }) => {

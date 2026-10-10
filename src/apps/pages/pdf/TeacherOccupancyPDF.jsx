@@ -1,3 +1,4 @@
+
 // import React from "react";
 // import {
 //   Page,
@@ -8,18 +9,23 @@
 //   Image,
 // } from "@react-pdf/renderer";
 
-// // ─── STYLES ───────────────────────────────────────────────────────────────────
-// const styles = StyleSheet.create({
-//   page: {
-//     paddingTop: 70,
-//     paddingBottom: 70,
-//     paddingHorizontal: 20,
-//     fontSize: 10,
-//     fontFamily: "Helvetica",
-//     backgroundColor: "#fff",
-//   },
+// /* =========================================================
+//    DESIGN TOKENS  (black & white only — no fills anywhere)
+// ========================================================= */
 
-//   // ─── Fixed Header Image ───
+// const COLORS = {
+//   black: "#000000",
+// };
+
+// const BOLD = "Helvetica-Bold";
+// const REGULAR = "Helvetica";
+
+// /* =========================================================
+//    STYLES
+// ========================================================= */
+
+// const styles = StyleSheet.create({
+//   /* ---------- Fixed header image ---------- */
 //   headerWrapper: {
 //     position: "absolute",
 //     top: 8,
@@ -32,235 +38,395 @@
 //   headerImage: {
 //     width: "100%",
 //     height: 60,
+//     marginBottom: 10,
 //     objectFit: "contain",
-//     marginBottom: 12,
 //   },
 
-//   // ─── Fixed Footer Image ───
-//   footerWrapper: {
-//     position: "absolute",
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     height: 55,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   footerImage: {
-//     width: "100%",
-//     height: 55,
-//     objectFit: "cover",
-//   },
-
-//   // ─── Report Title (first page only) ───
+//   /* ---------- Report title (first page only) ---------- */
 //   reportTitle: {
+//     fontFamily: BOLD,
 //     fontSize: 16,
-//     fontWeight: "bold",
-//     color: "#1e1e3a",
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     textAlign: "center",
 //     marginBottom: 10,
 //     paddingBottom: 10,
 //     borderBottomWidth: 2,
-//     borderBottomColor: "#1e1e3a",
+//     borderBottomColor: COLORS.black,
 //   },
 
-//   // ─── Timetable ───
+//   /* ---------- TIMETABLE (full grid) ----------
+//      The container owns the left + top border, every cell owns its
+//      right border, and every row owns its bottom border. */
+
 //   timetableContainer: {
 //     marginBottom: 15,
-//     border: "1px solid #E2E8F0",
-//     borderRadius: 4,
+//     borderLeftWidth: 1,
+//     borderLeftColor: COLORS.black,
+//     borderTopWidth: 1,
+//     borderTopColor: COLORS.black,
 //   },
 
-//   // ─── Teacher Name + "Timetable" title row (spans full width) ───
+//   /* Teacher name title row */
 //   timetableTitleRow: {
 //     flexDirection: "row",
-//     backgroundColor: "#EEF2FF",
-//     // "#1e1e3a",
+//     justifyContent: "space-between",
+//     alignItems: "center",
 //     padding: 8,
-//     borderTopLeftRadius: 4,
-//     borderTopRightRadius: 4,
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
 //   },
 //   timetableTitleText: {
-//     fontSize: 11,
-//     fontWeight: "bold",
-//     color: "#000",
+//     fontFamily: BOLD,
+//     fontSize: 12,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 //   timetableTitleSep: {
-//     fontSize: 11,
-//     color: "#94A3B8",
+//     fontFamily: BOLD,
+//     fontSize: 12,
+//     color: COLORS.black,
 //     marginHorizontal: 6,
 //   },
 //   timetableTitleSub: {
-//     fontSize: 10,
-//     color: "#000",
-//     marginTop: 1,
+//     fontFamily: BOLD,
+//     fontSize: 11,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 
-//   // ─── Column Header Row ───
-//   timetableHeader: {
-//     backgroundColor: "#F8FAFC",
-//     borderBottomWidth: 2,
-//     borderBottomColor: "#1e1e3a",
+//   /* Total / Occupied / Free boxes in the title row */
+//   statBox: {
+//     borderWidth: 1,
+//     borderColor: COLORS.black,
+//     paddingHorizontal: 8,
+//     paddingVertical: 3,
+//     alignItems: "center",
+//     minWidth: 58,
+//     marginLeft: 6,
 //   },
-//   timetableHeaderCell: {
+//   statBoxLabel: {
+//     fontFamily: BOLD,
+//     fontSize: 7.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     marginBottom: 2,
+//   },
+//   statBoxValue: {
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//   },
+
+//   /* Column header row (period slots) */
+//   timetableHeaderRow: {
+//     flexDirection: "row",
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
+//   },
+
+//   dayCornerCell: {
+//     width: 44,
+//     flexShrink: 0,
 //     padding: 6,
-//     fontSize: 9,
-//     fontWeight: "bold",
-//     color: "#1e1e3a",
-//     textAlign: "center",
 //     borderRightWidth: 1,
-//     borderRightColor: "#E2E8F0",
+//     borderRightColor: COLORS.black,
+//     justifyContent: "center",
+//     alignItems: "center",
 //   },
-//   timetableHeaderCellLast: {
-//     borderRightWidth: 0,
+//   dayCornerText: {
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 
-//   // ─── Time & Day Cells ───
-//   timeCell: {
-//     padding: 8,
-//     fontSize: 9,
-//     fontWeight: "bold",
-//     color: "#334155",
-//     textAlign: "left",
-//     borderRightWidth: 1,
-//     borderRightColor: "#F1F5F9",
-//     width: "12%",
-//     minWidth: 80,
-//   },
-//   dayCell: {
-//     padding: 8,
-//     fontSize: 9,
-//     color: "#475569",
-//     textAlign: "center",
-//     borderRightWidth: 1,
-//     borderRightColor: "#F1F5F9",
+//   slotHeaderCell: {
 //     flex: 1,
-//     minHeight: 40,
-//     display: "flex",
+//     padding: 5,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
 //     alignItems: "center",
 //     justifyContent: "center",
 //   },
-//   dayCellLast: { borderRightWidth: 0 },
-//   breakCell:   { backgroundColor: "#F1F5F9" },
+//   slotPeriodLabel: {
+//     fontFamily: BOLD,
+//     fontSize: 8.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//     marginBottom: 2,
+//   },
+//   slotTimeRange: {
+//     fontFamily: BOLD,
+//     fontSize: 7,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//     lineHeight: 1.3,
+//   },
 
-//   // ─── Subject Cell ───
-//   subjectCellBox: {
-//     padding: 6,
-//     backgroundColor: "#FFFBEB",
-//     borderLeftWidth: 3,
-//     borderLeftColor: "#F59E0B",
-//     borderRadius: 3,
-//     fontSize: 8,
+//   /* Data rows (one per day) */
+//   dataRow: {
+//     flexDirection: "row",
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
+//     minHeight: 40,
+//   },
+
+//   dayNameCell: {
+//     width: 44,
+//     flexShrink: 0,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     padding: 4,
+//   },
+//   dayNameText: {
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     textAlign: "center",
 //   },
-//   subjectName:  { fontWeight: "bold", color: "#92400E", marginBottom: 2 },
-//   subjectGrade: { fontSize: 8, color: "#F59E0B" },
 
-//   // ─── Summary Page Title ───
+//   dataCell: {
+//     flex: 1,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
+//     padding: 4,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+
+//   subjectName: {
+//     fontFamily: BOLD,
+//     fontSize: 7.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//     marginBottom: 1,
+//   },
+//   subjectGrade: {
+//     fontFamily: REGULAR,
+//     fontSize: 7,
+//     color: COLORS.black,
+//     textAlign: "center",
+//   },
+//   emptyDash: {
+//     fontSize: 8,
+//     color: COLORS.black,
+//     textAlign: "center",
+//   },
+
+//   /* ---------- SUMMARY PAGE ---------- */
+
 //   summaryPageTitle: {
+//     fontFamily: BOLD,
 //     fontSize: 16,
-//     fontWeight: "bold",
-//     color: "#1e1e3a",
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     marginTop: 8,
 //     marginBottom: 6,
 //     textAlign: "center",
 //     paddingBottom: 10,
 //   },
 
-//   // ─── Stat Cards ───
+//   sectionLabel: {
+//     fontFamily: BOLD,
+//     fontSize: 12,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     marginBottom: 10,
+//     marginTop: 4,
+//   },
+
+//   /* Stat cards: one bordered strip with dividers */
 //   overviewCard: {
 //     flexDirection: "row",
-//     justifyContent: "space-between",
+//     borderWidth: 1,
+//     borderColor: COLORS.black,
 //     marginBottom: 20,
-//     gap: 8,
 //   },
 //   statCard: {
 //     flex: 1,
 //     padding: 12,
-//     backgroundColor: "#F8FAFC",
-//     border: "1px solid #E2E8F0",
-//     borderRadius: 6,
+//     alignItems: "center",
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
+//   },
+//   statCardLast: {
+//     flex: 1,
+//     padding: 12,
 //     alignItems: "center",
 //   },
-//   statValue:         { fontSize: 18, fontWeight: "bold", color: "#1e1e3a", marginBottom: 4 },
-//   statLabel:         { fontSize: 8, color: "#64748B", textAlign: "center" },
-//   statValueOccupied: { color: "#FB923C" },
-//   statValueFree:     { color: "#10B981" },
+//   statValue: {
+//     fontFamily: BOLD,
+//     fontSize: 18,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     marginBottom: 4,
+//   },
+//   statLabel: {
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//   },
 
-//   // ─── Overall Summary Table ───
+//   /* Overall summary table (full grid) */
 //   overallSummaryTable: {
 //     marginBottom: 20,
-//     border: "1px solid #E2E8F0",
-//     borderRadius: 4,
+//     borderLeftWidth: 1,
+//     borderLeftColor: COLORS.black,
+//     borderTopWidth: 1,
+//     borderTopColor: COLORS.black,
 //   },
 //   overallSummaryHeaderRow: {
 //     flexDirection: "row",
-//     backgroundColor: "#EEF2FF",
 //     borderBottomWidth: 1,
-//     borderBottomColor: "#E2E8F0",
+//     borderBottomColor: COLORS.black,
 //   },
-//   overallSummaryRow:     { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#E2E8F0" },
-//   overallSummaryRowLast: { flexDirection: "row" },
-//   overallSummaryRowAlt:  { backgroundColor: "#F8FAFC" },
+//   overallSummaryRow: {
+//     flexDirection: "row",
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
+//   },
 
-//   colTeacher:  { width: "28%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0" },
-//   colSubjects: { width: "32%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0" },
-//   colTotal:    { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0", textAlign: "center" },
-//   colOccupied: { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: "#E2E8F0", textAlign: "center" },
-//   colFree:     { width: "14%", padding: 8, textAlign: "center" },
+//   /* Column widths total 100% (28 + 32 + 13 + 13 + 14) */
+//   colTeacher: { width: "28%", padding: 8, borderRightWidth: 1, borderRightColor: COLORS.black },
+//   colSubjects: { width: "32%", padding: 8, borderRightWidth: 1, borderRightColor: COLORS.black },
+//   colTotal: { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: COLORS.black, textAlign: "center" },
+//   colOccupied: { width: "13%", padding: 8, borderRightWidth: 1, borderRightColor: COLORS.black, textAlign: "center" },
+//   colFree: { width: "14%", padding: 8, borderRightWidth: 1, borderRightColor: COLORS.black, textAlign: "center" },
 
-//   overallHeaderText:   { fontSize: 9, fontWeight: "bold",textAlign: "center", color: "#000" },
-//   overallCellText:     { fontSize: 9, color: "#334155" },
-//   overallCellOccupied: { fontSize: 9, color: "#FB923C", fontWeight: "bold" },
-//   overallCellFree:     { fontSize: 9, color: "#10B981", fontWeight: "bold" },
-//   overallCellTeacher:  { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
+//   overallHeaderText: {
+//     fontFamily: BOLD,
+//     fontSize: 10,
+//     fontWeight: 700,
+//     textAlign: "center",
+//     color: COLORS.black,
+//   },
+//   overallCellText: { fontSize: 9, color: COLORS.black },
+//   overallCellBold: {
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//   },
+//   overallCellCenter: { fontSize: 9, color: COLORS.black, textAlign: "center" },
+//   overallCellTeacher: {
+//     fontFamily: BOLD,
+//     fontSize: 9.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//   },
+//   overallCellStandards: {
+//     fontSize: 8,
+//     color: COLORS.black,
+//     marginTop: 2,
+//   },
 
-//   // ─── Grand Total Row ───
-//   grandTotalRow:      { flexDirection: "row", backgroundColor: "#EEF2FF", borderTopWidth: 1, borderTopColor: "#1e1e3a" },
-//   grandTotalText:     { fontSize: 9, fontWeight: "bold", color: "#1e1e3a" },
-//   grandTotalOccupied: { fontSize: 9, fontWeight: "bold", color: "#FB923C" },
-//   grandTotalFree:     { fontSize: 9, fontWeight: "bold", color: "#10B981" },
+//   grandTotalRow: {
+//     flexDirection: "row",
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
+//   },
+//   grandTotalText: {
+//     fontFamily: BOLD,
+//     fontSize: 9.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//   },
+//   grandTotalCenter: {
+//     fontFamily: BOLD,
+//     fontSize: 9.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//   },
 
-//   // ─── Subject Breakdown ───
+//   /* Subject details per teacher */
 //   subjectBreakdownSection: { marginTop: 20 },
 //   subjectBreakdownTitle: {
+//     fontFamily: BOLD,
 //     fontSize: 12,
-//     fontWeight: "bold",
-//     color: "#1e1e3a",
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     marginBottom: 10,
 //     paddingBottom: 6,
 //     borderBottomWidth: 1,
-//     borderBottomColor: "#E2E8F0",
+//     borderBottomColor: COLORS.black,
 //   },
 //   teacherSubjectBlock: {
-//     marginBottom: 14,
 //     padding: 10,
-//     backgroundColor: "#F8FAFC",
-//     borderRadius: 4,
-//     border: "1px solid #E2E8F0",
+//     marginBottom: 10,
+//     borderWidth: 1,
+//     borderColor: COLORS.black,
 //   },
-//   teacherSubjectBlockName: { fontSize: 10, fontWeight: "bold", color: "#1e1e3a", marginBottom: 6 },
-//   subjectTagsRow:          { flexDirection: "row", flexWrap: "wrap" },
+//   teacherSubjectBlockName: {
+//     fontFamily: BOLD,
+//     fontSize: 10.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     marginBottom: 6,
+//   },
+//   teacherSubjectBlockMeta: {
+//     fontFamily: REGULAR,
+//     fontWeight: 400,
+//     color: COLORS.black,
+//   },
+//   subjectTagsRow: { flexDirection: "row", flexWrap: "wrap" },
 //   subjectTag: {
-//     backgroundColor: "#EEF2FF",
-//     border: "0.5px solid #6366F1",
+//     borderWidth: 0.75,
+//     borderColor: COLORS.black,
 //     padding: 4,
 //     marginRight: 6,
 //     marginBottom: 4,
-//     borderRadius: 3,
 //   },
-//   subjectTagText: { fontSize: 8, color: "#3730A3", fontWeight: 600 },
-
-//   sectionLabel: {
-//     fontSize: 11,
-//     fontWeight: "bold",
-//     color: "#1e1e3a",
-//     marginBottom: 10,
-//     marginTop: 4,
+//   subjectTagText: {
+//     fontFamily: BOLD,
+//     fontSize: 8,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 // });
 
-// // ─── REUSABLE HEADER ─────────────────────────────────────────────────────────
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// const DEFAULT_FOOTER_HEIGHT = 70;
+
+// const pageStyle = (footerHeight) => ({
+//   paddingTop: 70,
+//   paddingBottom: footerHeight || DEFAULT_FOOTER_HEIGHT,
+//   paddingHorizontal: 20,
+//   fontSize: 10,
+//   fontFamily: REGULAR,
+//   color: COLORS.black,
+// });
+
+// const parseTime = (t) => {
+//   if (!t) return 0;
+//   const parts = t.trim().split(" ");
+//   const ampm = parts[1];
+//   let [h, m] = parts[0].split(":").map(Number);
+//   if (ampm === "PM" && h !== 12) h += 12;
+//   if (ampm === "AM" && h === 12) h = 0;
+//   return h * 60 + m;
+// };
+
+// /* =========================================================
+//    REUSABLE HEADER / FOOTER
+// ========================================================= */
+
 // const PageHeader = ({ filters }) => {
 //   if (!filters?.HeaderImg) return null;
 //   return (
@@ -273,141 +439,139 @@
 //   );
 // };
 
-// // ─── REUSABLE FOOTER ─────────────────────────────────────────────────────────
-// const PageFooter = ({ filters }) => {
+// const PageFooter = ({ filters, footerHeight }) => {
 //   if (!filters?.FooterImg) return null;
 //   return (
-//     <View fixed style={styles.footerWrapper}>
+//     <View
+//       fixed
+//       style={{
+//         position: "absolute",
+//         bottom: 0,
+//         left: 0,
+//         right: 0,
+//         height: footerHeight || DEFAULT_FOOTER_HEIGHT,
+//       }}
+//     >
 //       <Image
 //         src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-//         style={styles.footerImage}
+//         style={{
+//           width: "100%",
+//           height: "100%",
+//         }}
 //       />
 //     </View>
 //   );
 // };
 
-// // ─── TIMETABLE TABLE ──────────────────────────────────────────────────────────
-// // teacherName is shown as a full-width title row at the top of the table
-// const TeacherTimetableTable = ({ teacher }) => {
+// /* =========================================================
+//    TIMETABLE TABLE
+//    Layout: Days = rows | Period slots = columns
+// ========================================================= */
+
+// const TeacherTimetableTable = ({ teacher, summary }) => {
 //   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-//   const { timeSlots, BreakSlotsList, schedule, TeacherName } = teacher;
+//   const { timeSlots, BreakSlots, BreakSlotsList, schedule, TeacherName } = teacher;
 
-//   const parseTime = (t) => {
-//     if (!t) return 0;
-//     const parts = t.trim().split(" ");
-//     const ampm = parts[1];
-//     let [h, m] = parts[0].split(":").map(Number);
-//     if (ampm === "PM" && h !== 12) h += 12;
-//     if (ampm === "AM" && h === 12) h = 0;
-//     return h * 60 + m;
-//   };
-
-//   const allSlotKeys = [
-//     ...timeSlots,
-//     ...BreakSlotsList.map((b) => b.SlotText),
-//   ].sort((a, b) => parseTime(a.split(" - ")[0]) - parseTime(b.split(" - ")[0]));
+//   // Exclude break/assembly/lunch/activity — keep only actual teaching periods
+//   const breakTexts = new Set(BreakSlotsList.map((b) => b.SlotText));
+//   const periodSlots = [...timeSlots]
+//     .filter((s) => !breakTexts.has(s))
+//     .sort((a, b) => parseTime(a.split(" - ")[0]) - parseTime(b.split(" - ")[0]));
 
 //   const dayMap = {};
 //   schedule.forEach((d) => { dayMap[d.day] = d.slots; });
 
-//   const breakTexts = new Set(BreakSlotsList.map((b) => b.SlotText));
-
 //   return (
 //     <View style={styles.timetableContainer}>
 
-//       {/* ── Full-width Teacher Name + "Timetable" title row ── */}
+//       {/* ── Teacher name title row ── */}
 //       <View style={styles.timetableTitleRow}>
-//         <Text style={styles.timetableTitleText}>{TeacherName}</Text>
-//         <Text style={styles.timetableTitleSep}>|</Text>
-//         <Text style={styles.timetableTitleSub}>Timetable</Text>
-//       </View>
 
-//       {/* ── Column Header Row (Time | Mon | Tue …) ── */}
-//       <View style={[styles.timetableHeader, { flexDirection: "row" }]}>
-//         <View style={styles.timeCell}>
-//           <Text>Time</Text>
+//         {/* Left: Name | Timetable */}
+//         <View style={{ flexDirection: "row", alignItems: "center" }}>
+//           <Text style={styles.timetableTitleText}>{TeacherName}</Text>
+//           <Text style={styles.timetableTitleSep}>|</Text>
+//           <Text style={styles.timetableTitleSub}>Timetable</Text>
 //         </View>
-//         {DAYS.map((day, idx) => (
-//           <View
-//             key={day}
-//             style={[
-//               styles.timetableHeaderCell,
-//               idx === DAYS.length - 1 && styles.timetableHeaderCellLast,
-//               { flex: 1 },
-//             ]}
-//           >
-//             <Text>{day.slice(0, 3)}</Text>
+
+//         {/* Right: Total / Occupied / Free from matched summary */}
+//         {summary && (
+//           <View style={{ flexDirection: "row" }}>
+//             <View style={styles.statBox}>
+//               <Text style={styles.statBoxLabel}>Total</Text>
+//               <Text style={styles.statBoxValue}>{summary.TotalHours}</Text>
+//             </View>
+//             <View style={styles.statBox}>
+//               <Text style={styles.statBoxLabel}>Occupied</Text>
+//               <Text style={styles.statBoxValue}>{summary.OccupiedHours}</Text>
+//             </View>
+//             <View style={styles.statBox}>
+//               <Text style={styles.statBoxLabel}>Free</Text>
+//               <Text style={styles.statBoxValue}>{summary.FreeHours}</Text>
+//             </View>
 //           </View>
-//         ))}
+//         )}
 //       </View>
 
-//       {/* ── Data Rows ── */}
-//       {allSlotKeys.map((slotKey) => {
-//         const isBreak  = breakTexts.has(slotKey);
-//         const [fromTime] = slotKey.split(" - ");
-//         const breakInfo  = isBreak
-//           ? BreakSlotsList.find((b) => b.SlotText === slotKey)
-//           : null;
+//       {/* ── Column header row ── */}
+//       <View style={styles.timetableHeaderRow}>
+//         <View style={styles.dayCornerCell}>
+//           <Text style={styles.dayCornerText}>Day</Text>
+//         </View>
 
-//         return (
-//           <View
-//             key={slotKey}
-//             style={[
-//               { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#F1F5F9" },
-//               isBreak && styles.breakCell,
-//             ]}
-//           >
-//             {/* Time Column */}
-//             <View style={[styles.timeCell, isBreak && styles.breakCell]}>
-//               {isBreak ? (
-//                 <>
-//                   <Text style={{ fontSize: 8, fontWeight: "bold", marginBottom: 2 }}>
-//                     {breakInfo?.SlotName}
-//                   </Text>
-//                   <Text style={{ fontSize: 8 }}>{fromTime}</Text>
-//                 </>
-//               ) : (
-//                 <Text>{fromTime}</Text>
-//               )}
+//         {periodSlots.map((slot, idx) => {
+//           // Period label from BreakSlots map e.g. "Period 1"; fallback to P<n>
+//           const periodLabel = (BreakSlots && BreakSlots[slot]) ? BreakSlots[slot] : `P${idx + 1}`;
+//           const [fromTime, toTime] = slot.split(" - ");
+//           return (
+//             <View key={slot} style={styles.slotHeaderCell}>
+//               <Text style={styles.slotPeriodLabel}>{periodLabel}</Text>
+//               <Text style={styles.slotTimeRange}>{fromTime} –</Text>
+//               <Text style={styles.slotTimeRange}>{toTime}</Text>
 //             </View>
+//           );
+//         })}
+//       </View>
 
-//             {/* Day Cells */}
-//             {DAYS.map((day, idx) => {
-//               const cellText    = isBreak ? "" : (dayMap[day]?.[slotKey] ?? "");
-//               const parts       = cellText
-//                 ? cellText.split(/\s*\(\s*|\s*\)/).filter(Boolean)
-//                 : [];
-//               const subjectPart = parts[0];
-//               const gradePart   = parts[1];
-
-//               return (
-//                 <View
-//                   key={day}
-//                   style={[
-//                     styles.dayCell,
-//                     idx === DAYS.length - 1 && styles.dayCellLast,
-//                     isBreak && styles.breakCell,
-//                     { flex: 1 },
-//                   ]}
-//                 >
-//                   {!isBreak && cellText && (
-//                     <View style={styles.subjectCellBox}>
-//                       {gradePart   && <Text style={styles.subjectName}>{gradePart}</Text>}
-//                       {subjectPart && <Text style={styles.subjectGrade}>{subjectPart}</Text>}
-//                     </View>
-//                   )}
-//                 </View>
-//               );
-//             })}
+//       {/* ── Data rows (one per day) ── */}
+//       {DAYS.map((day) => (
+//         <View key={day} style={styles.dataRow}>
+//           <View style={styles.dayNameCell}>
+//             <Text style={styles.dayNameText}>{day.slice(0, 3)}</Text>
 //           </View>
-//         );
-//       })}
+
+//           {periodSlots.map((slot) => {
+//             const cellText = dayMap[day]?.[slot] ?? "";
+//             const parts = cellText
+//               ? cellText.split(/\s*\(\s*|\s*\)/).filter(Boolean)
+//               : [];
+//             const subjectPart = parts[0] || "";
+//             const gradePart = parts[1] || "";
+
+//             return (
+//               <View key={slot} style={styles.dataCell}>
+//                 {cellText ? (
+//                   <View>
+//                     {gradePart ? <Text style={styles.subjectName}>{gradePart}</Text> : null}
+//                     {subjectPart ? <Text style={styles.subjectGrade}>{subjectPart}</Text> : null}
+//                   </View>
+//                 ) : (
+//                   <Text style={styles.emptyDash}>—</Text>
+//                 )}
+//               </View>
+//             );
+//           })}
+//         </View>
+//       ))}
 //     </View>
 //   );
 // };
 
-// // ─── OVERALL SUMMARY PAGE ─────────────────────────────────────────────────────
-// const OverallSummaryPage = ({ apiData, filters }) => {
+// /* =========================================================
+//    OVERALL SUMMARY PAGE
+// ========================================================= */
+
+// const OverallSummaryPage = ({ apiData, filters, footerHeight }) => {
 //   const summaries = apiData.Summaries || [];
 
 //   const parseMins = (str = "0h 0m") => {
@@ -417,125 +581,82 @@
 //   const toHM = (mins) => `${Math.floor(mins / 60)}h ${mins % 60}m`;
 
 //   const totalOccupied = summaries.reduce((s, r) => s + parseMins(r.OccupiedHours), 0);
-//   const totalFree     = summaries.reduce((s, r) => s + parseMins(r.FreeHours), 0);
+//   const totalFree = summaries.reduce((s, r) => s + parseMins(r.FreeHours), 0);
 
 //   return (
-//     <Page style={styles.page}>
+//     <Page style={pageStyle(footerHeight)}>
 //       <PageHeader filters={filters} />
-
 //       <Text style={styles.summaryPageTitle}>Overall Summary</Text>
 
-//       {/* Stat Cards */}
 //       <View style={styles.overviewCard}>
 //         <View style={styles.statCard}>
 //           <Text style={styles.statValue}>{apiData.Teachers.length}</Text>
 //           <Text style={styles.statLabel}>Total Teachers</Text>
 //         </View>
 //         <View style={styles.statCard}>
-//           <Text style={[styles.statValue, styles.statValueOccupied]}>
-//             {toHM(totalOccupied)}
-//           </Text>
+//           <Text style={styles.statValue}>{toHM(totalOccupied)}</Text>
 //           <Text style={styles.statLabel}>Total Occupied Hours</Text>
 //         </View>
-//         <View style={styles.statCard}>
-//           <Text style={[styles.statValue, styles.statValueFree]}>
-//             {toHM(totalFree)}
-//           </Text>
+//         <View style={styles.statCardLast}>
+//           <Text style={styles.statValue}>{toHM(totalFree)}</Text>
 //           <Text style={styles.statLabel}>Total Free Hours</Text>
 //         </View>
 //       </View>
 
-//       {/* Teacher-wise Breakdown Table */}
 //       <Text style={styles.sectionLabel}>Teacher-wise Breakdown</Text>
 //       <View style={styles.overallSummaryTable}>
 //         <View style={styles.overallSummaryHeaderRow}>
-//           <View style={styles.colTeacher}>
-//             <Text style={styles.overallHeaderText}>Teacher</Text>
-//           </View>
-//           <View style={styles.colSubjects}>
-//             <Text style={styles.overallHeaderText}>Subjects</Text>
-//           </View>
-//           <View style={styles.colTotal}>
-//             <Text style={styles.overallHeaderText}>Total Hrs</Text>
-//           </View>
-//           <View style={styles.colOccupied}>
-//             <Text style={styles.overallHeaderText}>Occupied</Text>
-//           </View>
-//           <View style={styles.colFree}>
-//             <Text style={styles.overallHeaderText}>Free Hrs</Text>
-//           </View>
+//           <View style={styles.colTeacher}><Text style={styles.overallHeaderText}>Teacher</Text></View>
+//           <View style={styles.colSubjects}><Text style={styles.overallHeaderText}>Subjects</Text></View>
+//           <View style={styles.colTotal}><Text style={styles.overallHeaderText}>Total Hrs</Text></View>
+//           <View style={styles.colOccupied}><Text style={styles.overallHeaderText}>Occupied</Text></View>
+//           <View style={styles.colFree}><Text style={styles.overallHeaderText}>Free Hrs</Text></View>
 //         </View>
 
-//         {summaries.map((s, idx) => {
-//           const isLast = idx === summaries.length - 1;
-//           const isAlt  = idx % 2 === 1;
-//           return (
-//             <View
-//               key={s.EmployeeID}
-//               style={[
-//                 isLast ? styles.overallSummaryRowLast : styles.overallSummaryRow,
-//                 isAlt && styles.overallSummaryRowAlt,
-//               ]}
-//             >
-//               <View style={styles.colTeacher}>
-//                 <Text style={styles.overallCellTeacher}>{s.TeacherName}</Text>
-//                 <Text style={[styles.overallCellText, { fontSize: 8, color: "#94A3B8", marginTop: 2 }]}>
-//                   {s.Standards}
-//                 </Text>
-//               </View>
-//               <View style={styles.colSubjects}>
-//                 <Text style={styles.overallCellText}>{s.Subjects}</Text>
-//               </View>
-//               <View style={styles.colTotal}>
-//                 <Text style={styles.overallCellText}>{s.TotalHours}</Text>
-//               </View>
-//               <View style={styles.colOccupied}>
-//                 <Text style={styles.overallCellOccupied}>{s.OccupiedHours}</Text>
-//               </View>
-//               <View style={styles.colFree}>
-//                 <Text style={styles.overallCellFree}>{s.FreeHours}</Text>
-//               </View>
+//         {summaries.map((s) => (
+//           <View key={s.EmployeeID} style={styles.overallSummaryRow}>
+//             <View style={styles.colTeacher}>
+//               <Text style={styles.overallCellTeacher}>{s.TeacherName}</Text>
+//               <Text style={styles.overallCellStandards}>{s.Standards}</Text>
 //             </View>
-//           );
-//         })}
+//             <View style={styles.colSubjects}>
+//               <Text style={styles.overallCellText}>{s.Subjects}</Text>
+//             </View>
+//             <View style={styles.colTotal}>
+//               <Text style={styles.overallCellCenter}>{s.TotalHours}</Text>
+//             </View>
+//             <View style={styles.colOccupied}>
+//               <Text style={styles.overallCellBold}>{s.OccupiedHours}</Text>
+//             </View>
+//             <View style={styles.colFree}>
+//               <Text style={styles.overallCellBold}>{s.FreeHours}</Text>
+//             </View>
+//           </View>
+//         ))}
 
-//         {/* Grand Total */}
 //         <View style={styles.grandTotalRow}>
-//           <View style={styles.colTeacher}>
-//             <Text style={styles.grandTotalText}>Grand Total</Text>
-//           </View>
-//           <View style={styles.colSubjects}>
-//             <Text style={styles.grandTotalText}>{summaries.length} Teachers</Text>
-//           </View>
-//           <View style={styles.colTotal}>
-//             <Text style={styles.grandTotalText}>—</Text>
-//           </View>
-//           <View style={styles.colOccupied}>
-//             <Text style={styles.grandTotalOccupied}>{toHM(totalOccupied)}</Text>
-//           </View>
-//           <View style={styles.colFree}>
-//             <Text style={styles.grandTotalFree}>{toHM(totalFree)}</Text>
-//           </View>
+//           <View style={styles.colTeacher}><Text style={styles.grandTotalText}>Grand Total</Text></View>
+//           <View style={styles.colSubjects}><Text style={styles.grandTotalText}>{summaries.length} Teachers</Text></View>
+//           <View style={styles.colTotal}><Text style={styles.grandTotalCenter}>—</Text></View>
+//           <View style={styles.colOccupied}><Text style={styles.grandTotalCenter}>{toHM(totalOccupied)}</Text></View>
+//           <View style={styles.colFree}><Text style={styles.grandTotalCenter}>{toHM(totalFree)}</Text></View>
 //         </View>
 //       </View>
 
-//       {/* Subject Details per Teacher */}
 //       <View style={styles.subjectBreakdownSection}>
 //         <Text style={styles.subjectBreakdownTitle}>Subject Details per Teacher</Text>
 //         {summaries.map((s) => (
-//           <View key={s.EmployeeID} style={styles.teacherSubjectBlock}>
+//           <View key={s.EmployeeID} style={styles.teacherSubjectBlock} wrap={false}>
 //             <Text style={styles.teacherSubjectBlockName}>
 //               {s.TeacherName}{"  "}
-//               <Text style={{ color: "#64748B", fontWeight: "normal" }}>
+//               <Text style={styles.teacherSubjectBlockMeta}>
 //                 ({s.OccupiedHours} occupied / {s.FreeHours} free)
 //               </Text>
 //             </Text>
 //             <View style={styles.subjectTagsRow}>
 //               {(s.SubjectStandardDetails || []).map((sd, i) => (
 //                 <View key={i} style={styles.subjectTag}>
-//                   <Text style={styles.subjectTagText}>
-//                     {sd.SubjectName} — {sd.Standards}
-//                   </Text>
+//                   <Text style={styles.subjectTagText}>{sd.SubjectName} — {sd.Standards}</Text>
 //                 </View>
 //               ))}
 //             </View>
@@ -543,17 +664,21 @@
 //         ))}
 //       </View>
 
-//       <PageFooter filters={filters} />
+//       <View style={{ height: footerHeight || DEFAULT_FOOTER_HEIGHT }} />
+//       <PageFooter filters={filters} footerHeight={footerHeight} />
 //     </Page>
 //   );
 // };
 
-// // ─── MAIN PDF DOCUMENT ────────────────────────────────────────────────────────
-// const TeacherOccupancyPDF = ({ apiData, filters = {} }) => {
+// /* =========================================================
+//    MAIN PDF DOCUMENT
+// ========================================================= */
+
+// const TeacherOccupancyPDF = ({ apiData, filters = {}, footerHeight }) => {
 //   if (!apiData || !apiData.Teachers) {
 //     return (
 //       <Document>
-//         <Page style={styles.page}>
+//         <Page style={pageStyle(footerHeight)}>
 //           <Text>No data available</Text>
 //         </Page>
 //       </Document>
@@ -567,30 +692,35 @@
 
 //   return (
 //     <Document>
-//       {/* ── One page per Teacher ── */}
 //       {apiData.Teachers.map((teacher, index) => (
-//         <Page key={teacher.EmployeeID} style={styles.page}>
+//         <Page key={teacher.EmployeeID} style={pageStyle(footerHeight)}>
 //           <PageHeader filters={filters} />
 
-//           {/* "Teacher Productivity Report" title — FIRST PAGE ONLY */}
+//           {/* Report title — first page only */}
 //           {index === 0 && (
-//             <Text style={styles.reportTitle}>Teacher Productivity Report</Text>
+//             <Text style={styles.reportTitle}>{filters.TitleName}</Text>
 //           )}
 
-//           {/* Timetable — teacher name shown as title row inside the table */}
-//           <TeacherTimetableTable teacher={teacher} />
+//           <TeacherTimetableTable
+//             teacher={teacher}
+//             summary={summaryMap[teacher.EmployeeID]}
+//           />
 
-//           <PageFooter filters={filters} />
+//           <PageFooter filters={filters} footerHeight={footerHeight} />
 //         </Page>
 //       ))}
 
-//       {/* ── Final Page: Overall Summary ── */}
-//       <OverallSummaryPage apiData={apiData} filters={filters} />
+//       <OverallSummaryPage apiData={apiData} filters={filters} footerHeight={footerHeight} />
 //     </Document>
 //   );
 // };
 
 // export default TeacherOccupancyPDF;
+
+
+
+// OLD with colors
+
 import React from "react";
 import {
   Page,

@@ -2210,6 +2210,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import CelebrationIcon from '@mui/icons-material/Celebration';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 const getPersonnelMenu = (is00123Subscription) =>
   is00123Subscription
     ? {
@@ -2493,7 +2494,8 @@ const Sidebars = () => {
   // const handleClick = () => {
   //   setOpen(!open);
   // };
-
+  const CompanyID = sessionStorage.getItem("compID");
+  const isTrustcompany = CompanyID === "76"; 
   const company = sessionStorage.getItem("company");
   const year = sessionStorage.getItem("year");
   const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
@@ -3034,6 +3036,27 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR321",
           },
+          // ...(isTrustcompany
+          //   ? [
+          //   {
+          //   name: "Sponser",
+          //   id: 43495,
+          //   //  url: "./TR243/Party",
+          //   url: "./TR321/Sponser",
+          //   icon: (
+          //     <Tooltip title="Sponser">
+          //       <VolunteerActivismIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR243",
+          // }]: []),
+         
           {
             name: "Settlement",
             id: 434891,

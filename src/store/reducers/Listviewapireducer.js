@@ -151,6 +151,8 @@ import BallotIcon from '@mui/icons-material/Ballot';
 import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
 import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 import TransferCertificate from "../../apps/pages/SkillGlow/Pdf/TransferCertificatePdf";
+import ReportCard from "../../apps/pages/SkillGlow/Pdf/Reportcard";
+import GradingIcon from '@mui/icons-material/Grading';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1927,7 +1929,7 @@ export const fetchListview =
 
                   return (
                     <Box>
-                      {isSeedEditable && (
+                      {isSeedEditable && screenName === "Project" && (
                         <Link to={`./EditProject/${params.row.RecordID}/E`}
                           state={{
                             AcademicYear: params.row.AcademicYear,
@@ -1945,7 +1947,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
+                      {(is003Subscription && params.row.RoutineTasks !== "Y" && screenName === "Project") && (
                         <Link
                           // to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                           to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.SlotGroupID}/${params.row.SlotGroupName}/${params.row.TotalWeekSlots}`}
@@ -1967,7 +1969,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                      {(is003Subscription && params.row.RoutineTasks === "Y" && screenName === "Project") && (
                         <Tooltip title="Time Table">
                           <span style={{ cursor: "pointer" }}>
                             <IconButton color="info" size="small" disabled>
@@ -1977,7 +1979,7 @@ export const fetchListview =
                         </Tooltip>
                       )}
 
-                      {!isSeedEditable && (
+                      {!isSeedEditable && screenName === "Project" && (
                         <Link to={`./EditProject/${params.row.RecordID}/V`}>
                           <Tooltip title="View">
                             <IconButton color="info" size="small">
@@ -2044,14 +2046,14 @@ export const fetchListview =
                         )}
                       </IconButton>
                     </Tooltip> */}
-                      {isSeedEditable && !is003Subscription && (
+                      {isSeedEditable && !is003Subscription && screenName === "Project" && (
                         <PDFButton
                           ProjectID={params.row.RecordID}
                           EmployeeID={params.row.InchargeID}
                         />
                       )}
 
-                      {(is003Subscription && params.row.RoutineTasks !== "Y") && (
+                      {(is003Subscription && params.row.RoutineTasks !== "Y"&& screenName === "Project") && (
                         <Link to={`./EditPromotion/${params.row.RecordID}/E`}
                           state={{
                             AcademicYear: params.row.AcademicYear,
@@ -2069,7 +2071,7 @@ export const fetchListview =
                           </Tooltip>
                         </Link>
                       )}
-                      {(is003Subscription && params.row.RoutineTasks === "Y") && (
+                      {(is003Subscription && params.row.RoutineTasks === "Y" && screenName === "Project") && (
                         <Tooltip title="Promotion">
                           <IconButton color="info" size="small" disabled>
                             <NextWeekIcon />
@@ -2077,9 +2079,29 @@ export const fetchListview =
                         </Tooltip>
 
                       )}
+                      {/* For Report Card screen */}
+                    {(screenName === "Standard") && (
+                        // <Link to={`/Apps/Secondarylistview/ReportCard/${params.row.AcademicYearID}/EditReportCard/${params.row.RecordID}/E`}
+                    <Link to={`./EditReportCard/${params.row.RecordID}/E`}
+ 
+                        state={{
+                            AcademicYear: params.row.AcademicYear,
+                            AcademicYearID: params.row.AcademicYearID,
+                            projectID: params.row.RecordID,
+                            MilestoneName: params.row.Name,
+                            projectName: params.row.Project,
+                            BreadCrumb1: params.row.Project,
+                          }}
+                        >
+                          <Tooltip title="Grading Report">
+                            <IconButton color="info" size="small">
+                              <GradingIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      )}
 
-
-                      {is003Subscription && (
+                      {is003Subscription && screenName === "Project" && (
                         // <Link
                         //   to={`/Apps/Secondarylistview/TR368/TimeTable/${params.row.AcademicYearID}/${params.row.RecordID}`}
                         //   state={{
@@ -3023,6 +3045,7 @@ export const fetchListview =
               AccessID == "TR291" ||
               AccessID == "TR299" ||
               AccessID == "TR294" ||
+              AccessID == "TR375" ||
               AccessID == "TR283"
             ) {
               obj = {
@@ -5695,6 +5718,7 @@ export const fetchListview =
                       ) : (
                         false
                       )}
+
                       {AccessID == "TR376" ? (
                         <Box>
                           <>
@@ -6829,7 +6853,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const location = useLocation();
   const state = location.state || {};
   console.log(state, "--state in listviewapireducers");
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  const is003Subscription = SubscriptionCode.endsWith("003");
   const dispatch = useDispatch();
   const ScheduleCheck = () => {
     Swal.fire({
@@ -6880,6 +6905,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID !== "TR298" &&
           accessID !== "TR281" &&
           accessID !== "TR282" &&
+          accessID !== "TR375" &&
           accessID !== "TR283" && (
             <Tooltip title="Edit">
               <IconButton
@@ -6913,6 +6939,39 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               <ModeEditOutlinedIcon />
             </IconButton>
           </Tooltip>
+        )}
+        {accessID == "TR375" ? (
+          <Box>
+            <>
+              <Link to={`./EditTerms/${params.row.RecordID}/E`}
+                state={{
+                  AcademicYear: params.row.AcademicYear,
+                }}
+              >
+                <Tooltip title="Edit">
+                  <IconButton color="info" size="small">
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+              {is003Subscription &&(
+                <Link
+                to={`/Apps/Secondarylistview/TR275/Standard/${params.row.AcademicYearID}/${params.row.RecordID}/${params.row.Name}`}
+                state={{ Terms: params.row.Terms,AcademicYearID:params.row.AcademicYearID,AcademicYear: params.row.AcademicYear, BreadCrumb2: screenName }}
+              >
+                <Tooltip title="Standard/Activities">
+                  <IconButton color="info" size="small">
+                    <SourceOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+              )}
+              
+            </>
+
+          </Box>
+        ) : (
+          false
         )}
         {accessID === "TR295" && (
           <Tooltip title="Edit">
@@ -7100,6 +7159,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID !== "TR283" &&
           accessID !== "TR299" &&
           accessID !== "TR294" &&
+          accessID !== "TR375" &&
           accessID !== "TR286" && (
             <Tooltip title="Delete">
               <IconButton
@@ -8015,6 +8075,92 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     );
   };
 
+  const downloadReportCardPDF = async () => {
+    const sampleData = {
+      school: {
+        name: "Little Treasures Play School",
+        location: "Ramapuram, Chennai",
+        logoUrl: null,
+      },
+      student: {
+        id: "STU-1042",
+        name: "Veera P",
+        rollNo: "12",
+        photoUrl: null,
+      },
+      academicYear: "2025 - 2026",
+      className: "Pre-KG",
+      classTeacher: "S. Mekala",
+      subjects: [
+        {
+          name: "English Orals and Writing",
+          grades: { firstTerm: "B+", secondTerm: "A++", annual: "A++" },
+        },
+        {
+          name: "Math Orals and Writing",
+          grades: { firstTerm: "A+", secondTerm: "A+", annual: "A++" },
+        },
+        {
+          name: "Drawing and Coloring",
+          grades: { firstTerm: "B+", secondTerm: "A+", annual: "A+" },
+        },
+        {
+          name: "General Awareness",
+          grades: { firstTerm: "B+", secondTerm: "A+", annual: "A+" },
+        },
+        {
+          name: "Rhymes",
+          grades: { firstTerm: "B+", secondTerm: "A+", annual: "A+" },
+        },
+      ],
+      gradingScale: [
+        { grade: "A++", label: "Outstanding performance" },
+        { grade: "A+", label: "Very good" },
+        { grade: "A", label: "Good" },
+        { grade: "B+", label: "Very satisfactory" },
+        { grade: "B", label: "Satisfactory" },
+      ],
+      remarks: [
+        {
+          term: "First term",
+          text: "Needs to be more active in class. Should improve participation.",
+        },
+        {
+          term: "Second term",
+          text: "Great improvement. Would be better if more attentive.",
+        },
+        {
+          term: "Annual",
+          text: "All the best for the next class.",
+        },
+      ],
+      signatures: {
+        parent: { firstTerm: null, secondTerm: null },
+        teacher: { firstTerm: null, secondTerm: null },
+      },
+    };
+
+    try {
+      const blob = await pdf(<ReportCard data={sampleData} />).toBlob();
+
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Report-Card-${sampleData.student.name}.pdf`;
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Report card PDF failed:", err);
+      alert("Could not generate the Report Card.");
+    }
+  };
+
+
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -8820,12 +8966,20 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
+
             {is003Subscription && params.row.Classification == "Student" && params.row.ExitFormalitiesAccepted == "Y" && (
               <TCButton
                 EmployeeID={params.row.RecordID}
                 CompanyID={params.row.CompanyID}
                 rows={params.row}
               />
+            )}
+            {is003Subscription && params.row.Classification == "Student" && (
+              <Tooltip title="Report Card">
+                <IconButton color="info" size="small" onClick={downloadReportCardPDF}>
+                  <ArticleIcon />
+                </IconButton>
+              </Tooltip>
             )}
             {/* OLD
          {is003Subscription && params.row.Classification == "Student" && (

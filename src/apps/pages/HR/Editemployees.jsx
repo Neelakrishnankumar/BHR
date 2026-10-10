@@ -1473,6 +1473,7 @@ const Editemployee = () => {
           : Data.Gender === "Others"
             ? "O"
             : "",
+            Age: Data.Age || "",
     // disable: Data.Disable === "Y" ? true : false,
     disable:
       typeof Data.Disable === "boolean" ? Data.Disable : Data.Disable === "Y",
@@ -1748,6 +1749,7 @@ const Editemployee = () => {
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       CrmUserChkbox: values.CRMUser === true ? "Y" : "N",
       Gender: values.Gender,
+      Age: values.Age || 0,
       Job: isStudentClassification ? "" : values.Job || "",
       Mgr: values.Mgr,
       Sal: values.amount || 0,
@@ -3965,6 +3967,7 @@ const Editemployee = () => {
     emailid: ParentgetData.EmailID || "",
     address: ParentgetData.Address || "",
     maplink: ParentgetData.MapLocation || "",
+    occupation: ParentgetData.Occupation || "",
     PanImg: ParentgetData.PanImg || "",
     GstImg: ParentgetData.gstImage || "",
     gstnumber: ParentgetData.GstNo || "",
@@ -4015,6 +4018,7 @@ const Editemployee = () => {
         PanCardNo: values.Pancardnumber || "0",
         Address: values.address || "",
         MapLocation: values.maplink || "",
+        Occupation: values.occupation || "",
         PanImg: panImage || "",
         GstNo: values.gstnumber || "0",
         GstImg: gstImage || "",
@@ -5442,7 +5446,7 @@ const Editemployee = () => {
     workfromhome: deploymentData.WorkFromHome === "Y" ? true : false,
     hybrid: deploymentData.Hybrid === "Y" ? true : false,
     onsite: deploymentData.OnSite === "Y" ? true : false,
-
+    College: deploymentData.College === "Y" ? true : false,
     Onsitedateflag: deploymentData.OnsiteDateFlag === "Y" ? true : false,
     Geninvoice: deploymentData.GenerateInvoice === "Y" ? true : false,
     Essaccess: deploymentData.EssAccess === "Y" ? true : false,
@@ -5501,6 +5505,7 @@ const Editemployee = () => {
       Office: values.office === true ? "Y" : "N",
       WorkFromHome: values.workfromhome === true ? "Y" : "N",
       Hybrid: values.hybrid === true ? "Y" : "N",
+      College: values.College === true ? "Y" : "N",
       OnSite: values.onsite === true ? "Y" : "N",
 
       OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",
@@ -5744,6 +5749,7 @@ const Editemployee = () => {
       Office: values.office === true ? "Y" : "N",
       WorkFromHome: values.workfromhome === true ? "Y" : "N",
       Hybrid: values.hybrid === true ? "Y" : "N",
+      College: values.College === true ? "Y" : "N",
       OnSite: values.onsite === true ? "Y" : "N",
     };
 
@@ -7569,6 +7575,7 @@ const Editemployee = () => {
                                       fullWidth
                                       variant="outlined"
                                       type="text"
+                                      size="small"
                                       label={
                                         <>
                                           Name
@@ -7599,6 +7606,38 @@ const Editemployee = () => {
                                       InputLabelProps={{
                                         shrink: true,
                                       }}
+                                    />
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      type="number"
+                                      size="small"
+                                      label="Age"
+                                      id="Age"
+                                      name="Age"
+                                      value={values.Age}
+                                      onBlur={handleBlur}
+                                      onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (value === "" || (/^\d{1,3}$/.test(value) && Number(value) >= 0)) {
+                                          handleChange(e);
+                                        }
+                                      }}
+                                      error={!!touched.Age && !!errors.Age}
+                                      helperText={touched.Age && errors.Age}
+                                      sx={{
+                                        backgroundColor: "#ffffff",
+                                        "& input": {
+                                          textAlign: "right",
+                                        },
+                                      }}
+                                      inputProps={{
+                                        min: 0,
+                                        max: 999,
+                                      }}
+                                      // InputLabelProps={{
+                                      //   shrink: true,
+                                      // }}
                                     />
 
                                     <TextField
@@ -11270,6 +11309,19 @@ const Editemployee = () => {
                               }
                               label={SubscriptionCode ? "School" : "office"}
                             />
+                             <FormControlLabel
+                              control={
+                                <Field
+                                  type="checkbox"
+                                  name="College"
+                                  id="College"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                />
+                              }
+                              label="College"
+                            />
                             <FormControlLabel
                               control={
                                 <Field
@@ -11822,13 +11874,12 @@ const Editemployee = () => {
                               Paid Leave Calculation
                             </Typography>
 
-                            <Box
+                            {/* <Box
                               display="flex"
                               alignItems="flex-end"
                               flexWrap="wrap"
                               gap={2}
                             >
-                              {/* No of Paid Leave / Year */}
                               <TextField
                                 label="No of Paid Leave / Year"
                                 name="PaidLeavePerYear"
@@ -11850,7 +11901,6 @@ const Editemployee = () => {
                                 }}
                               />
 
-                              {/* Process Button */}
                               <Button
                                 disabled={deploymentData.ProcessedFlag == "Y"}
                                 variant="contained"
@@ -11867,7 +11917,7 @@ const Editemployee = () => {
                               >
                                 Process
                               </Button>
-                            </Box>
+                            </Box> */}
                           </Box>
                         )}
                         {/* ----- COSTING CARD ----- */}
@@ -15411,6 +15461,7 @@ const Editemployee = () => {
                               >
                                 <MenuItem value="Father">Father</MenuItem>
                                 <MenuItem value="Mother">Mother</MenuItem>
+                                <MenuItem value="Sibling">Sibling</MenuItem>
                                 <MenuItem value="Daughter">Daughter</MenuItem>
                                 <MenuItem value="Son">Son</MenuItem>
                                 <MenuItem value="Spouse">Spouse</MenuItem>
@@ -15935,6 +15986,26 @@ const Editemployee = () => {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                               },
                             }}
+                          />
+                          <TextField
+                            name="occupation"
+                            type="text"
+                            id="occupation"
+                            label="Occupation"                             
+                            variant="outlined"
+                            size="small"
+                            value={values.occupation}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.occupation && !!errors.occupation}
+                            helperText={touched.occupation && errors.occupation}
+                            sx={{
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            
                           />
                           {/* <CheckinAutocomplete
                         id="ReferenceBy"
@@ -18561,7 +18632,8 @@ const Editemployee = () => {
                                 is003Subscription &&
                                 // flag !== "P" &&
                                 contractorData.Process == "N" &&
-                                ["OF", "TF", "AF", "HS"].includes(
+                                // ["OF", "TF", "AF", "HS"].includes(
+                                ["OF", "TF", "AF"].includes(
                                   values?.BillingUnits || "",
                                 )
                                 && (
